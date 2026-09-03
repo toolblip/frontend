@@ -1,223 +1,242 @@
 'use client';
 
-import { useState, useCallback } from 'react';
-import { PDFDocument } from 'pdf-lib';
+import { useCallback, useRef, useState } from 'react';
+import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 import { useSubscription } from '@/hooks/useSubscription';
 import { checkFileSize } from '@/lib/tier-limits';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
+
+const isPdfFile = (file: File) =>
+  file.type === 'application/pdf' || /\.pdf$/i.test(file.name);
+
+type PageState = { index: number; selected: boolean };
+
 export default function PdfPageDeleterClient() {
   const { tier } = useSubscription();
   const [file, setFile] = useState<File | null>(null);
-  const [pdfDoc, setPdfDoc] = useState<PDFDocument | null>(null);
-  const [pages, setPages] = useState<{ index: number; selected: boolean }[]>([]);
+  const [fileBytes, setFileBytes] = useState<Uint8Array | null>(null);
+  const [pages, setPages] = useState<PageState[]>([]);
+  const [loading, setLoading] = useState(false);
   const [processing, setProcessing] = useState(false);
-  const [result, setResult] = useState<{ success: boolean; message: string; blob?: Blob } | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [error, setError] = useState('');
+  const [result, setResult] = useState<{ message: string; blob?: Blob } | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const loadVersionRef = useRef(0);
 
-  const handleFileChange = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selected = e.target.files?.[0];
-    if (selected && selected.type === 'application/pdf') {
-      // Check file size against tier limit
-      const sizeError = checkFileSize(selected, tier);
-      if (sizeError) {
-        setResult({ success: false, message: sizeError });
-        return;
-      }
-      
+  const clearAll = () => {
+    loadVersionRef.current += 1;
+    setFile(null);
+    setFileBytes(null);
+    setPages([]);
+    setLoading(false);
+    setProcessing(false);
+    setIsDragging(false);
+    setError('');
+    setResult(null);
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
+  const loadFile = useCallback(async (selected: File | undefined, requestId = ++loadVersionRef.current) => {
+    if (!selected) return;
+    setFile(null);
+    setFileBytes(null);
+    setPages([]);
+    setResult(null);
+    setError('');
+    setLoading(false);
+    setProcessing(false);
+    if (!isPdfFile(selected)) {
+      setError('Please choose a PDF file.');
+      return;
+    }
+    const sizeError = checkFileSize(selected, tier);
+    if (sizeError) {
+      setError(sizeError);
+      return;
+    }
+    setLoading(true);
+    try {
+      const bytes = new Uint8Array(await selected.arrayBuffer());
+      const doc = await PDFDocument.load(bytes);
+      const pageCount = doc.getPageCount();
+      if (pageCount === 0) throw new Error('The PDF has no pages.');
+      if (requestId !== loadVersionRef.current) return;
       setFile(selected);
-      setResult(null);
-      
-      try {
-        const arrayBuffer = await selected.arrayBuffer();
-        const doc = await PDFDocument.load(arrayBuffer);
-        setPdfDoc(doc);
-        
-        const pageCount = doc.getPageCount();
-        setPages(Array.from({ length: pageCount }, (_, i) => ({ index: i, selected: false })));
-      } catch (err: any) {
-        setResult({
-          success: false,
-          message: `Error loading PDF: ${err.message}`,
-        });
-      }
+      setFileBytes(bytes);
+      setPages(Array.from({ length: pageCount }, (_, index) => ({ index, selected: false })));
+    } catch {
+      if (requestId === loadVersionRef.current) setError('Could not read this file as a valid PDF.');
+    } finally {
+      if (requestId === loadVersionRef.current) setLoading(false);
     }
-  }, []);
+  }, [tier]);
 
-  const handleDrop = useCallback(async (e: React.DragEvent) => {
-    e.preventDefault();
-    const dropped = e.dataTransfer.files?.[0];
-    if (dropped && dropped.type === 'application/pdf') {
-      // Check file size against tier limit
-      const sizeError = checkFileSize(dropped, tier);
-      if (sizeError) {
-        setResult({ success: false, message: sizeError });
-        return;
-      }
-      
-      setFile(dropped);
-      setResult(null);
-      
-      try {
-        const arrayBuffer = await dropped.arrayBuffer();
-        const doc = await PDFDocument.load(arrayBuffer);
-        setPdfDoc(doc);
-        
-        const pageCount = doc.getPageCount();
-        setPages(Array.from({ length: pageCount }, (_, i) => ({ index: i, selected: false })));
-      } catch (err: any) {
-        setResult({
-          success: false,
-          message: `Error loading PDF: ${err.message}`,
-        });
-      }
+  const loadExample = useCallback(async () => {
+    const requestId = ++loadVersionRef.current;
+    try {
+      const doc = await PDFDocument.create();
+      const font = await doc.embedFont(StandardFonts.HelveticaBold);
+      ['Keep this page', 'Remove this page', 'Keep this page', 'Remove this page'].forEach((label, index) => {
+        const page = doc.addPage([500, 320]);
+        page.drawRectangle({ x: 0, y: 0, width: 500, height: 320, color: index % 2 ? rgb(1, 0.95, 0.95) : rgb(0.95, 0.98, 0.95) });
+        page.drawText(label, { x: 60, y: 190, size: 26, font, color: index % 2 ? rgb(0.65, 0.1, 0.1) : rgb(0.1, 0.4, 0.2) });
+        page.drawText(`Example page ${index + 1}`, { x: 60, y: 150, size: 16, font });
+      });
+      const bytes = await doc.save();
+      if (requestId !== loadVersionRef.current) return;
+      await loadFile(new File([bytes as BlobPart], 'delete-pages-sample.pdf', { type: 'application/pdf' }), requestId);
+    } catch {
+      if (requestId === loadVersionRef.current) setError('Could not create the sample PDF.');
     }
-  }, []);
+  }, [loadFile]);
+
+  const clearResult = () => {
+    setResult(null);
+    setError('');
+  };
 
   const togglePage = (index: number) => {
-    setPages(prev => prev.map(p => 
-      p.index === index ? { ...p, selected: !p.selected } : p
-    ));
+    if (processing) return;
+    clearResult();
+    setPages((previous) => previous.map((page) => page.index === index ? { ...page, selected: !page.selected } : page));
   };
 
   const selectAll = () => {
-    setPages(prev => prev.map(p => ({ ...p, selected: true })));
+    if (processing) return;
+    clearResult();
+    setPages((previous) => previous.map((page) => ({ ...page, selected: true })));
   };
 
   const deselectAll = () => {
-    setPages(prev => prev.map(p => ({ ...p, selected: false })));
+    if (processing) return;
+    clearResult();
+    setPages((previous) => previous.map((page) => ({ ...page, selected: false })));
   };
 
   const deleteSelected = async () => {
-    if (!pdfDoc || !file) return;
-    
-    const selectedCount = pages.filter(p => p.selected).length;
+    if (!fileBytes || !file || processing) return;
+    const selectedCount = pages.filter((page) => page.selected).length;
     if (selectedCount === 0) {
-      setResult({ success: false, message: 'Please select pages to delete' });
+      setError('Select at least one page to delete.');
       return;
     }
-    
     if (selectedCount === pages.length) {
-      setResult({ success: false, message: 'Cannot delete all pages' });
+      setError('Keep at least one page in the PDF.');
       return;
     }
-    
+    const requestId = ++loadVersionRef.current;
     setProcessing(true);
+    setError('');
     try {
-      // Create new document without selected pages
-      const newDoc = await PDFDocument.create();
-      const pagesToKeep = pages.filter(p => !p.selected).map(p => p.index);
-      
-      const copiedPages = await newDoc.copyPages(pdfDoc, pagesToKeep);
-      copiedPages.forEach(page => newDoc.addPage(page));
-      
-      const pdfBytes = await newDoc.save();
-      const blob = new Blob([pdfBytes as any], { type: 'application/pdf' });
-      
+      const source = await PDFDocument.load(fileBytes);
+      const output = await PDFDocument.create();
+      const pagesToKeep = pages.filter((page) => !page.selected).map((page) => page.index);
+      const copiedPages = await output.copyPages(source, pagesToKeep);
+      copiedPages.forEach((page) => output.addPage(page));
+      const bytes = await output.save();
+      if (requestId !== loadVersionRef.current) return;
       setResult({
-        success: true,
-        message: `Deleted ${selectedCount} page(s). ${pagesToKeep.length} page(s) remaining.`,
-        blob,
+        message: `Deleted ${selectedCount} page${selectedCount === 1 ? '' : 's'}. ${pagesToKeep.length} page${pagesToKeep.length === 1 ? '' : 's'} remain.`,
+        blob: new Blob([bytes as BlobPart], { type: 'application/pdf' }),
       });
-    } catch (err: any) {
-      setResult({
-        success: false,
-        message: `Error: ${err.message}`,
-      });
+    } catch {
+      if (requestId === loadVersionRef.current) setError('Could not process this PDF.');
     } finally {
-      setProcessing(false);
+      if (requestId === loadVersionRef.current) setProcessing(false);
     }
   };
 
   const downloadResult = () => {
-    if (!result?.blob) return;
+    if (!result?.blob || !file) return;
     const url = URL.createObjectURL(result.blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = file?.name?.replace('.pdf', '_edited.pdf') || 'edited.pdf';
-    a.click();
+    const anchor = document.createElement('a');
+    anchor.href = url;
+    anchor.download = file.name.replace(/\.pdf$/i, '_edited.pdf');
+    anchor.click();
     URL.revokeObjectURL(url);
   };
 
+  const selectedCount = pages.filter((page) => page.selected).length;
+
   return (
     <div className="tb-v2-tool-card">
-      {/* File Upload */}
-      <div
-        onDrop={handleDrop}
-        onDragOver={(e) => e.preventDefault()}
-        className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-8 text-center hover:border-indigo-500 transition-colors"
-      >
-        <input
-          type="file"
-          accept=".pdf"
-          onChange={handleFileChange}
-          className="hidden"
-          id="pdf-upload"
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">PDF File</span>
+        <ToolExampleClearActions
+          onExample={() => void loadExample()}
+          onClear={clearAll}
+          canClear={Boolean(file || pages.length || result || error)}
+          exampleCount={1}
         />
-        <label htmlFor="pdf-upload" className="cursor-pointer">
-          <div className="text-4xl mb-2">📄</div>
-          </label>
+      </div>
+      <div style={{ padding: 20 }}>
+        <div
+          className="tb-v2-dropzone"
+          onDragOver={(event) => { event.preventDefault(); setIsDragging(true); }}
+          onDragLeave={() => setIsDragging(false)}
+          onDrop={(event) => {
+            event.preventDefault();
+            setIsDragging(false);
+            void loadFile(event.dataTransfer.files?.[0]);
+          }}
+          onClick={() => fileInputRef.current?.click()}
+          style={isDragging ? { borderColor: 'var(--accent)' } : undefined}
+        >
+          <span style={{ fontSize: 28 }}>PDF</span>
+          <span className="tb-v2-dropzone-text">{file?.name || 'Click or drag a PDF to remove pages'}</span>
+          <span className="tb-v2-dropzone-hint">Select pages locally, then download a new PDF</span>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="application/pdf,.pdf"
+            onChange={(event) => void loadFile(event.target.files?.[0])}
+            style={{ display: 'none' }}
+          />
+        </div>
+        {loading && <p className="tb-v2-empty">Reading PDF...</p>}
+        {error && <div className="tb-v2-banner tb-v2-banner-err" role="alert">{error}</div>}
       </div>
 
-      {/* Page Selection */}
-      {pages.length > 0 && (
-        <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold">
-              {pages.length} page(s) - {pages.filter(p => p.selected).length} selected for deletion
-            </h2>
-            <div className="space-x-2">
-              <button onClick={selectAll} className="px-3 py-1 text-sm bg-gray-200 dark:bg-gray-700 rounded">
-                Select All
-              </button>
-              <button onClick={deselectAll} className="px-3 py-1 text-sm bg-gray-200 dark:bg-gray-700 rounded">
-                Deselect All
-              </button>
-            </div>
+      {file && pages.length > 0 && (
+        <div style={{ padding: '0 20px 20px' }}>
+          <div className="tb-v2-tool-output-head">
+            <span className="tb-v2-tool-label">{file.name} - {pages.length} pages, {selectedCount} selected</span>
           </div>
-          
-          <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-3">
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 12 }}>
+            <button type="button" onClick={selectAll} disabled={processing} className="tb-v2-btn-sm">Select All</button>
+            <button type="button" onClick={deselectAll} disabled={processing} className="tb-v2-btn-sm">Deselect All</button>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(110px, 1fr))', gap: 10, marginTop: 12 }}>
             {pages.map((page) => (
               <button
                 key={page.index}
+                type="button"
                 onClick={() => togglePage(page.index)}
-                className={`p-3 border-2 rounded-lg text-center transition-colors ${
-                  page.selected
-                    ? 'border-red-500 bg-red-50 dark:bg-red-900/20'
-                    : 'border-gray-200 dark:border-gray-700 hover:border-indigo-500'
-                }`}
+                disabled={processing}
+                aria-pressed={page.selected}
+                aria-label={`Page ${page.index + 1}, ${page.selected ? 'selected for deletion' : 'kept'}`}
+                className="tb-v2-section"
+                style={{ padding: 14, textAlign: 'center', border: `2px solid ${page.selected ? 'var(--danger, #dc2626)' : 'var(--border)'}`, background: page.selected ? 'rgba(220, 38, 38, 0.08)' : undefined }}
               >
-                <div className="text-2xl mb-1">📄</div>
-                <div className="text-sm font-medium">Page {page.index + 1}</div>
-                {page.selected && (
-                  <div className="text-xs text-red-600 dark:text-red-400 mt-1">
-                    ☒ Delete
-                  </div>
-                )}
+                <div style={{ fontSize: 28 }}>PDF</div>
+                <div>Page {page.index + 1}</div>
+                <div className="tb-v2-empty">{page.selected ? 'Selected' : 'Keep'}</div>
               </button>
             ))}
           </div>
-          
-          <button
-            onClick={deleteSelected}
-            disabled={pages.filter(p => p.selected).length === 0 || processing}
-            className="w-full py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {processing ? 'Processing...' : `Delete ${pages.filter(p => p.selected).length} Page(s)`}
+          <button type="button" onClick={() => void deleteSelected()} disabled={selectedCount === 0 || selectedCount === pages.length || processing} className="tb-v2-btn tb-v2-btn-primary tb-v2-btn-lg" style={{ width: '100%', marginTop: 16 }}>
+            {processing ? 'Processing...' : `Delete ${selectedCount} Page${selectedCount === 1 ? '' : 's'}`}
           </button>
-        </div>
-      )}
-
-      {/* Result */}
-      {result && (
-        <div className={`p-4 rounded-lg ${result.success ? 'bg-green-50 dark:bg-green-900/20' : 'bg-red-50 dark:bg-red-900/20'}`}>
-          <p className={result.success ? 'text-green-700 dark:text-green-400' : 'text-red-700 dark:text-red-400'}>
-            {result.message}
-          </p>
-          {result.success && (
-            <button
-              onClick={downloadResult}
-              className="mt-3 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
-            >
-              Download Edited PDF
-            </button>
+          {selectedCount === pages.length && (
+            <div className="tb-v2-banner tb-v2-banner-err" role="alert" style={{ marginTop: 12 }}>
+              Keep at least one page. Deselect one page before deleting.
+            </div>
+          )}
+          {result?.blob && (
+            <div className="tb-v2-banner" style={{ marginTop: 12 }}>
+              {result.message} <button type="button" onClick={downloadResult} className="tb-v2-btn-sm" style={{ marginLeft: 8 }}>Download PDF</button>
+            </div>
           )}
         </div>
       )}

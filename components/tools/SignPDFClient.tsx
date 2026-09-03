@@ -1,9 +1,15 @@
 'use client';
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { PDFDocument } from 'pdf-lib';
+import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
+import { useSubscription } from '@/hooks/useSubscription';
+import { checkFileSize } from '@/lib/tier-limits';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 type Mode = 'draw' | 'type' | 'upload';
+
+const isPdfFile = (file: File) =>
+  file.type === 'application/pdf' || /\.pdf$/i.test(file.name);
 
 function dataUrlToBytes(dataUrl: string): Uint8Array {
   const base64 = dataUrl.split(',')[1] ?? '';
@@ -14,7 +20,9 @@ function dataUrlToBytes(dataUrl: string): Uint8Array {
 }
 
 export default function SignPDFClient() {
+  const { tier } = useSubscription();
   const [file, setFile] = useState<File | null>(null);
+  const [fileBytes, setFileBytes] = useState<Uint8Array | null>(null);
   const [pageCount, setPageCount] = useState(0);
   const [pageIndex, setPageIndex] = useState(0);
   const [mode, setMode] = useState<Mode>('draw');
@@ -25,6 +33,7 @@ export default function SignPDFClient() {
   const [posY, setPosY] = useState(50);
   const [sigWidth, setSigWidth] = useState(180);
   const [sigHeight, setSigHeight] = useState(70);
+  const [hasDrawing, setHasDrawing] = useState(false);
   const [status, setStatus] = useState<'idle' | 'loading' | 'processing' | 'done' | 'error'>('idle');
   const [message, setMessage] = useState('');
   const [isDragging, setIsDragging] = useState(false);
@@ -35,58 +44,132 @@ export default function SignPDFClient() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const typeCanvasRef = useRef<HTMLCanvasElement>(null);
   const drawingRef = useRef(false);
+  const loadVersionRef = useRef(0);
+  const signatureLoadVersionRef = useRef(0);
+
+  const invalidateResult = () => {
+    loadVersionRef.current += 1;
+    setResultBlob(null);
+    setMessage('');
+    setStatus('idle');
+  };
 
   const reset = () => {
+    loadVersionRef.current += 1;
+    signatureLoadVersionRef.current += 1;
     setFile(null);
+    setFileBytes(null);
     setPageCount(0);
     setPageIndex(0);
     setStatus('idle');
     setMessage('');
     setResultBlob(null);
+    setIsDragging(false);
+    setUploadedDataUrl('');
+    setUploadedMime('image/png');
+    setHasDrawing(false);
+    clearDrawCanvas(true);
+    if (fileRef.current) fileRef.current.value = '';
+    if (sigFileRef.current) sigFileRef.current.value = '';
   };
 
-  const handleFile = async (f: File) => {
-    setFile(f);
-    setStatus('loading');
-    setMessage('');
+  const loadFile = useCallback(async (f: File | undefined, requestId?: number) => {
+    if (!f || status === 'processing') return;
+    const currentRequestId = requestId ?? ++loadVersionRef.current;
+    if (currentRequestId !== loadVersionRef.current) return;
+    setFile(null);
+    setFileBytes(null);
+    setPageCount(0);
     setResultBlob(null);
+    setMessage('');
+    if (!isPdfFile(f)) {
+      setStatus('error');
+      setMessage('Please choose a PDF file.');
+      return;
+    }
+    const sizeError = checkFileSize(f, tier);
+    if (sizeError) {
+      setStatus('error');
+      setMessage(sizeError);
+      return;
+    }
+    setStatus('loading');
     try {
-      const arrayBuffer = await f.arrayBuffer();
-      const pdfDoc = await PDFDocument.load(arrayBuffer);
+      const bytes = new Uint8Array(await f.arrayBuffer());
+      const pdfDoc = await PDFDocument.load(bytes);
+      if (pdfDoc.getPageCount() === 0) throw new Error('The PDF has no pages.');
+      if (currentRequestId !== loadVersionRef.current) return;
+      setFile(f);
+      setFileBytes(bytes);
       setPageCount(pdfDoc.getPageCount());
       setPageIndex(0);
       setStatus('idle');
     } catch {
-      setStatus('error');
-      setMessage('Error reading PDF. Please ensure it is a valid PDF file.');
+      if (currentRequestId === loadVersionRef.current) {
+        setStatus('error');
+        setMessage('Could not read this file as a valid PDF.');
+      }
     }
-  };
+  }, [status, tier]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (status === 'processing') return;
     const f = e.target.files?.[0];
-    if (f) handleFile(f);
+    void loadFile(f);
   };
 
   const onDrop = (e: React.DragEvent) => {
     e.preventDefault();
+    if (status === 'processing') return;
     setIsDragging(false);
     const f = e.dataTransfer.files?.[0];
-    if (f && f.type === 'application/pdf') handleFile(f);
+    void loadFile(f);
   };
+
+  const loadExample = useCallback(async () => {
+    if (status === 'processing') return;
+    const requestId = ++loadVersionRef.current;
+    try {
+      const doc = await PDFDocument.create();
+      const font = await doc.embedFont(StandardFonts.HelveticaBold);
+      ['Signature sample', 'Second page'].forEach((title, index) => {
+        const page = doc.addPage([500, 320]);
+        page.drawRectangle({ x: 0, y: 0, width: 500, height: 320, color: rgb(0.97, 0.98, 1) });
+        page.drawText(title, { x: 60, y: 220, size: 26, font, color: rgb(0.1, 0.2, 0.45) });
+        page.drawText(`Example page ${index + 1}`, { x: 60, y: 180, size: 16, font });
+      });
+      const bytes = await doc.save();
+      if (requestId !== loadVersionRef.current) return;
+      setMode('type');
+      setTypedText('Example Signer');
+      await loadFile(new File([bytes as BlobPart], 'sign-sample.pdf', { type: 'application/pdf' }), requestId);
+    } catch {
+      if (requestId === loadVersionRef.current) {
+        setStatus('error');
+        setMessage('Could not create the sample PDF.');
+      }
+    }
+  }, [loadFile, status]);
 
   // Draw-mode canvas handlers
   const getCanvasPoint = (e: React.PointerEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current;
     if (!canvas) return { x: 0, y: 0 };
     const rect = canvas.getBoundingClientRect();
-    return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+    return {
+      x: (e.clientX - rect.left) * (canvas.width / rect.width),
+      y: (e.clientY - rect.top) * (canvas.height / rect.height),
+    };
   };
 
   const onPointerDown = (e: React.PointerEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
+    if (status === 'processing') return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
+    invalidateResult();
+    e.currentTarget.setPointerCapture(e.pointerId);
     drawingRef.current = true;
     const { x, y } = getCanvasPoint(e);
     ctx.beginPath();
@@ -95,11 +178,16 @@ export default function SignPDFClient() {
 
   const onPointerMove = (e: React.PointerEvent<HTMLCanvasElement>) => {
     if (!drawingRef.current) return;
+    if (status === 'processing') {
+      drawingRef.current = false;
+      return;
+    }
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
     const { x, y } = getCanvasPoint(e);
+    setHasDrawing(true);
     ctx.lineWidth = 2.5;
     ctx.lineCap = 'round';
     ctx.strokeStyle = '#111827';
@@ -111,19 +199,23 @@ export default function SignPDFClient() {
     drawingRef.current = false;
   };
 
-  const clearDrawCanvas = () => {
+  const clearDrawCanvas = (force = false) => {
+    if (status === 'processing' && !force) return;
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext('2d');
-    if (canvas && ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (canvas && ctx) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+    setHasDrawing(false);
+    invalidateResult();
   };
 
-  // Initialize canvas backgrounds (white) so exported PNG isn't transparent-on-transparent
+  // Keep the signature canvas transparent so the exported image has no white box.
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext('2d');
     if (canvas && ctx) {
-      ctx.fillStyle = '#ffffff';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
   }, []);
 
@@ -132,32 +224,39 @@ export default function SignPDFClient() {
     const canvas = typeCanvasRef.current;
     const ctx = canvas?.getContext('2d');
     if (!canvas || !ctx) return;
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = '#111827';
     ctx.font = 'italic 42px "Brush Script MT", "Segoe Script", cursive';
     ctx.textBaseline = 'middle';
     ctx.fillText(typedText || ' ', 16, canvas.height / 2);
-  }, [typedText, mode]);
+  }, [typedText, mode, file, pageCount]);
 
   const handleSigFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (status === 'processing') return;
     const f = e.target.files?.[0];
     if (!f) return;
-    if (f.type !== 'image/png' && f.type !== 'image/jpeg') {
+    const requestId = ++signatureLoadVersionRef.current;
+    setUploadedDataUrl('');
+    if (f.type !== 'image/png' && f.type !== 'image/jpeg' && !/\.(png|jpe?g)$/i.test(f.name)) {
       setStatus('error');
       setMessage('Signature image must be PNG or JPG.');
       return;
     }
-    setUploadedMime(f.type as 'image/png' | 'image/jpeg');
+    setUploadedMime(f.type === 'image/png' || /\.png$/i.test(f.name) ? 'image/png' : 'image/jpeg');
+    invalidateResult();
+    setStatus('idle');
+    setMessage('');
     const reader = new FileReader();
-    reader.onload = () => setUploadedDataUrl(reader.result as string);
+    reader.onload = () => {
+      if (requestId === signatureLoadVersionRef.current) setUploadedDataUrl(reader.result as string);
+    };
     reader.readAsDataURL(f);
   };
 
   const getSignatureBytes = useCallback((): { bytes: Uint8Array; kind: 'png' | 'jpg' } | null => {
     if (mode === 'draw') {
       const canvas = canvasRef.current;
-      if (!canvas) return null;
+      if (!canvas || !hasDrawing) return null;
       return { bytes: dataUrlToBytes(canvas.toDataURL('image/png')), kind: 'png' };
     }
     if (mode === 'type') {
@@ -170,32 +269,45 @@ export default function SignPDFClient() {
       return { bytes: dataUrlToBytes(uploadedDataUrl), kind: uploadedMime === 'image/png' ? 'png' : 'jpg' };
     }
     return null;
-  }, [mode, uploadedDataUrl, uploadedMime]);
+  }, [hasDrawing, mode, uploadedDataUrl, uploadedMime]);
 
   const process = async () => {
-    if (!file) return;
+    if (!fileBytes || status === 'processing') return;
+    if (mode === 'type' && !typedText.trim()) {
+      setStatus('error');
+      setMessage('Type a name first.');
+      return;
+    }
     const sig = getSignatureBytes();
     if (!sig) {
       setStatus('error');
       setMessage('Please draw, type, or upload a signature first.');
       return;
     }
+    const requestId = ++loadVersionRef.current;
     setStatus('processing');
+    setMessage('');
     try {
-      const arrayBuffer = await file.arrayBuffer();
-      const pdfDoc = await PDFDocument.load(arrayBuffer);
+      const pdfDoc = await PDFDocument.load(fileBytes);
       const page = pdfDoc.getPages()[pageIndex];
       if (!page) throw new Error('Invalid page');
       const image = sig.kind === 'png' ? await pdfDoc.embedPng(sig.bytes) : await pdfDoc.embedJpg(sig.bytes);
-      page.drawImage(image, { x: posX, y: posY, width: sigWidth, height: sigHeight });
+      const width = Math.max(1, Math.min(sigWidth, page.getWidth()));
+      const height = Math.max(1, Math.min(sigHeight, page.getHeight()));
+      const x = Math.max(0, Math.min(posX, page.getWidth() - width));
+      const y = Math.max(0, Math.min(posY, page.getHeight() - height));
+      page.drawImage(image, { x, y, width, height });
       const pdfBytes = await pdfDoc.save();
+      if (requestId !== loadVersionRef.current) return;
       const blob = new Blob([pdfBytes as BlobPart], { type: 'application/pdf' });
       setResultBlob(blob);
       setStatus('done');
       setMessage('Signed PDF ready to download!');
     } catch {
-      setStatus('error');
-      setMessage('Error signing PDF. Please try again.');
+      if (requestId === loadVersionRef.current) {
+        setStatus('error');
+        setMessage('Error signing PDF. Please try again.');
+      }
     }
   };
 
@@ -209,29 +321,50 @@ export default function SignPDFClient() {
     URL.revokeObjectURL(url);
   };
 
+  const clearAll = () => {
+    reset();
+    setMode('draw');
+    setTypedText('Your Name');
+    setUploadedDataUrl('');
+    setPosX(50);
+    setPosY(50);
+    setSigWidth(180);
+    setSigHeight(70);
+    if (sigFileRef.current) sigFileRef.current.value = '';
+  };
+
   return (
-    <div>
+    <div className="tb-v2-tool-card">
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">PDF File</span>
+        <ToolExampleClearActions
+          onExample={() => void loadExample()}
+          onClear={clearAll}
+          canClear={Boolean(file || resultBlob || message)}
+          exampleDisabled={status === 'processing'}
+          exampleCount={1}
+        />
+      </div>
       {!file && (
         <div
-          onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+          onDragOver={(e) => { if (status !== 'processing') { e.preventDefault(); setIsDragging(true); } }}
           onDragLeave={() => setIsDragging(false)}
           onDrop={onDrop}
-          onClick={() => fileRef.current?.click()}
-          className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-colors ${
+          onClick={() => { if (status !== 'processing') fileRef.current?.click(); }}
+          aria-disabled={status === 'processing'}
+          className={`tb-v2-dropzone ${
             isDragging
               ? 'border-indigo-400 bg-indigo-50 dark:bg-indigo-900/20'
-              : 'border-gray-300 dark:border-gray-600 hover:border-indigo-400 dark:hover:border-indigo-500'
+              : ''
           }`}
         >
-          <div className="text-4xl mb-2">✍️</div>
-          <p className="text-gray-600 dark:text-gray-400">
-            {isDragging ? 'Drop PDF here' : 'Click or drag a PDF to sign'}
-          </p>
-          <p className="text-xs text-gray-500 mt-1">PDF files only</p>
+          <div style={{ fontSize: 28 }}>PDF</div>
+          <span className="tb-v2-dropzone-text">{isDragging ? 'Drop PDF here' : 'Click or drag a PDF to sign'}</span>
+          <span className="tb-v2-dropzone-hint">Draw, type, or upload a visual signature locally</span>
         </div>
       )}
 
-      <input ref={fileRef} type="file" accept=".pdf" onChange={handleFileChange} className="hidden" />
+      <input ref={fileRef} type="file" accept="application/pdf,.pdf" onChange={handleFileChange} disabled={status === 'processing'} className="hidden" />
 
       {file && (
         <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-xl flex items-center justify-between">
@@ -239,7 +372,7 @@ export default function SignPDFClient() {
             <p className="font-medium">{file.name}</p>
             <p className="text-sm text-gray-500">{pageCount} page{pageCount === 1 ? '' : 's'}</p>
           </div>
-          <button onClick={reset} className="text-gray-400 hover:text-gray-600">✕</button>
+          <button type="button" onClick={reset} className="text-gray-400 hover:text-gray-600">✕</button>
         </div>
       )}
 
@@ -249,7 +382,8 @@ export default function SignPDFClient() {
             <label className="tb-v2-tool-label">Page to sign</label>
             <select
               value={pageIndex}
-              onChange={e => setPageIndex(Number(e.target.value))}
+              disabled={status === 'processing'}
+              onChange={e => { if (status !== 'processing') { invalidateResult(); setPageIndex(Number(e.target.value)); } }}
               className="tb-v2-select"
             >
               {Array.from({ length: pageCount }, (_, i) => (
@@ -263,7 +397,8 @@ export default function SignPDFClient() {
               <button
                 key={m}
                 type="button"
-                onClick={() => setMode(m)}
+                onClick={() => { if (status !== 'processing') { invalidateResult(); setMode(m); } }}
+                disabled={status === 'processing'}
                 className={`tb-v2-btn-sm ${mode === m ? 'tb-v2-btn-primary' : ''}`}
               >
                 {m === 'draw' ? 'Draw' : m === 'type' ? 'Type' : 'Upload'}
@@ -281,9 +416,11 @@ export default function SignPDFClient() {
                 onPointerMove={onPointerMove}
                 onPointerUp={onPointerUp}
                 onPointerLeave={onPointerUp}
+                onPointerCancel={onPointerUp}
+                aria-disabled={status === 'processing'}
                 className="border border-gray-300 dark:border-gray-600 rounded-lg bg-white touch-none w-full max-w-[400px]"
               />
-              <button type="button" onClick={clearDrawCanvas} className="tb-v2-btn-sm mt-2">Clear</button>
+              <button type="button" onClick={() => clearDrawCanvas()} disabled={status === 'processing'} className="tb-v2-btn-sm mt-2">Clear</button>
             </div>
           )}
 
@@ -292,7 +429,9 @@ export default function SignPDFClient() {
               <input
                 type="text"
                 value={typedText}
-                onChange={e => setTypedText(e.target.value)}
+                maxLength={80}
+                onChange={e => { if (status !== 'processing') { invalidateResult(); setTypedText(e.target.value); } }}
+                disabled={status === 'processing'}
                 placeholder="Type your name..."
                 className="tb-v2-input"
               />
@@ -307,14 +446,15 @@ export default function SignPDFClient() {
 
           {mode === 'upload' && (
             <div className="mt-3">
-              <button type="button" onClick={() => sigFileRef.current?.click()} className="tb-v2-btn-sm">
+              <button type="button" onClick={() => { if (status !== 'processing') sigFileRef.current?.click(); }} disabled={status === 'processing'} className="tb-v2-btn-sm">
                 Choose signature image (PNG/JPG)
               </button>
               <input
                 ref={sigFileRef}
                 type="file"
-                accept="image/png,image/jpeg"
+                accept="image/png,image/jpeg,.png,.jpg,.jpeg"
                 onChange={handleSigFileChange}
+                disabled={status === 'processing'}
                 className="hidden"
               />
               {uploadedDataUrl && (
@@ -327,23 +467,24 @@ export default function SignPDFClient() {
           <div className="tb-v2-grid-2 mt-4">
             <div>
               <label className="tb-v2-tool-label">Position X (pt from left)</label>
-              <input type="number" value={posX} onChange={e => setPosX(Number(e.target.value))} className="tb-v2-input" />
+              <input type="number" min={0} value={posX} disabled={status === 'processing'} onChange={e => { if (status !== 'processing') { invalidateResult(); setPosX(Number(e.target.value) || 0); } }} className="tb-v2-input" />
             </div>
             <div>
               <label className="tb-v2-tool-label">Position Y (pt from bottom)</label>
-              <input type="number" value={posY} onChange={e => setPosY(Number(e.target.value))} className="tb-v2-input" />
+              <input type="number" min={0} value={posY} disabled={status === 'processing'} onChange={e => { if (status !== 'processing') { invalidateResult(); setPosY(Number(e.target.value) || 0); } }} className="tb-v2-input" />
             </div>
             <div>
               <label className="tb-v2-tool-label">Width (pt)</label>
-              <input type="number" value={sigWidth} onChange={e => setSigWidth(Number(e.target.value))} className="tb-v2-input" />
+              <input type="number" min={1} value={sigWidth} disabled={status === 'processing'} onChange={e => { if (status !== 'processing') { invalidateResult(); setSigWidth(Number(e.target.value) || 1); } }} className="tb-v2-input" />
             </div>
             <div>
               <label className="tb-v2-tool-label">Height (pt)</label>
-              <input type="number" value={sigHeight} onChange={e => setSigHeight(Number(e.target.value))} className="tb-v2-input" />
+              <input type="number" min={1} value={sigHeight} disabled={status === 'processing'} onChange={e => { if (status !== 'processing') { invalidateResult(); setSigHeight(Number(e.target.value) || 1); } }} className="tb-v2-input" />
             </div>
           </div>
 
           <button
+            type="button"
             onClick={process}
             disabled={status === 'processing'}
             className="tb-v2-btn tb-v2-btn-primary tb-v2-btn-lg w-full mt-4"
@@ -357,6 +498,7 @@ export default function SignPDFClient() {
         <div className="p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl mt-4">
           <p className="text-sm text-green-600 dark:text-green-400 mb-2">✅ {message}</p>
           <button
+            type="button"
             onClick={downloadResult}
             className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
           >
@@ -366,12 +508,12 @@ export default function SignPDFClient() {
       )}
 
       {status === 'error' && (
-        <div className="p-4 bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-xl mt-4">
+        <div role="alert" className="p-4 bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-xl mt-4">
           <p className="text-sm text-red-600 dark:text-red-400">❌ {message}</p>
         </div>
       )}
 
-      <p className="text-xs text-gray-500 mt-4">
+      <p className="tb-v2-empty" style={{ margin: '16px 20px 20px' }}>
         This tool places a visual signature image onto your PDF. It does not apply a cryptographic digital signature or legal e-signature certificate.
       </p>
     </div>

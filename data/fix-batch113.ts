@@ -62,7 +62,7 @@ const FIX_BATCH_113: Record<string, FixBatchEntry> = {
   },
 
   watermark: {
-    description: `Removing an existing watermark cleans up a mark that's already there, but adding one is the opposite move entirely, a document's owner marking a draft as a draft or a confidential file as confidential before it ever gets shared, a proactive step taken ahead of distribution rather than a reactive cleanup afterward. This tool adds a text or an image watermark to a PDF file, letting a document's owner mark it clearly before sharing rather than fixing an existing mark left by someone else. Useful for stamping 'CONFIDENTIAL' or 'DRAFT' across every page of a document before it goes out for review, adding a company logo watermark to discourage unauthorized reproduction before a file gets shared externally, or marking a draft clearly as a draft so nobody mistakes it for a final version.`,
+    description: `Removing an existing watermark cleans up a mark that's already there, but adding one is the opposite move entirely, a document's owner marking a draft as a draft or a confidential file as confidential before it ever gets shared. This tool adds a visible text or image watermark to every page of a PDF, with opacity, rotation, and sizing controls, without encrypting the file or restricting access. Useful for stamping 'CONFIDENTIAL' or 'DRAFT' across every page before review, adding a company logo watermark before external distribution, or marking a draft so nobody mistakes it for a final version.`,
     examples: [
       {
         title: 'Stamp a document before external review',

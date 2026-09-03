@@ -94,7 +94,7 @@ const FIX_BATCH_110: Record<string, FixBatchEntry> = {
   },
 
   sign: {
-    description: `A signed document isn't a secret, anyone can still read every word of it, the signature exists to assert who reviewed and approved it rather than to hide anything, a completely different concern from encrypting a file to keep its contents confidential. This tool adds a signature to a PDF document by drawing, typing, or uploading one, covering an authentic handwritten look on a touchscreen, a fast styled signature when handwriting isn't practical, or reusing an existing signature image consistently across many documents. Useful for signing a contract by hand on a touchscreen or trackpad for an authentic look, adding a quick typed signature to a document when a full handwritten one isn't practical, or uploading the same signature image once to apply consistently across a batch of documents that all need it.`,
+    description: `A signed document isn't a secret, anyone can still read every word of it, the signature exists to show who reviewed and approved it rather than to hide anything, a completely different concern from encrypting a file to keep its contents confidential. This tool adds a visual signature to one PDF by drawing, typing, or uploading one, then lets you place and size it on a selected page. Useful for signing a contract by hand on a touchscreen or trackpad, adding a typed signature when handwriting isn't practical, or placing a saved signature image on a PDF without printing and scanning it.`,
     examples: [
       {
         title: 'Sign a contract by hand on a touchscreen',
@@ -102,9 +102,9 @@ const FIX_BATCH_110: Record<string, FixBatchEntry> = {
         note: 'Asserts approval, does not encrypt or hide the content.',
       },
       {
-        title: 'Apply a saved signature across many documents',
-        code: `Input: signature-image.png, apply to: 12 documents\nOutput: 12 documents signed consistently`,
-        note: 'Reuses one signature image rather than redrawing each time.',
+        title: 'Place a saved signature image',
+        code: `Input: contract.pdf, signature-image.png\nOutput: contract-signed.pdf (signature placed on the selected page)`,
+        note: 'Places a consistent signature image without redrawing it by hand.',
       },
     ],
   },
