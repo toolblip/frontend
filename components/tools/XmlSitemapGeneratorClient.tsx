@@ -1,63 +1,94 @@
 'use client';
 
 import { useState } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 interface UrlEntry {
   loc: string;
   lastmod?: string;
   changefreq?: 'always' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'never';
   priority?: string;
+  image?: string;
 }
 
-type UrlStatus = 'active' | 'pending' | 'archived';
-
-interface UrlWithStatus extends UrlEntry {
-  status: UrlStatus;
+function isHttpUrl(value: string): boolean {
+  if (!/^https?:\/\//i.test(value)) return false;
+  try {
+    const url = new URL(value);
+    return Boolean(url.hostname) && (url.protocol === 'http:' || url.protocol === 'https:');
+  } catch {
+    return false;
+  }
 }
 
 export default function XmlSitemapGeneratorClient() {
   const [baseUrl, setBaseUrl] = useState('');
-  const [urls, setUrls] = useState<UrlWithStatus[]>([]);
+  const [urls, setUrls] = useState<UrlEntry[]>([]);
   const [newUrl, setNewUrl] = useState('');
   const [lastmod, setLastmod] = useState('');
   const [changefreq, setChangefreq] = useState<UrlEntry['changefreq']>('weekly');
   const [priority, setPriority] = useState('0.5');
+  const [imageUrl, setImageUrl] = useState('');
   const [generated, setGenerated] = useState('');
   const [includeImages, setIncludeImages] = useState(false);
+  const [error, setError] = useState('');
 
   const addUrl = () => {
-    if (!newUrl.trim()) return;
-    
-    let fullUrl = newUrl;
-    if (baseUrl && !newUrl.startsWith('http')) {
-      fullUrl = baseUrl.replace(/\/$/, '') + '/' + newUrl.replace(/^\//, '');
+    const enteredUrl = newUrl.trim();
+    if (!enteredUrl) return;
+
+    const trimmedBaseUrl = baseUrl.trim();
+    const fullUrl = /^https?:\/\//i.test(enteredUrl)
+      ? enteredUrl
+      : trimmedBaseUrl
+        ? `${trimmedBaseUrl.replace(/\/$/, '')}/${enteredUrl.replace(/^\//, '')}`
+        : enteredUrl;
+
+    try {
+      const parsedUrl = new URL(fullUrl);
+      if (parsedUrl.protocol !== 'http:' && parsedUrl.protocol !== 'https:') {
+        throw new Error('Unsupported protocol');
+      }
+    } catch {
+      setError('Enter an absolute http(s) URL or add a valid Base URL first.');
+      return;
     }
 
-    const entry: UrlWithStatus = {
+    const image = imageUrl.trim();
+    if (image && !isHttpUrl(image)) {
+      setError('Image URL must be an absolute http(s) URL.');
+      return;
+    }
+
+    const entry: UrlEntry = {
       loc: fullUrl,
       lastmod: lastmod || undefined,
       changefreq,
       priority,
-      status: 'active',
+      image: image || undefined,
     };
 
-    setUrls([...urls, entry]);
+    setUrls((current) => (
+      current.some((url) => url.loc === entry.loc)
+        ? current
+        : [...current, entry]
+    ));
     setNewUrl('');
+    setImageUrl('');
+    setError('');
   };
 
   const removeUrl = (index: number) => {
-    setUrls(urls.filter((_, i) => i !== index));
+    setUrls((current) => current.filter((_, i) => i !== index));
   };
 
   const generateSitemap = () => {
     let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
     
     if (includeImages) {
-      xml += '<?xml-stylesheet type="text/xsl" href="/sitemap.xsl"?>\n';
       xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n';
       xml += '         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n';
     } else {
-      xml += '<?xml-stylesheet type="text/xsl" href="/sitemap.xsl"?>\n';
       xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
     }
 
@@ -73,10 +104,16 @@ export default function XmlSitemapGeneratorClient() {
       if (url.priority) {
         xml += `    <priority>${url.priority}</priority>\n`;
       }
+      if (includeImages && url.image) {
+        xml += '    <image:image>\n';
+        xml += `      <image:loc>${escapeXml(url.image)}</image:loc>\n`;
+        xml += '    </image:image>\n';
+      }
       xml += '  </url>\n';
     });
 
     xml += '</urlset>';
+    setError('');
     setGenerated(xml);
   };
 
@@ -90,7 +127,7 @@ export default function XmlSitemapGeneratorClient() {
   };
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(generated);
+    navigator.clipboard.writeText(generated).catch(() => {});
   };
 
   const downloadFile = () => {
@@ -105,20 +142,36 @@ export default function XmlSitemapGeneratorClient() {
     URL.revokeObjectURL(url);
   };
 
-  const generateIndexSitemap = () => {
-    let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
-    xml += '<?xml-stylesheet type="text/xsl" href="/sitemapindex.xsl"?>\n';
-    xml += '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
-    
-    if (baseUrl) {
-      xml += '  <sitemap>\n';
-      xml += `    <loc>${baseUrl.replace(/\/$/, '')}/sitemap.xml</loc>\n`;
-      xml += `    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>\n`;
-      xml += '  </sitemap>\n';
-    }
-    
-    xml += '</sitemapindex>';
-    return xml;
+  const loadExample = () => {
+    setBaseUrl('https://example.com');
+    setUrls([{
+      loc: 'https://example.com/about',
+      lastmod: '2026-01-15',
+      changefreq: 'daily',
+      priority: '0.8',
+      image: 'https://example.com/images/about.jpg',
+    }]);
+    setNewUrl('');
+    setLastmod('2026-01-15');
+    setChangefreq('daily');
+    setPriority('0.8');
+    setImageUrl('');
+    setIncludeImages(true);
+    setGenerated('');
+    setError('');
+  };
+
+  const clear = () => {
+    setBaseUrl('');
+    setUrls([]);
+    setNewUrl('');
+    setLastmod('');
+    setChangefreq('weekly');
+    setPriority('0.5');
+    setImageUrl('');
+    setGenerated('');
+    setIncludeImages(false);
+    setError('');
   };
 
   const priorities = [
@@ -139,8 +192,17 @@ export default function XmlSitemapGeneratorClient() {
   return (
     <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
       <div>
-        <label className="tb-v2-tool-label" style={{marginBottom:8}}>Base URL</label>
+        <div className="tb-v2-tool-input-head">
+          <label className="tb-v2-tool-label" htmlFor="sitemap-base-url">Base URL</label>
+          <ToolExampleClearActions
+            onExample={loadExample}
+            onClear={clear}
+            canClear={Boolean(baseUrl || urls.length || newUrl || lastmod || imageUrl || generated || error || includeImages || changefreq !== 'weekly' || priority !== '0.5')}
+            exampleCount={1}
+          />
+        </div>
         <input
+          id="sitemap-base-url"
           type="url"
           value={baseUrl}
           onChange={(e) => setBaseUrl(e.target.value)}
@@ -158,11 +220,13 @@ export default function XmlSitemapGeneratorClient() {
               type="text"
               value={newUrl}
               onChange={(e) => setNewUrl(e.target.value)}
+              aria-label="Sitemap URL"
               placeholder="/page or full URL"
               className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               onKeyDown={(e) => e.key === 'Enter' && addUrl()}
             />
             <button
+              type="button"
               onClick={addUrl}
               className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
             >
@@ -172,8 +236,9 @@ export default function XmlSitemapGeneratorClient() {
 
           <div className="tb-v2-grid-2">
             <div>
-              <label className="block text-sm text-gray-600 mb-1">Last Modified</label>
-              <input
+               <label className="block text-sm text-gray-600 mb-1" htmlFor="sitemap-last-modified">Last Modified</label>
+               <input
+                 id="sitemap-last-modified"
                 type="date"
                 value={lastmod}
                 onChange={(e) => setLastmod(e.target.value)}
@@ -181,8 +246,9 @@ export default function XmlSitemapGeneratorClient() {
               />
             </div>
             <div>
-              <label className="block text-sm text-gray-600 mb-1">Change Frequency</label>
-              <select
+               <label className="block text-sm text-gray-600 mb-1" htmlFor="sitemap-change-frequency">Change Frequency</label>
+               <select
+                 id="sitemap-change-frequency"
                 value={changefreq}
                 onChange={(e) => setChangefreq(e.target.value as UrlEntry['changefreq'])}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500"
@@ -195,8 +261,9 @@ export default function XmlSitemapGeneratorClient() {
           </div>
 
           <div>
-            <label className="block text-sm text-gray-600 mb-1">Priority</label>
-            <select
+             <label className="block text-sm text-gray-600 mb-1" htmlFor="sitemap-priority">Priority</label>
+             <select
+               id="sitemap-priority"
               value={priority}
               onChange={(e) => setPriority(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500"
@@ -206,6 +273,20 @@ export default function XmlSitemapGeneratorClient() {
               ))}
             </select>
           </div>
+
+          {includeImages && (
+            <div>
+              <label className="block text-sm text-gray-600 mb-1" htmlFor="sitemap-image-url">Image URL (optional)</label>
+              <input
+                id="sitemap-image-url"
+                type="url"
+                value={imageUrl}
+                onChange={(e) => setImageUrl(e.target.value)}
+                placeholder="https://example.com/image.jpg"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+          )}
 
           <div className="flex items-center gap-2">
             <input
@@ -229,10 +310,13 @@ export default function XmlSitemapGeneratorClient() {
                       <div className="text-xs text-gray-500">
                         {url.changefreq} | priority: {url.priority}
                         {url.lastmod && ` | ${url.lastmod}`}
+                        {url.image && ` | image: ${url.image}`}
                       </div>
                     </div>
                     <button
+                      type="button"
                       onClick={() => removeUrl(index)}
+                      aria-label={`Remove ${url.loc}`}
                       className="text-red-500 hover:text-red-700 flex-shrink-0"
                     >
                       ×
@@ -248,6 +332,7 @@ export default function XmlSitemapGeneratorClient() {
           <div className="flex justify-between items-center">
             <h3 className="font-medium">Generated Sitemap</h3>
             <button
+              type="button"
               onClick={generateSitemap}
               className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
             >
@@ -260,14 +345,16 @@ export default function XmlSitemapGeneratorClient() {
               <div className="bg-gray-900 rounded-lg p-4 max-h-96 overflow-auto">
                 <pre className="text-green-400 text-xs font-mono whitespace-pre-wrap">{generated}</pre>
               </div>
-              <div className="flex gap-4">
+               <div className="flex gap-4 flex-wrap">
                 <button
+                  type="button"
                   onClick={copyToClipboard}
                   className="text-sm text-blue-600 hover:text-blue-700"
                 >
                   Copy to Clipboard
                 </button>
                 <button
+                  type="button"
                   onClick={downloadFile}
                   className="text-sm text-blue-600 hover:text-blue-700"
                 >
@@ -276,6 +363,7 @@ export default function XmlSitemapGeneratorClient() {
               </div>
             </>
           )}
+          {error && <p className="text-sm text-red-600" role="alert">{error}</p>}
         </div>
       </div>
 

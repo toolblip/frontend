@@ -3159,15 +3159,18 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
    ========================================================================== */
 
 /* Tool form controls */
-.tb-v2-input {
+.tb-v2-input,
+.tb-v2-tool-input {
   width: 100%; padding: 10px 14px;
   border: 1px solid var(--line); border-radius: 9px;
   background: var(--surface); color: var(--fg-0);
   font-family: var(--f-sans); font-size: 14px; line-height: 1.5;
   outline: none; transition: border-color .12s;
 }
-.tb-v2-input:focus { border-color: var(--red); }
-.tb-v2-input::placeholder { color: var(--fg-3); }
+.tb-v2-input:focus,
+.tb-v2-tool-input:focus { border-color: var(--red); }
+.tb-v2-input::placeholder,
+.tb-v2-tool-input::placeholder { color: var(--fg-3); }
 
 .tb-v2-input-mono {
   font-family: var(--f-mono); font-size: 13.5px;
