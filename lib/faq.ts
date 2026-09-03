@@ -1090,7 +1090,7 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'What happens to lines that aren\'t valid URLs?', a: 'They\'re listed separately as unparseable rather than silently dropped or grouped in with the duplicates.' },
     { q: 'Can I get a cleaned, deduplicated list?', a: 'Yes, a Deduplicated URL List section outputs one canonical URL per unique page, ready to copy.' },
   ],
-  'edit': [
+  'edit-pdf': [
     { q: 'Does it let me edit the original text already in the PDF?', a: 'No, it adds new text and image overlays on top of the page rather than modifying existing PDF content.' },
     { q: 'Can I position overlays precisely?', a: 'Yes, anchor to any of 9 positions (left, center, or right combined with top, middle, or bottom) with pixel offsets, and a marker preview shows roughly where each overlay will land.' },
     { q: 'Can I add overlays to specific pages in a multi-page PDF?', a: 'Yes, use Prev and Next to switch pages, and each overlay you add is tied to whichever page was active when you added it.' },
@@ -1150,7 +1150,7 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'How does it actually strip the metadata?', a: 'It redraws the image onto a canvas and re-exports it from there, which drops all embedded metadata as a side effect, not only the specific tags it listed.' },
     { q: 'What if no EXIF tags are detected?', a: 'It still re-encodes the image and offers the cleaned file for download, since some formats or cameras embed metadata this parser doesn\'t decode by name.' },
   ],
-  'extract-img': [
+  'extract-images-from-pdf': [
     { q: 'What image encodings can it pull out of a PDF?', a: 'JPEG images are extracted directly, and grayscale, RGB, CMYK, and indexed-RGB images are rebuilt pixel by pixel into PNG files.' },
     { q: 'Are there image types it can\'t extract?', a: 'Yes, less common encodings like JPEG2000 or CCITT fax compression are skipped rather than guessed at, so every image you get back is a faithful copy of the original.' },
     { q: 'Can I download every extracted image at once?', a: 'Yes, a Download All as ZIP option bundles every image found in the PDF into a single archive built in your browser.' },
@@ -1435,7 +1435,7 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Can I see the raw HTML instead of the rendered preview?', a: 'Yes, a tab next to Preview switches the right pane to show the generated HTML source, then a Copy HTML button grabs exactly what is displayed.' },
     { q: 'What Markdown features are supported?', a: 'GitHub Flavored Markdown, including headings, lists, inline code, fenced code blocks, blockquotes, and links, the same set used in the sample text preloaded when you open the tool.' },
   ],
-  'merge': [
+  'merge-pdfs': [
     { q: 'Can I change the order of the PDFs before merging?', a: 'Yes, each file in the list has up and down arrows to reorder it, so pages appear in your merged document in whatever sequence you choose.' },
     { q: 'What happens if I select a non-PDF file?', a: 'It is silently skipped, only files with a PDF mime type are added to the merge list, so dragging in a mixed folder only picks up the PDFs.' },
     { q: 'How do I know the merge worked correctly?', a: 'The result message reports the exact combined page count, calculated by copying every source PDF\'s pages in order into the new document with pdf-lib.' },

@@ -32,7 +32,7 @@ const TOOL_CONTENT: Record<string, ToolContent> = {
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "add-pages": {
+  "add-pages-to-pdf": {
     description: `Reordering pages that already exist in a document and inserting brand new content into it are two genuinely different operations, dragging page 6 ahead of page 4 doesn't add anything new to the file, while dropping in a blank page for handwritten notes or copying in a page from an entirely different PDF does, and a tool built for one doesn't necessarily handle the other well. This tool adds blank pages or pages copied from another PDF at a specific position within an existing document, leaving the existing pages in their original order. Useful for inserting a blank page for notes between two existing pages in a report, copying a signature page from one PDF into a specific spot in another, or adding several new pages to a document without rebuilding the whole file from scratch.`,
     examples: [
       {
@@ -115,7 +115,7 @@ Output: contract.pdf with the signature page appended`,
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "annotate": {
+  "annotate-pdf": {
     description: `Leaving feedback on a shared draft and actually changing the document's content are two different operations that shouldn't be confused, a reviewer highlighting a paragraph and adding a comment needs the original text to stay visible underneath the markup. This tool draws text comments, highlights, and rectangles over a PDF page without replacing its underlying content. Useful for leaving feedback on a shared draft, highlighting a specific clause in a contract for discussion before anyone edits it, or marking up a document for review while keeping the actual text intact.`,
     examples: [
       {
@@ -1111,7 +1111,7 @@ WCAG AA: Pass (large text)`
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "edit": {
+  "edit-pdf": {
     description: `Adding a note, label, or replacement graphic to a PDF often means opening a full editor just to place one small overlay, while the original document content should remain available underneath for review. This tool adds text and image overlays to PDF pages in your browser without replacing the existing PDF text or images. Useful for adding a visible label to a finished report, placing a logo or signature image on a form, or adding a note to a PDF while keeping its original content intact.`,
     examples: [
       {
@@ -1227,7 +1227,7 @@ Output: brochure-updated.pdf`,
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "extract-img": {
+  "extract-images-from-pdf": {
     description: `A PDF report with embedded photos or charts holds each image as a separate object inside the file's structure, and getting one of those images back out usually means an awkward screenshot-and-crop rather than actually recovering the original embedded file at its full quality. This tool pulls common embedded JPEG and raster images out directly, downloadable individually or bundled together as a ZIP, while reporting uncommon encodings it can't decode. Useful for recovering a photo or chart embedded in a PDF report without the quality loss a screenshot would introduce, pulling supported images out of a PDF at once instead of extracting each one individually, or getting a specific graphic back out of a document where the original image file is otherwise nowhere to be found.`,
     examples: [
       {
@@ -2570,7 +2570,7 @@ Cause: Trailing comma`
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "merge": {
+  "merge-pdfs": {
     description: `Combining several PDFs into one document by hand usually means opening each file separately and manually copying pages across, an error-prone process for anything beyond two or three short files, especially once the pages need to end up in a specific order pulled from multiple different sources rather than just appended one after another. This tool merges multiple PDF files into a single document, combining pages from different sources in whatever order they're actually needed rather than a fixed append-only sequence. Useful for combining several scanned documents into one PDF for a single submission, merging a cover letter, a resume, and a portfolio into one file for a job application, or assembling pages pulled from multiple source PDFs into one document in a specific intended order.`,
     examples: [
       {
