@@ -1,4 +1,5 @@
 import { test, expect, type Page } from '@playwright/test';
+import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 
 // Stage 2 Feature 1 Group B: verify representative real browser-only tool
 // execution paths still run end to end. Focused coverage across distinct
@@ -43,6 +44,75 @@ test.describe('Browser tool execution paths', () => {
       await expect(page.getByRole('button', { name: 'Example', exact: true })).toBeVisible();
       await expect(page.getByRole('button', { name: 'Clear', exact: true })).toBeVisible();
     }
+  });
+
+  test('add-pages-to-pdf edits real page thumbnails in the browser', async ({ page }) => {
+    const createPdf = async (labels: string[]) => {
+      const document = await PDFDocument.create();
+      const font = await document.embedFont(StandardFonts.Helvetica);
+      for (const label of labels) {
+        const pdfPage = document.addPage([400, 300]);
+        pdfPage.drawText(label, { x: 32, y: 250, size: 24, font, color: rgb(0.1, 0.2, 0.4) });
+      }
+      return Buffer.from(await document.save());
+    };
+
+    await page.goto('/tools/add-pages-to-pdf');
+    await dismissCookies(page);
+
+    await page.locator('#base-pdf-upload').setInputFiles({
+      name: 'base.pdf',
+      mimeType: 'application/pdf',
+      buffer: await createPdf(['Base 1', 'Base 2']),
+    });
+    await expect(page.getByText('Base PDF: 2 pages', { exact: true })).toBeVisible();
+    await expect(page.locator('[data-testid="editor-page-thumbnail"]')).toHaveCount(2);
+    await expect(page.getByText('Page 1 of 2', { exact: true })).toBeVisible();
+    await expect(page.locator('[data-testid="page-thumbnail-image"]')).toHaveCount(2);
+    await expect(page.locator('[data-testid="page-thumbnail-image"]').first()).toHaveAttribute('src', /^data:image\/png;base64,/);
+    await expect(page.locator('[data-testid="selected-page-image"]').first()).toBeVisible();
+    await expect(page.locator('[data-testid="selected-page-image"]').first()).toHaveAttribute('src', /^data:image\/png;base64,/);
+
+    await page.locator('#insert-pdf-upload').setInputFiles({
+      name: 'insert.pdf',
+      mimeType: 'application/pdf',
+      buffer: await createPdf(['Insert 1', 'Insert 2']),
+    });
+    await expect(page.getByText('Insert PDF: 2 pages', { exact: true })).toBeVisible();
+    await expect(page.locator('[data-testid="page-thumbnail-image"]')).toHaveCount(4);
+    await page.locator('[data-testid="source-page-insert.pdf-1"]').click();
+    await page.locator('[data-testid="source-page-insert.pdf-2"]').click();
+    await page.getByRole('button', { name: 'Insert selected pages' }).click();
+    await expect(page.getByText('4 pages in editor', { exact: true })).toBeVisible();
+    const editorPages = page.locator('[data-testid="editor-page-thumbnail"]');
+    await expect(editorPages).toHaveCount(4);
+    await expect(editorPages.nth(0)).toHaveAttribute('data-page-label', 'base page 1');
+    await expect(editorPages.nth(1)).toHaveAttribute('data-page-label', 'base page 2');
+    await expect(editorPages.nth(2)).toHaveAttribute('data-page-label', 'insert page 1');
+    await expect(editorPages.nth(3)).toHaveAttribute('data-page-label', 'insert page 2');
+
+    await page.getByRole('button', { name: /Move page 4 up/i }).click();
+    await expect(editorPages.nth(2)).toHaveAttribute('data-page-label', 'insert page 2');
+    await page.getByRole('button', { name: /Delete page 4/i }).click();
+    await expect(page.getByText('3 pages in editor', { exact: true })).toBeVisible();
+    await expect(editorPages).toHaveCount(3);
+    await expect(editorPages.nth(0)).toHaveAttribute('data-page-label', 'base page 1');
+    await expect(editorPages.nth(1)).toHaveAttribute('data-page-label', 'base page 2');
+    await expect(editorPages.nth(2)).toHaveAttribute('data-page-label', 'insert page 2');
+
+    await page.getByRole('button', { name: 'Save Edited PDF' }).click();
+    await expect(page.getByText('Edited PDF ready: 3 pages', { exact: true })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Preview Edited PDF' })).toHaveAttribute('href', /^blob:/);
+    const downloadPromise = page.waitForEvent('download');
+    await page.getByRole('button', { name: 'Download Edited PDF' }).click();
+    const download = await downloadPromise;
+    expect(download.suggestedFilename()).toMatch(/edited.*\.pdf$/i);
+    const downloaded = await download.createReadStream();
+    const chunks: Buffer[] = [];
+    for await (const chunk of downloaded ?? []) chunks.push(Buffer.from(chunk));
+    const output = await PDFDocument.load(Buffer.concat(chunks));
+    expect(output.getPageCount()).toBe(3);
+    expect(output.getPages().every((pdfPage) => pdfPage.getWidth() > 0 && pdfPage.getHeight() > 0)).toBe(true);
   });
 
   test('DNS lookup uses the canonical route and preserves the V2 interface', async ({ page, request }) => {
