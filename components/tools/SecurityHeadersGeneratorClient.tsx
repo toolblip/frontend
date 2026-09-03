@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 interface HeaderConfig {
   enabled: boolean;
@@ -10,72 +11,86 @@ interface HeaderConfig {
 
 const HEADER_PRESETS = [
   { name: 'Basic Security', description: 'Essential security headers for most websites' },
-  { name: 'Strict CSP', description: 'Strict Content Security Policy with strict-dynamic' },
+  { name: 'Strict CSP', description: 'Content Security Policy without inline scripts' },
   { name: 'HSTS Preload', description: 'HTTP Strict Transport Security for preload list' },
   { name: 'Full Protection', description: 'Comprehensive security headers' },
 ];
 
+const createInitialHeaders = (): Record<string, HeaderConfig> => ({
+  'X-Frame-Options': {
+    enabled: true,
+    value: 'SAMEORIGIN',
+    description: 'Prevents clickjacking by controlling iframe embedding',
+  },
+  'X-Content-Type-Options': {
+    enabled: true,
+    value: 'nosniff',
+    description: 'Prevents MIME type sniffing',
+  },
+  'X-XSS-Protection': {
+    enabled: true,
+    value: '1; mode=block',
+    description: 'Legacy XSS filter (replaced by CSP in modern browsers)',
+  },
+  'Referrer-Policy': {
+    enabled: true,
+    value: 'strict-origin-when-cross-origin',
+    description: 'Controls how much referrer info is shared',
+  },
+  'Permissions-Policy': {
+    enabled: true,
+    value: 'accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()',
+    description: 'Controls browser feature permissions',
+  },
+  'Content-Security-Policy': {
+    enabled: false,
+    value: "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: https:; font-src 'self'; connect-src 'self' https:; frame-ancestors 'self';",
+    description: 'Controls which resources can be loaded',
+  },
+  'Strict-Transport-Security': {
+    enabled: false,
+    value: 'max-age=31536000; includeSubDomains',
+    description: 'Forces HTTPS connections (HSTS)',
+  },
+  'X-Permitted-Cross-Domain-Policies': {
+    enabled: false,
+    value: 'none',
+    description: 'Controls Adobe Flash cross-domain requests',
+  },
+  'Cross-Origin-Embedder-Policy': {
+    enabled: false,
+    value: 'require-corp',
+    description: 'Controls cross-origin resource loading',
+  },
+  'Cross-Origin-Opener-Policy': {
+    enabled: false,
+    value: 'same-origin',
+    description: 'Isolates browsing context',
+  },
+  'Cross-Origin-Resource-Policy': {
+    enabled: false,
+    value: 'same-origin',
+    description: 'Controls cross-origin resource sharing',
+  },
+});
+
+function singleLine(value: string): string {
+  return value.replace(/[\r\n]+/g, ' ').trim();
+}
+
+function quoteConfigValue(value: string): string {
+  return singleLine(value).replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+}
+
+function isValidHeaderName(value: string): boolean {
+  return /^[!#$%&'*+\-.^_`|~0-9A-Za-z]+$/.test(value);
+}
+
 export default function SecurityHeadersGeneratorClient() {
   const [preset, setPreset] = useState('Basic Security');
-  const [copied, setCopied] = useState(false);
+  const [copiedFormat, setCopiedFormat] = useState<'headers' | 'nginx' | 'apache' | 'next' | null>(null);
 
-  const [headers, setHeaders] = useState<Record<string, HeaderConfig>>({
-    'X-Frame-Options': {
-      enabled: true,
-      value: 'SAMEORIGIN',
-      description: 'Prevents clickjacking by controlling iframe embedding',
-    },
-    'X-Content-Type-Options': {
-      enabled: true,
-      value: 'nosniff',
-      description: 'Prevents MIME type sniffing',
-    },
-    'X-XSS-Protection': {
-      enabled: true,
-      value: '1; mode=block',
-      description: 'Legacy XSS filter (replaced by CSP in modern browsers)',
-    },
-    'Referrer-Policy': {
-      enabled: true,
-      value: 'strict-origin-when-cross-origin',
-      description: 'Controls how much referrer info is shared',
-    },
-    'Permissions-Policy': {
-      enabled: true,
-      value: 'accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()',
-      description: 'Controls browser feature permissions',
-    },
-    'Content-Security-Policy': {
-      enabled: false,
-      value: "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self' https:; frame-ancestors 'self';",
-      description: 'Controls which resources can be loaded',
-    },
-    'Strict-Transport-Security': {
-      enabled: false,
-      value: 'max-age=31536000; includeSubDomains',
-      description: 'Forces HTTPS connections (HSTS)',
-    },
-    'X-Permitted-Cross-Domain-Policies': {
-      enabled: false,
-      value: 'none',
-      description: 'Controls Adobe Flash cross-domain requests',
-    },
-    'Cross-Origin-Embedder-Policy': {
-      enabled: false,
-      value: 'require-corp',
-      description: 'Controls cross-origin resource loading',
-    },
-    'Cross-Origin-Opener-Policy': {
-      enabled: false,
-      value: 'same-origin',
-      description: 'Isolates browsing context',
-    },
-    'Cross-Origin-Resource-Policy': {
-      enabled: false,
-      value: 'same-origin',
-      description: 'Controls cross-origin resource sharing',
-    },
-  });
+  const [headers, setHeaders] = useState<Record<string, HeaderConfig>>(createInitialHeaders);
 
   const [customHeaders, setCustomHeaders] = useState<{ name: string; value: string }[]>([]);
   const [newHeaderName, setNewHeaderName] = useState('');
@@ -107,6 +122,7 @@ export default function SecurityHeadersGeneratorClient() {
           'X-Content-Type-Options': { ...prev['X-Content-Type-Options'], enabled: true },
           'X-XSS-Protection': { ...prev['X-XSS-Protection'], enabled: true },
           'Referrer-Policy': { ...prev['Referrer-Policy'], enabled: true },
+          'Permissions-Policy': { ...prev['Permissions-Policy'], enabled: true },
         }));
         break;
       case 'Strict CSP':
@@ -117,7 +133,7 @@ export default function SecurityHeadersGeneratorClient() {
           'Content-Security-Policy': {
             ...prev['Content-Security-Policy'],
             enabled: true,
-            value: "default-src 'self'; script-src 'self' 'strict-dynamic' 'nonce-{RANDOM}'; style-src 'self'; img-src 'self' data: https:; font-src 'self'; connect-src 'self' https:; frame-ancestors 'self'; base-uri 'self'; form-action 'self';",
+            value: "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: https:; font-src 'self'; connect-src 'self' https:; frame-ancestors 'self'; base-uri 'self'; form-action 'self';",
           },
           'Strict-Transport-Security': { ...prev['Strict-Transport-Security'], enabled: true },
         }));
@@ -145,7 +161,7 @@ export default function SecurityHeadersGeneratorClient() {
     }
   };
 
-  const [generatedAt, setGeneratedAt] = useState<string>('…');
+  const [generatedAt, setGeneratedAt] = useState<string>('...');
 
   useEffect(() => {
     setGeneratedAt(new Date().toISOString());
@@ -157,13 +173,13 @@ export default function SecurityHeadersGeneratorClient() {
 
     Object.entries(headers).forEach(([name, config]) => {
       if (config.enabled) {
-        output += `${name}: ${config.value}\n`;
+        output += `${name}: ${singleLine(config.value)}\n`;
       }
     });
 
     customHeaders.forEach((h) => {
       if (h.name && h.value) {
-        output += `${h.name}: ${h.value}\n`;
+        output += `${singleLine(h.name)}: ${singleLine(h.value)}\n`;
       }
     });
 
@@ -177,14 +193,13 @@ export default function SecurityHeadersGeneratorClient() {
 
     Object.entries(headers).forEach(([name, config]) => {
       if (config.enabled) {
-        const nginxName = name.toLowerCase().replace(/-/g, '_');
-        output += `    add_header ${name} "${config.value}" always;\n`;
+        output += `    add_header ${name} "${quoteConfigValue(config.value)}" always;\n`;
       }
     });
 
     customHeaders.forEach((h) => {
       if (h.name && h.value) {
-        output += `    add_header ${h.name} "${h.value}" always;\n`;
+        output += `    add_header ${singleLine(h.name)} "${quoteConfigValue(h.value)}" always;\n`;
       }
     });
 
@@ -199,13 +214,13 @@ export default function SecurityHeadersGeneratorClient() {
 
     Object.entries(headers).forEach(([name, config]) => {
       if (config.enabled) {
-        output += `    Header set ${name} "${config.value}"\n`;
+        output += `    Header set ${name} "${quoteConfigValue(config.value)}"\n`;
       }
     });
 
     customHeaders.forEach((h) => {
       if (h.name && h.value) {
-        output += `    Header set ${h.name} "${h.value}"\n`;
+        output += `    Header set ${singleLine(h.name)} "${quoteConfigValue(h.value)}"\n`;
       }
     });
 
@@ -220,8 +235,8 @@ export default function SecurityHeadersGeneratorClient() {
     Object.entries(headers).forEach(([name, config]) => {
       if (config.enabled) {
         output += `  {\n`;
-        output += `    key: '${name}',\n`;
-        output += `    value: '${config.value}',\n`;
+        output += `    key: ${JSON.stringify(name)},\n`;
+        output += `    value: ${JSON.stringify(singleLine(config.value))},\n`;
         output += `  },\n`;
       }
     });
@@ -229,8 +244,8 @@ export default function SecurityHeadersGeneratorClient() {
     customHeaders.forEach((h) => {
       if (h.name && h.value) {
         output += `  {\n`;
-        output += `    key: '${h.name}',\n`;
-        output += `    value: '${h.value}',\n`;
+        output += `    key: ${JSON.stringify(singleLine(h.name))},\n`;
+        output += `    value: ${JSON.stringify(singleLine(h.value))},\n`;
         output += `  },\n`;
       }
     });
@@ -250,16 +265,21 @@ export default function SecurityHeadersGeneratorClient() {
   };
 
   // Guard clipboard access to prevent hydration mismatch
-  const copy = (text: string) => {
+  const copy = (format: 'headers' | 'nginx' | 'apache' | 'next', text: string) => {
     if (!isMounted) return;
     navigator.clipboard.writeText(text).catch(() => {});
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
+    setCopiedFormat(format);
+    setTimeout(() => setCopiedFormat(null), 1500);
   };
 
   const addCustomHeader = () => {
-    if (newHeaderName && newHeaderValue) {
-      setCustomHeaders([...customHeaders, { name: newHeaderName, value: newHeaderValue }]);
+    const name = singleLine(newHeaderName);
+    const value = singleLine(newHeaderValue);
+    if (name && value && isValidHeaderName(name)) {
+      setCustomHeaders((current) => [
+        ...current.filter((header) => header.name.toLowerCase() !== name.toLowerCase()),
+        { name, value },
+      ]);
       setNewHeaderName('');
       setNewHeaderValue('');
     }
@@ -269,16 +289,41 @@ export default function SecurityHeadersGeneratorClient() {
     setCustomHeaders(customHeaders.filter((_, i) => i !== index));
   };
 
+  const loadExample = () => {
+    applyPreset('Strict CSP');
+    setCustomHeaders([{ name: 'Cache-Control', value: 'no-store' }]);
+    setNewHeaderName('');
+    setNewHeaderValue('');
+  };
+
+  const clear = () => {
+    setPreset('Basic Security');
+    setHeaders(createInitialHeaders());
+    setCustomHeaders([]);
+    setNewHeaderName('');
+    setNewHeaderValue('');
+    setCopiedFormat(null);
+  };
+
   const output = generate();
   const nginxOutput = generateNginx();
   const apacheOutput = generateApache();
   const nextJsOutput = generateNextJs();
+  const initialHeaders = createInitialHeaders();
+  const canClear = preset !== 'Basic Security'
+    || customHeaders.length > 0
+    || Boolean(newHeaderName || newHeaderValue)
+    || Object.entries(headers).some(([name, config]) => {
+      const initial = initialHeaders[name];
+      return !initial || config.enabled !== initial.enabled || config.value !== initial.value;
+    });
 
   if (!isMounted) {
     return (
       <div>
         <div className="tb-v2-tool-input-head">
           <span className="tb-v2-tool-label">Presets</span>
+          <ToolExampleClearActions onExample={loadExample} onClear={clear} canClear={canClear} exampleCount={1} />
         </div>
         <div className="tb-v2-mode-tabs" role="tablist">
           {HEADER_PRESETS.map((p) => (
@@ -295,6 +340,7 @@ export default function SecurityHeadersGeneratorClient() {
     <div>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Presets</span>
+        <ToolExampleClearActions onExample={loadExample} onClear={clear} canClear={canClear} exampleCount={1} />
       </div>
       <div className="tb-v2-mode-tabs" role="tablist">
         {HEADER_PRESETS.map((p) => (
@@ -321,7 +367,7 @@ export default function SecurityHeadersGeneratorClient() {
               key={name}
               style={{
                 padding: '12px',
-                border: '1px solid var(--tb-border)',
+                border: '1px solid var(--line)',
                 borderRadius: '8px',
                 opacity: config.enabled ? '1' : '0.6',
               }}
@@ -347,16 +393,18 @@ export default function SecurityHeadersGeneratorClient() {
                 </label>
               </div>
               {config.enabled && (
-                <input
-                  type="text"
-                  value={config.value}
+                  <input
+                    type="text"
+                    id={`header-value-${name}`}
+                    aria-label={`${name} value`}
+                    value={config.value}
                   onChange={(e) =>
                     setHeaders((prev) => ({
                       ...prev,
                       [name]: { ...prev[name], value: e.target.value },
                     }))
                   }
-                  className="tb-v2-tool-input"
+                  className="tb-v2-input"
                   style={{ fontFamily: 'var(--f-mono)', fontSize: '12px' }}
                 />
               )}
@@ -371,22 +419,26 @@ export default function SecurityHeadersGeneratorClient() {
           <div className="tb-v2-tool-label" style={{ marginBottom: '8px' }}>
             Custom Headers
           </div>
-          <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '8px' }}>
             <input
               type="text"
+              aria-label="Custom header name"
               value={newHeaderName}
               onChange={(e) => setNewHeaderName(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && addCustomHeader()}
               placeholder="Header-Name"
-              className="tb-v2-tool-input"
-              style={{ flex: 1 }}
+              className="tb-v2-input"
+              style={{ flex: '1 1 180px', minWidth: 0 }}
             />
             <input
               type="text"
+              aria-label="Custom header value"
               value={newHeaderValue}
               onChange={(e) => setNewHeaderValue(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && addCustomHeader()}
               placeholder="Header value"
-              className="tb-v2-tool-input"
-              style={{ flex: 2 }}
+              className="tb-v2-input"
+              style={{ flex: '2 1 240px', minWidth: 0 }}
             />
             <button
               type="button"
@@ -416,6 +468,7 @@ export default function SecurityHeadersGeneratorClient() {
               <button
                 type="button"
                 onClick={() => removeCustomHeader(i)}
+                aria-label={`Remove ${h.name} header`}
                 style={{ marginLeft: 'auto', background: 'none', border: 'none', cursor: 'pointer', color: '#dc2626' }}
               >
                 ×
@@ -430,10 +483,10 @@ export default function SecurityHeadersGeneratorClient() {
         {output && (
           <button
             type="button"
-            onClick={() => copy(output)}
-            className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}
-          >
-            {copied ? 'Copied' : 'Copy'}
+              onClick={() => copy('headers', output)}
+              className={`tb-v2-copy-btn ${copiedFormat === 'headers' ? 'done' : ''}`}
+            >
+              {copiedFormat === 'headers' ? 'Copied' : 'Copy'}
           </button>
         )}
       </div>
@@ -456,7 +509,8 @@ export default function SecurityHeadersGeneratorClient() {
         <div style={{ marginTop: '8px', position: 'relative' }}>
           <button
             type="button"
-            onClick={() => copy(nginxOutput)}
+            onClick={() => copy('nginx', nginxOutput)}
+            className={copiedFormat === 'nginx' ? 'done' : undefined}
             style={{
               position: 'absolute',
               right: '8px',
@@ -470,7 +524,7 @@ export default function SecurityHeadersGeneratorClient() {
               fontSize: '12px',
             }}
           >
-            Copy
+            {copiedFormat === 'nginx' ? 'Copied' : 'Copy'}
           </button>
           <pre
             className="tb-v2-tool-pre"
@@ -496,7 +550,8 @@ export default function SecurityHeadersGeneratorClient() {
         <div style={{ marginTop: '8px', position: 'relative' }}>
           <button
             type="button"
-            onClick={() => copy(apacheOutput)}
+            onClick={() => copy('apache', apacheOutput)}
+            className={copiedFormat === 'apache' ? 'done' : undefined}
             style={{
               position: 'absolute',
               right: '8px',
@@ -510,7 +565,7 @@ export default function SecurityHeadersGeneratorClient() {
               fontSize: '12px',
             }}
           >
-            Copy
+            {copiedFormat === 'apache' ? 'Copied' : 'Copy'}
           </button>
           <pre
             className="tb-v2-tool-pre"
@@ -536,7 +591,8 @@ export default function SecurityHeadersGeneratorClient() {
         <div style={{ marginTop: '8px', position: 'relative' }}>
           <button
             type="button"
-            onClick={() => copy(nextJsOutput)}
+            onClick={() => copy('next', nextJsOutput)}
+            className={copiedFormat === 'next' ? 'done' : undefined}
             style={{
               position: 'absolute',
               right: '8px',
@@ -550,7 +606,7 @@ export default function SecurityHeadersGeneratorClient() {
               fontSize: '12px',
             }}
           >
-            Copy
+            {copiedFormat === 'next' ? 'Copied' : 'Copy'}
           </button>
           <pre
             className="tb-v2-tool-pre"
@@ -566,7 +622,7 @@ export default function SecurityHeadersGeneratorClient() {
         <ul style={{ margin: 0, paddingLeft: '18px', lineHeight: '1.6' }}>
           <li>Test headers on <a href="https://securityheaders.com" target="_blank" rel="noopener" style={{ color: '#2563eb' }}>securityheaders.com</a></li>
           <li>HSTS with preload is permanent - ensure HTTPS works across all subdomains first</li>
-          <li>CSP 'strict-dynamic' requires a nonce or hash for script execution</li>
+          <li>A strict CSP blocks inline scripts unless you explicitly allow them</li>
           <li>Monitor for false positives after deploying new CSP rules</li>
         </ul>
       </div>
