@@ -160,10 +160,16 @@ export default function PdfPasswordRemoverClient() {
         message = 'PDF re-saved without its existing permission metadata.';
       } catch {
         try {
-          bytes = await flattenPdfWithPassword(fileBytes, password.trim());
-          message = 'PDF unlocked and flattened into a new password-free PDF.';
+          const doc = await PDFDocument.load(fileBytes, { ignoreEncryption: true });
+          bytes = await doc.save();
+          message = 'PDF re-saved without its existing permission metadata.';
         } catch {
-          throw new Error(password.trim() ? 'The password was incorrect, or this PDF format is not supported.' : 'This PDF requires an opening password. Enter the correct password and try again.');
+          try {
+            bytes = await flattenPdfWithPassword(fileBytes, password.trim());
+            message = 'PDF unlocked and flattened into a new password-free PDF.';
+          } catch {
+            throw new Error(password.trim() ? 'The password was incorrect, or this PDF format is not supported.' : 'This PDF requires an opening password. Enter the correct password and try again.');
+          }
         }
       }
       if (requestId !== loadVersionRef.current) return;
