@@ -100,7 +100,7 @@ export default function HtaccessRedirectGeneratorClient() {
         lines.push(
           '    # Add www',
           `    RewriteCond %{HTTP_HOST} ^${escapedDomain}$ [NC]`,
-          `    RewriteRule ^ https://www.${domain}%{REQUEST_URI} [L,R=301]`,
+          `    RewriteRule ^ ${forceHttps ? `https://www.${domain}%{REQUEST_URI}` : `//www.${domain}%{REQUEST_URI}`} [L,R=301]`,
           '',
         );
       }
@@ -109,7 +109,7 @@ export default function HtaccessRedirectGeneratorClient() {
         lines.push(
           '    # Remove www',
           `    RewriteCond %{HTTP_HOST} ^www\\.${escapedDomain}$ [NC]`,
-          `    RewriteRule ^ https://${domain}%{REQUEST_URI} [L,R=301]`,
+          `    RewriteRule ^ ${forceHttps ? `https://${domain}%{REQUEST_URI}` : `//${domain}%{REQUEST_URI}`} [L,R=301]`,
           '',
         );
       }

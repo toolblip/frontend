@@ -466,7 +466,7 @@ export default function JsonLdGeneratorClient() {
           setGenerated('');
           return;
         }
-        if (basicData.logo.trim() && !isHttpUrl(basicData.logo.trim())) {
+        if (schemaType === 'Organization' && basicData.logo.trim() && !isHttpUrl(basicData.logo.trim())) {
           setError('Logo URL must be an absolute http(s) URL.');
           setGenerated('');
           return;
