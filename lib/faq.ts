@@ -1025,7 +1025,7 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'What exactly counts as "Total Savings"?', a: 'The total amount removed from the original price by both discounts. Tax is shown separately since it is an addition rather than a saving.' },
     { q: 'Does it accept discounts entered as a decimal like 0.25 instead of 25?', a: 'No, the Discount Percentage field expects a whole percent value like 25, not a decimal fraction.' },
   ],
-  'dns-lookup-v2': [
+  'dns-lookup': [
     { q: 'Where do the DNS results come from?', a: 'Live queries to Google\'s public DNS-over-HTTPS resolver (dns.google), not cached or simulated data.' },
     { q: 'Can I look up multiple record types in one click?', a: 'Yes, toggle any combination of A, AAAA, MX, TXT, and CNAME and Lookup All queries them simultaneously.' },
     { q: 'What happens if a record type does not exist for the domain?', a: 'That type\'s card shows "No records found" rather than an error, while a genuine lookup failure shows "Lookup failed" instead.' },

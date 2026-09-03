@@ -129,7 +129,6 @@ import DecimalToBinaryClient from '@/components/tools/DecimalToBinaryClient';
 import DecimalToHexClient from '@/components/tools/DecimalToHexClient';
 import DecodeToolClient from '@/components/tools/DecodeToolClient';
 import DiffToolClient from '@/components/tools/DiffToolClient';
-import DnsLookupClient from '@/components/tools/DnsLookupClient';
 import DuplicateLineFinderClient from '@/components/tools/DuplicateLineFinderClient';
 import DuplicateLineRemovalClient from '@/components/tools/DuplicateLineRemovalClient';
 import EmailGeneratorClient from '@/components/tools/EmailGeneratorClient';
@@ -1032,7 +1031,7 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'diff-tool':
       return <DiffToolClient />;
     case 'dns-lookup':
-      return <DnsLookupClient />;
+      return <DnsLookupV2Client />;
     case 'duplicate-line-finder':
       return <DuplicateLineFinderClient />;
     case 'duplicate-line-removal':
