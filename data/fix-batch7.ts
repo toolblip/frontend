@@ -77,7 +77,7 @@ const FIX_BATCH_7: Record<string, FixBatchEntry> = {
     ],
   },
 
-  edit: {
+  'edit-pdf': {
     description: `A PDF is usually the last stop for a document, exported once from whatever created it and then treated as final, which becomes a real problem the moment a typo turns up or a date needs updating and nobody has the original Word file or design source anymore. This tool edits a PDF directly: click into a block of text and retype it, swap an image for a different one, move an element to a new spot on the page, all without needing to regenerate the file from source. It's built for the small, specific fixes that come up after a document already exists as a PDF: correcting a misspelled name on a certificate, updating a price on a flyer, replacing a logo that changed after the document was already finalized and sent out.`,
     examples: [
       {

@@ -109,7 +109,7 @@ const FIX_BATCH_70: Record<string, FixBatchEntry> = {
     ],
   },
 
-  edit: {
+  'edit-pdf': {
     description: `Discovering a typo in an already-finalized PDF, or needing to swap out an outdated logo baked directly into an exported document, doesn't have to mean going back to the original source file and re-exporting everything from scratch, when the actual text and images inside that PDF can just be changed directly. This tool edits text and images in a PDF file, changing content that's already there directly in the browser rather than only adding a new layer on top of it. Useful for fixing a typo discovered in a contract or a report that's already been exported to PDF, replacing an outdated image or a logo directly within an existing document, or making a small correction to a finalized PDF without needing to track down and re-export the original source file.`,
     examples: [
       {

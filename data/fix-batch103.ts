@@ -157,7 +157,7 @@ const FIX_BATCH_103: Record<string, FixBatchEntry> = {
     ],
   },
 
-  merge: {
+  'merge-pdfs': {
     description: `Combining several PDFs into one document by hand usually means opening each file separately and manually copying pages across, an error-prone process for anything beyond two or three short files, especially once the pages need to end up in a specific order pulled from multiple different sources rather than just appended one after another. This tool merges multiple PDF files into a single document, combining pages from different sources in whatever order they're actually needed rather than a fixed append-only sequence. Useful for combining several scanned documents into one PDF for a single submission, merging a cover letter, a resume, and a portfolio into one file for a job application, or assembling pages pulled from multiple source PDFs into one document in a specific intended order.`,
     examples: [
       {

@@ -141,7 +141,7 @@ const FIX_BATCH_97: Record<string, FixBatchEntry> = {
     ],
   },
 
-  edit: {
+  'edit-pdf': {
     description: `Adding a note, label, or replacement graphic to a PDF often means opening a full editor just to place one small overlay, while the original document content should remain available underneath for review. This tool adds text and image overlays to PDF pages in your browser without replacing the existing PDF text or images. Useful for adding a visible label to a finished report, placing a logo or signature image on a form, or adding a note to a PDF while keeping its original content intact.`,
     examples: [
       {
