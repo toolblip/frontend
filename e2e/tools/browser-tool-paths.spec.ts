@@ -12,6 +12,39 @@ async function dismissCookies(page: Page) {
 }
 
 test.describe('Browser tool execution paths', () => {
+  test('PDF canonical routes redirect legacy slugs and expose their controls', async ({ page, request }) => {
+    const redirects = [
+      ['add-pages', 'add-pages-to-pdf'],
+      ['annotate', 'annotate-pdf'],
+      ['edit', 'edit-pdf'],
+      ['extract-img', 'extract-images-from-pdf'],
+      ['merge', 'merge-pdfs'],
+    ] as const;
+
+    for (const [legacySlug, canonicalSlug] of redirects) {
+      const response = await request.get(`/tools/${legacySlug}`, { maxRedirects: 0 });
+      expect(response.status()).toBe(308);
+      expect(response.headers().location).toBe(`/tools/${canonicalSlug}`);
+    }
+
+    const canonicalPages = [
+      ['add-pages-to-pdf', 'Add Pages to PDF'],
+      ['annotate-pdf', 'PDF Annotator'],
+      ['edit-pdf', 'Edit PDF'],
+      ['extract-images-from-pdf', 'Extract Images from PDF'],
+      ['merge-pdfs', 'Merge PDFs'],
+    ] as const;
+
+    for (const [canonicalSlug, heading] of canonicalPages) {
+      await page.goto(`/tools/${canonicalSlug}`);
+      await dismissCookies(page);
+      await expect(page).toHaveURL(new RegExp(`/tools/${canonicalSlug}$`));
+      await expect(page.getByRole('heading', { level: 1, name: heading, exact: true })).toBeVisible();
+      await expect(page.getByRole('button', { name: 'Example', exact: true })).toBeVisible();
+      await expect(page.getByRole('button', { name: 'Clear', exact: true })).toBeVisible();
+    }
+  });
+
   test('DNS lookup uses the canonical route and preserves the V2 interface', async ({ page, request }) => {
     for (const legacyPath of ['/tools/dns-lookup-v2', '/tools/dns-lookup-express']) {
       const response = await request.get(legacyPath, { maxRedirects: 0 });

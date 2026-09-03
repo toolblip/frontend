@@ -93,7 +93,7 @@ const FIX_BATCH_22: Record<string, FixBatchEntry> = {
     ],
   },
 
-  'add-pages': {
+  'add-pages-to-pdf': {
     description: `Building a finished PDF sometimes means combining pieces that started as separate documents entirely: inserting a blank page for handwritten notes into a form, merging a signed signature page from one file into the main contract, or reordering pages after realizing the appendix should come before the summary instead of after it. This tool works at the page level rather than editing content within a page: add blank pages at a specific position, insert existing pages pulled from another PDF, and rearrange the resulting order until the document reads the way it's supposed to. Useful for assembling a multi-part document from pieces that started as separate files, inserting a blank page into a form that needs space for handwritten additions, or fixing a PDF whose pages ended up in the wrong order after scanning.`,
     examples: [
       {

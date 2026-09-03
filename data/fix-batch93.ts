@@ -61,7 +61,7 @@ const FIX_BATCH_93: Record<string, FixBatchEntry> = {
     ],
   },
 
-  annotate: {
+  'annotate-pdf': {
     description: `Leaving feedback on a shared draft and actually changing the document's content are two different operations that shouldn't be confused, a reviewer highlighting a paragraph and adding a comment needs the original text to stay visible underneath the markup. This tool draws text comments, highlights, and rectangles over a PDF page without replacing its underlying content. Useful for leaving feedback on a shared draft, highlighting a specific clause in a contract for discussion before anyone edits it, or marking up a document for review while keeping the actual text intact.`,
     examples: [
       {

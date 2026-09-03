@@ -77,7 +77,7 @@ const FIX_BATCH_44: Record<string, FixBatchEntry> = {
     ],
   },
 
-  'extract-img': {
+  'extract-images-from-pdf': {
     description: `A PDF report with embedded photos or charts holds each image as a separate object inside the file's structure, and getting one of those images back out usually means an awkward screenshot-and-crop rather than actually recovering the original embedded file at its full quality. This tool pulls common embedded JPEG and raster images out directly, downloadable individually or bundled together as a ZIP, while reporting uncommon encodings it can't decode. Useful for recovering a photo or chart embedded in a PDF report without the quality loss a screenshot would introduce, pulling supported images out of a PDF at once instead of extracting each one individually, or getting a specific graphic back out of a document where the original image file is otherwise nowhere to be found.`,
     examples: [
       {

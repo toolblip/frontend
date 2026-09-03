@@ -1164,13 +1164,13 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <AccessibilityCheckerClient />;
     case 'aac-to-wav':
       return <AacToWavClient />;
-    case 'add-pages':
+    case 'add-pages-to-pdf':
       return <PdfPageAdderClient />;
     case 'add-subtitles':
       return <AddSubtitlesClient />;
     case 'algorithm-visualizer':
       return <AlgorithmVisualizerClient />;
-    case 'annotate':
+    case 'annotate-pdf':
       return <AnnotateClient />;
     case 'ascii-art-generator':
       return <AsciiArtGeneratorClient />;
@@ -1546,7 +1546,7 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <DuplicatePhraseDetectorClient />;
     case 'duplicate-url-detector':
       return <DuplicateUrlDetectorClient />;
-    case 'edit':
+    case 'edit-pdf':
       return <EditClient />;
     case 'encodings-ref':
       return <EncodingsRefClient />;
@@ -1572,7 +1572,7 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <ExifRemoverClient />;
     case 'extract-audio':
       return <ExtractAudioClient />;
-    case 'extract-img':
+    case 'extract-images-from-pdf':
       return <ExtractImgClient />;
     case 'favicon-browser':
     case 'favicon-checker-express':
@@ -1857,7 +1857,7 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'image-rotate': return <ImageRotateToolClient />;
     case 'image-shadow-generator':
       return <ImageShadowGeneratorClient />;
-    case 'merge':
+    case 'merge-pdfs':
       return <MergeClient />;
     case 'meme-maker':
       return <MemeMakerClient />;
