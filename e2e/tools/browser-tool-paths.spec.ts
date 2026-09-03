@@ -28,18 +28,18 @@ test.describe('Browser tool execution paths', () => {
     }
 
     const canonicalPages = [
-      ['add-pages-to-pdf', /Add Pages to PDF/i],
-      ['annotate-pdf', /PDF Annotator/i],
-      ['edit-pdf', /Edit PDF/i],
-      ['extract-images-from-pdf', /Extract Images from PDF/i],
-      ['merge-pdfs', /Merge PDFs/i],
+      ['add-pages-to-pdf', 'Add Pages to PDF'],
+      ['annotate-pdf', 'PDF Annotator'],
+      ['edit-pdf', 'Edit PDF'],
+      ['extract-images-from-pdf', 'Extract Images from PDF'],
+      ['merge-pdfs', 'Merge PDFs'],
     ] as const;
 
     for (const [canonicalSlug, heading] of canonicalPages) {
       await page.goto(`/tools/${canonicalSlug}`);
       await dismissCookies(page);
       await expect(page).toHaveURL(new RegExp(`/tools/${canonicalSlug}$`));
-      await expect(page.getByRole('heading', { name: heading })).toBeVisible();
+      await expect(page.getByRole('heading', { level: 1, name: heading, exact: true })).toBeVisible();
       await expect(page.getByRole('button', { name: 'Example', exact: true })).toBeVisible();
       await expect(page.getByRole('button', { name: 'Clear', exact: true })).toBeVisible();
     }
