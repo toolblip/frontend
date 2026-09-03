@@ -1041,7 +1041,7 @@ WCAG AA: Pass (large text)`
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "dns-lookup-v2": {
+  "dns-lookup": {
     description: `A domain resolving correctly over legacy IPv4 says nothing about whether it also resolves over IPv6, and checking that specifically means looking up an AAAA record, a detail that's easy to overlook entirely if a lookup tool only ever checks the older record types most domains have carried for decades. This tool queries A, AAAA, MX, TXT, and CNAME records for any domain, including IPv6 addressing alongside the more traditional record types. Useful for confirming a domain actually resolves correctly over IPv6, not just legacy IPv4, checking whether a newly added AAAA record has propagated, or auditing a domain's records with modern IPv6 addressing included rather than assumed.`,
     examples: [
 

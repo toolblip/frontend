@@ -12,6 +12,21 @@ async function dismissCookies(page: Page) {
 }
 
 test.describe('Browser tool execution paths', () => {
+  test('DNS lookup uses the canonical route and preserves the V2 interface', async ({ page, request }) => {
+    for (const legacyPath of ['/tools/dns-lookup-v2', '/tools/dns-lookup-express']) {
+      const response = await request.get(legacyPath, { maxRedirects: 0 });
+      expect(response.status()).toBe(308);
+      expect(response.headers().location).toBe('/tools/dns-lookup');
+    }
+
+    await page.goto('/tools/dns-lookup');
+    await dismissCookies(page);
+    await expect(page).toHaveURL(/\/tools\/dns-lookup$/);
+    await expect(page.getByRole('button', { name: 'Lookup All' })).toBeVisible();
+    await expect(page.getByText('Results by Type', { exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'AAAA', exact: true })).toBeVisible();
+  });
+
   test('json-formatter formats valid JSON live and flags syntax errors', async ({ page }) => {
     await page.goto('/tools/json-formatter');
     await dismissCookies(page);
