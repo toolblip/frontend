@@ -2452,7 +2452,21 @@ button.tb-v2-mm-more-row-btn {
 }
 
 /* PDF extractor preview */
-.tb-pdf-extract-preview-toggle { margin-bottom: 16px; }
+.tb-pdf-extract-preview-toggle {
+  margin-bottom: 16px;
+  border-radius: 8px;
+  border-color: var(--line-2);
+  background: var(--surface-2);
+  font-weight: 650;
+}
+.tb-pdf-extract-preview-toggle > span {
+  font-size: 16px;
+  line-height: 1;
+}
+.tb-pdf-extract-preview-toggle:hover {
+  border-color: var(--red);
+  color: var(--red);
+}
 .tb-pdf-extract-preview-section {
   width: 100%;
   max-width: 1040px;
