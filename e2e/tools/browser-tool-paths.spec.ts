@@ -121,11 +121,38 @@ test.describe('Browser tool execution paths', () => {
 
     await page.getByRole('button', { name: 'Example', exact: true }).click();
     await expect(page.getByText('annotate-sample.pdf - 2 pages', { exact: true })).toBeVisible();
+    await expect(page.getByText('Click or drag a PDF here', { exact: true })).toHaveCount(0);
     await expect(page.getByTestId('annotate-preview-image')).toBeVisible();
     await expect(page.getByText('Page 1 of 2', { exact: true })).toBeVisible();
 
+    const layout = await page.evaluate(() => {
+      const editor = document.querySelector('.tb-pdf-annotate-editor')!.getBoundingClientRect();
+      const tools = document.querySelector('.tb-pdf-annotate-tools')!.getBoundingClientRect();
+      const preview = document.querySelector('.tb-pdf-annotate-preview-viewport')!.getBoundingClientRect();
+      const pager = document.querySelector('.tb-pdf-annotate-pager')!.getBoundingClientRect();
+      const pageSurface = document.querySelector('.tb-pdf-annotate-page')!.getBoundingClientRect();
+      return {
+        editorWidth: editor.width,
+        editorBottom: editor.bottom,
+        toolsBottom: tools.bottom,
+        previewTop: preview.top,
+        previewBottom: preview.bottom,
+        pagerTop: pager.top,
+        pagerBottom: pager.bottom,
+        pageWidth: pageSurface.width,
+        pageHeight: pageSurface.height,
+        previewWidth: preview.width,
+        previewHeight: preview.height,
+      };
+    });
+    expect(layout.toolsBottom).toBeLessThanOrEqual(layout.previewTop + 1);
+    expect(layout.pagerTop).toBeGreaterThanOrEqual(layout.previewBottom - 1);
+    expect(layout.pagerBottom).toBeLessThanOrEqual(layout.editorBottom + 1);
+    expect(layout.pageWidth).toBeLessThanOrEqual(layout.previewWidth + 1);
+    expect(layout.pageHeight).toBeLessThanOrEqual(layout.previewHeight + 1);
+
     await page.evaluate(() => {
-      document.querySelector('[data-testid="annotate-preview"]')?.scrollIntoView({ block: 'start', behavior: 'instant' as ScrollBehavior });
+      document.querySelector('[data-testid="annotate-preview"]')?.scrollIntoView({ block: 'center', behavior: 'instant' as ScrollBehavior });
     });
     await page.waitForTimeout(300);
     const previewBox = await page.getByTestId('annotate-preview').boundingBox();
