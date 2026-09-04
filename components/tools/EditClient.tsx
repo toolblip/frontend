@@ -112,6 +112,7 @@ export default function EditClient() {
   const [zoom, setZoom] = useState(1);
   const [activeTool, setActiveTool] = useState<ActiveTool>(null);
   const [pendingImage, setPendingImage] = useState<PendingImage | null>(null);
+  const [isLoadingExample, setIsLoadingExample] = useState(false);
   const [textItems, setTextItems] = useState<PdfTextItem[]>([]);
   const [selectedText, setSelectedText] = useState<PdfTextItem | null>(null);
   const [eraseStart, setEraseStart] = useState<{ x: number; y: number } | null>(null);
@@ -188,14 +189,23 @@ export default function EditClient() {
   };
 
   const loadExample = async () => {
+    if (isLoadingExample) return;
     const requestId = ++loadVersionRef.current;
-    const doc = await PDFDocument.create();
-    const page = doc.addPage([612, 792]);
-    const font = await doc.embedFont(StandardFonts.Helvetica);
-    page.drawText('Sample PDF Document', { x: 60, y: 720, size: 22, font });
-    page.drawText('This is a placeholder page for practicing edits.', { x: 60, y: 690, size: 12, font, color: rgb(0.4, 0.4, 0.4) });
-    const bytes = await doc.save();
-    if (requestId === loadVersionRef.current) await loadPdf(bytes, 'sample.pdf', requestId);
+    setIsLoadingExample(true);
+    setError('');
+    try {
+      const doc = await PDFDocument.create();
+      const page = doc.addPage([612, 792]);
+      const font = await doc.embedFont(StandardFonts.Helvetica);
+      page.drawText('Sample PDF Document', { x: 60, y: 720, size: 22, font });
+      page.drawText('This is a placeholder page for practicing edits.', { x: 60, y: 690, size: 12, font, color: rgb(0.4, 0.4, 0.4) });
+      const bytes = await doc.save();
+      if (requestId === loadVersionRef.current) await loadPdf(bytes, 'sample.pdf', requestId);
+    } catch {
+      if (requestId === loadVersionRef.current) setError('Could not load the sample PDF. Please try again.');
+    } finally {
+      if (requestId === loadVersionRef.current) setIsLoadingExample(false);
+    }
   };
 
   const addTextOverlay = (x: number, y: number) => {
@@ -467,7 +477,7 @@ export default function EditClient() {
     <div className="tb-v2-tool-card">
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">PDF File</span>
-        <ToolExampleClearActions onExample={loadExample} onClear={clearAll} canClear={Boolean(fileBytes || overlays.length || error)} exampleCount={1} />
+        <ToolExampleClearActions onExample={loadExample} onClear={clearAll} canClear={Boolean(fileBytes || overlays.length || error || isLoadingExample)} exampleCount={1} exampleDisabled={isLoadingExample} />
       </div>
       <div style={{ padding: 20 }}>
         {!fileBytes && (
@@ -484,6 +494,7 @@ export default function EditClient() {
             <input ref={fileInputRef} type="file" accept="application/pdf" onChange={(e) => handleFile(e.target.files?.[0])} style={{ display: 'none' }} />
           </div>
         )}
+        {isLoadingExample && <div className="tb-v2-banner" role="status" style={{ marginTop: 12 }}>Loading sample PDF...</div>}
         {error && <div className="tb-v2-banner tb-v2-banner-err" style={{ marginTop: 12 }}>{error}</div>}
       </div>
 
