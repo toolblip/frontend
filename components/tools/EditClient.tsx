@@ -35,6 +35,13 @@ interface ImageOverlay {
 }
 
 type Overlay = TextOverlay | ImageOverlay;
+type ActiveTool = 'text' | 'image' | null;
+
+interface PendingImage {
+  bytes: Uint8Array;
+  format: 'png' | 'jpg';
+  previewUrl: string;
+}
 
 function hexToRgb01(hex: string): [number, number, number] {
   const m = hex.replace('#', '');
@@ -68,31 +75,30 @@ export default function EditClient() {
   const [previewFailed, setPreviewFailed] = useState(false);
   const [previewViewportSize, setPreviewViewportSize] = useState({ width: 0, height: 0 });
   const [zoom, setZoom] = useState(1);
+  const [activeTool, setActiveTool] = useState<ActiveTool>(null);
+  const [pendingImage, setPendingImage] = useState<PendingImage | null>(null);
 
   const [draftText, setDraftText] = useState('New text');
   const [draftFontSize, setDraftFontSize] = useState(24);
   const [draftColor, setDraftColor] = useState('#111111');
-  const [anchorX, setAnchorX] = useState<AnchorX>('left');
-  const [anchorY, setAnchorY] = useState<AnchorY>('top');
-  const [offsetX, setOffsetX] = useState(40);
-  const [offsetY, setOffsetY] = useState(40);
   const [imageWidthPt, setImageWidthPt] = useState(150);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const imageInputRef = useRef<HTMLInputElement>(null);
   const previewViewportRef = useRef<HTMLDivElement>(null);
-  const previewPageRef = useRef<HTMLDivElement>(null);
   const loadVersionRef = useRef(0);
 
   const resetDocument = () => {
     overlays.forEach(ov => { if (ov.kind === 'image') URL.revokeObjectURL(ov.previewUrl); });
+    if (pendingImage) URL.revokeObjectURL(pendingImage.previewUrl);
     setFileBytes(null); setFileName(''); setPageSizes([]); setCurrentPage(1); setOverlays([]); setIsDragging(false); setError(''); setStatus('idle');
+    setActiveTool(null); setPendingImage(null); setZoom(1);
   };
 
   const clearAll = () => {
     loadVersionRef.current += 1;
     resetDocument();
-    setDraftText('New text'); setDraftFontSize(24); setDraftColor('#111111'); setAnchorX('left'); setAnchorY('top'); setOffsetX(40); setOffsetY(40); setImageWidthPt(150);
+    setDraftText('New text'); setDraftFontSize(24); setDraftColor('#111111'); setImageWidthPt(150);
     if (fileInputRef.current) fileInputRef.current.value = '';
     if (imageInputRef.current) imageInputRef.current.value = '';
   };
@@ -153,12 +159,13 @@ export default function EditClient() {
     if (requestId === loadVersionRef.current) await loadPdf(bytes, 'sample.pdf', requestId);
   };
 
-  const addTextOverlay = () => {
+  const addTextOverlay = (x: number, y: number) => {
     if (!draftText.trim() || !fileBytes) return;
     setOverlays(o => [...o, {
       id: nextOverlayId++, kind: 'text', page: currentPage, text: draftText,
-      fontSize: draftFontSize, color: draftColor, anchorX, anchorY, offsetX, offsetY,
+      fontSize: draftFontSize, color: draftColor, anchorX: 'left', anchorY: 'top', offsetX: x, offsetY: y,
     }]);
+    setActiveTool(null);
     setStatus('idle');
   };
 
@@ -171,11 +178,32 @@ export default function EditClient() {
     if (requestId !== loadVersionRef.current || !fileBytes) return;
     const bytes = new Uint8Array(buffer);
     const previewUrl = URL.createObjectURL(file);
-    setOverlays(o => [...o, {
-      id: nextOverlayId++, kind: 'image', page: currentPage, bytes, format, previewUrl,
-      widthPt: imageWidthPt, anchorX, anchorY, offsetX, offsetY,
-    }]);
+    if (pendingImage) URL.revokeObjectURL(pendingImage.previewUrl);
+    setPendingImage({ bytes, format, previewUrl });
+    setActiveTool('image');
     setStatus('idle');
+  };
+
+  const handlePreviewClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (!activeTool || !fileBytes) return;
+    const rect = event.currentTarget.getBoundingClientRect();
+    const x = Math.max(0, Math.min(pageSize.width, ((event.clientX - rect.left) / rect.width) * pageSize.width));
+    const y = Math.max(0, Math.min(pageSize.height, ((event.clientY - rect.top) / rect.height) * pageSize.height));
+
+    if (activeTool === 'text') {
+      addTextOverlay(x, y);
+      return;
+    }
+
+    if (pendingImage) {
+      setOverlays(o => [...o, {
+        id: nextOverlayId++, kind: 'image', page: currentPage, bytes: pendingImage.bytes, format: pendingImage.format,
+        previewUrl: pendingImage.previewUrl, widthPt: imageWidthPt, anchorX: 'left', anchorY: 'top', offsetX: x, offsetY: y,
+      }]);
+      setPendingImage(null);
+      setActiveTool(null);
+      setStatus('idle');
+    }
   };
 
   const removeOverlay = (id: number) => { setOverlays(o => { const removed = o.find(x => x.id === id); if (removed?.kind === 'image') URL.revokeObjectURL(removed.previewUrl); return o.filter(x => x.id !== id); }); setStatus('idle'); };
@@ -332,8 +360,11 @@ export default function EditClient() {
               <span className="tb-v2-tool-label">PDF canvas</span>
               <div ref={previewViewportRef} className="tb-pdf-edit-preview-viewport">
                 <div
-                  ref={previewPageRef}
                   className="tb-pdf-edit-page"
+                  role="button"
+                  tabIndex={activeTool ? 0 : -1}
+                  aria-label={activeTool === 'text' ? 'Click the PDF page to place text' : activeTool === 'image' ? 'Click the PDF page to place image' : 'PDF page preview'}
+                  onClick={handlePreviewClick}
                   style={{ width: displayPageSize.width, height: displayPageSize.height }}
                 >
                   {preview ? (
@@ -383,42 +414,38 @@ export default function EditClient() {
               <p className="tb-pdf-edit-preview-hint">Added text and images appear directly on the page.</p>
             </div>
 
-            <div className="tb-pdf-edit-toolbar">
-            <div className="tb-pdf-edit-tool tb-v2-option-group" style={{ marginBottom: 16 }}>
-              <label className="tb-v2-tool-label">Add Text</label>
-              <input type="text" value={draftText} onChange={e => setDraftText(e.target.value)} className="tb-v2-input" placeholder="Type text" style={{ marginBottom: 8 }} />
-              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                <label style={{ fontSize: 12 }}>Size <input type="number" min={6} max={200} value={draftFontSize} onChange={e => setDraftFontSize(Number(e.target.value) || 24)} className="tb-v2-input" style={{ width: 70 }} /></label>
-                <label style={{ fontSize: 12 }}>Color <input type="color" value={draftColor} onChange={e => setDraftColor(e.target.value)} style={{ verticalAlign: 'middle' }} /></label>
-              </div>
-              <button type="button" onClick={addTextOverlay} aria-label="Add Text Overlay" className="tb-v2-btn tb-v2-btn-primary" style={{ marginTop: 10 }}>Add Text</button>
-            </div>
-
-            <div className="tb-pdf-edit-tool tb-v2-option-group" style={{ marginBottom: 16 }}>
-              <label className="tb-v2-tool-label">Add Image</label>
-              <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 8 }}>
-                <label style={{ fontSize: 12 }}>Width (pt) <input type="number" min={10} max={600} value={imageWidthPt} onChange={e => setImageWidthPt(Number(e.target.value) || 150)} className="tb-v2-input" style={{ width: 80 }} /></label>
-               <button type="button" onClick={() => imageInputRef.current?.click()} aria-label="Choose Image" className="tb-v2-btn-sm">Add Image</button>
-                <input ref={imageInputRef} type="file" accept="image/png,image/jpeg" onChange={e => handleImageFile(e.target.files?.[0])} style={{ display: 'none' }} />
-              </div>
-            </div>
-
-            <div className="tb-pdf-edit-tool tb-v2-option-group" style={{ marginBottom: 16 }}>
-              <label className="tb-v2-tool-label">Position</label>
-              <div style={{ display: 'flex', gap: 6, marginBottom: 6 }}>
-                {(['left', 'center', 'right'] as AnchorX[]).map(a => (
-                  <button key={a} type="button" onClick={() => setAnchorX(a)} className={`tb-v2-mode-tab ${anchorX === a ? 'on' : ''}`}>{a}</button>
-                ))}
-                {(['top', 'middle', 'bottom'] as AnchorY[]).map(a => (
-                  <button key={a} type="button" onClick={() => setAnchorY(a)} className={`tb-v2-mode-tab ${anchorY === a ? 'on' : ''}`}>{a}</button>
-                ))}
-              </div>
-              <div style={{ display: 'flex', gap: 8 }}>
-                <label style={{ fontSize: 12 }}>Offset X (pt) <input type="number" value={offsetX} onChange={e => setOffsetX(Number(e.target.value) || 0)} className="tb-v2-input" style={{ width: 70 }} /></label>
-                <label style={{ fontSize: 12 }}>Offset Y (pt) <input type="number" value={offsetY} onChange={e => setOffsetY(Number(e.target.value) || 0)} className="tb-v2-input" style={{ width: 70 }} /></label>
-              </div>
-            </div>
-
+            <div className="tb-pdf-edit-toolbar" aria-label="PDF editing tools">
+              <button
+                type="button"
+                className={`tb-pdf-edit-tool-button ${activeTool === 'text' ? 'active' : ''}`}
+                aria-pressed={activeTool === 'text'}
+                onClick={() => setActiveTool(tool => tool === 'text' ? null : 'text')}
+              >
+                <span aria-hidden="true">T</span> Text
+              </button>
+              <button
+                type="button"
+                className={`tb-pdf-edit-tool-button ${activeTool === 'image' ? 'active' : ''}`}
+                aria-pressed={activeTool === 'image'}
+                onClick={() => imageInputRef.current?.click()}
+              >
+                <span aria-hidden="true">▧</span> Image
+              </button>
+              <input ref={imageInputRef} type="file" accept="image/png,image/jpeg" onChange={e => handleImageFile(e.target.files?.[0])} style={{ display: 'none' }} />
+              {activeTool === 'text' && (
+                <div className="tb-pdf-edit-context-tools">
+                  <input aria-label="Text to add" type="text" value={draftText} onChange={e => setDraftText(e.target.value)} className="tb-v2-input" placeholder="Type text" />
+                  <label>Size <input aria-label="Text size" type="number" min={6} max={200} value={draftFontSize} onChange={e => setDraftFontSize(Number(e.target.value) || 24)} className="tb-v2-input" /></label>
+                  <label className="tb-pdf-edit-color-label">Color <input aria-label="Text color" type="color" value={draftColor} onChange={e => setDraftColor(e.target.value)} /></label>
+                </div>
+              )}
+              {activeTool === 'image' && pendingImage && (
+                <div className="tb-pdf-edit-context-tools">
+                  <span className="tb-pdf-edit-tool-hint">Click the page to place image</span>
+                  <label>Width <input aria-label="Image width" type="number" min={10} max={600} value={imageWidthPt} onChange={e => setImageWidthPt(Number(e.target.value) || 150)} className="tb-v2-input" /></label>
+                </div>
+              )}
+              {activeTool === 'text' && <span className="tb-pdf-edit-tool-hint">Click the page to place text</span>}
             </div>
 
             {overlays.length > 0 && (
