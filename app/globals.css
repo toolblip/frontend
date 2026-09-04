@@ -2539,6 +2539,47 @@ button.tb-v2-mm-more-row-btn {
   margin-top: 10px;
   font-size: 13px;
 }
+
+/* Merge PDFs */
+.tb-pdf-merge-workspace { padding: 20px; }
+.tb-pdf-merge-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.tb-pdf-merge-file-list { display: grid; gap: 8px; }
+.tb-pdf-merge-file {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface-2);
+}
+.tb-pdf-merge-file-icon { font-size: 22px; flex: 0 0 auto; }
+.tb-pdf-merge-file-info {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+  flex: 1;
+}
+.tb-pdf-merge-file-info strong,
+.tb-pdf-merge-file-info small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tb-pdf-merge-file-info strong { font-size: 13px; color: var(--fg-0); }
+.tb-pdf-merge-file-info small { font-size: 11px; color: var(--fg-2); }
+.tb-pdf-merge-file-actions { display: flex; gap: 6px; flex: 0 0 auto; }
+.tb-pdf-merge-action { width: 100%; justify-content: center; margin-top: 16px; }
+.tb-pdf-merge-success { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 12px; }
+@media (max-width: 600px) {
+  .tb-pdf-merge-summary { align-items: flex-start; flex-direction: column; }
+  .tb-pdf-merge-file { align-items: flex-start; flex-wrap: wrap; }
+  .tb-pdf-merge-file-actions { width: 100%; padding-left: 32px; }
+  .tb-pdf-merge-success { align-items: flex-start; flex-direction: column; }
+}
 .tb-v2-diff-stats {
   display: flex; gap: 10px;
   font-family: var(--f-mono); font-size: 12px; font-weight: 600;

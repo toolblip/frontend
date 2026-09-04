@@ -1,301 +1,184 @@
 'use client';
 
-import { useState, useCallback, useRef } from 'react';
-import { PDFDocument } from 'pdf-lib';
+import { useRef, useState } from 'react';
+import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 import { useSubscription } from '@/hooks/useSubscription';
 import { checkFileSize } from '@/lib/tier-limits';
-import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
-const isPdfFile = (file: File) =>
-  file.type === 'application/pdf' || /\.pdf$/i.test(file.name);
+type PdfFile = { file: File; doc: PDFDocument };
+type Result = { success: boolean; message: string; blob?: Blob };
+
+const isPdfFile = (file: File) => file.type === 'application/pdf' || /\.pdf$/i.test(file.name);
 
 export default function MergeClient() {
   const { tier } = useSubscription();
-  const [files, setFiles] = useState<{ file: File; doc: PDFDocument }[]>([]);
+  const [files, setFiles] = useState<PdfFile[]>([]);
   const [processing, setProcessing] = useState(false);
-  const [result, setResult] = useState<{ success: boolean; message: string; blob?: Blob } | null>(null);
+  const [result, setResult] = useState<Result | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [loading, setLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const loadVersionRef = useRef(0);
 
-  const clearAll = () => { loadVersionRef.current += 1; setFiles([]); setResult(null); setProcessing(false); if (fileInputRef.current) fileInputRef.current.value = ''; };
-
-  const loadExample = useCallback(async () => {
-    const requestId = ++loadVersionRef.current;
-    const first = await PDFDocument.create(); first.addPage([400, 300]);
-    const second = await PDFDocument.create(); second.addPage([400, 300]); second.addPage([400, 300]);
-    const firstBytes = await first.save(); const secondBytes = await second.save();
-    if (requestId !== loadVersionRef.current) return;
-    setFiles([
-      { file: new File([firstBytes as BlobPart], 'sample-cover.pdf', { type: 'application/pdf' }), doc: await PDFDocument.load(firstBytes) },
-      { file: new File([secondBytes as BlobPart], 'sample-pages.pdf', { type: 'application/pdf' }), doc: await PDFDocument.load(secondBytes) },
-    ]); setProcessing(false); setResult(null);
-  }, []);
-
-  const handleFilesChange = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (processing) return;
-    const selectedFiles = e.target.files;
-    if (!selectedFiles || selectedFiles.length === 0) return;
-    const requestId = ++loadVersionRef.current;
-    
-    const newFiles: { file: File; doc: PDFDocument }[] = [];
-    
-    for (let i = 0; i < selectedFiles.length; i++) {
-      if (requestId !== loadVersionRef.current) return;
-      const file = selectedFiles[i];
-      if (!isPdfFile(file)) continue;
-      
-      // Check file size against tier limit
-      const sizeError = checkFileSize(file, tier);
-      if (sizeError) {
-        if (requestId !== loadVersionRef.current) return;
-        setResult({ success: false, message: `${file.name}: ${sizeError}` });
-        return;
-      }
-      
-      try {
-        const arrayBuffer = await file.arrayBuffer();
-        const doc = await PDFDocument.load(arrayBuffer);
-        if (requestId !== loadVersionRef.current) return;
-        newFiles.push({ file, doc });
-      } catch (err: any) {
-        if (requestId !== loadVersionRef.current) return;
-        setResult({
-          success: false,
-          message: `Error loading ${file.name}: ${err.message}`,
-        });
-        return;
-      }
-    }
-    
-    if (newFiles.length === 0) {
-      setResult({ success: false, message: 'Choose at least one PDF file.' });
-      return;
-    }
-    if (requestId !== loadVersionRef.current) return;
-    setFiles(prev => [...prev, ...newFiles]);
+  const loadFiles = async (selected: File[], replace = false) => {
+    if (selected.length === 0) return;
+    setLoading(true);
     setResult(null);
-  }, [processing, tier]);
+    const nextFiles: PdfFile[] = [];
+    try {
+      for (const file of selected) {
+        if (!isPdfFile(file)) throw new Error(`${file.name}: please choose a PDF file.`);
+        const sizeError = checkFileSize(file, tier);
+        if (sizeError) throw new Error(`${file.name}: ${sizeError}`);
+        nextFiles.push({ file, doc: await PDFDocument.load(await file.arrayBuffer()) });
+      }
+      setFiles(current => replace ? nextFiles : [...current, ...nextFiles]);
+    } catch (error) {
+      setResult({ success: false, message: error instanceof Error ? error.message : 'Could not read the selected PDF files.' });
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  const handleDrop = useCallback(async (e: React.DragEvent) => {
-    e.preventDefault();
-    if (processing) return;
-    const droppedFiles = e.dataTransfer.files;
-    if (!droppedFiles || droppedFiles.length === 0) return;
-    const requestId = ++loadVersionRef.current;
-    
-    const newFiles: { file: File; doc: PDFDocument }[] = [];
-    
-    for (let i = 0; i < droppedFiles.length; i++) {
-      if (requestId !== loadVersionRef.current) return;
-      const file = droppedFiles[i];
-      if (!isPdfFile(file)) continue;
-      
-      // Check file size against tier limit
-      const sizeError = checkFileSize(file, tier);
-      if (sizeError) {
-        if (requestId !== loadVersionRef.current) return;
-        setResult({ success: false, message: `${file.name}: ${sizeError}` });
-        return;
-      }
-      
-      try {
-        const arrayBuffer = await file.arrayBuffer();
-        const doc = await PDFDocument.load(arrayBuffer);
-        if (requestId !== loadVersionRef.current) return;
-        newFiles.push({ file, doc });
-      } catch (err: any) {
-        if (requestId !== loadVersionRef.current) return;
-        setResult({
-          success: false,
-          message: `Error loading ${file.name}: ${err.message}`,
-        });
-        return;
-      }
-    }
-    
-    if (newFiles.length === 0) {
-      setResult({ success: false, message: 'Drop at least one PDF file.' });
-      return;
-    }
-    if (requestId !== loadVersionRef.current) return;
-    setFiles(prev => [...prev, ...newFiles]);
+  const handleFilesChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    void loadFiles(Array.from(event.target.files || []));
+    event.target.value = '';
+  };
+
+  const handleDrop = (event: React.DragEvent) => {
+    event.preventDefault();
+    setIsDragging(false);
+    void loadFiles(Array.from(event.dataTransfer.files || []));
+  };
+
+  const loadExample = async () => {
+    setLoading(true);
     setResult(null);
-  }, [processing, tier]);
+    try {
+      const samples = await Promise.all(['First sample PDF', 'Second sample PDF'].map(async (title, index) => {
+        const doc = await PDFDocument.create();
+        const font = await doc.embedFont(StandardFonts.Helvetica);
+        const page = doc.addPage([612, 792]);
+        page.drawText(title, { x: 60, y: 700, size: 24, font });
+        page.drawText(`Page ${index + 1} is ready to merge.`, { x: 60, y: 660, size: 14, font, color: rgb(0.35, 0.35, 0.35) });
+        return new File([await doc.save() as BlobPart], `sample-${index + 1}.pdf`, { type: 'application/pdf' });
+      }));
+      await loadFiles(samples, true);
+    } catch (error) {
+      setResult({ success: false, message: error instanceof Error ? error.message : 'Could not create the sample PDFs.' });
+      setLoading(false);
+    }
+  };
+
+  const clearAll = () => {
+    setFiles([]);
+    setResult(null);
+    setLoading(false);
+    setIsDragging(false);
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
 
   const removeFile = (index: number) => {
-    if (processing) return;
-    setFiles(prev => prev.filter((_, i) => i !== index));
+    setFiles(current => current.filter((_, fileIndex) => fileIndex !== index));
     setResult(null);
   };
 
   const moveFile = (from: number, to: number) => {
-    if (processing) return;
-    setFiles(prev => {
-      if (to < 0 || to >= prev.length) return prev;
-      const newFiles = [...prev];
-      const [moved] = newFiles.splice(from, 1);
-      newFiles.splice(to, 0, moved);
-      return newFiles;
-    });
+    if (to < 0 || to >= files.length) return;
+    const next = [...files];
+    const [moved] = next.splice(from, 1);
+    next.splice(to, 0, moved);
+    setFiles(next);
     setResult(null);
   };
 
-  const mergePDFs = async () => {
+  const mergePdfFiles = async () => {
     if (files.length < 2) {
-      setResult({ success: false, message: 'Please add at least 2 PDF files to merge' });
+      setResult({ success: false, message: 'Add at least 2 PDF files to merge.' });
       return;
     }
-    
-    const requestId = ++loadVersionRef.current;
     setProcessing(true);
+    setResult(null);
     try {
       const mergedDoc = await PDFDocument.create();
-      
       for (const { doc } of files) {
         const copiedPages = await mergedDoc.copyPages(doc, doc.getPageIndices());
         copiedPages.forEach(page => mergedDoc.addPage(page));
       }
-      
       const pdfBytes = await mergedDoc.save();
-      const blob = new Blob([pdfBytes as any], { type: 'application/pdf' });
-      if (requestId !== loadVersionRef.current) return;
-      
-      setResult({
-        success: true,
-        message: `Merged ${files.length} PDFs into one document (${mergedDoc.getPageCount()} pages)`,
-        blob,
-      });
-    } catch (err: any) {
-      if (requestId !== loadVersionRef.current) return;
-      setResult({
-        success: false,
-        message: `Error: ${err.message}`,
-      });
+      setResult({ success: true, message: `Merged ${files.length} PDFs into one document (${mergedDoc.getPageCount()} pages).`, blob: new Blob([pdfBytes as BlobPart], { type: 'application/pdf' }) });
+    } catch (error) {
+      setResult({ success: false, message: error instanceof Error ? error.message : 'Could not merge these PDF files.' });
     } finally {
-      if (requestId === loadVersionRef.current) setProcessing(false);
+      setProcessing(false);
     }
   };
 
   const downloadResult = () => {
     if (!result?.blob) return;
     const url = URL.createObjectURL(result.blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'merged.pdf';
-    a.click();
+    const anchor = document.createElement('a');
+    anchor.href = url;
+    anchor.download = 'merged.pdf';
+    anchor.click();
     URL.revokeObjectURL(url);
   };
 
   return (
     <div className="tb-v2-tool-card">
-      {/* File Upload */}
-      <div
-        onDrop={handleDrop}
-        onDragOver={(e) => e.preventDefault()}
-        className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-8 text-center hover:border-indigo-500 transition-colors"
-      >
-        <input
-          type="file"
-          accept=".pdf"
-          multiple
-          ref={fileInputRef}
-          onChange={handleFilesChange}
-          disabled={processing}
-          className="hidden"
-          id="pdf-upload"
-        />
-        <label htmlFor="pdf-upload" className="cursor-pointer">
-          <div className="text-4xl mb-2">📄</div>
-          <p className="text-sm text-gray-500 mt-1">
-            Select 2 or more PDF files to merge
-          </p>
-        </label>
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">PDF files</span>
+        <ToolExampleClearActions onExample={() => void loadExample()} onClear={clearAll} canClear={Boolean(files.length || result || loading)} exampleCount={1} exampleDisabled={loading || processing} />
       </div>
-      <div className="tb-v2-tool-input-head" style={{ marginTop: 12 }}><span className="tb-v2-tool-label">Merge order</span><ToolExampleClearActions onExample={() => void loadExample()} onClear={clearAll} canClear={Boolean(files.length || result)} exampleCount={1} /></div>
 
-      {/* File List */}
+      {!files.length && (
+        <div style={{ padding: 20 }}>
+          <div
+            className={`tb-v2-dropzone ${isDragging ? 'dragging' : ''}`}
+            onClick={() => fileInputRef.current?.click()}
+            onDragOver={event => { event.preventDefault(); setIsDragging(true); }}
+            onDragLeave={() => setIsDragging(false)}
+            onDrop={handleDrop}
+          >
+            <span style={{ fontSize: 28 }}>📄</span>
+            <span className="tb-v2-dropzone-text">{loading ? 'Loading PDFs...' : 'Click or drag PDF files here'}</span>
+            <span className="tb-v2-dropzone-hint">Choose two or more PDFs, then arrange them before merging</span>
+            <input ref={fileInputRef} type="file" accept="application/pdf,.pdf" multiple onChange={handleFilesChange} style={{ display: 'none' }} />
+          </div>
+        </div>
+      )}
+
+      {loading && <div className="tb-v2-banner" role="status" style={{ margin: '0 20px 20px' }}>Reading PDF files in your browser...</div>}
+      {result && !result.success && <div className="tb-v2-banner tb-v2-banner-err" role="alert" style={{ margin: '0 20px 20px' }}>{result.message}</div>}
+
       {files.length > 0 && (
-        <div className="space-y-3">
-          <h2 className="text-lg font-semibold">
-            {files.length} file(s) to merge
-          </h2>
-          
-          <div className="space-y-2">
-            {files.map((f, index) => (
-              <div
-                key={index}
-                className="tb-v2-section" style={{padding:16,background:"var(--surface-2)"}}
-              >
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl">📄</span>
-                  <div>
-                    <p className="font-medium">{f.file.name}</p>
-                    <p className="text-sm text-gray-500">
-                      {f.doc.getPageCount()} page(s) - {(f.file.size / 1024).toFixed(1)} KB
-                    </p>
-                  </div>
-                </div>
-                
-                <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={() => moveFile(index, index - 1)}
-                    disabled={index === 0 || processing}
-                    aria-label={`Move ${f.file.name} up`}
-                    className="p-1 text-gray-500 hover:text-gray-700 disabled:opacity-30"
-                  >
-                    ↑
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => moveFile(index, index + 1)}
-                    disabled={index === files.length - 1 || processing}
-                    aria-label={`Move ${f.file.name} down`}
-                    className="p-1 text-gray-500 hover:text-gray-700 disabled:opacity-30"
-                  >
-                    ↓
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => removeFile(index)}
-                    disabled={processing}
-                    aria-label={`Remove ${f.file.name}`}
-                    className="p-1 text-red-500 hover:text-red-700"
-                  >
-                    ✕
-                  </button>
-                </div>
+        <div className="tb-v2-tool-output-body tb-pdf-merge-workspace">
+          <div className="tb-pdf-merge-summary">
+            <span className="tb-v2-tool-label">{files.length} PDF{files.length === 1 ? '' : 's'} ready to merge</span>
+            <button type="button" className="tb-v2-btn-sm" onClick={() => fileInputRef.current?.click()}>Add more PDFs</button>
+            <input ref={fileInputRef} type="file" accept="application/pdf,.pdf" multiple onChange={handleFilesChange} style={{ display: 'none' }} />
+          </div>
+          <div className="tb-pdf-merge-file-list">
+            {files.map((entry, index) => (
+              <div className="tb-pdf-merge-file" key={`${entry.file.name}-${index}`}>
+                <span className="tb-pdf-merge-file-icon" aria-hidden="true">📄</span>
+                <span className="tb-pdf-merge-file-info"><strong>{entry.file.name}</strong><small>{entry.doc.getPageCount()} page{entry.doc.getPageCount() === 1 ? '' : 's'} · {(entry.file.size / 1024).toFixed(1)} KB</small></span>
+                <span className="tb-pdf-merge-file-actions">
+                  <button type="button" className="tb-v2-btn-sm" aria-label={`Move ${entry.file.name} up`} disabled={index === 0} onClick={() => moveFile(index, index - 1)}>↑</button>
+                  <button type="button" className="tb-v2-btn-sm" aria-label={`Move ${entry.file.name} down`} disabled={index === files.length - 1} onClick={() => moveFile(index, index + 1)}>↓</button>
+                  <button type="button" className="tb-v2-btn-sm" aria-label={`Remove ${entry.file.name}`} onClick={() => removeFile(index)}>Remove</button>
+                </span>
               </div>
             ))}
           </div>
-          
-          <button
-            type="button"
-            onClick={mergePDFs}
-            disabled={files.length < 2 || processing}
-            className="w-full py-3 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {processing ? 'Processing...' : `Merge ${files.length} PDFs`}
+          <button type="button" className="tb-v2-btn tb-v2-btn-primary tb-pdf-merge-action" onClick={() => void mergePdfFiles()} disabled={files.length < 2 || processing}>
+            {processing ? 'Merging...' : `Merge ${files.length} PDFs`}
           </button>
+          {result?.success && <div className="tb-v2-banner tb-pdf-merge-success" role="status">{result.message}<button type="button" className="tb-v2-btn-sm" onClick={downloadResult}>Download merged PDF</button></div>}
         </div>
       )}
 
-      {/* Result */}
-      {result && (
-        <div className={`p-4 rounded-lg ${result.success ? 'bg-green-50 dark:bg-green-900/20' : 'bg-red-50 dark:bg-red-900/20'}`}>
-          <p className={result.success ? 'text-green-700 dark:text-green-400' : 'text-red-700 dark:text-red-400'}>
-            {result.message}
-          </p>
-          {result.success && (
-            <button
-              onClick={downloadResult}
-              className="mt-3 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
-            >
-              Download Merged PDF
-            </button>
-          )}
-        </div>
-      )}
+      {!files.length && !result && !loading && <p className="tb-v2-empty">Upload PDFs or load the sample to begin.</p>}
     </div>
   );
 }
