@@ -197,15 +197,17 @@ test.describe('Browser tool execution paths', () => {
       const workspace = document.querySelector('.tb-pdf-edit-workspace')!.getBoundingClientRect();
       const preview = document.querySelector('.tb-pdf-edit-preview-viewport')!.getBoundingClientRect();
       const pager = document.querySelector('.tb-pdf-edit-pager')!.getBoundingClientRect();
-      const tool = document.querySelector('.tb-pdf-edit-tool')!.getBoundingClientRect();
-      return { workspaceBottom: workspace.bottom, previewTop: preview.top, previewBottom: preview.bottom, pagerTop: pager.top, toolBottom: tool.bottom };
+      const toolbar = document.querySelector('.tb-pdf-edit-toolbar')!.getBoundingClientRect();
+      return { workspaceBottom: workspace.bottom, previewTop: preview.top, previewBottom: preview.bottom, pagerTop: pager.top, toolbarBottom: toolbar.bottom };
     });
-    expect(layout.toolBottom).toBeLessThanOrEqual(layout.previewTop + 1);
+    expect(layout.toolbarBottom).toBeLessThanOrEqual(layout.previewTop + 1);
     expect(layout.pagerTop).toBeGreaterThanOrEqual(layout.previewBottom - 1);
     expect(layout.pagerTop).toBeLessThanOrEqual(layout.workspaceBottom + 1);
 
-    await page.getByRole('button', { name: 'Add Text Overlay' }).click();
-    await expect(page.getByTitle('New text')).toBeVisible();
+    await page.getByRole('button', { name: 'Text', exact: true }).click();
+    await page.getByLabel('Text to add').fill('Hello from the editor');
+    await page.locator('.tb-pdf-edit-page').click({ position: { x: 100, y: 100 } });
+    await expect(page.getByTitle('Hello from the editor')).toBeVisible();
     const downloadPromise = page.waitForEvent('download');
     await page.getByRole('button', { name: 'Apply Edits & Download PDF' }).click();
     const download = await downloadPromise;

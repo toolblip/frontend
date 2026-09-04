@@ -2279,6 +2279,11 @@ button.tb-v2-mm-more-row-btn {
   overflow: hidden;
   background: var(--surface-2);
 }
+.tb-pdf-edit-page[aria-label*='place'] { cursor: crosshair; }
+.tb-pdf-edit-page:focus-visible {
+  outline: 3px solid var(--red);
+  outline-offset: 3px;
+}
 .tb-pdf-edit-page > img {
   display: block;
   width: 100%;
@@ -2288,7 +2293,6 @@ button.tb-v2-mm-more-row-btn {
 .tb-pdf-edit-overlay-image {
   position: absolute;
   z-index: 1;
-  transform: translate(-50%, -50%);
   pointer-events: none;
 }
 .tb-pdf-edit-overlay-text {
@@ -2355,24 +2359,63 @@ button.tb-v2-mm-more-row-btn {
   border-radius: 12px;
   background: var(--surface-2);
 }
-.tb-pdf-edit-toolbar .tb-pdf-edit-tool {
-  display: contents;
-}
-.tb-pdf-edit-toolbar .tb-v2-tool-label {
-  color: var(--fg-1);
-  letter-spacing: 0.04em;
-}
-.tb-pdf-edit-toolbar input[type='text'] {
-  width: 180px;
-  margin: 0 !important;
-}
-.tb-pdf-edit-toolbar > .tb-pdf-edit-tool > div {
-  display: inline-flex !important;
+.tb-pdf-edit-tool-button {
+  display: inline-flex;
   align-items: center;
-  gap: 8px !important;
-  margin: 0 !important;
+  justify-content: center;
+  gap: 7px;
+  min-width: 82px;
+  min-height: 38px;
+  padding: 7px 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--fg-1);
+  font-size: 13px;
+  font-weight: 650;
+  cursor: pointer;
 }
-.tb-pdf-edit-toolbar label { font-size: 12px; color: var(--fg-1); }
+.tb-pdf-edit-tool-button > span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  background: var(--surface-3, var(--surface-2));
+  color: var(--fg-0);
+  font-family: var(--f-mono);
+  font-size: 14px;
+  font-weight: 700;
+}
+.tb-pdf-edit-tool-button:hover,
+.tb-pdf-edit-tool-button.active {
+  border-color: var(--red);
+  color: var(--red);
+}
+.tb-pdf-edit-tool-button.active { box-shadow: 0 0 0 2px color-mix(in srgb, var(--red) 16%, transparent); }
+.tb-pdf-edit-context-tools {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-width: 0;
+  margin-left: 2px;
+}
+.tb-pdf-edit-context-tools > .tb-v2-input { width: 180px; }
+.tb-pdf-edit-context-tools label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--fg-1);
+  font-size: 12px;
+}
+.tb-pdf-edit-context-tools label .tb-v2-input { width: 64px; }
+.tb-pdf-edit-color-label input { width: 32px; height: 28px; padding: 2px; }
+.tb-pdf-edit-tool-hint {
+  color: var(--fg-2);
+  font-size: 12px;
+}
 .tb-v2-diff-stats {
   display: flex; gap: 10px;
   font-family: var(--f-mono); font-size: 12px; font-weight: 600;
