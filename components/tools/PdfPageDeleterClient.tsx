@@ -6,10 +6,33 @@ import { useSubscription } from '@/hooks/useSubscription';
 import { checkFileSize } from '@/lib/tier-limits';
 import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
-const isPdfFile = (file: File) =>
-  file.type === 'application/pdf' || /\.pdf$/i.test(file.name);
+const isPdfFile = (file: File) => file.type === 'application/pdf' || /\.pdf$/i.test(file.name);
 
-type PageState = { index: number; selected: boolean };
+type PageState = { index: number; selected: boolean; previewUrl: string | null };
+
+async function renderPageThumbnail(bytes: Uint8Array, pageNumber: number): Promise<string | null> {
+  try {
+    const pdfjs = await import('pdfjs-dist/legacy/build/pdf.mjs');
+    pdfjs.GlobalWorkerOptions.workerSrc = `${process.env.NEXT_PUBLIC_BASE_PATH || ''}/pdf-worker/pdf.worker.min.mjs`;
+    const task = pdfjs.getDocument({ data: bytes.slice() });
+    try {
+      const doc = await task.promise;
+      const page = await doc.getPage(pageNumber);
+      const viewport = page.getViewport({ scale: 0.28 });
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.ceil(viewport.width);
+      canvas.height = Math.ceil(viewport.height);
+      const context = canvas.getContext('2d');
+      if (!context) return null;
+      await page.render({ canvas, canvasContext: context, viewport }).promise;
+      return canvas.toDataURL('image/png');
+    } finally {
+      await task.destroy();
+    }
+  } catch {
+    return null;
+  }
+}
 
 export default function PdfPageDeleterClient() {
   const { tier } = useSubscription();
@@ -24,8 +47,15 @@ export default function PdfPageDeleterClient() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const loadVersionRef = useRef(0);
 
+  const revokePreviews = (items: PageState[]) => {
+    items.forEach((page) => {
+      if (page.previewUrl) URL.revokeObjectURL(page.previewUrl);
+    });
+  };
+
   const clearAll = () => {
     loadVersionRef.current += 1;
+    revokePreviews(pages);
     setFile(null);
     setFileBytes(null);
     setPages([]);
@@ -44,14 +74,15 @@ export default function PdfPageDeleterClient() {
     setPages([]);
     setResult(null);
     setError('');
-    setLoading(false);
     setProcessing(false);
     if (!isPdfFile(selected)) {
+      setLoading(false);
       setError('Please choose a PDF file.');
       return;
     }
     const sizeError = checkFileSize(selected, tier);
     if (sizeError) {
+      setLoading(false);
       setError(sizeError);
       return;
     }
@@ -61,19 +92,29 @@ export default function PdfPageDeleterClient() {
       const doc = await PDFDocument.load(bytes);
       const pageCount = doc.getPageCount();
       if (pageCount === 0) throw new Error('The PDF has no pages.');
-      if (requestId !== loadVersionRef.current) return;
+      const nextPages: PageState[] = [];
+      for (let index = 0; index < pageCount; index += 1) {
+        nextPages.push({ index, selected: false, previewUrl: await renderPageThumbnail(bytes, index + 1) });
+      }
+      if (requestId !== loadVersionRef.current) {
+        revokePreviews(nextPages);
+        return;
+      }
+      revokePreviews(pages);
       setFile(selected);
       setFileBytes(bytes);
-      setPages(Array.from({ length: pageCount }, (_, index) => ({ index, selected: false })));
+      setPages(nextPages);
     } catch {
       if (requestId === loadVersionRef.current) setError('Could not read this file as a valid PDF.');
     } finally {
       if (requestId === loadVersionRef.current) setLoading(false);
     }
-  }, [tier]);
+  }, [pages, tier]);
 
   const loadExample = useCallback(async () => {
     const requestId = ++loadVersionRef.current;
+    setLoading(true);
+    setError('');
     try {
       const doc = await PDFDocument.create();
       const font = await doc.embedFont(StandardFonts.HelveticaBold);
@@ -83,11 +124,14 @@ export default function PdfPageDeleterClient() {
         page.drawText(label, { x: 60, y: 190, size: 26, font, color: index % 2 ? rgb(0.65, 0.1, 0.1) : rgb(0.1, 0.4, 0.2) });
         page.drawText(`Example page ${index + 1}`, { x: 60, y: 150, size: 16, font });
       });
-      const bytes = await doc.save();
-      if (requestId !== loadVersionRef.current) return;
-      await loadFile(new File([bytes as BlobPart], 'delete-pages-sample.pdf', { type: 'application/pdf' }), requestId);
+      if (requestId === loadVersionRef.current) {
+        await loadFile(new File([await doc.save() as BlobPart], 'delete-pages-sample.pdf', { type: 'application/pdf' }), requestId);
+      }
     } catch {
-      if (requestId === loadVersionRef.current) setError('Could not create the sample PDF.');
+      if (requestId === loadVersionRef.current) {
+        setLoading(false);
+        setError('Could not create the sample PDF.');
+      }
     }
   }, [loadFile]);
 
@@ -162,84 +206,77 @@ export default function PdfPageDeleterClient() {
   return (
     <div className="tb-v2-tool-card">
       <div className="tb-v2-tool-input-head">
-        <span className="tb-v2-tool-label">PDF File</span>
+        <span className="tb-v2-tool-label">PDF file</span>
         <ToolExampleClearActions
           onExample={() => void loadExample()}
           onClear={clearAll}
-          canClear={Boolean(file || pages.length || result || error)}
+          canClear={Boolean(file || pages.length || result || error || loading)}
           exampleCount={1}
+          exampleDisabled={loading || processing}
         />
       </div>
-      <div style={{ padding: 20 }}>
-        <div
-          className="tb-v2-dropzone"
-          onDragOver={(event) => { event.preventDefault(); setIsDragging(true); }}
-          onDragLeave={() => setIsDragging(false)}
-          onDrop={(event) => {
-            event.preventDefault();
-            setIsDragging(false);
-            void loadFile(event.dataTransfer.files?.[0]);
-          }}
-          onClick={() => fileInputRef.current?.click()}
-          style={isDragging ? { borderColor: 'var(--accent)' } : undefined}
-        >
-          <span style={{ fontSize: 28 }}>PDF</span>
-          <span className="tb-v2-dropzone-text">{file?.name || 'Click or drag a PDF to remove pages'}</span>
-          <span className="tb-v2-dropzone-hint">Select pages locally, then download a new PDF</span>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="application/pdf,.pdf"
-            onChange={(event) => void loadFile(event.target.files?.[0])}
-            style={{ display: 'none' }}
-          />
+
+      {!file && (
+        <div style={{ padding: 20 }}>
+          <div
+            className={`tb-v2-dropzone ${isDragging ? 'dragging' : ''}`}
+            onDragOver={(event) => { event.preventDefault(); setIsDragging(true); }}
+            onDragLeave={() => setIsDragging(false)}
+            onDrop={(event) => { event.preventDefault(); setIsDragging(false); void loadFile(event.dataTransfer.files?.[0]); }}
+            onClick={() => fileInputRef.current?.click()}
+          >
+            <span style={{ fontSize: 28 }}>📄</span>
+            <span className="tb-v2-dropzone-text">{loading ? 'Loading PDF...' : 'Click or drag a PDF here'}</span>
+            <span className="tb-v2-dropzone-hint">Select the pages to remove, then download a new PDF</span>
+            <input ref={fileInputRef} type="file" accept="application/pdf,.pdf" onChange={(event) => void loadFile(event.target.files?.[0])} style={{ display: 'none' }} />
+          </div>
         </div>
-        {loading && <p className="tb-v2-empty">Reading PDF...</p>}
-        {error && <div className="tb-v2-banner tb-v2-banner-err" role="alert">{error}</div>}
-      </div>
+      )}
+
+      {loading && <div className="tb-v2-banner" role="status" style={{ margin: '0 20px 20px' }}>Preparing page previews in your browser...</div>}
+      {error && <div className="tb-v2-banner tb-v2-banner-err" role="alert" style={{ margin: '0 20px 20px' }}>{error}</div>}
 
       {file && pages.length > 0 && (
-        <div style={{ padding: '0 20px 20px' }}>
-          <div className="tb-v2-tool-output-head">
-            <span className="tb-v2-tool-label">{file.name} - {pages.length} pages, {selectedCount} selected</span>
+        <div className="tb-v2-tool-output-body tb-pdf-delete-workspace">
+          <div className="tb-pdf-delete-summary">
+            <span className="tb-v2-tool-label">{pages.length} pages · {selectedCount} selected to delete</span>
+            <button type="button" className="tb-v2-btn-sm" onClick={() => fileInputRef.current?.click()}>＋ Replace PDF</button>
+            <input ref={fileInputRef} type="file" accept="application/pdf,.pdf" onChange={(event) => void loadFile(event.target.files?.[0])} style={{ display: 'none' }} />
           </div>
-          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 12 }}>
-            <button type="button" onClick={selectAll} disabled={processing} className="tb-v2-btn-sm">Select All</button>
-            <button type="button" onClick={deselectAll} disabled={processing} className="tb-v2-btn-sm">Deselect All</button>
+          <p className="tb-pdf-delete-instruction">Select one or more page cards to remove. Keep at least one page.</p>
+          <div className="tb-pdf-delete-controls">
+            <button type="button" className="tb-v2-btn-sm" onClick={selectAll} disabled={processing}>Select all</button>
+            <button type="button" className="tb-v2-btn-sm" onClick={deselectAll} disabled={processing}>Deselect all</button>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(110px, 1fr))', gap: 10, marginTop: 12 }}>
+          <div className="tb-pdf-delete-grid">
             {pages.map((page) => (
               <button
                 key={page.index}
                 type="button"
+                className={`tb-pdf-delete-card ${page.selected ? 'selected' : ''}`}
                 onClick={() => togglePage(page.index)}
                 disabled={processing}
                 aria-pressed={page.selected}
                 aria-label={`Page ${page.index + 1}, ${page.selected ? 'selected for deletion' : 'kept'}`}
-                className="tb-v2-section"
-                style={{ padding: 14, textAlign: 'center', border: `2px solid ${page.selected ? 'var(--danger, #dc2626)' : 'var(--border)'}`, background: page.selected ? 'rgba(220, 38, 38, 0.08)' : undefined }}
               >
-                <div style={{ fontSize: 28 }}>PDF</div>
-                <div>Page {page.index + 1}</div>
-                <div className="tb-v2-empty">{page.selected ? 'Selected' : 'Keep'}</div>
+                <span className="tb-pdf-delete-order">{page.index + 1}</span>
+                <div className="tb-pdf-delete-thumbnail">
+                  {page.previewUrl ? <img src={page.previewUrl} alt={`Preview of page ${page.index + 1}`} /> : <span aria-hidden="true">📄</span>}
+                </div>
+                <strong>Page {page.index + 1}</strong>
+                <small>{page.selected ? 'Selected for deletion' : 'Keep'}</small>
               </button>
             ))}
           </div>
-          <button type="button" onClick={() => void deleteSelected()} disabled={selectedCount === 0 || selectedCount === pages.length || processing} className="tb-v2-btn tb-v2-btn-primary tb-v2-btn-lg" style={{ width: '100%', marginTop: 16 }}>
-            {processing ? 'Processing...' : `Delete ${selectedCount} Page${selectedCount === 1 ? '' : 's'}`}
+          <button type="button" className="tb-v2-btn tb-v2-btn-primary tb-pdf-delete-action" onClick={() => void deleteSelected()} disabled={selectedCount === 0 || selectedCount === pages.length || processing}>
+            {processing ? 'Deleting...' : `Delete ${selectedCount} page${selectedCount === 1 ? '' : 's'}`}
           </button>
-          {selectedCount === pages.length && (
-            <div className="tb-v2-banner tb-v2-banner-err" role="alert" style={{ marginTop: 12 }}>
-              Keep at least one page. Deselect one page before deleting.
-            </div>
-          )}
-          {result?.blob && (
-            <div className="tb-v2-banner" style={{ marginTop: 12 }}>
-              {result.message} <button type="button" onClick={downloadResult} className="tb-v2-btn-sm" style={{ marginLeft: 8 }}>Download PDF</button>
-            </div>
-          )}
+          {selectedCount === pages.length && <div className="tb-v2-banner tb-v2-banner-err" role="alert" style={{ marginTop: 12 }}>Keep at least one page. Deselect one page before deleting.</div>}
+          {result?.blob && <div className="tb-v2-banner tb-pdf-delete-success" role="status">{result.message}<button type="button" className="tb-v2-btn-sm" onClick={downloadResult}>Download edited PDF</button></div>}
         </div>
       )}
+
+      {!file && !loading && !error && <p className="tb-v2-empty">Upload a PDF or load the sample to select pages for deletion.</p>}
     </div>
   );
 }

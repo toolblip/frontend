@@ -393,4 +393,32 @@ test.describe('Browser tool execution paths', () => {
     await page.getByRole('button', { name: 'Clear', exact: true }).click();
     await expect(page.getByText('Upload a PDF or load the sample to arrange its pages.', { exact: true })).toBeVisible();
   });
+
+  test('delete-pages previews, removes a selected page, and downloads in the browser', async ({ page }) => {
+    await page.goto('/tools/delete-pages');
+    await dismissCookies(page);
+
+    await expect(page.getByRole('button', { name: 'Example', exact: true })).toBeVisible({ timeout: 15000 });
+    await page.getByRole('button', { name: 'Example', exact: true }).click();
+    await expect(page.getByText('4 pages · 0 selected to delete', { exact: true })).toBeVisible({ timeout: 15000 });
+    await expect(page.locator('.tb-pdf-delete-thumbnail img')).toHaveCount(4);
+
+    await page.getByRole('button', { name: 'Page 2, kept', exact: true }).click();
+    await expect(page.getByText('4 pages · 1 selected to delete', { exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Delete 1 page', exact: true })).toBeEnabled();
+
+    const downloadPromise = page.waitForEvent('download');
+    await page.getByRole('button', { name: 'Delete 1 page', exact: true }).click();
+    await expect(page.getByRole('status')).toContainText('Deleted 1 page. 3 pages remain.');
+    await page.getByRole('button', { name: 'Download edited PDF', exact: true }).click();
+    const download = await downloadPromise;
+    expect(download.suggestedFilename()).toMatch(/delete-pages-sample_edited\.pdf$/i);
+    const stream = await download.createReadStream();
+    const chunks: Buffer[] = [];
+    for await (const chunk of stream ?? []) chunks.push(Buffer.from(chunk));
+    expect((await PDFDocument.load(Buffer.concat(chunks))).getPageCount()).toBe(3);
+
+    await page.getByRole('button', { name: 'Clear', exact: true }).click();
+    await expect(page.getByText('Upload a PDF or load the sample to select pages for deletion.', { exact: true })).toBeVisible();
+  });
 });
