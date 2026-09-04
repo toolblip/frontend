@@ -358,4 +358,41 @@ test.describe('Browser tool execution paths', () => {
     await page.getByRole('button', { name: 'Clear', exact: true }).click();
     await expect(page.getByText('Upload PDFs or load the sample to begin.', { exact: true })).toBeVisible();
   });
+
+  test('rearrange PDF pages previews, reorders, rotates, and downloads in the browser', async ({ page }, testInfo) => {
+    await page.goto('/tools/rearrange');
+    await dismissCookies(page);
+
+    await expect(page.getByRole('button', { name: 'Example', exact: true })).toBeVisible({ timeout: 15000 });
+    await page.getByRole('button', { name: 'Example', exact: true }).click();
+    await expect(page.getByText('3 pages ready to arrange', { exact: true })).toBeVisible({ timeout: 15000 });
+    await expect(page.locator('.tb-pdf-rearrange-thumbnail img')).toHaveCount(3);
+
+    const cards = page.locator('.tb-pdf-rearrange-card');
+    if (testInfo.project.name === 'mobile') {
+      await cards.nth(2).getByRole('button', { name: 'Move page 3 up' }).click();
+      await cards.nth(1).getByRole('button', { name: 'Move page 3 up' }).click();
+    } else {
+      await cards.nth(2).dragTo(cards.nth(0));
+    }
+    await expect(cards.nth(0)).toContainText('Page 3');
+    await cards.nth(0).getByRole('button', { name: /Rotate/ }).click();
+    await expect(cards.nth(0)).toContainText('90° rotation');
+
+    const downloadPromise = page.waitForEvent('download');
+    await page.getByRole('button', { name: 'Save reordered PDF', exact: true }).click();
+    await expect(page.getByRole('status')).toContainText('Reordered 3 pages successfully.');
+    await page.getByRole('button', { name: 'Download reordered PDF', exact: true }).click();
+    const download = await downloadPromise;
+    expect(download.suggestedFilename()).toMatch(/^rearranged-.*\.pdf$/i);
+    const stream = await download.createReadStream();
+    const chunks: Buffer[] = [];
+    for await (const chunk of stream ?? []) chunks.push(Buffer.from(chunk));
+    const output = await PDFDocument.load(Buffer.concat(chunks));
+    expect(output.getPageCount()).toBe(3);
+    expect(output.getPage(0).getRotation().angle).toBe(90);
+
+    await page.getByRole('button', { name: 'Clear', exact: true }).click();
+    await expect(page.getByText('Upload a PDF or load the sample to arrange its pages.', { exact: true })).toBeVisible();
+  });
 });

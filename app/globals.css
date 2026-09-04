@@ -2617,6 +2617,76 @@ button.tb-v2-mm-more-row-btn {
   .tb-pdf-merge-summary { align-items: flex-start; flex-direction: column; }
   .tb-pdf-merge-success { align-items: flex-start; flex-direction: column; }
 }
+
+/* Rearrange PDF pages */
+.tb-pdf-rearrange-workspace { padding: 20px; }
+.tb-pdf-rearrange-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.tb-pdf-rearrange-instruction { margin: 0 0 14px; color: var(--fg-2); font-size: 12px; }
+.tb-pdf-rearrange-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 14px;
+}
+.tb-pdf-rearrange-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  padding: 14px 10px 10px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface-2);
+  cursor: grab;
+  transition: border-color .12s, box-shadow .12s, opacity .12s;
+}
+.tb-pdf-rearrange-card.dragging { opacity: .55; border-color: var(--red); box-shadow: 0 0 0 2px color-mix(in srgb, var(--red) 15%, transparent); }
+.tb-pdf-rearrange-drag-handle { position: absolute; top: 8px; left: 10px; color: var(--fg-3); font-size: 18px; line-height: 1; }
+.tb-pdf-rearrange-order {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  display: grid;
+  width: 22px;
+  height: 22px;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--red);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+}
+.tb-pdf-rearrange-thumbnail {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 122px;
+  height: 158px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--surface);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, .08);
+  transition: transform .15s;
+}
+.tb-pdf-rearrange-thumbnail img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.tb-pdf-rearrange-thumbnail span { font-size: 34px; }
+.tb-pdf-rearrange-card > strong { color: var(--fg-0); font-size: 13px; }
+.tb-pdf-rearrange-card > small { color: var(--fg-2); font-size: 11px; }
+.tb-pdf-rearrange-card-actions { display: flex; justify-content: center; gap: 5px; flex-wrap: wrap; width: 100%; margin-top: 4px; }
+.tb-pdf-rearrange-action { width: 100%; justify-content: center; margin-top: 16px; }
+.tb-pdf-rearrange-success { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 12px; }
+@media (max-width: 600px) {
+  .tb-pdf-rearrange-summary { align-items: flex-start; flex-direction: column; }
+  .tb-pdf-rearrange-success { align-items: flex-start; flex-direction: column; }
+}
 .tb-v2-diff-stats {
   display: flex; gap: 10px;
   font-family: var(--f-mono); font-size: 12px; font-weight: 600;
