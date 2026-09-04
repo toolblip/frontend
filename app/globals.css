@@ -4003,13 +4003,24 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
   max-width: 100%;
 }
 .tb-pdf-annotate-editor > .tb-v2-tool-output-head { order: 1; flex: 0 0 auto; }
-.tb-pdf-annotate-tools { order: 2; flex: 0 0 auto; }
+.tb-pdf-annotate-tools {
+  order: 2;
+  flex: 0 0 auto;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface-2);
+  padding: 10px 12px;
+}
 .tb-pdf-annotate-preview-section {
   order: 3;
   display: flex;
   flex-direction: column;
   min-height: 0;
   flex: 0 0 auto;
+  width: 100%;
+  max-width: 1040px;
+  margin-inline: auto;
 }
 .tb-pdf-annotate-pager {
   order: 4;
@@ -4017,6 +4028,13 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
   align-items: center;
   gap: 8px;
   flex: 0 0 auto;
+  justify-content: center;
+}
+.tb-pdf-annotate-page-indicator {
+  color: var(--fg-2);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 .tb-pdf-annotate-actions { order: 5; flex: 0 0 auto; }
 .tb-pdf-annotate-status { order: 6; flex: 0 0 auto; }
@@ -4024,7 +4042,7 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
 .tb-pdf-annotate-preview-viewport {
   width: 100%;
   height: clamp(180px, calc(100dvh - 560px), 640px);
-  max-width: 100%;
+  max-width: 1040px;
   max-height: 100%;
   min-height: 180px;
   min-width: 0;
@@ -4047,6 +4065,7 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
   object-fit: contain;
 }
 @media (max-width: 640px) {
+  .tb-pdf-annotate-preview-section { max-width: 100%; }
   .tb-pdf-annotate-preview-viewport {
     height: clamp(180px, calc(100dvh - 500px), 420px);
   }
