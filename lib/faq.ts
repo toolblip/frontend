@@ -1440,7 +1440,7 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'What happens if I select a non-PDF file?', a: 'It is silently skipped, only files with a PDF mime type are added to the merge list, so dragging in a mixed folder only picks up the PDFs.' },
     { q: 'How do I know the merge worked correctly?', a: 'The result message reports the exact combined page count, calculated by copying every source PDF\'s pages in order into the new document with pdf-lib.' },
   ],
-  'rearrange': [
+  'pdf-rearrange': [
     { q: 'How do I change the page order?', a: 'Drag a page row to a new position, or use its Up and Down buttons. The saved PDF follows the displayed order.' },
     { q: 'Can I rotate one page without rotating the others?', a: 'Yes, Rotate adds 90 degrees to the selected page only. Repeat it to reach 180 or 270 degrees.' },
     { q: 'Does it edit the content inside a page?', a: 'No, it rearranges and rotates whole pages. Pages are copied into a new PDF, so document-level metadata may not carry over.' },

@@ -2941,7 +2941,7 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'random-choice-picker': return <RandomChoicePickerClient />;
     case 'random-choice-wheel': return <RandomChoiceWheelClient />;
     case 'reading-level-estimator': return <ReadingLevelEstimatorClient />;
-    case 'rearrange': return <RearrangePDFPagesClient />;
+    case 'pdf-rearrange': return <RearrangePDFPagesClient />;
     case 'regex-description-generator': return <RegexDescriptionGeneratorClient />;
     case 'regex-escape': return <RegexEscapeClient />;
     case 'regex-explainer': return <RegexExplainerClient />;

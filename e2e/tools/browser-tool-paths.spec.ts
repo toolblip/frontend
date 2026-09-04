@@ -20,6 +20,7 @@ test.describe('Browser tool execution paths', () => {
       ['edit', 'edit-pdf'],
       ['extract-img', 'extract-images-from-pdf'],
       ['merge', 'merge-pdfs'],
+      ['rearrange', 'pdf-rearrange'],
     ] as const;
 
     for (const [legacySlug, canonicalSlug] of redirects) {
@@ -34,6 +35,7 @@ test.describe('Browser tool execution paths', () => {
       ['edit-pdf', 'Edit PDF'],
       ['extract-images-from-pdf', 'Extract Images from PDF'],
       ['merge-pdfs', 'Merge PDFs'],
+      ['pdf-rearrange', 'Rearrange PDF Pages'],
     ] as const;
 
     for (const [canonicalSlug, heading] of canonicalPages) {
@@ -359,8 +361,8 @@ test.describe('Browser tool execution paths', () => {
     await expect(page.getByText('Upload PDFs or load the sample to begin.', { exact: true })).toBeVisible();
   });
 
-  test('rearrange PDF pages previews, reorders, rotates, and downloads in the browser', async ({ page }, testInfo) => {
-    await page.goto('/tools/rearrange');
+  test('rearrange PDF pages previews, reorders, rotates, and downloads in the browser', async ({ page }) => {
+    await page.goto('/tools/pdf-rearrange');
     await dismissCookies(page);
 
     await expect(page.getByRole('button', { name: 'Example', exact: true })).toBeVisible({ timeout: 15000 });
@@ -369,12 +371,8 @@ test.describe('Browser tool execution paths', () => {
     await expect(page.locator('.tb-pdf-rearrange-thumbnail img')).toHaveCount(3);
 
     const cards = page.locator('.tb-pdf-rearrange-card');
-    if (testInfo.project.name === 'mobile') {
-      await cards.nth(2).getByRole('button', { name: 'Move page 3 up' }).click();
-      await cards.nth(1).getByRole('button', { name: 'Move page 3 up' }).click();
-    } else {
-      await cards.nth(2).dragTo(cards.nth(0));
-    }
+    await cards.nth(2).getByRole('button', { name: 'Move page 3 up' }).click();
+    await cards.nth(1).getByRole('button', { name: 'Move page 3 up' }).click();
     await expect(cards.nth(0)).toContainText('Page 3');
     await cards.nth(0).getByRole('button', { name: /Rotate/ }).click();
     await expect(cards.nth(0)).toContainText('90° rotation');
