@@ -326,32 +326,37 @@ export default function ExtractImgClient() {
 
   return (
     <div className="tb-v2-tool-card">
-      <div className="tb-v2-tool-input-head" style={{ margin: '0 20px 12px' }}><span className="tb-v2-tool-label">PDF File</span><ToolExampleClearActions onExample={() => void loadExample()} onClear={clearAll} canClear={Boolean(images.length || loaded || error || fileName)} exampleCount={1} /></div>
+      <div className="tb-v2-tool-input-head" style={{ margin: '0 20px 12px' }}><span className="tb-v2-tool-label">PDF File</span><ToolExampleClearActions onExample={() => void loadExample()} onClear={clearAll} canClear={Boolean(images.length || loaded || error || fileName || loading)} exampleCount={1} exampleDisabled={loading} /></div>
       <div className="tb-v2-banner" style={{ margin: 20 }}>
         JPEG images embedded in the PDF are extracted directly. Other raster images (grayscale, RGB, CMYK, or
         indexed-color) are reconstructed as PNG. JPEG2000, CCITT fax, and other uncommon encodings can't be decoded
         by this tool and are skipped, not faked.
       </div>
 
-      <div style={{ padding: '0 20px 20px' }}>
-        <div
-          className={`tb-v2-dropzone ${isDragging ? 'dragging' : ''}`}
-          onClick={() => fileInputRef.current?.click()}
-          onDragOver={e => { e.preventDefault(); setIsDragging(true); }}
-          onDragLeave={() => setIsDragging(false)}
-          onDrop={handleDrop}
-        >
-          <span style={{ fontSize: 28 }}>📄</span>
-          <span className="tb-v2-dropzone-text">{loading ? 'Extracting...' : 'Click or drag a PDF file here'}</span>
-          <span className="tb-v2-dropzone-hint">Processed entirely in your browser</span>
-          <input ref={fileInputRef} type="file" accept=".pdf" onChange={handleFileChange} style={{ display: 'none' }} />
+      {!loaded && (
+        <div style={{ padding: '0 20px 20px' }}>
+          <div
+            className={`tb-v2-dropzone ${isDragging ? 'dragging' : ''}`}
+            onClick={() => fileInputRef.current?.click()}
+            onDragOver={e => { e.preventDefault(); setIsDragging(true); }}
+            onDragLeave={() => setIsDragging(false)}
+            onDrop={handleDrop}
+          >
+            <span style={{ fontSize: 28 }}>📄</span>
+            <span className="tb-v2-dropzone-text">{loading ? 'Extracting...' : 'Click or drag a PDF file here'}</span>
+            <span className="tb-v2-dropzone-hint">Processed entirely in your browser</span>
+            <input ref={fileInputRef} type="file" accept=".pdf" onChange={handleFileChange} style={{ display: 'none' }} />
+          </div>
         </div>
-      </div>
+      )}
+
+      {loading && <div className="tb-v2-banner" role="status" style={{ margin: '0 20px 20px' }}>Extracting images in your browser...</div>}
 
       {error && <div className="tb-v2-banner-err" style={{ margin: '0 20px 20px' }}>{error}</div>}
 
       {loaded && (
         <div style={{ padding: '0 20px 20px' }}>
+          <div className="tb-v2-tool-output-head" style={{ margin: '0 -20px 16px' }}><span className="tb-v2-tool-label">{fileName} &middot; {images.length} image{images.length === 1 ? '' : 's'}</span></div>
           <div className="tb-v2-stats-grid" style={{ marginBottom: 16 }}>
             <div className="tb-v2-stat-pill"><div style={{ fontSize: 11, color: 'var(--fg-2)' }}>Images Extracted</div><div>{images.length}</div></div>
             {skipped > 0 && <div className="tb-v2-stat-pill"><div style={{ fontSize: 11, color: 'var(--fg-2)' }}>Skipped (unsupported)</div><div>{skipped}</div></div>}
