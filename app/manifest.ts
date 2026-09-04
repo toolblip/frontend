@@ -6,6 +6,7 @@ export default function manifest(): MetadataRoute.Manifest {
     short_name: 'Toolblip',
     description:
       'Free browser-based developer tools: JSON formatter, Base64, UUID generator, and more.',
+    id: '/',
     start_url: '/',
     scope: '/',
     display: 'standalone',

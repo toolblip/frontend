@@ -16,19 +16,18 @@ function isStandaloneDisplay(): boolean {
   return mq || iosStandalone;
 }
 
-function isIosSafari(): boolean {
+function isIosBrowser(): boolean {
   if (typeof navigator === 'undefined') return false;
   const ua = navigator.userAgent;
-  const iOS =
+  return (
     /iPad|iPhone|iPod/.test(ua) ||
-    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-  // iOS Chrome/Firefox/Edge have their own tokens; plain Safari does not.
-  return iOS && /WebKit/i.test(ua) && !/CriOS|FxiOS|EdgiOS|OPiOS/.test(ua);
+    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+  );
 }
 
 /**
  * Chrome/Edge fire `beforeinstallprompt` when the app is installable.
- * iOS Safari has no prompt API — we surface Share → Add to Home Screen tips instead.
+ * iOS browsers have no prompt API — we surface Share → Add to Home Screen tips instead.
  * Already-installed (standalone) and unsupported browsers stay hidden.
  */
 export function usePwaInstall() {
@@ -41,10 +40,8 @@ export function usePwaInstall() {
       return;
     }
 
-    if (isIosSafari()) {
-      setMode('ios-tip');
-      return;
-    }
+    const iosBrowser = isIosBrowser();
+    if (iosBrowser) setMode('ios-tip');
 
     const onBip = (e: Event) => {
       e.preventDefault();
