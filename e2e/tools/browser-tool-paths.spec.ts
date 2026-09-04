@@ -21,6 +21,10 @@ test.describe('Browser tool execution paths', () => {
       ['extract-img', 'extract-images-from-pdf'],
       ['merge', 'merge-pdfs'],
       ['rearrange', 'pdf-rearrange'],
+      ['delete-pages', 'delete-pages-from-pdf'],
+      ['sign', 'sign-pdf'],
+      ['unlock', 'unlock-pdf'],
+      ['watermark', 'add-watermark-to-pdf'],
     ] as const;
 
     for (const [legacySlug, canonicalSlug] of redirects) {
@@ -36,6 +40,7 @@ test.describe('Browser tool execution paths', () => {
       ['extract-images-from-pdf', 'Extract Images from PDF'],
       ['merge-pdfs', 'Merge PDFs'],
       ['pdf-rearrange', 'Rearrange PDF Pages'],
+      ['delete-pages-from-pdf', 'Delete PDF Pages'],
     ] as const;
 
     for (const [canonicalSlug, heading] of canonicalPages) {
@@ -45,6 +50,11 @@ test.describe('Browser tool execution paths', () => {
       await expect(page.getByRole('heading', { level: 1, name: heading, exact: true })).toBeVisible();
       await expect(page.getByRole('button', { name: 'Example', exact: true })).toBeVisible();
       await expect(page.getByRole('button', { name: 'Clear', exact: true })).toBeVisible();
+    }
+
+    for (const canonicalSlug of ['sign-pdf', 'unlock-pdf', 'add-watermark-to-pdf']) {
+      const response = await request.get(`/tools/${canonicalSlug}`);
+      expect(response.status()).toBe(200);
     }
   });
 
@@ -395,7 +405,7 @@ test.describe('Browser tool execution paths', () => {
   });
 
   test('delete-pages previews, removes a selected page, and downloads in the browser', async ({ page }) => {
-    await page.goto('/tools/delete-pages');
+    await page.goto('/tools/delete-pages-from-pdf');
     await dismissCookies(page);
 
     await expect(page.getByRole('button', { name: 'Example', exact: true })).toBeVisible({ timeout: 15000 });
