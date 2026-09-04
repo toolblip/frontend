@@ -205,6 +205,7 @@ test.describe('Browser tool execution paths', () => {
     expect(layout.pagerTop).toBeLessThanOrEqual(layout.workspaceBottom + 1);
 
     await page.getByRole('button', { name: 'Add Text Overlay' }).click();
+    await expect(page.getByTitle('New text')).toBeVisible();
     const downloadPromise = page.waitForEvent('download');
     await page.getByRole('button', { name: 'Apply Edits & Download PDF' }).click();
     const download = await downloadPromise;

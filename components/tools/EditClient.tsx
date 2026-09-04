@@ -329,7 +329,7 @@ export default function EditClient() {
             </div>
 
             <div className="tb-pdf-edit-preview-section">
-              <span className="tb-v2-tool-label">Page preview with overlay positions</span>
+              <span className="tb-v2-tool-label">PDF canvas</span>
               <div ref={previewViewportRef} className="tb-pdf-edit-preview-viewport">
                 <div
                   ref={previewPageRef}
@@ -351,15 +351,25 @@ export default function EditClient() {
                   {pageOverlays.map(ov => {
                     const { xPct, yPct } = markerPercent(ov.anchorX, ov.anchorY, ov.offsetX, ov.offsetY, pageSize.width, pageSize.height);
                     return (
-                      <div
-                        key={ov.id}
-                        title={ov.kind === 'text' ? ov.text : 'Image overlay'}
-                        style={{
-                          position: 'absolute', left: `${xPct}%`, top: `${yPct}%`, transform: 'translate(-50%, -50%)',
-                          width: 12, height: 12, borderRadius: '50%', background: 'var(--red, #dc2626)',
-                          border: '2px solid var(--surface)', boxShadow: '0 1px 3px rgba(0,0,0,.35)',
-                        }}
-                      />
+                      ov.kind === 'text' ? (
+                        <div
+                          key={ov.id}
+                          title={ov.text}
+                          className="tb-pdf-edit-overlay-text"
+                          style={{ left: `${xPct}%`, top: `${yPct}%`, color: ov.color, fontSize: `${Math.max(8, ov.fontSize * 0.8)}px` }}
+                        >
+                          {ov.text}
+                        </div>
+                      ) : (
+                        <img
+                          key={ov.id}
+                          src={ov.previewUrl}
+                          alt="Image overlay preview"
+                          title="Image overlay"
+                          className="tb-pdf-edit-overlay-image"
+                          style={{ left: `${xPct}%`, top: `${yPct}%`, width: `${Math.min(45, Math.max(8, (ov.widthPt / pageSize.width) * 100))}%` }}
+                        />
+                      )
                     );
                   })}
                 </div>
@@ -370,30 +380,31 @@ export default function EditClient() {
                 </div>
               </div>
               {previewFailed && <p className="tb-v2-empty" role="alert">The visual preview could not be rendered.</p>}
-              <p className="tb-pdf-edit-preview-hint">Dots mark where each overlay will land on the PDF.</p>
+              <p className="tb-pdf-edit-preview-hint">Added text and images appear directly on the page.</p>
             </div>
 
+            <div className="tb-pdf-edit-toolbar">
             <div className="tb-pdf-edit-tool tb-v2-option-group" style={{ marginBottom: 16 }}>
               <label className="tb-v2-tool-label">Add Text</label>
-              <input type="text" value={draftText} onChange={e => setDraftText(e.target.value)} className="tb-v2-input" placeholder="Text to add" style={{ marginBottom: 8 }} />
+              <input type="text" value={draftText} onChange={e => setDraftText(e.target.value)} className="tb-v2-input" placeholder="Type text" style={{ marginBottom: 8 }} />
               <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                 <label style={{ fontSize: 12 }}>Size <input type="number" min={6} max={200} value={draftFontSize} onChange={e => setDraftFontSize(Number(e.target.value) || 24)} className="tb-v2-input" style={{ width: 70 }} /></label>
                 <label style={{ fontSize: 12 }}>Color <input type="color" value={draftColor} onChange={e => setDraftColor(e.target.value)} style={{ verticalAlign: 'middle' }} /></label>
               </div>
-              <button type="button" onClick={addTextOverlay} className="tb-v2-btn tb-v2-btn-primary" style={{ marginTop: 10 }}>Add Text Overlay</button>
+              <button type="button" onClick={addTextOverlay} aria-label="Add Text Overlay" className="tb-v2-btn tb-v2-btn-primary" style={{ marginTop: 10 }}>Add Text</button>
             </div>
 
             <div className="tb-pdf-edit-tool tb-v2-option-group" style={{ marginBottom: 16 }}>
               <label className="tb-v2-tool-label">Add Image</label>
               <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 8 }}>
                 <label style={{ fontSize: 12 }}>Width (pt) <input type="number" min={10} max={600} value={imageWidthPt} onChange={e => setImageWidthPt(Number(e.target.value) || 150)} className="tb-v2-input" style={{ width: 80 }} /></label>
-                <button type="button" onClick={() => imageInputRef.current?.click()} className="tb-v2-btn-sm">Choose Image&hellip;</button>
+               <button type="button" onClick={() => imageInputRef.current?.click()} aria-label="Choose Image" className="tb-v2-btn-sm">Add Image</button>
                 <input ref={imageInputRef} type="file" accept="image/png,image/jpeg" onChange={e => handleImageFile(e.target.files?.[0])} style={{ display: 'none' }} />
               </div>
             </div>
 
             <div className="tb-pdf-edit-tool tb-v2-option-group" style={{ marginBottom: 16 }}>
-              <label className="tb-v2-tool-label">Anchor Position (applies to next overlay added)</label>
+              <label className="tb-v2-tool-label">Position</label>
               <div style={{ display: 'flex', gap: 6, marginBottom: 6 }}>
                 {(['left', 'center', 'right'] as AnchorX[]).map(a => (
                   <button key={a} type="button" onClick={() => setAnchorX(a)} className={`tb-v2-mode-tab ${anchorX === a ? 'on' : ''}`}>{a}</button>
@@ -406,6 +417,8 @@ export default function EditClient() {
                 <label style={{ fontSize: 12 }}>Offset X (pt) <input type="number" value={offsetX} onChange={e => setOffsetX(Number(e.target.value) || 0)} className="tb-v2-input" style={{ width: 70 }} /></label>
                 <label style={{ fontSize: 12 }}>Offset Y (pt) <input type="number" value={offsetY} onChange={e => setOffsetY(Number(e.target.value) || 0)} className="tb-v2-input" style={{ width: 70 }} /></label>
               </div>
+            </div>
+
             </div>
 
             {overlays.length > 0 && (
@@ -425,11 +438,12 @@ export default function EditClient() {
             <button
               className="tb-pdf-edit-actions tb-v2-btn tb-v2-btn-primary"
               type="button"
+              aria-label="Apply Edits & Download PDF"
               onClick={applyAndDownload}
               disabled={overlays.length === 0 || status === 'processing'}
               style={{ width: '100%' }}
             >
-              {status === 'processing' ? 'Applying edits...' : 'Apply Edits & Download PDF'}
+              {status === 'processing' ? 'Applying edits...' : 'Edit PDF'}
             </button>
             {status === 'done' && (
                 <div className="tb-pdf-edit-status tb-v2-banner" style={{ marginTop: 12 }}>Edited PDF downloaded.</div>
