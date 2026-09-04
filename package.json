@@ -8,6 +8,7 @@
     "prebuild": "node scripts/generate-blog-manifest.mjs",
     "start": "next start",
     "lint": "next lint",
+    "pwa:verify": "node scripts/verify-pwa-assets.mjs",
     "test": "vitest run",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
