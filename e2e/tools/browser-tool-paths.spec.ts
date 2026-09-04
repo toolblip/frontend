@@ -182,7 +182,7 @@ test.describe('Browser tool execution paths', () => {
     expect(output.getPageCount()).toBe(2);
   });
 
-  test('edit-pdf shows the rendered page and zoom controls before applying an overlay', async ({ page }) => {
+  test('edit-pdf edits existing text and adds new content on the PDF canvas', async ({ page }) => {
     await page.goto('/tools/edit-pdf');
     await dismissCookies(page);
 
@@ -190,6 +190,7 @@ test.describe('Browser tool execution paths', () => {
     await expect(page.getByText('sample.pdf · 1 page', { exact: true })).toBeVisible();
     await expect(page.getByText('Click or drag a PDF here', { exact: true })).toHaveCount(0);
     await expect(page.getByTestId('edit-preview-image')).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Select PDF text: Sample PDF Document' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Zoom out' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Zoom in' })).toBeVisible();
 
@@ -204,12 +205,21 @@ test.describe('Browser tool execution paths', () => {
     expect(layout.pagerTop).toBeGreaterThanOrEqual(layout.previewBottom - 1);
     expect(layout.pagerTop).toBeLessThanOrEqual(layout.workspaceBottom + 1);
 
+    await page.getByRole('button', { name: 'Select PDF text: Sample PDF Document' }).click();
+    await page.getByLabel('Selected PDF text').fill('Edited heading');
+    await page.getByRole('button', { name: 'Save text', exact: true }).click();
+    await expect(page.getByTitle('Edited heading')).toBeVisible();
+
+    await page.getByRole('button', { name: 'Select PDF text: This is a placeholder page for practicing edits.' }).click();
+    await page.getByRole('button', { name: 'Remove text', exact: true }).click();
+    await expect(page.getByText(/Removed page content/)).toBeVisible();
+
     await page.getByRole('button', { name: 'Text', exact: true }).click();
     await page.getByLabel('Text to add').fill('Hello from the editor');
     await page.locator('.tb-pdf-edit-page').click({ position: { x: 100, y: 100 } });
     await expect(page.getByTitle('Hello from the editor')).toBeVisible();
     const downloadPromise = page.waitForEvent('download');
-    await page.getByRole('button', { name: 'Apply Edits & Download PDF' }).click();
+    await page.getByRole('button', { name: 'Save and Download PDF' }).click();
     const download = await downloadPromise;
     expect(download.suggestedFilename()).toMatch(/edited-.*\.pdf$/i);
     const downloaded = await download.createReadStream();
