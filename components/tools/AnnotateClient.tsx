@@ -49,7 +49,9 @@ export default function AnnotateClient() {
   const [previewLoading, setPreviewLoading] = useState(false);
   const [previewFailed, setPreviewFailed] = useState(false);
   const [draftBox, setDraftBox] = useState<{ x: number; y: number; w: number; h: number } | null>(null);
+  const [previewViewportSize, setPreviewViewportSize] = useState({ width: 0, height: 0 });
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const previewViewportRef = useRef<HTMLDivElement>(null);
   const previewBoxRef = useRef<HTMLDivElement>(null);
   const drawingRef = useRef<{ startX: number; startY: number } | null>(null);
   const loadVersionRef = useRef(0);
@@ -184,6 +186,37 @@ export default function AnnotateClient() {
   }, [fileBytes, page]);
 
   const pageSize = pageSizes[page - 1] ?? { width: 612, height: 792 };
+
+  useEffect(() => {
+    const viewport = previewViewportRef.current;
+    if (!viewport || !preview) {
+      setPreviewViewportSize({ width: 0, height: 0 });
+      return;
+    }
+    const updateSize = () =>
+      setPreviewViewportSize({
+        width: viewport.clientWidth,
+        height: viewport.clientHeight,
+      });
+    const observer = new ResizeObserver(updateSize);
+    observer.observe(viewport);
+    updateSize();
+    return () => observer.disconnect();
+  }, [preview, page]);
+
+  const pageScale = Math.min(
+    1,
+    previewViewportSize.width > 0
+      ? previewViewportSize.width / pageSize.width
+      : 1,
+    previewViewportSize.height > 0
+      ? previewViewportSize.height / pageSize.height
+      : 1,
+  );
+  const displayPageSize = {
+    width: Math.max(1, pageSize.width * pageScale),
+    height: Math.max(1, pageSize.height * pageScale),
+  };
 
   const toPdfPoint = (clientX: number, clientY: number) => {
     const box = previewBoxRef.current?.getBoundingClientRect();
@@ -363,28 +396,30 @@ export default function AnnotateClient() {
         />
       </div>
       <div style={{ padding: 20 }}>
-        <div
-          className="tb-v2-dropzone"
-          onClick={() => fileInputRef.current?.click()}
-          onDragOver={(e) => e.preventDefault()}
-          onDrop={(e) => {
-            e.preventDefault();
-            void handleFile(e.dataTransfer.files?.[0]);
-          }}
-        >
-          <span style={{ fontSize: 28 }}>PDF</span>
-          <span className="tb-v2-dropzone-text">Click or drag a PDF here</span>
-          <span className="tb-v2-dropzone-hint">
-            Review markup is added locally with the original PDF underneath
-          </span>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="application/pdf"
-            onChange={(e) => void handleFile(e.target.files?.[0])}
-            style={{ display: "none" }}
-          />
-        </div>
+        {!fileBytes && (
+          <div
+            className="tb-v2-dropzone"
+            onClick={() => fileInputRef.current?.click()}
+            onDragOver={(e) => e.preventDefault()}
+            onDrop={(e) => {
+              e.preventDefault();
+              void handleFile(e.dataTransfer.files?.[0]);
+            }}
+          >
+            <span style={{ fontSize: 28 }}>PDF</span>
+            <span className="tb-v2-dropzone-text">Click or drag a PDF here</span>
+            <span className="tb-v2-dropzone-hint">
+              Review markup is added locally with the original PDF underneath
+            </span>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="application/pdf"
+              onChange={(e) => void handleFile(e.target.files?.[0])}
+              style={{ display: "none" }}
+            />
+          </div>
+        )}
         {error && (
           <div
             className="tb-v2-banner tb-v2-banner-err"
@@ -396,13 +431,13 @@ export default function AnnotateClient() {
         )}
       </div>
       {fileBytes && (
-        <div style={{ padding: "0 20px 20px" }}>
+        <div className="tb-pdf-annotate-editor" style={{ padding: "0 20px 20px" }}>
           <div className="tb-v2-tool-output-head">
             <span className="tb-v2-tool-label">
               {fileName} - {pageCount} page{pageCount === 1 ? "" : "s"}
             </span>
           </div>
-          <div className="tb-v2-option-group" style={{ marginBottom: 16 }}>
+          <div className="tb-pdf-annotate-pager tb-v2-option-group" style={{ marginBottom: 16 }}>
             <label htmlFor="annotate-page">Selected page</label>
             <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
               <button
@@ -442,49 +477,59 @@ export default function AnnotateClient() {
               </span>
             </div>
           </div>
-          <div style={{ marginBottom: 16 }}>
+          <div className="tb-pdf-annotate-preview-section" style={{ marginBottom: 16 }}>
             <span className="tb-v2-tool-label">Page preview - drag to place highlight or rectangle, click to place text</span>
             <div
-              ref={previewBoxRef}
+              ref={previewViewportRef}
+              className="tb-pdf-annotate-preview-viewport"
               data-testid="annotate-preview"
               onPointerDown={handlePreviewPointerDown}
               onPointerMove={handlePreviewPointerMove}
               onPointerUp={handlePreviewPointerUp}
               onPointerLeave={handlePreviewPointerUp}
               style={{
-                position: "relative",
                 marginTop: 8,
-                border: "1px solid var(--line)",
-                borderRadius: 8,
-                overflow: "hidden",
-                background: "var(--surface-2)",
-                touchAction: "none",
-                cursor: type === "text" ? "text" : "crosshair",
-                userSelect: "none",
               }}
             >
-              {preview ? (
-                <img
-                  src={preview}
-                  alt={`Rendered page ${page} of ${fileName}`}
-                  data-testid="annotate-preview-image"
-                  draggable={false}
-                  style={{ display: "block", width: "100%", height: "auto" }}
-                />
-              ) : (
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    minHeight: 320,
-                    color: "var(--fg-2)",
-                    fontSize: 13,
-                  }}
-                >
-                  {previewLoading ? "Rendering page preview…" : "Page preview unavailable - you can still place markup with the coordinates below."}
-                </div>
-              )}
+              <div
+                ref={previewBoxRef}
+                className="tb-pdf-annotate-page"
+                style={{
+                  position: "relative",
+                  width: displayPageSize.width,
+                  height: displayPageSize.height,
+                  flex: "0 0 auto",
+                  border: "1px solid var(--line)",
+                  borderRadius: 8,
+                  overflow: "hidden",
+                  background: "var(--surface-2)",
+                  touchAction: "none",
+                  cursor: type === "text" ? "text" : "crosshair",
+                  userSelect: "none",
+                }}
+              >
+                {preview ? (
+                  <img
+                    src={preview}
+                    alt={`Rendered page ${page} of ${fileName}`}
+                    data-testid="annotate-preview-image"
+                    draggable={false}
+                    style={{ display: "block", width: "100%", height: "100%" }}
+                  />
+                ) : (
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      minHeight: 320,
+                      color: "var(--fg-2)",
+                      fontSize: 13,
+                    }}
+                  >
+                    {previewLoading ? "Rendering page preview…" : "Page preview unavailable - you can still place markup with the coordinates below."}
+                  </div>
+                )}
               {preview &&
                 annotations
                   .filter((ann) => ann.page === page)
@@ -525,6 +570,7 @@ export default function AnnotateClient() {
                   }}
                 />
               )}
+              </div>
             </div>
             {previewFailed && (
               <p className="tb-v2-empty" role="alert">
@@ -532,7 +578,7 @@ export default function AnnotateClient() {
               </p>
             )}
           </div>
-          <div className="tb-v2-option-group" style={{ marginBottom: 16 }}>
+          <div className="tb-pdf-annotate-tools tb-v2-option-group" style={{ marginBottom: 16 }}>
             <label className="tb-v2-tool-label">Markup</label>
             <div className="tb-v2-mode-tabs">
               {(["highlight", "rectangle", "text"] as AnnotationType[]).map(
@@ -650,7 +696,7 @@ export default function AnnotateClient() {
               Add Markup
             </button>
           </div>
-          <div className="tb-v2-mode-tabs">
+          <div className="tb-pdf-annotate-actions tb-v2-mode-tabs">
             <button
               type="button"
               onClick={undo}
@@ -679,11 +725,11 @@ export default function AnnotateClient() {
             </button>
           </div>
           {status === "done" && (
-            <div className="tb-v2-banner" style={{ marginTop: 12 }}>
+            <div className="tb-pdf-annotate-status tb-v2-banner" style={{ marginTop: 12 }}>
               Annotated PDF downloaded.
             </div>
           )}
-          <p className="tb-v2-empty">
+          <p className="tb-pdf-annotate-count tb-v2-empty">
             {annotations.length} markup item
             {annotations.length === 1 ? "" : "s"} - Coordinates are points from
             the top-left of the selected page.
