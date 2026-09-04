@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import ToolExampleClearActions from "@/components/tools/ToolExampleClearActions";
 
@@ -44,7 +44,15 @@ export default function AnnotateClient() {
   const [color, setColor] = useState("#f59e0b");
   const [error, setError] = useState("");
   const [status, setStatus] = useState<"idle" | "processing" | "done">("idle");
+  const [pageSizes, setPageSizes] = useState<{ width: number; height: number }[]>([]);
+  const [preview, setPreview] = useState<string | null>(null);
+  const [previewLoading, setPreviewLoading] = useState(false);
+  const [previewFailed, setPreviewFailed] = useState(false);
+  const [draftBox, setDraftBox] = useState<{ x: number; y: number; w: number; h: number } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const previewBoxRef = useRef<HTMLDivElement>(null);
+  const drawingRef = useRef<{ startX: number; startY: number } | null>(null);
+  const loadVersionRef = useRef(0);
 
   const resetDocument = () => {
     setFileBytes(null);
@@ -54,21 +62,30 @@ export default function AnnotateClient() {
     setAnnotations([]);
     setError("");
     setStatus("idle");
+    setPageSizes([]);
+    setPreview(null);
+    setPreviewLoading(false);
+    setPreviewFailed(false);
+    setDraftBox(null);
   };
 
   const loadPdf = async (bytes: Uint8Array, name: string) => {
+    const version = ++loadVersionRef.current;
     resetDocument();
     try {
       const doc = await PDFDocument.load(bytes);
       if (doc.getPageCount() === 0) throw new Error("The PDF has no pages.");
+      if (version !== loadVersionRef.current) return;
       setFileBytes(bytes);
       setFileName(name);
       setPageCount(doc.getPageCount());
       setPage(1);
       setAnnotations([]);
+      setPageSizes(doc.getPages().map((p) => p.getSize()));
       setError("");
       setStatus("idle");
     } catch {
+      if (version !== loadVersionRef.current) return;
       setError(
         "Could not read this file as a PDF. Make sure it is a valid, unencrypted PDF.",
       );
@@ -102,6 +119,7 @@ export default function AnnotateClient() {
     await loadPdf(await doc.save(), "annotate-sample.pdf");
   };
   const clearAll = () => {
+    loadVersionRef.current += 1;
     resetDocument();
     setType("highlight");
     setX(60);
@@ -112,6 +130,134 @@ export default function AnnotateClient() {
     setText("Review comment");
     setColor("#f59e0b");
     if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+  useEffect(() => {
+    if (!fileBytes) {
+      setPreview(null);
+      setPreviewLoading(false);
+      return;
+    }
+    const version = loadVersionRef.current;
+    let active = true;
+    setPreviewLoading(true);
+    setPreviewFailed(false);
+    (async () => {
+      try {
+        const pdfjs = await import("pdfjs-dist/legacy/build/pdf.mjs");
+        pdfjs.GlobalWorkerOptions.workerSrc = `${process.env.NEXT_PUBLIC_BASE_PATH || ""}/pdf-worker/pdf.worker.min.mjs`;
+        const task = pdfjs.getDocument({ data: fileBytes.slice() });
+        try {
+          const doc = await task.promise;
+          if (page < 1 || page > doc.numPages) {
+            await task.destroy();
+            return;
+          }
+          const pdfPage = await doc.getPage(page);
+          const viewport = pdfPage.getViewport({ scale: 1.2 });
+          const canvas = window.document.createElement("canvas");
+          canvas.width = Math.ceil(viewport.width);
+          canvas.height = Math.ceil(viewport.height);
+          const context = canvas.getContext("2d");
+          if (!context) throw new Error("Canvas unavailable.");
+          await pdfPage.render({ canvas, canvasContext: context, viewport }).promise;
+          if (active && version === loadVersionRef.current) {
+            setPreview(canvas.toDataURL("image/png"));
+          }
+          await task.destroy();
+        } catch (renderError) {
+          try {
+            await task.destroy();
+          } catch {
+            /* ignore cleanup errors */
+          }
+          throw renderError;
+        }
+      } catch {
+        if (active && version === loadVersionRef.current) setPreviewFailed(true);
+      } finally {
+        if (active && version === loadVersionRef.current) setPreviewLoading(false);
+      }
+    })();
+    return () => {
+      active = false;
+    };
+  }, [fileBytes, page]);
+
+  const pageSize = pageSizes[page - 1] ?? { width: 612, height: 792 };
+
+  const toPdfPoint = (clientX: number, clientY: number) => {
+    const box = previewBoxRef.current?.getBoundingClientRect();
+    if (!box) return null;
+    const relX = Math.min(1, Math.max(0, (clientX - box.left) / box.width));
+    const relY = Math.min(1, Math.max(0, (clientY - box.top) / box.height));
+    return { x: relX * pageSize.width, y: relY * pageSize.height };
+  };
+
+  const placeAnnotation = (px: number, py: number, w: number, h: number) => {
+    if (!fileBytes) return;
+    if (type === "text" && !text.trim()) {
+      setError("Enter a comment or label before adding text.");
+      return;
+    }
+    setX(Math.round(px));
+    setY(Math.round(py));
+    if (type !== "text") {
+      setWidth(Math.max(1, Math.round(w)));
+      setHeight(Math.max(1, Math.round(h)));
+    }
+    setAnnotations((prev) => [
+      ...prev,
+      {
+        id: nextAnnotationId++,
+        type,
+        page,
+        x: Math.max(0, Math.round(px)),
+        y: Math.max(0, Math.round(py)),
+        width: Math.max(1, Math.round(w)),
+        height: Math.max(1, Math.round(h)),
+        text: text.trim(),
+        fontSize: Math.max(8, Math.min(72, fontSize)),
+        color,
+      },
+    ]);
+    setError("");
+    setStatus("idle");
+  };
+
+  const handlePreviewPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!fileBytes || !preview) return;
+    const pt = toPdfPoint(e.clientX, e.clientY);
+    if (!pt) return;
+    if (type === "text") {
+      setX(Math.round(pt.x));
+      setY(Math.round(pt.y));
+      return;
+    }
+    drawingRef.current = { startX: pt.x, startY: pt.y };
+    setDraftBox({ x: pt.x, y: pt.y, w: 0, h: 0 });
+  };
+
+  const handlePreviewPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    const start = drawingRef.current;
+    if (!start) return;
+    const pt = toPdfPoint(e.clientX, e.clientY);
+    if (!pt) return;
+    setDraftBox({
+      x: Math.min(start.startX, pt.x),
+      y: Math.min(start.startY, pt.y),
+      w: Math.abs(pt.x - start.startX),
+      h: Math.abs(pt.y - start.startY),
+    });
+  };
+
+  const handlePreviewPointerUp = () => {
+    const start = drawingRef.current;
+    const box = draftBox;
+    drawingRef.current = null;
+    setDraftBox(null);
+    if (!start || !box) return;
+    if (box.w < 4 || box.h < 4) return;
+    placeAnnotation(box.x, box.y, box.w, box.h);
   };
   const addAnnotation = () => {
     if (!fileBytes) return;
@@ -258,20 +404,133 @@ export default function AnnotateClient() {
           </div>
           <div className="tb-v2-option-group" style={{ marginBottom: 16 }}>
             <label htmlFor="annotate-page">Selected page</label>
-            <input
-              id="annotate-page"
-              type="number"
-              min={1}
-              max={pageCount}
-              value={page}
-              onChange={(e) =>
-                setPage(
-                  Math.max(1, Math.min(pageCount, Number(e.target.value) || 1)),
-                )
-              }
-              className="tb-v2-input"
-              style={{ width: 80 }}
-            />
+            <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+              <button
+                type="button"
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                disabled={page <= 1}
+                className="tb-v2-btn-sm"
+                aria-label="Previous page"
+              >
+                ←
+              </button>
+              <input
+                id="annotate-page"
+                type="number"
+                min={1}
+                max={pageCount}
+                value={page}
+                onChange={(e) =>
+                  setPage(
+                    Math.max(1, Math.min(pageCount, Number(e.target.value) || 1)),
+                  )
+                }
+                className="tb-v2-input"
+                style={{ width: 80 }}
+              />
+              <button
+                type="button"
+                onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
+                disabled={page >= pageCount}
+                className="tb-v2-btn-sm"
+                aria-label="Next page"
+              >
+                →
+              </button>
+              <span className="tb-v2-empty" style={{ margin: 0 }}>
+                Page {page} of {pageCount}
+              </span>
+            </div>
+          </div>
+          <div style={{ marginBottom: 16 }}>
+            <span className="tb-v2-tool-label">Page preview - drag to place highlight or rectangle, click to place text</span>
+            <div
+              ref={previewBoxRef}
+              data-testid="annotate-preview"
+              onPointerDown={handlePreviewPointerDown}
+              onPointerMove={handlePreviewPointerMove}
+              onPointerUp={handlePreviewPointerUp}
+              onPointerLeave={handlePreviewPointerUp}
+              style={{
+                position: "relative",
+                marginTop: 8,
+                border: "1px solid var(--line)",
+                borderRadius: 8,
+                overflow: "hidden",
+                background: "var(--surface-2)",
+                touchAction: "none",
+                cursor: type === "text" ? "text" : "crosshair",
+                userSelect: "none",
+              }}
+            >
+              {preview ? (
+                <img
+                  src={preview}
+                  alt={`Rendered page ${page} of ${fileName}`}
+                  data-testid="annotate-preview-image"
+                  draggable={false}
+                  style={{ display: "block", width: "100%", height: "auto" }}
+                />
+              ) : (
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    minHeight: 320,
+                    color: "var(--fg-2)",
+                    fontSize: 13,
+                  }}
+                >
+                  {previewLoading ? "Rendering page preview…" : "Page preview unavailable - you can still place markup with the coordinates below."}
+                </div>
+              )}
+              {preview &&
+                annotations
+                  .filter((ann) => ann.page === page)
+                  .map((ann) => (
+                    <div
+                      key={ann.id}
+                      aria-hidden="true"
+                      style={{
+                        position: "absolute",
+                        left: `${(ann.x / pageSize.width) * 100}%`,
+                        top: `${(ann.y / pageSize.height) * 100}%`,
+                        width: ann.type === "text" ? "auto" : `${(ann.width / pageSize.width) * 100}%`,
+                        height: ann.type === "text" ? "auto" : `${(ann.height / pageSize.height) * 100}%`,
+                        backgroundColor: ann.type === "highlight" ? `${ann.color}59` : "transparent",
+                        border: ann.type === "rectangle" ? `2px solid ${ann.color}` : "none",
+                        color: ann.color,
+                        fontSize: ann.type === "text" ? 14 : undefined,
+                        fontWeight: 700,
+                        pointerEvents: "none",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {ann.type === "text" ? ann.text : null}
+                    </div>
+                  ))}
+              {preview && draftBox && draftBox.w > 0 && draftBox.h > 0 && (
+                <div
+                  aria-hidden="true"
+                  style={{
+                    position: "absolute",
+                    left: `${(draftBox.x / pageSize.width) * 100}%`,
+                    top: `${(draftBox.y / pageSize.height) * 100}%`,
+                    width: `${(draftBox.w / pageSize.width) * 100}%`,
+                    height: `${(draftBox.h / pageSize.height) * 100}%`,
+                    backgroundColor: type === "highlight" ? `${color}59` : "transparent",
+                    border: `2px dashed ${color}`,
+                    pointerEvents: "none",
+                  }}
+                />
+              )}
+            </div>
+            {previewFailed && (
+              <p className="tb-v2-empty" role="alert">
+                The visual preview could not be rendered, but markup placement with coordinates and export still work.
+              </p>
+            )}
           </div>
           <div className="tb-v2-option-group" style={{ marginBottom: 16 }}>
             <label className="tb-v2-tool-label">Markup</label>

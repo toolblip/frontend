@@ -115,6 +115,39 @@ test.describe('Browser tool execution paths', () => {
     expect(output.getPages().every((pdfPage) => pdfPage.getWidth() > 0 && pdfPage.getHeight() > 0)).toBe(true);
   });
 
+  test('annotate-pdf annotates a rendered page preview in the browser', async ({ page }) => {
+    await page.goto('/tools/annotate-pdf');
+    await dismissCookies(page);
+
+    await page.getByRole('button', { name: 'Example', exact: true }).click();
+    await expect(page.getByText('annotate-sample.pdf - 2 pages', { exact: true })).toBeVisible();
+    await expect(page.getByTestId('annotate-preview-image')).toBeVisible();
+    await expect(page.getByText('Page 1 of 2', { exact: true })).toBeVisible();
+
+    await page.evaluate(() => {
+      document.querySelector('[data-testid="annotate-preview"]')?.scrollIntoView({ block: 'start', behavior: 'instant' as ScrollBehavior });
+    });
+    await page.waitForTimeout(300);
+    const previewBox = await page.getByTestId('annotate-preview').boundingBox();
+    expect(previewBox).not.toBeNull();
+    await page.mouse.move(previewBox!.x + previewBox!.width * 0.3, previewBox!.y + previewBox!.height * 0.1);
+    await page.mouse.down();
+    await page.mouse.move(previewBox!.x + previewBox!.width * 0.6, previewBox!.y + previewBox!.height * 0.25, { steps: 5 });
+    await page.mouse.up();
+    await expect(page.getByText('1 markup item')).toBeVisible();
+
+    const downloadPromise = page.waitForEvent('download');
+    await page.getByRole('button', { name: 'Export Annotated PDF' }).click();
+    const download = await downloadPromise;
+    expect(download.suggestedFilename()).toMatch(/annotated-.*\.pdf$/i);
+    await expect(page.getByText('Annotated PDF downloaded.')).toBeVisible();
+    const downloaded = await download.createReadStream();
+    const chunks: Buffer[] = [];
+    for await (const chunk of downloaded ?? []) chunks.push(Buffer.from(chunk));
+    const output = await PDFDocument.load(Buffer.concat(chunks));
+    expect(output.getPageCount()).toBe(2);
+  });
+
   test('DNS lookup uses the canonical route and preserves the V2 interface', async ({ page, request }) => {
     for (const legacyPath of ['/tools/dns-lookup-v2', '/tools/dns-lookup-express']) {
       const response = await request.get(legacyPath, { maxRedirects: 0 });
