@@ -3375,7 +3375,7 @@ Output: xn--85bp0auq.xn--54b7fta0cc`
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "rearrange": {
+  "pdf-rearrange": {
     description: `Fixing a scanned document where the pages landed out of order, or one where a page ended up upside down, means either rescanning from scratch or opening a full PDF editor just to move and rotate a handful of pages, both heavier than the actual fix requires when the content itself is already fine. This tool reorders, rotates, and reorganizes PDF pages through a drag-and-drop interface, built for restructuring an existing document's page order rather than editing the content on any individual page. Useful for fixing a scanned document's pages that came out in the wrong order, rotating a page that landed sideways or upside down without touching the rest of the file, or reorganizing a multi-source PDF's pages into the sequence they were actually meant to be read in.`,
     examples: [
       {
