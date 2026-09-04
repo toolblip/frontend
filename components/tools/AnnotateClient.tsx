@@ -50,6 +50,7 @@ export default function AnnotateClient() {
   const [previewFailed, setPreviewFailed] = useState(false);
   const [draftBox, setDraftBox] = useState<{ x: number; y: number; w: number; h: number } | null>(null);
   const [previewViewportSize, setPreviewViewportSize] = useState({ width: 0, height: 0 });
+  const [zoom, setZoom] = useState(1);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const previewViewportRef = useRef<HTMLDivElement>(null);
   const previewBoxRef = useRef<HTMLDivElement>(null);
@@ -131,6 +132,7 @@ export default function AnnotateClient() {
     setFontSize(16);
     setText("Review comment");
     setColor("#f59e0b");
+    setZoom(1);
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
   useEffect(() => {
@@ -214,8 +216,8 @@ export default function AnnotateClient() {
       : 1,
   );
   const displayPageSize = {
-    width: Math.max(1, pageSize.width * pageScale),
-    height: Math.max(1, pageSize.height * pageScale),
+    width: Math.max(1, pageSize.width * pageScale * zoom),
+    height: Math.max(1, pageSize.height * pageScale * zoom),
   };
 
   const toPdfPoint = (clientX: number, clientY: number) => {
@@ -491,6 +493,31 @@ export default function AnnotateClient() {
                 marginTop: 8,
               }}
             >
+              <div
+                className="tb-pdf-annotate-zoom-controls"
+                aria-label="PDF zoom controls"
+                onPointerDown={(e) => e.stopPropagation()}
+              >
+                <button
+                  type="button"
+                  className="tb-v2-btn-sm"
+                  aria-label="Zoom out"
+                  onClick={() => setZoom((value) => Math.max(0.5, value - 0.25))}
+                  disabled={zoom <= 0.5}
+                >
+                  −
+                </button>
+                <span aria-live="polite">{Math.round(zoom * 100)}%</span>
+                <button
+                  type="button"
+                  className="tb-v2-btn-sm"
+                  aria-label="Zoom in"
+                  onClick={() => setZoom((value) => Math.min(2, value + 0.25))}
+                  disabled={zoom >= 2}
+                >
+                  +
+                </button>
+              </div>
               <div
                 ref={previewBoxRef}
                 className="tb-pdf-annotate-page"

@@ -150,6 +150,13 @@ test.describe('Browser tool execution paths', () => {
     expect(layout.pagerBottom).toBeLessThanOrEqual(layout.editorBottom + 1);
     expect(layout.pageWidth).toBeLessThanOrEqual(layout.previewWidth + 1);
     expect(layout.pageHeight).toBeLessThanOrEqual(layout.previewHeight + 1);
+    await expect(page.getByRole('button', { name: 'Zoom out' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Zoom in' })).toBeVisible();
+    await expect(page.getByText('100%', { exact: true })).toBeVisible();
+    await page.getByRole('button', { name: 'Zoom in' }).click();
+    await expect(page.getByText('125%', { exact: true })).toBeVisible();
+    await page.getByRole('button', { name: 'Zoom out' }).click();
+    await expect(page.getByText('100%', { exact: true })).toBeVisible();
 
     await page.evaluate(() => {
       document.querySelector('[data-testid="annotate-preview"]')?.scrollIntoView({ block: 'center', behavior: 'instant' as ScrollBehavior });
