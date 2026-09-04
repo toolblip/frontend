@@ -472,7 +472,7 @@ export default function AnnotateClient() {
               >
                 →
               </button>
-              <span className="tb-v2-empty" style={{ margin: 0 }}>
+              <span className="tb-pdf-annotate-page-indicator">
                 Page {page} of {pageCount}
               </span>
             </div>
@@ -579,7 +579,7 @@ export default function AnnotateClient() {
             )}
           </div>
           <div className="tb-pdf-annotate-tools tb-v2-option-group" style={{ marginBottom: 16 }}>
-            <label className="tb-v2-tool-label">Markup</label>
+            <label className="tb-v2-tool-label">Markup tools</label>
             <div className="tb-v2-mode-tabs">
               {(["highlight", "rectangle", "text"] as AnnotationType[]).map(
                 (item) => (
@@ -589,7 +589,7 @@ export default function AnnotateClient() {
                     onClick={() => setType(item)}
                     className={`tb-v2-mode-tab ${type === item ? "on" : ""}`}
                   >
-                    {item}
+                    {item.charAt(0).toUpperCase() + item.slice(1)}
                   </button>
                 ),
               )}
