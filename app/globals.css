@@ -2452,6 +2452,7 @@ button.tb-v2-mm-more-row-btn {
 }
 
 /* PDF extractor preview */
+.tb-pdf-extract-preview-toggle { margin-bottom: 16px; }
 .tb-pdf-extract-preview-section {
   width: 100%;
   max-width: 1040px;
