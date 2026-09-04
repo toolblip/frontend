@@ -304,4 +304,21 @@ test.describe('Browser tool execution paths', () => {
     await hex.fill('#ffffff');
     await expect(page.getByText('rgb(255, 255, 255)', { exact: true })).toBeVisible();
   });
+
+  test('extract-images-from-pdf loads its sample, extracts an image, and clears', async ({ page }) => {
+    await page.goto('/tools/extract-images-from-pdf');
+    await dismissCookies(page);
+
+    await expect(page.getByRole('button', { name: 'Example', exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Clear', exact: true })).toBeDisabled();
+    await page.getByRole('button', { name: 'Example', exact: true }).click();
+    await expect(page.getByText('Images Extracted', { exact: true })).toBeVisible({ timeout: 15000 });
+    await expect(page.getByText('1', { exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Download All as ZIP' })).toBeVisible();
+    await expect(page.getByText('Click or drag a PDF file here', { exact: true })).toHaveCount(0);
+
+    await page.getByRole('button', { name: 'Clear', exact: true }).click();
+    await expect(page.getByText('Upload a PDF file to extract its embedded images.', { exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Clear', exact: true })).toBeDisabled();
+  });
 });
