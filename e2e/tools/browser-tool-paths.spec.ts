@@ -340,9 +340,12 @@ test.describe('Browser tool execution paths', () => {
     await expect(page.getByText('2 PDFs ready to merge', { exact: true })).toBeVisible({ timeout: 15000 });
     await expect(page.getByText('sample-1.pdf', { exact: true })).toBeVisible();
     await expect(page.getByText('sample-2.pdf', { exact: true })).toBeVisible();
+    const cards = page.locator('.tb-pdf-merge-file');
+    await cards.nth(1).dragTo(cards.nth(0));
+    await expect(cards.nth(0)).toContainText('sample-2.pdf');
 
     const downloadPromise = page.waitForEvent('download');
-    await page.getByRole('button', { name: 'Merge 2 PDFs', exact: true }).click();
+    await page.getByRole('button', { name: 'Merge PDF', exact: true }).click();
     await expect(page.getByText(/Merged 2 PDFs into one document \(2 pages\)/)).toBeVisible();
     await page.getByRole('button', { name: 'Download merged PDF', exact: true }).click();
     const download = await downloadPromise;
