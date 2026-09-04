@@ -253,13 +253,14 @@ export default function ExtractImgClient() {
   const [previewPageSize, setPreviewPageSize] = useState({ width: 612, height: 792 });
   const [previewViewportSize, setPreviewViewportSize] = useState({ width: 0, height: 0 });
   const [zoom, setZoom] = useState(1);
+  const [showPreview, setShowPreview] = useState(false);
   const previewViewportRef = useRef<HTMLDivElement>(null);
 
   const clearAll = () => {
     loadVersionRef.current += 1;
     images.forEach(img => URL.revokeObjectURL(img.previewUrl));
     setImages([]); setSkipped(0); setFileName(''); setError(''); setLoading(false); setLoaded(false); setIsDragging(false);
-    setPdfBytes(null); setPageCount(0); setCurrentPage(1); setPreview(null); setPreviewFailed(false); setZoom(1);
+    setPdfBytes(null); setPageCount(0); setCurrentPage(1); setPreview(null); setPreviewFailed(false); setZoom(1); setShowPreview(false);
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
@@ -309,6 +310,7 @@ export default function ExtractImgClient() {
       setPreview(null);
       setPreviewFailed(false);
       setZoom(1);
+      setShowPreview(false);
       setLoaded(true);
     } catch (e) {
       if (requestId === loadVersionRef.current) setError(e instanceof Error ? e.message : 'Could not read this PDF file.');
@@ -325,7 +327,7 @@ export default function ExtractImgClient() {
   };
 
   useEffect(() => {
-    if (!pdfBytes) {
+    if (!pdfBytes || !showPreview) {
       setPreview(null);
       setPreviewLoading(false);
       return;
@@ -366,7 +368,7 @@ export default function ExtractImgClient() {
       }
     })();
     return () => { active = false; };
-  }, [pdfBytes, currentPage]);
+  }, [pdfBytes, currentPage, showPreview]);
 
   useEffect(() => {
     const viewport = previewViewportRef.current;
@@ -442,7 +444,10 @@ export default function ExtractImgClient() {
       {loaded && (
         <div style={{ padding: '0 20px 20px' }}>
           <div className="tb-v2-tool-output-head" style={{ margin: '0 -20px 16px' }}><span className="tb-v2-tool-label">{fileName} &middot; {images.length} image{images.length === 1 ? '' : 's'}</span></div>
-          <div className="tb-pdf-extract-preview-section">
+          <button type="button" className="tb-v2-btn-sm tb-pdf-extract-preview-toggle" aria-expanded={showPreview} onClick={() => setShowPreview(value => !value)}>
+            {showPreview ? 'Hide PDF preview' : 'Preview PDF'}
+          </button>
+          {showPreview && <div className="tb-pdf-extract-preview-section">
             <span className="tb-v2-tool-label">PDF preview</span>
             <div ref={previewViewportRef} className="tb-pdf-extract-preview-viewport">
               <div className="tb-pdf-extract-page" style={{ width: displayPreviewSize.width, height: displayPreviewSize.height }}>
@@ -464,7 +469,7 @@ export default function ExtractImgClient() {
               <button type="button" className="tb-v2-btn-sm" disabled={currentPage >= pageCount} onClick={() => setCurrentPage(page => page + 1)}>Next →</button>
             </div>
             {previewFailed && <p className="tb-v2-empty" role="alert">The PDF preview could not be rendered.</p>}
-          </div>
+          </div>}
           <div className="tb-v2-stats-grid" style={{ marginBottom: 16 }}>
             <div className="tb-v2-stat-pill"><div style={{ fontSize: 11, color: 'var(--fg-2)' }}>Images Extracted</div><div>{images.length}</div></div>
             {skipped > 0 && <div className="tb-v2-stat-pill"><div style={{ fontSize: 11, color: 'var(--fg-2)' }}>Skipped (unsupported)</div><div>{skipped}</div></div>}

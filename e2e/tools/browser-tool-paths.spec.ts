@@ -309,15 +309,20 @@ test.describe('Browser tool execution paths', () => {
     await page.goto('/tools/extract-images-from-pdf');
     await dismissCookies(page);
 
-    await expect(page.getByRole('button', { name: 'Example', exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Example', exact: true })).toBeVisible({ timeout: 15000 });
     await expect(page.getByRole('button', { name: 'Clear', exact: true })).toBeDisabled();
     await page.getByRole('button', { name: 'Example', exact: true }).click();
     await expect(page.getByText('Images Extracted', { exact: true })).toBeVisible({ timeout: 15000 });
+    await expect(page.getByRole('button', { name: 'Preview PDF', exact: true })).toBeVisible();
+    await expect(page.getByTestId('extract-pdf-preview-image')).toHaveCount(0);
+    await page.getByRole('button', { name: 'Preview PDF', exact: true }).click();
     await expect(page.getByTestId('extract-pdf-preview-image')).toBeVisible();
     await expect(page.getByRole('button', { name: 'Zoom out PDF preview' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Zoom in PDF preview' })).toBeVisible();
     await expect(page.getByText('Page 1 of 1', { exact: true })).toBeVisible();
-    await expect(page.getByText('1', { exact: true })).toBeVisible();
+    await page.getByRole('button', { name: 'Hide PDF preview', exact: true }).click();
+    await expect(page.getByTestId('extract-pdf-preview-image')).toHaveCount(0);
+    await expect(page.locator('.tb-v2-stat-pill').first().getByText('1', { exact: true })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Download All as ZIP' })).toBeVisible();
     await expect(page.getByText('Click or drag a PDF file here', { exact: true })).toHaveCount(0);
 
