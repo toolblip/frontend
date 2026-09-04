@@ -1,176 +1,150 @@
 'use client';
 
-import { useCallback, useRef, useState } from 'react';
-import { PDFDocument, StandardFonts, degrees, rgb } from 'pdf-lib';
-import { useSubscription } from '@/hooks/useSubscription';
-import { checkFileSize } from '@/lib/tier-limits';
+import { useRef, useState } from 'react';
+import { PDFDocument, degrees, StandardFonts, rgb } from 'pdf-lib';
 import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
-const isPdfFile = (file: File) =>
-  file.type === 'application/pdf' || /\.pdf$/i.test(file.name);
+interface PageItem {
+  originalIndex: number;
+  rotation: number;
+  previewUrl: string | null;
+}
+
+type Status = 'idle' | 'loading' | 'processing' | 'done' | 'error';
+
+async function renderPageThumbnail(bytes: Uint8Array, pageNumber: number): Promise<string | null> {
+  try {
+    const pdfjs = await import('pdfjs-dist/legacy/build/pdf.mjs');
+    pdfjs.GlobalWorkerOptions.workerSrc = `${process.env.NEXT_PUBLIC_BASE_PATH || ''}/pdf-worker/pdf.worker.min.mjs`;
+    const task = pdfjs.getDocument({ data: bytes.slice() });
+    try {
+      const doc = await task.promise;
+      const page = await doc.getPage(pageNumber);
+      const viewport = page.getViewport({ scale: 0.28 });
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.ceil(viewport.width);
+      canvas.height = Math.ceil(viewport.height);
+      const context = canvas.getContext('2d');
+      if (!context) return null;
+      await page.render({ canvas, canvasContext: context, viewport }).promise;
+      return canvas.toDataURL('image/png');
+    } finally {
+      await task.destroy();
+    }
+  } catch {
+    return null;
+  }
+}
 
 export default function RearrangePDFPagesClient() {
-  const { tier } = useSubscription();
   const [file, setFile] = useState<File | null>(null);
-  const [fileBytes, setFileBytes] = useState<Uint8Array | null>(null);
-  const [pageCount, setPageCount] = useState(0);
-  const [order, setOrder] = useState<number[]>([]);
-  const [rotations, setRotations] = useState<number[]>([]);
-  const [status, setStatus] = useState<'idle' | 'loading' | 'processing' | 'done' | 'error'>('idle');
+  const [pages, setPages] = useState<PageItem[]>([]);
+  const [status, setStatus] = useState<Status>('idle');
   const [message, setMessage] = useState('');
-  const [isDragging, setIsDragging] = useState(false);
   const [resultBlob, setResultBlob] = useState<Blob | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [draggingIndex, setDraggingIndex] = useState<number | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
-  const dragIndexRef = useRef<number | null>(null);
   const loadVersionRef = useRef(0);
 
-  const clearAll = () => {
+  const revokePreviews = (items: PageItem[]) => items.forEach(item => { if (item.previewUrl) URL.revokeObjectURL(item.previewUrl); });
+
+  const reset = () => {
     loadVersionRef.current += 1;
+    revokePreviews(pages);
     setFile(null);
-    setFileBytes(null);
-    setPageCount(0);
-    setOrder([]);
-    setRotations([]);
+    setPages([]);
     setStatus('idle');
     setMessage('');
     setResultBlob(null);
     setIsDragging(false);
+    setDraggingIndex(null);
     if (fileRef.current) fileRef.current.value = '';
   };
 
-  const loadFile = useCallback(async (selected: File | undefined, requestId = ++loadVersionRef.current) => {
-    if (!selected) return;
-    setFile(null);
-    setFileBytes(null);
-    setPageCount(0);
-    setOrder([]);
-    setRotations([]);
-    setResultBlob(null);
+  const handleFile = async (selectedFile: File | undefined, requestId = ++loadVersionRef.current) => {
+    if (!selectedFile) return;
+    setStatus('loading');
     setMessage('');
-    setStatus('idle');
-    if (!isPdfFile(selected)) {
+    setResultBlob(null);
+    if (selectedFile.type !== 'application/pdf' && !/\.pdf$/i.test(selectedFile.name)) {
       setStatus('error');
       setMessage('Please choose a PDF file.');
       return;
     }
-    const sizeError = checkFileSize(selected, tier);
-    if (sizeError) {
-      setStatus('error');
-      setMessage(sizeError);
-      return;
-    }
-    setStatus('loading');
     try {
-      const bytes = new Uint8Array(await selected.arrayBuffer());
+      const bytes = new Uint8Array(await selectedFile.arrayBuffer());
       const pdfDoc = await PDFDocument.load(bytes);
-      const pages = pdfDoc.getPages();
-      if (pages.length === 0) throw new Error('The PDF has no pages.');
-      if (requestId !== loadVersionRef.current) return;
-      setFile(selected);
-      setFileBytes(bytes);
-      setPageCount(pages.length);
-      setOrder(pages.map((_, index) => index));
-      setRotations(pages.map((page) => ((page.getRotation().angle % 360) + 360) % 360));
+      const pageCount = pdfDoc.getPageCount();
+      const nextPages: PageItem[] = [];
+      for (let index = 0; index < pageCount; index++) {
+        nextPages.push({ originalIndex: index, rotation: ((pdfDoc.getPage(index).getRotation().angle % 360) + 360) % 360, previewUrl: await renderPageThumbnail(bytes, index + 1) });
+      }
+      if (requestId !== loadVersionRef.current) {
+        revokePreviews(nextPages);
+        return;
+      }
+      revokePreviews(pages);
+      setFile(selectedFile);
+      setPages(nextPages);
       setStatus('idle');
     } catch {
       if (requestId === loadVersionRef.current) {
         setStatus('error');
-        setMessage('Could not read this file as a valid PDF.');
+        setMessage('Could not read this PDF. Please choose a valid PDF file.');
       }
     }
-  }, [tier]);
+  };
 
-  const loadExample = useCallback(async () => {
+  const loadExample = async () => {
     const requestId = ++loadVersionRef.current;
+    setStatus('loading');
+    setMessage('');
     try {
       const doc = await PDFDocument.create();
-      const font = await doc.embedFont(StandardFonts.HelveticaBold);
-      ['First page', 'Second page', 'Third page'].forEach((title, index) => {
-        const page = doc.addPage([500, 320]);
-        page.drawRectangle({ x: 0, y: 0, width: 500, height: 320, color: rgb(0.95, 0.97, 1) });
-        page.drawText(title, { x: 60, y: 220, size: 28, font, color: rgb(0.1, 0.2, 0.45) });
-        page.drawText(`Example page ${index + 1}`, { x: 60, y: 180, size: 16, font });
+      const font = await doc.embedFont(StandardFonts.Helvetica);
+      ['Cover page', 'Project details', 'Next steps'].forEach((title, index) => {
+        const page = doc.addPage([612, 792]);
+        page.drawText(title, { x: 60, y: 700, size: 26, font, color: rgb(0.1, 0.2, 0.4) });
+        page.drawText(`Sample page ${index + 1} — drag pages to change this order.`, { x: 60, y: 660, size: 13, font, color: rgb(0.35, 0.35, 0.35) });
       });
-      const bytes = await doc.save();
-      if (requestId !== loadVersionRef.current) return;
-      await loadFile(new File([bytes as BlobPart], 'rearrange-sample.pdf', { type: 'application/pdf' }), requestId);
+      if (requestId === loadVersionRef.current) await handleFile(new File([await doc.save() as BlobPart], 'rearrange-sample.pdf', { type: 'application/pdf' }), requestId);
     } catch {
-      if (requestId === loadVersionRef.current) {
-        setStatus('error');
-        setMessage('Could not create the sample PDF.');
-      }
+      if (requestId === loadVersionRef.current) { setStatus('error'); setMessage('Could not create the sample PDF.'); }
     }
-  }, [loadFile]);
+  };
 
-  const invalidateResult = () => {
+  const movePage = (from: number, to: number) => {
+    if (to < 0 || to >= pages.length) return;
+    const next = [...pages];
+    const [moved] = next.splice(from, 1);
+    next.splice(to, 0, moved);
+    setPages(next);
     setResultBlob(null);
-    setMessage('');
     setStatus('idle');
   };
 
-  const movePage = (displayIndex: number, direction: -1 | 1) => {
-    if (status === 'processing') return;
-    const target = displayIndex + direction;
-    if (target < 0 || target >= order.length) return;
-    invalidateResult();
-    setOrder((previous) => {
-      const next = [...previous];
-      [next[displayIndex], next[target]] = [next[target], next[displayIndex]];
-      return next;
-    });
-  };
-
-  const rotatePage = (originalIndex: number) => {
-    if (status === 'processing') return;
-    invalidateResult();
-    setRotations((previous) => {
-      const next = [...previous];
-      next[originalIndex] = (next[originalIndex] + 90) % 360;
-      return next;
-    });
-  };
-
-  const onItemDragStart = (displayIndex: number) => {
-    if (status !== 'processing') dragIndexRef.current = displayIndex;
-  };
-
-  const onItemDrop = (displayIndex: number) => {
-    const from = dragIndexRef.current;
-    dragIndexRef.current = null;
-    if (status === 'processing' || from === null || from === displayIndex) return;
-    invalidateResult();
-    setOrder((previous) => {
-      const next = [...previous];
-      const [moved] = next.splice(from, 1);
-      next.splice(displayIndex, 0, moved);
-      return next;
-    });
+  const rotatePage = (index: number) => {
+    setPages(current => current.map((page, pageIndex) => pageIndex === index ? { ...page, rotation: (page.rotation + 90) % 360 } : page));
+    setResultBlob(null);
+    setStatus('idle');
   };
 
   const process = async () => {
-    if (!fileBytes || order.length === 0 || status === 'processing') return;
-    const requestId = ++loadVersionRef.current;
+    if (!file || pages.length === 0) return;
     setStatus('processing');
     setMessage('');
     try {
-      const source = await PDFDocument.load(fileBytes);
+      const source = await PDFDocument.load(await file.arrayBuffer());
       const output = await PDFDocument.create();
-      const copiedPages = await output.copyPages(source, order);
-      copiedPages.forEach((page, index) => {
-        const originalIndex = order[index];
-        page.setRotation(degrees(rotations[originalIndex] ?? 0));
-        output.addPage(page);
-      });
-      const bytes = await output.save();
-      if (requestId !== loadVersionRef.current) return;
-      setResultBlob(new Blob([bytes as BlobPart], { type: 'application/pdf' }));
+      const copiedPages = await output.copyPages(source, pages.map(page => page.originalIndex));
+      copiedPages.forEach((page, index) => { page.setRotation(degrees(pages[index].rotation)); output.addPage(page); });
+      setResultBlob(new Blob([await output.save() as BlobPart], { type: 'application/pdf' }));
       setStatus('done');
-      setMessage(`Saved ${order.length} page${order.length === 1 ? '' : 's'} in the selected order.`);
+      setMessage(`Reordered ${pages.length} pages successfully.`);
     } catch {
-      if (requestId === loadVersionRef.current) {
-        setStatus('error');
-        setMessage('Could not process this PDF.');
-      }
+      setStatus('error');
+      setMessage('Could not process this PDF. Please try again.');
     }
   };
 
@@ -187,80 +161,56 @@ export default function RearrangePDFPagesClient() {
   return (
     <div className="tb-v2-tool-card">
       <div className="tb-v2-tool-input-head">
-        <span className="tb-v2-tool-label">PDF File</span>
-        <ToolExampleClearActions
-          onExample={() => void loadExample()}
-          onClear={clearAll}
-          canClear={Boolean(file || resultBlob || message)}
-          exampleCount={1}
-        />
-      </div>
-      <div style={{ padding: 20 }}>
-        <div
-          className="tb-v2-dropzone"
-          onDragOver={(event) => { event.preventDefault(); setIsDragging(true); }}
-          onDragLeave={() => setIsDragging(false)}
-          onDrop={(event) => {
-            event.preventDefault();
-            setIsDragging(false);
-            void loadFile(event.dataTransfer.files?.[0]);
-          }}
-          onClick={() => fileRef.current?.click()}
-          style={isDragging ? { borderColor: 'var(--accent)' } : undefined}
-        >
-          <span style={{ fontSize: 28 }}>PDF</span>
-          <span className="tb-v2-dropzone-text">{file?.name || 'Click or drag a PDF to reorder its pages'}</span>
-          <span className="tb-v2-dropzone-hint">Pages are rearranged locally in your browser</span>
-          <input
-            ref={fileRef}
-            type="file"
-            accept="application/pdf,.pdf"
-            onChange={(event) => void loadFile(event.target.files?.[0])}
-            style={{ display: 'none' }}
-          />
-        </div>
-        {status === 'loading' && <p className="tb-v2-empty">Reading PDF...</p>}
-        {status === 'error' && <div className="tb-v2-banner tb-v2-banner-err" role="alert">{message}</div>}
+        <span className="tb-v2-tool-label">PDF file</span>
+        <ToolExampleClearActions onExample={() => void loadExample()} onClear={reset} canClear={Boolean(file || pages.length || message)} exampleCount={1} exampleDisabled={status === 'loading' || status === 'processing'} />
       </div>
 
-      {file && order.length > 0 && (
-        <div style={{ padding: '0 20px 20px' }}>
-          <div className="tb-v2-tool-output-head">
-            <span className="tb-v2-tool-label">{file.name} - {pageCount} page{pageCount === 1 ? '' : 's'}</span>
+      {!file && (
+        <div style={{ padding: 20 }}>
+          <div className={`tb-v2-dropzone ${isDragging ? 'dragging' : ''}`} onClick={() => fileRef.current?.click()} onDragOver={event => { event.preventDefault(); setIsDragging(true); }} onDragLeave={() => setIsDragging(false)} onDrop={event => { event.preventDefault(); setIsDragging(false); void handleFile(event.dataTransfer.files?.[0]); }}>
+            <span style={{ fontSize: 28 }}>📄</span>
+            <span className="tb-v2-dropzone-text">{status === 'loading' ? 'Loading PDF...' : 'Click or drag a PDF here'}</span>
+            <span className="tb-v2-dropzone-hint">Drag page cards to set the final order</span>
+            <input ref={fileRef} type="file" accept="application/pdf,.pdf" onChange={event => void handleFile(event.target.files?.[0])} style={{ display: 'none' }} />
           </div>
-          <div className="tb-v2-option-group" style={{ marginTop: 12 }}>
-            <span className="tb-v2-tool-label">Pages</span>
-            <span className="tb-v2-empty">Drag a page, or use the arrows, to change order. Rotate adds 90 degrees.</span>
+        </div>
+      )}
+
+      {status === 'loading' && <div className="tb-v2-banner" role="status" style={{ margin: '0 20px 20px' }}>Preparing page previews in your browser...</div>}
+      {status === 'error' && <div className="tb-v2-banner tb-v2-banner-err" role="alert" style={{ margin: '0 20px 20px' }}>{message}</div>}
+
+      {file && pages.length > 0 && (
+        <div className="tb-v2-tool-output-body tb-pdf-rearrange-workspace">
+          <div className="tb-pdf-rearrange-summary">
+            <span className="tb-v2-tool-label">{pages.length} page{pages.length === 1 ? '' : 's'} ready to arrange</span>
+            <button type="button" className="tb-v2-btn-sm" onClick={() => fileRef.current?.click()}>＋ Replace PDF</button>
+            <input ref={fileRef} type="file" accept="application/pdf,.pdf" onChange={event => void handleFile(event.target.files?.[0])} style={{ display: 'none' }} />
           </div>
-          <div style={{ display: 'grid', gap: 8, marginTop: 12 }}>
-            {order.map((originalIndex, displayIndex) => (
-              <div
-                key={originalIndex}
-                draggable={status !== 'processing'}
-                onDragStart={() => onItemDragStart(displayIndex)}
-                onDragOver={(event) => event.preventDefault()}
-                onDrop={() => onItemDrop(displayIndex)}
-                className="tb-v2-section"
-                style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', padding: 12, cursor: status === 'processing' ? 'default' : 'grab' }}
-              >
-                <span className="tb-v2-tool-label" style={{ minWidth: 70 }}>Position {displayIndex + 1}</span>
-                <span style={{ flex: 1, minWidth: 130 }}>Original page {originalIndex + 1} - {rotations[originalIndex] ?? 0} deg</span>
-                <button type="button" onClick={() => rotatePage(originalIndex)} disabled={status === 'processing'} className="tb-v2-btn-sm">Rotate</button>
-                <button type="button" onClick={() => movePage(displayIndex, -1)} disabled={displayIndex === 0 || status === 'processing'} className="tb-v2-btn-sm">Up</button>
-                <button type="button" onClick={() => movePage(displayIndex, 1)} disabled={displayIndex === order.length - 1 || status === 'processing'} className="tb-v2-btn-sm">Down</button>
+          <p className="tb-pdf-rearrange-instruction">Drag and drop the page cards to reorder them. Rotate any page before saving.</p>
+          <div className="tb-pdf-rearrange-grid">
+            {pages.map((page, index) => (
+              <div key={page.originalIndex} className={`tb-pdf-rearrange-card ${draggingIndex === index ? 'dragging' : ''}`} draggable onDragStart={() => setDraggingIndex(index)} onDragOver={event => event.preventDefault()} onDrop={() => { if (draggingIndex !== null) movePage(draggingIndex, index); setDraggingIndex(null); }} onDragEnd={() => setDraggingIndex(null)}>
+                <span className="tb-pdf-rearrange-drag-handle" aria-hidden="true">⠿</span>
+                <span className="tb-pdf-rearrange-order">{index + 1}</span>
+                <div className="tb-pdf-rearrange-thumbnail" style={{ transform: `rotate(${page.rotation}deg)` }}>
+                  {page.previewUrl ? <img src={page.previewUrl} alt={`Preview of page ${page.originalIndex + 1}`} /> : <span aria-hidden="true">📄</span>}
+                </div>
+                <strong>Page {page.originalIndex + 1}</strong>
+                <small>{page.rotation}° rotation</small>
+                <div className="tb-pdf-rearrange-card-actions">
+                  <button type="button" className="tb-v2-btn-sm" onClick={() => rotatePage(index)}>↻ Rotate</button>
+                  <button type="button" className="tb-v2-btn-sm" aria-label={`Move page ${page.originalIndex + 1} up`} disabled={index === 0} onClick={() => movePage(index, index - 1)}>↑</button>
+                  <button type="button" className="tb-v2-btn-sm" aria-label={`Move page ${page.originalIndex + 1} down`} disabled={index === pages.length - 1} onClick={() => movePage(index, index + 1)}>↓</button>
+                </div>
               </div>
             ))}
           </div>
-          <button type="button" onClick={() => void process()} disabled={status === 'processing'} className="tb-v2-btn tb-v2-btn-primary tb-v2-btn-lg" style={{ width: '100%', marginTop: 16 }}>
-            {status === 'processing' ? 'Processing...' : 'Save Reordered PDF'}
-          </button>
-          {status === 'done' && resultBlob && (
-            <div className="tb-v2-banner" style={{ marginTop: 12 }}>
-              {message} <button type="button" onClick={downloadResult} className="tb-v2-btn-sm" style={{ marginLeft: 8 }}>Download PDF</button>
-            </div>
-          )}
+          <button type="button" className="tb-v2-btn tb-v2-btn-primary tb-pdf-rearrange-action" onClick={() => void process()} disabled={status === 'processing'}>{status === 'processing' ? 'Saving...' : 'Save reordered PDF'}</button>
+          {status === 'done' && <div className="tb-v2-banner tb-pdf-rearrange-success" role="status">{message}<button type="button" className="tb-v2-btn-sm" onClick={downloadResult}>Download reordered PDF</button></div>}
         </div>
       )}
+
+      {!file && status === 'idle' && <p className="tb-v2-empty">Upload a PDF or load the sample to arrange its pages.</p>}
     </div>
   );
 }
