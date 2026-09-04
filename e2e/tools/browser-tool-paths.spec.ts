@@ -330,4 +330,29 @@ test.describe('Browser tool execution paths', () => {
     await expect(page.getByText('Upload a PDF file to extract its embedded images.', { exact: true })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Clear', exact: true })).toBeDisabled();
   });
+
+  test('merge-pdfs loads two sample files, preserves order, and downloads the merged PDF', async ({ page }) => {
+    await page.goto('/tools/merge-pdfs');
+    await dismissCookies(page);
+
+    await expect(page.getByRole('button', { name: 'Example', exact: true })).toBeVisible({ timeout: 15000 });
+    await page.getByRole('button', { name: 'Example', exact: true }).click();
+    await expect(page.getByText('2 PDFs ready to merge', { exact: true })).toBeVisible({ timeout: 15000 });
+    await expect(page.getByText('sample-1.pdf', { exact: true })).toBeVisible();
+    await expect(page.getByText('sample-2.pdf', { exact: true })).toBeVisible();
+
+    const downloadPromise = page.waitForEvent('download');
+    await page.getByRole('button', { name: 'Merge 2 PDFs', exact: true }).click();
+    await expect(page.getByText(/Merged 2 PDFs into one document \(2 pages\)/)).toBeVisible();
+    await page.getByRole('button', { name: 'Download merged PDF', exact: true }).click();
+    const download = await downloadPromise;
+    expect(download.suggestedFilename()).toBe('merged.pdf');
+    const stream = await download.createReadStream();
+    const chunks: Buffer[] = [];
+    for await (const chunk of stream ?? []) chunks.push(Buffer.from(chunk));
+    expect((await PDFDocument.load(Buffer.concat(chunks))).getPageCount()).toBe(2);
+
+    await page.getByRole('button', { name: 'Clear', exact: true }).click();
+    await expect(page.getByText('Upload PDFs or load the sample to begin.', { exact: true })).toBeVisible();
+  });
 });
