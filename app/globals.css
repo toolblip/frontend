@@ -2687,6 +2687,82 @@ button.tb-v2-mm-more-row-btn {
   .tb-pdf-rearrange-summary { align-items: flex-start; flex-direction: column; }
   .tb-pdf-rearrange-success { align-items: flex-start; flex-direction: column; }
 }
+
+/* Delete PDF pages */
+.tb-pdf-delete-workspace { padding: 20px; }
+.tb-pdf-delete-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.tb-pdf-delete-instruction { margin: 0 0 12px; color: var(--fg-2); font-size: 12px; }
+.tb-pdf-delete-controls { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+.tb-pdf-delete-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 14px;
+}
+.tb-pdf-delete-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  padding: 14px 10px 12px;
+  border: 2px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface-2);
+  color: var(--fg-0);
+  cursor: pointer;
+  transition: border-color .12s, box-shadow .12s, background .12s;
+}
+.tb-pdf-delete-card:hover { border-color: var(--red); }
+.tb-pdf-delete-card.selected {
+  border-color: var(--red);
+  background: color-mix(in srgb, var(--red) 8%, var(--surface-2));
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--red) 14%, transparent);
+}
+.tb-pdf-delete-card:disabled { cursor: default; opacity: .7; }
+.tb-pdf-delete-order {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  display: grid;
+  width: 22px;
+  height: 22px;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--red);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+}
+.tb-pdf-delete-thumbnail {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 122px;
+  height: 158px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--surface);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, .08);
+}
+.tb-pdf-delete-thumbnail img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.tb-pdf-delete-thumbnail span { font-size: 34px; }
+.tb-pdf-delete-card > strong { font-size: 13px; }
+.tb-pdf-delete-card > small { color: var(--fg-2); font-size: 11px; text-align: center; }
+.tb-pdf-delete-card.selected > small { color: var(--red); font-weight: 600; }
+.tb-pdf-delete-action { width: 100%; justify-content: center; margin-top: 16px; }
+.tb-pdf-delete-success { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 12px; }
+@media (max-width: 600px) {
+  .tb-pdf-delete-summary { align-items: flex-start; flex-direction: column; }
+  .tb-pdf-delete-success { align-items: flex-start; flex-direction: column; }
+}
 .tb-v2-diff-stats {
   display: flex; gap: 10px;
   font-family: var(--f-mono); font-size: 12px; font-weight: 600;
