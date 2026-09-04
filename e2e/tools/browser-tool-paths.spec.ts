@@ -182,6 +182,40 @@ test.describe('Browser tool execution paths', () => {
     expect(output.getPageCount()).toBe(2);
   });
 
+  test('edit-pdf shows the rendered page and zoom controls before applying an overlay', async ({ page }) => {
+    await page.goto('/tools/edit-pdf');
+    await dismissCookies(page);
+
+    await page.getByRole('button', { name: 'Example', exact: true }).click();
+    await expect(page.getByText('sample.pdf · 1 page', { exact: true })).toBeVisible();
+    await expect(page.getByText('Click or drag a PDF here', { exact: true })).toHaveCount(0);
+    await expect(page.getByTestId('edit-preview-image')).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Zoom out' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Zoom in' })).toBeVisible();
+
+    const layout = await page.evaluate(() => {
+      const workspace = document.querySelector('.tb-pdf-edit-workspace')!.getBoundingClientRect();
+      const preview = document.querySelector('.tb-pdf-edit-preview-viewport')!.getBoundingClientRect();
+      const pager = document.querySelector('.tb-pdf-edit-pager')!.getBoundingClientRect();
+      const tool = document.querySelector('.tb-pdf-edit-tool')!.getBoundingClientRect();
+      return { workspaceBottom: workspace.bottom, previewTop: preview.top, previewBottom: preview.bottom, pagerTop: pager.top, toolBottom: tool.bottom };
+    });
+    expect(layout.toolBottom).toBeLessThanOrEqual(layout.previewTop + 1);
+    expect(layout.pagerTop).toBeGreaterThanOrEqual(layout.previewBottom - 1);
+    expect(layout.pagerTop).toBeLessThanOrEqual(layout.workspaceBottom + 1);
+
+    await page.getByRole('button', { name: 'Add Text Overlay' }).click();
+    const downloadPromise = page.waitForEvent('download');
+    await page.getByRole('button', { name: 'Apply Edits & Download PDF' }).click();
+    const download = await downloadPromise;
+    expect(download.suggestedFilename()).toMatch(/edited-.*\.pdf$/i);
+    const downloaded = await download.createReadStream();
+    const chunks: Buffer[] = [];
+    for await (const chunk of downloaded ?? []) chunks.push(Buffer.from(chunk));
+    const output = await PDFDocument.load(Buffer.concat(chunks));
+    expect(output.getPageCount()).toBe(1);
+  });
+
   test('DNS lookup uses the canonical route and preserves the V2 interface', async ({ page, request }) => {
     for (const legacyPath of ['/tools/dns-lookup-v2', '/tools/dns-lookup-express']) {
       const response = await request.get(legacyPath, { maxRedirects: 0 });

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
@@ -63,6 +63,11 @@ export default function EditClient() {
   const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState('');
   const [status, setStatus] = useState<'idle' | 'processing' | 'done'>('idle');
+  const [preview, setPreview] = useState<string | null>(null);
+  const [previewLoading, setPreviewLoading] = useState(false);
+  const [previewFailed, setPreviewFailed] = useState(false);
+  const [previewViewportSize, setPreviewViewportSize] = useState({ width: 0, height: 0 });
+  const [zoom, setZoom] = useState(1);
 
   const [draftText, setDraftText] = useState('New text');
   const [draftFontSize, setDraftFontSize] = useState(24);
@@ -75,6 +80,8 @@ export default function EditClient() {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const imageInputRef = useRef<HTMLInputElement>(null);
+  const previewViewportRef = useRef<HTMLDivElement>(null);
+  const previewPageRef = useRef<HTMLDivElement>(null);
   const loadVersionRef = useRef(0);
 
   const resetDocument = () => {
@@ -103,6 +110,9 @@ export default function EditClient() {
       setPageSizes(sizes);
       setCurrentPage(1);
       setOverlays([]);
+      setPreview(null);
+      setPreviewFailed(false);
+      setZoom(1);
       setStatus('idle');
     } catch {
       if (requestId === loadVersionRef.current) setError('Could not read this file as a PDF. Make sure it is a valid, unencrypted PDF.');
@@ -219,6 +229,69 @@ export default function EditClient() {
   const pageSize = pageSizes[currentPage - 1] || { width: 612, height: 792 };
   const pageOverlays = overlays.filter(o => o.page === currentPage);
 
+  useEffect(() => {
+    if (!fileBytes) {
+      setPreview(null);
+      setPreviewLoading(false);
+      return;
+    }
+    const requestId = loadVersionRef.current;
+    let active = true;
+    setPreviewLoading(true);
+    setPreviewFailed(false);
+    (async () => {
+      try {
+        const pdfjs = await import('pdfjs-dist/legacy/build/pdf.mjs');
+        pdfjs.GlobalWorkerOptions.workerSrc = `${process.env.NEXT_PUBLIC_BASE_PATH || ''}/pdf-worker/pdf.worker.min.mjs`;
+        const task = pdfjs.getDocument({ data: fileBytes.slice() });
+        try {
+          const doc = await task.promise;
+          const pdfPage = await doc.getPage(currentPage);
+          const viewport = pdfPage.getViewport({ scale: 1.2 });
+          const canvas = window.document.createElement('canvas');
+          canvas.width = Math.ceil(viewport.width);
+          canvas.height = Math.ceil(viewport.height);
+          const context = canvas.getContext('2d');
+          if (!context) throw new Error('Canvas unavailable.');
+          await pdfPage.render({ canvas, canvasContext: context, viewport }).promise;
+          if (active && requestId === loadVersionRef.current) setPreview(canvas.toDataURL('image/png'));
+          await task.destroy();
+        } catch (renderError) {
+          try { await task.destroy(); } catch { /* ignore cleanup errors */ }
+          throw renderError;
+        }
+      } catch {
+        if (active && requestId === loadVersionRef.current) setPreviewFailed(true);
+      } finally {
+        if (active && requestId === loadVersionRef.current) setPreviewLoading(false);
+      }
+    })();
+    return () => { active = false; };
+  }, [fileBytes, currentPage]);
+
+  useEffect(() => {
+    const viewport = previewViewportRef.current;
+    if (!viewport || !preview) {
+      setPreviewViewportSize({ width: 0, height: 0 });
+      return;
+    }
+    const updateSize = () => setPreviewViewportSize({ width: viewport.clientWidth, height: viewport.clientHeight });
+    const observer = new ResizeObserver(updateSize);
+    observer.observe(viewport);
+    updateSize();
+    return () => observer.disconnect();
+  }, [preview, currentPage]);
+
+  const pageScale = Math.min(
+    1,
+    previewViewportSize.width > 0 ? previewViewportSize.width / pageSize.width : 1,
+    previewViewportSize.height > 0 ? previewViewportSize.height / pageSize.height : 1,
+  );
+  const displayPageSize = {
+    width: Math.max(1, pageSize.width * pageScale * zoom),
+    height: Math.max(1, pageSize.height * pageScale * zoom),
+  };
+
   return (
     <div className="tb-v2-tool-card">
       <div className="tb-v2-tool-input-head">
@@ -226,18 +299,20 @@ export default function EditClient() {
         <ToolExampleClearActions onExample={loadExample} onClear={clearAll} canClear={Boolean(fileBytes || overlays.length || error)} exampleCount={1} />
       </div>
       <div style={{ padding: 20 }}>
-        <div
-          className={`tb-v2-dropzone ${isDragging ? 'dragging' : ''}`}
-          onClick={() => fileInputRef.current?.click()}
-          onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
-          onDragLeave={() => setIsDragging(false)}
-          onDrop={handleDrop}
-        >
-          <span style={{ fontSize: 28 }}>📄</span>
-          <span className="tb-v2-dropzone-text">Click or drag a PDF here</span>
-          <span className="tb-v2-dropzone-hint">Text and image overlays are baked into your actual PDF, entirely in your browser</span>
-          <input ref={fileInputRef} type="file" accept="application/pdf" onChange={(e) => handleFile(e.target.files?.[0])} style={{ display: 'none' }} />
-        </div>
+        {!fileBytes && (
+          <div
+            className={`tb-v2-dropzone ${isDragging ? 'dragging' : ''}`}
+            onClick={() => fileInputRef.current?.click()}
+            onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+            onDragLeave={() => setIsDragging(false)}
+            onDrop={handleDrop}
+          >
+            <span style={{ fontSize: 28 }}>📄</span>
+            <span className="tb-v2-dropzone-text">Click or drag a PDF here</span>
+            <span className="tb-v2-dropzone-hint">Text and image overlays are baked into your actual PDF, entirely in your browser</span>
+            <input ref={fileInputRef} type="file" accept="application/pdf" onChange={(e) => handleFile(e.target.files?.[0])} style={{ display: 'none' }} />
+          </div>
+        )}
         {error && <div className="tb-v2-banner tb-v2-banner-err" style={{ marginTop: 12 }}>{error}</div>}
       </div>
 
@@ -246,38 +321,59 @@ export default function EditClient() {
           <div className="tb-v2-tool-output-head">
             <span className="tb-v2-tool-label">{fileName} &middot; {pageSizes.length} page{pageSizes.length === 1 ? '' : 's'}</span>
           </div>
-          <div style={{ padding: '0 20px 20px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
+          <div className="tb-pdf-edit-workspace" style={{ padding: '0 20px 20px' }}>
+            <div className="tb-pdf-edit-pager" style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
               <button type="button" className="tb-v2-btn-sm" disabled={currentPage <= 1} onClick={() => setCurrentPage(p => p - 1)}>&larr; Prev</button>
               <span style={{ fontSize: 13 }}>Editing page {currentPage} of {pageSizes.length}</span>
               <button type="button" className="tb-v2-btn-sm" disabled={currentPage >= pageSizes.length} onClick={() => setCurrentPage(p => p + 1)}>Next &rarr;</button>
             </div>
 
-            <div style={{
-              position: 'relative', width: '100%', maxWidth: 320,
-              aspectRatio: `${pageSize.width} / ${pageSize.height}`,
-              background: 'var(--surface-2)', border: '1px solid var(--line)', borderRadius: 8, marginBottom: 16,
-            }}>
-              {pageOverlays.map(ov => {
-                const { xPct, yPct } = markerPercent(ov.anchorX, ov.anchorY, ov.offsetX, ov.offsetY, pageSize.width, pageSize.height);
-                return (
-                  <div
-                    key={ov.id}
-                    title={ov.kind === 'text' ? ov.text : 'Image overlay'}
-                    style={{
-                      position: 'absolute', left: `${xPct}%`, top: `${yPct}%`, transform: 'translate(-50%, -50%)',
-                      width: 10, height: 10, borderRadius: '50%', background: 'var(--red, #dc2626)',
-                      border: '2px solid var(--surface-1, #fff)',
-                    }}
-                  />
-                );
-              })}
+            <div className="tb-pdf-edit-preview-section">
+              <span className="tb-v2-tool-label">Page preview with overlay positions</span>
+              <div ref={previewViewportRef} className="tb-pdf-edit-preview-viewport">
+                <div
+                  ref={previewPageRef}
+                  className="tb-pdf-edit-page"
+                  style={{ width: displayPageSize.width, height: displayPageSize.height }}
+                >
+                  {preview ? (
+                    <img
+                      src={preview}
+                      alt={`Rendered page ${currentPage} of ${fileName}`}
+                      data-testid="edit-preview-image"
+                      draggable={false}
+                    />
+                  ) : (
+                    <div className="tb-pdf-edit-preview-message">
+                      {previewLoading ? 'Rendering page preview…' : 'Page preview unavailable.'}
+                    </div>
+                  )}
+                  {pageOverlays.map(ov => {
+                    const { xPct, yPct } = markerPercent(ov.anchorX, ov.anchorY, ov.offsetX, ov.offsetY, pageSize.width, pageSize.height);
+                    return (
+                      <div
+                        key={ov.id}
+                        title={ov.kind === 'text' ? ov.text : 'Image overlay'}
+                        style={{
+                          position: 'absolute', left: `${xPct}%`, top: `${yPct}%`, transform: 'translate(-50%, -50%)',
+                          width: 12, height: 12, borderRadius: '50%', background: 'var(--red, #dc2626)',
+                          border: '2px solid var(--surface)', boxShadow: '0 1px 3px rgba(0,0,0,.35)',
+                        }}
+                      />
+                    );
+                  })}
+                </div>
+                <div className="tb-pdf-edit-zoom-controls" aria-label="PDF zoom controls">
+                  <button type="button" className="tb-v2-btn-sm" aria-label="Zoom out" onClick={() => setZoom(value => Math.max(0.5, value - 0.25))} disabled={zoom <= 0.5}>−</button>
+                  <span aria-live="polite">{Math.round(zoom * 100)}%</span>
+                  <button type="button" className="tb-v2-btn-sm" aria-label="Zoom in" onClick={() => setZoom(value => Math.min(2, value + 0.25))} disabled={zoom >= 2}>+</button>
+                </div>
+              </div>
+              {previewFailed && <p className="tb-v2-empty" role="alert">The visual preview could not be rendered.</p>}
+              <p className="tb-pdf-edit-preview-hint">Dots mark where each overlay will land on the PDF.</p>
             </div>
-            <p style={{ fontSize: 12, color: 'var(--fg-2)', marginTop: -10, marginBottom: 16 }}>
-              Position preview only, dots mark where each overlay will land &middot; page content itself is not shown here
-            </p>
 
-            <div className="tb-v2-option-group" style={{ marginBottom: 16 }}>
+            <div className="tb-pdf-edit-tool tb-v2-option-group" style={{ marginBottom: 16 }}>
               <label className="tb-v2-tool-label">Add Text</label>
               <input type="text" value={draftText} onChange={e => setDraftText(e.target.value)} className="tb-v2-input" placeholder="Text to add" style={{ marginBottom: 8 }} />
               <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
@@ -287,7 +383,7 @@ export default function EditClient() {
               <button type="button" onClick={addTextOverlay} className="tb-v2-btn tb-v2-btn-primary" style={{ marginTop: 10 }}>Add Text Overlay</button>
             </div>
 
-            <div className="tb-v2-option-group" style={{ marginBottom: 16 }}>
+            <div className="tb-pdf-edit-tool tb-v2-option-group" style={{ marginBottom: 16 }}>
               <label className="tb-v2-tool-label">Add Image</label>
               <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 8 }}>
                 <label style={{ fontSize: 12 }}>Width (pt) <input type="number" min={10} max={600} value={imageWidthPt} onChange={e => setImageWidthPt(Number(e.target.value) || 150)} className="tb-v2-input" style={{ width: 80 }} /></label>
@@ -296,7 +392,7 @@ export default function EditClient() {
               </div>
             </div>
 
-            <div className="tb-v2-option-group" style={{ marginBottom: 16 }}>
+            <div className="tb-pdf-edit-tool tb-v2-option-group" style={{ marginBottom: 16 }}>
               <label className="tb-v2-tool-label">Anchor Position (applies to next overlay added)</label>
               <div style={{ display: 'flex', gap: 6, marginBottom: 6 }}>
                 {(['left', 'center', 'right'] as AnchorX[]).map(a => (
@@ -313,7 +409,7 @@ export default function EditClient() {
             </div>
 
             {overlays.length > 0 && (
-              <div className="tb-v2-option-group" style={{ marginBottom: 16 }}>
+              <div className="tb-pdf-edit-overlays tb-v2-option-group" style={{ marginBottom: 16 }}>
                 <label className="tb-v2-tool-label">Overlays ({overlays.length})</label>
                 {overlays.map(ov => (
                   <div key={ov.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '6px 0', fontSize: 13 }}>
@@ -327,16 +423,16 @@ export default function EditClient() {
             )}
 
             <button
+              className="tb-pdf-edit-actions tb-v2-btn tb-v2-btn-primary"
               type="button"
               onClick={applyAndDownload}
               disabled={overlays.length === 0 || status === 'processing'}
-              className="tb-v2-btn tb-v2-btn-primary"
               style={{ width: '100%' }}
             >
               {status === 'processing' ? 'Applying edits...' : 'Apply Edits & Download PDF'}
             </button>
             {status === 'done' && (
-              <div className="tb-v2-banner" style={{ marginTop: 12 }}>Edited PDF downloaded.</div>
+                <div className="tb-pdf-edit-status tb-v2-banner" style={{ marginTop: 12 }}>Edited PDF downloaded.</div>
             )}
           </div>
         </>
