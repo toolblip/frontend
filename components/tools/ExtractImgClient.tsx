@@ -444,10 +444,11 @@ export default function ExtractImgClient() {
       {loaded && (
         <div style={{ padding: '0 20px 20px' }}>
           <div className="tb-v2-tool-output-head" style={{ margin: '0 -20px 16px' }}><span className="tb-v2-tool-label">{fileName} &middot; {images.length} image{images.length === 1 ? '' : 's'}</span></div>
-          <button type="button" className="tb-v2-btn-sm tb-pdf-extract-preview-toggle" aria-expanded={showPreview} onClick={() => setShowPreview(value => !value)}>
+          <button type="button" className="tb-v2-btn tb-pdf-extract-preview-toggle" aria-expanded={showPreview} aria-controls="pdf-extract-preview" onClick={() => setShowPreview(value => !value)}>
+            <span aria-hidden="true">▣</span>
             {showPreview ? 'Hide PDF preview' : 'Preview PDF'}
           </button>
-          {showPreview && <div className="tb-pdf-extract-preview-section">
+          {showPreview && <div id="pdf-extract-preview" className="tb-pdf-extract-preview-section">
             <span className="tb-v2-tool-label">PDF preview</span>
             <div ref={previewViewportRef} className="tb-pdf-extract-preview-viewport">
               <div className="tb-pdf-extract-page" style={{ width: displayPreviewSize.width, height: displayPreviewSize.height }}>
