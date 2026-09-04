@@ -313,6 +313,10 @@ test.describe('Browser tool execution paths', () => {
     await expect(page.getByRole('button', { name: 'Clear', exact: true })).toBeDisabled();
     await page.getByRole('button', { name: 'Example', exact: true }).click();
     await expect(page.getByText('Images Extracted', { exact: true })).toBeVisible({ timeout: 15000 });
+    await expect(page.getByTestId('extract-pdf-preview-image')).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Zoom out PDF preview' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Zoom in PDF preview' })).toBeVisible();
+    await expect(page.getByText('Page 1 of 1', { exact: true })).toBeVisible();
     await expect(page.getByText('1', { exact: true })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Download All as ZIP' })).toBeVisible();
     await expect(page.getByText('Click or drag a PDF file here', { exact: true })).toHaveCount(0);

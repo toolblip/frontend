@@ -150,7 +150,7 @@ async function rawToPng(rawBytes: Uint8Array, width: number, height: number, mod
   return new Promise(resolve => canvas.toBlob(blob => resolve(blob), 'image/png'));
 }
 
-async function extractImages(bytes: Uint8Array): Promise<{ images: ExtractedImage[]; skipped: number }> {
+async function extractImages(bytes: Uint8Array): Promise<{ images: ExtractedImage[]; skipped: number; pageCount: number }> {
   const pdfDoc = await PDFDocument.load(bytes, { ignoreEncryption: true });
   const images: ExtractedImage[] = [];
   const seen = new Set<string>();
@@ -231,7 +231,7 @@ async function extractImages(bytes: Uint8Array): Promise<{ images: ExtractedImag
     }
   }
 
-  return { images, skipped };
+  return { images, skipped, pageCount: pages.length };
 }
 
 export default function ExtractImgClient() {
@@ -244,11 +244,22 @@ export default function ExtractImgClient() {
   const [loaded, setLoaded] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const loadVersionRef = useRef(0);
+  const [pdfBytes, setPdfBytes] = useState<Uint8Array | null>(null);
+  const [pageCount, setPageCount] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [preview, setPreview] = useState<string | null>(null);
+  const [previewLoading, setPreviewLoading] = useState(false);
+  const [previewFailed, setPreviewFailed] = useState(false);
+  const [previewPageSize, setPreviewPageSize] = useState({ width: 612, height: 792 });
+  const [previewViewportSize, setPreviewViewportSize] = useState({ width: 0, height: 0 });
+  const [zoom, setZoom] = useState(1);
+  const previewViewportRef = useRef<HTMLDivElement>(null);
 
   const clearAll = () => {
     loadVersionRef.current += 1;
     images.forEach(img => URL.revokeObjectURL(img.previewUrl));
     setImages([]); setSkipped(0); setFileName(''); setError(''); setLoading(false); setLoaded(false); setIsDragging(false);
+    setPdfBytes(null); setPageCount(0); setCurrentPage(1); setPreview(null); setPreviewFailed(false); setZoom(1);
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
@@ -283,7 +294,8 @@ export default function ExtractImgClient() {
     setLoading(true);
     try {
       const buffer = await file.arrayBuffer();
-      const { images: found, skipped: skippedCount } = await extractImages(new Uint8Array(buffer));
+      const bytes = new Uint8Array(buffer);
+      const { images: found, skipped: skippedCount, pageCount: foundPageCount } = await extractImages(bytes);
       if (requestId !== loadVersionRef.current) {
         found.forEach(img => URL.revokeObjectURL(img.previewUrl));
         return;
@@ -291,6 +303,12 @@ export default function ExtractImgClient() {
       setFileName(file.name);
       setImages(found);
       setSkipped(skippedCount);
+      setPdfBytes(bytes);
+      setPageCount(foundPageCount);
+      setCurrentPage(1);
+      setPreview(null);
+      setPreviewFailed(false);
+      setZoom(1);
       setLoaded(true);
     } catch (e) {
       if (requestId === loadVersionRef.current) setError(e instanceof Error ? e.message : 'Could not read this PDF file.');
@@ -304,6 +322,73 @@ export default function ExtractImgClient() {
     e.preventDefault();
     setIsDragging(false);
     loadFile(e.dataTransfer.files?.[0]);
+  };
+
+  useEffect(() => {
+    if (!pdfBytes) {
+      setPreview(null);
+      setPreviewLoading(false);
+      return;
+    }
+    const requestId = loadVersionRef.current;
+    let active = true;
+    setPreviewLoading(true);
+    setPreviewFailed(false);
+    (async () => {
+      try {
+        const pdfjs = await import('pdfjs-dist/legacy/build/pdf.mjs');
+        pdfjs.GlobalWorkerOptions.workerSrc = `${process.env.NEXT_PUBLIC_BASE_PATH || ''}/pdf-worker/pdf.worker.min.mjs`;
+        const task = pdfjs.getDocument({ data: pdfBytes.slice() });
+        try {
+          const doc = await task.promise;
+          const page = await doc.getPage(currentPage);
+          const pageViewport = page.getViewport({ scale: 1 });
+          const renderViewport = page.getViewport({ scale: 1.2 });
+          const canvas = document.createElement('canvas');
+          canvas.width = Math.ceil(renderViewport.width);
+          canvas.height = Math.ceil(renderViewport.height);
+          const context = canvas.getContext('2d');
+          if (!context) throw new Error('Canvas unavailable.');
+          await page.render({ canvas, canvasContext: context, viewport: renderViewport }).promise;
+          if (active && requestId === loadVersionRef.current) {
+            setPreviewPageSize({ width: pageViewport.width, height: pageViewport.height });
+            setPreview(canvas.toDataURL('image/png'));
+          }
+          await task.destroy();
+        } catch (renderError) {
+          try { await task.destroy(); } catch { /* ignore cleanup errors */ }
+          throw renderError;
+        }
+      } catch {
+        if (active && requestId === loadVersionRef.current) setPreviewFailed(true);
+      } finally {
+        if (active && requestId === loadVersionRef.current) setPreviewLoading(false);
+      }
+    })();
+    return () => { active = false; };
+  }, [pdfBytes, currentPage]);
+
+  useEffect(() => {
+    const viewport = previewViewportRef.current;
+    if (!viewport || !preview) {
+      setPreviewViewportSize({ width: 0, height: 0 });
+      return;
+    }
+    const updateSize = () => setPreviewViewportSize({ width: viewport.clientWidth, height: viewport.clientHeight });
+    const observer = new ResizeObserver(updateSize);
+    observer.observe(viewport);
+    updateSize();
+    return () => observer.disconnect();
+  }, [preview, currentPage]);
+
+  const previewScale = Math.min(
+    1,
+    previewViewportSize.width > 0 ? previewViewportSize.width / previewPageSize.width : 1,
+    previewViewportSize.height > 0 ? previewViewportSize.height / previewPageSize.height : 1,
+  );
+  const displayPreviewSize = {
+    width: Math.max(1, previewPageSize.width * previewScale * zoom),
+    height: Math.max(1, previewPageSize.height * previewScale * zoom),
   };
 
   const downloadOne = (img: ExtractedImage) => {
@@ -357,6 +442,29 @@ export default function ExtractImgClient() {
       {loaded && (
         <div style={{ padding: '0 20px 20px' }}>
           <div className="tb-v2-tool-output-head" style={{ margin: '0 -20px 16px' }}><span className="tb-v2-tool-label">{fileName} &middot; {images.length} image{images.length === 1 ? '' : 's'}</span></div>
+          <div className="tb-pdf-extract-preview-section">
+            <span className="tb-v2-tool-label">PDF preview</span>
+            <div ref={previewViewportRef} className="tb-pdf-extract-preview-viewport">
+              <div className="tb-pdf-extract-page" style={{ width: displayPreviewSize.width, height: displayPreviewSize.height }}>
+                {preview ? (
+                  <img src={preview} alt={`Page ${currentPage} of ${pageCount} from ${fileName}`} data-testid="extract-pdf-preview-image" draggable={false} />
+                ) : (
+                  <div className="tb-pdf-extract-preview-message">{previewLoading ? 'Rendering PDF preview...' : 'PDF preview unavailable.'}</div>
+                )}
+              </div>
+              <div className="tb-pdf-extract-zoom-controls" aria-label="PDF preview zoom controls">
+                <button type="button" className="tb-v2-btn-sm" aria-label="Zoom out PDF preview" onClick={() => setZoom(value => Math.max(0.5, value - 0.25))} disabled={zoom <= 0.5}>−</button>
+                <span aria-live="polite">{Math.round(zoom * 100)}%</span>
+                <button type="button" className="tb-v2-btn-sm" aria-label="Zoom in PDF preview" onClick={() => setZoom(value => Math.min(2, value + 0.25))} disabled={zoom >= 2}>+</button>
+              </div>
+            </div>
+            <div className="tb-pdf-extract-pager">
+              <button type="button" className="tb-v2-btn-sm" disabled={currentPage <= 1} onClick={() => setCurrentPage(page => page - 1)}>← Prev</button>
+              <span>Page {currentPage} of {pageCount}</span>
+              <button type="button" className="tb-v2-btn-sm" disabled={currentPage >= pageCount} onClick={() => setCurrentPage(page => page + 1)}>Next →</button>
+            </div>
+            {previewFailed && <p className="tb-v2-empty" role="alert">The PDF preview could not be rendered.</p>}
+          </div>
           <div className="tb-v2-stats-grid" style={{ marginBottom: 16 }}>
             <div className="tb-v2-stat-pill"><div style={{ fontSize: 11, color: 'var(--fg-2)' }}>Images Extracted</div><div>{images.length}</div></div>
             {skipped > 0 && <div className="tb-v2-stat-pill"><div style={{ fontSize: 11, color: 'var(--fg-2)' }}>Skipped (unsupported)</div><div>{skipped}</div></div>}
