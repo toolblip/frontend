@@ -2295,6 +2295,40 @@ button.tb-v2-mm-more-row-btn {
   z-index: 1;
   pointer-events: none;
 }
+.tb-pdf-edit-text-target {
+  position: absolute;
+  z-index: 2;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  background: transparent;
+  cursor: text;
+}
+.tb-pdf-edit-text-target:hover,
+.tb-pdf-edit-text-target.selected {
+  border-color: color-mix(in srgb, var(--red) 70%, transparent);
+  background: color-mix(in srgb, var(--red) 12%, transparent);
+}
+.tb-pdf-edit-text-target.inactive { pointer-events: none; }
+.tb-pdf-edit-erase-overlay {
+  position: absolute;
+  z-index: 3;
+  border: 1px solid color-mix(in srgb, var(--red) 70%, transparent);
+  background: rgba(255, 255, 255, .82);
+  pointer-events: none;
+}
+.tb-pdf-edit-erase-overlay.draft {
+  border-style: dashed;
+  background: color-mix(in srgb, var(--red) 12%, transparent);
+}
+.tb-pdf-edit-replacement-text {
+  z-index: 3;
+  padding: 1px;
+  background: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .tb-pdf-edit-overlay-text {
   max-width: 70%;
   padding: 4px 7px;
