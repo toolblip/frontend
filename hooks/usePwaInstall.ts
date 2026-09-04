@@ -40,10 +40,8 @@ export function usePwaInstall() {
       return;
     }
 
-    if (isIosBrowser()) {
-      setMode('ios-tip');
-      return;
-    }
+    const iosBrowser = isIosBrowser();
+    if (iosBrowser) setMode('ios-tip');
 
     const onBip = (e: Event) => {
       e.preventDefault();
