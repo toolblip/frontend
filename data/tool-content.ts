@@ -50,7 +50,7 @@ Output: contract.pdf with the signature page appended`,
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "delete-pages": {
+  "delete-pages-from-pdf": {
     description: `Removing specific pages from a PDF is a different operation from splitting or merging, those create new files from parts of the original, while deletion modifies the existing document by taking pages out entirely, and the result needs to preserve all the remaining pages in their original order. This tool lets you select individual page tiles to delete from a PDF, then produces a new file with only the pages you kept. Useful for removing blank pages from a scanned document, taking out an accidentally included page from a report, or stripping out pages that contain sensitive information before sharing a PDF with others.`,
     examples: [
       {
@@ -3839,7 +3839,7 @@ Output: xn--85bp0auq.xn--54b7fta0cc`
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "sign": {
+  "sign-pdf": {
     description: `A contract that needs a visual signature doesn't have to mean printing it out, signing it by hand, and scanning it back in, when a signature can be drawn directly with a mouse or a finger, typed in a script-style font, or uploaded as an image. This tool places one visual signature on a selected page of a PDF, then lets you position and size it before downloading the result. It doesn't create a cryptographic digital signature or legal e-signature certificate.`,
     examples: [
       {
@@ -4518,7 +4518,7 @@ Cairo`, note: `Same list, flipped. Use this for a reverse leaderboard or log.` }
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "unlock": {
+  "unlock-pdf": {
     description: `A PDF you have permission to use can still be inconvenient when it asks for a password every time it opens or carries restrictions that no longer serve a purpose. This tool unlocks an accessible PDF in your browser: files that open normally are re-saved, and files that require an opening password are rendered into a new password-free PDF when you provide the current password. The password-protected path produces a flattened document, so the visible pages are preserved but the original text and form structure aren't editable.`,
     examples: [
       {
@@ -4723,7 +4723,7 @@ Cairo`, note: `Same list, flipped. Use this for a reverse leaderboard or log.` }
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "watermark": {
+  "add-watermark-to-pdf": {
     description: `A contract draft or a confidential report often needs to be marked clearly across every single page before it goes anywhere outside a small group, not just the first page, since a recipient screenshotting or forwarding just one page should still see it's a draft, not a final version. This tool adds a visible text or image watermark across every page of a PDF, with opacity, rotation, and sizing controls, without encrypting the file or restricting access. Useful for stamping "CONFIDENTIAL" across an entire document before sharing it externally, marking every page of a draft contract so an out-of-context screenshot still reads as unfinished, or branding a document with a logo before distributing it publicly.`,
     examples: [
       {

@@ -1014,7 +1014,7 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'What does "Pad zeros" do?', a: 'It pads the hexadecimal result to an even number of digits with leading zeros, useful when you need consistent byte-pair formatting.' },
     { q: 'Does it convert to octal too?', a: 'Yes, alongside hexadecimal and binary, an octal result is shown even though it is not mentioned in the tool\'s name.' },
   ],
-  'delete-pages': [
+  'delete-pages-from-pdf': [
     { q: 'How do I choose which pages to remove?', a: 'Click any page tile to mark it for deletion, or use Select All / Deselect All to toggle every page at once.' },
     { q: 'Can I delete every page in the document?', a: 'No, the tool blocks deleting all pages since that would leave an empty PDF, at least one page must remain.' },
     { q: 'Does it re-render or compress the remaining pages?', a: 'The remaining pages are copied into a new PDF in their original order. Page content is kept, but document-level metadata and some interactive features may not carry over.' },
@@ -1445,12 +1445,12 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Can I rotate one page without rotating the others?', a: 'Yes, Rotate adds 90 degrees to the selected page only. Repeat it to reach 180 or 270 degrees.' },
     { q: 'Does it edit the content inside a page?', a: 'No, it rearranges and rotates whole pages. Pages are copied into a new PDF, so document-level metadata may not carry over.' },
   ],
-  'sign': [
+  'sign-pdf': [
     { q: 'What signature methods are supported?', a: 'Draw a signature with a mouse, trackpad, or finger, type a name in a script-style font, or upload a PNG or JPG signature image.' },
     { q: 'Can I choose which page receives the signature?', a: 'Yes, select a page and set the signature position and size in PDF points before signing.' },
     { q: 'Is this a legal or cryptographic digital signature?', a: 'No. The tool places a visual signature image on the PDF. It does not create a certificate-based digital signature or guarantee legal acceptance.' },
   ],
-  'unlock': [
+  'unlock-pdf': [
     { q: 'Can it unlock a PDF that asks for a password?', a: 'Yes, provide the current opening password. The browser renders the visible pages into a new password-free PDF.' },
     { q: 'What happens to a password-protected PDF\'s text and forms?', a: 'The password-protected path creates a flattened PDF. The pages remain visible, but the original selectable text and interactive form structure are not preserved.' },
     { q: 'Are my PDF or password uploaded?', a: 'No. PDF parsing, password handling, and output generation happen locally in your browser.' },
@@ -1460,7 +1460,7 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'What happens to a password-protected PDF\'s text and forms?', a: 'The password-protected path creates a flattened PDF. The pages remain visible, but the original selectable text and interactive form structure are not preserved.' },
     { q: 'Are my PDF or password uploaded?', a: 'No. PDF parsing, password handling, and output generation happen locally in your browser.' },
   ],
-  'watermark': [
+  'add-watermark-to-pdf': [
     { q: 'Can I use text or an image as the watermark?', a: 'Yes, choose Text for a typed mark such as CONFIDENTIAL, or Image for a PNG or JPG logo.' },
     { q: 'Does the watermark appear on every page?', a: 'Yes, the selected watermark is applied to every page. Opacity, rotation, and image width can be adjusted before processing.' },
     { q: 'Does a watermark protect a PDF from access?', a: 'No. It is a visible label or deterrent, not encryption, access control, or a replacement for document permissions.' },

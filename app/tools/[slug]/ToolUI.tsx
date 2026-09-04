@@ -1334,7 +1334,7 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <ColorToneGeneratorClient />;
     case 'color-toolblip':
       return <ColorToolblipClient />;
-    case 'delete-pages':
+    case 'delete-pages-from-pdf':
       return <PdfPageDeleterClient />;
     case 'content-summarizer':
       return <ContentSummarizerClient />;
@@ -2962,7 +2962,7 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'serp-quick': return <SERPQuickClient />;
     case 'serp-snippet-viewer': return <SERPSnippetViewerClient />;
     case 'shell-command-reference': return <ShellCommandReferenceClient />;
-    case 'sign': return <SignPDFClient />;
+    case 'sign-pdf': return <SignPDFClient />;
     case 'sitemap-html-new': return <SitemapHTMLNewClient />;
     case 'slug-health-checker': return <SlugHealthCheckerClient />;
     case 'slug-permalink-checker': return <SlugPermalinkCheckerClient />;
@@ -2984,7 +2984,7 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'unblur': return <UnblurImageClient />;
     case 'unicode-escape-encoder': return <UnicodeEscapeEncoderClient />;
     case 'unit-conversion-tool': return <UnitConversionToolClient />;
-    case 'unlock': return <PdfPasswordRemoverClient />;
+    case 'unlock-pdf': return <PdfPasswordRemoverClient />;
     case 'uuid-compare': return <UUIDCompareClient />;
     case 'uuid-comparator': return <UUIDComparatorClient />;
     case 'uuid-normalizer': return <UUIDNormalizerClient />;
@@ -2993,7 +2993,7 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'vsd-to-pptx': return <VsdxToPptxClient />;
     case 'vsdx-to-docx': return <VsdxToDocxClient />;
     case 'vsdx-to-pptx': return <VsdxToPptxClient />;
-    case 'watermark': return <AddWatermarkToPDFClient />;
+    case 'add-watermark-to-pdf': return <AddWatermarkToPDFClient />;
     case 'websocket-tester': return <WebSocketTesterClient />;
     case 'what-if-scenario-calculator': return <WhatIfScenarioCalculatorClient />;
     case 'word-alphabetizer': return <WordAlphabetizerClient />;
