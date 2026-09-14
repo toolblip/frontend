@@ -7,6 +7,7 @@ import { checkFileSize } from '@/lib/tier-limits';
 import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 type Mode = 'draw' | 'type' | 'upload';
+const PDF_PREVIEW_SCALE = 0.75;
 
 const isPdfFile = (file: File) =>
   file.type === 'application/pdf' || /\.pdf$/i.test(file.name);
@@ -17,6 +18,30 @@ function dataUrlToBytes(dataUrl: string): Uint8Array {
   const bytes = new Uint8Array(binary.length);
   for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
   return bytes;
+}
+
+async function renderPdfPage(bytes: Uint8Array, pageNumber: number): Promise<{ url: string; width: number; height: number } | null> {
+  try {
+    const pdfjs = await import('pdfjs-dist/legacy/build/pdf.mjs');
+    pdfjs.GlobalWorkerOptions.workerSrc = `${process.env.NEXT_PUBLIC_BASE_PATH || ''}/pdf-worker/pdf.worker.min.mjs`;
+    const task = pdfjs.getDocument({ data: bytes.slice() });
+    try {
+      const doc = await task.promise;
+      const page = await doc.getPage(pageNumber);
+      const viewport = page.getViewport({ scale: PDF_PREVIEW_SCALE });
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.ceil(viewport.width);
+      canvas.height = Math.ceil(viewport.height);
+      const context = canvas.getContext('2d');
+      if (!context) return null;
+      await page.render({ canvas, canvasContext: context, viewport }).promise;
+      return { url: canvas.toDataURL('image/png'), width: viewport.width, height: viewport.height };
+    } finally {
+      await task.destroy();
+    }
+  } catch {
+    return null;
+  }
 }
 
 export default function SignPDFClient() {
@@ -38,6 +63,8 @@ export default function SignPDFClient() {
   const [message, setMessage] = useState('');
   const [isDragging, setIsDragging] = useState(false);
   const [resultBlob, setResultBlob] = useState<Blob | null>(null);
+  const [pagePreview, setPagePreview] = useState<{ url: string; width: number; height: number } | null>(null);
+  const [previewLoading, setPreviewLoading] = useState(false);
 
   const fileRef = useRef<HTMLInputElement>(null);
   const sigFileRef = useRef<HTMLInputElement>(null);
@@ -46,6 +73,7 @@ export default function SignPDFClient() {
   const drawingRef = useRef(false);
   const loadVersionRef = useRef(0);
   const signatureLoadVersionRef = useRef(0);
+  const previewVersionRef = useRef(0);
 
   const invalidateResult = () => {
     loadVersionRef.current += 1;
@@ -57,6 +85,7 @@ export default function SignPDFClient() {
   const reset = () => {
     loadVersionRef.current += 1;
     signatureLoadVersionRef.current += 1;
+    previewVersionRef.current += 1;
     setFile(null);
     setFileBytes(null);
     setPageCount(0);
@@ -64,6 +93,8 @@ export default function SignPDFClient() {
     setStatus('idle');
     setMessage('');
     setResultBlob(null);
+    setPagePreview(null);
+    setPreviewLoading(false);
     setIsDragging(false);
     setUploadedDataUrl('');
     setUploadedMime('image/png');
@@ -231,6 +262,22 @@ export default function SignPDFClient() {
     ctx.fillText(typedText || ' ', 16, canvas.height / 2);
   }, [typedText, mode, file, pageCount]);
 
+  useEffect(() => {
+    if (!fileBytes || pageCount === 0) {
+      previewVersionRef.current += 1;
+      setPagePreview(null);
+      setPreviewLoading(false);
+      return;
+    }
+    const requestId = ++previewVersionRef.current;
+    setPreviewLoading(true);
+    void renderPdfPage(fileBytes, pageIndex + 1).then((preview) => {
+      if (requestId !== previewVersionRef.current) return;
+      setPagePreview(preview);
+      setPreviewLoading(false);
+    });
+  }, [fileBytes, pageCount, pageIndex]);
+
   const handleSigFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (status === 'processing') return;
     const f = e.target.files?.[0];
@@ -333,6 +380,20 @@ export default function SignPDFClient() {
     if (sigFileRef.current) sigFileRef.current.value = '';
   };
 
+  const signaturePreviewUrl = mode === 'draw'
+    ? (hasDrawing ? canvasRef.current?.toDataURL('image/png') : null)
+    : mode === 'type'
+      ? typeCanvasRef.current?.toDataURL('image/png')
+      : uploadedDataUrl || null;
+
+  const previewScale = PDF_PREVIEW_SCALE;
+  const previewSignatureStyle = pagePreview && signaturePreviewUrl ? {
+    left: `${posX * previewScale}px`,
+    top: `${pagePreview.height - (posY + sigHeight) * previewScale}px`,
+    width: `${sigWidth * previewScale}px`,
+    height: `${sigHeight * previewScale}px`,
+  } : undefined;
+
   return (
     <div className="tb-v2-tool-card">
       <div className="tb-v2-tool-input-head">
@@ -367,18 +428,19 @@ export default function SignPDFClient() {
       <input ref={fileRef} type="file" accept="application/pdf,.pdf" onChange={handleFileChange} disabled={status === 'processing'} className="hidden" />
 
       {file && (
-        <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-xl flex items-center justify-between">
-          <div>
-            <p className="font-medium">{file.name}</p>
-            <p className="text-sm text-gray-500">{pageCount} page{pageCount === 1 ? '' : 's'}</p>
+        <div className="tb-sign-file-chip">
+          <div className="tb-sign-file-icon" aria-hidden="true">PDF</div>
+          <div className="tb-sign-file-info">
+            <strong>{file.name}</strong>
+            <span>{pageCount} page{pageCount === 1 ? '' : 's'} ready to sign</span>
           </div>
-          <button type="button" onClick={reset} className="text-gray-400 hover:text-gray-600">✕</button>
+          <button type="button" onClick={reset} className="tb-sign-file-remove" aria-label="Remove PDF">×</button>
         </div>
       )}
 
       {file && pageCount > 0 && (
-        <>
-          <div className="mt-4">
+        <div className="tb-sign-workspace">
+          <div className="tb-sign-page-control">
             <label className="tb-v2-tool-label">Page to sign</label>
             <select
               value={pageIndex}
@@ -392,13 +454,33 @@ export default function SignPDFClient() {
             </select>
           </div>
 
-          <div className="mt-4 flex gap-2">
+          <div className="tb-sign-preview" aria-label={`Preview of page ${pageIndex + 1}`}>
+            <div className="tb-sign-preview-head">
+              <span className="tb-v2-tool-label">Page preview</span>
+              <span className="tb-sign-preview-page">Page {pageIndex + 1} of {pageCount}</span>
+            </div>
+            <div className="tb-sign-preview-viewport">
+              {previewLoading && <span className="tb-v2-empty">Rendering page preview...</span>}
+              {pagePreview && (
+                <div className="tb-sign-preview-page-surface" style={{ width: pagePreview.width, height: pagePreview.height }}>
+                  <img src={pagePreview.url} alt={`Rendered preview of page ${pageIndex + 1}`} />
+                  {signaturePreviewUrl && <img className="tb-sign-preview-signature" src={signaturePreviewUrl} alt="Signature placement preview" style={previewSignatureStyle} />}
+                </div>
+              )}
+            </div>
+            <p className="tb-sign-preview-hint">The signature overlay shows where it will be placed in the exported PDF.</p>
+          </div>
+
+          <div className="tb-sign-editor">
+          <div className="tb-sign-mode-tabs" role="tablist" aria-label="Signature method">
             {(['draw', 'type', 'upload'] as Mode[]).map(m => (
               <button
                 key={m}
                 type="button"
                 onClick={() => { if (status !== 'processing') { invalidateResult(); setMode(m); } }}
                 disabled={status === 'processing'}
+                role="tab"
+                aria-selected={mode === m}
                 className={`tb-v2-btn-sm ${mode === m ? 'tb-v2-btn-primary' : ''}`}
               >
                 {m === 'draw' ? 'Draw' : m === 'type' ? 'Type' : 'Upload'}
@@ -407,7 +489,7 @@ export default function SignPDFClient() {
           </div>
 
           {mode === 'draw' && (
-            <div className="mt-3">
+            <div className="tb-sign-mode-panel">
               <canvas
                 ref={canvasRef}
                 width={400}
@@ -425,7 +507,7 @@ export default function SignPDFClient() {
           )}
 
           {mode === 'type' && (
-            <div className="mt-3">
+            <div className="tb-sign-mode-panel">
               <input
                 type="text"
                 value={typedText}
@@ -445,7 +527,7 @@ export default function SignPDFClient() {
           )}
 
           {mode === 'upload' && (
-            <div className="mt-3">
+            <div className="tb-sign-mode-panel">
               <button type="button" onClick={() => { if (status !== 'processing') sigFileRef.current?.click(); }} disabled={status === 'processing'} className="tb-v2-btn-sm">
                 Choose signature image (PNG/JPG)
               </button>
@@ -464,7 +546,7 @@ export default function SignPDFClient() {
             </div>
           )}
 
-          <div className="tb-v2-grid-2 mt-4">
+          <div className="tb-sign-position-grid">
             <div>
               <label className="tb-v2-tool-label">Position X (pt from left)</label>
               <input type="number" min={0} value={posX} disabled={status === 'processing'} onChange={e => { if (status !== 'processing') { invalidateResult(); setPosX(Number(e.target.value) || 0); } }} className="tb-v2-input" />
@@ -487,33 +569,34 @@ export default function SignPDFClient() {
             type="button"
             onClick={process}
             disabled={status === 'processing'}
-            className="tb-v2-btn tb-v2-btn-primary tb-v2-btn-lg w-full mt-4"
+            className="tb-v2-btn tb-v2-btn-primary tb-v2-btn-lg tb-sign-action"
           >
             {status === 'processing' ? '⏳ Signing...' : '✍️ Sign PDF'}
           </button>
-        </>
+          </div>
+        </div>
       )}
 
       {status === 'done' && (
-        <div className="p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl mt-4">
-          <p className="text-sm text-green-600 dark:text-green-400 mb-2">✅ {message}</p>
+        <div className="tb-sign-result" role="status">
+          <p>{message}</p>
           <button
             type="button"
             onClick={downloadResult}
-            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+            className="tb-v2-btn tb-v2-btn-primary"
           >
-            Download Signed PDF
+            Download signed PDF
           </button>
         </div>
       )}
 
       {status === 'error' && (
-        <div role="alert" className="p-4 bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-xl mt-4">
-          <p className="text-sm text-red-600 dark:text-red-400">❌ {message}</p>
+        <div role="alert" className="tb-sign-error">
+          <p>{message}</p>
         </div>
       )}
 
-      <p className="tb-v2-empty" style={{ margin: '16px 20px 20px' }}>
+      <p className="tb-sign-disclaimer">
         This tool places a visual signature image onto your PDF. It does not apply a cryptographic digital signature or legal e-signature certificate.
       </p>
     </div>
