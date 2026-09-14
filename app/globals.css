@@ -2863,6 +2863,13 @@ button.tb-v2-mm-more-row-btn {
 }
 .tb-pdf-unlock-consent-label input:disabled { cursor: default; }
 .tb-pdf-unlock-consent p { margin: 0 0 0 25px; color: var(--fg-3); font-size: 11px; line-height: 1.4; }
+.tb-pdf-unlock-action { justify-content: center; }
+.tb-pdf-unlock-result { align-items: center; justify-content: space-between; gap: 14px; }
+.tb-pdf-unlock-result > span { min-width: 0; }
+.tb-pdf-unlock-download { flex: 0 0 auto; white-space: nowrap; }
+@media (max-width: 520px) {
+  .tb-pdf-unlock-result { align-items: flex-start; flex-direction: column; }
+}
 
 /* Sign PDF */
 .tb-sign-file-chip {

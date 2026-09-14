@@ -277,15 +277,16 @@ export default function PdfPasswordRemoverClient() {
             </label>
             <p id="unlock-permission-help">You are responsible for using the unlocked file lawfully.</p>
           </div>
-          <button type="button" onClick={() => void removePassword()} disabled={processing || !permissionConfirmed} aria-describedby="unlock-permission-help" className="tb-v2-btn tb-v2-btn-primary tb-v2-btn-lg" style={{ width: '100%', marginTop: 16 }}>
+          <button type="button" onClick={() => void removePassword()} disabled={processing || !permissionConfirmed} aria-describedby="unlock-permission-help" className="tb-v2-btn tb-v2-btn-primary tb-pdf-unlock-action" style={{ width: '100%', marginTop: 16 }}>
             {processing ? 'Processing...' : 'Unlock PDF'}
           </button>
           <div className="tb-v2-banner" style={{ marginTop: 12 }}>
             Use this only on a PDF you have permission to unlock. Opening-password files are flattened into page images so the output no longer needs a password.
           </div>
           {result?.blob && (
-            <div className="tb-v2-banner" style={{ marginTop: 12 }}>
-              {result.message} <button type="button" onClick={downloadResult} className="tb-v2-btn-sm" style={{ marginLeft: 8 }}>Download PDF</button>
+            <div className="tb-v2-banner tb-pdf-unlock-result" style={{ marginTop: 12 }}>
+              <span>{result.message}</span>
+              <button type="button" onClick={downloadResult} className="tb-v2-btn tb-v2-btn-sm tb-pdf-unlock-download">Download PDF</button>
             </div>
           )}
         </div>
