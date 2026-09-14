@@ -53,6 +53,7 @@ export default function PdfPasswordRemoverClient() {
   const [loading, setLoading] = useState(false);
   const [processing, setProcessing] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
+  const [permissionConfirmed, setPermissionConfirmed] = useState(false);
   const [error, setError] = useState('');
   const [result, setResult] = useState<{ message: string; blob?: Blob } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -74,6 +75,7 @@ export default function PdfPasswordRemoverClient() {
     setLoading(false);
     setProcessing(false);
     setIsDragging(false);
+    setPermissionConfirmed(false);
     setError('');
     setResult(null);
     if (fileInputRef.current) fileInputRef.current.value = '';
@@ -88,6 +90,7 @@ export default function PdfPasswordRemoverClient() {
     setResult(null);
     setError('');
     setPassword('');
+    setPermissionConfirmed(false);
     setLoading(false);
     setProcessing(false);
     if (!isPdfFile(selected)) {
@@ -147,6 +150,10 @@ export default function PdfPasswordRemoverClient() {
 
   const removePassword = async () => {
     if (!fileBytes || !file || processing) return;
+    if (!permissionConfirmed) {
+      setError('Please confirm that you own this PDF or have permission to unlock it.');
+      return;
+    }
     const requestId = ++loadVersionRef.current;
     setProcessing(true);
     setError('');
@@ -252,7 +259,25 @@ export default function PdfPasswordRemoverClient() {
             className="tb-v2-input"
             style={{ marginTop: 8 }}
           />
-          <button type="button" onClick={() => void removePassword()} disabled={processing} className="tb-v2-btn tb-v2-btn-primary tb-v2-btn-lg" style={{ width: '100%', marginTop: 16 }}>
+          <div className="tb-pdf-unlock-consent">
+            <label className="tb-pdf-unlock-consent-label" htmlFor="unlock-permission-confirmed">
+              <input
+                id="unlock-permission-confirmed"
+                type="checkbox"
+                checked={permissionConfirmed}
+                disabled={isProcessing}
+                onChange={(event) => {
+                  if (!isProcessing) {
+                    invalidateResult();
+                    setPermissionConfirmed(event.target.checked);
+                  }
+                }}
+              />
+              <span>I confirm that I own this PDF or have permission from its owner to unlock it.</span>
+            </label>
+            <p id="unlock-permission-help">You are responsible for using the unlocked file lawfully.</p>
+          </div>
+          <button type="button" onClick={() => void removePassword()} disabled={processing || !permissionConfirmed} aria-describedby="unlock-permission-help" className="tb-v2-btn tb-v2-btn-primary tb-v2-btn-lg" style={{ width: '100%', marginTop: 16 }}>
             {processing ? 'Processing...' : 'Unlock PDF'}
           </button>
           <div className="tb-v2-banner" style={{ marginTop: 12 }}>
