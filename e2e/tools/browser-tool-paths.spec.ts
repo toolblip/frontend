@@ -435,6 +435,24 @@ test.describe('Browser tool execution paths', () => {
     await page.getByRole('button', { name: 'Example', exact: true }).click();
     await expect(page.getByText('4 pages · 0 selected to delete', { exact: true })).toBeVisible({ timeout: 15000 });
     await expect(page.locator('.tb-pdf-delete-thumbnail img')).toHaveCount(4);
+    const pageCards = page.locator('.tb-pdf-delete-card');
+    const cardBoxes = await pageCards.evaluateAll((elements) => elements.map((element) => {
+      const rect = element.getBoundingClientRect();
+      return { x: rect.x, y: rect.y };
+    }));
+    expect(Math.abs(cardBoxes[0].x - cardBoxes[1].x)).toBeLessThanOrEqual(1);
+    expect(cardBoxes[1].y).toBeGreaterThan(cardBoxes[0].y);
+
+    await page.getByRole('button', { name: 'Preview page', exact: true }).nth(1).click();
+    const previewDialog = page.getByRole('dialog', { name: 'Preview page 2' });
+    await expect(previewDialog).toBeVisible();
+    await expect(previewDialog.getByAltText('Large preview of page 2')).toBeVisible();
+    await expect(page.getByText('100%', { exact: true })).toBeVisible();
+    await page.getByRole('button', { name: 'Zoom in preview' }).click();
+    await expect(page.getByText('125%', { exact: true })).toBeVisible();
+    await page.getByRole('button', { name: 'Zoom out preview' }).click();
+    await expect(page.getByText('100%', { exact: true })).toBeVisible();
+    await page.getByRole('button', { name: 'Close', exact: true }).click();
 
     await page.getByRole('button', { name: 'Page 2, kept', exact: true }).click();
     await expect(page.getByText('4 pages · 1 selected to delete', { exact: true })).toBeVisible();

@@ -2712,9 +2712,9 @@ button.tb-v2-mm-more-row-btn {
 .tb-pdf-delete-instruction { margin: 0 0 12px; color: var(--fg-2); font-size: 12px; }
 .tb-pdf-delete-controls { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
 .tb-pdf-delete-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 .tb-pdf-delete-card {
   position: relative;
@@ -2728,7 +2728,7 @@ button.tb-v2-mm-more-row-btn {
   border-radius: 10px;
   background: var(--surface-2);
   color: var(--fg-0);
-  cursor: pointer;
+  width: 100%;
   transition: border-color .12s, box-shadow .12s, background .12s;
 }
 .tb-pdf-delete-card:hover { border-color: var(--red); }
@@ -2737,7 +2737,19 @@ button.tb-v2-mm-more-row-btn {
   background: color-mix(in srgb, var(--red) 8%, var(--surface-2));
   box-shadow: 0 0 0 2px color-mix(in srgb, var(--red) 14%, transparent);
 }
-.tb-pdf-delete-card:disabled { cursor: default; opacity: .7; }
+.tb-pdf-delete-select {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--fg-0);
+  cursor: pointer;
+}
+.tb-pdf-delete-select:disabled { cursor: default; opacity: .7; }
 .tb-pdf-delete-order {
   position: absolute;
   top: 8px;
@@ -2766,14 +2778,60 @@ button.tb-v2-mm-more-row-btn {
 }
 .tb-pdf-delete-thumbnail img { display: block; width: 100%; height: 100%; object-fit: contain; }
 .tb-pdf-delete-thumbnail span { font-size: 34px; }
-.tb-pdf-delete-card > strong { font-size: 13px; }
-.tb-pdf-delete-card > small { color: var(--fg-2); font-size: 11px; text-align: center; }
-.tb-pdf-delete-card.selected > small { color: var(--red); font-weight: 600; }
+.tb-pdf-delete-select > strong { font-size: 13px; }
+.tb-pdf-delete-select > small { color: var(--fg-2); font-size: 11px; text-align: center; }
+.tb-pdf-delete-card.selected .tb-pdf-delete-select > small { color: var(--red); font-weight: 600; }
+.tb-pdf-delete-preview-button { margin-top: 4px; }
 .tb-pdf-delete-action { width: 100%; justify-content: center; margin-top: 16px; }
 .tb-pdf-delete-success { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 12px; }
+.tb-pdf-delete-preview-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(15, 23, 42, .68);
+}
+.tb-pdf-delete-preview-dialog {
+  display: flex;
+  flex-direction: column;
+  width: min(900px, 100%);
+  max-height: calc(100vh - 40px);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  box-shadow: 0 18px 60px rgba(0, 0, 0, .3);
+}
+.tb-pdf-delete-preview-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--line);
+}
+.tb-pdf-delete-preview-controls { display: flex; align-items: center; gap: 6px; }
+.tb-pdf-delete-preview-controls span { min-width: 48px; color: var(--fg-2); font-size: 12px; text-align: center; }
+.tb-pdf-delete-preview-viewport {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  min-height: 320px;
+  overflow: auto;
+  padding: 20px;
+  background: var(--surface-2);
+}
+.tb-pdf-delete-preview-image { display: block; width: auto; max-width: none; height: auto; margin: 0 auto; border: 1px solid var(--line); box-shadow: 0 3px 12px rgba(0, 0, 0, .16); }
 @media (max-width: 600px) {
   .tb-pdf-delete-summary { align-items: flex-start; flex-direction: column; }
   .tb-pdf-delete-success { align-items: flex-start; flex-direction: column; }
+  .tb-pdf-delete-preview-backdrop { padding: 8px; }
+  .tb-pdf-delete-preview-dialog { max-height: calc(100vh - 16px); }
+  .tb-pdf-delete-preview-head { align-items: flex-start; flex-direction: column; }
+  .tb-pdf-delete-preview-viewport { min-height: 260px; padding: 12px; }
 }
 .tb-v2-diff-stats {
   display: flex; gap: 10px;

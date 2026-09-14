@@ -10,7 +10,7 @@ const isPdfFile = (file: File) => file.type === 'application/pdf' || /\.pdf$/i.t
 
 type PageState = { index: number; selected: boolean; previewUrl: string | null };
 
-async function renderPageThumbnail(bytes: Uint8Array, pageNumber: number): Promise<string | null> {
+async function renderPagePreview(bytes: Uint8Array, pageNumber: number, scale: number): Promise<string | null> {
   try {
     const pdfjs = await import('pdfjs-dist/legacy/build/pdf.mjs');
     pdfjs.GlobalWorkerOptions.workerSrc = `${process.env.NEXT_PUBLIC_BASE_PATH || ''}/pdf-worker/pdf.worker.min.mjs`;
@@ -18,7 +18,7 @@ async function renderPageThumbnail(bytes: Uint8Array, pageNumber: number): Promi
     try {
       const doc = await task.promise;
       const page = await doc.getPage(pageNumber);
-      const viewport = page.getViewport({ scale: 0.28 });
+      const viewport = page.getViewport({ scale });
       const canvas = document.createElement('canvas');
       canvas.width = Math.ceil(viewport.width);
       canvas.height = Math.ceil(viewport.height);
@@ -44,8 +44,13 @@ export default function PdfPageDeleterClient() {
   const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState('');
   const [result, setResult] = useState<{ message: string; blob?: Blob } | null>(null);
+  const [previewPageIndex, setPreviewPageIndex] = useState<number | null>(null);
+  const [previewZoom, setPreviewZoom] = useState(1);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [previewLoading, setPreviewLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const loadVersionRef = useRef(0);
+  const previewRequestRef = useRef(0);
 
   const revokePreviews = (items: PageState[]) => {
     items.forEach((page) => {
@@ -64,6 +69,10 @@ export default function PdfPageDeleterClient() {
     setIsDragging(false);
     setError('');
     setResult(null);
+    previewRequestRef.current += 1;
+    setPreviewPageIndex(null);
+    setPreviewUrl(null);
+    setPreviewLoading(false);
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
@@ -94,7 +103,7 @@ export default function PdfPageDeleterClient() {
       if (pageCount === 0) throw new Error('The PDF has no pages.');
       const nextPages: PageState[] = [];
       for (let index = 0; index < pageCount; index += 1) {
-        nextPages.push({ index, selected: false, previewUrl: await renderPageThumbnail(bytes, index + 1) });
+        nextPages.push({ index, selected: false, previewUrl: await renderPagePreview(bytes, index + 1, 0.28) });
       }
       if (requestId !== loadVersionRef.current) {
         revokePreviews(nextPages);
@@ -138,6 +147,32 @@ export default function PdfPageDeleterClient() {
   const clearResult = () => {
     setResult(null);
     setError('');
+  };
+
+  const closePreview = () => {
+    previewRequestRef.current += 1;
+    setPreviewPageIndex(null);
+    setPreviewUrl(null);
+    setPreviewLoading(false);
+  };
+
+  const openPreview = async (index: number, zoom = 1) => {
+    if (!fileBytes) return;
+    const requestId = ++previewRequestRef.current;
+    setPreviewPageIndex(index);
+    setPreviewZoom(zoom);
+    setPreviewUrl(null);
+    setPreviewLoading(true);
+    const nextPreview = await renderPagePreview(fileBytes, index + 1, zoom);
+    if (requestId !== previewRequestRef.current) return;
+    setPreviewUrl(nextPreview);
+    setPreviewLoading(false);
+  };
+
+  const changePreviewZoom = (delta: number) => {
+    if (previewPageIndex === null) return;
+    const nextZoom = Math.min(2, Math.max(0.75, Number((previewZoom + delta).toFixed(2))));
+    void openPreview(previewPageIndex, nextZoom);
   };
 
   const togglePage = (index: number) => {
@@ -250,22 +285,24 @@ export default function PdfPageDeleterClient() {
           </div>
           <div className="tb-pdf-delete-grid">
             {pages.map((page) => (
-              <button
-                key={page.index}
-                type="button"
-                className={`tb-pdf-delete-card ${page.selected ? 'selected' : ''}`}
-                onClick={() => togglePage(page.index)}
-                disabled={processing}
-                aria-pressed={page.selected}
-                aria-label={`Page ${page.index + 1}, ${page.selected ? 'selected for deletion' : 'kept'}`}
-              >
-                <span className="tb-pdf-delete-order">{page.index + 1}</span>
-                <div className="tb-pdf-delete-thumbnail">
-                  {page.previewUrl ? <img src={page.previewUrl} alt={`Preview of page ${page.index + 1}`} /> : <span aria-hidden="true">📄</span>}
-                </div>
-                <strong>Page {page.index + 1}</strong>
-                <small>{page.selected ? 'Selected for deletion' : 'Keep'}</small>
-              </button>
+              <div key={page.index} className={`tb-pdf-delete-card ${page.selected ? 'selected' : ''}`}>
+                <button
+                  type="button"
+                  className="tb-pdf-delete-select"
+                  onClick={() => togglePage(page.index)}
+                  disabled={processing}
+                  aria-pressed={page.selected}
+                  aria-label={`Page ${page.index + 1}, ${page.selected ? 'selected for deletion' : 'kept'}`}
+                >
+                  <span className="tb-pdf-delete-order">{page.index + 1}</span>
+                  <div className="tb-pdf-delete-thumbnail">
+                    {page.previewUrl ? <img src={page.previewUrl} alt={`Preview of page ${page.index + 1}`} /> : <span aria-hidden="true">📄</span>}
+                  </div>
+                  <strong>Page {page.index + 1}</strong>
+                  <small>{page.selected ? 'Selected for deletion' : 'Keep'}</small>
+                </button>
+                <button type="button" className="tb-v2-btn-sm tb-pdf-delete-preview-button" onClick={() => void openPreview(page.index)} disabled={processing}>Preview page</button>
+              </div>
             ))}
           </div>
           <button type="button" className="tb-v2-btn tb-v2-btn-primary tb-pdf-delete-action" onClick={() => void deleteSelected()} disabled={selectedCount === 0 || selectedCount === pages.length || processing}>
@@ -273,6 +310,26 @@ export default function PdfPageDeleterClient() {
           </button>
           {selectedCount === pages.length && <div className="tb-v2-banner tb-v2-banner-err" role="alert" style={{ marginTop: 12 }}>Keep at least one page. Deselect one page before deleting.</div>}
           {result?.blob && <div className="tb-v2-banner tb-pdf-delete-success" role="status">{result.message}<button type="button" className="tb-v2-btn-sm" onClick={downloadResult}>Download edited PDF</button></div>}
+        </div>
+      )}
+
+      {previewPageIndex !== null && (
+        <div className="tb-pdf-delete-preview-backdrop" role="presentation" onClick={closePreview}>
+          <div className="tb-pdf-delete-preview-dialog" role="dialog" aria-modal="true" aria-labelledby="tb-pdf-delete-preview-title" onClick={(event) => event.stopPropagation()}>
+            <div className="tb-pdf-delete-preview-head">
+              <strong id="tb-pdf-delete-preview-title">Preview page {previewPageIndex + 1}</strong>
+              <div className="tb-pdf-delete-preview-controls">
+                <button type="button" className="tb-v2-btn-sm" aria-label="Zoom out preview" onClick={() => changePreviewZoom(-0.25)} disabled={previewZoom <= 0.75 || previewLoading}>−</button>
+                <span>{Math.round(previewZoom * 100)}%</span>
+                <button type="button" className="tb-v2-btn-sm" aria-label="Zoom in preview" onClick={() => changePreviewZoom(0.25)} disabled={previewZoom >= 2 || previewLoading}>＋</button>
+                <button type="button" className="tb-v2-btn-sm" onClick={closePreview}>Close</button>
+              </div>
+            </div>
+            <div className="tb-pdf-delete-preview-viewport">
+              {previewLoading && <span className="tb-v2-empty">Rendering preview...</span>}
+              {previewUrl && <img className="tb-pdf-delete-preview-image" src={previewUrl} alt={`Large preview of page ${previewPageIndex + 1}`} />}
+            </div>
+          </div>
         </div>
       )}
 
