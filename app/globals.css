@@ -2629,9 +2629,18 @@ button.tb-v2-mm-more-row-btn {
 }
 .tb-pdf-rearrange-instruction { margin: 0 0 14px; color: var(--fg-2); font-size: 12px; }
 .tb-pdf-rearrange-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.tb-pdf-rearrange-drop-zone {
+  height: 10px;
+  border-top: 3px solid transparent;
+  transition: border-color .12s, height .12s;
+}
+.tb-pdf-rearrange-drop-zone.active {
+  height: 14px;
+  border-color: var(--red);
 }
 .tb-pdf-rearrange-card {
   position: relative;
@@ -2646,6 +2655,7 @@ button.tb-v2-mm-more-row-btn {
   background: var(--surface-2);
   cursor: grab;
   touch-action: none;
+  width: 100%;
   transition: border-color .12s, box-shadow .12s, opacity .12s;
 }
 .tb-pdf-rearrange-card.dragging { opacity: .55; border-color: var(--red); box-shadow: 0 0 0 2px color-mix(in srgb, var(--red) 15%, transparent); }

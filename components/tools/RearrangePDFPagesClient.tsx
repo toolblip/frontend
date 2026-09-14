@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { PDFDocument, degrees, StandardFonts, rgb } from 'pdf-lib';
 import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
@@ -44,11 +44,11 @@ export default function RearrangePDFPagesClient() {
   const [resultBlob, setResultBlob] = useState<Blob | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [draggingIndex, setDraggingIndex] = useState<number | null>(null);
-  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
+  const [dropIndex, setDropIndex] = useState<number | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
   const loadVersionRef = useRef(0);
   const draggingIndexRef = useRef<number | null>(null);
-  const dragOverIndexRef = useRef<number | null>(null);
+  const dropIndexRef = useRef<number | null>(null);
 
   const revokePreviews = (items: PageItem[]) => items.forEach(item => { if (item.previewUrl) URL.revokeObjectURL(item.previewUrl); });
 
@@ -62,9 +62,9 @@ export default function RearrangePDFPagesClient() {
     setResultBlob(null);
     setIsDragging(false);
     setDraggingIndex(null);
-    setDragOverIndex(null);
+    setDropIndex(null);
     draggingIndexRef.current = null;
-    dragOverIndexRef.current = null;
+    dropIndexRef.current = null;
     if (fileRef.current) fileRef.current.value = '';
   };
 
@@ -72,20 +72,26 @@ export default function RearrangePDFPagesClient() {
     const handlePointerMove = (event: PointerEvent) => {
       if (draggingIndexRef.current === null) return;
       event.preventDefault();
-      const element = document.elementFromPoint(event.clientX, event.clientY);
-      const card = element?.closest<HTMLElement>('[data-rearrange-card-index]');
-      const nextIndex = card ? Number(card.dataset.rearrangeCardIndex) : draggingIndexRef.current;
-      if (nextIndex === null || !Number.isInteger(nextIndex) || nextIndex < 0 || nextIndex >= pages.length) return;
-      dragOverIndexRef.current = nextIndex;
-      setDragOverIndex(nextIndex);
+      const cards = Array.from(document.querySelectorAll<HTMLElement>('[data-rearrange-card-index]'));
+      let nextIndex = cards.length;
+      for (let index = 0; index < cards.length; index += 1) {
+        const rect = cards[index].getBoundingClientRect();
+        if (event.clientY < rect.top + rect.height / 2) {
+          nextIndex = index;
+          break;
+        }
+      }
+      dropIndexRef.current = nextIndex;
+      setDropIndex(nextIndex);
     };
 
     const finishPointerDrag = () => {
       const from = draggingIndexRef.current;
-      const to = dragOverIndexRef.current;
-      if (from !== null && to !== null && from !== to) {
+      const dropAt = dropIndexRef.current;
+      const to = from !== null && dropAt !== null && dropAt > from ? dropAt - 1 : dropAt;
+      if (from !== null && to !== null && to !== from) {
         setPages((current) => {
-          if (from < 0 || from >= current.length || to < 0 || to >= current.length) return current;
+          if (from < 0 || from >= current.length || to < 0 || to > current.length - 1) return current;
           const next = [...current];
           const [moved] = next.splice(from, 1);
           next.splice(to, 0, moved);
@@ -95,9 +101,9 @@ export default function RearrangePDFPagesClient() {
         setStatus('idle');
       }
       draggingIndexRef.current = null;
-      dragOverIndexRef.current = null;
+      dropIndexRef.current = null;
       setDraggingIndex(null);
-      setDragOverIndex(null);
+      setDropIndex(null);
     };
 
     window.addEventListener('pointermove', handlePointerMove, { passive: false });
@@ -176,9 +182,9 @@ export default function RearrangePDFPagesClient() {
     if (event.button !== 0 || (event.target instanceof Element && event.target.closest('button'))) return;
     event.preventDefault();
     draggingIndexRef.current = index;
-    dragOverIndexRef.current = index;
+    dropIndexRef.current = index;
     setDraggingIndex(index);
-    setDragOverIndex(index);
+    setDropIndex(index);
   };
 
   const rotatePage = (index: number) => {
@@ -246,13 +252,14 @@ export default function RearrangePDFPagesClient() {
           <p className="tb-pdf-rearrange-instruction">Drag a page card to reorder it, or use the arrow controls. Rotate any page before saving.</p>
           <div className="tb-pdf-rearrange-grid">
             {pages.map((page, index) => (
-              <div
-                key={page.originalIndex}
-                className={`tb-pdf-rearrange-card ${draggingIndex === index ? 'dragging' : ''} ${dragOverIndex === index && draggingIndex !== index ? 'drag-over' : ''}`}
-                data-rearrange-card-index={index}
-                aria-grabbed={draggingIndex === index}
-                onPointerDown={(event) => startPageDrag(event, index)}
-              >
+              <Fragment key={page.originalIndex}>
+                <div className={`tb-pdf-rearrange-drop-zone ${dropIndex === index && draggingIndex !== null ? 'active' : ''}`} aria-hidden="true" />
+                <div
+                  className={`tb-pdf-rearrange-card ${draggingIndex === index ? 'dragging' : ''}`}
+                  data-rearrange-card-index={index}
+                  aria-grabbed={draggingIndex === index}
+                  onPointerDown={(event) => startPageDrag(event, index)}
+                >
                 <span className="tb-pdf-rearrange-drag-handle" aria-hidden="true">⠿</span>
                 <span className="tb-pdf-rearrange-order">{index + 1}</span>
                 <div className="tb-pdf-rearrange-thumbnail" style={{ transform: `rotate(${page.rotation}deg)` }}>
@@ -265,8 +272,10 @@ export default function RearrangePDFPagesClient() {
                   <button type="button" className="tb-v2-btn-sm" aria-label={`Move page ${page.originalIndex + 1} up`} disabled={index === 0} onClick={() => movePage(index, index - 1)}>↑</button>
                   <button type="button" className="tb-v2-btn-sm" aria-label={`Move page ${page.originalIndex + 1} down`} disabled={index === pages.length - 1} onClick={() => movePage(index, index + 1)}>↓</button>
                 </div>
-              </div>
+                </div>
+              </Fragment>
             ))}
+            <div className={`tb-pdf-rearrange-drop-zone ${dropIndex === pages.length && draggingIndex !== null ? 'active' : ''}`} aria-hidden="true" />
           </div>
           <button type="button" className="tb-v2-btn tb-v2-btn-primary tb-pdf-rearrange-action" onClick={() => void process()} disabled={status === 'processing'}>{status === 'processing' ? 'Saving...' : 'Save reordered PDF'}</button>
           {status === 'done' && <div className="tb-v2-banner tb-pdf-rearrange-success" role="status">{message}<button type="button" className="tb-v2-btn-sm" onClick={downloadResult}>Download reordered PDF</button></div>}
