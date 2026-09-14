@@ -2645,9 +2645,11 @@ button.tb-v2-mm-more-row-btn {
   border-radius: 10px;
   background: var(--surface-2);
   cursor: grab;
+  touch-action: none;
   transition: border-color .12s, box-shadow .12s, opacity .12s;
 }
 .tb-pdf-rearrange-card.dragging { opacity: .55; border-color: var(--red); box-shadow: 0 0 0 2px color-mix(in srgb, var(--red) 15%, transparent); }
+.tb-pdf-rearrange-card.drag-over { border-color: var(--red); box-shadow: 0 0 0 3px color-mix(in srgb, var(--red) 18%, transparent); }
 .tb-pdf-rearrange-drag-handle { position: absolute; top: 8px; left: 10px; color: var(--fg-3); font-size: 18px; line-height: 1; }
 .tb-pdf-rearrange-order {
   position: absolute;

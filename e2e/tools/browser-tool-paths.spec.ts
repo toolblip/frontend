@@ -371,7 +371,7 @@ test.describe('Browser tool execution paths', () => {
     await expect(page.getByText('Upload PDFs or load the sample to begin.', { exact: true })).toBeVisible();
   });
 
-  test('rearrange PDF pages previews, reorders, rotates, and downloads in the browser', async ({ page }) => {
+  test('rearrange PDF pages previews, reorders, rotates, and downloads in the browser', async ({ page }, testInfo) => {
     await page.goto('/tools/pdf-rearrange');
     await dismissCookies(page);
 
@@ -381,8 +381,21 @@ test.describe('Browser tool execution paths', () => {
     await expect(page.locator('.tb-pdf-rearrange-thumbnail img')).toHaveCount(3);
 
     const cards = page.locator('.tb-pdf-rearrange-card');
-    await cards.nth(2).getByRole('button', { name: 'Move page 3 up' }).click();
-    await cards.nth(1).getByRole('button', { name: 'Move page 3 up' }).click();
+    if (testInfo.project.name === 'mobile') {
+      await cards.nth(2).getByRole('button', { name: 'Move page 3 up' }).click();
+      await cards.nth(1).getByRole('button', { name: 'Move page 3 up' }).click();
+    } else {
+      await cards.nth(2).scrollIntoViewIfNeeded();
+      const sourceBox = await cards.nth(2).locator('.tb-pdf-rearrange-thumbnail').boundingBox();
+      const targetBox = await cards.nth(0).boundingBox();
+      expect(sourceBox).not.toBeNull();
+      expect(targetBox).not.toBeNull();
+      await page.mouse.move(sourceBox!.x + sourceBox!.width / 2, sourceBox!.y + sourceBox!.height / 2);
+      await page.mouse.down();
+      await expect(cards.nth(2)).toHaveAttribute('aria-grabbed', 'true');
+      await page.mouse.move(targetBox!.x + targetBox!.width / 2, targetBox!.y + targetBox!.height / 2, { steps: 12 });
+      await page.mouse.up();
+    }
     await expect(cards.nth(0)).toContainText('Page 3');
     await cards.nth(0).getByRole('button', { name: /Rotate/ }).click();
     await expect(cards.nth(0)).toContainText('90° rotation');
