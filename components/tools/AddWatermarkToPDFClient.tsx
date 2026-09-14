@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { PDFDocument, StandardFonts, degrees, rgb } from 'pdf-lib';
 import { useSubscription } from '@/hooks/useSubscription';
 import { checkFileSize } from '@/lib/tier-limits';
@@ -24,6 +24,45 @@ type WatermarkLayout = {
   height: number;
   scale: number;
 };
+
+type PagePreview = {
+  url: string;
+  width: number;
+  height: number;
+  pageWidth: number;
+  pageHeight: number;
+};
+
+async function renderPdfPagePreview(bytes: Uint8Array): Promise<PagePreview | null> {
+  try {
+    const pdfjs = await import('pdfjs-dist/legacy/build/pdf.mjs');
+    pdfjs.GlobalWorkerOptions.workerSrc = `${process.env.NEXT_PUBLIC_BASE_PATH || ''}/pdf-worker/pdf.worker.min.mjs`;
+    const loadingTask = pdfjs.getDocument({ data: bytes.slice() });
+    try {
+      const pdfDocument = await loadingTask.promise;
+      const page = await pdfDocument.getPage(1);
+      const pageViewport = page.getViewport({ scale: 1 });
+      const viewport = page.getViewport({ scale: 0.75 });
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.ceil(viewport.width);
+      canvas.height = Math.ceil(viewport.height);
+      const context = canvas.getContext('2d');
+      if (!context) return null;
+      await page.render({ canvas, canvasContext: context, viewport }).promise;
+      return {
+        url: canvas.toDataURL('image/png'),
+        width: viewport.width,
+        height: viewport.height,
+        pageWidth: pageViewport.width,
+        pageHeight: pageViewport.height,
+      };
+    } finally {
+      await loadingTask.destroy();
+    }
+  } catch {
+    return null;
+  }
+}
 
 function getRotatedBounds(width: number, height: number, angle: number) {
   const radians = (angle * Math.PI) / 180;
@@ -73,6 +112,7 @@ export default function AddWatermarkToPDFClient() {
   const [mode, setMode] = useState<WatermarkMode>('text');
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imageBytes, setImageBytes] = useState<Uint8Array | null>(null);
+  const [imagePreviewUrl, setImagePreviewUrl] = useState('');
   const [imageKind, setImageKind] = useState<'png' | 'jpg'>('png');
   const [opacity, setOpacity] = useState(0.35);
   const [rotation, setRotation] = useState(45);
@@ -81,9 +121,12 @@ export default function AddWatermarkToPDFClient() {
   const [message, setMessage] = useState('');
   const [isDragging, setIsDragging] = useState(false);
   const [resultBlob, setResultBlob] = useState<Blob | null>(null);
+  const [pagePreview, setPagePreview] = useState<PagePreview | null>(null);
+  const [previewLoading, setPreviewLoading] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
   const imageRef = useRef<HTMLInputElement>(null);
   const loadVersionRef = useRef(0);
+  const previewVersionRef = useRef(0);
   const isProcessing = status === 'processing';
 
   const invalidateResult = () => {
@@ -101,6 +144,7 @@ export default function AddWatermarkToPDFClient() {
     setMode('text');
     setImageFile(null);
     setImageBytes(null);
+    setImagePreviewUrl('');
     setImageKind('png');
     setOpacity(0.35);
     setRotation(45);
@@ -112,6 +156,28 @@ export default function AddWatermarkToPDFClient() {
     if (fileRef.current) fileRef.current.value = '';
     if (imageRef.current) imageRef.current.value = '';
   };
+
+  useEffect(() => {
+    return () => {
+      if (imagePreviewUrl) URL.revokeObjectURL(imagePreviewUrl);
+    };
+  }, [imagePreviewUrl]);
+
+  useEffect(() => {
+    if (!fileBytes) {
+      previewVersionRef.current += 1;
+      setPagePreview(null);
+      setPreviewLoading(false);
+      return;
+    }
+    const requestId = ++previewVersionRef.current;
+    setPreviewLoading(true);
+    void renderPdfPagePreview(fileBytes).then((preview) => {
+      if (requestId !== previewVersionRef.current) return;
+      setPagePreview(preview);
+      setPreviewLoading(false);
+    });
+  }, [fileBytes]);
 
   const loadFile = useCallback(async (selected: File | undefined, requestId?: number) => {
     if (!selected || status === 'processing') return;
@@ -179,6 +245,7 @@ export default function AddWatermarkToPDFClient() {
     const requestId = ++loadVersionRef.current;
     setImageFile(null);
     setImageBytes(null);
+    setImagePreviewUrl('');
     setResultBlob(null);
     setMessage('');
     setStatus('loading');
@@ -192,6 +259,7 @@ export default function AddWatermarkToPDFClient() {
       if (requestId !== loadVersionRef.current) return;
       setImageFile(selected);
       setImageBytes(bytes);
+      setImagePreviewUrl(URL.createObjectURL(selected));
       setImageKind(selected.type === 'image/png' || /\.png$/i.test(selected.name) ? 'png' : 'jpg');
       setStatus('idle');
     } catch {
@@ -296,6 +364,26 @@ export default function AddWatermarkToPDFClient() {
     URL.revokeObjectURL(url);
   };
 
+  const previewTextSize = pagePreview
+    ? Math.max(1, Math.min(
+      120,
+      Math.min(pagePreview.pageWidth, pagePreview.pageHeight) / 7,
+      (Math.min(pagePreview.pageWidth, pagePreview.pageHeight) * 0.72) / Math.max(1, watermarkText.trim().length * 0.6),
+    )) * (pagePreview.width / pagePreview.pageWidth)
+    : 0;
+  const previewTextStyle = pagePreview ? {
+    maxWidth: '72%',
+    opacity,
+    fontSize: `${previewTextSize}px`,
+    transform: `translate(-50%, -50%) rotate(${rotation}deg)`,
+  } : undefined;
+  const previewImageStyle = {
+    width: `${Math.min(80, Math.max(10, imageScale))}%`,
+    maxHeight: '80%',
+    opacity,
+    transform: `translate(-50%, -50%) rotate(${rotation}deg)`,
+  };
+
   return (
     <div className="tb-v2-tool-card">
       <div className="tb-v2-tool-input-head">
@@ -343,6 +431,27 @@ export default function AddWatermarkToPDFClient() {
         <div style={{ padding: '0 20px 20px' }}>
           <div className="tb-v2-tool-output-head">
             <span className="tb-v2-tool-label">{file.name}</span>
+          </div>
+          <div className="tb-pdf-watermark-preview" aria-label="Watermark preview">
+            <div className="tb-pdf-watermark-preview-head">
+              <span className="tb-v2-tool-label">Preview</span>
+              <span>Page 1 of the exported PDF</span>
+            </div>
+            <div className="tb-pdf-watermark-preview-viewport">
+              {previewLoading && <span className="tb-v2-empty">Rendering page preview...</span>}
+              {pagePreview && (
+                <div className="tb-pdf-watermark-page" style={{ width: pagePreview.width, height: pagePreview.height }}>
+                  <img src={pagePreview.url} alt="Rendered preview of the first PDF page" />
+                  {mode === 'text' && watermarkText.trim() && (
+                    <span className="tb-pdf-watermark-text-overlay" style={previewTextStyle}>{watermarkText.trim()}</span>
+                  )}
+                  {mode === 'image' && imagePreviewUrl && (
+                    <img className="tb-pdf-watermark-image-overlay" src={imagePreviewUrl} alt="Watermark image preview" style={previewImageStyle} />
+                  )}
+                </div>
+              )}
+            </div>
+            <p className="tb-pdf-watermark-preview-hint">The preview shows the first page with the current watermark settings. The watermark is applied to every page when exported.</p>
           </div>
           <div className="tb-v2-option-group" style={{ marginTop: 14 }}>
             <span className="tb-v2-tool-label">Watermark type</span>
