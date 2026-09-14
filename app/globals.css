@@ -2833,6 +2833,131 @@ button.tb-v2-mm-more-row-btn {
   .tb-pdf-delete-preview-head { align-items: flex-start; flex-direction: column; }
   .tb-pdf-delete-preview-viewport { min-height: 260px; padding: 12px; }
 }
+
+/* Sign PDF */
+.tb-sign-file-chip {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 16px 20px 0;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface-2);
+}
+.tb-sign-file-icon {
+  display: grid;
+  width: 40px;
+  height: 40px;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--red) 12%, var(--surface));
+  color: var(--red);
+  font-family: var(--f-mono);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .04em;
+}
+.tb-sign-file-info { display: grid; min-width: 0; gap: 3px; }
+.tb-sign-file-info strong { overflow: hidden; color: var(--fg-0); font-size: 13px; text-overflow: ellipsis; white-space: nowrap; }
+.tb-sign-file-info span { color: var(--fg-2); font-size: 12px; }
+.tb-sign-file-remove {
+  width: 28px;
+  height: 28px;
+  flex: 0 0 auto;
+  margin-left: auto;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--fg-3);
+  cursor: pointer;
+  font-size: 22px;
+  line-height: 1;
+}
+.tb-sign-file-remove:hover { background: var(--surface-3); color: var(--fg-0); }
+.tb-sign-workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(280px, .85fr);
+  gap: 16px;
+  margin: 16px 20px 0;
+}
+.tb-sign-page-control { grid-column: 1 / -1; display: flex; align-items: center; gap: 12px; }
+.tb-sign-page-control .tb-v2-select { min-width: 150px; }
+.tb-sign-preview,
+.tb-sign-editor {
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface-2);
+}
+.tb-sign-preview { overflow: hidden; }
+.tb-sign-preview-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 13px 15px;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+}
+.tb-sign-preview-page { color: var(--fg-2); font-size: 12px; font-variant-numeric: tabular-nums; }
+.tb-sign-preview-viewport {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  min-height: 360px;
+  max-height: 620px;
+  overflow: auto;
+  padding: 24px;
+  background: color-mix(in srgb, var(--surface-3) 48%, var(--surface-2));
+}
+.tb-sign-preview-page-surface {
+  position: relative;
+  flex: 0 0 auto;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .16);
+}
+.tb-sign-preview-page-surface > img:first-child { display: block; width: 100%; height: 100%; }
+.tb-sign-preview-signature { position: absolute; object-fit: contain; pointer-events: none; }
+.tb-sign-preview-hint { margin: 0; padding: 10px 15px 13px; color: var(--fg-2); font-size: 11px; line-height: 1.45; }
+.tb-sign-editor { padding: 15px; background: var(--surface); }
+.tb-sign-mode-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; padding: 4px; border-radius: 10px; background: var(--surface-2); }
+.tb-sign-mode-tabs .tb-v2-btn-sm { width: 100%; justify-content: center; border-color: transparent; }
+.tb-sign-mode-tabs .tb-v2-btn-primary { border-color: var(--red); }
+.tb-sign-mode-panel { display: grid; gap: 10px; min-height: 148px; margin-top: 14px; padding: 13px; border: 1px dashed var(--line-2); border-radius: 10px; background: var(--surface-2); }
+.tb-sign-mode-panel canvas { max-width: 100%; }
+.tb-sign-position-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+.tb-sign-position-grid > div { display: grid; gap: 5px; }
+.tb-sign-position-grid .tb-v2-tool-label { font-size: 10px; letter-spacing: .03em; }
+.tb-sign-action { width: 100%; justify-content: center; margin-top: 16px; }
+.tb-sign-result,
+.tb-sign-error {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin: 16px 20px 0;
+  padding: 14px 16px;
+  border-radius: 12px;
+}
+.tb-sign-result { border: 1px solid color-mix(in srgb, #22c55e 28%, var(--line)); background: color-mix(in srgb, #22c55e 8%, var(--surface)); }
+.tb-sign-result p, .tb-sign-error p { margin: 0; font-size: 13px; }
+.tb-sign-result p { color: #15803d; }
+.tb-sign-error { border: 1px solid color-mix(in srgb, var(--red) 30%, var(--line)); background: color-mix(in srgb, var(--red) 7%, var(--surface)); }
+.tb-sign-error p { color: var(--red); }
+.tb-sign-disclaimer { margin: 16px 20px 20px; color: var(--fg-3); font-size: 11px; line-height: 1.5; }
+@media (max-width: 760px) {
+  .tb-sign-workspace { grid-template-columns: 1fr; }
+  .tb-sign-preview-viewport { min-height: 280px; padding: 16px; }
+}
+@media (max-width: 520px) {
+  .tb-sign-file-chip { margin-right: 14px; margin-left: 14px; }
+  .tb-sign-workspace { margin-right: 14px; margin-left: 14px; }
+  .tb-sign-result, .tb-sign-error { align-items: flex-start; flex-direction: column; margin-right: 14px; margin-left: 14px; }
+  .tb-sign-position-grid { grid-template-columns: 1fr; }
+}
 .tb-v2-diff-stats {
   display: flex; gap: 10px;
   font-family: var(--f-mono); font-size: 12px; font-weight: 600;

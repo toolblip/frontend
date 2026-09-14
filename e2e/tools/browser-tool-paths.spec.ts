@@ -472,4 +472,26 @@ test.describe('Browser tool execution paths', () => {
     await page.getByRole('button', { name: 'Clear', exact: true }).click();
     await expect(page.getByText('Upload a PDF or load the sample to select pages for deletion.', { exact: true })).toBeVisible();
   });
+
+  test('sign-pdf previews placement, switches pages, and downloads the signed PDF', async ({ page }) => {
+    await page.goto('/tools/sign-pdf');
+    await dismissCookies(page);
+
+    await page.getByRole('button', { name: 'Example', exact: true }).click();
+    await expect(page.getByText('2 pages ready to sign', { exact: true })).toBeVisible({ timeout: 15000 });
+    await expect(page.getByRole('img', { name: 'Rendered preview of page 1' })).toBeVisible({ timeout: 15000 });
+    await expect(page.getByRole('img', { name: 'Signature placement preview' })).toBeVisible();
+    await expect(page.getByRole('tab', { name: 'Type', exact: true })).toHaveAttribute('aria-selected', 'true');
+
+    await page.getByRole('combobox').selectOption('1');
+    await expect(page.getByRole('img', { name: 'Rendered preview of page 2' })).toBeVisible({ timeout: 15000 });
+    await expect(page.getByText('Page 2 of 2', { exact: true })).toBeVisible();
+
+    const downloadPromise = page.waitForEvent('download');
+    await page.locator('.tb-sign-action').click();
+    await expect(page.getByRole('status')).toContainText('Signed PDF ready to download!', { timeout: 15000 });
+    await page.getByRole('button', { name: 'Download signed PDF', exact: true }).click();
+    const download = await downloadPromise;
+    expect(download.suggestedFilename()).toMatch(/^signed-sign-sample\.pdf$/i);
+  });
 });
