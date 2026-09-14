@@ -528,6 +528,8 @@ test.describe('Browser tool execution paths', () => {
     await expect(page.getByText('watermark-sample.pdf', { exact: true }).first()).toBeVisible({ timeout: 15000 });
     await expect(page.getByRole('img', { name: 'Rendered preview of the first PDF page' })).toBeVisible({ timeout: 15000 });
     const watermarkPreview = page.locator('.tb-pdf-watermark-text-overlay');
+    await expect(watermarkPreview).toHaveCount(0);
+    await page.getByRole('button', { name: 'Preview watermark', exact: true }).click();
     await expect(watermarkPreview).toHaveText('CONFIDENTIAL');
 
     await page.locator('input[type="text"]').fill('INTERNAL');

@@ -123,6 +123,7 @@ export default function AddWatermarkToPDFClient() {
   const [resultBlob, setResultBlob] = useState<Blob | null>(null);
   const [pagePreview, setPagePreview] = useState<PagePreview | null>(null);
   const [previewLoading, setPreviewLoading] = useState(false);
+  const [showWatermarkPreview, setShowWatermarkPreview] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
   const imageRef = useRef<HTMLInputElement>(null);
   const loadVersionRef = useRef(0);
@@ -149,6 +150,7 @@ export default function AddWatermarkToPDFClient() {
     setOpacity(0.35);
     setRotation(45);
     setImageScale(42);
+    setShowWatermarkPreview(false);
     setStatus('idle');
     setMessage('');
     setResultBlob(null);
@@ -187,6 +189,7 @@ export default function AddWatermarkToPDFClient() {
     setFileBytes(null);
     setResultBlob(null);
     setMessage('');
+    setShowWatermarkPreview(false);
     if (!isPdfFile(selected)) {
       setStatus('error');
       setMessage('Please choose a PDF file.');
@@ -434,7 +437,7 @@ export default function AddWatermarkToPDFClient() {
           </div>
           <div className="tb-pdf-watermark-preview" aria-label="Watermark preview">
             <div className="tb-pdf-watermark-preview-head">
-              <span className="tb-v2-tool-label">Preview</span>
+              <span className="tb-v2-tool-label">{showWatermarkPreview ? 'Watermark preview' : 'Original page'}</span>
               <span>Page 1 of the exported PDF</span>
             </div>
             <div className="tb-pdf-watermark-preview-viewport">
@@ -442,16 +445,20 @@ export default function AddWatermarkToPDFClient() {
               {pagePreview && (
                 <div className="tb-pdf-watermark-page" style={{ width: pagePreview.width, height: pagePreview.height }}>
                   <img src={pagePreview.url} alt="Rendered preview of the first PDF page" />
-                  {mode === 'text' && watermarkText.trim() && (
+                  {showWatermarkPreview && mode === 'text' && watermarkText.trim() && (
                     <span className="tb-pdf-watermark-text-overlay" style={previewTextStyle}>{watermarkText.trim()}</span>
                   )}
-                  {mode === 'image' && imagePreviewUrl && (
+                  {showWatermarkPreview && mode === 'image' && imagePreviewUrl && (
                     <img className="tb-pdf-watermark-image-overlay" src={imagePreviewUrl} alt="Watermark image preview" style={previewImageStyle} />
                   )}
                 </div>
               )}
             </div>
-            <p className="tb-pdf-watermark-preview-hint">The preview shows the first page with the current watermark settings. The watermark is applied to every page when exported.</p>
+            <p className="tb-pdf-watermark-preview-hint">
+              {showWatermarkPreview
+                ? 'This is a non-destructive preview. The watermark is applied to every page only when exported.'
+                : 'This is the original first page. Preview the watermark before exporting to see the current settings.'}
+            </p>
           </div>
           <div className="tb-v2-option-group" style={{ marginTop: 14 }}>
             <span className="tb-v2-tool-label">Watermark type</span>
@@ -485,6 +492,14 @@ export default function AddWatermarkToPDFClient() {
               <input type="number" min={10} max={80} value={imageScale} disabled={isProcessing} onChange={(event) => { if (!isProcessing) { invalidateResult(); setImageScale(Math.max(10, Math.min(80, Number(event.target.value) || 42))); } }} className="tb-v2-input" style={{ marginTop: 8 }} />
             </label>
           )}
+          <button
+            type="button"
+            onClick={() => setShowWatermarkPreview((visible) => !visible)}
+            disabled={isProcessing}
+            className="tb-v2-btn tb-pdf-watermark-preview-action"
+          >
+            {showWatermarkPreview ? 'Hide watermark preview' : 'Preview watermark'}
+          </button>
           <button type="button" onClick={() => void process()} disabled={status === 'processing'} className="tb-v2-btn tb-v2-btn-primary tb-v2-btn-lg" style={{ width: '100%', marginTop: 16 }}>
             {status === 'processing' ? 'Processing...' : 'Add Watermark'}
           </button>
