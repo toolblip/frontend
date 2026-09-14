@@ -4852,3 +4852,68 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
   }
   .tb-pdf-annotate-pager { flex-wrap: wrap; }
 }
+
+/* Add Watermark to PDF preview */
+.tb-pdf-watermark-preview {
+  margin-top: 14px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface-2);
+}
+.tb-pdf-watermark-preview-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+}
+.tb-pdf-watermark-preview-head > span:last-child { color: var(--fg-2); font-size: 11px; }
+.tb-pdf-watermark-preview-viewport {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  min-height: 300px;
+  max-height: 600px;
+  overflow: auto;
+  padding: 20px;
+  background: color-mix(in srgb, var(--surface-3) 48%, var(--surface-2));
+}
+.tb-pdf-watermark-page {
+  position: relative;
+  flex: 0 0 auto;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .16);
+}
+.tb-pdf-watermark-page > img:first-child { display: block; width: 100%; height: 100%; }
+.tb-pdf-watermark-text-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  overflow: hidden;
+  color: #737373;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transform-origin: center;
+  pointer-events: none;
+}
+.tb-pdf-watermark-image-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  height: auto;
+  object-fit: contain;
+  transform-origin: center;
+  pointer-events: none;
+}
+.tb-pdf-watermark-preview-hint { margin: 0; padding: 10px 14px 12px; color: var(--fg-2); font-size: 11px; line-height: 1.45; }
+@media (max-width: 600px) {
+  .tb-pdf-watermark-preview-viewport { min-height: 260px; padding: 12px; }
+  .tb-pdf-watermark-preview-head { align-items: flex-start; flex-direction: column; gap: 4px; }
+}

@@ -519,4 +519,27 @@ test.describe('Browser tool execution paths', () => {
     await page.getByRole('button', { name: 'Clear', exact: true }).click();
     await expect(page.getByText('Click or drag a PDF to unlock', { exact: true })).toBeVisible();
   });
+
+  test('add-watermark-to-pdf previews settings before export', async ({ page }) => {
+    await page.goto('/tools/add-watermark-to-pdf');
+    await dismissCookies(page);
+
+    await page.getByRole('button', { name: 'Example', exact: true }).click();
+    await expect(page.getByText('watermark-sample.pdf', { exact: true }).first()).toBeVisible({ timeout: 15000 });
+    await expect(page.getByRole('img', { name: 'Rendered preview of the first PDF page' })).toBeVisible({ timeout: 15000 });
+    const watermarkPreview = page.locator('.tb-pdf-watermark-text-overlay');
+    await expect(watermarkPreview).toHaveText('CONFIDENTIAL');
+
+    await page.locator('input[type="text"]').fill('INTERNAL');
+    await expect(watermarkPreview).toHaveText('INTERNAL');
+    await page.locator('input[type="number"]').nth(1).fill('30');
+    await expect(watermarkPreview).toHaveAttribute('style', /rotate\(30deg\)/);
+
+    const downloadPromise = page.waitForEvent('download');
+    await page.getByRole('button', { name: 'Add Watermark', exact: true }).click();
+    await expect(page.getByText('Watermark added to all 2 pages.')).toBeVisible({ timeout: 15000 });
+    await page.getByRole('button', { name: 'Download PDF', exact: true }).click();
+    const download = await downloadPromise;
+    expect(download.suggestedFilename()).toMatch(/^watermarked-watermark-sample\.pdf$/i);
+  });
 });
