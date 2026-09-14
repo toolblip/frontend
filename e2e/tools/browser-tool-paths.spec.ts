@@ -494,4 +494,29 @@ test.describe('Browser tool execution paths', () => {
     const download = await downloadPromise;
     expect(download.suggestedFilename()).toMatch(/^signed-sign-sample\.pdf$/i);
   });
+
+  test('unlock-pdf requires permission acknowledgment before processing', async ({ page }) => {
+    await page.goto('/tools/unlock-pdf');
+    await dismissCookies(page);
+
+    await page.getByRole('button', { name: 'Example', exact: true }).click();
+    await expect(page.getByText('unlock-sample.pdf', { exact: true }).first()).toBeVisible({ timeout: 15000 });
+
+    const permission = page.getByRole('checkbox', { name: 'I confirm that I own this PDF or have permission from its owner to unlock it.' });
+    const unlockButton = page.getByRole('button', { name: 'Unlock PDF', exact: true });
+    await expect(permission).not.toBeChecked();
+    await expect(unlockButton).toBeDisabled();
+
+    await permission.check();
+    await expect(unlockButton).toBeEnabled();
+    const downloadPromise = page.waitForEvent('download');
+    await unlockButton.click();
+    await expect(page.getByText('PDF re-saved without its existing permission metadata.')).toBeVisible({ timeout: 15000 });
+    await page.getByRole('button', { name: 'Download PDF', exact: true }).click();
+    const download = await downloadPromise;
+    expect(download.suggestedFilename()).toMatch(/^unlock-sample_unlocked\.pdf$/i);
+
+    await page.getByRole('button', { name: 'Clear', exact: true }).click();
+    await expect(page.getByText('Click or drag a PDF to unlock', { exact: true })).toBeVisible();
+  });
 });
