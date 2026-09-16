@@ -146,6 +146,9 @@ test.describe('Browser tool execution paths', () => {
       return {
         editorWidth: editor.width,
         editorBottom: editor.bottom,
+        toolsLeft: tools.left,
+        toolsTop: tools.top,
+        previewRight: preview.right,
         toolsBottom: tools.bottom,
         previewTop: preview.top,
         previewBottom: preview.bottom,
@@ -155,9 +158,15 @@ test.describe('Browser tool execution paths', () => {
         pageHeight: pageSurface.height,
         previewWidth: preview.width,
         previewHeight: preview.height,
+        viewportWidth: window.innerWidth,
       };
     });
-    expect(layout.toolsBottom).toBeLessThanOrEqual(layout.previewTop + 1);
+    if (layout.viewportWidth <= 820) {
+      expect(layout.toolsTop).toBeGreaterThanOrEqual(layout.pagerBottom - 1);
+    } else {
+      expect(layout.toolsLeft).toBeGreaterThanOrEqual(layout.previewRight - 1);
+      expect(layout.toolsTop).toBeLessThanOrEqual(layout.previewTop + 1);
+    }
     expect(layout.pagerTop).toBeGreaterThanOrEqual(layout.previewBottom - 1);
     expect(layout.pagerBottom).toBeLessThanOrEqual(layout.editorBottom + 1);
     expect(layout.pageWidth).toBeLessThanOrEqual(layout.previewWidth + 1);
