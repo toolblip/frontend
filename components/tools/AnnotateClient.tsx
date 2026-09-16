@@ -387,7 +387,7 @@ export default function AnnotateClient() {
   };
 
   return (
-    <div className="tb-v2-tool-card">
+    <div className="tb-v2-tool-card tb-pdf-annotate-card">
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">PDF File</span>
         <ToolExampleClearActions
@@ -397,7 +397,7 @@ export default function AnnotateClient() {
           exampleCount={1}
         />
       </div>
-      <div style={{ padding: 20 }}>
+      <div className="tb-pdf-annotate-upload-area">
         {!fileBytes && (
           <div
             className="tb-v2-dropzone"
@@ -433,7 +433,7 @@ export default function AnnotateClient() {
         )}
       </div>
       {fileBytes && (
-        <div className="tb-pdf-annotate-editor" style={{ padding: "0 20px 20px" }}>
+        <div className="tb-pdf-annotate-editor">
           <div className="tb-v2-tool-output-head">
             <span className="tb-v2-tool-label">
               {fileName} - {pageCount} page{pageCount === 1 ? "" : "s"}
@@ -446,7 +446,7 @@ export default function AnnotateClient() {
                 type="button"
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
                 disabled={page <= 1}
-                className="tb-v2-btn-sm"
+                className="tb-v2-btn tb-v2-btn-sm"
                 aria-label="Previous page"
               >
                 ←
@@ -469,7 +469,7 @@ export default function AnnotateClient() {
                 type="button"
                 onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
                 disabled={page >= pageCount}
-                className="tb-v2-btn-sm"
+                className="tb-v2-btn tb-v2-btn-sm"
                 aria-label="Next page"
               >
                 →
@@ -480,7 +480,7 @@ export default function AnnotateClient() {
             </div>
           </div>
           <div className="tb-pdf-annotate-preview-section" style={{ marginBottom: 16 }}>
-            <span className="tb-v2-tool-label">Page preview - drag to place highlight or rectangle, click to place text</span>
+               <div className="tb-pdf-annotate-preview-heading"><span className="tb-v2-tool-label">Page preview</span><span>Drag to draw a highlight or rectangle. Click to place text.</span></div>
             <div
               ref={previewViewportRef}
               className="tb-pdf-annotate-preview-viewport"
@@ -489,9 +489,7 @@ export default function AnnotateClient() {
               onPointerMove={handlePreviewPointerMove}
               onPointerUp={handlePreviewPointerUp}
               onPointerLeave={handlePreviewPointerUp}
-              style={{
-                marginTop: 8,
-              }}
+                 style={{ marginTop: 8 }}
             >
               <div
                 className="tb-pdf-annotate-zoom-controls"
@@ -500,7 +498,7 @@ export default function AnnotateClient() {
               >
                 <button
                   type="button"
-                  className="tb-v2-btn-sm"
+                   className="tb-v2-btn tb-v2-btn-sm"
                   aria-label="Zoom out"
                   onClick={() => setZoom((value) => Math.max(0.5, value - 0.25))}
                   disabled={zoom <= 0.5}
@@ -510,7 +508,7 @@ export default function AnnotateClient() {
                 <span aria-live="polite">{Math.round(zoom * 100)}%</span>
                 <button
                   type="button"
-                  className="tb-v2-btn-sm"
+                   className="tb-v2-btn tb-v2-btn-sm"
                   aria-label="Zoom in"
                   onClick={() => setZoom((value) => Math.min(2, value + 0.25))}
                   disabled={zoom >= 2}
@@ -605,7 +603,7 @@ export default function AnnotateClient() {
               </p>
             )}
           </div>
-          <div className="tb-pdf-annotate-tools tb-v2-option-group" style={{ marginBottom: 16 }}>
+          <div className="tb-pdf-annotate-tools tb-v2-option-group">
             <label className="tb-v2-tool-label">Markup tools</label>
             <div className="tb-v2-mode-tabs">
               {(["highlight", "rectangle", "text"] as AnnotationType[]).map(
@@ -621,14 +619,7 @@ export default function AnnotateClient() {
                 ),
               )}
             </div>
-            <div
-              style={{
-                display: "flex",
-                gap: 8,
-                flexWrap: "wrap",
-                marginTop: 10,
-              }}
-            >
+             <div className="tb-pdf-annotate-fields">
               <label>
                 Left{" "}
                 <input
@@ -728,7 +719,7 @@ export default function AnnotateClient() {
               type="button"
               onClick={undo}
               disabled={!annotations.length}
-              className="tb-v2-btn-sm"
+              className="tb-v2-btn tb-v2-btn-sm"
             >
               Undo
             </button>
@@ -736,7 +727,7 @@ export default function AnnotateClient() {
               type="button"
               onClick={clearAnnotations}
               disabled={!annotations.length}
-              className="tb-v2-btn-sm"
+              className="tb-v2-btn tb-v2-btn-sm"
             >
               Clear Annotations
             </button>
