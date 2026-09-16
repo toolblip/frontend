@@ -4853,6 +4853,81 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
   .tb-pdf-annotate-pager { flex-wrap: wrap; }
 }
 
+/* Add Pages to PDF */
+.tb-pdf-add-workspace { display: grid; gap: 16px; padding: 20px; }
+.tb-pdf-add-upload-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.tb-pdf-add-upload-card { min-width: 0; padding: 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-2); }
+.tb-pdf-add-upload-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
+.tb-pdf-add-upload-head label { color: var(--fg-0); font-size: 13px; font-weight: 700; }
+.tb-pdf-add-upload-head span { color: var(--fg-3); font-size: 10px; text-transform: uppercase; letter-spacing: .05em; }
+.tb-pdf-add-dropzone { border: 1px dashed var(--line-2); border-radius: 9px; background: var(--surface); transition: border-color .12s, background .12s; }
+.tb-pdf-add-dropzone:hover { border-color: var(--red); background: color-mix(in srgb, var(--red) 3%, var(--surface)); }
+.tb-pdf-add-dropzone > label { display: grid; justify-items: center; gap: 5px; padding: 20px 14px; color: var(--fg-2); cursor: pointer; text-align: center; }
+.tb-pdf-add-dropzone strong { overflow: hidden; max-width: 100%; color: var(--fg-0); font-size: 13px; text-overflow: ellipsis; white-space: nowrap; }
+.tb-pdf-add-dropzone span:not(.tb-pdf-add-upload-icon) { max-width: 260px; font-size: 11px; line-height: 1.4; }
+.tb-pdf-add-dropzone em { color: var(--red); font-size: 11px; font-style: normal; font-weight: 600; }
+.tb-pdf-add-upload-icon { display: grid; width: 38px; height: 38px; place-items: center; border-radius: 10px; background: color-mix(in srgb, var(--red) 12%, var(--surface)); color: var(--red); font-family: var(--f-mono); font-size: 10px; font-weight: 800; }
+.tb-pdf-add-file-summary { display: flex; flex-wrap: wrap; gap: 8px; color: var(--fg-2); font-size: 12px; }
+.tb-pdf-add-file-summary span { padding: 7px 10px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface-2); }
+.tb-pdf-add-file-summary strong { margin-right: 4px; color: var(--fg-0); }
+.tb-pdf-add-loading { margin: 0; color: var(--fg-2); font-size: 12px; }
+.tb-pdf-add-panel { min-width: 0; padding: 15px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-2); }
+.tb-pdf-add-panel-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 13px; }
+.tb-pdf-add-panel-head h2 { margin: 0; color: var(--fg-0); font-size: 15px; font-weight: 700; }
+.tb-pdf-add-panel-head p { margin: 3px 0 0; color: var(--fg-2); font-size: 11px; }
+.tb-pdf-add-count { flex: 0 0 auto; color: var(--fg-2); font-size: 11px; font-variant-numeric: tabular-nums; }
+.tb-pdf-add-source-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.tb-pdf-add-source-page { display: grid; gap: 8px; min-width: 0; padding: 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--fg-1); cursor: pointer; text-align: left; transition: border-color .12s, box-shadow .12s, background .12s; }
+.tb-pdf-add-source-page:hover { border-color: var(--line-2); }
+.tb-pdf-add-source-page.selected { border-color: var(--red); background: color-mix(in srgb, var(--red) 5%, var(--surface)); box-shadow: 0 0 0 2px color-mix(in srgb, var(--red) 16%, transparent); }
+.tb-pdf-add-source-page > span { overflow: hidden; font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
+.tb-pdf-add-thumbnail-image { display: block; width: 100%; height: 126px; object-fit: contain; }
+.tb-pdf-add-page-fallback { display: flex; align-items: center; justify-content: center; width: 100%; height: 126px; color: var(--fg-3); font-size: 11px; text-align: center; }
+.tb-pdf-add-page-fallback.large { height: 300px; }
+.tb-pdf-add-controls { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; padding: 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-2); }
+.tb-pdf-add-control-group { display: grid; gap: 8px; min-width: 0; }
+.tb-pdf-add-mode-tabs, .tb-pdf-add-position-tabs { display: flex; flex-wrap: wrap; gap: 6px; }
+.tb-pdf-add-mode-tabs .tb-v2-mode-tab, .tb-pdf-add-position-tabs .tb-v2-mode-tab { min-height: 32px; padding: 0 12px; }
+.tb-pdf-add-number-field { display: flex; align-items: center; gap: 8px; color: var(--fg-1); font-size: 12px; }
+.tb-pdf-add-number-field .tb-v2-input { width: 82px; padding: 7px 9px; }
+.tb-pdf-add-insert-action { width: 100%; justify-content: center; }
+.tb-pdf-add-editor-grid { display: grid; grid-template-columns: minmax(250px, .85fr) minmax(0, 1.15fr); gap: 16px; }
+.tb-pdf-add-editor-list { display: grid; gap: 8px; max-height: 630px; overflow: auto; padding-right: 2px; }
+.tb-pdf-add-editor-row { display: flex; align-items: center; gap: 8px; min-width: 0; padding: 8px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); transition: border-color .12s, box-shadow .12s; }
+.tb-pdf-add-editor-row.selected { border-color: var(--red); box-shadow: 0 0 0 2px color-mix(in srgb, var(--red) 14%, transparent); }
+.tb-pdf-add-editor-select { display: grid; grid-template-columns: 70px minmax(0, 1fr); align-items: center; gap: 10px; min-width: 0; flex: 1; border: 0; background: transparent; color: var(--fg-1); cursor: pointer; text-align: left; }
+.tb-pdf-add-editor-select .tb-pdf-add-thumbnail-image, .tb-pdf-add-editor-select .tb-pdf-add-page-fallback { width: 70px; height: 86px; border: 1px solid var(--line); border-radius: 5px; background: var(--surface-2); }
+.tb-pdf-add-editor-select > span { overflow: hidden; font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
+.tb-pdf-add-editor-actions { display: grid; gap: 4px; }
+.tb-pdf-add-editor-actions button { display: grid; width: 26px; height: 25px; place-items: center; padding: 0; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--fg-1); cursor: pointer; font-size: 12px; }
+.tb-pdf-add-editor-actions button:hover:not(:disabled) { border-color: var(--line-2); background: var(--surface-2); }
+.tb-pdf-add-editor-actions button:last-child { color: var(--red); }
+.tb-pdf-add-editor-actions button:disabled { cursor: default; opacity: .35; }
+.tb-pdf-add-preview-meta { margin: 0 0 10px; color: var(--fg-2); font-size: 12px; }
+.tb-pdf-add-preview-viewport { display: flex; align-items: center; justify-content: center; min-height: 390px; max-height: 630px; overflow: auto; padding: 20px; border-radius: 9px; background: color-mix(in srgb, var(--surface-3) 48%, var(--surface-2)); }
+.tb-pdf-add-selected-image { display: block; max-width: 100%; max-height: 540px; object-fit: contain; box-shadow: 0 8px 24px rgba(0, 0, 0, .15); }
+.tb-pdf-add-preview-viewport .tb-pdf-add-page-fallback.large { max-width: 100%; background: var(--surface); box-shadow: 0 8px 24px rgba(0, 0, 0, .15); }
+.tb-pdf-add-empty { margin: 0; color: var(--fg-2); font-size: 12px; }
+.tb-pdf-add-save-action { width: 100%; justify-content: center; }
+.tb-pdf-add-result { display: grid; gap: 12px; padding: 14px 16px; border: 1px solid var(--line); border-radius: 12px; }
+.tb-pdf-add-result.success { background: color-mix(in srgb, #22c55e 7%, var(--surface)); }
+.tb-pdf-add-result.error { background: color-mix(in srgb, var(--red) 7%, var(--surface)); }
+.tb-pdf-add-result p { margin: 0; color: var(--fg-1); font-size: 13px; }
+.tb-pdf-add-result-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+@media (max-width: 760px) {
+  .tb-pdf-add-upload-grid, .tb-pdf-add-controls, .tb-pdf-add-editor-grid { grid-template-columns: 1fr; }
+  .tb-pdf-add-source-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 480px) {
+  .tb-pdf-add-workspace { padding: 14px; }
+  .tb-pdf-add-source-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .tb-pdf-add-source-page { padding: 7px; }
+  .tb-pdf-add-thumbnail-image { height: 108px; }
+  .tb-pdf-add-preview-viewport { min-height: 300px; padding: 12px; }
+  .tb-pdf-add-result-actions { flex-direction: column; }
+  .tb-pdf-add-result-actions .tb-v2-btn { width: 100%; justify-content: center; }
+}
+
 /* Add Watermark to PDF preview */
 .tb-pdf-watermark-preview {
   margin-top: 14px;

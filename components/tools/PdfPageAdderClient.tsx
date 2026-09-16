@@ -56,12 +56,12 @@ function PageImage({ page, large = false }: { page: PageSource | EditorPage; lar
         src={page.thumbnail}
         alt={`Rendered page ${page.pageIndex + 1} from ${page.fileName}`}
         data-testid={large ? 'selected-page-image' : 'page-thumbnail-image'}
-        className={large ? 'max-h-[460px] max-w-full object-contain' : 'h-28 w-full object-contain'}
+        className={large ? 'tb-pdf-add-selected-image' : 'tb-pdf-add-thumbnail-image'}
       />
     );
   }
   return (
-    <div className={`flex items-center justify-center bg-white text-center text-xs text-gray-500 ${large ? 'h-72 w-full' : 'h-28 w-full'}`}>
+    <div className={large ? 'tb-pdf-add-page-fallback large' : 'tb-pdf-add-page-fallback'}>
       Page {page.pageIndex + 1}<br />preview unavailable
     </div>
   );
@@ -381,57 +381,70 @@ export default function PdfPageAdderClient() {
   };
 
   return (
-    <div className="tb-v2-tool-card space-y-5">
+    <div className="tb-v2-tool-card tb-pdf-add-card">
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">PDF page editor</span>
         <ToolExampleClearActions onExample={() => void loadExample()} onClear={clearAll} canClear={Boolean(base || inserts.length || result)} exampleCount={1} />
       </div>
-      <div className="grid gap-4 md:grid-cols-2">
-        <UploadBox label="Base PDF" description="Pages in this PDF become the starting order." inputId="base-pdf-upload" inputRef={baseInputRef} fileName={base?.file.name} onFiles={(files) => void loadBaseFile(files[0])} />
-        <UploadBox label="Insert PDFs" description="Choose one or more PDFs, then select source pages." inputId="insert-pdf-upload" inputRef={insertInputRef} multiple fileName={inserts.length ? `${inserts.length} source PDF${inserts.length === 1 ? '' : 's'}` : undefined} onFiles={(files) => void loadInsertFiles(files)} />
-      </div>
-      {base && <p className="text-sm text-gray-600 dark:text-gray-300">Base PDF: {base.pages.length} pages</p>}
-      {inserts.length > 0 && <p className="text-sm text-gray-600 dark:text-gray-300">Insert PDF: {sourcePages.length} pages</p>}
-      {warning && <p role="alert" className="tb-v2-error">{warning}</p>}
-      {loading && <p role="status">Loading PDF pages…</p>}
-      <section className="rounded-lg border border-gray-200 p-4 dark:border-gray-700">
-        <h2 className="mb-3 text-base font-semibold">Source pages</h2>
-        {sourcePages.length ? <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">{sourcePages.map((page) => {
+      <div className="tb-pdf-add-workspace">
+        <div className="tb-pdf-add-upload-grid">
+          <UploadBox label="Base PDF" description="Pages in this PDF become the starting order." inputId="base-pdf-upload" inputRef={baseInputRef} fileName={base?.file.name} onFiles={(files) => void loadBaseFile(files[0])} />
+          <UploadBox label="Insert PDFs" description="Choose one or more PDFs, then select source pages." inputId="insert-pdf-upload" inputRef={insertInputRef} multiple fileName={inserts.length ? `${inserts.length} source PDF${inserts.length === 1 ? '' : 's'}` : undefined} onFiles={(files) => void loadInsertFiles(files)} />
+        </div>
+        <div className="tb-pdf-add-file-summary">
+          {base && <span><strong>Base PDF:</strong> {base.pages.length} pages</span>}
+          {inserts.length > 0 && <span><strong>Insert PDF:</strong> {sourcePages.length} pages</span>}
+          {!base && !inserts.length && <span>Start with a base PDF, then add pages from another PDF or blank pages.</span>}
+        </div>
+        {warning && <p role="alert" className="tb-v2-error">{warning}</p>}
+        {loading && <p role="status" className="tb-pdf-add-loading">Loading PDF pages…</p>}
+      <section className="tb-pdf-add-panel tb-pdf-add-source-panel">
+        <div className="tb-pdf-add-panel-head">
+          <div><h2>Source pages</h2><p>Choose pages from your insert PDFs.</p></div>
+          {sourcePages.length > 0 && <span className="tb-pdf-add-count">{selectedSourceKeys.length} selected</span>}
+        </div>
+        {sourcePages.length ? <div className="tb-pdf-add-source-grid">{sourcePages.map((page) => {
           const key = `${page.sourceId}-${page.pageIndex}`;
           const selected = selectedSourceKeys.includes(key);
-          return <button key={key} type="button" data-testid={`source-page-${page.fileName}-${page.pageIndex + 1}`} aria-pressed={selected} aria-label={`Select insert page ${page.pageIndex + 1} from ${page.fileName}`} onClick={() => setSelectedSourceKeys((current) => selected ? current.filter((item) => item !== key) : [...current, key])} className={`rounded border p-2 text-left ${selected ? 'border-indigo-500 ring-2 ring-indigo-300' : 'border-gray-200 dark:border-gray-700'}`}><PageImage page={page} /><span className="mt-1 block text-xs">{page.fileName} · page {page.pageIndex + 1}</span></button>;
+          return <button key={key} type="button" data-testid={`source-page-${page.fileName}-${page.pageIndex + 1}`} aria-pressed={selected} aria-label={`Select insert page ${page.pageIndex + 1} from ${page.fileName}`} onClick={() => setSelectedSourceKeys((current) => selected ? current.filter((item) => item !== key) : [...current, key])} className={`tb-pdf-add-source-page ${selected ? 'selected' : ''}`}><PageImage page={page} /><span>{page.fileName} · page {page.pageIndex + 1}</span></button>;
         })}</div> : <p className="text-sm text-gray-500">Upload an insert PDF to choose individual pages.</p>}
       </section>
-      <div className="flex flex-wrap gap-2">
-        <button type="button" className={`tb-v2-mode-tab ${insertMode === 'pdf' ? 'on' : ''}`} onClick={() => setInsertMode('pdf')}>Pages from PDF</button>
-        <button type="button" className={`tb-v2-mode-tab ${insertMode === 'blank' ? 'on' : ''}`} onClick={() => setInsertMode('blank')}>Blank pages</button>
+      <div className="tb-pdf-add-controls">
+        <div className="tb-pdf-add-control-group">
+          <span className="tb-v2-tool-label">Add pages from</span>
+          <div className="tb-pdf-add-mode-tabs" role="tablist" aria-label="Page source">
+            <button type="button" role="tab" aria-selected={insertMode === 'pdf'} className={`tb-v2-mode-tab ${insertMode === 'pdf' ? 'on' : ''}`} onClick={() => setInsertMode('pdf')}>Pages from PDF</button>
+            <button type="button" role="tab" aria-selected={insertMode === 'blank'} className={`tb-v2-mode-tab ${insertMode === 'blank' ? 'on' : ''}`} onClick={() => setInsertMode('blank')}>Blank pages</button>
+          </div>
+        </div>
+        {insertMode === 'blank' && <label className="tb-pdf-add-number-field">Blank pages <input aria-label="Number of blank pages" type="number" min={1} max={50} value={blankCount} onChange={(event) => setBlankCount(Math.min(50, Math.max(1, Number(event.target.value) || 1)))} className="tb-v2-input" /></label>}
+        <div className="tb-pdf-add-control-group">
+          <span className="tb-v2-tool-label">Insert position</span>
+          <div className="tb-pdf-add-position-tabs">{(['beginning', 'end', 'custom'] as Position[]).map((option) => <button key={option} type="button" aria-pressed={position === option} onClick={() => setPosition(option)} className={`tb-v2-mode-tab ${position === option ? 'on' : ''}`}>{option[0].toUpperCase() + option.slice(1)}</button>)}</div>
+          {position === 'custom' && <label className="tb-pdf-add-number-field">Insert before page <input aria-label="Custom insert position" type="number" min={1} max={editorPages.length + 1} value={customPosition} onChange={(event) => setCustomPosition(Math.min(editorPages.length + 1, Math.max(1, Number(event.target.value) || 1)))} className="tb-v2-input" /></label>}
+        </div>
       </div>
-      {insertMode === 'blank' && <label className="block text-sm">Blank pages <input aria-label="Number of blank pages" type="number" min={1} max={50} value={blankCount} onChange={(event) => setBlankCount(Math.min(50, Math.max(1, Number(event.target.value) || 1)))} className="ml-2 w-20 rounded border p-2" /></label>}
-      <div className="space-y-2">
-        <span className="block text-sm font-medium">Insert position</span>
-        <div className="flex flex-wrap gap-2">{(['beginning', 'end', 'custom'] as Position[]).map((option) => <button key={option} type="button" aria-pressed={position === option} onClick={() => setPosition(option)} className={`rounded px-4 py-2 ${position === option ? 'bg-indigo-500 text-white' : 'bg-gray-200 dark:bg-gray-700'}`}>{option[0].toUpperCase() + option.slice(1)}</button>)}</div>
-        {position === 'custom' && <label className="block text-sm">Insert before page <input aria-label="Custom insert position" type="number" min={1} max={editorPages.length + 1} value={customPosition} onChange={(event) => setCustomPosition(Math.min(editorPages.length + 1, Math.max(1, Number(event.target.value) || 1)))} className="ml-2 w-20 rounded border p-2" /></label>}
-      </div>
-      <button type="button" onClick={insertSelectedPages} disabled={!base || (insertMode === 'pdf' && !selectedSourceKeys.length)} className="w-full rounded-lg bg-indigo-500 py-3 text-white disabled:cursor-not-allowed disabled:opacity-50">Insert selected pages</button>
-      <div className="grid gap-5 lg:grid-cols-[1fr_1.2fr]">
-        <section className="rounded-lg border border-gray-200 p-4 dark:border-gray-700">
-          <div className="mb-3 flex items-center justify-between"><h2 className="text-base font-semibold">Editor pages</h2><span className="text-sm text-gray-500">{editorPages.length} pages in editor</span></div>
-          <div className="space-y-2">{editorPages.map((page, index) => <div key={page.id} data-testid="editor-page-thumbnail" data-page-label={page.kind === 'blank' ? 'Blank' : `${page.fileName.replace(/\.pdf$/i, '')} page ${page.pageIndex + 1}`} className={`flex items-center gap-2 rounded border p-2 ${selectedEditor?.id === page.id ? 'border-indigo-500 ring-1 ring-indigo-300' : 'border-gray-200 dark:border-gray-700'}`}>
-            <button type="button" onClick={() => setSelectedEditorId(page.id)} aria-label={`Select page ${index + 1}`} className="min-w-0 flex-1 text-left"><PageImage page={page} /><span className="mt-1 block text-xs">Page {index + 1} · {page.kind === 'blank' ? 'Blank' : page.fileName}</span></button>
-            <div className="flex flex-col gap-1"><button type="button" aria-label={`Move page ${index + 1} up`} onClick={() => movePage(index, -1)} disabled={index === 0} className="rounded border px-2 py-1 text-xs disabled:opacity-40">↑</button><button type="button" aria-label={`Move page ${index + 1} down`} onClick={() => movePage(index, 1)} disabled={index === editorPages.length - 1} className="rounded border px-2 py-1 text-xs disabled:opacity-40">↓</button><button type="button" aria-label={`Delete page ${index + 1}`} onClick={() => deletePage(page.id)} disabled={editorPages.length <= 1} className="rounded border px-2 py-1 text-xs text-red-600 disabled:opacity-40">×</button></div>
+      <button type="button" onClick={insertSelectedPages} disabled={!base || (insertMode === 'pdf' && !selectedSourceKeys.length)} className="tb-v2-btn tb-v2-btn-primary tb-pdf-add-insert-action">Insert selected pages</button>
+      <div className="tb-pdf-add-editor-grid">
+        <section className="tb-pdf-add-panel tb-pdf-add-editor-panel">
+          <div className="tb-pdf-add-panel-head"><div><h2>Editor pages</h2><p>Arrange the final PDF order.</p></div><span className="tb-pdf-add-count">{editorPages.length} pages in editor</span></div>
+          <div className="tb-pdf-add-editor-list">{editorPages.map((page, index) => <div key={page.id} data-testid="editor-page-thumbnail" data-page-label={page.kind === 'blank' ? 'Blank' : `${page.fileName.replace(/\.pdf$/i, '')} page ${page.pageIndex + 1}`} className={`tb-pdf-add-editor-row ${selectedEditor?.id === page.id ? 'selected' : ''}`}>
+            <button type="button" onClick={() => setSelectedEditorId(page.id)} aria-label={`Select page ${index + 1}`} className="tb-pdf-add-editor-select"><PageImage page={page} /><span>Page {index + 1} · {page.kind === 'blank' ? 'Blank' : page.fileName}</span></button>
+            <div className="tb-pdf-add-editor-actions"><button type="button" aria-label={`Move page ${index + 1} up`} onClick={() => movePage(index, -1)} disabled={index === 0}>↑</button><button type="button" aria-label={`Move page ${index + 1} down`} onClick={() => movePage(index, 1)} disabled={index === editorPages.length - 1}>↓</button><button type="button" aria-label={`Delete page ${index + 1}`} onClick={() => deletePage(page.id)} disabled={editorPages.length <= 1}>×</button></div>
           </div>)}</div>
         </section>
-        <section className="rounded-lg border border-gray-200 p-4 dark:border-gray-700">
-          <h2 className="mb-3 text-base font-semibold">Selected page preview</h2>
-          {selectedEditor ? <><p className="mb-3 text-sm text-gray-500">Page {editorPages.findIndex((page) => page.id === selectedEditor.id) + 1} of {editorPages.length}</p><div className="flex min-h-72 items-center justify-center rounded bg-gray-100 p-3 dark:bg-gray-800">{selectedPreviewLoading ? <p role="status">Loading selected page preview…</p> : selectedPreview ? <img src={selectedPreview} alt={`Large preview of page ${selectedEditor.pageIndex + 1}`} data-testid="selected-page-image" className="max-h-[460px] max-w-full object-contain" /> : <PageImage page={selectedEditor} large />}</div></> : <p className="text-sm text-gray-500">Upload a base PDF to begin editing.</p>}
+        <section className="tb-pdf-add-panel tb-pdf-add-selected-panel">
+          <div className="tb-pdf-add-panel-head"><div><h2>Selected page preview</h2><p>Click an editor page to inspect it.</p></div></div>
+          {selectedEditor ? <><p className="tb-pdf-add-preview-meta">Page {editorPages.findIndex((page) => page.id === selectedEditor.id) + 1} of {editorPages.length}</p><div className="tb-pdf-add-preview-viewport">{selectedPreviewLoading ? <p role="status">Loading selected page preview…</p> : selectedPreview ? <img src={selectedPreview} alt={`Large preview of page ${selectedEditor.pageIndex + 1}`} data-testid="selected-page-image" className="tb-pdf-add-selected-image" /> : <PageImage page={selectedEditor} large />}</div></> : <p className="tb-pdf-add-empty">Upload a base PDF to begin editing.</p>}
         </section>
       </div>
-      <button type="button" onClick={() => void saveEditedPdf()} disabled={!base || !editorPages.length || processing} className="w-full rounded-lg bg-green-600 py-3 text-white disabled:cursor-not-allowed disabled:opacity-50">{processing ? 'Saving Edited PDF…' : 'Save Edited PDF'}</button>
-      {result && <div role="status" className={`rounded-lg p-4 ${result.success ? 'bg-green-50 dark:bg-green-900/20' : 'bg-red-50 dark:bg-red-900/20'}`}><p>{result.message}</p>{result.success && <div className="mt-3 flex flex-wrap gap-2"><button type="button" onClick={downloadResult} className="rounded bg-green-600 px-4 py-2 text-white">Download Edited PDF</button>{result.url && <a href={result.url} target="_blank" rel="noreferrer" className="rounded border border-green-600 px-4 py-2 text-green-700 dark:text-green-300">Preview Edited PDF</a>}</div>}</div>}
+      <button type="button" onClick={() => void saveEditedPdf()} disabled={!base || !editorPages.length || processing} className="tb-v2-btn tb-v2-btn-primary tb-pdf-add-save-action">{processing ? 'Saving Edited PDF…' : 'Save Edited PDF'}</button>
+      {result && <div role="status" className={`tb-pdf-add-result ${result.success ? 'success' : 'error'}`}><p>{result.message}</p>{result.success && <div className="tb-pdf-add-result-actions"><button type="button" onClick={downloadResult} className="tb-v2-btn tb-v2-btn-primary">Download Edited PDF</button>{result.url && <a href={result.url} target="_blank" rel="noreferrer" className="tb-v2-btn">Preview Edited PDF</a>}</div>}</div>}
+      </div>
     </div>
   );
 }
 
 function UploadBox({ label, description, inputId, inputRef, fileName, multiple = false, onFiles }: { label: string; description: string; inputId: string; inputRef: React.RefObject<HTMLInputElement | null>; fileName?: string; multiple?: boolean; onFiles: (files: FileList) => void }) {
-  return <div className="space-y-2"><label htmlFor={inputId} className="block text-sm font-medium">{label}</label><div onDrop={(event) => { event.preventDefault(); if (event.dataTransfer.files.length) onFiles(event.dataTransfer.files); }} onDragOver={(event) => event.preventDefault()} className="rounded-lg border-2 border-dashed border-gray-300 p-5 text-center hover:border-indigo-500 dark:border-gray-600"><input ref={inputRef} id={inputId} type="file" accept=".pdf,application/pdf" multiple={multiple} onChange={(event) => { if (event.target.files) onFiles(event.target.files); }} className="hidden" /><label htmlFor={inputId} className="cursor-pointer"><span className="block text-3xl" aria-hidden="true">📄</span><span className="block font-medium">{fileName ?? `Choose ${label.toLowerCase()}`}</span><span className="block text-xs text-gray-500">{description} Click or drop PDF{multiple ? 's' : ''}.</span></label></div></div>;
+  return <div className="tb-pdf-add-upload-card"><div className="tb-pdf-add-upload-head"><label htmlFor={inputId}>{label}</label><span>{multiple ? 'Multiple files' : 'One file'}</span></div><div onDrop={(event) => { event.preventDefault(); if (event.dataTransfer.files.length) onFiles(event.dataTransfer.files); }} onDragOver={(event) => event.preventDefault()} className="tb-pdf-add-dropzone"><input ref={inputRef} id={inputId} type="file" accept=".pdf,application/pdf" multiple={multiple} onChange={(event) => { if (event.target.files) onFiles(event.target.files); }} className="hidden" /><label htmlFor={inputId}><span className="tb-pdf-add-upload-icon" aria-hidden="true">PDF</span><strong>{fileName ?? `Choose ${label.toLowerCase()}`}</strong><span>{description}</span><em>Click or drop PDF{multiple ? 's' : ''} here</em></label></div></div>;
 }
