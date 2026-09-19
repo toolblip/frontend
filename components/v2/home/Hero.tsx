@@ -26,6 +26,11 @@ export default function Hero({ toolCount }: { toolCount: number }) {
                 Submit Your Tool
               </Link>
             </div>
+            <div className="tb-v2-hero-badge">
+              <a href="https://launchigniter.com/product/toolblip?ref=badge-toolblip" target="_blank" rel="noopener noreferrer">
+                <img src="https://launchigniter.com/api/badge/toolblip?theme=light" alt="Featured on LaunchIgniter" width="212" height="55" />
+              </a>
+            </div>
             <div className="tb-v2-hero-chips">
               <span className="tb-v2-chip"><IconShield /> Privacy-first</span>
               <span className="tb-v2-chip"><IconZap /> No signup</span>
