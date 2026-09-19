@@ -53,6 +53,11 @@ export default function Footer() {
             </ul>
           </div>
         </div>
+        <div className="tb-v2-footer-badge">
+          <a href="https://saascity.io" target="_blank" rel="noopener">
+            <img src="https://saascity.io/badges/featured-dark.svg" alt="Featured on SaaSCity" width="150" height="54" />
+          </a>
+        </div>
         <div className="tb-v2-footer-meta">
           <span>© {year} Toolblip. Built to stay out of your way.</span>
           <ApiStatus />
