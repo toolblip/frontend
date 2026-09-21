@@ -5,6 +5,7 @@ import { useSubscription } from '@/hooks/useSubscription';
 import { FileSizeError, UpgradeNotice } from '@/components/FileSizeGuard';
 import { convertHeicIfNeeded } from '@/lib/heic';
 import { fitAspectCrop, isCommittedDrag, type CropRect } from '@/lib/image-crop';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 const PRESETS = [
   { label: '1:1 Square', ratio: 1 },
@@ -117,8 +118,7 @@ export default function ImageCropperClient() {
     e.target.value = '';
   };
 
-  const loadSample = (e: React.MouseEvent) => {
-    e.stopPropagation();
+  const loadSample = () => {
     const src = '/samples/tool-sample.png';
     setSelectedFile(null);
     const img = new Image();
@@ -262,6 +262,7 @@ export default function ImageCropperClient() {
   const resetImage = () => {
     setImage(null);
     setSelectedFile(null);
+    setPreset(PRESETS[0]);
     setCropRect(EMPTY_CROP);
     setSampleError(false);
     imgRef.current = null;
@@ -269,21 +270,30 @@ export default function ImageCropperClient() {
   };
 
   return (
-    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
+    <div>
+      <div className="tb-v2-tool-input-head" style={{ borderBottom: '1px solid var(--line)' }}>
+        <span className="tb-v2-tool-label">Image Cropper</span>
+        <ToolExampleClearActions
+          onExample={loadSample}
+          onClear={resetImage}
+          canClear={Boolean(image || selectedFile || sampleError)}
+        />
+      </div>
+
+      <div className="tb-v2-section" style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: '20px' }}>
       <div>
         <p className="tb-v2-tool-label" style={{ marginBottom: 8 }}>Aspect Ratio</p>
-        <div className="flex flex-wrap gap-4">
+        <div className="tb-v2-mode-tabs" role="group" aria-label="Aspect ratio">
           {PRESETS.map(({ label, ratio }) => (
-            <label key={label} className="flex items-center gap-2 text-sm cursor-pointer">
-              <input
-                type="radio"
-                name="crop-preset"
-                checked={preset.label === label}
-                onChange={() => selectPreset(label, ratio)}
-                className="w-4 h-4 accent-red-600"
-              />
+            <button
+              key={label}
+              type="button"
+              onClick={() => selectPreset(label, ratio)}
+              className={`tb-v2-mode-tab ${preset.label === label ? 'on' : ''}`}
+              aria-pressed={preset.label === label}
+            >
               {label}
-            </label>
+            </button>
           ))}
         </div>
       </div>
@@ -312,12 +322,6 @@ export default function ImageCropperClient() {
             <>
               <p className="text-gray-400 text-sm">Drag & drop an image, or click to browse</p>
               <p className="text-gray-600 text-xs mt-1">PNG, JPG, WebP, GIF, HEIC</p>
-              <button
-                onClick={loadSample}
-                className="text-xs text-red-700 dark:text-red-400 underline hover:no-underline mt-3"
-              >
-                Or try a sample image
-              </button>
               {sampleError && (
                 <p className="text-xs text-amber-500 mt-2">Couldn&apos;t load the sample image, try again.</p>
               )}
@@ -331,20 +335,14 @@ export default function ImageCropperClient() {
           <p className="text-xs text-gray-500">
             {preset.label} crop is ready — drag on the image to choose a different area
           </p>
-          <div className="flex gap-2">
+          <div className="flex justify-end">
             <button
               onClick={downloadCrop}
-              className="tb-v2-btn tb-v2-btn-primary tb-v2-btn-lg flex-1 disabled:opacity-50"
+              className="tb-v2-btn tb-v2-btn-primary tb-v2-btn-lg disabled:opacity-50"
               disabled={cropRect.w === 0 || isOversized}
               title={isOversized ? 'File size exceeds your plan limit' : ''}
             >
               {isOversized ? 'File Too Large' : 'Download Crop'}
-            </button>
-            <button
-              onClick={resetImage}
-              className="tb-v2-btn tb-v2-btn-ghost tb-v2-btn-lg"
-            >
-              Choose New Image
             </button>
           </div>
           <canvas
@@ -362,6 +360,7 @@ export default function ImageCropperClient() {
           )}
         </div>
       )}
+      </div>
     </div>
   );
 }

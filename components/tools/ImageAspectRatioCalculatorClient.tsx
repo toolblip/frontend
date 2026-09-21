@@ -2,6 +2,7 @@
 
 import { useMemo, useRef, useState } from 'react';
 import { COMMON_RATIOS, nearestCommonRatio, simplifyRatio } from '@/lib/image-ratio';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 function num(v: string): number | null {
   const n = parseFloat(v);
@@ -48,13 +49,35 @@ export default function ImageAspectRatioCalculatorClient() {
     setHeight(String(Math.round(w / presetRatio)));
   };
 
+  const loadExample = () => {
+    setWidth('1920');
+    setHeight('1080');
+    setFileName('');
+    setError('');
+  };
+
+  const clearAll = () => {
+    setWidth('');
+    setHeight('');
+    setFileName('');
+    setError('');
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
   return (
     <div className="tb-v2-tool-card">
-      <div className="tb-v2-tool-input-head">
-        <span className="tb-v2-tool-label">Dimensions</span>
-        <button type="button" onClick={() => fileInputRef.current?.click()} className="tb-v2-btn-sm">
-          Read from Image
-        </button>
+      <div className="tb-v2-tool-input-head" style={{ borderBottom: '1px solid var(--line)' }}>
+        <span className="tb-v2-tool-label">Image Aspect Ratio Calculator</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+          <button type="button" onClick={() => fileInputRef.current?.click()} className="tb-v2-btn-sm">
+            Read from Image
+          </button>
+          <ToolExampleClearActions
+            onExample={loadExample}
+            onClear={clearAll}
+            canClear={Boolean(width || height || fileName || error)}
+          />
+        </div>
         <input
           ref={fileInputRef}
           type="file"
