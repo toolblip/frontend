@@ -5,20 +5,11 @@ import { useSubscription } from '@/hooks/useSubscription';
 import { FileSizeError, UpgradeNotice } from '@/components/FileSizeGuard';
 import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
-type CircleShape = 'circle' | 'rounded' | 'square';
 type OutputBg = 'transparent' | 'white' | 'blur';
-
-const CIRCLE_PRESETS = [
-  { label: 'Circle', shape: 'circle' as CircleShape, radius: 50 },
-  { label: 'Rounded Square', shape: 'rounded' as CircleShape, radius: 20 },
-  { label: 'Soft Rounded', shape: 'rounded' as CircleShape, radius: 10 },
-  { label: 'Square', shape: 'square' as CircleShape, radius: 0 },
-];
 
 function renderCrop(
   canvas: HTMLCanvasElement,
   img: HTMLImageElement,
-  preset: (typeof CIRCLE_PRESETS)[number],
   bgType: OutputBg,
   outputSize: number,
 ): string {
@@ -47,17 +38,10 @@ function renderCrop(
     }
   }
 
-  const radius = (preset.radius / 100) * outputSize;
   ctx.save();
-  if (preset.shape === 'circle') {
-    ctx.beginPath();
-    ctx.arc(outputSize / 2, outputSize / 2, outputSize / 2 - 1, 0, Math.PI * 2);
-    ctx.clip();
-  } else if (preset.shape === 'rounded') {
-    ctx.beginPath();
-    ctx.roundRect(0, 0, outputSize, outputSize, radius);
-    ctx.clip();
-  }
+  ctx.beginPath();
+  ctx.arc(outputSize / 2, outputSize / 2, outputSize / 2 - 1, 0, Math.PI * 2);
+  ctx.clip();
 
   const sourceSize = Math.max(img.width, img.height);
   const sourceX = (img.width - sourceSize) / 2;
@@ -71,7 +55,6 @@ function renderCrop(
 export default function CircleCropClient() {
   const [image, setImage] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [preset, setPreset] = useState(CIRCLE_PRESETS[0]);
   const [bgType, setBgType] = useState<OutputBg>('transparent');
   const [outputSize, setOutputSize] = useState(512);
   const [previewCanvas, setPreviewCanvas] = useState<string | null>(null);
@@ -85,8 +68,8 @@ export default function CircleCropClient() {
 
   useEffect(() => {
     if (!image || !imgRef.current || !canvasRef.current) return;
-    setPreviewCanvas(renderCrop(canvasRef.current, imgRef.current, preset, bgType, outputSize));
-  }, [image, preset, bgType, outputSize]);
+    setPreviewCanvas(renderCrop(canvasRef.current, imgRef.current, bgType, outputSize));
+  }, [image, bgType, outputSize]);
 
   const applyLoadedImage = (img: HTMLImageElement, src: string) => {
     imgRef.current = img;
@@ -97,13 +80,17 @@ export default function CircleCropClient() {
 
   const loadImage = (file: File) => {
     setSelectedFile(file);
+    setSampleError(false);
     const reader = new FileReader();
     reader.onload = (e) => {
       const src = e.target?.result as string;
       const img = new Image();
       img.onload = () => applyLoadedImage(img, src);
+      img.onerror = () => setSampleError(true);
       img.src = src;
     };
+    reader.onerror = () => setSampleError(true);
+    reader.readAsDataURL(file);
   };
 
   const loadSample = () => {
@@ -112,10 +99,6 @@ export default function CircleCropClient() {
     img.onload = () => applyLoadedImage(img, '/samples/tool-sample.png');
     img.onerror = () => setSampleError(true);
     img.src = '/samples/tool-sample.png';
-  };
-
-  const handlePresetChange = (nextPreset: (typeof CIRCLE_PRESETS)[number]) => {
-    setPreset(nextPreset);
   };
 
   const handleBgChange = (nextBg: OutputBg) => {
@@ -130,7 +113,7 @@ export default function CircleCropClient() {
     const img = imgRef.current;
     if (!img || !previewCanvas) return;
     const canvas = document.createElement('canvas');
-    const dataUrl = renderCrop(canvas, img, preset, bgType, outputSize);
+    const dataUrl = renderCrop(canvas, img, bgType, outputSize);
     const link = document.createElement('a');
     link.download = `circle-crop-${outputSize}.png`;
     link.href = dataUrl;
@@ -140,7 +123,6 @@ export default function CircleCropClient() {
   const reset = () => {
     setImage(null);
     setSelectedFile(null);
-    setPreset(CIRCLE_PRESETS[0]);
     setBgType('transparent');
     setOutputSize(512);
     setPreviewCanvas(null);
@@ -195,23 +177,6 @@ export default function CircleCropClient() {
                   style={{ aspectRatio: `${outputSize}/${outputSize}` }}
                 />
               )}
-            </div>
-
-            <div>
-              <p className="tb-v2-tool-label" style={{ marginBottom: 8 }}>Shape</p>
-              <div className="tb-v2-mode-tabs" role="group" aria-label="Shape">
-                {CIRCLE_PRESETS.map((nextPreset) => (
-                  <button
-                    key={nextPreset.label}
-                    type="button"
-                    onClick={() => handlePresetChange(nextPreset)}
-                    className={`tb-v2-mode-tab ${preset.label === nextPreset.label ? 'on' : ''}`}
-                    aria-pressed={preset.label === nextPreset.label}
-                  >
-                    {nextPreset.label}
-                  </button>
-                ))}
-              </div>
             </div>
 
             <div>

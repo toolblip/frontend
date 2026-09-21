@@ -681,7 +681,7 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Do I need to enter the subnet mask separately?', a: 'No, entering an address with its CIDR prefix (like 192.168.1.0/24) is enough, the subnet mask and every other value are derived from that prefix automatically.' },
   ],
   'circle-crop': [
-    { q: 'What shapes can I crop to besides a circle?', a: 'Rounded square and plain square presets are also available alongside the circle crop, each using a real canvas clip path rather than just a CSS border-radius overlay.' },
+    { q: 'What shape does Circle Crop produce?', a: 'Every export is clipped to a true circle, with transparent corners unless you choose a white or blurred background.' },
     { q: 'What background options are there for the cropped-out area?', a: 'Transparent (the clipped-away corners are genuinely see-through in the exported PNG), solid white, or a blurred copy of your own image filling the space behind the cropped shape.' },
     { q: 'Can I control the output size?', a: 'Yes, a size slider sets the exported image dimensions, so you can produce anything from a small avatar-sized crop up to a larger image.' },
   ],
