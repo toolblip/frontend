@@ -802,7 +802,7 @@ button.tb-v2-mm-more-row-btn {
 .tb-v2-footer ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
 .tb-v2-footer a { font-size: 13.5px; color: var(--fg-2); text-decoration: none; }
 .tb-v2-footer a:hover { color: var(--red); }
-.tb-v2-footer-badge { margin-top: 28px; display: flex; align-items: center; }
+.tb-v2-footer-badge { margin-top: 28px; display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
 .tb-v2-footer-badge a { line-height: 0; opacity: .72; transition: opacity .15s; }
 .tb-v2-footer-badge a:hover { opacity: 1; }
 .tb-v2-footer-meta {
