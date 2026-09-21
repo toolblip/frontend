@@ -69,6 +69,79 @@ export default function Footer() {
           <a href="https://fazier.com/launches/toolblip.com" target="_blank" rel="noopener noreferrer">
             <img src="https://fazier.com/api/v1//public/badges/launch_badges.svg?badge_type=launched&theme=light" width="120" alt="Fazier badge" />
           </a>
+          <a href="https://tinylaunch.com" target="_blank" rel="noopener">
+            <img src="https://tinylaunch.com/tinylaunch_badge_launching_soon.svg" alt="TinyLaunch Badge" style={{ width: 202, height: 'auto' }} />
+          </a>
+          <a href="https://neeed.directory/products/toolblip?utm_source=toolblip" target="_blank" rel="noopener">
+            <img src="https://neeed.directory/badges/neeed-badge-light.svg" alt="Featured on neeed.directory" width="139" />
+          </a>
+          <a href="https://findly.tools/toolblip?utm_source=toolblip" target="_blank" rel="noopener noreferrer">
+            <img src="https://findly.tools/badges/findly-tools-badge-light.svg" alt="Featured on Findly.tools" width="175" height="55" />
+          </a>
+          <a href="https://twelve.tools" target="_blank">
+            <img src="https://twelve.tools/badge0-white.svg" alt="Featured on Twelve Tools" width="200" height="54" />
+          </a>
+          <a href="https://www.outdr.lol/card/startuptrusted.com" target="_blank" rel="noopener" className="inline-block transition-transform hover:scale-105">
+            <img src="https://www.outdr.lol/badge/startuptrusted.com.svg?theme=light" alt="Domain Rating 54 on outdr.lol" width="168" height="40" loading="lazy" />
+          </a>
+          <a href="https://www.foundrlist.com/product/toolblip?utm_source=badge&utm_medium=embed" target="_blank" rel="noopener">
+            <img src="https://www.foundrlist.com/api/badge/toolblip" alt="Featured on FoundrList" width="150" height="48" />
+          </a>
+          <a href="https://confettisaas.com/saas/toolblip-com?ref=badge" target="_blank" rel="noopener" aria-label="View Toolblip on ConfettiSaaS">
+            <img src="https://confettisaas.com/badge-light.svg" width="250" height="54" alt="Toolblip on ConfettiSaaS" loading="lazy" style={{ display: 'block' }} />
+          </a>
+          <a href="https://auraplusplus.com/projects/toolblip" target="_blank" rel="noopener" title="View this project on Aura++">
+            <img src="https://auraplusplus.com/images/badges/featured-on-light.svg" alt="Featured on Aura++" width="265" height="58" />
+          </a>
+          <a href="https://www.superlaun.ch/products/3508" target="_blank" rel="noopener">
+            <img src="https://www.superlaun.ch/badge.png" alt="Featured on Super Launch" width="300" height="300" />
+          </a>
+          <a href="https://tools.launchllama.co?utm_source=badge&utm_medium=referral" target="_blank" rel="noopener noreferrer">
+            <img src="https://tools.launchllama.co/featured-badge.png?v=2" alt="Featured on Launch Llama Tools" width="200" height="52" />
+          </a>
+          <a href="https://smollaunch.com" target="_blank" rel="noopener">
+            <img src="https://smollaunch.com/badges/featured.svg" alt="Toolblip — Featured on Smol Launch" loading="lazy" width="250" height="60" />
+          </a>
+          <a href="https://launchboosts.com/project/toolblip" target="_blank">
+            <img src="https://launchboosts.com/badges/featured-dark.svg" alt="Featured on LaunchBoosts" width="180" height="54" />
+          </a>
+          <a href="https://www.launchvault.dev" target="_blank" title="Featured on LaunchVault">
+            <img src="https://www.launchvault.dev/images/badges/launch-vault-badge.svg" alt="Featured on LaunchVault" style={{ width: 195, height: 'auto' }} />
+          </a>
+          <a href="https://www.verifiedtools.info/tools/toolblip" target="_blank" rel="noopener noreferrer">
+            <img src="https://www.verifiedtools.info/badge.svg" alt="Toolblip on Verified Tools — AI & SaaS tools directory" width="200" height="54" />
+          </a>
+          <a data-topaitools4u-badge="verified-listing" href="https://www.topaitools4u.site" target="_blank" rel="noopener" aria-label="Listed on TopAITools4U" style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '10px 14px', border: '1px solid #d9d9d9', borderRadius: 12, background: '#ffffff', color: '#111111', fontFamily: 'Inter,Arial,sans-serif', textDecoration: 'none' }}>
+            <img src="https://www.topaitools4u.site/logo.svg" alt="TopAITools4U" width="32" height="32" style={{ display: 'block', width: 32, height: 32, borderRadius: 9 }} />
+            <span style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.15 }}>
+              <span style={{ fontSize: 10, letterSpacing: '.08em', textTransform: 'uppercase', color: '#6b7280' }}>Listed on</span>
+              <span style={{ fontSize: 15, fontWeight: 700 }}>TopAITools4U</span>
+            </span>
+          </a>
+          <a href="https://makerhunt.io/project/toolblip" target="_blank" rel="noopener" title="Featured on MakerHunt">
+            <img src="https://makerhunt.io/badges/makerhunt-badge-light.svg" alt="Featured on MakerHunt" width="200" height="60" />
+          </a>
+          <a href="https://www.startup.sx/product/toolblip-ce96?verify=fcb6b0b5fa7ba124c837775a248d82a6" target="_blank" rel="noopener">
+            <img src="https://www.startup.sx/badge.png" alt="Featured on Startup.sx" width="150" />
+          </a>
+          <a href="https://webspot.app" target="_blank" rel="noopener noreferrer">
+            <img src="https://webspot.app/featured-light.svg" alt="Featured on Webspot" style={{ height: 54, width: 'auto' }} />
+          </a>
+          <a href="https://uno.directory" target="_blank" rel="noopener">
+            <img src="https://uno.directory/uno-directory.svg" alt="Listed on Uno Directory" width="120" height="30" />
+          </a>
+          <a href="https://sidehunt.io/project/toolblip" target="_blank" rel="noopener" title="View project on Sidehunt">
+            <img src="https://sidehunt.io/badges/sidehunt-badge-light.svg" alt="Featured on Sidehunt" width="200" height="60" />
+          </a>
+          <a href="https://productfame.com" target="_blank" rel="noopener noreferrer">
+            <img src="https://productfame.com/badges/featured-light.svg" alt="Featured on ProductFame" width="245" height="54" />
+          </a>
+          <a href="https://prolaunch.net" target="_blank" title="Pro Launch Featured Badge">
+            <img src="https://prolaunch.net/images/badges/featured-light.svg" alt="Pro Launch Featured Badge" style={{ width: 240, height: 'auto' }} />
+          </a>
+          <a href="https://nicklaunches.com/products/toolblip/?utm_source=toolblip.com&utm_medium=badge&utm_campaign=featured" target="_blank" rel="noopener">
+            <img src="https://nicklaunches.com/badges/featured.png" alt="Toolblip on Nick Launches" width="244" height="56" />
+          </a>
         </div>
         <div className="tb-v2-footer-meta">
           <span>© {year} Toolblip. Built to stay out of your way.</span>

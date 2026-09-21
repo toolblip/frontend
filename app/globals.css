@@ -805,6 +805,7 @@ button.tb-v2-mm-more-row-btn {
 .tb-v2-footer-badge { margin-top: 28px; display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
 .tb-v2-footer-badge a { line-height: 0; opacity: .72; transition: opacity .15s; }
 .tb-v2-footer-badge a:hover { opacity: 1; }
+.tb-v2-footer-badge a[href="https://www.superlaun.ch/products/3508"] img { width: auto; height: auto; max-height: 60px; }
 .tb-v2-footer-meta {
   margin-top: 44px; padding-top: 20px; border-top: 1px solid var(--line);
   display: flex; justify-content: space-between; align-items: center;
