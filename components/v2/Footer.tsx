@@ -57,6 +57,18 @@ export default function Footer() {
           <a href="https://saascity.io" target="_blank" rel="noopener">
             <img src="https://saascity.io/badges/featured-dark.svg" alt="Featured on SaaSCity" width="150" height="54" />
           </a>
+          <a href="https://launchigniter.com/product/toolblip?ref=badge-toolblip" target="_blank" rel="noopener noreferrer">
+            <img src="https://launchigniter.com/api/badge/toolblip?theme=light" alt="Featured on LaunchIgniter" width="212" height="55" />
+          </a>
+          <a href="https://earlyhunt.com/project/toolblip" target="_blank" rel="noopener noreferrer">
+            <img src="https://earlyhunt.com/badges/earlyhunt-badge-light.svg" alt="Featured on EarlyHunt" width="265" height="58" />
+          </a>
+          <a href="https://indiehunt.io/project/toolblip" target="_blank" rel="noopener noreferrer">
+            <img src="https://indiehunt.io/badges/indiehunt-badge-light.svg" alt="Featured on IndieHunt" width="265" height="58" />
+          </a>
+          <a href="https://fazier.com/launches/toolblip.com" target="_blank" rel="noopener noreferrer">
+            <img src="https://fazier.com/api/v1//public/badges/launch_badges.svg?badge_type=launched&theme=light" width="120" alt="Fazier badge" />
+          </a>
         </div>
         <div className="tb-v2-footer-meta">
           <span>© {year} Toolblip. Built to stay out of your way.</span>
