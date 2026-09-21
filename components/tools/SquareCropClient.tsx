@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useRef, useCallback } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSubscription } from '@/hooks/useSubscription';
 import { FileSizeError, UpgradeNotice } from '@/components/FileSizeGuard';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 const SQUARE_PRESETS = [
   { label: 'Instagram Post', size: 1080, description: '1080×1080' },
@@ -19,43 +20,19 @@ export default function SquareCropClient() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [preset, setPreset] = useState(SQUARE_PRESETS[0]);
   const [customSize, setCustomSize] = useState(1024);
-  const [cropSize, setCropSize] = useState(1080);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const previewRef = useRef<HTMLCanvasElement>(null);
   const imgRef = useRef<HTMLImageElement | null>(null);
   const [cropPos, setCropPos] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
-  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const dragOffsetRef = useRef({ x: 0, y: 0 });
   const [imgLoaded, setImgLoaded] = useState(false);
+  const [sampleError, setSampleError] = useState(false);
   const { tier } = useSubscription();
   const maxSizeMB = tier === 'free' ? 5 : tier === 'starter' ? 10 : tier === 'ultra' ? 100 : tier === 'max' ? 500 : 5;
 
   const isOversized = selectedFile != null && selectedFile.size / (1024 * 1024) > maxSizeMB;
-  const outputSize = preset.size || customSize;
-
-  const loadImage = (file: File) => {
-    setSelectedFile(file);
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const src = e.target?.result as string;
-      setImage(src);
-      const img = new Image();
-      img.onload = () => {
-        imgRef.current = img;
-        setImgLoaded(true);
-        // Center the crop area
-        const canvas = canvasRef.current;
-        if (!canvas) return;
-        const scale = Math.min(canvas.width / img.width, canvas.height / img.height);
-        const scaledW = img.width * scale;
-        const scaledH = img.height * scale;
-        setCropPos({ x: (canvas.width - scaledW) / 2, y: (canvas.height - scaledH) / 2 });
-        drawCanvas();
-      };
-      img.src = src;
-    };
-    reader.readAsDataURL(file);
-  };
+  const outputSize = preset.size || Math.min(4000, Math.max(50, Number.isFinite(customSize) ? customSize : 50));
 
   const drawCanvas = useCallback(() => {
     const canvas = canvasRef.current;
@@ -64,32 +41,23 @@ export default function SquareCropClient() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Fit image to canvas (cover)
-    const scale = Math.min(canvas.width / img.width, canvas.height / img.height);
-    const scaledW = img.width * scale;
-    const scaledH = img.height * scale;
-    const offsetX = (canvas.width - scaledW) / 2;
-    const offsetY = (canvas.height - scaledH) / 2;
-
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(img, offsetX, offsetY, scaledW, scaledH);
+    ctx.drawImage(img, 0, 0);
 
-    // Draw semi-transparent overlay outside crop area
-    const cropX = cropPos.x;
-    const cropY = cropPos.y;
-    const cropW = Math.min(outputSize * scale, canvas.width - cropX);
-    const cropH = Math.min(outputSize * scale, canvas.height - cropY);
+    const cropSide = Math.min(img.width, img.height);
+    const cropX = Math.max(0, Math.min(cropPos.x, img.width - cropSide));
+    const cropY = Math.max(0, Math.min(cropPos.y, img.height - cropSide));
 
     ctx.fillStyle = 'rgba(0,0,0,0.6)';
     ctx.fillRect(0, 0, canvas.width, cropY);
-    ctx.fillRect(0, cropY + cropH, canvas.width, canvas.height - cropY - cropH);
-    ctx.fillRect(0, cropY, cropX, cropH);
-    ctx.fillRect(cropX + cropW, cropY, canvas.width - cropX - cropW, cropH);
+    ctx.fillRect(0, cropY + cropSide, canvas.width, canvas.height - cropY - cropSide);
+    ctx.fillRect(0, cropY, cropX, cropSide);
+    ctx.fillRect(cropX + cropSide, cropY, canvas.width - cropX - cropSide, cropSide);
 
     // Crop border
     ctx.strokeStyle = '#DC2626';
     ctx.lineWidth = 2;
-    ctx.strokeRect(cropX, cropY, cropW, cropH);
+    ctx.strokeRect(cropX, cropY, cropSide, cropSide);
 
     // Corner markers
     const cornerSize = 8;
@@ -101,57 +69,102 @@ export default function SquareCropClient() {
     ctx.stroke();
     // Top-right
     ctx.beginPath();
-    ctx.moveTo(cropX + cropW - cornerSize, cropY); ctx.lineTo(cropX + cropW, cropY); ctx.lineTo(cropX + cropW, cropY + cornerSize);
+    ctx.moveTo(cropX + cropSide - cornerSize, cropY); ctx.lineTo(cropX + cropSide, cropY); ctx.lineTo(cropX + cropSide, cropY + cornerSize);
     ctx.stroke();
     // Bottom-left
     ctx.beginPath();
-    ctx.moveTo(cropX, cropY + cropH - cornerSize); ctx.lineTo(cropX, cropY + cropH); ctx.lineTo(cropX + cornerSize, cropY + cropH);
+    ctx.moveTo(cropX, cropY + cropSide - cornerSize); ctx.lineTo(cropX, cropY + cropSide); ctx.lineTo(cropX + cornerSize, cropY + cropSide);
     ctx.stroke();
     // Bottom-right
     ctx.beginPath();
-    ctx.moveTo(cropX + cropW - cornerSize, cropY + cropH); ctx.lineTo(cropX + cropW, cropY + cropH); ctx.lineTo(cropX + cropW, cropY + cropH - cornerSize);
+    ctx.moveTo(cropX + cropSide - cornerSize, cropY + cropSide); ctx.lineTo(cropX + cropSide, cropY + cropSide); ctx.lineTo(cropX + cropSide, cropY + cropSide - cornerSize);
     ctx.stroke();
-  }, [cropPos, outputSize]);
+  }, [cropPos]);
+
+  useEffect(() => {
+    if (image && imgRef.current) drawCanvas();
+  }, [drawCanvas, image]);
+
+  const applyLoadedImage = (img: HTMLImageElement, src: string) => {
+    imgRef.current = img;
+    setCropPos({
+      x: Math.max(0, (img.width - Math.min(img.width, img.height)) / 2),
+      y: Math.max(0, (img.height - Math.min(img.width, img.height)) / 2),
+    });
+    setImgLoaded(true);
+    setSampleError(false);
+    setImage(src);
+  };
+
+  const loadImage = (file: File) => {
+    setSelectedFile(file);
+    setImgLoaded(false);
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const src = e.target?.result as string;
+      const img = new Image();
+      img.onload = () => applyLoadedImage(img, src);
+      img.src = src;
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const loadSample = () => {
+    setSelectedFile(null);
+    setImgLoaded(false);
+    const img = new Image();
+    img.onload = () => applyLoadedImage(img, '/samples/tool-sample.png');
+    img.onerror = () => setSampleError(true);
+    img.src = '/samples/tool-sample.png';
+  };
 
   const handlePresetChange = (p: typeof SQUARE_PRESETS[0]) => {
     setPreset(p);
-    if (p.size) setCropSize(p.size);
   };
 
-  const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    const rect = canvasRef.current!.getBoundingClientRect();
-    setDragStart({ x: e.clientX - cropPos.x, y: e.clientY - cropPos.y });
+  const pointerToImage = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    const canvas = canvasRef.current;
+    const img = imgRef.current;
+    if (!canvas || !img) return null;
+    const bounds = canvas.getBoundingClientRect();
+    if (!bounds.width || !bounds.height) return null;
+    return {
+      x: (e.clientX - bounds.left) * (img.width / bounds.width),
+      y: (e.clientY - bounds.top) * (img.height / bounds.height),
+    };
+  };
+
+  const handlePointerDown = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    const pos = pointerToImage(e);
+    if (!pos || !imgRef.current) return;
+    e.currentTarget.setPointerCapture(e.pointerId);
+    dragOffsetRef.current = { x: pos.x - cropPos.x, y: pos.y - cropPos.y };
     setIsDragging(true);
   };
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    if (!isDragging) return;
-    const rect = canvasRef.current!.getBoundingClientRect();
-    const newX = Math.max(0, Math.min(e.clientX - rect.left - dragStart.x + cropPos.x, rect.width - outputSize));
-    const newY = Math.max(0, Math.min(e.clientY - rect.top - dragStart.y + cropPos.y, rect.height - outputSize));
+  const handlePointerMove = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    if (!isDragging || !imgRef.current) return;
+    const pos = pointerToImage(e);
+    if (!pos) return;
+    const cropSide = Math.min(imgRef.current.width, imgRef.current.height);
+    const newX = Math.max(0, Math.min(pos.x - dragOffsetRef.current.x, imgRef.current.width - cropSide));
+    const newY = Math.max(0, Math.min(pos.y - dragOffsetRef.current.y, imgRef.current.height - cropSide));
     setCropPos({ x: newX, y: newY });
-    drawCanvas();
   };
 
-  const handleMouseUp = () => setIsDragging(false);
+  const handlePointerUp = () => setIsDragging(false);
 
   const downloadCrop = () => {
     if (!imgRef.current || !imgLoaded) return;
     const img = imgRef.current;
+    const cropSide = Math.min(img.width, img.height);
     const canvas = document.createElement('canvas');
     canvas.width = outputSize;
     canvas.height = outputSize;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Calculate source rect from crop position
-    const displayScale = Math.min(canvasRef.current!.width / img.width, canvasRef.current!.height / img.height);
-    const srcScale = img.width / (canvasRef.current!.width / displayScale);
-    const srcX = cropPos.x * srcScale;
-    const srcY = cropPos.y * srcScale;
-    const srcSize = outputSize * srcScale;
-
-    ctx.drawImage(img, srcX, srcY, srcSize, srcSize, 0, 0, outputSize, outputSize);
+    ctx.drawImage(img, cropPos.x, cropPos.y, cropSide, cropSide, 0, 0, outputSize, outputSize);
 
     const link = document.createElement('a');
     link.download = `square-crop-${outputSize}x${outputSize}.png`;
@@ -159,41 +172,64 @@ export default function SquareCropClient() {
     link.click();
   };
 
+  const reset = () => {
+    setImage(null);
+    setSelectedFile(null);
+    setPreset(SQUARE_PRESETS[0]);
+    setCustomSize(1024);
+    setCropPos({ x: 0, y: 0 });
+    setImgLoaded(false);
+    setSampleError(false);
+    imgRef.current = null;
+    if (canvasRef.current) canvasRef.current.width = 0;
+  };
+
   return (
-    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
+    <div>
+      <div className="tb-v2-tool-input-head" style={{ borderBottom: '1px solid var(--line)' }}>
+        <span className="tb-v2-tool-label">Square Crop</span>
+        <ToolExampleClearActions
+          onExample={loadSample}
+          onClear={reset}
+          canClear={Boolean(image || selectedFile || sampleError)}
+        />
+      </div>
+
+      <div className="tb-v2-section" style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: '20px' }}>
       {/* Presets */}
-      <div className="tb-v2-mode-tabs">
+      <div>
+        <p className="tb-v2-tool-label" style={{ marginBottom: 8 }}>Output size</p>
+        <div className="tb-v2-mode-tabs" role="group" aria-label="Output size">
         {SQUARE_PRESETS.map((p) => (
           <button
             key={p.label}
+            type="button"
             onClick={() => handlePresetChange(p)}
-            className={`text-xs px-3 py-1.5 rounded-full transition-colors ${
-              preset.label === p.label
-                ? 'bg-[#DC2626] text-black font-semibold'
-                : 'bg-[#1a1a2e] text-gray-400 hover:text-white border border-gray-700'
-            }`}
+            className={`tb-v2-mode-tab ${preset.label === p.label ? 'on' : ''}`}
+            aria-pressed={preset.label === p.label}
           >
             {p.label}
           </button>
         ))}
+        </div>
       </div>
 
       {preset.label === 'Custom' && (
-        <div className="flex items-center gap-3">
-          <label className="text-xs text-gray-400">Size (px):</label>
+        <label className="flex items-center gap-3 text-sm">
+          <span className="tb-v2-tool-label">Size (px)</span>
           <input
             type="number"
             min={50}
             max={4000}
             value={customSize}
             onChange={(e) => setCustomSize(Number(e.target.value))}
-            className="bg-[#1a1a2e] border border-gray-700 rounded-lg px-3 py-1.5 text-sm text-white w-24"
+            className="tb-v2-input w-28"
           />
-          <span className="text-xs text-gray-500">{customSize} × {customSize}px</span>
-        </div>
+          <span className="text-xs text-gray-500">{outputSize} × {outputSize}px</span>
+        </label>
       )}
 
-      <p className="text-xs text-gray-500">
+      <p className="text-xs text-gray-500" style={{ margin: 0 }}>
         Output: <span className="text-[#DC2626] font-medium">{outputSize} × {outputSize}px</span> - drag on image to reposition crop area
       </p>
 
@@ -208,6 +244,7 @@ export default function SquareCropClient() {
           <span className="text-3xl mb-3 block">✂️</span>
           <p className="text-gray-400 text-sm">Drag & drop an image, or click to browse</p>
           <p className="text-gray-600 text-xs mt-1">PNG, JPG, WebP, GIF • Max {maxSizeMB}MB</p>
+          {sampleError && <p className="text-xs text-amber-500 mt-2">Couldn&apos;t load the sample image, try again.</p>}
           <input
             id="square-crop-input"
             type="file"
@@ -223,31 +260,25 @@ export default function SquareCropClient() {
         <div className="space-y-3">
           <canvas
             ref={canvasRef}
-            width={500}
-            height={500}
-            className="max-w-full rounded-lg cursor-grab active:cursor-grabbing"
-            onMouseDown={handleMouseDown}
-            onMouseMove={handleMouseMove}
-            onMouseUp={handleMouseUp}
-            onMouseLeave={handleMouseUp}
+            className="max-w-full max-h-[50vh] w-auto h-auto mx-auto block rounded-lg cursor-grab active:cursor-grabbing touch-none"
+            onPointerDown={handlePointerDown}
+            onPointerMove={handlePointerMove}
+            onPointerUp={handlePointerUp}
+            onPointerCancel={handlePointerUp}
           />
           <div className="tb-v2-mode-tabs">
             <button
+              type="button"
               onClick={downloadCrop}
               disabled={!imgLoaded || isOversized}
               className="bg-[#DC2626] hover:bg-[#B91C1C] text-black font-semibold px-5 py-2 rounded-lg text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isOversized ? 'File Too Large' : `Download ${outputSize}×${outputSize} PNG`}
             </button>
-            <button
-              onClick={() => { setImage(null); setSelectedFile(null); setImgLoaded(false); }}
-              className="bg-[#1a1a2e] hover:bg-gray-700 text-gray-300 px-4 py-2 rounded-lg text-sm border border-gray-700 transition-colors"
-            >
-              Choose New Image
-            </button>
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 }
