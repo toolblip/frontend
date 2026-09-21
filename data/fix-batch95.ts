@@ -14,17 +14,17 @@ export interface FixBatchEntry {
 
 const FIX_BATCH_95: Record<string, FixBatchEntry> = {
   'circle-crop': {
-    description: `A perfect circle, an oval, and a rounded square, sometimes specifically a squircle, the shape modern app icons actually use rather than a plain rounded rectangle, are three genuinely different crops, and getting a transparent PNG out the other end matters because the cropped shape then needs to sit cleanly over whatever background it's placed on next, not just display correctly inside one platform's own circular mask. This tool crops an image into a circle, an oval, or a rounded square, with a transparent PNG output built for placing the result over any background rather than one specific display context. Useful for cropping a logo into a squircle shape for an app icon rather than a plain circle, creating an oval-cropped image that needs to sit over a custom background elsewhere, or producing a transparent circular cutout for a design that isn't tied to any single platform's own avatar mask.`,
+    description: `A circular crop removes the corners outside a round boundary, which is what a profile picture or avatar slot expects. This tool crops an image into a true circle and exports a PNG with transparent corners, with optional white or blurred backgrounds and an adjustable output size. Useful for preparing a profile photo for an avatar slot, cropping a logo into a circular mark, or producing a transparent circular image that can sit over any design background.`,
     examples: [
       {
-        title: 'Crop a logo into a squircle for an app icon',
-        code: `Input: logo.png\nOutput: logo-squircle.png (rounded square, transparent background)`,
-        note: 'Produces the squircle shape modern app icons actually use.',
+        title: 'Crop a logo into a circular avatar',
+        code: `Input: logo.png\nOutput: logo-circle.png (circular crop, transparent corners)`,
+        note: 'Produces a true circle rather than a square with rounded corners.',
       },
       {
-        title: 'Create a transparent oval cutout',
-        code: `Input: photo.jpg\nOutput: photo-oval.png (transparent PNG)`,
-        note: 'Ready to place over any background, not just one platform mask.',
+        title: 'Create a transparent circular profile image',
+        code: `Input: photo.jpg\nOutput: photo-circle.png (transparent PNG)`,
+        note: 'Ready to place over any background while keeping the output circular.',
       },
     ],
   },
