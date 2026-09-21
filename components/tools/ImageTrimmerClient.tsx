@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useSubscription } from '@/hooks/useSubscription';
 import { FileSizeError, UpgradeNotice } from '@/components/FileSizeGuard';
 import { convertHeicIfNeeded } from '@/lib/heic';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 interface TrimBox {
   x: number;
@@ -109,8 +110,7 @@ export default function ImageTrimmerClient() {
     }
   };
 
-  const loadSample = (e: React.MouseEvent) => {
-    e.stopPropagation();
+  const loadSample = () => {
     const src = '/samples/tool-sample.png';
     setSelectedFile(null);
     setTrimmedUrl(null);
@@ -190,11 +190,22 @@ export default function ImageTrimmerClient() {
     setTrimmedUrl(null);
     setTrimBox(null);
     setStatus('idle');
+    setTolerance(24);
     imgRef.current = null;
   };
 
   return (
-    <div className="tb-v2-section" style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: '16px 20px' }}>
+    <div>
+      <div className="tb-v2-tool-input-head" style={{ borderBottom: '1px solid var(--line)' }}>
+        <span className="tb-v2-tool-label">Image Trimmer</span>
+        <ToolExampleClearActions
+          onExample={loadSample}
+          onClear={reset}
+          canClear={Boolean(image || selectedFile || trimmedUrl || status !== 'idle')}
+        />
+      </div>
+
+      <div className="tb-v2-section" style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: '20px' }}>
       {!image ? (
         <div
           className="border-2 border-dashed border-gray-700 hover:border-red-600 rounded-xl p-12 text-center transition-colors cursor-pointer"
@@ -209,12 +220,6 @@ export default function ImageTrimmerClient() {
             <>
               <p className="text-gray-400 text-sm">Drag & drop an image, or click to browse</p>
               <p className="text-gray-600 text-xs mt-1">PNG, JPG, WebP, GIF, HEIC</p>
-              <button
-                onClick={loadSample}
-                className="text-xs text-red-700 dark:text-red-400 underline hover:no-underline mt-3"
-              >
-                Or try a sample image
-              </button>
               {status === 'sample-error' && (
                 <p className="text-xs text-amber-500 mt-2">Couldn&apos;t load the sample image, try again.</p>
               )}
@@ -233,25 +238,25 @@ export default function ImageTrimmerClient() {
         </div>
       ) : (
         <div className="space-y-3">
-          <div className="flex items-center gap-4">
-            <label className="text-sm font-medium">Tolerance: {tolerance}</label>
+          <div className="flex flex-wrap items-center gap-3">
+            <label htmlFor="trim-tolerance" className="tb-v2-tool-label">Tolerance</label>
             <input
+              id="trim-tolerance"
               type="range"
               min="0"
               max="128"
               value={tolerance}
               onChange={(e) => { setTolerance(Number(e.target.value)); setStatus('idle'); }}
-              className="tb-v2-range"
+              className="tb-v2-range min-w-[180px] flex-1"
             />
+            <output htmlFor="trim-tolerance" className="text-sm font-semibold tabular-nums">{tolerance}</output>
           </div>
           <p className="text-xs text-gray-500">
-            Trim samples the top-left pixel as the border color, then removes any solid rows/columns of that
-            color from the edges. Raise the tolerance for borders with slight noise or compression artifacts.
-            Image Trimmer only works on images with a flat, uniform-color margin (screenshots, logos, scans) -
-            it can&apos;t crop a photo&apos;s subject out of a busy background.
+            Trims flat, uniform-color borders from screenshots, logos, and scans. Raise the tolerance for slight
+            edge noise; it does not remove subjects from busy photos.
           </p>
 
-          <div className="flex gap-2">
+          <div className="flex flex-wrap justify-end gap-2">
             <button
               onClick={trimImage}
               disabled={isProcessing || isOversized}
@@ -259,9 +264,6 @@ export default function ImageTrimmerClient() {
               title={isOversized ? 'File size exceeds your plan limit' : ''}
             >
               {isProcessing ? 'Trimming...' : isOversized ? 'File Too Large' : 'Trim Image'}
-            </button>
-            <button onClick={reset} className="tb-v2-btn tb-v2-btn-ghost tb-v2-btn-lg">
-              Choose New Image
             </button>
             {trimmedUrl && (
               <button onClick={downloadTrim} className="tb-v2-btn tb-v2-btn-ghost tb-v2-btn-lg">
@@ -303,6 +305,7 @@ export default function ImageTrimmerClient() {
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 }
