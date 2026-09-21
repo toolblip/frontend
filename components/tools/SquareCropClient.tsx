@@ -41,6 +41,8 @@ export default function SquareCropClient() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
+    canvas.width = img.width;
+    canvas.height = img.height;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(img, 0, 0);
 
@@ -81,9 +83,26 @@ export default function SquareCropClient() {
     ctx.stroke();
   }, [cropPos]);
 
+  const drawOutputPreview = useCallback(() => {
+    const canvas = previewRef.current;
+    const img = imgRef.current;
+    if (!canvas || !img) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const cropSide = Math.min(img.width, img.height);
+    canvas.width = outputSize;
+    canvas.height = outputSize;
+    ctx.clearRect(0, 0, outputSize, outputSize);
+    ctx.drawImage(img, cropPos.x, cropPos.y, cropSide, cropSide, 0, 0, outputSize, outputSize);
+  }, [cropPos, outputSize]);
+
   useEffect(() => {
-    if (image && imgRef.current) drawCanvas();
-  }, [drawCanvas, image]);
+    if (image && imgRef.current) {
+      drawCanvas();
+      drawOutputPreview();
+    }
+  }, [drawCanvas, drawOutputPreview, image]);
 
   const applyLoadedImage = (img: HTMLImageElement, src: string) => {
     imgRef.current = img;
@@ -182,6 +201,7 @@ export default function SquareCropClient() {
     setSampleError(false);
     imgRef.current = null;
     if (canvasRef.current) canvasRef.current.width = 0;
+    if (previewRef.current) previewRef.current.width = 0;
   };
 
   return (
@@ -230,7 +250,7 @@ export default function SquareCropClient() {
       )}
 
       <p className="text-xs text-gray-500" style={{ margin: 0 }}>
-        Output: <span className="text-[#DC2626] font-medium">{outputSize} × {outputSize}px</span> - drag on image to reposition crop area
+        Export: <span className="text-[#DC2626] font-medium">{outputSize} × {outputSize}px</span> - drag the source crop to reposition it
       </p>
 
       {/* Upload zone */}
@@ -258,14 +278,28 @@ export default function SquareCropClient() {
         </div>
       ) : (
         <div className="space-y-3">
-          <canvas
-            ref={canvasRef}
-            className="max-w-full max-h-[50vh] w-auto h-auto mx-auto block rounded-lg cursor-grab active:cursor-grabbing touch-none"
-            onPointerDown={handlePointerDown}
-            onPointerMove={handlePointerMove}
-            onPointerUp={handlePointerUp}
-            onPointerCancel={handlePointerUp}
-          />
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <div>
+              <p className="tb-v2-tool-label" style={{ marginBottom: 8 }}>Crop area</p>
+              <canvas
+                ref={canvasRef}
+                className="max-w-full max-h-[50vh] w-auto h-auto mx-auto block rounded-lg cursor-grab active:cursor-grabbing touch-none"
+                onPointerDown={handlePointerDown}
+                onPointerMove={handlePointerMove}
+                onPointerUp={handlePointerUp}
+                onPointerCancel={handlePointerUp}
+              />
+            </div>
+            <div>
+              <p className="tb-v2-tool-label" style={{ marginBottom: 8 }}>Export preview</p>
+              <canvas
+                ref={previewRef}
+                aria-label={`Export preview at ${outputSize} by ${outputSize} pixels`}
+                className="max-w-full max-h-[50vh] w-auto h-auto mx-auto block rounded-lg"
+              />
+              <p className="mt-2 text-center text-xs text-gray-500">{outputSize} × {outputSize}px PNG</p>
+            </div>
+          </div>
           <div className="tb-v2-mode-tabs">
             <button
               type="button"
