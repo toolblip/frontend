@@ -50,7 +50,7 @@ function renderCrop(canvas: HTMLCanvasElement, img: HTMLImageElement, bgType: Ou
   return canvas.toDataURL('image/png');
 }
 
-function drawEditor(canvas: HTMLCanvasElement, img: HTMLImageElement, cropPosition: CropPosition): void {
+export function drawEditor(canvas: HTMLCanvasElement, img: HTMLImageElement, cropPosition: CropPosition): void {
   const scale = Math.min(1, 720 / Math.max(img.width, img.height));
   canvas.width = Math.max(1, Math.round(img.width * scale));
   canvas.height = Math.max(1, Math.round(img.height * scale));
@@ -70,6 +70,12 @@ function drawEditor(canvas: HTMLCanvasElement, img: HTMLImageElement, cropPositi
   ctx.beginPath();
   ctx.arc(centerX, centerY, cropSize / 2, 0, Math.PI * 2);
   ctx.fill();
+  ctx.restore();
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(centerX, centerY, cropSize / 2, 0, Math.PI * 2);
+  ctx.clip();
+  ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
   ctx.restore();
   ctx.save();
   ctx.beginPath();
