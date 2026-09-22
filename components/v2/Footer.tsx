@@ -142,6 +142,23 @@ export default function Footer() {
           <a href="https://nicklaunches.com/products/toolblip/?utm_source=toolblip.com&utm_medium=badge&utm_campaign=featured" target="_blank" rel="noopener">
             <img src="https://nicklaunches.com/badges/featured.png" alt="Toolblip on Nick Launches" width="244" height="56" />
           </a>
+          <a target="_blank" href="https://aixcollection.com/ai/toolblip"><img src="https://aixcollection.com/assets/images/badge.png" alt="AI X Collection" height="54" loading="lazy" /></a>
+          <a href="https://www.nxgntools.com/tools/toolblip?utm_source=toolblip" target="_blank" rel="noopener" style={{ display: 'inline-block', width: 'auto' }}>
+            <img src="https://www.nxgntools.com/api/embed/toolblip?type=LAUNCHING_SOON_ON" alt="Launching soon on NxGn Tools" style={{ height: '48px', width: 'auto' }} />
+          </a>
+          <a href="https://liftoapp.com/product/toolblip" target="_blank" rel="noopener noreferrer"><img src="https://liftoapp.com/badges/featured-dark.svg" alt="Featured on Lifto" width="200" height="54" /></a>
+          <a href="https://versily.com/products/toolblip?utm_source=versily&utm_medium=badge&utm_campaign=featured" target="_blank" rel="noopener">
+            <img src="https://amujqvxlqnrslaqiozkw.supabase.co/functions/v1/badge-svg?theme=dark&width=205&height=44&id=920b0a0f-2b65-46f6-b776-cc1b61026022" width="205" height="44" alt="Featured on Versily - Toolblip" loading="lazy" decoding="async" style={{ height: 'auto', aspectRatio: '205/44' }} />
+          </a>
+          <a href="https://www.techtrendin.com/products/toolblip" target="_blank">
+            <img src="https://www.techtrendin.com/badges/featured-light.png" alt="Featured on TechTrendin'" style={{ width: 'auto', height: '52px' }} />
+          </a>
+          <a href="https://www.seewhatnewai.com" target="_blank">[backlink description]</a>
+          <a href="https://wired.business" target="_blank"><img src="https://wired.business/badge0-light.svg" alt="Featured on Wired Business" width="200" height="54" /></a>
+          <a href="https://sideprojects.net/projects/toolblip"><img src="https://sideprojects.net/projects/toolblip/badge.svg" alt="Launched on sideprojects.net" height="58" /></a>
+          <a target="_blank" href="https://www.llmrelevance.com" aria-label="LLM Relevance - AI & SEO Tools for Small Business"><img src="https://www.llmrelevance.com/badges/llm-relevance-horizontal-light.svg" alt="LLM Relevance" height="44" /></a>
+          <a href="https://www.aitoolzdir.com" target="_blank">AI Toolz Dir</a>
+          <a href="https://sololaunches.com/startups/toolblip" target="_blank"><img src="https://sololaunches.com/api/badges/support?theme=light" alt="Toolblip on Solo Launches" width="250" height="54" /></a>
         </div>
         <div className="tb-v2-footer-meta">
           <span>© {year} Toolblip. Built to stay out of your way.</span>
