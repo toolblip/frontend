@@ -26,6 +26,10 @@ describe('clampCropSelection', () => {
   it('keeps the effective zoomed crop inside the source image', () => {
     expect(getEffectiveCropSelection(1200, 800, { x: 0, y: 0, size: 400 }, 3)).toEqual({ x: 133.33333333333331, y: 133.33333333333331, size: 133.33333333333334 });
   });
+
+  it('normalizes an out-of-bounds frame before calculating the effective crop', () => {
+    expect(getEffectiveCropSelection(1200, 800, { x: -200, y: -100, size: 1000 }, 1)).toEqual({ x: 0, y: 0, size: 800 });
+  });
 });
 
 describe('drawEditor', () => {
