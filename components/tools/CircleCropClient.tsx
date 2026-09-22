@@ -31,10 +31,11 @@ export function resizeCropSelection(imageWidth: number, imageHeight: number, sel
 }
 
 export function getEffectiveCropSelection(imageWidth: number, imageHeight: number, selection: CropSelection, zoom: number): CropSelection {
-  const effectiveSize = selection.size / Math.max(1, zoom);
+  const safeSelection = clampCropSelection(imageWidth, imageHeight, selection);
+  const effectiveSize = safeSelection.size / Math.max(1, zoom);
   return clampCropSelection(imageWidth, imageHeight, {
-    x: selection.x + (selection.size - effectiveSize) / 2,
-    y: selection.y + (selection.size - effectiveSize) / 2,
+    x: safeSelection.x + (safeSelection.size - effectiveSize) / 2,
+    y: safeSelection.y + (safeSelection.size - effectiveSize) / 2,
     size: effectiveSize,
   });
 }
@@ -80,16 +81,17 @@ export function drawEditor(canvas: HTMLCanvasElement, img: HTMLImageElement, sel
   canvas.height = Math.max(1, Math.round(img.height * scale));
   const ctx = canvas.getContext('2d');
   if (!ctx) return;
+  const safeSelection = clampCropSelection(img.width, img.height, selection);
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   const imageScale = scale * Math.max(1, zoom);
-  const selectedCenterX = selection.x + selection.size / 2;
-  const selectedCenterY = selection.y + selection.size / 2;
+  const selectedCenterX = safeSelection.x + safeSelection.size / 2;
+  const selectedCenterY = safeSelection.y + safeSelection.size / 2;
   const imageOffsetX = selectedCenterX * scale - selectedCenterX * imageScale;
   const imageOffsetY = selectedCenterY * scale - selectedCenterY * imageScale;
   ctx.drawImage(img, imageOffsetX, imageOffsetY, img.width * imageScale, img.height * imageScale);
-  const cropSize = selection.size * scale;
-  const cropX = selection.x * scale;
-  const cropY = selection.y * scale;
+  const cropSize = safeSelection.size * scale;
+  const cropX = safeSelection.x * scale;
+  const cropY = safeSelection.y * scale;
   const centerX = cropX + cropSize / 2;
   const centerY = cropY + cropSize / 2;
   ctx.save();
@@ -287,9 +289,10 @@ export default function CircleCropClient() {
           <>
             <div>
               <p className="tb-v2-tool-label" style={{ marginBottom: 8 }}>Crop area</p>
-              <div className="rounded-xl overflow-hidden" style={{ background: '#111827' }}>
+              <div className="rounded-xl overflow-hidden" style={{ background: '#111827', border: '2px solid #6b7280' }}>
                 <canvas ref={editorCanvasRef} className="block w-full h-auto" style={{ maxHeight: 480, objectFit: 'contain', touchAction: 'none', cursor: 'grab' }} onPointerDown={handleEditorPointerDown} onPointerMove={handleEditorPointerMove} onPointerUp={finishEditorDrag} onPointerCancel={finishEditorDrag} aria-label="Circular crop editor. Drag inside the circle to move it, or drag a handle to resize it." />
               </div>
+              <p className="text-xs text-gray-500" style={{ margin: '8px 0 0' }}>The outlined rectangle is the full source image.</p>
               <p className="text-xs text-gray-500" style={{ margin: '8px 0 0' }}>Drag inside the circle to move it; drag the handles or use Crop size to resize; use Zoom to zoom in or out.</p>
             </div>
             <label className="flex items-center gap-3">
@@ -304,7 +307,7 @@ export default function CircleCropClient() {
             </label>
             <div>
               <p className="tb-v2-tool-label" style={{ marginBottom: 8 }}>Output preview</p>
-              <div className="flex justify-center rounded-xl p-3" style={{ backgroundImage: 'repeating-conic-gradient(#e5e7eb 0% 25%, #f9fafb 0% 50%)', backgroundSize: '16px 16px' }}>
+              <div className="flex justify-center rounded-xl p-3" style={{ backgroundImage: 'repeating-conic-gradient(#374151 0% 25%, #1f2937 0% 50%)', backgroundSize: '16px 16px' }}>
                 <canvas ref={outputCanvasRef} className="hidden" aria-hidden="true" />
                 {previewCanvas && <img src={previewCanvas} alt="Circular crop output preview" className="max-w-full max-h-64 rounded-lg object-contain" style={{ aspectRatio: `${outputSize}/${outputSize}` }} />}
               </div>
