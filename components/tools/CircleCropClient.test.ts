@@ -1,17 +1,22 @@
 import { describe, expect, it, vi } from 'vitest';
-import { clampCropPosition, drawEditor } from './CircleCropClient';
+import { clampCropSelection, drawEditor, resizeCropSelection } from './CircleCropClient';
 
-describe('clampCropPosition', () => {
+describe('clampCropSelection', () => {
   it('keeps the centered crop position', () => {
-    expect(clampCropPosition(1200, 800, 400, { x: 400, y: 200 })).toEqual({ x: 400, y: 200 });
+    expect(clampCropSelection(1200, 800, { x: 400, y: 200, size: 400 })).toEqual({ x: 400, y: 200, size: 400 });
   });
 
   it('clamps a crop beyond the top-left image edge', () => {
-    expect(clampCropPosition(1200, 800, 400, { x: -50, y: -25 })).toEqual({ x: 0, y: 0 });
+    expect(clampCropSelection(1200, 800, { x: -50, y: -25, size: 400 })).toEqual({ x: 0, y: 0, size: 400 });
   });
 
   it('clamps a crop beyond the bottom-right image edge', () => {
-    expect(clampCropPosition(1200, 800, 400, { x: 900, y: 500 })).toEqual({ x: 800, y: 400 });
+    expect(clampCropSelection(1200, 800, { x: 900, y: 500, size: 400 })).toEqual({ x: 800, y: 400, size: 400 });
+  });
+
+  it('clamps crop size to the source image while preserving the selection center', () => {
+    expect(resizeCropSelection(1200, 800, { x: 400, y: 200, size: 400 }, 600)).toEqual({ x: 300, y: 100, size: 600 });
+    expect(resizeCropSelection(1200, 800, { x: 400, y: 200, size: 400 }, 1000)).toEqual({ x: 200, y: 0, size: 800 });
   });
 });
 
@@ -41,7 +46,7 @@ describe('drawEditor', () => {
     } as unknown as HTMLCanvasElement;
     const image = { width: 800, height: 600 } as HTMLImageElement;
 
-    drawEditor(canvas, image, { x: 100, y: 0 });
+    drawEditor(canvas, image, { x: 100, y: 0, size: 400 });
 
     expect(drawImage).toHaveBeenCalledTimes(2);
   });

@@ -7,23 +7,37 @@ import { FileSizeError, UpgradeNotice } from '@/components/FileSizeGuard';
 import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 type OutputBg = 'transparent' | 'white' | 'blur';
-export type CropPosition = { x: number; y: number };
+export type CropSelection = { x: number; y: number; size: number };
 
-export function clampCropPosition(imageWidth: number, imageHeight: number, cropSize: number, position: CropPosition): CropPosition {
+export function clampCropSelection(imageWidth: number, imageHeight: number, selection: CropSelection): CropSelection {
+  const maxSize = Math.max(1, Math.min(imageWidth, imageHeight));
+  const size = Math.min(Math.max(selection.size, 1), maxSize);
   return {
-    x: Math.min(Math.max(position.x, 0), Math.max(0, imageWidth - cropSize)),
-    y: Math.min(Math.max(position.y, 0), Math.max(0, imageHeight - cropSize)),
+    x: Math.min(Math.max(selection.x, 0), Math.max(0, imageWidth - size)),
+    y: Math.min(Math.max(selection.y, 0), Math.max(0, imageHeight - size)),
+    size,
   };
 }
 
-function centerCropPosition(imageWidth: number, imageHeight: number, cropSize: number): CropPosition {
-  return clampCropPosition(imageWidth, imageHeight, cropSize, { x: (imageWidth - cropSize) / 2, y: (imageHeight - cropSize) / 2 });
+export function resizeCropSelection(imageWidth: number, imageHeight: number, selection: CropSelection, nextSize: number): CropSelection {
+  const centerX = selection.x + selection.size / 2;
+  const centerY = selection.y + selection.size / 2;
+  const clampedSize = Math.min(Math.max(nextSize, 1), Math.max(1, Math.min(imageWidth, imageHeight)));
+  return clampCropSelection(imageWidth, imageHeight, {
+    x: centerX - clampedSize / 2,
+    y: centerY - clampedSize / 2,
+    size: clampedSize,
+  });
 }
 
-function renderCrop(canvas: HTMLCanvasElement, img: HTMLImageElement, bgType: OutputBg, outputSize: number, cropPosition: CropPosition): string {
+function centerCropSelection(imageWidth: number, imageHeight: number, size: number): CropSelection {
+  return clampCropSelection(imageWidth, imageHeight, { x: (imageWidth - size) / 2, y: (imageHeight - size) / 2, size });
+}
+
+function renderCrop(canvas: HTMLCanvasElement, img: HTMLImageElement, bgType: OutputBg, outputSize: number, selection: CropSelection): string {
   const ctx = canvas.getContext('2d');
   if (!ctx) return '';
-  const cropSize = Math.min(img.width, img.height);
+  const cropSize = selection.size;
   canvas.width = outputSize;
   canvas.height = outputSize;
   ctx.clearRect(0, 0, outputSize, outputSize);
@@ -37,7 +51,7 @@ function renderCrop(canvas: HTMLCanvasElement, img: HTMLImageElement, bgType: Ou
       blurCanvas.width = outputSize;
       blurCanvas.height = outputSize;
       blurCtx.filter = 'blur(20px)';
-      blurCtx.drawImage(img, cropPosition.x, cropPosition.y, cropSize, cropSize, 0, 0, outputSize, outputSize);
+      blurCtx.drawImage(img, selection.x, selection.y, cropSize, cropSize, 0, 0, outputSize, outputSize);
       ctx.drawImage(blurCanvas, 0, 0);
     }
   }
@@ -45,12 +59,12 @@ function renderCrop(canvas: HTMLCanvasElement, img: HTMLImageElement, bgType: Ou
   ctx.beginPath();
   ctx.arc(outputSize / 2, outputSize / 2, outputSize / 2 - 1, 0, Math.PI * 2);
   ctx.clip();
-  ctx.drawImage(img, cropPosition.x, cropPosition.y, cropSize, cropSize, 0, 0, outputSize, outputSize);
+  ctx.drawImage(img, selection.x, selection.y, cropSize, cropSize, 0, 0, outputSize, outputSize);
   ctx.restore();
   return canvas.toDataURL('image/png');
 }
 
-export function drawEditor(canvas: HTMLCanvasElement, img: HTMLImageElement, cropPosition: CropPosition): void {
+export function drawEditor(canvas: HTMLCanvasElement, img: HTMLImageElement, selection: CropSelection): void {
   const scale = Math.min(1, 720 / Math.max(img.width, img.height));
   canvas.width = Math.max(1, Math.round(img.width * scale));
   canvas.height = Math.max(1, Math.round(img.height * scale));
@@ -58,9 +72,9 @@ export function drawEditor(canvas: HTMLCanvasElement, img: HTMLImageElement, cro
   if (!ctx) return;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-  const cropSize = Math.min(img.width, img.height) * scale;
-  const cropX = cropPosition.x * scale;
-  const cropY = cropPosition.y * scale;
+  const cropSize = selection.size * scale;
+  const cropX = selection.x * scale;
+  const cropY = selection.y * scale;
   const centerX = cropX + cropSize / 2;
   const centerY = cropY + cropSize / 2;
   ctx.save();
@@ -104,28 +118,37 @@ export default function CircleCropClient() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [bgType, setBgType] = useState<OutputBg>('transparent');
   const [outputSize, setOutputSize] = useState(512);
-  const [cropPosition, setCropPosition] = useState<CropPosition>({ x: 0, y: 0 });
+  const [cropSelection, setCropSelection] = useState<CropSelection>({ x: 0, y: 0, size: 1 });
   const [previewCanvas, setPreviewCanvas] = useState<string | null>(null);
   const [sampleError, setSampleError] = useState(false);
   const editorCanvasRef = useRef<HTMLCanvasElement>(null);
   const outputCanvasRef = useRef<HTMLCanvasElement>(null);
   const imgRef = useRef<HTMLImageElement | null>(null);
-  const dragRef = useRef<{ pointerId: number; startX: number; startY: number; crop: CropPosition } | null>(null);
+  const dragRef = useRef<{
+    pointerId: number;
+    startX: number;
+    startY: number;
+    selection: CropSelection;
+    mode: 'move' | 'resize';
+    handle?: 'top' | 'right' | 'bottom' | 'left';
+  } | null>(null);
   const { tier } = useSubscription();
   const maxSizeMB = tier === 'free' ? 5 : tier === 'starter' ? 10 : tier === 'ultra' ? 100 : tier === 'max' ? 500 : 5;
   const isOversized = selectedFile != null && selectedFile.size / (1024 * 1024) > maxSizeMB;
+  const cropMaxSize = imgRef.current ? Math.min(imgRef.current.width, imgRef.current.height) : 1;
+  const cropMinSize = Math.min(32, cropMaxSize);
 
   useEffect(() => {
-    if (image && imgRef.current && editorCanvasRef.current) drawEditor(editorCanvasRef.current, imgRef.current, cropPosition);
-  }, [image, cropPosition]);
+    if (image && imgRef.current && editorCanvasRef.current) drawEditor(editorCanvasRef.current, imgRef.current, cropSelection);
+  }, [image, cropSelection]);
 
   useEffect(() => {
-    if (image && imgRef.current && outputCanvasRef.current) setPreviewCanvas(renderCrop(outputCanvasRef.current, imgRef.current, bgType, outputSize, cropPosition));
-  }, [image, cropPosition, bgType, outputSize]);
+    if (image && imgRef.current && outputCanvasRef.current) setPreviewCanvas(renderCrop(outputCanvasRef.current, imgRef.current, bgType, outputSize, cropSelection));
+  }, [image, cropSelection, bgType, outputSize]);
 
   const applyLoadedImage = (img: HTMLImageElement, src: string) => {
     imgRef.current = img;
-    setCropPosition(centerCropPosition(img.width, img.height, Math.min(img.width, img.height)));
+    setCropSelection(centerCropSelection(img.width, img.height, Math.min(img.width, img.height)));
     setPreviewCanvas(null);
     setSampleError(false);
     setImage(src);
@@ -160,14 +183,24 @@ export default function CircleCropClient() {
     const x = (event.clientX - rect.left) * displayScale;
     const y = (event.clientY - rect.top) * displayScale;
     const imageScale = canvas.width / img.width;
-    const cropSize = Math.min(img.width, img.height) * imageScale;
-    const cropX = cropPosition.x * imageScale;
-    const cropY = cropPosition.y * imageScale;
-    const dx = x - cropX - cropSize / 2;
-    const dy = y - cropY - cropSize / 2;
-    if (dx * dx + dy * dy > (cropSize / 2) ** 2) return;
+    const cropSize = cropSelection.size * imageScale;
+    const cropX = cropSelection.x * imageScale;
+    const cropY = cropSelection.y * imageScale;
+    const centerX = cropX + cropSize / 2;
+    const centerY = cropY + cropSize / 2;
+    const dx = x - centerX;
+    const dy = y - centerY;
+    const handleRadius = Math.max(14, cropSize * .04);
+    const handles: Array<['top' | 'right' | 'bottom' | 'left', number, number]> = [
+      ['top', centerX, cropY],
+      ['right', cropX + cropSize, centerY],
+      ['bottom', centerX, cropY + cropSize],
+      ['left', cropX, centerY],
+    ];
+    const handle = handles.find(([, handleX, handleY]) => Math.hypot(x - handleX, y - handleY) <= handleRadius)?.[0];
+    if (!handle && dx * dx + dy * dy > (cropSize / 2) ** 2) return;
     event.currentTarget.setPointerCapture(event.pointerId);
-    dragRef.current = { pointerId: event.pointerId, startX: event.clientX, startY: event.clientY, crop: cropPosition };
+    dragRef.current = { pointerId: event.pointerId, startX: event.clientX, startY: event.clientY, selection: cropSelection, mode: handle ? 'resize' : 'move', handle };
   };
   const handleEditorPointerMove = (event: ReactPointerEvent<HTMLCanvasElement>) => {
     const img = imgRef.current;
@@ -176,8 +209,15 @@ export default function CircleCropClient() {
     if (!img || !canvas || !drag || drag.pointerId !== event.pointerId) return;
     const rect = canvas.getBoundingClientRect();
     const sourceScale = img.width / rect.width;
-    const cropSize = Math.min(img.width, img.height);
-    setCropPosition(clampCropPosition(img.width, img.height, cropSize, { x: drag.crop.x + (event.clientX - drag.startX) * sourceScale, y: drag.crop.y + (event.clientY - drag.startY) * sourceScale }));
+    const deltaX = (event.clientX - drag.startX) * sourceScale;
+    const deltaY = (event.clientY - drag.startY) * sourceScale;
+    if (drag.mode === 'resize' && drag.handle) {
+      const sizeDelta = drag.handle === 'top' || drag.handle === 'bottom' ? deltaY : deltaX;
+      const signedDelta = drag.handle === 'top' || drag.handle === 'left' ? -sizeDelta : sizeDelta;
+      setCropSelection(resizeCropSelection(img.width, img.height, drag.selection, drag.selection.size + signedDelta * 2));
+      return;
+    }
+    setCropSelection(clampCropSelection(img.width, img.height, { ...drag.selection, x: drag.selection.x + deltaX, y: drag.selection.y + deltaY }));
   };
   const finishEditorDrag = (event: ReactPointerEvent<HTMLCanvasElement>) => {
     if (dragRef.current?.pointerId !== event.pointerId) return;
@@ -188,7 +228,7 @@ export default function CircleCropClient() {
     const img = imgRef.current;
     if (!img || !previewCanvas) return;
     const canvas = document.createElement('canvas');
-    const dataUrl = renderCrop(canvas, img, bgType, outputSize, cropPosition);
+    const dataUrl = renderCrop(canvas, img, bgType, outputSize, cropSelection);
     const link = document.createElement('a');
     link.download = `circle-crop-${outputSize}.png`;
     link.href = dataUrl;
@@ -199,7 +239,7 @@ export default function CircleCropClient() {
     setSelectedFile(null);
     setBgType('transparent');
     setOutputSize(512);
-    setCropPosition({ x: 0, y: 0 });
+    setCropSelection({ x: 0, y: 0, size: 1 });
     setPreviewCanvas(null);
     setSampleError(false);
     imgRef.current = null;
@@ -230,10 +270,15 @@ export default function CircleCropClient() {
             <div>
               <p className="tb-v2-tool-label" style={{ marginBottom: 8 }}>Crop area</p>
               <div className="rounded-xl overflow-hidden" style={{ background: '#111827' }}>
-                <canvas ref={editorCanvasRef} className="block w-full h-auto" style={{ maxHeight: 480, objectFit: 'contain', touchAction: 'none', cursor: 'grab' }} onPointerDown={handleEditorPointerDown} onPointerMove={handleEditorPointerMove} onPointerUp={finishEditorDrag} onPointerCancel={finishEditorDrag} aria-label="Circular crop editor. Drag the circle to reposition the crop." />
+                <canvas ref={editorCanvasRef} className="block w-full h-auto" style={{ maxHeight: 480, objectFit: 'contain', touchAction: 'none', cursor: 'grab' }} onPointerDown={handleEditorPointerDown} onPointerMove={handleEditorPointerMove} onPointerUp={finishEditorDrag} onPointerCancel={finishEditorDrag} aria-label="Circular crop editor. Drag inside the circle to move it, or drag a handle to resize it." />
               </div>
-              <p className="text-xs text-gray-500" style={{ margin: '8px 0 0' }}>Drag the circle to reposition the crop.</p>
+              <p className="text-xs text-gray-500" style={{ margin: '8px 0 0' }}>Drag inside the circle to move it; drag the handles or use Crop size to resize.</p>
             </div>
+            <label className="flex items-center gap-3">
+              <span className="tb-v2-tool-label">Crop size</span>
+              <input type="range" min={cropMinSize} max={cropMaxSize} step={1} value={Math.round(cropSelection.size)} onChange={(e) => setCropSelection((selection) => resizeCropSelection(imgRef.current?.width ?? cropMaxSize, imgRef.current?.height ?? cropMaxSize, selection, Number(e.target.value)))} className="tb-v2-range flex-1" aria-label="Crop size in pixels" />
+              <output className="text-sm font-semibold tabular-nums">{Math.round(cropSelection.size)}px</output>
+            </label>
             <div>
               <p className="tb-v2-tool-label" style={{ marginBottom: 8 }}>Output preview</p>
               <div className="flex justify-center rounded-xl p-3" style={{ backgroundImage: 'repeating-conic-gradient(#e5e7eb 0% 25%, #f9fafb 0% 50%)', backgroundSize: '16px 16px' }}>
