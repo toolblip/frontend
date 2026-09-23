@@ -14,10 +14,14 @@ export default function ImageCompressorClient() {
   const [format, setFormat] = useState<OutputFormat>('jpeg');
   const [isCompressing, setIsCompressing] = useState(false);
   const [result, setResult] = useState<string | null>(null);
+  const [sourceFile, setSourceFile] = useState<File | null>(null);
+  const [resultNote, setResultNote] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [originalDimensions, setOriginalDimensions] = useState({ width: 0, height: 0 });
   const [fileName, setFileName] = useState('');
   const [isDragging, setIsDragging] = useState(false);
-  const [resultFormat, setResultFormat] = useState<OutputFormat>('jpeg');
+  const [resultFormat, setResultFormat] = useState('');
+  const [resultFileName, setResultFileName] = useState('');
   const loadId = useRef(0);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -25,22 +29,41 @@ export default function ImageCompressorClient() {
   const loadFile = (file: File) => {
     if (file.type && !file.type.startsWith('image/')) return;
     const id = ++loadId.current;
+    setSourceFile(file);
     setFileName(file.name);
     setOriginalSize(file.size);
+    setImage(null);
+    setOriginalDimensions({ width: 0, height: 0 });
+    setResult(null);
+    setCompressedSize(0);
+    setResultFormat('');
+    setResultFileName('');
+    setResultNote(null);
+    setError(null);
+    setIsDragging(false);
     setIsCompressing(false);
-    const reader = new FileReader();
-    reader.onload = (event) => {
+    const fail = () => {
       if (id !== loadId.current) return;
-      const src = event.target?.result as string;
-      setImage(src);
-      setResult(null);
-      setCompressedSize(0);
+      setError('This image could not be read. Please try another file.');
+    };
+    const reader = new FileReader();
+    reader.onerror = fail;
+    reader.onabort = fail;
+    reader.onload = () => {
+      if (id !== loadId.current) return;
+      const src = reader.result;
+      if (typeof src !== 'string') { fail(); return; }
 
       const img = new Image();
-      img.onload = () => { if (id === loadId.current) setOriginalDimensions({ width: img.width, height: img.height }); };
+      img.onload = () => {
+        if (id !== loadId.current) return;
+        setImage(src);
+        setOriginalDimensions({ width: img.width, height: img.height });
+      };
+      img.onerror = fail;
       img.src = src;
     };
-    reader.readAsDataURL(file);
+    try { reader.readAsDataURL(file); } catch { fail(); }
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -51,11 +74,15 @@ export default function ImageCompressorClient() {
 
   const loadExample = async () => {
     const id = loadId.current;
-    const response = await fetch('/samples/tool-sample.png');
-    if (!response.ok) return;
-    const blob = await response.blob();
-    if (id !== loadId.current) return;
-    loadFile(new File([blob], 'tool-sample.png', { type: blob.type || 'image/png' }));
+    try {
+      const response = await fetch('/samples/tool-sample.png');
+      if (!response.ok) throw new Error('Sample image unavailable');
+      const blob = await response.blob();
+      if (id !== loadId.current) return;
+      loadFile(new File([blob], 'tool-sample.png', { type: blob.type || 'image/png' }));
+    } catch {
+      if (id === loadId.current) setError('The sample image could not be loaded. Please try again.');
+    }
   };
 
   const clear = () => {
@@ -68,39 +95,72 @@ export default function ImageCompressorClient() {
     setCompressedSize(0);
     setOriginalDimensions({ width: 0, height: 0 });
     setResult(null);
+    setSourceFile(null);
+    setResultNote(null);
+    setResultFormat('');
+    setResultFileName('');
+    setError(null);
     setQuality(80);
     setFormat('jpeg');
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
   const compressImage = () => {
-    if (!image || !canvasRef.current) return;
+    if (!image || !sourceFile || !canvasRef.current || isCompressing) return;
 
     setIsCompressing(true);
+    setError(null);
+    setResult(null);
+    setResultNote(null);
+    setCompressedSize(0);
+    setResultFormat('');
+    setResultFileName('');
 
     const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) { setIsCompressing(false); return; }
     const id = loadId.current;
+    const fail = () => {
+      if (id !== loadId.current) return;
+      setError('This image could not be compressed. Please try again or choose another image.');
+      setIsCompressing(false);
+    };
 
     const img = new Image();
+    img.onerror = fail;
     img.onload = () => {
       if (id !== loadId.current) return;
-      canvas.width = img.width;
-      canvas.height = img.height;
-      ctx.drawImage(img, 0, 0);
+      try {
+        const ctx = canvas.getContext('2d');
+        if (!ctx) { fail(); return; }
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.drawImage(img, 0, 0);
 
-      const mimeType = `image/${format}`;
-      const compressed = canvas.toDataURL(mimeType, quality / 100);
-      
-      // Calculate approximate compressed size from base64
-      const base64Length = compressed.split(',')[1]?.length || 0;
-      const sizeInBytes = Math.ceil(base64Length * 0.75);
-      
-      setResultFormat(format);
-      setResult(compressed);
-      setCompressedSize(sizeInBytes);
-      setIsCompressing(false);
+        canvas.toBlob((blob) => {
+          if (id !== loadId.current) return;
+          if (!blob) { fail(); return; }
+
+          const keepOriginal = blob.size >= sourceFile.size;
+          const output = keepOriginal ? sourceFile : blob;
+          const outputFormat = output.type.split('/')[1]?.split('+')[0]
+            || (keepOriginal ? sourceFile.name.split('.').pop() : '');
+          if (!outputFormat) { fail(); return; }
+
+          const reader = new FileReader();
+          reader.onerror = fail;
+          reader.onabort = fail;
+          reader.onload = () => {
+            if (id !== loadId.current) return;
+            if (typeof reader.result !== 'string') { fail(); return; }
+            setResult(reader.result);
+            setCompressedSize(output.size);
+            setResultFormat(outputFormat);
+            setResultFileName(keepOriginal ? sourceFile.name : `compressed.${outputFormat}`);
+            setResultNote(keepOriginal ? 'No smaller export was available with these settings. The original was kept unchanged.' : null);
+            setIsCompressing(false);
+          };
+          try { reader.readAsDataURL(output); } catch { fail(); }
+        }, `image/${format}`, format === 'png' ? undefined : quality / 100);
+      } catch { fail(); }
     };
     img.src = image;
   };
@@ -108,7 +168,7 @@ export default function ImageCompressorClient() {
   const handleDownload = () => {
     if (!result) return;
     const link = document.createElement('a');
-    link.download = `compressed.${resultFormat}`;
+    link.download = resultFileName;
     link.href = result;
     link.click();
   };
@@ -129,7 +189,7 @@ export default function ImageCompressorClient() {
     <div className="tb-image-tool">
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Image</span>
-        <ToolExampleClearActions onExample={loadExample} onClear={clear} canClear={!!image} />
+        <ToolExampleClearActions onExample={loadExample} onClear={clear} canClear={!!sourceFile || !!error} />
       </div>
       <div className="tb-image-tool-body">
         <input ref={fileInputRef} type="file" accept="image/*" onChange={handleImageUpload} hidden aria-label="Select image to compress" />
@@ -148,6 +208,7 @@ export default function ImageCompressorClient() {
             <span className="tb-v2-dropzone-hint">{image ? `${formatBytes(originalSize)} · Click or drop to replace` : 'PNG, JPEG, WebP, GIF and other browser-supported images'}</span>
           </span>
         </button>
+        {error && <p className="tb-image-hint" role="alert">{error}</p>}
         {image && (
           <>
             <div className="tb-v2-card tb-image-settings">
@@ -200,8 +261,9 @@ export default function ImageCompressorClient() {
             {result && (
               <div className="tb-v2-card tb-image-result" aria-live="polite">
                 <div>
-                  <strong>{compressionRatio > 0 ? `${compressionRatio}% smaller` : compressionRatio < 0 ? `${Math.abs(compressionRatio)}% larger` : 'Same file size'}</strong>
-                  <p className="tb-image-hint">{formatBytes(originalSize)} original → {formatBytes(compressedSize)} compressed</p>
+                  <strong>{resultNote ? 'Original kept · no size reduction' : compressionRatio > 0 ? `${compressionRatio}% smaller` : 'Less than 1% smaller'}</strong>
+                  <p className="tb-image-hint">{formatBytes(originalSize)} original → {formatBytes(compressedSize)} {resultNote ? 'unchanged' : 'compressed'}</p>
+                  {resultNote && <p className="tb-image-hint">{resultNote}</p>}
                 </div>
                 <button type="button" onClick={handleDownload} className="tb-v2-btn tb-v2-btn-primary">Download {resultFormat.toUpperCase()}</button>
               </div>
