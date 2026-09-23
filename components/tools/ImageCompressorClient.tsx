@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 type OutputFormat = 'jpeg' | 'png' | 'webp';
 
@@ -16,25 +17,44 @@ export default function ImageCompressorClient() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const loadFile = (file: File) => {
+    setOriginalSize(file.size);
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const src = event.target?.result as string;
+      setImage(src);
+      setResult(null);
+      setCompressedSize(0);
+
+      const img = new Image();
+      img.onload = () => setOriginalDimensions({ width: img.width, height: img.height });
+      img.src = src;
+    };
+    reader.readAsDataURL(file);
+  };
+
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      setOriginalSize(file.size);
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        setImage(event.target?.result as string);
-        setResult(null);
-        setCompressedSize(0);
-        
-        // Get dimensions
-        const img = new Image();
-        img.onload = () => {
-          setOriginalDimensions({ width: img.width, height: img.height });
-        };
-        img.src = event.target?.result as string;
-      };
-      reader.readAsDataURL(file);
-    }
+    if (file) loadFile(file);
+    e.target.value = '';
+  };
+
+  const loadExample = async () => {
+    const response = await fetch('/samples/tool-sample.png');
+    if (!response.ok) return;
+    const blob = await response.blob();
+    loadFile(new File([blob], 'tool-sample.png', { type: blob.type || 'image/png' }));
+  };
+
+  const clear = () => {
+    setImage(null);
+    setOriginalSize(0);
+    setCompressedSize(0);
+    setOriginalDimensions({ width: 0, height: 0 });
+    setResult(null);
+    setQuality(80);
+    setFormat('jpeg');
+    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
   const compressImage = () => {
@@ -88,6 +108,10 @@ export default function ImageCompressorClient() {
 
   return (
     <div className="tb-v2-flex tb-v2-flex-col tb-v2-gap-4 tb-v2-p-4">
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Image</span>
+        <ToolExampleClearActions onExample={loadExample} onClear={clear} canClear={!!image} />
+      </div>
       <h2 className="tb-v2-text-2xl tb-v2-font-bold">Image Compressor</h2>
       <p className="tb-v2-text-sm tb-v2-text-gray-500">Compress images with quality and format options</p>
 

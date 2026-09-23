@@ -3,6 +3,7 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { useSubscription } from '@/hooks/useSubscription';
 import { FileSizeError, UpgradeNotice } from '@/components/FileSizeGuard';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 type OutputFormat = 'image/jpeg' | 'image/png' | 'image/webp' | 'image/avif';
 
@@ -196,8 +197,19 @@ export default function ImageFormatConverterClient() {
     setError(null);
   }, [sourceObjectUrl]);
 
+  const loadExample = useCallback(async () => {
+    const response = await fetch('/samples/tool-sample.png');
+    if (!response.ok) return;
+    const blob = await response.blob();
+    handleFile(new File([blob], 'tool-sample.png', { type: blob.type || 'image/png' }));
+  }, [handleFile]);
+
   return (
     <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Image</span>
+        <ToolExampleClearActions onExample={loadExample} onClear={reset} canClear={!!sourceFile} />
+      </div>
       {/* Drop zone */}
       <div
         role="button"

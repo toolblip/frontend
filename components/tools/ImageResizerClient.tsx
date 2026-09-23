@@ -3,6 +3,7 @@
 import { useState, useRef } from 'react';
 import { useSubscription } from '@/hooks/useSubscription';
 import { FileSizeError, UpgradeNotice } from '@/components/FileSizeGuard';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 export default function ImageResizerClient() {
   const [file, setFile] = useState<File | null>(null);
@@ -11,14 +12,13 @@ export default function ImageResizerClient() {
   const [height, setHeight] = useState(600);
   const [maintain, setMaintain] = useState(true);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const { tier } = useSubscription();
   const maxSizeMB = tier === 'free' ? 5 : tier === 'starter' ? 10 : tier === 'ultra' ? 100 : tier === 'max' ? 500 : 5;
 
   const isOversized = file != null && file.size / (1024 * 1024) > maxSizeMB;
 
-  const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const f = e.target.files?.[0];
-    if (!f) return;
+  const loadFile = (f: File) => {
     setFile(f);
     const url = URL.createObjectURL(f);
     setPreview(url);
@@ -28,6 +28,28 @@ export default function ImageResizerClient() {
       setHeight(img.naturalHeight);
     };
     img.src = url;
+  };
+
+  const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const f = e.target.files?.[0];
+    if (f) loadFile(f);
+    e.target.value = '';
+  };
+
+  const loadExample = async () => {
+    const response = await fetch('/samples/tool-sample.png');
+    if (!response.ok) return;
+    const blob = await response.blob();
+    loadFile(new File([blob], 'tool-sample.png', { type: blob.type || 'image/png' }));
+  };
+
+  const clear = () => {
+    setFile(null);
+    setPreview('');
+    setWidth(800);
+    setHeight(600);
+    setMaintain(true);
+    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
   const resize = () => {
@@ -49,10 +71,15 @@ export default function ImageResizerClient() {
 
   return (
     <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Image</span>
+        <ToolExampleClearActions onExample={loadExample} onClear={clear} canClear={!!file} />
+      </div>
       <div>
         <label className="tb-v2-tool-label">Select image</label>
         <input
           type="file"
+          ref={fileInputRef}
           accept="image/*"
           onChange={handleFile}
           className="w-full text-sm text-gray-500 dark:text-gray-400 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-red-600 file:text-white file:text-sm file:font-medium hover:file:bg-red-700 cursor-pointer"

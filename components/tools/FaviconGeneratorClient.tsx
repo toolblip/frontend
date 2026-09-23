@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 export default function FaviconGeneratorClient() {
   const [emoji, setEmoji] = useState('🔧');
@@ -10,11 +11,13 @@ export default function FaviconGeneratorClient() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [downloadReady, setDownloadReady] = useState(false);
   const [hasGenerated, setHasGenerated] = useState(false);
+  const [cleared, setCleared] = useState(false);
 
   // Generate on mount and whenever parameters change
   useEffect(() => {
+    if (cleared) return;
     generate();
-  }, [emoji, fg, bg, size]);
+  }, [emoji, fg, bg, size, cleared]);
 
   const generate = () => {
     const canvas = canvasRef.current;
@@ -41,7 +44,7 @@ export default function FaviconGeneratorClient() {
     setHasGenerated(true);
   };
 
-  const download = (format: 'png' | 'ico' | 'svg') => {
+  const download = async (format: 'png' | 'ico' | 'svg') => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -53,9 +56,33 @@ export default function FaviconGeneratorClient() {
       a.href = url; a.download = `favicon.svg`; a.click();
       URL.revokeObjectURL(url);
     } else if (format === 'ico') {
-      const ico = canvas.toDataURL('image/png');
+      const icoSize = Math.min(size, 256);
+      const icoCanvas = document.createElement('canvas');
+      icoCanvas.width = icoSize;
+      icoCanvas.height = icoSize;
+      icoCanvas.getContext('2d')?.drawImage(canvas, 0, 0, icoSize, icoSize);
+      const png = await new Promise<Blob | null>((resolve) => icoCanvas.toBlob(resolve, 'image/png'));
+      if (!png) return;
+      const imageData = await png.arrayBuffer();
+      const icoData = new ArrayBuffer(22 + imageData.byteLength);
+      const view = new DataView(icoData);
+      view.setUint16(0, 0, true);
+      view.setUint16(2, 1, true);
+      view.setUint16(4, 1, true);
+      view.setUint8(6, icoSize === 256 ? 0 : icoSize);
+      view.setUint8(7, icoSize === 256 ? 0 : icoSize);
+      view.setUint8(8, 0);
+      view.setUint8(9, 0);
+      view.setUint16(10, 1, true);
+      view.setUint16(12, 32, true);
+      view.setUint32(14, imageData.byteLength, true);
+      view.setUint32(18, 22, true);
+      new Uint8Array(icoData, 22).set(new Uint8Array(imageData));
+      const ico = new Blob([icoData], { type: 'image/vnd.microsoft.icon' });
+      const url = URL.createObjectURL(ico);
       const a = document.createElement('a');
-      a.href = ico; a.download = `favicon.ico`; a.click();
+      a.href = url; a.download = `favicon.ico`; a.click();
+      URL.revokeObjectURL(url);
     } else {
       const url = canvas.toDataURL('image/png');
       const a = document.createElement('a');
@@ -63,15 +90,39 @@ export default function FaviconGeneratorClient() {
     }
   };
 
+  const clear = () => {
+    setEmoji('');
+    setFg('#ffffff');
+    setBg('#DC2626');
+    setSize(32);
+    setDownloadReady(false);
+    setHasGenerated(false);
+    setCleared(true);
+    const ctx = canvasRef.current?.getContext('2d');
+    if (ctx && canvasRef.current) ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+  };
+
+  const loadExample = () => {
+    setCleared(false);
+    setEmoji('🔧');
+    setFg('#ffffff');
+    setBg('#DC2626');
+    setSize(64);
+  };
+
   return (
     <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Favicon settings</span>
+        <ToolExampleClearActions onExample={loadExample} onClear={clear} canClear={!cleared} />
+      </div>
       <div className="tb-v2-grid-2">
         <div>
           <label className="tb-v2-tool-label">Emoji</label>
           <input
             type="text"
             value={emoji}
-            onChange={(e) => setEmoji(e.target.value)}
+            onChange={(e) => { setCleared(false); setEmoji(e.target.value); }}
             className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-red-500 text-2xl"
             maxLength={2}
           />
@@ -81,7 +132,7 @@ export default function FaviconGeneratorClient() {
           <input
             type="number"
             value={size}
-            onChange={(e) => setSize(Number(e.target.value))}
+            onChange={(e) => { setCleared(false); setSize(Number(e.target.value)); }}
             min={16} max={512}
             className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-red-500"
           />
@@ -91,7 +142,7 @@ export default function FaviconGeneratorClient() {
           <input
             type="color"
             value={bg}
-            onChange={(e) => setBg(e.target.value)}
+            onChange={(e) => { setCleared(false); setBg(e.target.value); }}
             className="w-full h-10 rounded cursor-pointer"
           />
         </div>
@@ -100,7 +151,7 @@ export default function FaviconGeneratorClient() {
           <input
             type="color"
             value={fg}
-            onChange={(e) => setFg(e.target.value)}
+            onChange={(e) => { setCleared(false); setFg(e.target.value); }}
             className="w-full h-10 rounded cursor-pointer"
           />
         </div>
