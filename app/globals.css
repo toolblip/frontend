@@ -5054,3 +5054,45 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
   .tb-pdf-watermark-preview-viewport { min-height: 260px; padding: 12px; }
   .tb-pdf-watermark-preview-head { align-items: flex-start; flex-direction: column; gap: 4px; }
 }
+
+/* Image resize/compress and QR tool workspaces. Keep these rules local to the tools. */
+.tb-image-tool-body { display: flex; flex-direction: column; gap: 20px; padding: 20px; min-width: 0; }
+.tb-image-upload { width: 100%; font-family: inherit; }
+.tb-image-upload-copy { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+.tb-image-upload-copy .tb-v2-dropzone-text { overflow-wrap: anywhere; }
+.tb-image-upload-compact { flex-direction: row; justify-content: flex-start; text-align: left; padding: 14px 16px; gap: 12px; border-style: solid; }
+.tb-image-upload-compact > svg { flex-shrink: 0; color: var(--fg-2); }
+.tb-image-tool .tb-v2-card { border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); padding: 16px; min-width: 0; }
+.tb-image-workspace, .tb-image-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+.tb-image-workspace { align-items: start; }
+.tb-image-settings, .tb-image-field, .tb-image-preview-card { display: flex; flex-direction: column; gap: 14px; }
+.tb-image-field { gap: 8px; min-width: 0; font-size: 13px; font-weight: 500; color: var(--fg-1); }
+.tb-image-preview-card { margin: 0; }
+.tb-image-card-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.tb-image-preview { display: flex; align-items: center; justify-content: center; height: 240px; padding: 12px; border-radius: 8px; background: var(--surface-2); overflow: hidden; text-align: center; }
+.tb-image-preview img { display: block; max-width: 100%; max-height: 100%; object-fit: contain; }
+.tb-image-hint { margin: 0; color: var(--fg-2); font-size: 12.5px; font-weight: 400; line-height: 1.5; }
+.tb-image-quality { width: 100%; min-height: 28px; accent-color: var(--red); cursor: pointer; }
+.tb-image-actions, .tb-image-result { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.tb-image-result strong { display: block; margin-bottom: 4px; font-size: 15px; color: var(--fg-0); }
+.tb-image-tool .tb-v2-btn, .tb-qr-tool .tb-v2-btn { justify-content: center; text-decoration: none; }
+.tb-image-tool button:disabled, .tb-qr-tool button:disabled { opacity: .5; cursor: not-allowed; }
+.tb-image-tool :is(button, a, input):focus-visible, .tb-qr-tool :is(button, input, select):focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
+.tb-qr-tool { gap: 0; }
+.tb-qr-input-section { display: flex; flex-direction: column; gap: 16px; }
+.tb-qr-generate { align-self: flex-start; }
+.tb-qr-tool .tb-v2-qr-controls { justify-content: space-between; gap: 16px; padding-top: 20px; border-top: 1px solid var(--line); }
+.tb-qr-tool .tb-v2-qr-label { color: var(--fg-2); }
+.tb-qr-tool .tb-v2-qr-sizes { flex-wrap: wrap; }
+.tb-qr-tool .tb-v2-qr-sizes .tb-v2-mode-tab { min-width: 36px; padding: 7px 10px; }
+.tb-qr-output { border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface-2); padding: 16px; }
+.tb-qr-tool .tb-v2-qr-preview { padding: 20px 0 4px; }
+.tb-qr-tool .tb-v2-qr-img { max-width: min(100%, 320px); background: #fff; border-radius: 6px; }
+.tb-qr-tool .tb-v2-qr-placeholder { min-height: 220px; }
+@media (max-width: 600px) {
+  .tb-image-tool-body { padding: 16px; gap: 16px; }
+  .tb-image-workspace, .tb-image-fields { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+  .tb-image-preview { height: 220px; }
+  .tb-image-actions, .tb-image-result { align-items: stretch; flex-direction: column; }
+  .tb-image-actions .tb-v2-btn, .tb-image-result .tb-v2-btn, .tb-qr-generate { width: 100%; }
+}

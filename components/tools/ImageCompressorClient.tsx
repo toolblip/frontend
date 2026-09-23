@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef } from 'react';
+import { Upload, FileImage } from 'lucide-react';
 import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 type OutputFormat = 'jpeg' | 'png' | 'webp';
@@ -14,20 +15,29 @@ export default function ImageCompressorClient() {
   const [isCompressing, setIsCompressing] = useState(false);
   const [result, setResult] = useState<string | null>(null);
   const [originalDimensions, setOriginalDimensions] = useState({ width: 0, height: 0 });
+  const [fileName, setFileName] = useState('');
+  const [isDragging, setIsDragging] = useState(false);
+  const [resultFormat, setResultFormat] = useState<OutputFormat>('jpeg');
+  const loadId = useRef(0);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const loadFile = (file: File) => {
+    if (file.type && !file.type.startsWith('image/')) return;
+    const id = ++loadId.current;
+    setFileName(file.name);
     setOriginalSize(file.size);
+    setIsCompressing(false);
     const reader = new FileReader();
     reader.onload = (event) => {
+      if (id !== loadId.current) return;
       const src = event.target?.result as string;
       setImage(src);
       setResult(null);
       setCompressedSize(0);
 
       const img = new Image();
-      img.onload = () => setOriginalDimensions({ width: img.width, height: img.height });
+      img.onload = () => { if (id === loadId.current) setOriginalDimensions({ width: img.width, height: img.height }); };
       img.src = src;
     };
     reader.readAsDataURL(file);
@@ -40,13 +50,19 @@ export default function ImageCompressorClient() {
   };
 
   const loadExample = async () => {
+    const id = loadId.current;
     const response = await fetch('/samples/tool-sample.png');
     if (!response.ok) return;
     const blob = await response.blob();
+    if (id !== loadId.current) return;
     loadFile(new File([blob], 'tool-sample.png', { type: blob.type || 'image/png' }));
   };
 
   const clear = () => {
+    loadId.current++;
+    setFileName('');
+    setIsDragging(false);
+    setIsCompressing(false);
     setImage(null);
     setOriginalSize(0);
     setCompressedSize(0);
@@ -64,10 +80,12 @@ export default function ImageCompressorClient() {
 
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+    if (!ctx) { setIsCompressing(false); return; }
+    const id = loadId.current;
 
     const img = new Image();
     img.onload = () => {
+      if (id !== loadId.current) return;
       canvas.width = img.width;
       canvas.height = img.height;
       ctx.drawImage(img, 0, 0);
@@ -79,6 +97,7 @@ export default function ImageCompressorClient() {
       const base64Length = compressed.split(',')[1]?.length || 0;
       const sizeInBytes = Math.ceil(base64Length * 0.75);
       
+      setResultFormat(format);
       setResult(compressed);
       setCompressedSize(sizeInBytes);
       setIsCompressing(false);
@@ -89,7 +108,7 @@ export default function ImageCompressorClient() {
   const handleDownload = () => {
     if (!result) return;
     const link = document.createElement('a');
-    link.download = `compressed.${format}`;
+    link.download = `compressed.${resultFormat}`;
     link.href = result;
     link.click();
   };
@@ -107,120 +126,90 @@ export default function ImageCompressorClient() {
     : 0;
 
   return (
-    <div className="tb-v2-flex tb-v2-flex-col tb-v2-gap-4 tb-v2-p-4">
+    <div className="tb-image-tool">
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Image</span>
         <ToolExampleClearActions onExample={loadExample} onClear={clear} canClear={!!image} />
       </div>
-      <h2 className="tb-v2-text-2xl tb-v2-font-bold">Image Compressor</h2>
-      <p className="tb-v2-text-sm tb-v2-text-gray-500">Compress images with quality and format options</p>
-
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="image/*"
-        onChange={handleImageUpload}
-        className="tb-v2-file-input"
-      />
-
-      {image && (
-        <div className="tb-v2-flex tb-v2-flex-col tb-v2-gap-4">
-          <div className="tb-v2-grid tb-v2-grid-cols-2 tb-v2-gap-4">
-            <div>
-              <p className="tb-v2-text-sm tb-v2-text-gray-500">Original</p>
-              <img src={image} alt="Original" className="tb-v2-max-w-full tb-v2-max-h-[200px] tb-v2-object-contain tb-v2-rounded" />
-              <div className="tb-v2-text-sm tb-v2-mt-1">
-                <p>{formatBytes(originalSize)}</p>
-                <p className="tb-v2-text-gray-400">{originalDimensions.width} × {originalDimensions.height}</p>
-              </div>
-            </div>
-            {result && (
-              <div>
-                <p className="tb-v2-text-sm tb-v2-text-gray-500">Compressed</p>
-                <img src={result} alt="Compressed" className="tb-v2-max-w-full tb-v2-max-h-[200px] tb-v2-object-contain tb-v2-rounded" />
-                <div className="tb-v2-text-sm tb-v2-mt-1">
-                  <p>{formatBytes(compressedSize)}</p>
+      <div className="tb-image-tool-body">
+        <input ref={fileInputRef} type="file" accept="image/*" onChange={handleImageUpload} hidden aria-label="Select image to compress" />
+        <button
+          type="button"
+          className={`tb-v2-dropzone tb-image-upload ${image ? 'tb-image-upload-compact' : ''} ${isDragging ? 'dragging' : ''}`}
+          onClick={() => fileInputRef.current?.click()}
+          onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+          onDragLeave={() => setIsDragging(false)}
+          onDrop={(e) => { e.preventDefault(); setIsDragging(false); const dropped = e.dataTransfer.files[0]; if (dropped) loadFile(dropped); }}
+          aria-label={image ? 'Replace image. Click or drop an image' : 'Choose image or drag and drop'}
+        >
+          {image ? <FileImage size={22} aria-hidden="true" /> : <Upload size={28} aria-hidden="true" />}
+          <span className="tb-image-upload-copy">
+            <span className="tb-v2-dropzone-text">{image ? fileName : 'Click to upload or drag an image here'}</span>
+            <span className="tb-v2-dropzone-hint">{image ? `${formatBytes(originalSize)} · Click or drop to replace` : 'PNG, JPEG, WebP, GIF and other browser-supported images'}</span>
+          </span>
+        </button>
+        {image && (
+          <>
+            <div className="tb-v2-card tb-image-settings">
+              <div className="tb-image-fields">
+                <div className="tb-image-field">
+                  <span className="tb-v2-tool-label">Output format</span>
+                  <div className="tb-v2-mode-tabs" role="group" aria-label="Output format">
+                    {(['jpeg', 'png', 'webp'] as OutputFormat[]).map((option) => (
+                      <button key={option} type="button" onClick={() => setFormat(option)} aria-pressed={format === option} className={`tb-v2-mode-tab ${format === option ? 'on' : ''}`}>
+                        {option === 'webp' ? 'WebP' : option.toUpperCase()}
+                      </button>
+                    ))}
+                  </div>
+                  <p className="tb-image-hint">
+                    {format === 'jpeg' && 'Good for photos. Adjustable quality and smaller files.'}
+                    {format === 'png' && 'Lossless graphics. Quality does not affect PNG output.'}
+                    {format === 'webp' && 'Compact images with adjustable quality.'}
+                  </p>
+                </div>
+                <div className="tb-image-field">
+                  <label className="tb-image-card-head" htmlFor="compress-quality"><span className="tb-v2-tool-label">Quality</span><span className="tb-v2-range-val">{quality}%</span></label>
+                  <input id="compress-quality" type="range" min="1" max="100" value={quality} onChange={(e) => setQuality(Number(e.target.value))} className="tb-image-quality" />
+                  <p className="tb-image-hint">Lower quality makes smaller JPEG and WebP files.</p>
                 </div>
               </div>
+              <div className="tb-image-actions">
+                <button type="button" onClick={compressImage} disabled={isCompressing} className="tb-v2-btn tb-v2-btn-primary">{isCompressing ? 'Compressing…' : 'Compress Image'}</button>
+              </div>
+            </div>
+            <div className="tb-image-workspace">
+              <figure className="tb-v2-card tb-image-preview-card">
+                <figcaption className="tb-image-card-head"><span className="tb-v2-tool-label">Original</span><span className="tb-image-hint">{formatBytes(originalSize)}</span></figcaption>
+                <div className="tb-image-preview">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={image} alt="Original image" />
+                </div>
+                <p className="tb-image-hint">{originalDimensions.width} × {originalDimensions.height} px</p>
+              </figure>
+              <figure className="tb-v2-card tb-image-preview-card">
+                <figcaption className="tb-image-card-head"><span className="tb-v2-tool-label">Compressed</span>{result && <span className="tb-image-hint">{formatBytes(compressedSize)} · {resultFormat.toUpperCase()}</span>}</figcaption>
+                <div className="tb-image-preview">
+                  {result ? (
+                    /* eslint-disable-next-line @next/next/no-img-element */
+                    <img src={result} alt="Compressed image" />
+                  ) : <p className="tb-image-hint">Choose your settings and compress to preview the result.</p>}
+                </div>
+                <p className="tb-image-hint">{result ? `${originalDimensions.width} × ${originalDimensions.height} px` : 'Your compressed image will appear here.'}</p>
+              </figure>
+            </div>
+            {result && (
+              <div className="tb-v2-card tb-image-result" aria-live="polite">
+                <div>
+                  <strong>{compressionRatio > 0 ? `${compressionRatio}% smaller` : compressionRatio < 0 ? `${Math.abs(compressionRatio)}% larger` : 'Same file size'}</strong>
+                  <p className="tb-image-hint">{formatBytes(originalSize)} original → {formatBytes(compressedSize)} compressed</p>
+                </div>
+                <button type="button" onClick={handleDownload} className="tb-v2-btn tb-v2-btn-primary">Download {resultFormat.toUpperCase()}</button>
+              </div>
             )}
-          </div>
-
-          <div className="tb-v2-card">
-            <h3 className="tb-v2-text-sm tb-v2-font-semibold tb-v2-mb-2">Output Format</h3>
-            <div className="tb-v2-flex tb-v2-gap-2">
-              <button
-                onClick={() => setFormat('jpeg')}
-                className={`tb-v2-btn ${format === 'jpeg' ? 'tb-v2-btn-primary' : 'tb-v2-btn-secondary'}`}
-              >
-                JPEG
-              </button>
-              <button
-                onClick={() => setFormat('png')}
-                className={`tb-v2-btn ${format === 'png' ? 'tb-v2-btn-primary' : 'tb-v2-btn-secondary'}`}
-              >
-                PNG
-              </button>
-              <button
-                onClick={() => setFormat('webp')}
-                className={`tb-v2-btn ${format === 'webp' ? 'tb-v2-btn-primary' : 'tb-v2-btn-secondary'}`}
-              >
-                WebP
-              </button>
-            </div>
-            <p className="tb-v2-text-xs tb-v2-text-gray-500 tb-v2-mt-2">
-              {format === 'jpeg' && 'Good for photos. Lossy compression with adjustable quality.'}
-              {format === 'png' && 'Good for graphics. Lossless but larger file sizes.'}
-              {format === 'webp' && 'Modern format. Best compression with quality control.'}
-            </p>
-          </div>
-
-          <div className="tb-v2-flex tb-v2-flex-col tb-v2-gap-2">
-            <div className="tb-v2-flex tb-v2-justify-between tb-v2-items-center">
-              <label className="tb-v2-text-sm tb-v2-font-medium">Quality</label>
-              <span className="tb-v2-text-sm tb-v2-font-medium">{quality}%</span>
-            </div>
-            <input
-              type="range"
-              min="1"
-              max="100"
-              value={quality}
-              onChange={(e) => setQuality(Number(e.target.value))}
-              className="tb-v2-range"
-            />
-            <p className="tb-v2-text-xs tb-v2-text-gray-500">
-              Lower quality = smaller file size. 80% is usually a good balance.
-            </p>
-          </div>
-
-          <button
-            onClick={compressImage}
-            disabled={isCompressing}
-            className="tb-v2-btn tb-v2-btn-primary tb-v2-disabled:opacity-50"
-          >
-            {isCompressing ? 'Compressing...' : 'Compress Image'}
-          </button>
-        </div>
-      )}
-
-      <canvas ref={canvasRef} className="hidden" />
-
-      {result && (
-        <div className="tb-v2-flex tb-v2-flex-col tb-v2-gap-2 tb-v2-card tb-v2-bg-green-50">
-          <div className="tb-v2-flex tb-v2-justify-between tb-v2-items-center">
-            <p className="tb-v2-text-sm tb-v2-font-medium">Compression Result</p>
-            <span className={`tb-v2-text-lg tb-v2-font-bold ${compressionRatio > 0 ? 'tb-v2-text-green-600' : 'tb-v2-text-red-600'}`}>
-              {compressionRatio > 0 ? `-${compressionRatio}%` : `+${Math.abs(compressionRatio)}%`}
-            </span>
-          </div>
-          <div className="tb-v2-grid tb-v2-grid-cols-2 tb-v2-gap-2 tb-v2-text-sm">
-            <div>Original: <span className="tb-v2-font-medium">{formatBytes(originalSize)}</span></div>
-            <div>Compressed: <span className="tb-v2-font-medium">{formatBytes(compressedSize)}</span></div>
-          </div>
-          <button onClick={handleDownload} className="tb-v2-btn tb-v2-btn-secondary">
-            Download {format.toUpperCase()}
-          </button>
-        </div>
-      )}
+          </>
+        )}
+      </div>
+      <canvas ref={canvasRef} hidden />
     </div>
   );
 }
