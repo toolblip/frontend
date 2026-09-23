@@ -117,14 +117,13 @@ export default function QrCodeGeneratorClient() {
   }
 
   return (
-    <div className="tb-v2-qr-root">
-      {/* Input row */}
-      <div className="tb-v2-qr-input-row">
-        <div className="tb-v2-qr-input-wrap">
+    <div className="tb-v2-qr-root tb-qr-tool">
           <div className="tb-v2-tool-input-head">
             <span className="tb-v2-tool-label">QR code content</span>
             <ToolExampleClearActions onExample={loadExample} onClear={clear} canClear={!!text || !!ssid || !!contactName || !!contactPhone || !!contactEmail || !!imageUrl} />
           </div>
+      <div className="tb-image-tool-body">
+        <div className="tb-qr-input-section">
           <div className="tb-v2-mode-tabs" role="group" aria-label="QR code content type">
             {(['url', 'text', 'wifi', 'vcard'] as ContentType[]).map((type) => (
               <button
@@ -132,25 +131,25 @@ export default function QrCodeGeneratorClient() {
                 type="button"
                 aria-pressed={contentType === type}
                 onClick={() => { setContentType(type); if (error) setError(''); }}
-                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${contentType === type ? 'bg-red-600 text-black' : 'bg-gray-800 border border-gray-700 text-gray-400 hover:text-white'}`}
+                className={`tb-v2-mode-tab ${contentType === type ? 'on' : ''}`}
               >
                 {type === 'vcard' ? 'Contact' : type === 'wifi' ? 'Wi-Fi' : type.toUpperCase()}
               </button>
             ))}
           </div>
           {contentType === 'wifi' ? (
-            <div className="tb-v2-grid-2">
-              <input className="tb-v2-qr-input" value={ssid} onChange={(e) => setSsid(e.target.value)} placeholder="Network name (SSID)" aria-label="Wi-Fi network name" />
-              <input className="tb-v2-qr-input" type="password" value={wifiPassword} onChange={(e) => setWifiPassword(e.target.value)} placeholder="Password" aria-label="Wi-Fi password" disabled={wifiSecurity === 'nopass'} />
-              <select className="tb-v2-qr-input" value={wifiSecurity} onChange={(e) => setWifiSecurity(e.target.value as typeof wifiSecurity)} aria-label="Wi-Fi security">
+            <div className="tb-image-fields">
+              <input className="tb-v2-input" value={ssid} onChange={(e) => setSsid(e.target.value)} placeholder="Network name (SSID)" aria-label="Wi-Fi network name" />
+              <input className="tb-v2-input" type="password" value={wifiPassword} onChange={(e) => setWifiPassword(e.target.value)} placeholder="Password" aria-label="Wi-Fi password" disabled={wifiSecurity === 'nopass'} />
+              <select className="tb-v2-input" value={wifiSecurity} onChange={(e) => setWifiSecurity(e.target.value as typeof wifiSecurity)} aria-label="Wi-Fi security">
                 <option value="WPA">WPA/WPA2</option><option value="WEP">WEP</option><option value="nopass">Open network</option>
               </select>
             </div>
           ) : contentType === 'vcard' ? (
-            <div className="tb-v2-grid-2">
-              <input className="tb-v2-qr-input" value={contactName} onChange={(e) => setContactName(e.target.value)} placeholder="Full name" aria-label="Contact name" />
-              <input className="tb-v2-qr-input" value={contactPhone} onChange={(e) => setContactPhone(e.target.value)} placeholder="Phone (optional)" aria-label="Contact phone" />
-              <input className="tb-v2-qr-input" type="email" value={contactEmail} onChange={(e) => setContactEmail(e.target.value)} placeholder="Email (optional)" aria-label="Contact email" />
+            <div className="tb-image-fields">
+              <input className="tb-v2-input" value={contactName} onChange={(e) => setContactName(e.target.value)} placeholder="Full name" aria-label="Contact name" />
+              <input className="tb-v2-input" value={contactPhone} onChange={(e) => setContactPhone(e.target.value)} placeholder="Phone (optional)" aria-label="Contact phone" />
+              <input className="tb-v2-input" type="email" value={contactEmail} onChange={(e) => setContactEmail(e.target.value)} placeholder="Email (optional)" aria-label="Contact email" />
             </div>
           ) : (
             <input
@@ -159,17 +158,16 @@ export default function QrCodeGeneratorClient() {
               onChange={e => { setText(e.target.value); if (error) setError(''); }}
               onKeyDown={e => e.key === 'Enter' && generate()}
               placeholder={contentType === 'url' ? 'Enter a URL' : 'Enter text to encode'}
-              className={`tb-v2-qr-input ${error ? 'tb-v2-qr-input--err' : ''}`}
+              className={`tb-v2-input ${error ? 'tb-v2-qr-input--err' : ''}`}
               aria-label="QR code content"
             />
           )}
           {error && <p className="tb-v2-qr-error" role="alert">{error}</p>}
-        </div>
-        <button type="button" className="tb-v2-qr-gen-btn" onClick={() => void generate()}>
+        <button type="button" className="tb-v2-btn tb-v2-btn-primary tb-qr-generate" disabled={loading} onClick={() => void generate()}>
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <polygon points="5 3 19 12 5 21 5 3" />
           </svg>
-          Generate
+          {loading ? 'Generating…' : 'Generate'}
         </button>
       </div>
 
@@ -182,7 +180,7 @@ export default function QrCodeGeneratorClient() {
               <button
                 key={s.value}
                 type="button"
-                className={`tb-v2-qr-size-btn ${size === s.value ? 'on' : ''}`}
+                className={`tb-v2-mode-tab ${size === s.value ? 'on' : ''}`}
                 onClick={() => { setSize(s.value); if (text.trim()) void generate(text, s.value); }}
                 aria-pressed={size === s.value}
               >
@@ -196,7 +194,7 @@ export default function QrCodeGeneratorClient() {
           <div className="tb-v2-qr-dl-group">
             <span className="tb-v2-qr-label">Download</span>
             <div className="tb-v2-qr-dl-btns">
-              <button type="button" className="tb-v2-qr-dl-btn" onClick={download}>
+              <button type="button" className="tb-v2-btn tb-v2-btn-sm" onClick={download}>
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                   <polyline points="7 10 12 15 17 10" />
@@ -204,7 +202,7 @@ export default function QrCodeGeneratorClient() {
                 </svg>
                 PNG
               </button>
-              <button type="button" className="tb-v2-qr-dl-btn" onClick={downloadSvg}>
+              <button type="button" className="tb-v2-btn tb-v2-btn-sm" onClick={downloadSvg}>
                 SVG
               </button>
             </div>
@@ -212,7 +210,8 @@ export default function QrCodeGeneratorClient() {
         )}
       </div>
 
-      {/* Preview */}
+      <div className="tb-qr-output" aria-live="polite">
+      <span className="tb-v2-tool-label">QR preview</span>
       {loading ? (
         <div className="tb-v2-qr-placeholder">
           <div className="tb-v2-qr-spinner" aria-hidden="true" />
@@ -229,9 +228,11 @@ export default function QrCodeGeneratorClient() {
             <rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" />
             <rect x="14" y="14" width="7" height="7" /><rect x="3" y="14" width="7" height="7" />
           </svg>
-          <p>Enter text and click Generate</p>
+          <p>Choose a content type, enter the details, and click Generate.</p>
         </div>
       )}
+      </div>
+      </div>
     </div>
   );
 }
