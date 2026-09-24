@@ -6,20 +6,6 @@ export default function Hero({ toolCount }: { toolCount: number }) {
   return (
     <section className="tb-v2-hero">
       <div className="tb-v2-container">
-        <div className="tb-v2-hero-badge">
-          <a href="https://launchigniter.com/product/toolblip?ref=badge-toolblip" target="_blank" rel="noopener noreferrer">
-            <img src="https://launchigniter.com/api/badge/toolblip?theme=light" alt="Featured on LaunchIgniter" width="212" height="55" />
-          </a>
-          <a href="https://earlyhunt.com/project/toolblip" target="_blank" rel="noopener noreferrer">
-            <img src="https://earlyhunt.com/badges/earlyhunt-badge-light.svg" alt="Featured on EarlyHunt" width="265" height="58" />
-          </a>
-          <a href="https://indiehunt.io/project/toolblip" target="_blank" rel="noopener noreferrer">
-            <img src="https://indiehunt.io/badges/indiehunt-badge-light.svg" alt="Featured on IndieHunt" width="265" height="58" />
-          </a>
-          <a href="https://fazier.com/launches/toolblip.com" target="_blank" rel="noopener noreferrer">
-            <img src="https://fazier.com/api/v1//public/badges/launch_badges.svg?badge_type=launched&theme=light" width="120" alt="Fazier badge" />
-          </a>
-        </div>
         <div className="tb-v2-hero-grid">
           <div>
             <div className="tb-v2-kicker">{toolCount} tools · 100% free · runs in your browser</div>
