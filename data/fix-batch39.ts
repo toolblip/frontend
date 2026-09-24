@@ -14,7 +14,7 @@ export interface FixBatchEntry {
 
 const FIX_BATCH_39: Record<string, FixBatchEntry> = {
   'favicon-generator': {
-    description: `This favicon generator starts with a typed emoji or up to two characters, not an uploaded image. Choose one size from 16 to 512px, pick foreground and background colors, then download the result as PNG, ICO, or SVG. It creates one selected size at a time rather than an automatic icon set. ICO output is limited to 256px; create other PNG or SVG sizes individually when you need them.`,
+    description: `This favicon generator creates one selected icon size from an emoji, short text, or an uploaded logo file. Choose a whole-pixel size from 16 to 512px, tune padding and background transparency, then download PNG, ICO, or SVG. Uploaded logos are contained inside the square without stretching; ICO output is capped at 256px, and logo SVG export embeds the rendered bitmap so the download matches the preview.`,
     examples: [
       {
         title: 'Create a text favicon for a prototype',
@@ -22,9 +22,9 @@ const FIX_BATCH_39: Record<string, FixBatchEntry> = {
         note: 'Exports one selected size instead of a full platform icon set.',
       },
       {
-        title: 'Make an emoji favicon without uploading artwork',
-        code: `Input: emoji: 🚀, size: 128px\nOutput: PNG, ICO, and SVG downloads`,
-        note: 'Uses typed input only; ICO output is limited to 256px even if a larger PNG/SVG size is selected.',
+        title: 'Make a favicon from an uploaded logo',
+        code: `Input: logo.svg, size: 128px, padding: 18%\nOutput: PNG, ICO, and bitmap-in-SVG downloads`,
+        note: 'The logo is fit inside the square without being stretched.',
       },
     ],
   },
