@@ -6,8 +6,19 @@ import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions'
 
 type OutputFormat = 'jpeg' | 'png' | 'webp';
 type DimensionValidation = { valid: true; error: '' } | { valid: false; error: string };
+type SizeAwareCompressorEncodeResult = {
+  blob: Blob | null;
+  actualQuality: number | null;
+  qualityAutoReduced: boolean;
+  couldMakeSmaller: boolean;
+  fellBackMimeType: boolean;
+  failed: boolean;
+  cancelled: boolean;
+};
 
 const DEFAULT_QUALITY = 80;
+const MIN_QUALITY = 10;
+const QUALITY_RETRY_STEP = 10;
 const MAX_CANVAS_SIDE = 8192;
 const MAX_CANVAS_PIXELS = 40_000_000;
 const SAMPLE_URL = '/samples/image-resizer-mountain.jpg';
@@ -115,6 +126,87 @@ export function getImageCompressorResultSummary(keptOriginal: boolean, compressi
   };
 }
 
+function isQualityEncodedMimeType(mimeType: string) {
+  const normalized = mimeType.toLowerCase();
+  return normalized === 'image/jpeg' || normalized === 'image/webp';
+}
+
+function getCompressorQualityCandidates(maxQuality: number) {
+  const clampedMax = Math.min(100, Math.max(MIN_QUALITY, Math.round(maxQuality)));
+  const candidates: number[] = [];
+  for (let nextQuality = clampedMax; nextQuality > MIN_QUALITY; nextQuality -= QUALITY_RETRY_STEP) {
+    candidates.push(nextQuality);
+  }
+  if (candidates[candidates.length - 1] !== MIN_QUALITY) candidates.push(MIN_QUALITY);
+  return candidates;
+}
+
+export async function encodeImageCompressorBlobWithSizeAwareness({
+  originalBytes,
+  requestedMimeType,
+  maxQuality,
+  encode,
+  isCancelled,
+}: {
+  originalBytes: number;
+  requestedMimeType: string;
+  maxQuality: number;
+  encode: (mimeType: string, quality?: number) => Promise<Blob | null>;
+  isCancelled: () => boolean;
+}): Promise<SizeAwareCompressorEncodeResult> {
+  const qualityApplies = isQualityEncodedMimeType(requestedMimeType);
+  const maxCandidateQuality = Math.min(100, Math.max(MIN_QUALITY, Math.round(maxQuality)));
+  const candidates = qualityApplies ? getCompressorQualityCandidates(maxCandidateQuality) : [null];
+  let best: { blob: Blob; quality: number | null; fellBackMimeType: boolean } | null = null;
+
+  for (const candidateQuality of candidates) {
+    if (isCancelled()) {
+      return { blob: null, actualQuality: null, qualityAutoReduced: false, couldMakeSmaller: false, fellBackMimeType: false, failed: false, cancelled: true };
+    }
+
+    let blob: Blob | null;
+    try {
+      blob = await encode(requestedMimeType, candidateQuality == null ? undefined : candidateQuality / 100);
+    } catch {
+      return { blob: null, actualQuality: null, qualityAutoReduced: false, couldMakeSmaller: false, fellBackMimeType: false, failed: true, cancelled: false };
+    }
+
+    if (isCancelled()) {
+      return { blob: null, actualQuality: null, qualityAutoReduced: false, couldMakeSmaller: false, fellBackMimeType: false, failed: false, cancelled: true };
+    }
+
+    if (!blob) {
+      return { blob: null, actualQuality: null, qualityAutoReduced: false, couldMakeSmaller: false, fellBackMimeType: false, failed: true, cancelled: false };
+    }
+
+    const actualMimeType = (blob.type || requestedMimeType).toLowerCase();
+    const fellBackMimeType = actualMimeType !== requestedMimeType.toLowerCase();
+    const recordedQuality = qualityApplies && !fellBackMimeType ? candidateQuality : null;
+
+    if (!best || blob.size < best.blob.size) {
+      best = { blob, quality: recordedQuality, fellBackMimeType };
+    }
+
+    if (fellBackMimeType || blob.size < originalBytes || !qualityApplies) {
+      break;
+    }
+  }
+
+  if (!best) {
+    return { blob: null, actualQuality: null, qualityAutoReduced: false, couldMakeSmaller: false, fellBackMimeType: false, failed: true, cancelled: false };
+  }
+
+  return {
+    blob: best.blob,
+    actualQuality: best.quality,
+    qualityAutoReduced: best.quality != null && best.quality < maxCandidateQuality,
+    couldMakeSmaller: best.blob.size < originalBytes,
+    fellBackMimeType: best.fellBackMimeType,
+    failed: false,
+    cancelled: false,
+  };
+}
+
 export default function ImageCompressorClient() {
   const [image, setImage] = useState<string | null>(null);
   const [originalSize, setOriginalSize] = useState<number>(0);
@@ -128,6 +220,8 @@ export default function ImageCompressorClient() {
   const [sourceFile, setSourceFile] = useState<File | null>(null);
   const [resultNote, setResultNote] = useState<string | null>(null);
   const [resultKeptOriginal, setResultKeptOriginal] = useState(false);
+  const [resultActualQuality, setResultActualQuality] = useState<number | null>(null);
+  const [resultQualityAutoReduced, setResultQualityAutoReduced] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [originalDimensions, setOriginalDimensions] = useState({ width: 0, height: 0 });
   const [fileName, setFileName] = useState('');
@@ -153,6 +247,8 @@ export default function ImageCompressorClient() {
     setResultFileName('');
     setResultNote(null);
     setResultKeptOriginal(false);
+    setResultActualQuality(null);
+    setResultQualityAutoReduced(false);
   };
 
   const resetWorkspace = () => {
@@ -262,6 +358,8 @@ export default function ImageCompressorClient() {
     setSourceFile(null);
     setResultNote(null);
     setResultKeptOriginal(false);
+    setResultActualQuality(null);
+    setResultQualityAutoReduced(false);
     setResultFormat('');
     setResultFileName('');
     setQuality(DEFAULT_QUALITY);
@@ -278,6 +376,8 @@ export default function ImageCompressorClient() {
     setResult(null);
     setResultNote(null);
     setResultKeptOriginal(false);
+    setResultActualQuality(null);
+    setResultQualityAutoReduced(false);
     setCompressedSize(0);
     setResultFormat('');
     setResultFileName('');
@@ -291,7 +391,7 @@ export default function ImageCompressorClient() {
 
     const img = new Image();
     img.onerror = fail;
-    img.onload = () => {
+    img.onload = async () => {
       if (id !== encodeId.current) return;
       try {
         const validation = validateCompressorDimensions(img.naturalWidth, img.naturalHeight);
@@ -312,34 +412,61 @@ export default function ImageCompressorClient() {
         }
         ctx.drawImage(img, 0, 0);
         const plan = getImageCompressorPlan(format, sourceFile.name);
+        const isEncodeCancelled = () => id !== encodeId.current;
+        const encodeCanvasBlob = (mimeType: string, encodeQuality?: number) => new Promise<Blob | null>((resolve, reject) => {
+          if (isEncodeCancelled()) {
+            resolve(null);
+            return;
+          }
+          try {
+            canvas.toBlob((blob) => {
+              if (isEncodeCancelled()) {
+                resolve(null);
+                return;
+              }
+              resolve(blob);
+            }, mimeType, encodeQuality);
+          } catch (toBlobError) {
+            reject(toBlobError);
+          }
+        });
 
-        canvas.toBlob((blob) => {
+        const encoded = await encodeImageCompressorBlobWithSizeAwareness({
+          originalBytes: sourceFile.size,
+          requestedMimeType: plan.requestedMimeType,
+          maxQuality: quality,
+          encode: encodeCanvasBlob,
+          isCancelled: isEncodeCancelled,
+        });
+
+        if (encoded.cancelled) return;
+        if (id !== encodeId.current) return;
+        if (encoded.failed || !encoded.blob) { fail(); return; }
+        const policy = getImageCompressorOutputPolicy({
+          original: sourceFile,
+          encoded: encoded.blob,
+          originalName: sourceFile.name,
+          compressedName: plan.filename,
+          requestedMimeType: plan.requestedMimeType,
+        });
+
+        const reader = new FileReader();
+        reader.onerror = fail;
+        reader.onabort = fail;
+        reader.onload = () => {
           if (id !== encodeId.current) return;
-          if (!blob) { fail(); return; }
-          const policy = getImageCompressorOutputPolicy({
-            original: sourceFile,
-            encoded: blob,
-            originalName: sourceFile.name,
-            compressedName: plan.filename,
-            requestedMimeType: plan.requestedMimeType,
-          });
-
-          const reader = new FileReader();
-          reader.onerror = fail;
-          reader.onabort = fail;
-          reader.onload = () => {
-            if (id !== encodeId.current) return;
-            if (typeof reader.result !== 'string') { fail(); return; }
-            setResult(reader.result);
-            setCompressedSize(policy.blob.size);
-            setResultFormat(policy.formatLabel);
-            setResultFileName(policy.fileName);
-            setResultNote(policy.note);
-            setResultKeptOriginal(policy.keptOriginal);
-            setIsCompressing(false);
-          };
-          try { reader.readAsDataURL(policy.blob); } catch { fail(); }
-        }, plan.requestedMimeType, plan.qualityApplies ? quality / 100 : undefined);
+          if (typeof reader.result !== 'string') { fail(); return; }
+          setResult(reader.result);
+          setCompressedSize(policy.blob.size);
+          setResultFormat(policy.formatLabel);
+          setResultFileName(policy.fileName);
+          setResultNote(policy.note);
+          setResultKeptOriginal(policy.keptOriginal);
+          setResultActualQuality(policy.keptOriginal ? null : encoded.actualQuality);
+          setResultQualityAutoReduced(!policy.keptOriginal && encoded.qualityAutoReduced);
+          setIsCompressing(false);
+        };
+        try { reader.readAsDataURL(policy.blob); } catch { fail(); }
       } catch { fail(); }
     };
     img.src = image;
@@ -414,9 +541,9 @@ export default function ImageCompressorClient() {
                   </p>
                 </div>
                 <div className="tb-image-field">
-                  <label className="tb-image-card-head" htmlFor="compress-quality"><span className="tb-v2-tool-label">Quality</span><span className="tb-v2-range-val">{qualityApplies ? `${quality}%` : 'PNG lossless'}</span></label>
-                  <input id="compress-quality" type="range" min="1" max="100" value={quality} onChange={(e) => { setQuality(Number(e.target.value)); invalidateResult(); }} disabled={!qualityApplies} className="tb-image-quality" />
-                  <p className="tb-image-hint">{qualityApplies ? 'Quality controls visual fidelity, not the final percent reduction.' : 'PNG ignores quality settings; try JPEG or WebP for lossy compression.'}</p>
+                  <label className="tb-image-card-head" htmlFor="compress-quality"><span className="tb-v2-tool-label">Maximum quality</span><span className="tb-v2-range-val">{qualityApplies ? `${quality}%` : 'PNG lossless'}</span></label>
+                  <input id="compress-quality" type="range" min={MIN_QUALITY} max="100" value={quality} onChange={(e) => { setQuality(Number(e.target.value)); invalidateResult(); }} disabled={!qualityApplies} className="tb-image-quality" />
+                  <p className="tb-image-hint">{qualityApplies ? 'Quality is not percent size reduction. JPEG and WebP are retried at lower quality when needed; if none are smaller, the original is kept unchanged.' : 'PNG ignores quality settings; if the PNG export is not smaller, the original is kept unchanged.'}</p>
                 </div>
               </div>
               {format === 'jpeg' && <p className="tb-image-hint">Transparent pixels are composited on white because JPEG has no alpha channel.</p>}
@@ -449,6 +576,7 @@ export default function ImageCompressorClient() {
                 <div>
                   <strong>{resultSummary.title}</strong>
                   <p className="tb-image-hint">{formatBytes(originalSize)} original → {formatBytes(compressedSize)} {resultSummary.sizeWord}</p>
+                  {resultActualQuality != null && <p className="tb-image-hint">Encoding quality: {resultActualQuality}%{resultQualityAutoReduced ? ' · automatically reduced from selected maximum' : ''}</p>}
                   {resultNote && <p className="tb-image-hint">{resultNote}</p>}
                 </div>
                 <button type="button" onClick={handleDownload} className="tb-v2-btn tb-v2-btn-primary">Download {resultFormat.toUpperCase()}</button>

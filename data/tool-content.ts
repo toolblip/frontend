@@ -1871,12 +1871,12 @@ Output: chart-page4.png`,
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "image-compressor": {
-    description: `Compressing an image is a tradeoff, not a promise that quality stays the same. This tool lets you choose JPEG, PNG, or WebP, adjust JPEG and WebP quality settings, and compare the preview next to the original before downloading. Lower JPEG or WebP quality can save bytes by throwing away detail, while PNG stays lossless and may grow instead. If the encoded file is not smaller than the upload, the tool keeps the original file and labels it unchanged. It does not automatically detect artifacts; the preview is there so you can judge the result yourself.`,
+    description: `Compressing an image is a tradeoff, not a promise that quality stays the same or that a quality number equals percent savings. This tool lets you choose JPEG, PNG, or WebP, set a maximum quality for JPEG and WebP, and compare the preview next to the original before downloading. JPEG and WebP first try your selected maximum quality, then automatically retry lower quality levels only when the actual encoded file is not smaller. PNG stays lossless and does not use quality retries. If no export is smaller than the upload, the original file is kept unchanged with its original name and format.`,
     examples: [
       {
         title: "Shrink a landscape photo as JPEG",
-        code: `Input: landscape photo, 1280x853, 320915 bytes\nOutput: JPEG quality 80, 1280x853, 277483 bytes, 14% smaller`,
-        note: "Results vary by browser, so compare the preview before downloading.",
+        code: `Input: landscape photo, maximum quality 80\nOutput: JPEG at actual encoded quality, only if the result is smaller`,
+        note: "The tool reports actual bytes saved and any automatic quality reduction.",
       },
       {
         title: "Keep the original when PNG would grow",

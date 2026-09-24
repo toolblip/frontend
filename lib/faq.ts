@@ -1331,10 +1331,10 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'What does the Tolerance slider control?', a: 'It sets how close a pixel\'s color has to be to the detected or chosen background color to get made transparent, so raising it removes more color variation like shadows or gradients.' },
   ],
   'image-compressor': [
-    { q: 'Which output formats can I compress to?', a: 'JPEG, PNG, or WebP, chosen with a button group, with a short note under each explaining when it is the better choice, such as JPEG for photos or WebP for the best overall compression.' },
-    { q: 'How do I control the tradeoff between size and quality?', a: 'For JPEG and WebP, the quality slider controls visual fidelity, not a guaranteed percent savings. Lower values usually make smaller files but can add visible artifacts.' },
-    { q: 'Does PNG use the quality slider?', a: 'No. PNG is lossless here, so the quality slider is disabled and the output keeps PNG pixel data and transparency instead of applying lossy compression.' },
-    { q: 'What happens if the compressed file is not smaller?', a: 'The original file is kept unchanged with its actual format and filename, and the result card says there was no size reduction instead of claiming a converted output.' },
+    { q: 'Which output formats can I compress to?', a: 'JPEG, PNG, or WebP, chosen with a button group. JPEG and WebP use a maximum quality setting; PNG stays lossless.' },
+    { q: 'How do I control the tradeoff between size and quality?', a: 'For JPEG and WebP, the slider sets maximum visual quality, not a guaranteed percent savings. The tool checks actual output bytes and can automatically retry lower quality if the first encode is not smaller.' },
+    { q: 'Does PNG use the quality slider?', a: 'No. PNG is lossless here, so the quality slider is disabled and no quality retry is used. If the PNG export is not smaller, the original is kept unchanged.' },
+    { q: 'What happens if the compressed file is not smaller?', a: 'The original file is kept unchanged with its actual format, filename, and bytes, and the result card says there was no size reduction instead of claiming a converted output.' },
   ],
   'image-cropper': [
     { q: 'What preset ratios are available?', a: 'Square 1:1, 16:9, 4:3, 3:2, Portrait 2:3, and Passport 35mm, so you can crop directly to common social, video, or ID photo dimensions.' },
