@@ -260,11 +260,11 @@ Output: Hello World!`
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "base64-image-converter": {
-    description: `A tiny icon embedded directly into a CSS file as Base64 text skips an entire separate HTTP request a browser would otherwise have to make just to fetch a small image file, and an email's HTML body that can't reliably load external images at all needs that same image data embedded directly inline instead. This tool converts an image into a Base64 data URL or decodes one back into an actual image file, moving in either direction between the two. Useful for embedding a small icon directly into a CSS file as a data URL to avoid an extra network request, converting an image into Base64 to paste into an email's HTML body where external images might get blocked, or decoding a Base64 data URL found in a webpage's source back into a downloadable image file.`,
+    description: `Convert PNG, JPEG, GIF, WebP, or browser-decodable SVG images into full Base64 data URLs, or decode Base64 image data back into a downloadable file. The tool checks the actual file bytes instead of guessing every raw Base64 string is PNG, rejects non-image data with a visible error, and keeps the decoded/original bytes for download. Useful for embedding a small image in CSS or email HTML, checking the real format behind a raw Base64 blob, or recovering an image file from a data URL copied out of page source.`,
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["Raw image format detection", "Visible invalid-image errors", "Copy and download output", "Base64 size overhead shown"]
   },
   "base64-image-decoder": {
     description: `A base64 data URL pulled from an API response, a config file, or a browser's developer tools is just a long string of characters until it's actually turned back into a viewable image, and the real need at that point usually isn't encoding anything new, it's seeing what the string actually represents and getting a real file out of it. This tool decodes a base64 data URL back into an image file, ready to view, inspect, or download, built specifically for the decode direction rather than a bidirectional encode-and-decode tool. Useful for turning a base64 string copied from an API response into an actual downloadable image file, inspecting what a data URL embedded in a config file actually depicts before trusting it, or recovering a viewable image from base64 text found in an email or a document.`,
