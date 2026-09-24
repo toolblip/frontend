@@ -2008,7 +2008,7 @@ Output: chart-page4.png`,
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "image-to-base64": {
-    description: `Encoding a single local image into a Base64 string to paste into one specific place, a JSON config's icon field, an inline data attribute, doesn't call for a bidirectional tool built around switching between encoding and decoding, especially when the image never needs to leave the local machine at any point in the process. This tool converts any image into a Base64 data URL entirely in the browser, reading the file locally with no upload step involved, focused on the single encode direction rather than a two-way conversion tool. Useful for embedding a personal or an internal screenshot into code as a data URL without it ever touching a server, converting a local icon file into a Base64 string for a JSON config or an inline attribute, or generating a data URL from an image file that should stay entirely on the local machine throughout.`,
+    description: `This tool turns a local PNG, JPEG, GIF, WebP, or browser-decodable SVG into a full Base64 data URL in your browser, with image preview and exact byte details before you copy. Use the string in HTML, CSS, JSON, or another place that expects an inline image value. The Decode tab can also recover an image from a Base64 data URL or raw Base64 string. Image files stay in the browser, decoded images are limited to 10 MiB, and Base64 makes text about a third larger than the original bytes rather than compressing it.`,
     examples: [
 
     ],
