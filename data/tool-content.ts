@@ -1948,9 +1948,18 @@ Output: chart-page4.png`,
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "image-resizer": {
-    description: `Resizing an image is a different job than cropping one: cropping cuts away part of the picture, resizing scales the entire thing up or down while keeping everything in frame, which is what actually matters when a platform enforces an exact pixel size instead of just an aspect ratio. This tool resizes to standard dimensions used across social platforms, thumbnails, and Open Graph preview images, with an aspect ratio lock so shrinking a photo's width doesn't accidentally squash or stretch it out of proportion. Batch resizing handles a whole folder of images to the same target size in one pass instead of opening each file individually. Useful for prepping a batch of product photos to a marketplace's exact required dimensions, generating a correctly sized preview image for a blog post, or shrinking a phone photo before it's attached somewhere with its own upload limit.`,
+    description: `Resizing an image is different from cropping one: cropping cuts away part of the picture, while resizing scales the whole image to a new pixel width and height. This tool resizes one browser-supported image at a time, with an aspect ratio lock for proportional changes or unlocked fields for an exact custom size. Useful for shrinking a large photo before upload, making a single blog preview image fit a required dimension, or exporting one image as a PNG without sending it to a server.`,
     examples: [
-
+      {
+        title: 'Resize one image proportionally',
+        code: `Input: photo.jpg, width: 1200px, aspect ratio locked\nOutput: resized-1200x800.png`,
+        note: 'Keeps the full image in frame while recalculating the matching height.',
+      },
+      {
+        title: 'Export an exact custom size',
+        code: `Input: banner.png, target: 1200x630px, aspect ratio unlocked\nOutput: resized-1200x630.png`,
+        note: 'Uses the typed whole-pixel dimensions in the downloaded PNG filename.',
+      },
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
