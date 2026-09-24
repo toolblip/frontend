@@ -1281,11 +1281,20 @@ Output: chart-page4.png`,
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "favicon-generator": {
-    description: `This favicon generator starts with a typed emoji or up to two characters, not an uploaded image. Choose one size from 16 to 512px, pick foreground and background colors, then download the result as PNG, ICO, or SVG. It creates one selected size at a time rather than an automatic icon set. ICO output is limited to 256px; create other PNG or SVG sizes individually when you need them.`,
+    description: `This favicon generator creates one selected icon size from an emoji, short text, or an uploaded logo file. Choose a whole-pixel size from 16 to 512px, tune padding and background transparency, then download PNG, ICO, or SVG. Uploaded logos are contained inside the square without stretching; ICO output is capped at 256px, and logo SVG export embeds the rendered bitmap so the download matches the preview.`,
     examples: [
-
+      {
+        title: 'Create a text favicon for a prototype',
+        code: `Input: text: TB, size: 64px, background: #DC2626\nOutput: favicon-64.png, favicon.ico, favicon.svg`,
+        note: 'Exports one selected size instead of a full platform icon set.',
+      },
+      {
+        title: 'Make a favicon from an uploaded logo',
+        code: `Input: logo.svg, size: 128px, padding: 18%\nOutput: PNG, ICO, and bitmap-in-SVG downloads`,
+        note: 'The logo is fit inside the square without being stretched.',
+      },
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["Emoji, text, and logo input modes", "PNG, ICO, and SVG downloads", "Transparent background option", "Runs in your browser"]
   },
   "favicon-grabber": {
     description: `Wanting to see how a competitor's or a reference site's favicon actually looks up close, needing to recover your own site's icon file after the original source got lost somewhere, or building something like a bookmarks app that needs to display each saved site's actual icon all come down to the same need, pulling a favicon directly off a live website rather than starting from scratch. This tool downloads the favicon from any website URL in ICO, PNG, and SVG formats, retrieving whatever version is actually available rather than requiring the original source file. Useful for grabbing a competitor's favicon for design comparison or inspiration, recovering your own site's icon after losing its original source file, or pulling a specific site's icon in SVG format for an app that displays saved sites with their actual icons.`,
