@@ -658,6 +658,11 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Can I resize without distorting the image?', a: 'Yes, a lock aspect ratio toggle recalculates the height automatically whenever you change the width (or vice versa), so the proportions stay correct unless you deliberately unlock it.' },
     { q: 'What file format does the resized image download as?', a: 'The output is exported as a PNG generated from the canvas, regardless of whether your source image was a JPEG, PNG, or another format.' },
   ],
+  'image-resizer': [
+    { q: 'Can I resize multiple images at once?', a: 'No. This tool resizes one image at a time. Use the Batch Image Resizer when you need to process several files together.' },
+    { q: 'Why does it require whole-pixel dimensions?', a: 'PNG canvases have integer pixel sizes, so the tool rejects fractional, zero, and non-finite dimensions before export instead of downloading a file whose name does not match its actual size.' },
+    { q: 'What size limits apply?', a: 'Output dimensions must be no more than 8192 pixels on either side and no more than 40 megapixels total. Those limits avoid huge browser canvas allocations that can fail or freeze the page.' },
+  ],
   'byte-converter': [
     { q: 'What units does it convert between?', a: 'Bytes, kilobytes, megabytes, gigabytes, terabytes, and petabytes, all shown at once from a single input value.' },
     { q: 'Does it use 1024 or 1000 as the conversion factor?', a: 'It uses the binary 1024-based factor between each unit (as used by operating systems reporting file and disk sizes), not the decimal 1000-based factor some storage manufacturers use.' },

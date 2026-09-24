@@ -94,17 +94,17 @@ const FIX_BATCH_71: Record<string, FixBatchEntry> = {
   },
 
   'image-resizer': {
-    description: `Resizing an entire folder of product photos to the same exact dimensions one image at a time is slow and prone to one photo quietly ending up a different size than the rest, which matters the moment a store listing or a thumbnail grid needs every image to actually match. This tool resizes images to standard dimensions for social media, thumbnails, and OG images, batch-resizing several at once with the aspect ratio locked so nothing ends up stretched, all without uploading a single file to a server. Useful for batch-resizing an entire folder of product photos to a consistent size for an online store listing, resizing a set of images for a thumbnail grid where every image needs to match exactly, or resizing several images locally in the browser without uploading anything anywhere.`,
+    description: `Resizing one image to an exact pixel size is a different job than cropping or running a batch job: the whole picture stays in frame while the browser scales it to the width and height you choose. This tool resizes a single browser-supported image with an aspect ratio lock for proportional changes, or unlocked fields for a deliberate exact size, all without uploading the file to a server. Useful for shrinking a large photo before upload, preparing one blog preview image at a required size, or exporting a one-off resized PNG with the dimensions reflected in the filename.`,
     examples: [
       {
-        title: 'Batch resize a folder of product photos',
-        code: `Input: [24 product photos], target size: 1000x1000, lock aspect ratio\nOutput: 24 photos resized consistently to 1000x1000`,
-        note: 'Resizes an entire batch to match instead of one at a time.',
+        title: 'Resize one photo proportionally',
+        code: `Input: photo.jpg, width: 1200px, lock aspect ratio\nOutput: resized-1200x800.png`,
+        note: 'Keeps the image proportional while changing its width.',
       },
       {
-        title: 'Resize locally without uploading',
-        code: `Input: banner.jpg, target size: 1200x630 (OG image)\nOutput: banner-resized.jpg`,
-        note: 'Processes the image entirely in the browser.',
+        title: 'Export an exact custom PNG',
+        code: `Input: banner.jpg, target size: 1200x630px, lock off\nOutput: resized-1200x630.png`,
+        note: 'Uses the actual output dimensions in the downloaded filename.',
       },
     ],
   },
