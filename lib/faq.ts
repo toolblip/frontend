@@ -204,6 +204,13 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'What size does it export?', a: 'It exports at 1200×630 by default, which is the standard Open Graph size and a solid choice for social sharing.' },
     { q: 'Can I download more than one version?', a: 'Yes. Update the inputs, generate again, and download as many variations as you need for testing or promotion.' },
   ],
+  'favicon-generator': [
+    { q: 'What can I use as the favicon input?', a: 'Type an emoji or up to two characters. This tool does not upload or trace an image file.' },
+    { q: 'What sizes and formats does it support?', a: 'You can choose one whole-pixel size from 16 to 512px and download PNG, ICO, or SVG. ICO export is capped at 256px.' },
+    { q: 'Does it generate a full favicon icon set automatically?', a: 'No. It creates one selected size at a time. If you need several sizes, change the size and download each one individually.' },
+    { q: 'Is anything uploaded while I generate the favicon?', a: 'No. The preview and downloads are rendered locally in your browser using canvas and SVG.' },
+    { q: 'What do Examples and Clear do?', a: 'Examples loads a sample emoji favicon setup. Clear resets the text, colors, preview, and downloads so you can start over.' },
+  ],
   'css-to-scss': [
     { q: 'What does the CSS to SCSS tool do?', a: 'It rewrites flat CSS into SCSS with nested selectors where that structure is obvious. That makes styles easier to read and edit.' },
     { q: 'Can it turn repeated selectors into nesting?', a: 'Yes. The tool groups descendant selectors into nested blocks so the output looks like hand-written SCSS.' },

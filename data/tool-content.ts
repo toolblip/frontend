@@ -1281,7 +1281,7 @@ Output: chart-page4.png`,
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "favicon-generator": {
-    description: `A favicon isn't one image, it's a set of them: 16x16 for a browser tab, 32x32 for a taskbar, a 180x180 Apple touch icon for an iPhone home screen, 192x192 and 512x512 for Android, each platform expecting its own size and sometimes its own format, which is why one logo file rarely covers every context correctly on its own. This tool generates the full set from a single source image, logo, or emoji, producing ICO, PNG, and SVG output at every size a modern site needs rather than one icon stretched or shrunk inconsistently across contexts it was never sized for. Useful for generating a complete, correctly-sized icon set from one logo instead of manually resizing it per platform, adding a home-screen icon for iOS and Android alongside the standard favicon, or fixing a site where the icon looks fine in a tab but blurry elsewhere.`,
+    description: `This favicon generator starts with a typed emoji or up to two characters, not an uploaded image. Choose one size from 16 to 512px, pick foreground and background colors, then download the result as PNG, ICO, or SVG. It creates one selected size at a time rather than an automatic icon set. ICO output is limited to 256px; create other PNG or SVG sizes individually when you need them.`,
     examples: [
 
     ],
