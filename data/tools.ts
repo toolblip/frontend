@@ -908,7 +908,7 @@ export const tools: Tool[] = [
   { name: 'Reading Time Calculator', slug: 'reading-time-calculator', description: 'Estimate how long it takes to read any text based on average reading speed.', emoji: '⏱️', category: 'Text' },
   { name: 'Syllable Counter', slug: 'syllable-counter', description: 'Count syllables in any word or phrase using heuristic vowel group detection.', emoji: '🔤', category: 'Text' },
   { name: 'URL Encoder', slug: 'url-encoder', description: 'Encode URLs and query parameters for safe transmission and proper formatting.', emoji: '🔗', category: 'Developer' },
-  { name: 'Image to Base64', slug: 'image-to-base64', description: 'Free online image to Base64 converter. Convert any image to a Base64 data URL for embedding in HTML, CSS, or JSON. No upload - runs in your browser.', emoji: '🖼️', category: 'Image' },
+  { name: 'Image to Base64', slug: 'image-to-base64', description: 'Encode PNG, JPEG, GIF, WebP, or browser-decodable SVG to a Base64 data URL, or decode Base64 back to an image. Local browser processing, 10 MiB decoded limit.', emoji: '🖼️', category: 'Image' },
   { name: 'Keyword Extractor', slug: 'keyword-extractor', description: 'Extract top keywords and key phrases from any text or webpage for SEO analysis.', emoji: '🔑', category: 'SEO' },
   { name: 'Length Converter', slug: 'length-converter', description: 'Convert length and distance between metric and imperial units - meters, feet, inches, and more.', emoji: '📏', category: 'Conversion' },
   { name: 'Weight Converter', slug: 'weight-converter', description: 'Convert weight between kilograms, pounds, ounces, grams, and stone instantly.', emoji: '⚖️', category: 'Conversion' },
