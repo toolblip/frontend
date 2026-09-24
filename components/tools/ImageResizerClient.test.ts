@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  encodeImageResizerBlobWithSizeAwareness,
   formatImageResizerBytes,
   getImageResizerExportPlan,
   getImageResizerSizeChange,
@@ -99,5 +100,154 @@ describe('getImageResizerSizeChange', () => {
       label: '-8,192 bytes (-72.7%)',
       grew: false,
     });
+  });
+});
+
+describe('encodeImageResizerBlobWithSizeAwareness', () => {
+  const blob = (size: number, type = 'image/jpeg') => new Blob([new Uint8Array(size)], { type });
+
+  it('retries JPEG/WebP below the selected maximum when the first result is not smaller', async () => {
+    const qualities: Array<number | undefined> = [];
+    const result = await encodeImageResizerBlobWithSizeAwareness({
+      originalBytes: 1_000,
+      requestedMimeType: 'image/jpeg',
+      maxQuality: 86,
+      encode: async (_mimeType, quality) => {
+        qualities.push(quality);
+        return quality === 0.86 ? blob(1_050) : blob(900);
+      },
+      isCancelled: () => false,
+    });
+
+    expect(qualities).toEqual([0.86, 0.76]);
+    expect(result).toMatchObject({
+      blob: expect.any(Blob),
+      actualQuality: 76,
+      qualityAutoReduced: true,
+      couldMakeSmaller: true,
+    });
+    expect(result.blob?.size).toBe(900);
+  });
+
+  it('keeps the lowest-byte candidate when no tested quality is strictly smaller', async () => {
+    const sizes: Record<number, number> = {
+      86: 1_060,
+      76: 1_030,
+      66: 1_080,
+      56: 1_020,
+      46: 1_040,
+      36: 1_025,
+      26: 1_050,
+      16: 1_070,
+      10: 1_035,
+    };
+
+    const result = await encodeImageResizerBlobWithSizeAwareness({
+      originalBytes: 1_000,
+      requestedMimeType: 'image/webp',
+      maxQuality: 86,
+      encode: async (_mimeType, quality) => blob(sizes[Math.round((quality ?? 0) * 100)] ?? 2_000, 'image/webp'),
+      isCancelled: () => false,
+    });
+
+    expect(result.blob?.size).toBe(1_020);
+    expect(result.actualQuality).toBe(56);
+    expect(result.qualityAutoReduced).toBe(true);
+    expect(result.couldMakeSmaller).toBe(false);
+  });
+
+  it('uses bounded ten-point retries down to the quality floor', async () => {
+    const qualities: Array<number | undefined> = [];
+
+    await encodeImageResizerBlobWithSizeAwareness({
+      originalBytes: 1_000,
+      requestedMimeType: 'image/jpeg',
+      maxQuality: 35,
+      encode: async (_mimeType, quality) => {
+        qualities.push(quality);
+        return blob(1_100);
+      },
+      isCancelled: () => false,
+    });
+
+    expect(qualities).toEqual([0.35, 0.25, 0.15, 0.1]);
+  });
+
+  it('does not retry PNG because the quality slider does not apply', async () => {
+    const qualities: Array<number | undefined> = [];
+
+    const result = await encodeImageResizerBlobWithSizeAwareness({
+      originalBytes: 1_000,
+      requestedMimeType: 'image/png',
+      maxQuality: 86,
+      encode: async (_mimeType, quality) => {
+        qualities.push(quality);
+        return blob(1_200, 'image/png');
+      },
+      isCancelled: () => false,
+    });
+
+    expect(qualities).toEqual([undefined]);
+    expect(result.actualQuality).toBeNull();
+    expect(result.qualityAutoReduced).toBe(false);
+    expect(result.couldMakeSmaller).toBe(false);
+  });
+
+  it('stops quality search when the browser falls back to another MIME type', async () => {
+    const qualities: Array<number | undefined> = [];
+
+    const result = await encodeImageResizerBlobWithSizeAwareness({
+      originalBytes: 1_000,
+      requestedMimeType: 'image/webp',
+      maxQuality: 86,
+      encode: async (_mimeType, quality) => {
+        qualities.push(quality);
+        return blob(1_200, 'image/png');
+      },
+      isCancelled: () => false,
+    });
+
+    expect(qualities).toEqual([0.86]);
+    expect(result.blob?.type).toBe('image/png');
+    expect(result.actualQuality).toBeNull();
+    expect(result.fellBackMimeType).toBe(true);
+  });
+
+  it('returns a failed result when encode returns null or rejects', async () => {
+    await expect(encodeImageResizerBlobWithSizeAwareness({
+      originalBytes: 1_000,
+      requestedMimeType: 'image/jpeg',
+      maxQuality: 86,
+      encode: async () => null,
+      isCancelled: () => false,
+    })).resolves.toMatchObject({ blob: null, failed: true });
+
+    await expect(encodeImageResizerBlobWithSizeAwareness({
+      originalBytes: 1_000,
+      requestedMimeType: 'image/jpeg',
+      maxQuality: 86,
+      encode: async () => {
+        throw new Error('encoder failed');
+      },
+      isCancelled: () => false,
+    })).resolves.toMatchObject({ blob: null, failed: true });
+  });
+
+  it('cancels before additional attempts and returns no result', async () => {
+    let attempts = 0;
+
+    const result = await encodeImageResizerBlobWithSizeAwareness({
+      originalBytes: 1_000,
+      requestedMimeType: 'image/jpeg',
+      maxQuality: 86,
+      encode: async () => {
+        attempts += 1;
+        return blob(1_100);
+      },
+      isCancelled: () => attempts > 0,
+    });
+
+    expect(attempts).toBe(1);
+    expect(result).toMatchObject({ blob: null, cancelled: true });
   });
 });
