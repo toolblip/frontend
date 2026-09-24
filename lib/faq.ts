@@ -1332,8 +1332,9 @@ const OVERRIDES: Record<string, FAQ[]> = {
   ],
   'image-compressor': [
     { q: 'Which output formats can I compress to?', a: 'JPEG, PNG, or WebP, chosen with a button group, with a short note under each explaining when it is the better choice, such as JPEG for photos or WebP for the best overall compression.' },
-    { q: 'How do I control the tradeoff between size and quality?', a: 'A quality slider from 1 to 100 percent controls the compression level, with the tool suggesting 80 percent as a good default balance.' },
-    { q: 'How can I tell how much smaller the result is?', a: 'The Original and Compressed panels show file size side by side, and a compression result card displays the percentage saved after you run Compress Image.' },
+    { q: 'How do I control the tradeoff between size and quality?', a: 'For JPEG and WebP, the quality slider controls visual fidelity, not a guaranteed percent savings. Lower values usually make smaller files but can add visible artifacts.' },
+    { q: 'Does PNG use the quality slider?', a: 'No. PNG is lossless here, so the quality slider is disabled and the output keeps PNG pixel data and transparency instead of applying lossy compression.' },
+    { q: 'What happens if the compressed file is not smaller?', a: 'The original file is kept unchanged with its actual format and filename, and the result card says there was no size reduction instead of claiming a converted output.' },
   ],
   'image-cropper': [
     { q: 'What preset ratios are available?', a: 'Square 1:1, 16:9, 4:3, 3:2, Portrait 2:3, and Passport 35mm, so you can crop directly to common social, video, or ID photo dimensions.' },

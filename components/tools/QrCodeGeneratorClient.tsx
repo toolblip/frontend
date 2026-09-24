@@ -1,10 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import QRCode from 'qrcode';
 import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 type ContentType = 'url' | 'text' | 'wifi' | 'vcard';
+type WifiSecurity = 'WPA' | 'WEP' | 'nopass';
 
 const SIZES = [
   { label: 'S', value: 128 },
@@ -12,6 +13,67 @@ const SIZES = [
   { label: 'L', value: 512 },
   { label: 'XL', value: 1024 },
 ];
+
+type QrPayloadInput = {
+  type: ContentType;
+  text: string;
+  ssid: string;
+  wifiPassword: string;
+  wifiSecurity: WifiSecurity;
+  contactName: string;
+  contactPhone: string;
+  contactEmail: string;
+};
+
+export function getQrRenderOptions(width: number) {
+  return { width, margin: 4 };
+}
+
+function escapeWifiPart(part: string) {
+  return part.replace(/([\\;,:"'])/g, '\\$1');
+}
+
+function escapeVCardText(part: string) {
+  return part
+    .replace(/\\/g, '\\\\')
+    .replace(/\r\n|\r|\n/g, '\\n')
+    .replace(/,/g, '\\,')
+    .replace(/;/g, '\\;');
+}
+
+function getVCardNameParts(name: string) {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length <= 1) return { given: parts[0] || '', family: '' };
+  return {
+    given: parts.slice(0, -1).join(' '),
+    family: parts[parts.length - 1],
+  };
+}
+
+export function buildQrPayload(input: QrPayloadInput) {
+  if (input.type === 'wifi') {
+    if (!input.ssid.trim()) return '';
+    const password = input.wifiSecurity === 'nopass' ? '' : `P:${escapeWifiPart(input.wifiPassword)};`;
+    return `WIFI:T:${input.wifiSecurity};S:${escapeWifiPart(input.ssid)};${password};`;
+  }
+
+  if (input.type === 'vcard') {
+    const name = input.contactName.trim();
+    if (!name) return '';
+    const { given, family } = getVCardNameParts(name);
+    return [
+      'BEGIN:VCARD',
+      'VERSION:3.0',
+      `FN:${escapeVCardText(name)}`,
+      `N:${escapeVCardText(family)};${escapeVCardText(given)};;;`,
+      input.contactPhone.trim() && `TEL:${escapeVCardText(input.contactPhone.trim())}`,
+      input.contactEmail.trim() && `EMAIL:${escapeVCardText(input.contactEmail.trim())}`,
+      'END:VCARD',
+    ].filter(Boolean).join('\r\n');
+  }
+
+  return input.text.trim();
+}
 
 export default function QrCodeGeneratorClient() {
   const [text, setText] = useState('https://toolblip.com');
@@ -27,29 +89,34 @@ export default function QrCodeGeneratorClient() {
   const [svgUrl, setSvgUrl] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const generationId = useRef(0);
 
-  function makePayload(value: string, type: ContentType) {
-    const escapeWifi = (part: string) => part.replace(/([\\;,:"'])/g, '\\$1');
-    if (type === 'wifi') {
-      if (!ssid.trim()) return '';
-      const password = wifiSecurity === 'nopass' ? '' : `P:${escapeWifi(wifiPassword)};`;
-      return `WIFI:T:${wifiSecurity};S:${escapeWifi(ssid)};${password};`;
-    }
-    if (type === 'vcard') {
-      const name = contactName.trim();
-      if (!name) return '';
-      return [
-        'BEGIN:VCARD', 'VERSION:3.0', `FN:${name}`, `N:${name}`,
-        contactPhone.trim() && `TEL:${contactPhone.trim()}`,
-        contactEmail.trim() && `EMAIL:${contactEmail.trim()}`,
-        'END:VCARD',
-      ].filter(Boolean).join('\n');
-    }
-    return value.trim();
+  function currentPayload(overrides: Partial<QrPayloadInput> = {}) {
+    return buildQrPayload({
+      type: contentType,
+      text,
+      ssid,
+      wifiPassword,
+      wifiSecurity,
+      contactName,
+      contactPhone,
+      contactEmail,
+      ...overrides,
+    });
   }
 
-  async function generate(value = text, outputSize = size, type = contentType) {
-    const payload = makePayload(value, type);
+  function invalidateResult(options: { clearError?: boolean } = {}) {
+    generationId.current++;
+    setImageUrl('');
+    setSvgUrl('');
+    setLoading(false);
+    if (options.clearError) setError('');
+  }
+
+  async function generate(overrides: Partial<QrPayloadInput> = {}, outputSize = size) {
+    const id = ++generationId.current;
+    const type = overrides.type ?? contentType;
+    const payload = currentPayload(overrides);
     if (!payload) {
       setError(type === 'wifi' ? 'Enter a Wi-Fi network name.' : type === 'vcard' ? 'Enter a contact name.' : 'Please enter a URL or text to encode.');
       setImageUrl('');
@@ -62,21 +129,25 @@ export default function QrCodeGeneratorClient() {
     setImageUrl('');
     setSvgUrl('');
     try {
+      const options = getQrRenderOptions(outputSize);
       const [png, svg] = await Promise.all([
-        QRCode.toDataURL(payload, { width: outputSize, margin: 2 }),
-        QRCode.toString(payload, { type: 'svg', width: outputSize, margin: 2 }),
+        QRCode.toDataURL(payload, options),
+        QRCode.toString(payload, { ...options, type: 'svg' }),
       ]);
+      if (id !== generationId.current) return;
       setImageUrl(png);
       setSvgUrl(`data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`);
     } catch {
+      if (id !== generationId.current) return;
       setError('Could not generate QR code. Please try again.');
     } finally {
-      setLoading(false);
+      if (id === generationId.current) setLoading(false);
     }
   }
 
   // Auto-generate on mount
   useEffect(() => { generate(); }, []);
+  useEffect(() => () => { generationId.current++; }, []);
 
   function download() {
     if (!imageUrl) return;
@@ -98,12 +169,14 @@ export default function QrCodeGeneratorClient() {
     const example = 'https://toolblip.com/tools/images';
     setContentType('url');
     setText(example);
-    void generate(example, size, 'url');
+    void generate({ type: 'url', text: example }, size);
   }
 
   function clear() {
+    generationId.current++;
     setContentType('url');
     setText('');
+    setSize(256);
     setSsid('');
     setWifiPassword('');
     setWifiSecurity('WPA');
@@ -116,11 +189,38 @@ export default function QrCodeGeneratorClient() {
     setLoading(false);
   }
 
+  function handleContentTypeChange(type: ContentType) {
+    setContentType(type);
+    invalidateResult({ clearError: true });
+  }
+
+  function handleFieldChange(setter: (value: string) => void, value: string) {
+    setter(value);
+    invalidateResult({ clearError: true });
+  }
+
+  function handleWifiSecurityChange(value: WifiSecurity) {
+    setWifiSecurity(value);
+    invalidateResult({ clearError: true });
+  }
+
+  function handleSizeChange(nextSize: number) {
+    setSize(nextSize);
+    const payload = currentPayload();
+    if (payload) {
+      void generate({}, nextSize);
+    } else {
+      invalidateResult({ clearError: false });
+    }
+  }
+
+  const canClear = !!text || !!ssid || !!wifiPassword || !!contactName || !!contactPhone || !!contactEmail || !!imageUrl || !!svgUrl || !!error || loading || size !== 256 || contentType !== 'url';
+
   return (
     <div className="tb-v2-qr-root tb-qr-tool">
           <div className="tb-v2-tool-input-head">
             <span className="tb-v2-tool-label">QR code content</span>
-            <ToolExampleClearActions onExample={loadExample} onClear={clear} canClear={!!text || !!ssid || !!contactName || !!contactPhone || !!contactEmail || !!imageUrl} />
+            <ToolExampleClearActions onExample={loadExample} onClear={clear} canClear={canClear} />
           </div>
       <div className="tb-image-tool-body">
         <div className="tb-qr-input-section">
@@ -130,7 +230,7 @@ export default function QrCodeGeneratorClient() {
                 key={type}
                 type="button"
                 aria-pressed={contentType === type}
-                onClick={() => { setContentType(type); if (error) setError(''); }}
+                onClick={() => handleContentTypeChange(type)}
                 className={`tb-v2-mode-tab ${contentType === type ? 'on' : ''}`}
               >
                 {type === 'vcard' ? 'Contact' : type === 'wifi' ? 'Wi-Fi' : type.toUpperCase()}
@@ -139,23 +239,23 @@ export default function QrCodeGeneratorClient() {
           </div>
           {contentType === 'wifi' ? (
             <div className="tb-image-fields">
-              <input className="tb-v2-input" value={ssid} onChange={(e) => setSsid(e.target.value)} placeholder="Network name (SSID)" aria-label="Wi-Fi network name" />
-              <input className="tb-v2-input" type="password" value={wifiPassword} onChange={(e) => setWifiPassword(e.target.value)} placeholder="Password" aria-label="Wi-Fi password" disabled={wifiSecurity === 'nopass'} />
-              <select className="tb-v2-input" value={wifiSecurity} onChange={(e) => setWifiSecurity(e.target.value as typeof wifiSecurity)} aria-label="Wi-Fi security">
+              <input className="tb-v2-input" value={ssid} onChange={(e) => handleFieldChange(setSsid, e.target.value)} placeholder="Network name (SSID)" aria-label="Wi-Fi network name" />
+              <input className="tb-v2-input" type="password" value={wifiPassword} onChange={(e) => handleFieldChange(setWifiPassword, e.target.value)} placeholder="Password" aria-label="Wi-Fi password" disabled={wifiSecurity === 'nopass'} />
+              <select className="tb-v2-input" value={wifiSecurity} onChange={(e) => handleWifiSecurityChange(e.target.value as WifiSecurity)} aria-label="Wi-Fi security">
                 <option value="WPA">WPA/WPA2</option><option value="WEP">WEP</option><option value="nopass">Open network</option>
               </select>
             </div>
           ) : contentType === 'vcard' ? (
             <div className="tb-image-fields">
-              <input className="tb-v2-input" value={contactName} onChange={(e) => setContactName(e.target.value)} placeholder="Full name" aria-label="Contact name" />
-              <input className="tb-v2-input" value={contactPhone} onChange={(e) => setContactPhone(e.target.value)} placeholder="Phone (optional)" aria-label="Contact phone" />
-              <input className="tb-v2-input" type="email" value={contactEmail} onChange={(e) => setContactEmail(e.target.value)} placeholder="Email (optional)" aria-label="Contact email" />
+              <input className="tb-v2-input" value={contactName} onChange={(e) => handleFieldChange(setContactName, e.target.value)} placeholder="Full name" aria-label="Contact name" />
+              <input className="tb-v2-input" value={contactPhone} onChange={(e) => handleFieldChange(setContactPhone, e.target.value)} placeholder="Phone (optional)" aria-label="Contact phone" />
+              <input className="tb-v2-input" type="email" value={contactEmail} onChange={(e) => handleFieldChange(setContactEmail, e.target.value)} placeholder="Email (optional)" aria-label="Contact email" />
             </div>
           ) : (
             <input
               type="text"
               value={text}
-              onChange={e => { setText(e.target.value); if (error) setError(''); }}
+              onChange={e => handleFieldChange(setText, e.target.value)}
               onKeyDown={e => e.key === 'Enter' && generate()}
               placeholder={contentType === 'url' ? 'Enter a URL' : 'Enter text to encode'}
               className={`tb-v2-input ${error ? 'tb-v2-qr-input--err' : ''}`}
@@ -181,7 +281,7 @@ export default function QrCodeGeneratorClient() {
                 key={s.value}
                 type="button"
                 className={`tb-v2-mode-tab ${size === s.value ? 'on' : ''}`}
-                onClick={() => { setSize(s.value); if (text.trim()) void generate(text, s.value); }}
+                onClick={() => handleSizeChange(s.value)}
                 aria-pressed={size === s.value}
               >
                 {s.label}
