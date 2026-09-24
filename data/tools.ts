@@ -917,7 +917,7 @@ export const tools: Tool[] = [
   { name: 'Duplicate Line Finder', slug: 'duplicate-line-finder', description: 'Find and highlight duplicate lines in text with one-click removal and line numbering.', emoji: '🔎', category: 'Text' },
   { name: 'Environment File Parser', slug: 'env-parser', description: 'Parse and validate .env files, extract keys and values, and detect syntax errors.', emoji: '⚙️', category: 'Developer' },
   { name: 'JSON to TypeScript Interface', slug: 'json-to-typescript-interface', description: 'Convert JSON to TypeScript interfaces with optional strict types, nullability, and readonly fields.', emoji: '📘', category: 'Developer' },
-  { name: 'Image Optimizer', slug: 'image-optimizer', description: 'Optimize images for web by compressing JPEG, PNG, WebP, and AVIF with quality control.', emoji: '🗜️', category: 'Image' },
+  { name: 'Image Optimizer', slug: 'image-optimizer', description: 'Resize, compress, and convert PNG, JPEG, and WebP images locally. Quality applies to JPEG and WebP only.', emoji: '🗜️', category: 'Image' },
   { name: 'Broken Link Checker', slug: 'broken-link-checker', description: 'Scan any webpage and identify broken or dead links with HTTP status codes.', emoji: '🔗', category: 'SEO' },
   { name: 'Google Algorithm Update Tracker', slug: 'google-algorithm-tracker', description: 'Track major Google algorithm updates and see which SEO factors were impacted.', emoji: '📈', category: 'SEO' },
   { name: 'Color Name Finder', slug: 'color-name-finder', description: 'Find the nearest named color for any HEX, RGB, or HSL value from color databases.', emoji: '🏷️', category: 'Color' },

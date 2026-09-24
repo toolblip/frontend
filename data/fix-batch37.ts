@@ -46,17 +46,17 @@ const FIX_BATCH_37: Record<string, FixBatchEntry> = {
   },
 
   'image-optimizer': {
-    description: `Converting to a different format entirely isn't always an option, a CMS that only accepts JPEG uploads, a platform with a strict format whitelist, which leaves compressing the file smarter within its existing format as the only real lever available for cutting an image's size down. This tool optimizes JPEG, PNG, WebP, and AVIF images by compressing more intelligently within their own format, with quality adjustable per image, rather than requiring a format change to see a meaningful size reduction. Useful for shrinking a JPEG's file size for a platform that specifically requires JPEG and won't accept anything else, optimizing a PNG screenshot's size without introducing a new format into an existing pipeline, or reducing an entire image library's total size while keeping every file in its original format.`,
+    description: `Optimize one image locally in the browser. Upload PNG, JPEG, WebP, GIF, or SVG up to 20 MiB, then export PNG, JPEG, or WebP. Resize by max bounds or exact dimensions, preview the real encoded output, and download only the current result. JPEG and WebP use quality as a maximum. PNG is lossless, so quality is disabled. Transparent PNG and WebP stay transparent; JPEG uses a white background. The result can be larger, and the preview says so when that happens.`,
     examples: [
       {
-        title: 'Shrink a JPEG for a platform requiring JPEG',
-        code: `Input: photo.jpg (2.1 MB)\nOutput: photo.jpg (480 KB, same format, quality: 82%)`,
-        note: 'Stays in the original JPEG format rather than converting to a different one.',
+        title: 'Shrink a photo for the web',
+        code: `Input: photo.jpg, max width 1280, JPEG quality 82%\nOutput: photo-optimized-1280x853.jpg with exact bytes shown`,
+        note: 'Uses the actual encoded Blob size from the browser.',
       },
       {
-        title: 'Optimize a PNG screenshot without changing format',
-        code: `Input: screenshot.png (1.4 MB)\nOutput: screenshot.png (620 KB)`,
-        note: 'Reduces size within PNG for a pipeline that expects PNG specifically.',
+        title: 'Convert a transparent PNG to WebP',
+        code: `Input: logo.png, format WebP, same dimensions\nOutput: logo-optimized-640x360.webp`,
+        note: 'Keeps transparency for WebP. JPEG uses a white matte.',
       },
     ],
   },
