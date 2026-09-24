@@ -1943,9 +1943,18 @@ Output: chart-page4.png`,
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "image-optimizer": {
-    description: `Converting to a different format entirely isn't always an option, a CMS that only accepts JPEG uploads, a platform with a strict format whitelist, which leaves compressing the file smarter within its existing format as the only real lever available for cutting an image's size down. This tool optimizes JPEG, PNG, WebP, and AVIF images by compressing more intelligently within their own format, with quality adjustable per image, rather than requiring a format change to see a meaningful size reduction. Useful for shrinking a JPEG's file size for a platform that specifically requires JPEG and won't accept anything else, optimizing a PNG screenshot's size without introducing a new format into an existing pipeline, or reducing an entire image library's total size while keeping every file in its original format.`,
+    description: `Optimize one image in your browser. Upload a PNG, JPEG, WebP, GIF, or SVG up to 20 MiB, then export PNG, JPEG, or WebP. Resize by max bounds or exact dimensions, preview the real output, and download only the current result. JPEG and WebP use a maximum quality setting. PNG is lossless, so quality is disabled. Transparent PNG and WebP stay transparent; JPEG uses a white background. Some exports are larger, and the tool says so instead of pretending every image gets smaller.`,
     examples: [
-
+      {
+        title: 'Shrink a photo for the web',
+        code: `Input: photo.jpg, max width 1280, JPEG quality 82%\nOutput: photo-optimized-1280x853.jpg with exact bytes shown`,
+        note: 'Uses the encoded Blob size from the browser, not a base64 estimate.',
+      },
+      {
+        title: 'Convert a transparent PNG to WebP',
+        code: `Input: logo.png, format WebP, same dimensions\nOutput: logo-optimized-640x360.webp`,
+        note: 'Transparency is kept for WebP. Pick JPEG only when a white matte is okay.',
+      },
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },

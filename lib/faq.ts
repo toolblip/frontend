@@ -1336,6 +1336,12 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Does PNG use the quality slider?', a: 'No. PNG is lossless here, so the quality slider is disabled and no quality retry is used. If the PNG export is not smaller, the original is kept unchanged.' },
     { q: 'What happens if the compressed file is not smaller?', a: 'The original file is kept unchanged with its actual format, filename, and bytes, and the result card says there was no size reduction instead of claiming a converted output.' },
   ],
+  'image-optimizer': [
+    { q: 'Which formats can I upload and export?', a: 'Upload PNG, JPEG, WebP, GIF, or SVG files that the browser can decode, up to 20 MiB and 32 megapixels. Export is PNG, JPEG, or WebP.' },
+    { q: 'Does the quality slider affect PNG?', a: 'No. PNG export is lossless here, so the quality slider is disabled. JPEG and WebP use quality as a maximum and may retry lower values to find a smaller file.' },
+    { q: 'What happens to transparency?', a: 'PNG and WebP keep transparency. JPEG has no alpha channel, so transparent pixels are placed on a white background.' },
+    { q: 'Will the optimized image always be smaller?', a: 'No. Resizing or changing format can make a file larger. The preview shows the exact output bytes and says when there is no reduction.' },
+  ],
   'image-cropper': [
     { q: 'What preset ratios are available?', a: 'Square 1:1, 16:9, 4:3, 3:2, Portrait 2:3, and Passport 35mm, so you can crop directly to common social, video, or ID photo dimensions.' },
     { q: 'How do I select the exact area to crop?', a: 'Drag directly on the image to draw a crop rectangle, shown as a semi-transparent overlay you can adjust before cropping.' },
