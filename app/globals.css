@@ -836,8 +836,34 @@ button.tb-v2-mm-more-row-btn {
   opacity: .72;
   transition: opacity .15s;
 }
-/* Fixed image boxes prevent remote badges from shifting the loop as they load.
+/* Fixed image boxes prevent badges from shifting the loop as they load.
    Contain keeps wide and square assets in their original proportions. */
+.tb-v2-directory-image {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 36px;
+}
+.tb-v2-directory-text {
+  font-size: 12px;
+  font-weight: 600;
+  white-space: normal;
+  text-align: center;
+}
+.tb-v2-directory-image img {
+  position: absolute;
+  inset: 0;
+  visibility: hidden;
+}
+.tb-v2-directory-image[data-loaded] img { visibility: visible; }
+.tb-v2-directory-image[data-loaded] > .tb-v2-directory-text { visibility: hidden; }
+.tb-v2-directory-group > a[data-topaitools4u-badge] .tb-v2-directory-image {
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+}
 .tb-v2-directory-group img {
   display: block;
   width: 100% !important;

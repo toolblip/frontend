@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="205" height="44" viewBox="0 0 205 44" fill="none">
+  <rect x="0.5" y="0.5" width="204" height="43" rx="8" ry="8" fill="#0a0a0a" stroke="#222222" stroke-width="1" />
+  <g transform="translate(16, 12) scale(0.044444444444444446)">
+    <path d="M307.67,33.3l183.3,317.5c25.63,44.4-6.41,99.89-57.67,99.89H66.7c-51.27,0-83.31-55.5-57.67-99.89L192.33,33.3c25.63-44.4,89.72-44.4,115.35,0Z" fill="#ffffff" />
+  </g>
+  <line x1="50" y1="9" x2="50" y2="35" stroke="#222222" stroke-width="1" />
+  <text x="64" y="22" dominant-baseline="central" fill="#999999" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="400">Featured on <tspan fill="#ffffff" font-weight="700" font-size="14">Versily</tspan></text>
+</svg>

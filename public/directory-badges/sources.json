@@ -1,0 +1,227 @@
+{
+  "retrieved": "2026-09-24",
+  "assets": [
+    {
+      "name": "SaaSCity",
+      "source": "https://saascity.io/badges/featured-dark.svg",
+      "file": "saascity.svg",
+      "sha256": "1eefdc826f0771c70d8a251582391ee47f28331067383c8063c1d02fdb3d5232"
+    },
+    {
+      "name": "LaunchIgniter",
+      "source": "https://launchigniter.com/api/badge/toolblip?theme=light",
+      "file": "launchigniter.svg",
+      "sha256": "16856c2ed9a476d5dce7a17c01d5f29459c8b96f098a312fa030967cfc2cf010"
+    },
+    {
+      "name": "EarlyHunt",
+      "source": "https://earlyhunt.com/badges/earlyhunt-badge-light.svg",
+      "file": "earlyhunt.svg",
+      "sha256": "6aefb79570ebd10aca45503186126a37844866b9a2382611a802f51b3368f461"
+    },
+    {
+      "name": "IndieHunt",
+      "source": "https://indiehunt.io/badges/indiehunt-badge-light.svg",
+      "file": "indiehunt.svg",
+      "sha256": "9809abf43ee53d8c3c47df2cac5668b6226a548254cd035183ce35f91592c284"
+    },
+    {
+      "name": "Fazier",
+      "source": "https://fazier.com/api/v1//public/badges/launch_badges.svg?badge_type=launched&theme=light",
+      "file": "fazier.svg",
+      "sha256": "f11c03ca6c5d11369f5709979d3baa007a5e133f70fea30d696a830fbc302396"
+    },
+    {
+      "name": "TinyLaunch",
+      "source": "https://tinylaunch.com/tinylaunch_badge_launching_soon.svg",
+      "file": "tinylaunch.svg",
+      "sha256": "436dfd367c69e34557bd6a5f3acbce5fc6f8f8a4cf6b4964e8174bedd4f7b977"
+    },
+    {
+      "name": "neeed.directory",
+      "source": "https://neeed.directory/badges/neeed-badge-light.svg",
+      "file": "neeed-directory.svg",
+      "sha256": "fd34f38cc1064bcaaac2d014e7a9d4dd761489750e92224e9d3ab186682b412d"
+    },
+    {
+      "name": "Findly.tools",
+      "source": "https://findly.tools/badges/findly-tools-badge-light.svg",
+      "file": "findly-tools.svg",
+      "sha256": "2674d594a945c27f0c19584fb7958e6ab8cae591f427096167a2706ecf3e58f8"
+    },
+    {
+      "name": "Twelve Tools",
+      "source": "https://twelve.tools/badge0-white.svg",
+      "file": "twelve-tools.svg",
+      "sha256": "5afcd9cdca89a62059186b6ccc62636e5e03f16fe4cd4e1c0500b7eef0649e92"
+    },
+    {
+      "name": "outdr.lol",
+      "source": "https://www.outdr.lol/badge/startuptrusted.com.svg?theme=light",
+      "fallback": true,
+      "reason": "Rating belongs to startuptrusted.com"
+    },
+    {
+      "name": "FoundrList",
+      "source": "https://www.foundrlist.com/api/badge/toolblip",
+      "file": "foundrlist.svg",
+      "sha256": "dd31cbf92b2053d1c3bd38687570207a7f8df5f6ca81447d6c881b36adb59c49"
+    },
+    {
+      "name": "ConfettiSaaS",
+      "source": "https://confettisaas.com/badge-light.svg",
+      "file": "confettisaas.svg",
+      "sha256": "8285a9a33984c9851fd03a3d05e5c26bc10d52aa617020d63c74e0ddf6dc306f"
+    },
+    {
+      "name": "Aura++",
+      "source": "https://auraplusplus.com/images/badges/featured-on-light.svg",
+      "file": "aura.svg",
+      "sha256": "580e281e40d39466588191421bf5136c8c5d6e15254d49068f54718b5afff1d4"
+    },
+    {
+      "name": "Super Launch",
+      "source": "https://www.superlaun.ch/badge.png",
+      "file": "super-launch.png",
+      "sha256": "83f52b5c53a53521d1fc625e6f2b3f9cafe08e96eaf07dda5281d06bce4076fa"
+    },
+    {
+      "name": "Launch Llama Tools",
+      "source": "https://tools.launchllama.co/featured-badge.png?v=2",
+      "file": "launch-llama-tools.png",
+      "sha256": "42212c11209538f4903ad18085f3a4c07d0000a31700466271a48682852c6d58"
+    },
+    {
+      "name": "Smol Launch",
+      "source": "https://smollaunch.com/badges/featured.svg",
+      "file": "smol-launch.svg",
+      "sha256": "c12fbde8236b17adbfb98271621bda4cbddfe39997f5b9d6acc27cca143eb8a7"
+    },
+    {
+      "name": "LaunchBoosts",
+      "source": "https://launchboosts.com/badges/featured-dark.svg",
+      "file": "launchboosts.svg",
+      "sha256": "cb7f533fe26f119f608b43d54eb77fb0a946243d2f6b3fbcd9f0395427da14e4"
+    },
+    {
+      "name": "LaunchVault",
+      "source": "https://www.launchvault.dev/images/badges/launch-vault-badge.svg",
+      "fallback": true,
+      "reason": "404 text/html; charset=utf-8 https://www.launchvault.dev/images/badges/launch-vault-badge.svg"
+    },
+    {
+      "name": "Verified Tools",
+      "source": "https://www.verifiedtools.info/badge.svg",
+      "file": "verified-tools.svg",
+      "sha256": "849e8130b586aaf14de7ce06256b449d7098d57e5f9769aa2bf8ae77ada4f614"
+    },
+    {
+      "name": "TopAITools4U",
+      "source": "https://www.topaitools4u.site/logo.svg",
+      "file": "topaitools4u.svg",
+      "sha256": "27917d0dfcf51e080c01330fa1574ccfbd2847c40c6a73c5e46a90211a20eb7e"
+    },
+    {
+      "name": "MakerHunt",
+      "source": "https://makerhunt.io/badges/makerhunt-badge-light.svg",
+      "file": "makerhunt.svg",
+      "sha256": "61a4d25ce4457e973cd351c5c0e7a292eb4eb5dc90727716ec44d5d84dc1d58c"
+    },
+    {
+      "name": "Startup.sx",
+      "source": "https://www.startup.sx/badge.png",
+      "file": "startup-sx.png",
+      "sha256": "9aaf875df5c1d918f898a40b98c74503d6ea6f804b6d870814be8eeec755eaae"
+    },
+    {
+      "name": "Webspot",
+      "source": "https://webspot.app/featured-light.svg",
+      "file": "webspot.svg",
+      "sha256": "12ee4da5f6b2f4397f1231ea318f4c62b9bfa35a369f2aa3ae2d0fb9e0d28779"
+    },
+    {
+      "name": "Uno Directory",
+      "source": "https://uno.directory/uno-directory.svg",
+      "file": "uno-directory.svg",
+      "sha256": "f81d10693db62f5786de40113c08a99a562f81dd48a32fb69612580a7508ab97"
+    },
+    {
+      "name": "Sidehunt",
+      "source": "https://sidehunt.io/badges/sidehunt-badge-light.svg",
+      "file": "sidehunt.svg",
+      "sha256": "decebe40c81596a7f4092d9a87c7c427da6c3619d034f8ec0e37f2ba94dd9e6f"
+    },
+    {
+      "name": "ProductFame",
+      "source": "https://productfame.com/badges/featured-light.svg",
+      "file": "productfame.svg",
+      "sha256": "534a99069a3d8030f8f3534639fbf434744a372f777167798152ba5db44a26e8"
+    },
+    {
+      "name": "Pro Launch",
+      "source": "https://prolaunch.net/images/badges/featured-light.svg",
+      "file": "pro-launch.svg",
+      "sha256": "04fc65441a6a9633f60a05d57181c5be555bc4e55b407e0e6fd0a5ef5b836d4d"
+    },
+    {
+      "name": "Nick Launches",
+      "source": "https://nicklaunches.com/badges/featured.png",
+      "file": "nick-launches.png",
+      "sha256": "6ed4ddfe30ade78645100042e9f68ab6c1f37b7a68d7b2194c88eb8e2f8cbe1f"
+    },
+    {
+      "name": "AI X Collection",
+      "source": "https://aixcollection.com/assets/images/badge.png",
+      "file": "ai-x-collection.png",
+      "sha256": "bbd4cbcda885bf85ea7bac5ff23f0991ba90f4c55a3f887cb378b478c0c32f9e"
+    },
+    {
+      "name": "NxGn Tools",
+      "source": "https://www.nxgntools.com/api/embed/toolblip?type=LAUNCHING_SOON_ON",
+      "file": "nxgn-tools.svg",
+      "sha256": "14d2f99a46893379ffe166760b1178b9a80a279bd2ca80a0b9add8872ecd79f1"
+    },
+    {
+      "name": "Lifto",
+      "source": "https://liftoapp.com/badges/featured-dark.svg",
+      "file": "lifto.svg",
+      "sha256": "974fcdbb2b94de33517957a405fc943f3aea87aac5ea4ca027977c6799f1fec6"
+    },
+    {
+      "name": "Versily",
+      "source": "https://amujqvxlqnrslaqiozkw.supabase.co/functions/v1/badge-svg?theme=dark&width=205&height=44&id=920b0a0f-2b65-46f6-b776-cc1b61026022",
+      "file": "versily.svg",
+      "sha256": "daee06d44ded56a72d2d45a3bb4890ab577f706b1eac3fae81460cdde0b961ae"
+    },
+    {
+      "name": "TechTrendin'",
+      "source": "https://www.techtrendin.com/badges/featured-light.png",
+      "file": "techtrendin.png",
+      "sha256": "6555f1dbc57a0420b9bf4915b1461e2cd7e7040f1e40354afae7cfc9a25f2dfc"
+    },
+    {
+      "name": "Wired Business",
+      "source": "https://wired.business/badge0-light.svg",
+      "file": "wired-business.svg",
+      "sha256": "92fb94ed64692c302019e8377bd2b798ba5390155a9bbd89e98c43120f437387"
+    },
+    {
+      "name": "sideprojects.net",
+      "source": "https://sideprojects.net/projects/toolblip/badge.svg",
+      "file": "sideprojects-net.svg",
+      "sha256": "b697b7e89b7b43f0a8ae7b20d61e7706ab4e6d0a7ccb97135c0fe31e1e599422"
+    },
+    {
+      "name": "LLM Relevance",
+      "source": "https://www.llmrelevance.com/badges/llm-relevance-horizontal-light.svg",
+      "file": "llm-relevance.svg",
+      "sha256": "3628bd89852e3ef1edb6e5b78da8681ca8a85ab1e5c5e848df1f1c132c1ab915"
+    },
+    {
+      "name": "Solo Launches",
+      "source": "https://sololaunches.com/api/badges/support?theme=light",
+      "file": "solo-launches.svg",
+      "sha256": "fd676d6f67340ab59098c934cdf9462bcf49b47a71ceffe3b881ae20f4dd33ab"
+    }
+  ]
+}
