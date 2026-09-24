@@ -37,8 +37,21 @@ type ResizeResult = {
   mimeType: string;
   formatLabel: string;
   sizeBytes: number;
+  actualQuality: number | null;
+  qualityAutoReduced: boolean;
+  couldMakeSmaller: boolean;
   sizeChange: ReturnType<typeof getImageResizerSizeChange>;
   notes: string[];
+};
+
+type SizeAwareEncodeResult = {
+  blob: Blob | null;
+  actualQuality: number | null;
+  qualityAutoReduced: boolean;
+  couldMakeSmaller: boolean;
+  fellBackMimeType: boolean;
+  failed: boolean;
+  cancelled: boolean;
 };
 
 const MIME_TO_FORMAT: Record<string, { choice: Exclude<ResizeFormatChoice, 'auto'>; mimeType: string; extension: 'png' | 'jpg' | 'webp'; label: 'PNG' | 'JPEG' | 'WebP' }> = {
@@ -55,6 +68,8 @@ const FORMAT_TO_MIME: Record<Exclude<ResizeFormatChoice, 'auto'>, { mimeType: st
 };
 
 const DEFAULT_QUALITY = 86;
+const MIN_QUALITY = 10;
+const QUALITY_RETRY_STEP = 10;
 
 export function validateResizeDimensions(rawWidth: number, rawHeight: number): ResizeValidation {
   if (!Number.isFinite(rawWidth) || !Number.isFinite(rawHeight)) {
@@ -171,6 +186,86 @@ function getActualFormatFromMime(mimeType: string) {
 function getSourceFormatLabel(sourceMimeType: string, sourceFileName: string) {
   const inferredMimeType = inferSourceMimeType(sourceMimeType, sourceFileName);
   return MIME_TO_FORMAT[inferredMimeType]?.label ?? getUnsupportedFormatLabel(inferredMimeType, sourceFileName);
+}
+
+function isQualityEncodedMimeType(mimeType: string) {
+  return mimeType === 'image/jpeg' || mimeType === 'image/webp';
+}
+
+function getQualityCandidates(maxQuality: number) {
+  const clampedMax = Math.min(100, Math.max(MIN_QUALITY, Math.round(maxQuality)));
+  const candidates: number[] = [];
+  for (let nextQuality = clampedMax; nextQuality > MIN_QUALITY; nextQuality -= QUALITY_RETRY_STEP) {
+    candidates.push(nextQuality);
+  }
+  if (candidates[candidates.length - 1] !== MIN_QUALITY) candidates.push(MIN_QUALITY);
+  return candidates;
+}
+
+export async function encodeImageResizerBlobWithSizeAwareness({
+  originalBytes,
+  requestedMimeType,
+  maxQuality,
+  encode,
+  isCancelled,
+}: {
+  originalBytes: number;
+  requestedMimeType: string;
+  maxQuality: number;
+  encode: (mimeType: string, quality?: number) => Promise<Blob | null>;
+  isCancelled: () => boolean;
+}): Promise<SizeAwareEncodeResult> {
+  const qualityApplies = isQualityEncodedMimeType(requestedMimeType);
+  const maxCandidateQuality = Math.min(100, Math.max(MIN_QUALITY, Math.round(maxQuality)));
+  const candidates = qualityApplies ? getQualityCandidates(maxCandidateQuality) : [null];
+  let best: { blob: Blob; quality: number | null; fellBackMimeType: boolean } | null = null;
+
+  for (const candidateQuality of candidates) {
+    if (isCancelled()) {
+      return { blob: null, actualQuality: null, qualityAutoReduced: false, couldMakeSmaller: false, fellBackMimeType: false, failed: false, cancelled: true };
+    }
+
+    let blob: Blob | null;
+    try {
+      blob = await encode(requestedMimeType, candidateQuality == null ? undefined : candidateQuality / 100);
+    } catch {
+      return { blob: null, actualQuality: null, qualityAutoReduced: false, couldMakeSmaller: false, fellBackMimeType: false, failed: true, cancelled: false };
+    }
+
+    if (isCancelled()) {
+      return { blob: null, actualQuality: null, qualityAutoReduced: false, couldMakeSmaller: false, fellBackMimeType: false, failed: false, cancelled: true };
+    }
+
+    if (!blob) {
+      return { blob: null, actualQuality: null, qualityAutoReduced: false, couldMakeSmaller: false, fellBackMimeType: false, failed: true, cancelled: false };
+    }
+
+    const actualMimeType = (blob.type || requestedMimeType).toLowerCase();
+    const fellBackMimeType = actualMimeType !== requestedMimeType.toLowerCase();
+    const recordedQuality = qualityApplies && !fellBackMimeType ? candidateQuality : null;
+
+    if (!best || blob.size < best.blob.size) {
+      best = { blob, quality: recordedQuality, fellBackMimeType };
+    }
+
+    if (fellBackMimeType || blob.size < originalBytes || !qualityApplies) {
+      break;
+    }
+  }
+
+  if (!best) {
+    return { blob: null, actualQuality: null, qualityAutoReduced: false, couldMakeSmaller: false, fellBackMimeType: false, failed: true, cancelled: false };
+  }
+
+  return {
+    blob: best.blob,
+    actualQuality: best.quality,
+    qualityAutoReduced: best.quality != null && best.quality < maxCandidateQuality,
+    couldMakeSmaller: best.blob.size < originalBytes,
+    fellBackMimeType: best.fellBackMimeType,
+    failed: false,
+    cancelled: false,
+  };
 }
 
 export default function ImageResizerClient() {
@@ -345,8 +440,9 @@ export default function ImageResizerClient() {
       return;
     }
     const img = new Image();
-    img.onload = () => {
-      if (sourceLoadId !== loadId.current || currentEncodeId !== encodeId.current || sourceUrl !== preview) return;
+    img.onload = async () => {
+      const isResizeCancelled = () => sourceLoadId !== loadId.current || currentEncodeId !== encodeId.current || sourceUrl !== preview;
+      if (isResizeCancelled()) return;
       canvas.width = plan.width;
       canvas.height = plan.height;
       const nextCtx = canvas.getContext('2d');
@@ -362,51 +458,82 @@ export default function ImageResizerClient() {
         nextCtx.clearRect(0, 0, plan.width, plan.height);
       }
       nextCtx.drawImage(img, 0, 0, plan.width, plan.height);
-      try {
-        canvas.toBlob((blob) => {
-          if (sourceLoadId !== loadId.current || currentEncodeId !== encodeId.current || sourceUrl !== preview) return;
-          if (!blob) {
-            setEncoding(false);
-            setError('The resized image could not be exported. Try smaller dimensions or a replacement image.');
-            return;
-          }
-          const actualFormat = getActualFormatFromMime(blob.type || plan.requestedMimeType);
-          const actualMimeType = blob.type || actualFormat.mimeType;
-          const actualFilename = actualFormat.extension === plan.extension
-            ? plan.filename
-            : `${getSafeBaseName(file.name)}-resized-${plan.width}x${plan.height}.${actualFormat.extension}`;
-          const notes: string[] = [];
-          if (plan.note) notes.push(plan.note);
-          if (actualMimeType !== plan.requestedMimeType) {
-            notes.push(`Your browser encoded ${actualFormat.label} instead of ${plan.formatLabel}; the download uses the actual format.`);
-          }
-          if (plan.requestedMimeType === 'image/jpeg') {
-            notes.push('JPEG does not support transparency, so transparent pixels were composited on white.');
-          }
-          const sizeChange = getImageResizerSizeChange(file.size, blob.size);
-          if (sizeChange.grew) {
-            notes.push('This resized file is larger. Pixel resizing does not guarantee a smaller file. Try JPEG/WebP with lower quality, or choose a different format.');
-          }
-          replaceResult({
-            url: URL.createObjectURL(blob),
-            filename: actualFilename,
-            sourceWidth: dimensions.width,
-            sourceHeight: dimensions.height,
-            sourceFormatLabel: getSourceFormatLabel(file.type, file.name),
-            width: plan.width,
-            height: plan.height,
-            mimeType: actualMimeType,
-            formatLabel: actualFormat.label,
-            sizeBytes: blob.size,
-            sizeChange,
-            notes,
-          });
-          setEncoding(false);
-        }, plan.requestedMimeType, showQuality ? quality / 100 : undefined);
-      } catch {
+      const encodeCanvasBlob = (mimeType: string, encodeQuality?: number) => new Promise<Blob | null>((resolve, reject) => {
+        if (isResizeCancelled()) {
+          resolve(null);
+          return;
+        }
+        try {
+          canvas.toBlob((blob) => {
+            if (isResizeCancelled()) {
+              resolve(null);
+              return;
+            }
+            resolve(blob);
+          }, mimeType, encodeQuality);
+        } catch (toBlobError) {
+          reject(toBlobError);
+        }
+      });
+
+      const encoded = await encodeImageResizerBlobWithSizeAwareness({
+        originalBytes: file.size,
+        requestedMimeType: plan.requestedMimeType,
+        maxQuality: quality,
+        encode: encodeCanvasBlob,
+        isCancelled: isResizeCancelled,
+      });
+
+      if (encoded.cancelled) return;
+      if (isResizeCancelled()) return;
+      if (encoded.failed || !encoded.blob) {
         if (currentEncodeId === encodeId.current) setEncoding(false);
         setError('The resized image could not be exported. Try smaller dimensions or a replacement image.');
+        return;
       }
+
+      const blob = encoded.blob;
+      const actualFormat = getActualFormatFromMime(blob.type || plan.requestedMimeType);
+      const actualMimeType = blob.type || actualFormat.mimeType;
+      const actualFilename = actualFormat.extension === plan.extension
+        ? plan.filename
+        : `${getSafeBaseName(file.name)}-resized-${plan.width}x${plan.height}.${actualFormat.extension}`;
+      const notes: string[] = [];
+      if (plan.note) notes.push(plan.note);
+      if (actualMimeType !== plan.requestedMimeType) {
+        notes.push(`Your browser encoded ${actualFormat.label} instead of ${plan.formatLabel}; the download uses the actual format.`);
+      }
+      if (plan.requestedMimeType === 'image/jpeg') {
+        notes.push('JPEG does not support transparency, so transparent pixels were composited on white.');
+      }
+      if (plan.requestedMimeType === 'image/png') {
+        notes.push('PNG is lossless. Choose WebP or JPEG if you need a smaller file.');
+      }
+      if (encoded.actualQuality != null && encoded.qualityAutoReduced) {
+        notes.push(`Quality was automatically reduced from ${quality}% to ${encoded.actualQuality}% after checking the actual file size.`);
+      }
+      const sizeChange = getImageResizerSizeChange(file.size, blob.size);
+      if (!encoded.couldMakeSmaller) {
+        notes.push('Could not make this file smaller at these dimensions. Try smaller dimensions or another format.');
+      }
+      replaceResult({
+        url: URL.createObjectURL(blob),
+        filename: actualFilename,
+        sourceWidth: dimensions.width,
+        sourceHeight: dimensions.height,
+        sourceFormatLabel: getSourceFormatLabel(file.type, file.name),
+        width: plan.width,
+        height: plan.height,
+        mimeType: actualMimeType,
+        formatLabel: actualFormat.label,
+        sizeBytes: blob.size,
+        actualQuality: encoded.actualQuality,
+        qualityAutoReduced: encoded.qualityAutoReduced,
+        couldMakeSmaller: encoded.couldMakeSmaller,
+        sizeChange,
+        notes,
+      });
+      setEncoding(false);
     };
     img.onerror = () => {
       if (sourceLoadId !== loadId.current || currentEncodeId !== encodeId.current) return;
@@ -494,13 +621,15 @@ export default function ImageResizerClient() {
               </label>
               {showQuality && (
                 <label className="tb-image-field">
-                  <span>Quality: {quality}%</span>
+                  <span>Maximum quality: {quality}%</span>
                   <input type="range" min={10} max={100} step={1} value={quality} onChange={(e) => { clearResult(); setQuality(Number(e.target.value)); }} />
+                  <span className="tb-image-hint">Quality is not a size reduction percent. JPEG and WebP quality is lowered automatically if the first export is not smaller.</span>
                 </label>
               )}
               <p className="tb-image-hint">Output: {width} × {height} px · {exportPlan?.formatLabel ?? 'Auto'}</p>
               {exportPlan?.note && <p className="tb-image-hint">{exportPlan.note}</p>}
               {exportPlan?.requestedMimeType === 'image/jpeg' && <p className="tb-image-hint">JPEG exports use a white background where the source has transparency.</p>}
+              {exportPlan?.requestedMimeType === 'image/png' && <p className="tb-image-hint">PNG is lossless. Choose WebP or JPEG when smaller files matter.</p>}
               <p id={limitsHintId} className="tb-image-hint">Use whole-pixel dimensions up to {MAX_CANVAS_SIDE} px per side and 40 MP total.</p>
               {!dimensionValidation.valid && <div id={dimensionErrorId} className="tb-v2-error" role="alert">{dimensionValidation.error}</div>}
               <button type="button" onClick={resize} disabled={!canResize} className="tb-v2-btn tb-v2-btn-primary" aria-busy={encoding}>
@@ -522,8 +651,11 @@ export default function ImageResizerClient() {
             <div className="tb-image-hint">
               <p>Original: {result.sourceWidth} × {result.sourceHeight} px · {result.sourceFormatLabel} · {formatImageResizerBytes(file?.size ?? 0)}</p>
               <p>Result: {result.width} × {result.height} px · {result.mimeType} · {formatImageResizerBytes(result.sizeBytes)}</p>
+              {result.actualQuality != null && (
+                <p>Encoding quality: {result.actualQuality}%{result.qualityAutoReduced ? ' · automatically reduced' : ''}</p>
+              )}
               <p><strong>File size change: {result.sizeChange.label}</strong></p>
-              {result.notes.map((note) => <p className={note.startsWith('This resized file is larger.') ? 'tb-v2-error' : undefined} key={note}>{note}</p>)}
+              {result.notes.map((note) => <p className={note.startsWith('Could not make this file smaller') ? 'tb-v2-error' : undefined} key={note}>{note}</p>)}
             </div>
             <a href={result.url} download={result.filename} className="tb-v2-btn tb-v2-btn-primary">
               Download resized image
