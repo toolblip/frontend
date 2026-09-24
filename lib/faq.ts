@@ -649,9 +649,9 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Does it account for age, sex, or muscle mass?', a: 'No, it only computes the standard weight-to-height BMI ratio. It does not adjust for age, sex, or body composition, which is a known limitation of the BMI formula itself, not something this calculator tries to correct.' },
   ],
   'broken-image-checker': [
-    { q: 'How does it find the images on a page?', a: 'It fetches the page HTML through a server-side proxy, parses out every img tag, and sends a real HEAD request to each resulting image URL to check whether it actually loads.' },
-    { q: 'Why does it flag an image as broken when it looks fine in my browser?', a: 'Some servers block HEAD requests or CORS from outside origins, which can make a perfectly working image report as unreachable. This is a disclosed limitation of checking images from another site rather than from within the page itself.' },
-    { q: 'What does the status shown for each image mean?', a: 'It is the real HTTP status code returned by that image URL, for example 200 for a working image or 404 for one that no longer exists at that path.' },
+    { q: 'How does it find the images on a page?', a: 'It reads the page HTML, resolves img src, data-src, data-lazy-src, and srcset values against the submitted page URL, dedupes them, and checks the first 20 unique HTTP image URLs.' },
+    { q: 'Does it use HTTP status codes?', a: 'No. It loads each HTTP image in the browser and reports Loaded, Failed to load, or Timed out. Unsupported URLs are skipped with a count instead of shown as image results.' },
+    { q: 'Why might a failed image still work on the real site?', a: 'A failed browser load from this tool can also mean blocking, hotlink protection, or a timeout. Treat failures as images to review, not automatic proof that the file is dead.' },
   ],
   'browser-image-resizer': [
     { q: 'Does my photo get uploaded to a server to resize it?', a: 'No. Resizing happens entirely in a canvas element in your browser, so the file never leaves your device.' },
@@ -1953,8 +1953,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
   ],
   'webp-converter': [
     { q: 'What quality levels can I choose when converting to WebP?', a: 'Four presets, Low (30%), Medium (50%), High (80%), and Maximum (100%), each shown with a short note about the size and quality tradeoff before you convert.' },
-    { q: 'Does it show how much smaller the WebP file is?', a: 'Yes, after converting it compares the original and converted file sizes and displays the percentage change, like "42% smaller", so you can see the savings from the format switch.' },
-    { q: 'How does the conversion actually happen?', a: 'Your image is drawn onto a hidden canvas element and then exported with canvas.toBlob at the image/webp MIME type and your chosen quality, entirely in your browser without uploading the file anywhere.' },
+    { q: 'Does it always make the image smaller?', a: 'No. After converting, it shows the exact source and WebP byte sizes and says whether the WebP result is smaller, larger, or the same size.' },
+    { q: 'How does the conversion actually happen?', a: 'The file bytes are checked first, then the decoded image is drawn to a canvas and exported with canvas.toBlob as image/webp. If the browser returns another format or null, the tool shows an error instead of keeping the original file.' },
   ],
   'webp-to-jpg': [
     { q: 'Which image formats can I upload as the source?', a: 'JPEG, PNG, WebP, AVIF, or GIF, the uploader checks the file\'s MIME type against that list and rejects anything else with an error message.' },

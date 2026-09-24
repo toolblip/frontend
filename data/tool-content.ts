@@ -365,11 +365,20 @@ Output: Hello World!`
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "broken-image-checker": {
-    description: `A CMS migration, a deleted file, or a renamed image path all leave the same trace behind, an image tag on a page still pointing at a file that no longer actually exists there, which a browser quietly renders as a blank broken icon instead of flagging loudly as an actual error. This tool checks every image on a webpage for a broken link or a failed load, surfacing exactly which image tag points somewhere that no longer resolves rather than requiring each one clicked or inspected individually. Useful for catching a broken image left behind after a CMS migration or a file rename, auditing a page before publishing to confirm every image actually loads, or finding an old image reference pointing at a file that got deleted or moved somewhere else.`,
+    description: `Find image URLs in a webpage's static HTML and check whether they load. The tool resolves relative, lazy, and srcset image paths against the page URL, checks up to 20 unique HTTP images, and shows Loaded, Failed to load, or Timed out. Unsupported URLs are skipped with a count. A failed load is a review signal, not proof that the file is gone.`,
     examples: [
-
+      {
+        title: 'Review a page after moving assets',
+        code: `Input: https://example.com/blog/post\nOutput: 14 unique image URLs found, 13 loaded, 1 failed to load`,
+        note: 'Shows the image URL to review without inventing an HTTP status.',
+      },
+      {
+        title: 'Keep a large page scan bounded',
+        code: `Input: https://example.com/gallery\nOutput: first 20 unique HTTP image URLs checked, extra unique URLs noted`,
+        note: 'Unsupported URLs are skipped and counted separately.',
+      },
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["Clean interface", "Fast processing", "No signup required", "Requires internet access"]
   },
   "broken-link-checker": {
     description: `Auditing a page's outbound links usually starts with actually collecting every link on that page first, which is tedious enough by hand that a dead link buried deep in an old post routinely goes unnoticed for months. This tool scans an entire webpage automatically, finding every outbound link on it and checking each one's HTTP status without requiring the list assembled or pasted in beforehand. Useful for auditing a single page's links automatically after a site redesign to catch anything that broke, finding a dead link buried in an old blog post without manually collecting every URL on the page first, or confirming every outbound link on a page actually resolves before it's shared widely.`,
@@ -4795,9 +4804,18 @@ Cairo`, note: `Same list, flipped. Use this for a reverse leaderboard or log.` }
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "webp-converter": {
-    description: `Page weight is one of the more direct levers over how fast a site actually loads, and WebP compresses meaningfully smaller than JPEG or PNG at comparable visual quality, which makes converting an existing image library into WebP one of the more effective ways to cut load time without touching anything else about a page. This tool converts images into WebP format for high-quality web compression with smaller file sizes, built for improving a site's actual load performance rather than for compatibility with a destination that doesn't accept WebP at all. Useful for converting a site's existing image library into WebP to reduce page weight across the board, shrinking a large batch of photos before deploying them to a page where load speed actually matters, or adopting WebP as a default format specifically for the compression gain it offers over older image formats.`,
+    description: `Convert one image to WebP, adjust quality, preview the result, and compare the exact output file size before downloading. The tool accepts PNG, JPEG, WebP, GIF, and browser-decodable SVG within the file and canvas limits. Animated inputs become a still image, SVGs are rasterized, and WebP can be larger at high quality, so the result shows the real size change.`,
     examples: [
-
+      {
+        title: 'Convert one photo to WebP',
+        code: `Input: photo.jpg, quality: High\nOutput: photo.webp with preview, dimensions, and exact file size`,
+        note: 'Download only after checking the real output.',
+      },
+      {
+        title: 'Compare quality settings',
+        code: `Input: product.png\nOutput: Low, Medium, High, or Maximum WebP result after each conversion`,
+        note: 'Changing quality clears the old result so the preview matches the current setting.',
+      },
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
