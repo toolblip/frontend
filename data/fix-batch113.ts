@@ -94,17 +94,17 @@ const FIX_BATCH_113: Record<string, FixBatchEntry> = {
   },
 
   'webp-converter': {
-    description: `Page weight is one of the more direct levers over how fast a site actually loads, and WebP compresses meaningfully smaller than JPEG or PNG at comparable visual quality, which makes converting an existing image library into WebP one of the more effective ways to cut load time without touching anything else about a page. This tool converts images into WebP format for high-quality web compression with smaller file sizes, built for improving a site's actual load performance rather than for compatibility with a destination that doesn't accept WebP at all. Useful for converting a site's existing image library into WebP to reduce page weight across the board, shrinking a large batch of photos before deploying them to a page where load speed actually matters, or adopting WebP as a default format specifically for the compression gain it offers over older image formats.`,
+    description: `This tool converts one PNG, JPEG, WebP, GIF, or browser-decodable SVG image to WebP in the browser. Pick Low, Medium, High, or Maximum quality, preview the result, and compare the exact output file size before downloading. It preserves transparency where WebP supports it, turns animated inputs into a still image, and reports when the WebP file is larger instead of promising savings.`,
     examples: [
       {
-        title: "Convert a site's image library to WebP",
-        code: `Input: 200 JPEG product photos\nOutput: 200 WebP images (35% smaller on average)`,
-        note: 'Aimed at page weight reduction, not compatibility fallback.',
+        title: 'Convert one photo and compare size',
+        code: `Input: photo.jpg, quality: High\nOutput: photo.webp, preview shown with exact byte size`,
+        note: 'Use the preview and size change before downloading.',
       },
       {
-        title: 'Shrink images before a performance-sensitive launch',
-        code: `Input: hero-banner.png (1.8 MB)\nOutput: hero-banner.webp (420 KB)`,
-        note: 'Cuts load time where it directly affects page speed.',
+        title: 'Try a smaller quality setting',
+        code: `Input: hero.png, quality: Low\nOutput: hero.webp, smaller file if the encoded result actually shrinks`,
+        note: 'Quality changes invalidate the old result so the preview matches the current setting.',
       },
     ],
   },

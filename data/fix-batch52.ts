@@ -142,17 +142,17 @@ const FIX_BATCH_52: Record<string, FixBatchEntry> = {
   },
 
   'broken-image-checker': {
-    description: `A CMS migration, a deleted file, or a renamed image path all leave the same trace behind, an image tag on a page still pointing at a file that no longer actually exists there, which a browser quietly renders as a blank broken icon instead of flagging loudly as an actual error. This tool checks every image on a webpage for a broken link or a failed load, surfacing exactly which image tag points somewhere that no longer resolves rather than requiring each one clicked or inspected individually. Useful for catching a broken image left behind after a CMS migration or a file rename, auditing a page before publishing to confirm every image actually loads, or finding an old image reference pointing at a file that got deleted or moved somewhere else.`,
+    description: `Image references can break after a migration, rename, or asset cleanup. This tool finds image URLs in a page's static HTML, resolves relative and lazy-loaded paths, and checks whether the first 20 unique HTTP images load in the browser. It shows Loaded, Failed to load, or Timed out, plus a count for unsupported URLs that were skipped.`,
     examples: [
       {
-        title: 'Find a broken image after a migration',
-        code: `Input: example.com/blog/post\nOutput: <img src="/old-uploads/hero.jpg"> -> 404 Not Found`,
-        note: 'Flags exactly which image reference stopped resolving after a migration.',
+        title: 'Review images after a migration',
+        code: `Input: https://example.com/blog/post\nOutput: 12 unique image URLs found, 11 loaded, 1 failed to load`,
+        note: 'Shows which image URL needs review without claiming a specific HTTP status.',
       },
       {
-        title: 'Audit a page before publishing',
-        code: `Input: example.com/products\nOutput: 18 images checked, 17 loaded, 1 broken`,
-        note: 'Confirms every image actually loads before the page goes live.',
+        title: 'Catch unsupported or skipped image URLs',
+        code: `Input: https://example.com/products\nOutput: 20 checked, 3 skipped unsupported URLs, more unique images found`,
+        note: 'Keeps the scan bounded and reports what was skipped.',
       },
     ],
   },
