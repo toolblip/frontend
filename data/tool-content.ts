@@ -1871,9 +1871,18 @@ Output: chart-page4.png`,
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "image-compressor": {
-    description: `Compressing an image blind and hoping the result still looks acceptable is a gamble, since the same compression level that leaves one photo looking fine can leave another visibly blocky or smeared, especially in areas with fine detail or smooth gradients where artifacts show up first. This tool compresses images to reduce file size while maintaining quality, with a side-by-side comparison showing exactly what's lost at a given setting before committing to it. Useful for checking exactly how much quality a specific compression level actually costs before saving over the original, comparing an original and compressed image directly to catch visible artifacts in detail-heavy areas, or dialing in the smallest file size that still holds up next to the source image.`,
+    description: `Compressing an image is a tradeoff, not a promise that quality stays the same. This tool lets you choose JPEG, PNG, or WebP, adjust JPEG and WebP quality settings, and compare the preview next to the original before downloading. Lower JPEG or WebP quality can save bytes by throwing away detail, while PNG stays lossless and may grow instead. If the encoded file is not smaller than the upload, the tool keeps the original file and labels it unchanged. It does not automatically detect artifacts; the preview is there so you can judge the result yourself.`,
     examples: [
-
+      {
+        title: "Shrink a landscape photo as JPEG",
+        code: `Input: landscape photo, 1280x853, 320915 bytes\nOutput: JPEG quality 80, 1280x853, 277483 bytes, 14% smaller`,
+        note: "Results vary by browser, so compare the preview before downloading.",
+      },
+      {
+        title: "Keep the original when PNG would grow",
+        code: `Input: photo.jpg, output format: PNG\nOutput: unchanged JPEG kept when the PNG encode is larger`,
+        note: "Correctly labels the result unchanged instead of claiming a bigger PNG is compressed.",
+      },
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
