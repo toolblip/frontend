@@ -1948,17 +1948,17 @@ Output: chart-page4.png`,
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "image-resizer": {
-    description: `Resizing an image is different from cropping one: cropping cuts away part of the picture, while resizing scales the whole image to a new pixel width and height. This tool resizes one browser-supported image at a time, with an aspect ratio lock for proportional changes or unlocked fields for an exact custom size. Useful for shrinking a large photo before upload, making a single blog preview image fit a required dimension, or exporting one image as a PNG without sending it to a server.`,
+    description: `Resizing an image is different from cropping one: cropping cuts away part of the picture, while resizing scales the whole image to a new pixel width and height. This tool resizes one browser-supported image at a time, previews the actual encoded result before download, and lets you keep the source format when possible or choose PNG, JPEG, or WebP explicitly. Useful for making a single blog preview image fit a required dimension, checking whether the encoded file grew or shrank, or exporting one resized image without sending it to a server.`,
     examples: [
       {
         title: 'Resize one image proportionally',
-        code: `Input: photo.jpg, width: 1200px, aspect ratio locked\nOutput: resized-1200x800.png`,
-        note: 'Keeps the full image in frame while recalculating the matching height.',
+        code: `Input: photo.jpg, width: 1200px, aspect ratio locked, format: Auto\nOutput preview: photo-resized-1200x800.jpg with actual bytes shown`,
+        note: 'Keeps the full image in frame while preserving JPEG by default.',
       },
       {
         title: 'Export an exact custom size',
-        code: `Input: banner.png, target: 1200x630px, aspect ratio unlocked\nOutput: resized-1200x630.png`,
-        note: 'Uses the typed whole-pixel dimensions in the downloaded PNG filename.',
+        code: `Input: banner.png, target: 1200x630px, aspect ratio unlocked, format: WebP\nOutput preview: banner-resized-1200x630.webp with file-size change shown`,
+        note: 'Uses the typed whole-pixel dimensions and selected output format in the download.',
       },
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]

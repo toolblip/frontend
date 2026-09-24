@@ -94,17 +94,17 @@ const FIX_BATCH_71: Record<string, FixBatchEntry> = {
   },
 
   'image-resizer': {
-    description: `Resizing one image to an exact pixel size is a different job than cropping or running a batch job: the whole picture stays in frame while the browser scales it to the width and height you choose. This tool resizes a single browser-supported image with an aspect ratio lock for proportional changes, or unlocked fields for a deliberate exact size, all without uploading the file to a server. Useful for shrinking a large photo before upload, preparing one blog preview image at a required size, or exporting a one-off resized PNG with the dimensions reflected in the filename.`,
+    description: `Resizing one image to an exact pixel size is a different job than cropping or running a batch job: the whole picture stays in frame while the browser scales it to the width and height you choose. This tool resizes a single browser-supported image with an aspect ratio lock, previews the actual output before download, and shows the resulting format, byte size, and file-size change. Useful for preparing one blog preview image at a required size, checking whether a resized export grew or shrank, or choosing PNG, JPEG, or WebP for a one-off browser-only resize.`,
     examples: [
       {
         title: 'Resize one photo proportionally',
-        code: `Input: photo.jpg, width: 1200px, lock aspect ratio\nOutput: resized-1200x800.png`,
-        note: 'Keeps the image proportional while changing its width.',
+        code: `Input: photo.jpg, width: 1200px, lock aspect ratio, format: Auto\nOutput preview: photo-resized-1200x800.jpg with actual bytes shown`,
+        note: 'Keeps the image proportional and preserves JPEG by default.',
       },
       {
-        title: 'Export an exact custom PNG',
-        code: `Input: banner.jpg, target size: 1200x630px, lock off\nOutput: resized-1200x630.png`,
-        note: 'Uses the actual output dimensions in the downloaded filename.',
+        title: 'Export an exact custom format',
+        code: `Input: banner.png, target size: 1200x630px, lock off, format: WebP\nOutput preview: banner-resized-1200x630.webp with file-size change shown`,
+        note: 'Uses the actual output dimensions and selected format in the downloaded filename.',
       },
     ],
   },

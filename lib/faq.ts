@@ -660,7 +660,9 @@ const OVERRIDES: Record<string, FAQ[]> = {
   ],
   'image-resizer': [
     { q: 'Can I resize multiple images at once?', a: 'No. This tool resizes one image at a time. Use the Batch Image Resizer when you need to process several files together.' },
-    { q: 'Why does it require whole-pixel dimensions?', a: 'PNG canvases have integer pixel sizes, so the tool rejects fractional, zero, and non-finite dimensions before export instead of downloading a file whose name does not match its actual size.' },
+    { q: 'What format does the resized image use?', a: 'Auto keeps JPEG, PNG, or WebP source files in the same format when the browser encoder supports it. You can also choose PNG, JPEG, or WebP explicitly. Other browser-decodable image inputs default to PNG with a note before export.' },
+    { q: 'Will resizing always make the file smaller?', a: 'No. Changing pixel dimensions does not guarantee a smaller encoded file. The result preview shows the actual byte size and signed size change before you download.' },
+    { q: 'Why does it require whole-pixel dimensions?', a: 'Canvas exports have integer pixel sizes, so the tool rejects fractional, zero, and non-finite dimensions before export instead of producing a file whose name does not match its actual size.' },
     { q: 'What size limits apply?', a: 'Output dimensions must be no more than 8192 pixels on either side and no more than 40 megapixels total. Those limits avoid huge browser canvas allocations that can fail or freeze the page.' },
   ],
   'byte-converter': [
