@@ -70,6 +70,11 @@ const FORMAT_TO_MIME: Record<Exclude<ResizeFormatChoice, 'auto'>, { mimeType: st
 const DEFAULT_QUALITY = 86;
 const MIN_QUALITY = 10;
 const QUALITY_RETRY_STEP = 10;
+const IMAGE_RESIZER_SAMPLE_URL = '/samples/image-resizer-mountain.jpg';
+const IMAGE_RESIZER_SAMPLE_NAME = 'image-resizer-mountain.jpg';
+const IMAGE_RESIZER_SAMPLE_MIME = 'image/jpeg';
+const IMAGE_RESIZER_SAMPLE_TARGET_WIDTH = 640;
+// Sample source: https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?fit=crop&w=1280&h=853&q=90&fm=jpg ; license: https://unsplash.com/license
 
 export function validateResizeDimensions(rawWidth: number, rawHeight: number): ResizeValidation {
   if (!Number.isFinite(rawWidth) || !Number.isFinite(rawHeight)) {
@@ -330,7 +335,7 @@ export default function ImageResizerClient() {
     setResult(null);
   };
 
-  const loadFile = (f: File) => {
+  const loadFile = (f: File, options: { targetWidth?: number } = {}) => {
     const id = ++loadId.current;
     clearResult();
     setLoading(false);
@@ -357,9 +362,15 @@ export default function ImageResizerClient() {
         setError('This image decoded with zero dimensions. Try another file or upload a replacement.');
         return;
       }
-      setDimensions({ width: img.naturalWidth, height: img.naturalHeight });
-      setWidth(img.naturalWidth);
-      setHeight(img.naturalHeight);
+      const sourceDimensions = { width: img.naturalWidth, height: img.naturalHeight };
+      const targetWidth = options.targetWidth
+        ? Math.min(sourceDimensions.width, Math.max(1, Math.round(options.targetWidth)))
+        : sourceDimensions.width;
+      setDimensions(sourceDimensions);
+      setWidth(targetWidth);
+      setHeight(options.targetWidth
+        ? Math.max(1, Math.round(targetWidth * sourceDimensions.height / sourceDimensions.width))
+        : sourceDimensions.height);
       setLoading(false);
       setError('');
     };
@@ -385,11 +396,16 @@ export default function ImageResizerClient() {
     setLoading(true);
     setError('');
     try {
-      const response = await fetch('/samples/tool-sample.png');
+      const response = await fetch(IMAGE_RESIZER_SAMPLE_URL);
       if (!response.ok) throw new Error('Sample image request failed.');
       const blob = await response.blob();
       if (id !== loadId.current) return;
-      loadFile(new File([blob], 'tool-sample.png', { type: blob.type || 'image/png' }));
+      setFormatChoice('auto');
+      setQuality(DEFAULT_QUALITY);
+      setMaintain(true);
+      loadFile(new File([blob], IMAGE_RESIZER_SAMPLE_NAME, { type: blob.type || IMAGE_RESIZER_SAMPLE_MIME }), {
+        targetWidth: IMAGE_RESIZER_SAMPLE_TARGET_WIDTH,
+      });
     } catch {
       if (id !== loadId.current) return;
       setLoading(false);
