@@ -875,7 +875,7 @@ export const tools: Tool[] = [
   { name: 'IPv6 Address Generator', slug: 'ipv6-generator', description: 'Generate random IPv6 addresses in full, compressed, or EUI-64 format for testing.', emoji: '🌍', category: 'Utility' },
   { name: 'MAC Address Generator', slug: 'mac-address-generator', description: 'Generate random MAC addresses in OUI, EUI-48, or EUI-64 format for network testing.', emoji: '📡', category: 'Utility' },
   { name: 'HTML Table Generator', slug: 'html-table-generator', description: 'Create styled HTML tables with custom rows, columns, borders, and striped or highlighted rows.', emoji: '📊', category: 'Developer' },
-  { name: 'Base64 Image Converter', slug: 'base64-image-converter', description: 'Convert images to Base64 data URLs or decode Base64 back to image files instantly.', emoji: '🖼️', category: 'Image' },
+  { name: 'Base64 Image Converter', slug: 'base64-image-converter', description: 'Convert verified images to Base64 data URLs or decode Base64 back to downloadable image files.', emoji: '🖼️', category: 'Image' },
   { name: 'Color Harmony Generator', slug: 'color-harmony-generator', description: 'Generate complementary, analogous, triadic, and split-complementary color palettes from any base hue.', emoji: '🎨', category: 'Color' },
   { name: 'Open Graph Preview', slug: 'open-graph-preview', description: 'Free Open Graph preview tool. See how your URL looks when shared on Facebook, LinkedIn, and messaging apps. Debug OG tags instantly.', emoji: '📤', category: 'SEO' },
   { name: 'Twitter Card Preview', slug: 'twitter-card-preview', description: 'Preview how a webpage appears when shared on Twitter with large or summary card.', emoji: '🐦', category: 'SEO' },

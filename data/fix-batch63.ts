@@ -126,17 +126,17 @@ const FIX_BATCH_63: Record<string, FixBatchEntry> = {
   },
 
   'base64-image-converter': {
-    description: `A tiny icon embedded directly into a CSS file as Base64 text skips an entire separate HTTP request a browser would otherwise have to make just to fetch a small image file, and an email's HTML body that can't reliably load external images at all needs that same image data embedded directly inline instead. This tool converts an image into a Base64 data URL or decodes one back into an actual image file, moving in either direction between the two. Useful for embedding a small icon directly into a CSS file as a data URL to avoid an extra network request, converting an image into Base64 to paste into an email's HTML body where external images might get blocked, or decoding a Base64 data URL found in a webpage's source back into a downloadable image file.`,
+    description: `Convert PNG, JPEG, GIF, WebP, or browser-decodable SVG images into full Base64 data URLs, or decode Base64 image data back into a downloadable file. The tool checks actual bytes before showing a preview, so raw JPEG stays JPEG, MIME mismatches are rejected, and valid Base64 text that is not an image does not leave a broken preview. Useful for embedding a small image in CSS or email HTML, checking the real format behind a raw Base64 blob, or recovering an image file from a data URL copied out of page source.`,
     examples: [
       {
         title: 'Embed an icon in CSS',
         code: `Input: icon.png\nOutput: background-image: url(data:image/png;base64,iVBORw0KGgo...);`,
-        note: 'Avoids a separate HTTP request for a small icon.',
+        note: 'Creates a full data URL after verifying the upload is really an image.',
       },
       {
-        title: 'Decode a data URL back into a file',
-        code: `Input: data:image/png;base64,iVBORw0KGgo...\nOutput: image.png`,
-        note: 'Recovers an actual image file from an embedded data URL.',
+        title: 'Decode raw Base64 back into a file',
+        code: `Input: /9j/4AAQSkZJRg...\nOutput: decoded-image.jpg`,
+        note: 'Detects the real image format from bytes and downloads the matching file.',
       },
     ],
   },

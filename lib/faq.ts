@@ -579,9 +579,9 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Is there a file size limit?', a: 'There\'s no hard cap in the tool itself, but very large files can be slow to encode and will produce a Base64 string roughly a third larger than the original file, since Base64 always expands binary data.' },
   ],
   'base64-image-converter': [
-    { q: 'Does it show me a preview of the image, or just the raw text?', a: 'Both. Encoding a file renders the actual image using the generated data URL, and decoding a pasted Base64 string reconstructs the image bytes and displays it the same way, not just a text box full of characters.' },
-    { q: 'What image formats can I encode?', a: 'Any format the browser can read as a file, including JPG, PNG, GIF, and WebP. The output data URL embeds the correct MIME type automatically based on what you uploaded.' },
-    { q: 'Can I decode Base64 that isn\'t a full data URL?', a: 'Yes. If you paste raw Base64 without the data:image/...;base64, prefix, the tool assumes image/png and still decodes and previews it.' },
+    { q: 'Does it show me a preview of the image, or just the raw text?', a: 'Both. The tool only shows output after the browser can decode the image and report real dimensions. Bad Base64, non-image bytes, MIME mismatches, and broken images show an inline error instead of a stale preview.' },
+    { q: 'What image formats can I encode or decode?', a: 'PNG, JPEG, GIF, WebP, and browser-decodable SVG. For raw Base64 without a data URL prefix, it inspects the bytes and uses the detected image type instead of assuming PNG.' },
+    { q: 'Can I download the decoded image?', a: 'Yes. Decode mode keeps the original decoded bytes and downloads them with the matching extension. Encode mode also offers the uploaded image bytes for download. Base64 is encoding, not compression, so the text is usually larger than the image file.' },
   ],
   'base64-image-decoder': [
     { q: 'How is this different from the Base64 Image Converter?', a: 'This tool is decode-only: paste or load a Base64 string and it reconstructs the image and gives you a download link. It doesn\'t have an encode mode for turning an image into Base64, which is what the Converter tool is for.' },
