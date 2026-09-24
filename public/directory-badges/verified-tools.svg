@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="54" viewBox="0 0 200 54" role="img" aria-label="Verified Tools — AI &amp; SaaS tools directory">
+  <!-- Solid fill: this sits on someone else's page, and we don't get to know
+       what colour that page is. An outline badge disappears on a dark site. -->
+  <rect width="200" height="54" rx="10" fill="#1B5E4A"/>
+
+  <!-- Seal mark, knocked out -->
+  <g transform="translate(14 15)">
+    <circle cx="12" cy="12" r="11.2" fill="none" stroke="#FFFFFF" stroke-width="1.9" opacity=".55"/>
+    <path d="M7.5 12.3 L10.6 15.4 L16.6 9.1" fill="none" stroke="#FFFFFF" stroke-width="2.2"
+          stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <text x="48" y="24" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"
+        font-size="10" font-weight="500" letter-spacing="1.3" fill="#FFFFFF" opacity=".72">ONE OF THE</text>
+  <text x="48" y="39" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"
+        font-size="15" font-weight="700" letter-spacing="-.3" fill="#FFFFFF">Verified Tools</text>
+</svg>
