@@ -160,6 +160,119 @@
   overflow-wrap: anywhere;
 }
 
+.rotationEditor {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.rotationCanvas {
+  position: relative;
+  min-height: 340px;
+  height: min(58vw, 560px);
+  max-height: 560px;
+  padding: 20px;
+}
+
+.rotationCanvas img,
+.rotationFallback {
+  display: block;
+  max-width: min(100%, 520px);
+  max-height: min(100%, 520px);
+  object-fit: contain;
+  width: auto;
+  height: auto;
+}
+
+.rotationCanvas img {
+  transition: none;
+}
+
+.angleBadge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  display: inline-flex;
+  min-width: 48px;
+  min-height: 32px;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--fg-0);
+  font-size: 0.85rem;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 12%);
+}
+
+.rotateButton {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  display: grid;
+  width: 48px;
+  height: 48px;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--fg-0);
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgb(0 0 0 / 16%);
+}
+
+.rotateButton:hover:not(:disabled) {
+  background: var(--surface-3);
+}
+
+.rotateButton:focus-visible {
+  outline: 3px solid var(--accent, #4f8cff);
+  outline-offset: 3px;
+}
+
+.rotateButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.rotationDownload {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.rotationDownload p {
+  flex: 1 1 180px;
+}
+
+@media (max-width: 640px) {
+  .rotationCanvas {
+    min-height: 250px;
+    height: min(90vw, 420px);
+    padding: 14px;
+  }
+
+  .rotationCanvas img,
+  .rotationFallback {
+    max-width: 100%;
+    max-height: 100%;
+  }
+
+  .rotationDownload {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .rotationDownload p {
+    flex: 0 1 auto;
+    margin: 0;
+  }
+}
+
 @media (max-width: 720px) {
   .workspace {
     grid-template-columns: 1fr;

@@ -28,6 +28,7 @@ describe('image transform output format', () => {
 
 describe('image transform dimensions', () => {
   it('swaps width and height only for quarter-turn rotations', () => {
+    expect(getImageTransformPlan(3, 2, { type: 'rotate', angle: 0 })).toEqual({ width: 3, height: 2, translateX: 0, translateY: 0, rotateRadians: 0, scaleX: 1, scaleY: 1 });
     expect(getImageTransformPlan(3, 2, { type: 'rotate', angle: 90 })).toMatchObject({ width: 2, height: 3 });
     expect(getImageTransformPlan(3, 2, { type: 'rotate', angle: 180 })).toMatchObject({ width: 3, height: 2 });
     expect(getImageTransformPlan(3, 2, { type: 'rotate', angle: 270 })).toMatchObject({ width: 2, height: 3 });
@@ -45,10 +46,24 @@ describe('image transform dimensions', () => {
 
 describe('image transform pixel coordinates', () => {
   it('maps clockwise rotations to exact integer output pixels', () => {
+    expect(mapImageTransformPixel(3, 2, 0, 0, { type: 'rotate', angle: 0 })).toEqual({ x: 0, y: 0 });
+    expect(mapImageTransformPixel(3, 2, 2, 1, { type: 'rotate', angle: 0 })).toEqual({ x: 2, y: 1 });
     expect(mapImageTransformPixel(3, 2, 0, 0, { type: 'rotate', angle: 90 })).toEqual({ x: 1, y: 0 });
     expect(mapImageTransformPixel(3, 2, 2, 1, { type: 'rotate', angle: 90 })).toEqual({ x: 0, y: 2 });
     expect(mapImageTransformPixel(3, 2, 0, 0, { type: 'rotate', angle: 180 })).toEqual({ x: 2, y: 1 });
     expect(mapImageTransformPixel(3, 2, 2, 1, { type: 'rotate', angle: 270 })).toEqual({ x: 1, y: 0 });
+  });
+
+  it('returns to the original coordinates after four clockwise quarter turns', () => {
+    const point = { x: 1, y: 1 };
+    let width = 3;
+    let height = 2;
+    let mapped = point;
+    for (let turn = 0; turn < 4; turn++) {
+      mapped = mapImageTransformPixel(width, height, mapped.x, mapped.y, { type: 'rotate', angle: 90 });
+      [width, height] = [height, width];
+    }
+    expect(mapped).toEqual(point);
   });
 
   it('maps flips without changing dimensions', () => {

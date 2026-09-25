@@ -8,7 +8,7 @@ import {
   type GeometryValidation,
 } from './image-geometry';
 
-export type ImageRotationAngle = 90 | 180 | 270;
+export type ImageRotationAngle = 0 | 90 | 180 | 270;
 export type ImageFlipDirection = 'horizontal' | 'vertical' | 'both';
 export type ImageTransformOperation =
   | { type: 'rotate'; angle: ImageRotationAngle }
@@ -57,6 +57,17 @@ export function verifyImageTransformOutputSignature(header: Uint8Array, mimeType
 
 export function getImageTransformPlan(sourceWidth: number, sourceHeight: number, operation: ImageTransformOperation): ImageTransformPlan {
   if (operation.type === 'rotate') {
+    if (operation.angle === 0) {
+      return {
+        width: sourceWidth,
+        height: sourceHeight,
+        translateX: 0,
+        translateY: 0,
+        rotateRadians: 0,
+        scaleX: 1,
+        scaleY: 1,
+      };
+    }
     if (operation.angle === 90) {
       return {
         width: sourceHeight,
@@ -131,6 +142,7 @@ export function mapImageTransformPixel(
   operation: ImageTransformOperation,
 ) {
   if (operation.type === 'rotate') {
+    if (operation.angle === 0) return { x, y };
     if (operation.angle === 90) return { x: sourceHeight - 1 - y, y: x };
     if (operation.angle === 180) return { x: sourceWidth - 1 - x, y: sourceHeight - 1 - y };
     return { x: y, y: sourceWidth - 1 - x };

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { Upload } from 'lucide-react';
+import { RotateCw, Upload } from 'lucide-react';
 import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 import {
   ACCEPTED_IMAGE_TRANSFORM_TYPES,
@@ -42,7 +42,7 @@ const TOOL_COPY: Record<TransformKind, {
 }> = {
   rotate: {
     controlLabel: 'Clockwise rotation',
-    hint: 'The preview updates when you choose a turn.',
+    hint: 'Click the rotate icon to turn the image.',
     busy: 'Updating preview...',
     outputLabel: 'Rotated',
     empty: 'Choose an image to see the rotated preview.',
@@ -59,12 +59,6 @@ const TOOL_COPY: Record<TransformKind, {
     operationName: 'flipped',
   },
 };
-
-const ROTATION_CHOICES: Array<{ value: ImageRotationAngle; label: string; aria: string }> = [
-  { value: 90, label: '90 degrees', aria: 'Rotate 90 degrees clockwise' },
-  { value: 180, label: '180 degrees', aria: 'Rotate 180 degrees clockwise' },
-  { value: 270, label: '270 degrees', aria: 'Rotate 270 degrees clockwise' },
-];
 
 const FLIP_CHOICES: Array<{ value: ImageFlipDirection; label: string; aria: string }> = [
   { value: 'horizontal', label: 'Horizontal', aria: 'Flip horizontal' },
@@ -89,7 +83,7 @@ function getOutputNotes(source: SourceImage, formatLabel: string) {
 export default function ImageTransformToolClient({ kind }: { kind: TransformKind }) {
   const [source, setSource] = useState<SourceImage | null>(null);
   const [result, setResult] = useState<TransformResult | null>(null);
-  const [rotation, setRotation] = useState<ImageRotationAngle>(90);
+  const [rotation, setRotation] = useState<ImageRotationAngle>(0);
   const [flipDirection, setFlipDirection] = useState<ImageFlipDirection>('horizontal');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -131,7 +125,7 @@ export default function ImageTransformToolClient({ kind }: { kind: TransformKind
   };
 
   const resetDefaults = () => {
-    setRotation(90);
+    setRotation(0);
     setFlipDirection('horizontal');
   };
 
@@ -153,6 +147,7 @@ export default function ImageTransformToolClient({ kind }: { kind: TransformKind
     clearResult();
     revokeSource();
     setSource(null);
+    setRotation(0);
     setError('');
     setLoading(true);
     setIsDragging(false);
@@ -242,6 +237,12 @@ export default function ImageTransformToolClient({ kind }: { kind: TransformKind
   const retryExport = () => {
     if (!exportFailed || !source) return;
     setRetryVersion((version) => version + 1);
+  };
+
+  const rotateClockwise = () => {
+    clearResult();
+    setError('');
+    setRotation((current) => ((current + 90) % 360) as ImageRotationAngle);
   };
 
   useEffect(() => {
@@ -421,33 +422,66 @@ export default function ImageTransformToolClient({ kind }: { kind: TransformKind
           )}
         </button>
 
-        {(loading || processing) && <p className="tb-image-hint" role="status">{loading ? 'Checking image...' : copy.busy}</p>}
+        {(loading || (kind === 'flip' && processing)) && <p className="tb-image-hint" role="status">{loading ? 'Checking image...' : copy.busy}</p>}
         {error && <p className="tb-image-hint" role="alert">{error}</p>}
 
         {source && (
           <>
+            {kind === 'rotate' ? (
+              <section className={`tb-v2-card ${styles.rotationEditor}`} aria-label="Image editor">
+                <div className={`${styles.rotationCanvas} tb-image-preview`} aria-busy={processing}>
+                  {result ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={result.url} alt="Image preview" className={styles.encodedImage} />
+                  ) : (() => {
+                    const plan = getImageTransformPlan(source.width, source.height, { type: 'rotate', angle: rotation });
+                    return (
+                      <svg
+                        className={styles.rotationFallback}
+                        width={plan.width}
+                        height={plan.height}
+                        viewBox={`0 0 ${plan.width} ${plan.height}`}
+                        preserveAspectRatio="xMidYMid meet"
+                        role="img"
+                        aria-label="Image preview"
+                      >
+                        <image
+                          href={source.url}
+                          width={source.width}
+                          height={source.height}
+                          transform={`translate(${plan.translateX} ${plan.translateY}) rotate(${rotation}) scale(${plan.scaleX} ${plan.scaleY})`}
+                        />
+                      </svg>
+                    );
+                  })()}
+                  <span className={styles.angleBadge} aria-live="polite">{rotation}°</span>
+                  <button
+                    type="button"
+                    className={styles.rotateButton}
+                    aria-label="Rotate 90 degrees clockwise"
+                    title="Rotate 90 degrees clockwise"
+                    onClick={rotateClockwise}
+                    disabled={!source || loading}
+                  >
+                    <RotateCw size={21} aria-hidden="true" />
+                  </button>
+                </div>
+                <div className={styles.rotationDownload}>
+                  <p className="tb-image-hint" role="status">{processing ? 'Updating preview…' : result ? `${result.width} x ${result.height} px · ${resultMeta}` : 'Preparing preview'}</p>
+                  <button type="button" onClick={download} disabled={!result || processing} className="tb-v2-btn tb-v2-btn-primary">
+                    Download {result?.formatLabel ?? (source.mimeType === 'image/jpeg' ? 'JPEG' : 'PNG')}
+                  </button>
+                  {exportFailed && <button type="button" onClick={retryExport} className="tb-v2-btn tb-v2-btn-sm">Retry preview</button>}
+                </div>
+              </section>
+            ) : (
+            <>
             <div className={`tb-v2-card tb-image-settings ${styles.settings}`}>
               <div className={styles.settingHead}>
                 <h3>{copy.controlLabel}</h3>
                 <p>{copy.hint}</p>
               </div>
-              {kind === 'rotate' ? (
-                <div className={`${styles.modeTabs} tb-v2-mode-tabs`} role="group" aria-label="Clockwise rotation">
-                  {ROTATION_CHOICES.map((choice) => (
-                    <button
-                      key={choice.value}
-                      type="button"
-                      className={`tb-v2-mode-tab ${rotation === choice.value ? 'on' : ''}`}
-                      aria-pressed={rotation === choice.value}
-                      aria-label={choice.aria}
-                      onClick={() => { if (rotation !== choice.value) invalidateForSetting(() => setRotation(choice.value)); }}
-                    >
-                      {choice.label}
-                    </button>
-                  ))}
-                </div>
-              ) : (
-                <div className={`${styles.modeTabs} tb-v2-mode-tabs`} role="group" aria-label="Flip direction">
+              <div className={`${styles.modeTabs} tb-v2-mode-tabs`} role="group" aria-label="Flip direction">
                   {FLIP_CHOICES.map((choice) => (
                     <button
                       key={choice.value}
@@ -460,8 +494,7 @@ export default function ImageTransformToolClient({ kind }: { kind: TransformKind
                       {choice.label}
                     </button>
                   ))}
-                </div>
-              )}
+              </div>
               <p className="tb-image-hint">JPEG is re-encoded at quality 90. PNG keeps transparency. GIF uses its first frame; SVG is rasterized.</p>
             </div>
 
@@ -514,6 +547,8 @@ export default function ImageTransformToolClient({ kind }: { kind: TransformKind
                 )}
               </figure>
             </div>
+            </>
+            )}
           </>
         )}
       </div>

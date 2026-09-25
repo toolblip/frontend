@@ -1036,7 +1036,7 @@ export const tools: Tool[] = [
   { name: 'Word Frequency Table', slug: 'word-frequency-table', description: 'Generate a frequency table showing how often each word appears in any text.', emoji: '📊', category: 'Text' },
   { name: 'API Auth Header Generator', slug: 'api-auth-header-generator', description: 'Generate API authentication headers for Bearer, Basic, and AWS Signature schemes.', emoji: '🔐', category: 'Developer' },
   { name: 'Image Border Adder', slug: 'image-border-adder', description: 'Add an outside PNG border with custom width and opaque color while previewing the new dimensions.', emoji: '🖼️', category: 'Image' },
-  { name: 'Image Rotate Tool', slug: 'image-rotate', description: 'Rotate images clockwise by 90°, 180°, or 270° with a live preview. JPEG and PNG downloads supported.', emoji: '🔄', category: 'Image' },
+  { name: 'Image Rotate Tool', slug: 'image-rotate', description: 'Turn an image 90° at a time with a live editor preview. JPEG and PNG downloads supported.', emoji: '🔄', category: 'Image' },
   { name: 'Image Flip Tool', slug: 'image-flip', description: 'Flip images horizontally, vertically, or both ways with a live preview. JPEG and PNG downloads supported.', emoji: '🔃', category: 'Image' },
   { name: 'Heading Tag Analyzer', slug: 'heading-tag-analyzer', description: 'Analyze heading structure (H1-H6) on any webpage to check for proper hierarchy and SEO best practices.', emoji: '🏷️', category: 'SEO' },
   { name: 'Color Luminance Checker', slug: 'color-luminance-checker', description: 'Check relative luminance and brightness of any color to predict contrast on light or dark backgrounds.', emoji: '💡', category: 'Color' },
