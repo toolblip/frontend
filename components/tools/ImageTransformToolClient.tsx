@@ -5,11 +5,11 @@ import { Upload } from 'lucide-react';
 import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 import {
   ACCEPTED_IMAGE_TRANSFORM_TYPES,
-  IMAGE_TRANSFORM_OUTPUT_MIME,
+  getImageTransformOutputFormat,
   getImageTransformPlan,
   validateImageTransformDimensions,
   validateImageTransformFile,
-  verifyPngOutputSignature,
+  verifyImageTransformOutputSignature,
   type ImageFlipDirection,
   type ImageRotationAngle,
   type ImageTransformOperation,
@@ -25,40 +25,38 @@ import styles from './ImageTransformTool.module.css';
 
 type TransformKind = 'rotate' | 'flip';
 type SourceImage = { file: File; url: string; width: number; height: number; mimeType: string; notes: string[] };
-type TransformResult = { url: string; blob: Blob; width: number; height: number; fileName: string; notes: string[] };
+type TransformResult = { url: string; blob: Blob; width: number; height: number; fileName: string; formatLabel: string; notes: string[] };
 
 const SAMPLE_URL = '/samples/image-resizer-mountain.jpg';
 const SAMPLE_MIME = 'image/jpeg';
+const EXPORT_DEBOUNCE_MS = 125;
 
 const TOOL_COPY: Record<TransformKind, {
   controlLabel: string;
   hint: string;
-  action: string;
   busy: string;
   outputLabel: string;
   empty: string;
-  fileName: string;
   sampleName: string;
+  operationName: string;
 }> = {
   rotate: {
     controlLabel: 'Clockwise rotation',
-    hint: 'Choose the clockwise turn, then rotate the image.',
-    action: 'Rotate image',
-    busy: 'Rotating image...',
+    hint: 'The preview updates when you choose a turn.',
+    busy: 'Updating preview...',
     outputLabel: 'Rotated',
-    empty: 'Choose an image, pick a clockwise turn, then rotate it.',
-    fileName: 'rotated-image.png',
+    empty: 'Choose an image to see the rotated preview.',
     sampleName: 'rotate-example.jpg',
+    operationName: 'rotated',
   },
   flip: {
     controlLabel: 'Flip direction',
-    hint: 'Choose the mirror direction, then flip the image.',
-    action: 'Flip image',
-    busy: 'Flipping image...',
+    hint: 'The preview updates when you choose a direction.',
+    busy: 'Updating preview...',
     outputLabel: 'Flipped',
-    empty: 'Choose an image, pick a direction, then flip it.',
-    fileName: 'flipped-image.png',
+    empty: 'Choose an image to see the flipped preview.',
     sampleName: 'flip-example.jpg',
+    operationName: 'flipped',
   },
 };
 
@@ -74,18 +72,18 @@ const FLIP_CHOICES: Array<{ value: ImageFlipDirection; label: string; aria: stri
   { value: 'both', label: 'Both', aria: 'Flip horizontal and vertical' },
 ];
 
-function getSizeChange(originalBytes: number, outputBytes: number) {
+function getSizeChange(originalBytes: number, outputBytes: number, formatLabel: string) {
   const delta = outputBytes - originalBytes;
   if (delta === 0) return 'Same file size';
   const percent = originalBytes > 0 ? Math.abs(delta / originalBytes * 100) : 0;
-  return delta < 0 ? `${percent.toFixed(1)}% smaller as PNG` : `${percent.toFixed(1)}% larger as PNG`;
+  return delta < 0 ? `${percent.toFixed(1)}% smaller as ${formatLabel}` : `${percent.toFixed(1)}% larger as ${formatLabel}`;
 }
 
-function getPngNotes(source: SourceImage) {
-  return [
-    ...source.notes,
-    'Output is PNG, so transparent pixels stay transparent. File size can be larger than the original.',
-  ];
+function getOutputNotes(source: SourceImage, formatLabel: string) {
+  const formatNote = formatLabel === 'JPEG'
+    ? 'JPEG is re-encoded at quality 90; file size may change.'
+    : 'PNG preserves transparent pixels; file size may change.';
+  return [...source.notes, formatNote];
 }
 
 export default function ImageTransformToolClient({ kind }: { kind: TransformKind }) {
@@ -96,9 +94,10 @@ export default function ImageTransformToolClient({ kind }: { kind: TransformKind
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [processing, setProcessing] = useState(false);
+  const [exportFailed, setExportFailed] = useState(false);
+  const [retryVersion, setRetryVersion] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
   const sourceUrlRef = useRef('');
   const resultUrlRef = useRef('');
   const loadId = useRef(0);
@@ -111,14 +110,12 @@ export default function ImageTransformToolClient({ kind }: { kind: TransformKind
     if (resultUrlRef.current) URL.revokeObjectURL(resultUrlRef.current);
   }, []);
 
-  const operation: ImageTransformOperation = kind === 'rotate'
-    ? { type: 'rotate', angle: rotation }
-    : { type: 'flip', direction: flipDirection };
   const copy = TOOL_COPY[kind];
 
   const clearResult = () => {
     processId.current++;
     setProcessing(false);
+    setExportFailed(false);
     if (resultUrlRef.current) {
       URL.revokeObjectURL(resultUrlRef.current);
       resultUrlRef.current = '';
@@ -166,6 +163,7 @@ export default function ImageTransformToolClient({ kind }: { kind: TransformKind
       setSource(null);
       setLoading(false);
       setProcessing(false);
+      setExportFailed(false);
       setError(message);
       if (fileInputRef.current) fileInputRef.current.value = '';
     };
@@ -241,111 +239,128 @@ export default function ImageTransformToolClient({ kind }: { kind: TransformKind
     setError('');
   };
 
-  const processImage = () => {
-    if (!source || loading || processing) return;
-    clearResult();
+  const retryExport = () => {
+    if (!exportFailed || !source) return;
+    setRetryVersion((version) => version + 1);
+  };
+
+  useEffect(() => {
+    if (!source || loading) return;
+
     const id = ++processId.current;
     const sourceLoadId = loadId.current;
-    const canvas = canvasRef.current;
-    if (!canvas) {
-      setError('Could not create the export canvas in this browser. Try again.');
-      return;
-    }
-    const ctx = canvas.getContext('2d');
-    if (!ctx) {
-      setError('Could not start the PNG export in this browser. Try again.');
-      return;
-    }
-
-    setProcessing(true);
-    setError('');
-    const isCancelled = () => id !== processId.current || sourceLoadId !== loadId.current;
+    let cancelled = false;
+    const isCancelled = () => cancelled || id !== processId.current || sourceLoadId !== loadId.current;
     const fail = (message: string) => {
       if (isCancelled()) return;
       setProcessing(false);
+      setExportFailed(true);
       setError(message);
     };
+    const operation: ImageTransformOperation = kind === 'rotate'
+      ? { type: 'rotate', angle: rotation }
+      : { type: 'flip', direction: flipDirection };
+    const format = getImageTransformOutputFormat(source.mimeType);
 
-    const img = new Image();
-    img.onload = async () => {
-      if (isCancelled()) return;
-      try {
-        const plan = getImageTransformPlan(source.width, source.height, operation);
-        const outputValidation = validateImageTransformDimensions(plan.width, plan.height);
-        if (!outputValidation.valid) {
-          fail(outputValidation.error);
-          return;
-        }
+    if (resultUrlRef.current) {
+      URL.revokeObjectURL(resultUrlRef.current);
+      resultUrlRef.current = '';
+    }
+    setResult(null);
+    setError('');
+    setExportFailed(false);
+    setProcessing(true);
 
-        canvas.width = plan.width;
-        canvas.height = plan.height;
-        const nextCtx = canvas.getContext('2d');
-        if (!nextCtx) {
-          fail('Could not finish the PNG export in this browser. Try again.');
-          return;
-        }
-        nextCtx.imageSmoothingEnabled = false;
-        nextCtx.clearRect(0, 0, plan.width, plan.height);
-        nextCtx.translate(plan.translateX, plan.translateY);
-        if (plan.rotateRadians) nextCtx.rotate(plan.rotateRadians);
-        if (plan.scaleX !== 1 || plan.scaleY !== 1) nextCtx.scale(plan.scaleX, plan.scaleY);
-        nextCtx.drawImage(img, 0, 0);
-        nextCtx.setTransform(1, 0, 0, 1, 0, 0);
-
-        const blob = await new Promise<Blob | null>((resolve, reject) => {
-          if (isCancelled()) {
-            resolve(null);
+    const timer = window.setTimeout(() => {
+      const img = new Image();
+      img.onload = async () => {
+        if (isCancelled()) return;
+        try {
+          const plan = getImageTransformPlan(source.width, source.height, operation);
+          const outputValidation = validateImageTransformDimensions(plan.width, plan.height);
+          if (!outputValidation.valid) {
+            fail(outputValidation.error);
             return;
           }
-          try {
-            canvas.toBlob((nextBlob) => resolve(nextBlob), IMAGE_TRANSFORM_OUTPUT_MIME);
-          } catch (toBlobError) {
-            reject(toBlobError);
+
+          const canvas = document.createElement('canvas');
+          canvas.width = plan.width;
+          canvas.height = plan.height;
+          const ctx = canvas.getContext('2d');
+          if (!ctx) {
+            fail(`Could not start the ${format.label} export in this browser. Try again.`);
+            return;
           }
-        });
-        if (isCancelled()) return;
-        if (!blob) {
-          fail('This image could not be exported as PNG. Try a smaller image or another file.');
-          return;
-        }
-        if (normalizeGeometryMime(blob.type || '') !== IMAGE_TRANSFORM_OUTPUT_MIME) {
-          fail('Your browser did not return PNG bytes. No download was created.');
-          return;
-        }
+          ctx.imageSmoothingEnabled = false;
+          ctx.clearRect(0, 0, plan.width, plan.height);
+          ctx.translate(plan.translateX, plan.translateY);
+          if (plan.rotateRadians) ctx.rotate(plan.rotateRadians);
+          if (plan.scaleX !== 1 || plan.scaleY !== 1) ctx.scale(plan.scaleX, plan.scaleY);
+          ctx.drawImage(img, 0, 0);
+          ctx.setTransform(1, 0, 0, 1, 0, 0);
 
-        const outputHeader = new Uint8Array(await blob.slice(0, 16).arrayBuffer());
-        if (isCancelled()) return;
-        if (!verifyPngOutputSignature(outputHeader)) {
-          fail('The browser export did not produce a valid PNG. No download was created.');
-          return;
-        }
+          const blob = await new Promise<Blob | null>((resolve, reject) => {
+            if (isCancelled()) {
+              resolve(null);
+              return;
+            }
+            try {
+              canvas.toBlob((nextBlob) => resolve(nextBlob), format.mimeType, format.quality);
+            } catch (toBlobError) {
+              reject(toBlobError);
+            }
+          });
+          if (isCancelled()) return;
+          if (!blob) {
+            fail(`This image could not be exported as ${format.label}. Try a smaller image or another file.`);
+            return;
+          }
+          if (normalizeGeometryMime(blob.type || '') !== format.mimeType) {
+            fail(`Your browser did not return ${format.label} bytes. No download was created.`);
+            return;
+          }
 
-        const resultUrl = URL.createObjectURL(blob);
-        if (isCancelled()) {
-          URL.revokeObjectURL(resultUrl);
-          return;
+          const outputHeader = new Uint8Array(await blob.slice(0, 16).arrayBuffer());
+          if (isCancelled()) return;
+          if (!verifyImageTransformOutputSignature(outputHeader, format.mimeType)) {
+            fail(`The browser export did not produce a valid ${format.label}. No download was created.`);
+            return;
+          }
+
+          const resultUrl = URL.createObjectURL(blob);
+          if (isCancelled()) {
+            URL.revokeObjectURL(resultUrl);
+            return;
+          }
+          if (resultUrlRef.current) URL.revokeObjectURL(resultUrlRef.current);
+          resultUrlRef.current = resultUrl;
+          setResult({
+            url: resultUrl,
+            blob,
+            width: plan.width,
+            height: plan.height,
+            fileName: `${source.file.name.replace(/\.[^.]+$/, '') || 'image'}-${copy.operationName}.${format.extension}`,
+            formatLabel: format.label,
+            notes: getOutputNotes(source, format.label),
+          });
+          setProcessing(false);
+        } catch (err) {
+          fail(err instanceof Error && err.message ? err.message : `This image could not be exported as ${format.label}. Try another image.`);
         }
-        if (resultUrlRef.current) URL.revokeObjectURL(resultUrlRef.current);
-        resultUrlRef.current = resultUrl;
-        setResult({
-          url: resultUrl,
-          blob,
-          width: plan.width,
-          height: plan.height,
-          fileName: copy.fileName,
-          notes: getPngNotes(source),
-        });
-        setProcessing(false);
-      } catch (err) {
-        fail(err instanceof Error && err.message ? err.message : 'This image could not be exported as PNG. Try another image.');
-      }
+      };
+      img.onerror = () => fail('This image could not be decoded for export. Try another file.');
+      img.src = source.url;
+    }, EXPORT_DEBOUNCE_MS);
+
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timer);
+      if (id === processId.current) processId.current++;
     };
-    img.onerror = () => fail('This image could not be decoded for export. Try another file.');
-    img.src = source.url;
-  };
+  }, [source, loading, kind, rotation, flipDirection, retryVersion, copy.operationName]);
 
   const download = () => {
-    if (!result) return;
+    if (!result || processing) return;
     const link = document.createElement('a');
     link.href = result.url;
     link.download = result.fileName;
@@ -353,14 +368,13 @@ export default function ImageTransformToolClient({ kind }: { kind: TransformKind
   };
 
   const sourceMeta = source ? `${formatGeometryBytesExact(source.file.size)} · ${source.width} x ${source.height} px · ${getGeometryMimeLabel(source.mimeType)}` : '';
-  const resultMeta = result ? `${formatGeometryBytesExact(result.blob.size)} · PNG` : 'PNG output';
-  const canProcess = Boolean(source && !loading && !processing);
+  const resultMeta = result ? `${formatGeometryBytesExact(result.blob.size)} · ${result.formatLabel}` : 'Preparing preview';
 
   return (
     <div className="tb-image-tool">
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Image</span>
-        <ToolExampleClearActions onExample={() => void loadExample()} onClear={clear} canClear={Boolean(source || result || error || loading || processing)} exampleDisabled={loading || processing} />
+        <ToolExampleClearActions onExample={() => void loadExample()} onClear={clear} canClear={Boolean(source || result || error || loading || processing)} exampleDisabled={loading} />
       </div>
 
       <div className="tb-image-tool-body">
@@ -426,7 +440,7 @@ export default function ImageTransformToolClient({ kind }: { kind: TransformKind
                       className={`tb-v2-mode-tab ${rotation === choice.value ? 'on' : ''}`}
                       aria-pressed={rotation === choice.value}
                       aria-label={choice.aria}
-                      onClick={() => invalidateForSetting(() => setRotation(choice.value))}
+                      onClick={() => { if (rotation !== choice.value) invalidateForSetting(() => setRotation(choice.value)); }}
                     >
                       {choice.label}
                     </button>
@@ -441,17 +455,14 @@ export default function ImageTransformToolClient({ kind }: { kind: TransformKind
                       className={`tb-v2-mode-tab ${flipDirection === choice.value ? 'on' : ''}`}
                       aria-pressed={flipDirection === choice.value}
                       aria-label={choice.aria}
-                      onClick={() => invalidateForSetting(() => setFlipDirection(choice.value))}
+                      onClick={() => { if (flipDirection !== choice.value) invalidateForSetting(() => setFlipDirection(choice.value)); }}
                     >
                       {choice.label}
                     </button>
                   ))}
                 </div>
               )}
-              <p className="tb-image-hint">PNG output keeps transparency. GIF exports use the first decoded frame; SVG files are rasterized.</p>
-              <div className="tb-image-actions">
-                <button type="button" onClick={processImage} disabled={!canProcess} className="tb-v2-btn tb-v2-btn-primary">{processing ? copy.busy : copy.action}</button>
-              </div>
+              <p className="tb-image-hint">JPEG is re-encoded at quality 90. PNG keeps transparency. GIF uses its first frame; SVG is rasterized.</p>
             </div>
 
             <div className={styles.workspace}>
@@ -477,7 +488,7 @@ export default function ImageTransformToolClient({ kind }: { kind: TransformKind
                 <figcaption className={`tb-image-card-head ${styles.previewCaption}`}>
                   <span className={styles.previewTitle}>
                     <span className="tb-v2-tool-label">{copy.outputLabel}</span>
-                    <span className="tb-image-hint">{result ? resultMeta : 'No current output'}</span>
+                    <span className="tb-image-hint">{resultMeta}</span>
                   </span>
                 </figcaption>
                 <div className={`tb-image-preview ${styles.previewPane}`} aria-busy={processing}>
@@ -489,21 +500,23 @@ export default function ImageTransformToolClient({ kind }: { kind: TransformKind
                 {result ? (
                   <div className={styles.resultBar} aria-live="polite">
                     <div className={styles.notes}>
-                      <strong>{getSizeChange(source.file.size, result.blob.size)}</strong>
+                      <strong>{getSizeChange(source.file.size, result.blob.size, result.formatLabel)}</strong>
                       <p className="tb-image-hint">{result.width} x {result.height} px · {formatGeometryBytesExact(source.file.size)} original to {formatGeometryBytesExact(result.blob.size)} output.</p>
                       {result.notes.map((note) => <p key={note} className="tb-image-hint">{note}</p>)}
                     </div>
-                    <button type="button" onClick={download} className="tb-v2-btn tb-v2-btn-primary">Download PNG</button>
+                    <button type="button" onClick={download} disabled={processing} className="tb-v2-btn tb-v2-btn-primary">Download {result.formatLabel}</button>
                   </div>
                 ) : (
-                  <p className="tb-image-hint">Run the action to create a PNG preview.</p>
+                  <div className={styles.resultBar}>
+                    <p className="tb-image-hint">{exportFailed ? 'Preview export failed.' : processing ? 'Updating the preview…' : 'Preview will appear here.'}</p>
+                    {exportFailed && <button type="button" onClick={retryExport} className="tb-v2-btn tb-v2-btn-sm">Retry preview</button>}
+                  </div>
                 )}
               </figure>
             </div>
           </>
         )}
       </div>
-      <canvas ref={canvasRef} hidden />
     </div>
   );
 }

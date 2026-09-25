@@ -17,6 +17,7 @@ import {
   MAX_IMAGE_LAYOUT_TOTAL_BYTES,
   getImageLayoutAggregateError,
   getImageLayoutSourceBoundsError,
+  moveItemToIndex,
 } from '@/lib/image-layout';
 
 export type ImageLayoutItem = {
@@ -204,6 +205,12 @@ async function readImageLayoutFile(
 
 export function getImageLayoutItemMeta(item: ImageLayoutItem) {
   return `${item.width} x ${item.height} px | ${getGeometryMimeLabel(item.mimeType)} | ${formatGeometryBytesExact(item.size)}`;
+}
+
+export function getImageLayoutOutputMimeType(sourceTypes: string[]) {
+  return sourceTypes.length > 0 && sourceTypes.every((type) => type.toLowerCase() === 'image/jpeg')
+    ? 'image/jpeg'
+    : 'image/png';
 }
 
 export function useImageLayoutImages(maxImages: number, onOutputInvalidated?: () => void) {
@@ -399,17 +406,20 @@ export function useImageLayoutImages(maxImages: number, onOutputInvalidated?: ()
     setItems(next);
   };
 
-  const moveItem = (id: string, direction: -1 | 1) => {
-    cancelInputWork();
-    clearResult();
+  const moveItemTo = (id: string, toIndex: number) => {
     const previous = itemsRef.current;
     const index = previous.findIndex((item) => item.id === id);
-    const nextIndex = index + direction;
-    if (index < 0 || nextIndex < 0 || nextIndex >= previous.length) return;
-    const next = [...previous];
-    [next[index], next[nextIndex]] = [next[nextIndex], next[index]];
+    const next = moveItemToIndex(previous, index, toIndex);
+    if (next === previous) return;
+    cancelInputWork();
+    clearResult();
     itemsRef.current = next;
     setItems(next);
+  };
+
+  const moveItem = (id: string, direction: -1 | 1) => {
+    const index = itemsRef.current.findIndex((item) => item.id === id);
+    moveItemTo(id, index + direction);
   };
 
   const clearAll = () => {
@@ -443,6 +453,7 @@ export function useImageLayoutImages(maxImages: number, onOutputInvalidated?: ()
     replaceFile,
     removeItem,
     moveItem,
+    moveItemTo,
     clearAll,
     clearResult,
     cancelInputWork,
@@ -457,23 +468,28 @@ export function useImageLayoutImages(maxImages: number, onOutputInvalidated?: ()
   };
 }
 
-export async function canvasToVerifiedPngResult(canvas: HTMLCanvasElement, filename: string) {
+export async function canvasToVerifiedImageResult(
+  canvas: HTMLCanvasElement,
+  filename: string,
+  mimeType: 'image/png' | 'image/jpeg',
+) {
   const width = canvas.width;
   const height = canvas.height;
   const blob = await new Promise<Blob | null>((resolve, reject) => {
     try {
-      canvas.toBlob((nextBlob) => resolve(nextBlob), 'image/png');
+      canvas.toBlob((nextBlob) => resolve(nextBlob), mimeType, mimeType === 'image/jpeg' ? 0.9 : undefined);
     } catch (err) {
       reject(err);
     }
   });
-  if (!blob) throw new Error('The PNG export returned empty bytes. Try again with fewer or smaller images.');
-  if (blob.type && blob.type.toLowerCase() !== 'image/png') {
-    throw new Error('The browser did not return valid PNG bytes. Try again or use another browser.');
+  const formatLabel = mimeType === 'image/jpeg' ? 'JPEG' : 'PNG';
+  if (!blob || blob.size === 0) throw new Error(`The ${formatLabel} export returned empty bytes. Try again with fewer or smaller images.`);
+  if (blob.type.toLowerCase() !== mimeType) {
+    throw new Error(`The browser did not return valid ${formatLabel} bytes. Try again or use another browser.`);
   }
   const signature = new Uint8Array(await blob.slice(0, 16).arrayBuffer());
-  if (!verifyGeometryOutputSignature(signature, 'image/png')) {
-    throw new Error('The browser did not return valid PNG bytes. Try again or use another browser.');
+  if (!verifyGeometryOutputSignature(signature, mimeType)) {
+    throw new Error(`The browser did not return valid ${formatLabel} bytes. Try again or use another browser.`);
   }
   return {
     url: URL.createObjectURL(blob),
@@ -482,4 +498,8 @@ export async function canvasToVerifiedPngResult(canvas: HTMLCanvasElement, filen
     width,
     height,
   };
+}
+
+export function canvasToVerifiedPngResult(canvas: HTMLCanvasElement, filename: string) {
+  return canvasToVerifiedImageResult(canvas, filename, 'image/png');
 }

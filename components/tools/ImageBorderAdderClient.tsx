@@ -2,6 +2,6 @@
 
 import ImageGeometryTool from './ImageGeometryTool';
 
-export default function ImageBorderAdderClient() {
-  return <ImageGeometryTool kind="border" />;
+export default function ImageBorderAdderClient({ live = false }: { live?: boolean }) {
+  return <ImageGeometryTool kind="border" live={live} />;
 }
