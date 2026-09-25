@@ -1960,7 +1960,7 @@ const OVERRIDES: Record<string, FAQ[]> = {
   'webp-converter': [
     { q: 'What quality levels can I choose when converting to WebP?', a: 'Four presets, Low (30%), Medium (50%), High (80%), and Maximum (100%), each shown with a short note about the size and quality tradeoff before you convert.' },
     { q: 'Does it always make the image smaller?', a: 'No. After converting, it shows the exact source and WebP byte sizes and says whether the WebP result is smaller, larger, or the same size.' },
-    { q: 'How does the conversion actually happen?', a: 'The file bytes are checked first, then the decoded image is drawn to a canvas and exported with canvas.toBlob as image/webp. If the browser returns another format or null, the tool shows an error instead of keeping the original file.' },
+    { q: 'How does the conversion actually happen?', a: 'The file bytes are checked first, then the decoded image is drawn to a canvas. Browsers that produce real WebP use the native encoder; if the native encoder returns PNG, another format, or null, the tool uses a local WebP encoder instead.' },
   ],
   'webp-to-jpg': [
     { q: 'Which image formats can I upload as the source?', a: 'JPEG, PNG, WebP, AVIF, or GIF, the uploader checks the file\'s MIME type against that list and rejects anything else with an error message.' },
