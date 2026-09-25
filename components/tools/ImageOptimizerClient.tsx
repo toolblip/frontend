@@ -1,9 +1,10 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { FileImage, Upload } from 'lucide-react';
+import { Upload } from 'lucide-react';
 import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 import { encodeImageOptimizerWebp } from '@/lib/image-optimizer-webp';
+import styles from './ImageOptimizerClient.module.css';
 
 type OutputFormat = 'jpeg' | 'png' | 'webp';
 type ImageDimensions = { width: number; height: number };
@@ -729,6 +730,8 @@ export default function ImageOptimizerClient() {
     : result?.couldMakeSmaller
       ? 'Optimized output is smaller than the original.'
       : 'Optimized output is not smaller than the original.';
+  const sourceMeta = source ? `${formatBytes(source.file.size)} · ${source.width} × ${source.height} px` : '';
+  const openFilePicker = () => fileInputRef.current?.click();
 
   return (
     <div className="tb-image-tool">
@@ -741,19 +744,39 @@ export default function ImageOptimizerClient() {
         <input ref={fileInputRef} type="file" accept={ACCEPTED_TYPES} onChange={handleFile} hidden aria-label="Select image to optimize" />
         <button
           type="button"
-          className={`tb-v2-dropzone tb-image-upload ${source ? 'tb-image-upload-compact' : ''} ${isDragging ? 'dragging' : ''}`}
-          onClick={() => fileInputRef.current?.click()}
+          className={`tb-v2-dropzone tb-image-upload ${source ? `tb-image-upload-compact ${styles.uploadCompact}` : ''} ${isDragging ? 'dragging' : ''}`}
+          onClick={openFilePicker}
           onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
           onDragLeave={() => setIsDragging(false)}
           onDrop={(e) => { e.preventDefault(); setIsDragging(false); const dropped = e.dataTransfer.files[0]; if (dropped) void loadFile(dropped); }}
           aria-label={source ? 'Replace image. Click or drop an image' : 'Choose image or drag and drop'}
           disabled={loading}
         >
-          {source ? <FileImage size={22} aria-hidden="true" /> : <Upload size={28} aria-hidden="true" />}
-          <span className="tb-image-upload-copy">
-            <span className="tb-v2-dropzone-text">{loading ? 'Loading image...' : source ? source.file.name : 'Click to upload or drag an image here'}</span>
-            <span className="tb-v2-dropzone-hint">{source ? `${formatBytes(source.file.size)} · ${source.width} × ${source.height} px` : 'PNG, JPEG, WebP, GIF, or SVG. 20 MiB max.'}</span>
-          </span>
+          {source ? (
+            <>
+              <span className={styles.uploadThumbnail} aria-hidden="true">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={source.url} alt="" />
+              </span>
+              <span className={`tb-image-upload-copy ${styles.uploadCopy}`}>
+                <span className={`tb-v2-dropzone-text ${styles.fileName}`} title={source.file.name}>{loading ? 'Loading image...' : source.file.name}</span>
+                <span className={`tb-v2-dropzone-hint ${styles.fileMeta}`}>{sourceMeta}</span>
+                <span className={`tb-v2-dropzone-hint ${styles.replaceHint}`}>Drop another image to replace.</span>
+              </span>
+              <span className={`tb-v2-btn tb-v2-btn-sm ${styles.replaceAffordance}`}>
+                <Upload size={15} aria-hidden="true" />
+                <span>Replace image</span>
+              </span>
+            </>
+          ) : (
+            <>
+              <Upload size={28} aria-hidden="true" />
+              <span className="tb-image-upload-copy">
+                <span className="tb-v2-dropzone-text">{loading ? 'Loading image...' : 'Click to upload or drag an image here'}</span>
+                <span className="tb-v2-dropzone-hint">PNG, JPEG, WebP, GIF, or SVG. 20 MiB max.</span>
+              </span>
+            </>
+          )}
         </button>
 
         {(loading || optimizing) && <p className="tb-image-hint" role="status">{loading ? 'Checking image...' : 'Optimizing image...'}</p>}
@@ -830,7 +853,22 @@ export default function ImageOptimizerClient() {
 
             <div className="tb-image-workspace">
               <figure className="tb-v2-card tb-image-preview-card">
-                <figcaption className="tb-image-card-head"><span className="tb-v2-tool-label">Original</span><span className="tb-image-hint">{formatBytesWithExact(source.file.size)}</span></figcaption>
+                <figcaption className={`tb-image-card-head ${styles.previewCaption}`}>
+                  <span className={styles.previewTitleGroup}>
+                    <span className="tb-v2-tool-label">Original</span>
+                    <span className="tb-image-hint">{formatBytesWithExact(source.file.size)}</span>
+                  </span>
+                  <button
+                    type="button"
+                    onClick={openFilePicker}
+                    disabled={loading}
+                    className={`tb-v2-btn tb-v2-btn-sm ${styles.previewReplaceButton}`}
+                    aria-label="Replace original image"
+                  >
+                    <Upload size={14} aria-hidden="true" />
+                    <span>Replace image</span>
+                  </button>
+                </figcaption>
                 <div className="tb-image-preview">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={source.url} alt="Original image" />
@@ -839,7 +877,7 @@ export default function ImageOptimizerClient() {
               </figure>
 
               <figure className="tb-v2-card tb-image-preview-card">
-                <figcaption className="tb-image-card-head"><span className="tb-v2-tool-label">Optimized</span>{result && <span className="tb-image-hint">{formatBytesWithExact(result.blob.size)} · {result.formatLabel}</span>}</figcaption>
+                <figcaption className={`tb-image-card-head ${styles.previewCaption}`}><span className="tb-v2-tool-label">Optimized</span>{result && <span className="tb-image-hint">{formatBytesWithExact(result.blob.size)} · {result.formatLabel}</span>}</figcaption>
                 <div className="tb-image-preview" aria-busy={optimizing}>
                   {result ? (
                     /* eslint-disable-next-line @next/next/no-img-element */
