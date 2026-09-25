@@ -1335,10 +1335,10 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'What format does the download use?', a: 'JPEG input downloads as JPEG at 90% quality. Other input formats download as PNG. GIFs are rasterized as still images.' },
   ],
   'image-rotate': [
-    { q: 'Does the preview update when I choose an angle?', a: 'Yes. Upload an image and choose a clockwise 90°, 180°, or 270° turn to see the result immediately. There is no Apply button.' },
+    { q: 'How do I rotate an image?', a: 'Click the rotate icon in the preview to turn the image 90° clockwise. Click again for each additional turn, then download the current preview.' },
     { q: 'What happens to the image size?', a: 'A 90 or 270 degree turn swaps the width and height. A 180 degree turn keeps the same dimensions.' },
     { q: 'What format does the download use?', a: 'JPEG input downloads as JPEG at 90% quality. Other input formats download as PNG, preserving PNG transparency. GIFs are rasterized as still images and SVGs are rasterized.' },
-    { q: 'Does rotation recompress previous results?', a: 'No. Each preview and download is made from the original uploaded image and current angle, not from a previously rotated output.' },
+    { q: 'Does rotation recompress previous results?', a: 'No. Each preview and download is made from the original uploaded image at the current angle, not from a previously rotated output.' },
   ],
   'image-flip': [
     { q: 'Does the preview update when I choose a flip direction?', a: 'Yes. Upload an image and choose horizontal, vertical, or both to see the result immediately. There is no Apply button.' },
