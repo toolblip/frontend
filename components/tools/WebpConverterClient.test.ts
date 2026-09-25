@@ -4,6 +4,7 @@ import {
   detectWebpConverterFormat,
   getWebpConverterOutputName,
   getWebpConverterSizeChange,
+  getWebpConverterNativeOutputState,
   validateWebpConverterBlob,
   validateWebpConverterDimensions,
   validateWebpConverterOutputBlob,
@@ -86,15 +87,36 @@ describe('validateWebpConverterDimensions', () => {
 });
 
 describe('validateWebpConverterOutputBlob', () => {
-  it('requires a real image/webp blob instead of silently keeping the original format', () => {
-    expect(validateWebpConverterOutputBlob(null)).toEqual({
+  it('requires a real image/webp blob with RIFF WEBP bytes before download is allowed', async () => {
+    await expect(validateWebpConverterOutputBlob(null)).resolves.toEqual({
       ok: false,
       error: 'The browser could not encode a WebP image.',
     });
-    expect(validateWebpConverterOutputBlob(new Blob([pngBytes], { type: 'image/png' }))).toEqual({
+    await expect(validateWebpConverterOutputBlob(new Blob([pngBytes], { type: 'image/png' }))).resolves.toEqual({
       ok: false,
       error: 'The browser returned PNG instead of WebP.',
     });
+    await expect(validateWebpConverterOutputBlob(new Blob([pngBytes], { type: 'image/webp' }))).resolves.toEqual({
+      ok: false,
+      error: 'The browser returned image/webp with non-WebP bytes.',
+    });
+    await expect(validateWebpConverterOutputBlob(new Blob([webpBytes], { type: 'image/webp' }))).resolves.toMatchObject({
+      ok: true,
+    });
+  });
+});
+
+describe('getWebpConverterNativeOutputState', () => {
+  it('uses native output only when both MIME and bytes are WebP', async () => {
+    await expect(getWebpConverterNativeOutputState(new Blob([webpBytes], { type: 'image/webp' }))).resolves.toEqual({
+      kind: 'usable',
+    });
+  });
+
+  it('falls back for Safari-style PNG bytes, wrong MIME, or null native output', async () => {
+    await expect(getWebpConverterNativeOutputState(null)).resolves.toEqual({ kind: 'fallback' });
+    await expect(getWebpConverterNativeOutputState(new Blob([pngBytes], { type: 'image/png' }))).resolves.toEqual({ kind: 'fallback' });
+    await expect(getWebpConverterNativeOutputState(new Blob([pngBytes], { type: 'image/webp' }))).resolves.toEqual({ kind: 'fallback' });
   });
 });
 

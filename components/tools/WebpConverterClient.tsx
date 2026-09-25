@@ -35,6 +35,8 @@ const MAX_SOURCE_BYTES = 20 * 1024 * 1024;
 const MAX_SIDE = 8192;
 const MAX_PIXELS = 32_000_000;
 const SAMPLE_URL = '/samples/image-resizer-mountain.jpg';
+const WEBP_ENCODER_WORKER_URL = '/codecs/webp-converter/webp-worker.js';
+const WEBP_ENCODER_TIMEOUT_MS = 60000;
 
 const QUALITY_OPTIONS: Array<{ key: QualityLevel; label: string; value: number; note: string }> = [
   { key: 'low', label: 'Low', value: 0.3, note: '30% quality' },
@@ -84,6 +86,18 @@ export function detectWebpConverterFormat(bytes: Uint8Array): ImageFormat | null
   return null;
 }
 
+function isWebpConverterSignature(bytes: Uint8Array) {
+  return bytes.length >= 12
+    && bytes[0] === 0x52
+    && bytes[1] === 0x49
+    && bytes[2] === 0x46
+    && bytes[3] === 0x46
+    && bytes[8] === 0x57
+    && bytes[9] === 0x45
+    && bytes[10] === 0x42
+    && bytes[11] === 0x50;
+}
+
 export async function validateWebpConverterBlob(blob: Blob):
   Promise<{ ok: true; format: ImageFormat } | { ok: false; error: string }> {
   if (blob.size > MAX_SOURCE_BYTES) return { ok: false, error: 'Images are limited to 20 MiB.' };
@@ -121,14 +135,26 @@ export function validateWebpConverterDimensions(width: number, height: number) {
   return { ok: true, error: '' };
 }
 
-export function validateWebpConverterOutputBlob(blob: Blob | null):
+export async function validateWebpConverterOutputBlob(blob: Blob | null): Promise<
   | { ok: true; blob: Blob }
-  | { ok: false; error: string } {
+  | { ok: false; error: string }
+> {
   if (!blob) return { ok: false, error: 'The browser could not encode a WebP image.' };
   if (normalizeMime(blob.type) !== 'image/webp') {
     return { ok: false, error: `The browser returned ${blob.type ? blob.type.replace('image/', '').toUpperCase() : 'another format'} instead of WebP.` };
   }
+  const bytes = new Uint8Array(await blob.slice(0, 12).arrayBuffer());
+  if (!isWebpConverterSignature(bytes)) {
+    return { ok: false, error: 'The browser returned image/webp with non-WebP bytes.' };
+  }
   return { ok: true, blob };
+}
+
+export async function getWebpConverterNativeOutputState(blob: Blob | null): Promise<{ kind: 'usable' } | { kind: 'fallback' }> {
+  if (!blob) return { kind: 'fallback' };
+  if (normalizeMime(blob.type) !== 'image/webp') return { kind: 'fallback' };
+  const bytes = new Uint8Array(await blob.slice(0, 12).arrayBuffer());
+  return isWebpConverterSignature(bytes) ? { kind: 'usable' } : { kind: 'fallback' };
 }
 
 export function getWebpConverterOutputName(sourceName: string) {
@@ -171,7 +197,64 @@ function loadImage(url: string, isCancelled: () => boolean): Promise<HTMLImageEl
 }
 
 function canvasToBlob(canvas: HTMLCanvasElement, mime: string, quality: number): Promise<Blob | null> {
-  return new Promise((resolve) => canvas.toBlob(resolve, mime, quality));
+  return new Promise((resolve, reject) => {
+    try {
+      canvas.toBlob(resolve, mime, quality);
+    } catch (err) {
+      reject(err);
+    }
+  });
+}
+
+function encodeWebpWithWorker(
+  imageData: ImageData,
+  qualityValue: number,
+  setActiveWorker: (worker: Worker, reject: (error: Error) => void) => void,
+  clearActiveWorker: (worker: Worker) => void,
+): Promise<Blob> {
+  return new Promise((resolve, reject) => {
+    const worker = new Worker(WEBP_ENCODER_WORKER_URL, { type: 'module' });
+    let settled = false;
+    const timeout = window.setTimeout(() => {
+      finish(() => reject(new Error('The local WebP encoder timed out. Try again or use a smaller image.')));
+    }, WEBP_ENCODER_TIMEOUT_MS);
+
+    const finish = (callback: () => void) => {
+      if (settled) return;
+      settled = true;
+      window.clearTimeout(timeout);
+      worker.onmessage = null;
+      worker.onerror = null;
+      worker.terminate();
+      clearActiveWorker(worker);
+      callback();
+    };
+
+    worker.onmessage = (event: MessageEvent<{ ok: true; buffer: ArrayBuffer } | { ok: false; error?: string }>) => {
+      const data = event.data;
+      if (data?.ok) {
+        finish(() => resolve(new Blob([data.buffer], { type: 'image/webp' })));
+        return;
+      }
+      finish(() => reject(new Error(data?.error || 'The local WebP encoder could not finish.')));
+    };
+
+    worker.onerror = () => {
+      finish(() => reject(new Error('The local WebP encoder could not load.')));
+    };
+
+    setActiveWorker(worker, (error) => finish(() => reject(error)));
+    try {
+      worker.postMessage({
+        rgba: imageData.data.buffer,
+        width: imageData.width,
+        height: imageData.height,
+        quality: Math.round(qualityValue * 100),
+      }, [imageData.data.buffer]);
+    } catch (err) {
+      finish(() => reject(err instanceof Error ? err : new Error('The local WebP encoder could not start.')));
+    }
+  });
 }
 
 export default function WebpConverterClient() {
@@ -186,7 +269,23 @@ export default function WebpConverterClient() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const opIdRef = useRef(0);
+  const activeWorkerRef = useRef<{ worker: Worker; reject: (error: Error) => void } | null>(null);
   const urlsRef = useRef<Set<string>>(new Set());
+
+  const setActiveWorker = useCallback((worker: Worker, reject: (error: Error) => void) => {
+    activeWorkerRef.current = { worker, reject };
+  }, []);
+
+  const clearActiveWorker = useCallback((worker: Worker) => {
+    if (activeWorkerRef.current?.worker === worker) activeWorkerRef.current = null;
+  }, []);
+
+  const terminateActiveWorker = useCallback(() => {
+    const activeWorker = activeWorkerRef.current;
+    activeWorkerRef.current = null;
+    activeWorker?.reject(new Error('cancelled'));
+    activeWorker?.worker.terminate();
+  }, []);
 
   const rememberUrl = useCallback((url: string) => {
     urlsRef.current.add(url);
@@ -206,9 +305,10 @@ export default function WebpConverterClient() {
 
   const cancelOperation = useCallback(() => {
     opIdRef.current += 1;
+    terminateActiveWorker();
     setIsConverting(false);
     setIsLoading(false);
-  }, []);
+  }, [terminateActiveWorker]);
 
   const clearConverted = useCallback(() => {
     setConverted((current) => {
@@ -230,8 +330,9 @@ export default function WebpConverterClient() {
 
   useEffect(() => () => {
     opIdRef.current += 1;
+    terminateActiveWorker();
     revokeAllUrls();
-  }, [revokeAllUrls]);
+  }, [revokeAllUrls, terminateActiveWorker]);
 
   const convertSelectedToWebp = useCallback(async (source: SelectedImage, requestedQuality: QualityLevel) => {
     if (!canvasRef.current || isLoading) return;
@@ -244,6 +345,7 @@ export default function WebpConverterClient() {
 
     try {
       const image = await loadImage(source.previewUrl, () => opId !== opIdRef.current);
+      if (opId !== opIdRef.current) return;
       const dimensions = validateWebpConverterDimensions(image.naturalWidth, image.naturalHeight);
       if (!dimensions.ok) throw new Error(dimensions.error);
 
@@ -254,10 +356,28 @@ export default function WebpConverterClient() {
       canvas.height = image.naturalHeight;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(image, 0, 0);
-
-      const blob = await canvasToBlob(canvas, 'image/webp', getQualityValue(requestedQuality));
       if (opId !== opIdRef.current) return;
-      const encoded = validateWebpConverterOutputBlob(blob);
+
+      const qualityValue = getQualityValue(requestedQuality);
+      let blob: Blob | null = null;
+      try {
+        blob = await canvasToBlob(canvas, 'image/webp', qualityValue);
+      } catch {
+        blob = null;
+      }
+      if (opId !== opIdRef.current) return;
+
+      const nativeOutput = await getWebpConverterNativeOutputState(blob);
+      if (opId !== opIdRef.current) return;
+      let outputBlob = blob;
+      if (nativeOutput.kind === 'fallback') {
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        if (opId !== opIdRef.current) return;
+        outputBlob = await encodeWebpWithWorker(imageData, qualityValue, setActiveWorker, clearActiveWorker);
+      }
+      if (opId !== opIdRef.current) return;
+
+      const encoded = await validateWebpConverterOutputBlob(outputBlob);
       if (!encoded.ok) throw new Error(encoded.error);
       if (opId !== opIdRef.current) return;
 
@@ -275,9 +395,10 @@ export default function WebpConverterClient() {
       if (err instanceof Error && err.message === 'cancelled') return;
       setError(err instanceof Error ? err.message : 'Conversion failed.');
     } finally {
+      if (opId === opIdRef.current) terminateActiveWorker();
       if (opId === opIdRef.current) setIsConverting(false);
     }
-  }, [cancelOperation, clearConverted, isLoading, rememberUrl]);
+  }, [cancelOperation, clearActiveWorker, clearConverted, isLoading, rememberUrl, setActiveWorker, terminateActiveWorker]);
 
   const prepareBlob = useCallback(async (blob: Blob, name: string): Promise<SelectedImage | null> => {
     cancelOperation();
