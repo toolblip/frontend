@@ -211,7 +211,7 @@
 .rotateButton {
   position: absolute;
   right: 12px;
-  bottom: 12px;
+  top: 12px;
   display: grid;
   width: 48px;
   height: 48px;
