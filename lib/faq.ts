@@ -1161,9 +1161,10 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Can I copy the XML instead of downloading a file?', a: 'Yes, a Copy XML button puts the full generated markup on your clipboard.' },
   ],
   'exif-remover': [
-    { q: 'What metadata does it show before removing it?', a: 'Common EXIF tags such as camera make and model, timestamps, exposure time, F-number, ISO, and focal length, listed so you can see what was embedded.' },
-    { q: 'How does it actually strip the metadata?', a: 'It redraws the image onto a canvas and re-exports it from there, which drops all embedded metadata as a side effect, not only the specific tags it listed.' },
-    { q: 'What if no EXIF tags are detected?', a: 'It still re-encodes the image and offers the cleaned file for download, since some formats or cameras embed metadata this parser doesn\'t decode by name.' },
+    { q: 'What image formats does it accept?', a: 'JPEG, PNG, WebP, GIF, and SVG files up to 20 MiB. JPEG exports back to JPEG at quality 95. PNG, WebP, GIF, and SVG export as PNG, with GIF cleaned as a still frame and SVG rasterized.' },
+    { q: 'What metadata does it remove?', a: 'After canvas re-encoding, the final bytes are checked for JPEG APP1, APP13, and COM metadata plus PNG text and eXIf chunks. The download is blocked if EXIF, XMP, or IPTC signatures are still found.' },
+    { q: 'Does it keep the image looking the same?', a: 'The browser decodes the source first, so decoded EXIF orientation is retained in the drawn pixels. PNG output keeps alpha where the decoder provides it.' },
+    { q: 'What does the metadata report mean?', a: 'It shows recognized EXIF fields when they can be parsed and labels GPS as present without showing coordinates. A zero recognized-field count only means no named fields were identified.' },
   ],
   'extract-images-from-pdf': [
     { q: 'What image encodings can it pull out of a PDF?', a: 'JPEG images are extracted directly, and grayscale, RGB, CMYK, and indexed-RGB images are rebuilt pixel by pixel into PNG files.' },
@@ -1574,9 +1575,24 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'What exactly counts as a "line" versus a "paragraph" here?', a: 'A line is any text between two line breaks, however short, while a paragraph requires a full blank line, meaning two consecutive line breaks, to separate it from the next block of text.' },
   ],
   'png-to-jpg': [
-    { q: 'Does it keep transparency when converting to JPEG?', a: 'No, JPEG has no alpha channel, so any transparent areas in your PNG get flattened onto whatever color the canvas renders behind them once the image is drawn and re-encoded as JPEG.' },
-    { q: 'Can I control how much the file shrinks?', a: 'Yes, a quality slider from 1 to 100 sets the JPEG compression level, the Before and After panels show both file sizes plus a percentage smaller or larger so you can judge the tradeoff before downloading.' },
-    { q: 'Does my image get uploaded to a server to be converted?', a: 'No, the file is drawn onto a hidden canvas in your browser and re-encoded to JPEG locally using the Canvas API, nothing is sent anywhere.' },
+    { q: 'Does it accept any image type?', a: 'No. It validates the file bytes and only converts real PNG input. A conflicting declared image MIME type is rejected, while the output filename is normalized to .jpg.' },
+    { q: 'What happens to transparent pixels?', a: 'JPEG has no alpha channel, so transparent pixels are flattened onto a background color. White is the default, and you can pick a different color before exporting.' },
+    { q: 'Will the JPEG always be smaller than the PNG?', a: 'No. The quality setting is a maximum, and the tool may retry lower quality to find a smaller JPEG, but some PNGs compress better. When that happens, the result says the JPEG is larger.' },
+  ],
+  'photo-resize': [
+    { q: 'What resize targets are built in?', a: 'It includes six common presets plus a custom size option, so you can resize for social posts, profile images, web images, or an exact width and height.' },
+    { q: 'What formats can I export?', a: 'The resized file exports as PNG or JPEG, with the preview showing the final dimensions and file size before download.' },
+    { q: 'Does resizing keep the original file untouched?', a: 'Yes. The browser decodes a copy, draws the resized pixels to canvas, and downloads a new file. Your original image is not changed or uploaded.' },
+  ],
+  'image-square-fit': [
+    { q: 'What does square fit do?', a: 'It places the whole image inside a square PNG canvas without cropping it, adding padding around the shorter side.' },
+    { q: 'Can the square padding be transparent?', a: 'No. The background control is a native color picker, so the padding is the opaque RGB color you choose.' },
+    { q: 'What size is the output?', a: 'The output is a square PNG using the square size you enter. The preview shows the exact pixel dimensions before download.' },
+  ],
+  'image-border-adder': [
+    { q: 'Where is the border added?', a: 'The border is added outside the image, so it does not cover the original pixels.' },
+    { q: 'How do the dimensions change?', a: 'The output PNG grows by twice the border width in each direction: a 10 px border adds 20 px to the width and 20 px to the height.' },
+    { q: 'Can the border be transparent?', a: 'No. The border control is a native color picker, so the border itself is an opaque RGB color. Any alpha inside the original image is preserved in the PNG output.' },
   ],
   'png-to-webp': [
     { q: 'How much smaller does WebP actually end up compared to my PNG?', a: 'It varies by image, the After panel shows the converted file size next to a note like "42% smaller" or "smaller/larger", calculated directly by comparing the two file sizes after conversion.' },
