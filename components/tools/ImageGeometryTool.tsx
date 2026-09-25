@@ -481,6 +481,12 @@ export default function ImageGeometryTool({ kind }: { kind: GeometryToolKind }) 
 
   const copy = TOOL_COPY[kind];
   const sourceMeta = source ? `${formatGeometryBytes(source.file.size)} · ${source.width} x ${source.height} px · ${getGeometryMimeLabel(source.mimeType)}` : '';
+  const resizePlanHint = plan.valid ? `${plan.width} x ${plan.height} px output` : plan.error;
+  const fitChoices: Array<{ value: FitMode; label: string; hint: string; hintId: string }> = [
+    { value: 'cover', label: 'Crop to fit', hint: 'Fill the target size and trim overflow.', hintId: 'image-geometry-fit-cover-hint' },
+    { value: 'stretch', label: 'Stretch', hint: 'Force the image into the exact size.', hintId: 'image-geometry-fit-stretch-hint' },
+    { value: 'contain', label: 'Pad', hint: 'Keep the full image and add background.', hintId: 'image-geometry-fit-contain-hint' },
+  ];
 
   return (
     <div className="tb-image-tool">
@@ -536,75 +542,160 @@ export default function ImageGeometryTool({ kind }: { kind: GeometryToolKind }) 
         {(loading || processing) && <p className="tb-image-hint" role="status">{loading ? 'Checking image...' : copy.busy}</p>}
         {error && <p className="tb-image-hint" role="alert">{error}</p>}
 
-        {source && (
+        {source && kind === 'resize' && (
+          <div className={styles.resizeWorkspace}>
+            <aside className={`tb-v2-card tb-image-settings ${styles.resizeSettings}`}>
+              <section className={styles.resizeSection}>
+                <div className={styles.sectionHead}>
+                  <h3>Size</h3>
+                  <span>{resizePlanHint}</span>
+                </div>
+                <div className={styles.field}>
+                  <label className="tb-v2-tool-label" htmlFor="image-geometry-preset">Target size</label>
+                  <select
+                    id="image-geometry-preset"
+                    className="tb-v2-select"
+                    value={customSize ? 'custom' : String(presetIndex)}
+                    onChange={(event) => {
+                      invalidate();
+                      if (event.target.value === 'custom') setCustomSize(true);
+                      else {
+                        setCustomSize(false);
+                        setPresetIndex(Number(event.target.value));
+                      }
+                    }}
+                  >
+                    {PHOTO_PRESETS.map((preset, index) => <option key={preset.label} value={index}>{preset.label}</option>)}
+                    <option value="custom">Custom</option>
+                  </select>
+                </div>
+                {customSize && (
+                  <div className={styles.resizeDimensions}>
+                    <div className={styles.field}>
+                      <label className="tb-v2-tool-label" htmlFor="image-geometry-width">Width</label>
+                      <input id="image-geometry-width" type="number" min="1" max={MAX_IMAGE_GEOMETRY_SIDE} step="1" className="tb-v2-input" value={widthInput} onChange={(event) => { setWidthInput(event.target.value); invalidate(); }} />
+                    </div>
+                    <div className={styles.field}>
+                      <label className="tb-v2-tool-label" htmlFor="image-geometry-height">Height</label>
+                      <input id="image-geometry-height" type="number" min="1" max={MAX_IMAGE_GEOMETRY_SIDE} step="1" className="tb-v2-input" value={heightInput} onChange={(event) => { setHeightInput(event.target.value); invalidate(); }} />
+                    </div>
+                  </div>
+                )}
+              </section>
+
+              <section className={styles.resizeSection}>
+                <div className={styles.sectionHead}>
+                  <h3>Fit</h3>
+                  <span>Choose how the photo fills the frame.</span>
+                </div>
+                <div className={styles.fitCards} role="group" aria-label="Fit mode">
+                  {fitChoices.map((choice) => (
+                    <button
+                      key={choice.value}
+                      type="button"
+                      className={`${styles.fitCard} ${fitMode === choice.value ? styles.fitCardOn : ''}`}
+                      aria-pressed={fitMode === choice.value}
+                      aria-label={choice.label}
+                      aria-describedby={choice.hintId}
+                      onClick={() => { setFitMode(choice.value); invalidate(); }}
+                    >
+                      <span className={`${styles.fitIcon} ${styles[`fitIcon${choice.value[0].toUpperCase()}${choice.value.slice(1)}`]}`} aria-hidden="true" />
+                      <span>
+                        <strong>{choice.label}</strong>
+                        <small id={choice.hintId}>{choice.hint}</small>
+                      </span>
+                    </button>
+                  ))}
+                </div>
+                {fitMode === 'contain' && (
+                  <label className={`${styles.field} ${styles.padColorField}`} htmlFor="image-geometry-pad-color">
+                    <span className="tb-v2-tool-label">Padding color</span>
+                    <span className={styles.swatchRow}>
+                      <input id="image-geometry-pad-color" type="color" value={padColor} onChange={(event) => { setPadColor(event.target.value); invalidate(); }} className={styles.swatch} />
+                      <span className="tb-image-hint">{padColor}</span>
+                    </span>
+                  </label>
+                )}
+              </section>
+
+              <section className={styles.resizeSection}>
+                <div className={styles.sectionHead}>
+                  <h3>Export</h3>
+                  <span>Limit: {MAX_IMAGE_GEOMETRY_SIDE} px per side and 32 megapixels.</span>
+                </div>
+                <div className={styles.field}>
+                  <span className="tb-v2-tool-label">Output format</span>
+                  <div className={`${styles.formatTabs} tb-v2-mode-tabs`} role="group" aria-label="Output format">
+                    <button type="button" className={`tb-v2-mode-tab ${format === 'image/png' ? 'on' : ''}`} aria-pressed={format === 'image/png'} onClick={() => { setFormat('image/png'); invalidate(); }}>PNG</button>
+                    <button type="button" className={`tb-v2-mode-tab ${format === 'image/jpeg' ? 'on' : ''}`} aria-pressed={format === 'image/jpeg'} onClick={() => { setFormat('image/jpeg'); invalidate(); }}>JPEG</button>
+                  </div>
+                </div>
+                <p className="tb-image-hint">{plan.valid ? `Ready to create ${plan.width} x ${plan.height} px.` : plan.error}</p>
+                <div className="tb-image-actions">
+                  <button type="button" onClick={processImage} disabled={!canProcess} className="tb-v2-btn tb-v2-btn-primary">{processing ? copy.busy : copy.action}</button>
+                </div>
+              </section>
+            </aside>
+
+            <section className={styles.resizePreviewArea}>
+              <div className={styles.resizePreviewGrid}>
+                <figure className={`tb-v2-card tb-image-preview-card ${styles.resizePreviewCard}`}>
+                  <figcaption className={`tb-image-card-head ${styles.previewCaption}`}>
+                    <span className={styles.previewTitle}>
+                      <span className="tb-v2-tool-label">Original</span>
+                      <span className="tb-image-hint">{formatGeometryBytesExact(source.file.size)}</span>
+                    </span>
+                    <button type="button" onClick={openFilePicker} disabled={loading} className={`tb-v2-btn tb-v2-btn-sm ${styles.replaceButton}`} aria-label="Replace original image">
+                      <Upload size={14} aria-hidden="true" />
+                      <span>Replace image</span>
+                    </button>
+                  </figcaption>
+                  <div className={`tb-image-preview ${styles.previewPane} ${styles.resizePreviewPane}`}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={source.url} alt="Original image" />
+                  </div>
+                  <p className="tb-image-hint">{source.width} x {source.height} px · {getGeometryMimeLabel(source.mimeType)}</p>
+                </figure>
+
+                <figure className={`tb-v2-card tb-image-preview-card ${styles.resizePreviewCard}`}>
+                  <figcaption className={`tb-image-card-head ${styles.previewCaption}`}>
+                    <span className={styles.previewTitle}>
+                      <span className="tb-v2-tool-label">{copy.outputLabel}</span>
+                      {result ? (
+                        <span className="tb-image-hint">{formatGeometryBytesExact(result.blob.size)} · {getGeometryMimeLabel(result.mimeType)}</span>
+                      ) : (
+                        <span className="tb-image-hint">{plan.valid ? `${plan.width} x ${plan.height} px` : 'Waiting for valid settings'}</span>
+                      )}
+                    </span>
+                  </figcaption>
+                  <div className={`tb-image-preview ${styles.previewPane} ${styles.resizePreviewPane}`} aria-busy={processing}>
+                    {result ? (
+                      /* eslint-disable-next-line @next/next/no-img-element */
+                      <img src={result.url} alt={`${copy.outputLabel} image`} />
+                    ) : <p className="tb-image-hint">{processing ? copy.busy : 'Resize to preview the current settings.'}</p>}
+                  </div>
+                  {result ? (
+                    <div className={styles.resizeResultBar} aria-live="polite">
+                      <div className={styles.notes}>
+                        <strong>{getSizeChange(source.file.size, result.blob.size)}</strong>
+                        <p className="tb-image-hint">{result.width} x {result.height} px · {formatGeometryBytesExact(source.file.size)} to {formatGeometryBytesExact(result.blob.size)}</p>
+                        {result.actualQuality != null && <p className="tb-image-hint">JPEG quality: {result.actualQuality}%{result.qualityAutoReduced ? ' after retry' : ''}</p>}
+                        {result.notes.map((note) => <p key={note} className="tb-image-hint">{note}</p>)}
+                      </div>
+                      <button type="button" onClick={download} className="tb-v2-btn tb-v2-btn-primary">Download current image</button>
+                    </div>
+                  ) : (
+                    <p className="tb-image-hint">No current output.</p>
+                  )}
+                </figure>
+              </div>
+            </section>
+          </div>
+        )}
+
+        {source && kind !== 'resize' && (
           <>
             <div className={`tb-v2-card tb-image-settings ${styles.panel}`}>
-              {kind === 'resize' && (
-                <>
-                  <div className={styles.field}>
-                    <label className="tb-v2-tool-label" htmlFor="image-geometry-preset">Target size</label>
-                    <select
-                      id="image-geometry-preset"
-                      className="tb-v2-select"
-                      value={customSize ? 'custom' : String(presetIndex)}
-                      onChange={(event) => {
-                        invalidate();
-                        if (event.target.value === 'custom') setCustomSize(true);
-                        else {
-                          setCustomSize(false);
-                          setPresetIndex(Number(event.target.value));
-                        }
-                      }}
-                    >
-                      {PHOTO_PRESETS.map((preset, index) => <option key={preset.label} value={index}>{preset.label}</option>)}
-                      <option value="custom">Custom</option>
-                    </select>
-                  </div>
-                  {customSize && (
-                    <div className={styles.fields}>
-                      <div className={styles.field}>
-                        <label className="tb-v2-tool-label" htmlFor="image-geometry-width">Width</label>
-                        <input id="image-geometry-width" type="number" min="1" max={MAX_IMAGE_GEOMETRY_SIDE} step="1" className="tb-v2-input" value={widthInput} onChange={(event) => { setWidthInput(event.target.value); invalidate(); }} />
-                      </div>
-                      <div className={styles.field}>
-                        <label className="tb-v2-tool-label" htmlFor="image-geometry-height">Height</label>
-                        <input id="image-geometry-height" type="number" min="1" max={MAX_IMAGE_GEOMETRY_SIDE} step="1" className="tb-v2-input" value={heightInput} onChange={(event) => { setHeightInput(event.target.value); invalidate(); }} />
-                      </div>
-                    </div>
-                  )}
-                  <div className={styles.fields}>
-                    <div className={styles.field}>
-                      <span className="tb-v2-tool-label">Fit</span>
-                      <div className="tb-v2-mode-tabs" role="group" aria-label="Fit mode">
-                        {([
-                          ['cover', 'Crop to fit'],
-                          ['stretch', 'Stretch'],
-                          ['contain', 'Pad'],
-                        ] as const).map(([value, label]) => (
-                          <button key={value} type="button" className={`tb-v2-mode-tab ${fitMode === value ? 'on' : ''}`} aria-pressed={fitMode === value} onClick={() => { setFitMode(value); invalidate(); }}>{label}</button>
-                        ))}
-                      </div>
-                    </div>
-                    <div className={styles.field}>
-                      <span className="tb-v2-tool-label">Output format</span>
-                      <div className="tb-v2-mode-tabs" role="group" aria-label="Output format">
-                        <button type="button" className={`tb-v2-mode-tab ${format === 'image/png' ? 'on' : ''}`} aria-pressed={format === 'image/png'} onClick={() => { setFormat('image/png'); invalidate(); }}>PNG</button>
-                        <button type="button" className={`tb-v2-mode-tab ${format === 'image/jpeg' ? 'on' : ''}`} aria-pressed={format === 'image/jpeg'} onClick={() => { setFormat('image/jpeg'); invalidate(); }}>JPEG</button>
-                      </div>
-                    </div>
-                  </div>
-                  {fitMode === 'contain' && (
-                    <label className={styles.field} htmlFor="image-geometry-pad-color">
-                      <span className="tb-v2-tool-label">Padding color</span>
-                      <span className={styles.swatchRow}>
-                        <input id="image-geometry-pad-color" type="color" value={padColor} onChange={(event) => { setPadColor(event.target.value); invalidate(); }} className={styles.swatch} />
-                        <span className="tb-image-hint">{padColor}</span>
-                      </span>
-                    </label>
-                  )}
-                </>
-              )}
-
               {kind === 'square' && (
                 <div className={styles.fields}>
                   <div className={styles.field}>

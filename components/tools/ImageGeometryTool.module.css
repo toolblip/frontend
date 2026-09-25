@@ -132,6 +132,238 @@
   gap: 4px;
 }
 
+.resizeWorkspace {
+  display: grid;
+  align-items: start;
+  grid-template-columns: minmax(280px, 300px) minmax(0, 1fr);
+  gap: 18px;
+}
+
+.resizeSettings {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.resizeSettings select {
+  width: 100%;
+}
+
+.resizeSection {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.resizeSection + .resizeSection {
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+
+.sectionHead {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sectionHead h3 {
+  margin: 0;
+  color: var(--fg-0);
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.sectionHead span {
+  color: var(--fg-2);
+  font-size: 0.83rem;
+  line-height: 1.4;
+}
+
+.resizeDimensions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.fitCards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.fitCard {
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  grid-template-columns: 38px minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--fg-0);
+  text-align: left;
+  cursor: pointer;
+}
+
+.fitCard:hover {
+  border-color: var(--red);
+}
+
+.fitCard:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 2px;
+}
+
+.fitCardOn {
+  border-color: var(--red);
+  background: var(--red-tint);
+  box-shadow: inset 0 0 0 1px var(--red);
+}
+
+.fitCard strong,
+.fitCard small {
+  display: block;
+  overflow-wrap: anywhere;
+}
+
+.fitCard strong {
+  font-size: 0.9rem;
+  line-height: 1.25;
+}
+
+.fitCard small {
+  margin-top: 2px;
+  color: var(--fg-2);
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
+.fitIcon {
+  position: relative;
+  display: block;
+  width: 38px;
+  height: 30px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--surface-3);
+}
+
+.fitIcon::before,
+.fitIcon::after {
+  position: absolute;
+  content: "";
+  border-radius: 4px;
+}
+
+.fitIconCover::before {
+  inset: 5px -5px;
+  background: var(--red);
+  opacity: 0.72;
+}
+
+.fitIconCover::after {
+  inset: 5px;
+  border: 1px solid var(--surface);
+}
+
+.fitIconStretch::before {
+  inset: 6px 4px;
+  background: var(--red);
+  opacity: 0.72;
+}
+
+.fitIconStretch::after {
+  inset: 12px 8px;
+  border-top: 1px solid var(--surface);
+  border-bottom: 1px solid var(--surface);
+}
+
+.fitIconContain::before {
+  inset: 6px 10px;
+  background: var(--red);
+  opacity: 0.72;
+}
+
+.fitIconContain::after {
+  inset: 4px;
+  border: 1px dashed var(--red);
+}
+
+.padColorField {
+  max-width: 180px;
+}
+
+.formatTabs {
+  width: 100%;
+}
+
+.formatTabs > button {
+  flex: 1 1 0;
+}
+
+.resizePreviewArea {
+  min-width: 0;
+}
+
+.resizePreviewGrid {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.resizePreviewCard {
+  min-width: 0;
+}
+
+.resizePreviewPane {
+  min-height: 240px;
+  background:
+    linear-gradient(45deg, var(--surface-3) 25%, transparent 25%),
+    linear-gradient(-45deg, var(--surface-3) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, var(--surface-3) 75%),
+    linear-gradient(-45deg, transparent 75%, var(--surface-3) 75%);
+  background-color: var(--surface-2);
+  background-position: 0 0, 10px 10px, 10px 10px, 0 0;
+  background-size: 20px 20px;
+}
+
+.resizePreviewPane img {
+  max-width: min(100%, 1000px);
+  max-height: min(100%, 520px);
+  object-fit: contain;
+}
+
+.resizeResultBar {
+  display: flex;
+  align-items: stretch;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  padding-top: 2px;
+}
+
+.resizeResultBar button {
+  width: 100%;
+  justify-content: center;
+}
+
+.resizeResultBar .notes {
+  width: 100%;
+  min-width: 0;
+}
+
+.resizeResultBar .notes p {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
 @media (max-width: 720px) {
   .fields,
   .workspace {
@@ -141,6 +373,31 @@
   .resultBox {
     align-items: stretch;
     flex-direction: column;
+  }
+}
+
+@media (max-width: 980px) {
+  .resizeWorkspace,
+  .resizePreviewGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .resizeSettings {
+    gap: 16px;
+  }
+
+  .fitCards {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .resizeWorkspace {
+    gap: 14px;
+  }
+
+  .fitCards {
+    grid-template-columns: 1fr;
   }
 }
 
