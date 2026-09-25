@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { RotateCw, Upload } from 'lucide-react';
+import { RotateCwSquare, Upload } from 'lucide-react';
 import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 import {
   ACCEPTED_IMAGE_TRANSFORM_TYPES,
@@ -463,7 +463,7 @@ export default function ImageTransformToolClient({ kind }: { kind: TransformKind
                     onClick={rotateClockwise}
                     disabled={!source || loading}
                   >
-                    <RotateCw size={21} aria-hidden="true" />
+                    <RotateCwSquare size={21} aria-hidden="true" />
                   </button>
                 </div>
                 <div className={styles.rotationDownload}>
