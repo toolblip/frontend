@@ -28,6 +28,8 @@ const nextConfig = {
   },
   async redirects() {
     return [
+      { source: '/tools/image-border-adder', destination: '/tools/images/border', permanent: true },
+      { source: '/tools/images/image-border-adder', destination: '/tools/images/border', permanent: true },
       // /advertise (the old house-ad media kit) was replaced by the
       // pay-to-rank Sponsors leaderboard. Never listed in a sitemap, so
       // no other reference needs updating.

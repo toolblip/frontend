@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+import { getToolBySlug, tools } from '@/data/tools';
 import { getCategoryPath, getToolAbsoluteUrl, getToolPath, getToolPathBySlug, isImageToolSlug } from '@/lib/tool-path';
 
 describe('getToolPath', () => {
@@ -14,6 +15,13 @@ describe('getToolPath', () => {
 describe('getToolPathBySlug', () => {
   it('resolves a catalog Image slug', () => {
     expect(getToolPathBySlug('image-cropper')).toBe('/tools/images/image-cropper');
+  });
+
+  it('resolves the retired border slug to the canonical catalog entry', () => {
+    expect(getToolPathBySlug('image-border-adder')).toBe('/tools/images/border');
+    expect(getToolBySlug('image-border-adder')?.slug).toBe('border');
+    expect(tools.filter((tool) => tool.slug === 'border' || tool.slug === 'image-border-adder').map((tool) => tool.slug))
+      .toEqual(['border']);
   });
 
   it('resolves a catalog non-image slug', () => {

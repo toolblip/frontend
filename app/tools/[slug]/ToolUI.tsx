@@ -1846,8 +1846,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <HttpStatusCheckerClient />;
     case 'image-background-remover':
       return <ImageBackgroundRemoverClient />;
-    case 'image-border-adder':
-      return <ImageBorderAdderClient />;
     case 'image-compressor':
       return <ImageCompressorClient />;
     case 'image-flip-tool': return <ImageFlipToolClient />; // legacy alias, redirected via next.config.mjs
