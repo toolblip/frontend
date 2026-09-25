@@ -159,4 +159,62 @@ describe('encodeImageOptimizerBlobWithSizeAwareness', () => {
       mimeMismatch: true,
     });
   });
+
+  it('preserves actionable Error messages from adaptive WebP encode failures', async () => {
+    await expect(encodeImageOptimizerBlobWithSizeAwareness({
+      originalBytes: 1_000,
+      requestedMimeType: 'image/webp',
+      maxQuality: 80,
+      encode: async () => {
+        throw new Error('The local WebP encoder timed out after 60 seconds. Try again.');
+      },
+      isCancelled: () => false,
+    })).resolves.toMatchObject({
+      blob: null,
+      failed: true,
+      cancelled: false,
+      error: 'The local WebP encoder timed out after 60 seconds. Try again.',
+    });
+  });
+
+  it('reports cancellation instead of a failure when encode rejects after cancellation', async () => {
+    const controller = new AbortController();
+
+    const result = await encodeImageOptimizerBlobWithSizeAwareness({
+      originalBytes: 1_000,
+      requestedMimeType: 'image/webp',
+      maxQuality: 80,
+      encode: async () => {
+        controller.abort();
+        throw new Error('The local WebP encoder failed.');
+      },
+      isCancelled: () => controller.signal.aborted,
+    });
+
+    expect(result).toMatchObject({
+      blob: null,
+      failed: false,
+      cancelled: true,
+    });
+    expect(result.error).toBeUndefined();
+  });
+
+  it('keeps non-Error thrown values as generic encode failures', async () => {
+    const result = await encodeImageOptimizerBlobWithSizeAwareness({
+      originalBytes: 1_000,
+      requestedMimeType: 'image/jpeg',
+      maxQuality: 80,
+      encode: async () => {
+        throw 'jpeg encode failed';
+      },
+      isCancelled: () => false,
+    });
+
+    expect(result).toMatchObject({
+      blob: null,
+      failed: true,
+      cancelled: false,
+    });
+    expect(result.error).toBeUndefined();
+  });
 });

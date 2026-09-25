@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { FileImage, Upload } from 'lucide-react';
 import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
+import { encodeImageOptimizerWebp } from '@/lib/image-optimizer-webp';
 
 type OutputFormat = 'jpeg' | 'png' | 'webp';
 type ImageDimensions = { width: number; height: number };
@@ -41,6 +42,7 @@ type SizeAwareOptimizerEncodeResult = {
   failed: boolean;
   cancelled: boolean;
   mimeMismatch: boolean;
+  error?: string;
 };
 
 const MAX_UPLOAD_BYTES = 20 * 1024 * 1024;
@@ -139,26 +141,47 @@ export async function encodeImageOptimizerBlobWithSizeAwareness({
     if (candidates[candidates.length - 1] !== MIN_QUALITY) candidates.push(MIN_QUALITY);
   }
 
+  const cancelledResult = (): SizeAwareOptimizerEncodeResult => ({
+    blob: null,
+    actualQuality: null,
+    qualityAutoReduced: false,
+    couldMakeSmaller: false,
+    failed: false,
+    cancelled: true,
+    mimeMismatch: false,
+  });
+  const failedResult = (error?: string): SizeAwareOptimizerEncodeResult => ({
+    blob: null,
+    actualQuality: null,
+    qualityAutoReduced: false,
+    couldMakeSmaller: false,
+    failed: true,
+    cancelled: false,
+    mimeMismatch: false,
+    ...(error ? { error } : {}),
+  });
+
   let best: { blob: Blob; quality: number | null } | null = null;
 
   for (const candidateQuality of candidates) {
     if (isCancelled()) {
-      return { blob: null, actualQuality: null, qualityAutoReduced: false, couldMakeSmaller: false, failed: false, cancelled: true, mimeMismatch: false };
+      return cancelledResult();
     }
 
     let blob: Blob | null;
     try {
       blob = await encode(requestedMimeType, candidateQuality == null ? undefined : candidateQuality / 100);
-    } catch {
-      return { blob: null, actualQuality: null, qualityAutoReduced: false, couldMakeSmaller: false, failed: true, cancelled: false, mimeMismatch: false };
+    } catch (err) {
+      if (isCancelled()) return cancelledResult();
+      return failedResult(err instanceof Error && err.message ? err.message : undefined);
     }
 
     if (isCancelled()) {
-      return { blob: null, actualQuality: null, qualityAutoReduced: false, couldMakeSmaller: false, failed: false, cancelled: true, mimeMismatch: false };
+      return cancelledResult();
     }
 
     if (!blob) {
-      return { blob: null, actualQuality: null, qualityAutoReduced: false, couldMakeSmaller: false, failed: true, cancelled: false, mimeMismatch: false };
+      return failedResult();
     }
 
     const actualMimeType = (blob.type || '').toLowerCase();
@@ -172,7 +195,7 @@ export async function encodeImageOptimizerBlobWithSizeAwareness({
   }
 
   if (!best) {
-    return { blob: null, actualQuality: null, qualityAutoReduced: false, couldMakeSmaller: false, failed: true, cancelled: false, mimeMismatch: false };
+    return failedResult();
   }
 
   return {
@@ -336,18 +359,23 @@ export default function ImageOptimizerClient() {
   const resultUrlRef = useRef('');
   const loadId = useRef(0);
   const encodeId = useRef(0);
+  const encodeAbortRef = useRef<AbortController | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => () => {
     loadId.current++;
     encodeId.current++;
+    encodeAbortRef.current?.abort();
+    encodeAbortRef.current = null;
     if (sourceUrlRef.current) URL.revokeObjectURL(sourceUrlRef.current);
     if (resultUrlRef.current) URL.revokeObjectURL(resultUrlRef.current);
   }, []);
 
   const clearResult = () => {
     encodeId.current++;
+    encodeAbortRef.current?.abort();
+    encodeAbortRef.current = null;
     setOptimizing(false);
     if (resultUrlRef.current) {
       URL.revokeObjectURL(resultUrlRef.current);
@@ -525,6 +553,8 @@ export default function ImageOptimizerClient() {
 
     clearResult();
     const id = ++encodeId.current;
+    const abortController = new AbortController();
+    encodeAbortRef.current = abortController;
     const sourceLoadId = loadId.current;
     const canvas = canvasRef.current;
     if (!canvas) {
@@ -541,19 +571,25 @@ export default function ImageOptimizerClient() {
     setError('');
 
     const isCancelled = () => id !== encodeId.current || sourceLoadId !== loadId.current;
+    const isAbortCancelled = () => isCancelled() || abortController.signal.aborted;
+    const finishEncode = () => {
+      if (encodeAbortRef.current === abortController) encodeAbortRef.current = null;
+    };
     const fail = (message: string) => {
-      if (isCancelled()) return;
+      if (isAbortCancelled()) return;
+      finishEncode();
       setOptimizing(false);
       setError(message);
     };
 
     const img = new Image();
     img.onload = async () => {
-      if (isCancelled()) return;
+      if (isAbortCancelled()) return;
       try {
         canvas.width = dimensionValidation.width;
         canvas.height = dimensionValidation.height;
         const nextCtx = canvas.getContext('2d');
+        if (isAbortCancelled()) return;
         if (!nextCtx) {
           fail('Could not finish the image export in this browser.');
           return;
@@ -567,16 +603,17 @@ export default function ImageOptimizerClient() {
           nextCtx.clearRect(0, 0, dimensionValidation.width, dimensionValidation.height);
         }
         nextCtx.drawImage(img, 0, 0, dimensionValidation.width, dimensionValidation.height);
+        if (isAbortCancelled()) return;
 
         const formatOption = FORMAT_OPTIONS[activeSettings.format];
         const encodeCanvasBlob = (mimeType: string, encodeQuality?: number) => new Promise<Blob | null>((resolve, reject) => {
-          if (isCancelled()) {
+          if (isAbortCancelled()) {
             resolve(null);
             return;
           }
           try {
             canvas.toBlob((blob) => {
-              if (isCancelled()) {
+              if (isAbortCancelled()) {
                 resolve(null);
                 return;
               }
@@ -586,18 +623,35 @@ export default function ImageOptimizerClient() {
             reject(toBlobError);
           }
         });
+        let fallbackRgba: Uint8ClampedArray | null = null;
+        const encodeBlob = async (mimeType: string, encodeQuality?: number) => {
+          if (mimeType !== 'image/webp') return encodeCanvasBlob(mimeType, encodeQuality);
+          if (isAbortCancelled()) return null;
+          return encodeImageOptimizerWebp({
+            width: dimensionValidation.width,
+            height: dimensionValidation.height,
+            quality: Math.round((encodeQuality ?? 1) * 100),
+            encodeNative: () => encodeCanvasBlob(mimeType, encodeQuality),
+            getRgba: () => {
+              if (isAbortCancelled()) return new Uint8ClampedArray();
+              if (!fallbackRgba) fallbackRgba = nextCtx.getImageData(0, 0, dimensionValidation.width, dimensionValidation.height).data;
+              return fallbackRgba;
+            },
+            signal: abortController.signal,
+          });
+        };
 
         const encoded = await encodeImageOptimizerBlobWithSizeAwareness({
           originalBytes: activeSource.file.size,
           requestedMimeType: formatOption.mimeType,
           maxQuality: activeSettings.quality,
-          encode: encodeCanvasBlob,
-          isCancelled,
+          encode: encodeBlob,
+          isCancelled: isAbortCancelled,
         });
 
-        if (encoded.cancelled || isCancelled()) return;
+        if (encoded.cancelled || isAbortCancelled()) return;
         if (encoded.failed || !encoded.blob) {
-          fail(encoded.mimeMismatch ? `Your browser did not return ${formatOption.label}. Try another format.` : 'This image could not be optimized. Try smaller dimensions or another file.');
+          fail(encoded.error || (encoded.mimeMismatch ? `Your browser did not return ${formatOption.label}. Try another format.` : 'This image could not be optimized. Try smaller dimensions or another file.'));
           return;
         }
 
@@ -613,7 +667,7 @@ export default function ImageOptimizerClient() {
         });
         const outputBlob = policy.blob;
         const resultUrl = URL.createObjectURL(outputBlob);
-        if (isCancelled()) {
+        if (isAbortCancelled()) {
           URL.revokeObjectURL(resultUrl);
           return;
         }
@@ -637,9 +691,10 @@ export default function ImageOptimizerClient() {
             ...(!policy.keptOriginal && activeSettings.format === 'png' ? ['PNG is lossless here, so quality does not change the export.'] : []),
           ],
         });
+        finishEncode();
         setOptimizing(false);
-      } catch {
-        fail('This image could not be optimized. Try another file.');
+      } catch (err) {
+        fail(err instanceof Error && err.message ? err.message : 'This image could not be optimized. Try again or choose another format.');
       }
     };
     img.onerror = () => fail('This image could not be decoded for export.');
