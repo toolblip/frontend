@@ -185,6 +185,7 @@ import PalindromeCheckerClient from '@/components/tools/PalindromeCheckerClient'
 import PasswordStrengthCheckerClient from '@/components/tools/PasswordStrengthCheckerClient';
 import PingTestClient from '@/components/tools/PingTestClient';
 import PlainTextCounterClient from '@/components/tools/PlainTextCounterClient';
+import PngToJpgClient from '@/components/tools/PngToJpgClient';
 import PunctuationFixerClient from '@/components/tools/PunctuationFixerClient';
 import RandomFractionGeneratorClient from '@/components/tools/RandomFractionGeneratorClient';
 import SecureRandomGeneratorClient from '@/components/tools/SecureRandomGeneratorClient';
@@ -1956,7 +1957,7 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'image-compressor-pro':
       return <ImageCompressorClient />;
     case 'png-to-jpg':
-      return <ImageFormatConverterClient />;
+      return <PngToJpgClient />;
     case 'png-to-webp':
       return <ImageFormatConverterClient />;
     case 'jpg-to-png':
