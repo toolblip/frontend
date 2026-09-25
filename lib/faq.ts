@@ -1339,6 +1339,7 @@ const OVERRIDES: Record<string, FAQ[]> = {
   'image-optimizer': [
     { q: 'Which formats can I upload and export?', a: 'Upload PNG, JPEG, WebP, GIF, or SVG files that the browser can decode, up to 20 MiB and 32 megapixels. Export is PNG, JPEG, or WebP.' },
     { q: 'Does the quality slider affect PNG?', a: 'No. PNG export is lossless here, so the quality slider is disabled. JPEG and WebP use quality as a maximum and may retry lower values to find a smaller file.' },
+    { q: 'Does WebP export work in Safari?', a: 'Yes. If Safari cannot return real WebP from the canvas encoder, the tool uses a local WebP fallback and still checks the downloaded bytes before showing the result.' },
     { q: 'What happens to transparency?', a: 'PNG and WebP keep transparency. JPEG has no alpha channel, so transparent pixels are placed on a white background.' },
     { q: 'Will the optimized image always be smaller?', a: 'No. Resizing or changing format can make a file larger. The preview shows the exact output bytes and says when there is no reduction.' },
   ],
