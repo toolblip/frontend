@@ -1,0 +1,223 @@
+.toolBody {
+  display: grid;
+  gap: 14px;
+}
+
+.dropzoneLoaded {
+  min-height: 86px;
+  padding-block: 14px;
+}
+
+.dropzoneLoaded svg {
+  width: 22px;
+  height: 22px;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 132px), 1fr));
+  gap: 8px;
+}
+
+.statPill {
+  align-items: flex-start;
+  min-width: 0;
+  padding: 10px 12px;
+  text-align: left;
+}
+
+.statValue {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  font-size: 14px;
+  line-height: 1.25;
+}
+
+.statLabel {
+  margin-top: 3px;
+  line-height: 1.25;
+}
+
+.controlGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 148px), 1fr));
+  gap: 12px;
+}
+
+.controlLabel {
+  display: grid;
+  gap: 8px;
+}
+
+.colorInput {
+  width: 44px;
+  height: 36px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--surface);
+}
+
+.sourceSection {
+  display: grid;
+  gap: 12px;
+}
+
+.sourceGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap: 10px;
+}
+
+.sourceCard {
+  display: grid;
+  min-width: 0;
+  gap: 9px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+.sourceMain {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+  min-width: 0;
+}
+
+.sourceThumb {
+  display: grid;
+  width: 72px;
+  height: 72px;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--surface-2);
+}
+
+.sourceThumb img {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.sourceText {
+  min-width: 0;
+}
+
+.sourceName {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  color: var(--fg-0);
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sourceMeta {
+  display: block;
+  margin-top: 4px;
+  color: var(--fg-2);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.sourceActions {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, max-content));
+  gap: 6px;
+  align-items: center;
+}
+
+.iconButton,
+.actionButton {
+  min-height: 32px;
+  padding: 6px 9px;
+}
+
+.iconButton {
+  width: 32px;
+  padding-inline: 0;
+  justify-content: center;
+}
+
+.actionButton {
+  gap: 5px;
+  white-space: nowrap;
+}
+
+.resultSection {
+  display: grid;
+  gap: 12px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+
+.resultHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px 12px;
+  align-items: center;
+}
+
+.resultMeta {
+  justify-self: end;
+  overflow-wrap: anywhere;
+}
+
+.resultFrame {
+  padding: 12px;
+  border-radius: 8px;
+  background: var(--surface-2);
+}
+
+.resultImage {
+  display: block;
+  max-width: 100%;
+  max-height: 520px;
+  margin: 0 auto;
+  object-fit: contain;
+}
+
+.resultDownload {
+  justify-self: start;
+}
+
+@media (max-width: 420px) {
+  .sourceGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .sourceMain {
+    grid-template-columns: 64px minmax(0, 1fr);
+  }
+
+  .sourceThumb {
+    width: 64px;
+    height: 64px;
+  }
+
+  .sourceActions {
+    grid-template-columns: 32px 32px minmax(0, max-content) minmax(0, max-content);
+  }
+
+  .actionButton {
+    padding-inline: 8px;
+  }
+
+  .resultHead {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .resultMeta {
+    justify-self: stretch;
+  }
+}

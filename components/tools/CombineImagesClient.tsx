@@ -1,261 +1,323 @@
 'use client';
 
-import { useState, useRef, useCallback } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { ChevronLeft, ChevronRight, Download, ImagePlus, Trash2, Upload } from 'lucide-react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
+import {
+  MAX_COMBINE_IMAGES,
+  MIN_COMBINE_IMAGES,
+  calculateCombineLayout,
+  getImageLayoutOutputError,
+  type CombineLayoutMode,
+} from '@/lib/image-layout';
+import {
+  canvasToVerifiedPngResult,
+  getImageLayoutItemMeta,
+  useImageLayoutImages,
+} from '@/components/tools/useImageLayoutImages';
+import styles from './ImageLayoutTool.module.css';
 
-type LayoutType = 'horizontal' | 'vertical' | 'grid';
+const COMBINE_SAMPLE_URLS = [
+  '/samples/image-resizer-mountain.jpg',
+  '/samples/tool-sample.png',
+  '/samples/png-to-jpg-photo.png',
+];
+
+function createCancelledOperationError() {
+  return new DOMException('The operation was cancelled.', 'AbortError');
+}
+
+function isAbortError(err: unknown) {
+  return err instanceof DOMException && err.name === 'AbortError';
+}
+
+async function fetchSampleFiles(signal: AbortSignal) {
+  const responses = await Promise.all(COMBINE_SAMPLE_URLS.map(async (url) => {
+    const response = await fetch(url, { signal });
+    if (!response.ok) throw new Error('Sample image request failed.');
+    const blob = await response.blob();
+    const name = url.split('/').pop() || 'sample-image.png';
+    return new File([blob], name, { type: blob.type || 'image/png' });
+  }));
+  return responses;
+}
 
 export default function CombineImagesClient() {
-  const [images, setImages] = useState<string[]>([]);
-  const [layout, setLayout] = useState<LayoutType>('horizontal');
+  const [layout, setLayout] = useState<CombineLayoutMode>('horizontal');
   const [spacing, setSpacing] = useState(10);
-  const [processedImage, setProcessedImage] = useState<string | null>(null);
   const [dragActive, setDragActive] = useState(false);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [exampleLoading, setExampleLoading] = useState(false);
+  const [exporting, setExporting] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const replaceInputRefs = useRef<Record<string, HTMLInputElement | null>>({});
+  const exampleControllerRef = useRef<AbortController | null>(null);
+  const exampleGenerationRef = useRef(0);
+  const {
+    items,
+    errors,
+    loading,
+    result,
+    addFiles,
+    replaceFile,
+    removeItem,
+    moveItem,
+    clearAll,
+    clearResult,
+    cancelInputWork,
+    beginOutputAttempt,
+    isCurrentAttempt,
+    setOutput,
+    setErrors,
+    sourceLimitText,
+    boundsText,
+  } = useImageLayoutImages(MAX_COMBINE_IMAGES, () => setExporting(false));
 
-  const loadFiles = (files: File[]) => {
-    if (files.length === 0) return;
-    const readers = files.map(
-      (file) =>
-        new Promise<string>((resolve) => {
-          const reader = new FileReader();
-          reader.onload = (event) => resolve(event.target?.result as string);
-          reader.readAsDataURL(file);
-        })
-    );
-    Promise.all(readers).then((newImages) => {
-      setImages((prev) => [...prev, ...newImages]);
-      setProcessedImage(null);
-    });
+  const combinePlan = useMemo(() => calculateCombineLayout(items, layout, spacing), [items, layout, spacing]);
+  const countError = items.length > 0 && items.length < MIN_COMBINE_IMAGES ? 'Add at least 2 images to combine.' : '';
+  const outputError = items.length >= MIN_COMBINE_IMAGES ? getImageLayoutOutputError(combinePlan.width, combinePlan.height) : '';
+  const actionError = countError || outputError;
+  const canCombine = items.length >= MIN_COMBINE_IMAGES && !actionError && !loading && !exporting;
+  const canClear = items.length > 0 || errors.length > 0 || Boolean(result) || loading || exampleLoading || exporting;
+
+  const cancelExampleLoad = () => {
+    exampleGenerationRef.current += 1;
+    exampleControllerRef.current?.abort();
+    exampleControllerRef.current = null;
+    setExampleLoading(false);
   };
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) loadFiles(Array.from(e.target.files));
+  const isCurrentExampleLoad = (generation: number, controller: AbortController) => (
+    generation === exampleGenerationRef.current && exampleControllerRef.current === controller && !controller.signal.aborted
+  );
+
+  const handleFiles = (files: FileList | File[]) => {
+    cancelExampleLoad();
+    void addFiles(Array.from(files));
+    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    setDragActive(false);
-    if (e.dataTransfer.files) {
-      loadFiles(Array.from(e.dataTransfer.files).filter((f) => f.type.startsWith('image/')));
+  const loadExample = async () => {
+    cancelExampleLoad();
+    const controller = new AbortController();
+    const generation = exampleGenerationRef.current;
+    exampleControllerRef.current = controller;
+    setExampleLoading(true);
+    setErrors([]);
+    clearResult();
+    try {
+      const files = await fetchSampleFiles(controller.signal);
+      if (!isCurrentExampleLoad(generation, controller)) return;
+      setLayout('grid');
+      setSpacing(10);
+      await addFiles(files, { replaceAll: true });
+    } catch (err) {
+      if (!isCurrentExampleLoad(generation, controller) || isAbortError(err)) return;
+      setErrors(['The sample images could not be loaded. Try Example again or upload your own images.']);
+    } finally {
+      if (isCurrentExampleLoad(generation, controller)) {
+        exampleControllerRef.current = null;
+        setExampleLoading(false);
+      }
     }
   };
 
-  const loadExample = () => {
-    const makeSwatch = (color: string) => {
-      const canvas = document.createElement('canvas');
-      canvas.width = 200;
-      canvas.height = 200;
-      const ctx = canvas.getContext('2d')!;
-      ctx.fillStyle = color;
-      ctx.fillRect(0, 0, 200, 200);
-      return canvas.toDataURL('image/png');
-    };
-    setImages([makeSwatch('#6366f1'), makeSwatch('#ec4899'), makeSwatch('#22c55e')]);
-    setProcessedImage(null);
+  const clear = () => {
+    cancelExampleLoad();
+    cancelInputWork();
+    setLayout('horizontal');
+    setSpacing(10);
+    setDragActive(false);
+    setExampleLoading(false);
+    setExporting(false);
+    clearAll();
+    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
-  const removeImage = (index: number) => {
-    setImages(images.filter((_, i) => i !== index));
-    setProcessedImage(null);
-  };
+  useEffect(() => () => {
+    cancelExampleLoad();
+  }, []);
 
-  const combineImages = useCallback(() => {
-    if (images.length < 2 || !canvasRef.current) return;
-
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    const loadedImages: HTMLImageElement[] = [];
-    let loadedCount = 0;
-
-    images.forEach((src, idx) => {
-      const img = new Image();
-      img.onload = () => {
-        loadedImages[idx] = img;
-        loadedCount++;
-
-        if (loadedCount === images.length) {
-          let width = 0;
-          let height = 0;
-          const gap = spacing;
-
-          if (layout === 'horizontal') {
-            width = loadedImages.reduce((sum, img) => sum + img.width, 0) + gap * (loadedImages.length - 1);
-            height = Math.max(...loadedImages.map((img) => img.height));
-          } else if (layout === 'vertical') {
-            width = Math.max(...loadedImages.map((img) => img.width));
-            height = loadedImages.reduce((sum, img) => sum + img.height, 0) + gap * (loadedImages.length - 1);
-          } else {
-            const cols = Math.ceil(Math.sqrt(loadedImages.length));
-            const rows = Math.ceil(loadedImages.length / cols);
-            const maxWidths: number[] = [];
-            const maxHeights: number[] = [];
-            for (let r = 0; r < rows; r++) {
-              const rowImages = loadedImages.slice(r * cols, r * cols + cols);
-              maxWidths.push(Math.max(...rowImages.map((img) => img.width)));
-              maxHeights.push(Math.max(...rowImages.map((img) => img.height)));
-            }
-            width = maxWidths.reduce((sum, w) => sum + w, 0) + gap * (cols - 1);
-            height = maxHeights.reduce((sum, h) => sum + h, 0) + gap * (rows - 1);
+  const combineImages = async () => {
+    if (!canCombine) return;
+    const attemptId = beginOutputAttempt();
+    const snapshotItems = [...items];
+    const snapshotPlan = combinePlan;
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    if (!context) {
+      setErrors(['Could not start the image export in this browser. Try again or reload the page.']);
+      return;
+    }
+    setExporting(true);
+    setErrors([]);
+    try {
+      canvas.width = snapshotPlan.width;
+      canvas.height = snapshotPlan.height;
+      context.fillStyle = '#ffffff';
+      context.fillRect(0, 0, snapshotPlan.width, snapshotPlan.height);
+      await Promise.all(snapshotItems.map((item, index) => new Promise<void>((resolve, reject) => {
+        const image = new Image();
+        image.onload = () => {
+          if (!isCurrentAttempt(attemptId)) {
+            reject(createCancelledOperationError());
+            return;
           }
-
-          canvas.width = width;
-          canvas.height = height;
-          ctx.fillStyle = '#ffffff';
-          ctx.fillRect(0, 0, width, height);
-
-          let offsetX = 0;
-          let offsetY = 0;
-
-          if (layout === 'grid') {
-            const cols = Math.ceil(Math.sqrt(loadedImages.length));
-            const maxWidths: number[] = [];
-            const maxHeights: number[] = [];
-
-            for (let r = 0; r < Math.ceil(loadedImages.length / cols); r++) {
-              const rowImages = loadedImages.slice(r * cols, r * cols + cols);
-              maxWidths.push(Math.max(...rowImages.map((img) => img.width)));
-              maxHeights.push(Math.max(...rowImages.map((img) => img.height)));
-            }
-
-            let row = 0;
-            let col = 0;
-            loadedImages.forEach((img, i) => {
-              const maxWidthInRow = maxWidths[row];
-              const x = col * (maxWidthInRow + gap);
-              ctx.drawImage(img, x, offsetY);
-              col++;
-              if (col >= cols) {
-                col = 0;
-                offsetY += maxHeights[row] + gap;
-                row++;
-              }
-            });
-          } else if (layout === 'horizontal') {
-            loadedImages.forEach((img) => {
-              ctx.drawImage(img, offsetX, (height - img.height) / 2);
-              offsetX += img.width + gap;
-            });
-          } else {
-            loadedImages.forEach((img) => {
-              ctx.drawImage(img, (width - img.width) / 2, offsetY);
-              offsetY += img.height + gap;
-            });
+          try {
+            const placement = snapshotPlan.placements[index];
+            context.drawImage(image, placement.x, placement.y, placement.width, placement.height);
+            resolve();
+          } catch (err) {
+            reject(err);
           }
-
-          setProcessedImage(canvas.toDataURL('image/png'));
-        }
-      };
-      img.src = src;
-    });
-  }, [images, layout, spacing]);
-
-  const handleDownload = () => {
-    if (!processedImage) return;
-    const link = document.createElement('a');
-    link.download = 'combined-image.png';
-    link.href = processedImage;
-    link.click();
+        };
+        image.onerror = () => reject(new Error(`${item.name}: The source image could not be decoded for export.`));
+        image.src = item.url;
+      })));
+      if (!isCurrentAttempt(attemptId)) return;
+      const output = await canvasToVerifiedPngResult(canvas, `combined-${snapshotPlan.width}x${snapshotPlan.height}.png`);
+      if (!isCurrentAttempt(attemptId)) {
+        URL.revokeObjectURL(output.url);
+        return;
+      }
+      setOutput(output);
+    } catch (err) {
+      if (!isCurrentAttempt(attemptId)) return;
+      setErrors([err instanceof Error ? err.message : 'The combined image could not be exported. Try again with fewer or smaller images.']);
+    } finally {
+      if (isCurrentAttempt(attemptId)) setExporting(false);
+    }
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="tb-v2-tool-card">
       <div className="tb-v2-tool-input-head">
-        <span className="tb-v2-tool-label">Combine Images</span>
-        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">
-          Load Example
-        </button>
+        <span className="tb-v2-tool-label">Combine images</span>
+        <ToolExampleClearActions onExample={() => void loadExample()} onClear={clear} canClear={canClear} exampleDisabled={loading || exporting || exampleLoading} exampleCount={3} />
       </div>
 
-      <div className="tb-v2-section" style={{ display: 'flex', flexDirection: 'column', gap: 20, padding: '20px' }}>
-        <div
-          onDragOver={(e) => { e.preventDefault(); setDragActive(true); }}
+      <div className={`tb-v2-tool-output-body ${styles.toolBody}`}>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          multiple
+          onChange={(event) => { if (event.target.files) handleFiles(event.target.files); }}
+          hidden
+          aria-label="Add images to combine"
+        />
+        <button
+          type="button"
+          className={`tb-v2-dropzone ${items.length > 0 ? styles.dropzoneLoaded : ''} ${dragActive ? 'dragging' : ''}`}
+          onClick={() => fileInputRef.current?.click()}
+          onDragOver={(event) => { event.preventDefault(); setDragActive(true); }}
           onDragLeave={() => setDragActive(false)}
-          onDrop={handleDrop}
-          className={`border-2 border-dashed rounded-xl p-8 text-center transition-colors ${dragActive ? 'border-indigo-400 bg-indigo-50' : 'border-gray-200'}`}
+          onDrop={(event) => {
+            event.preventDefault();
+            setDragActive(false);
+            handleFiles(event.dataTransfer.files);
+          }}
         >
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            multiple
-            onChange={handleImageUpload}
-            className="hidden"
-            id="combine-images-upload"
-          />
-          <label htmlFor="combine-images-upload" className="cursor-pointer">
-            <div className="text-gray-500 mb-2">Drop images here, or click to upload</div>
-            <div className="text-xs text-gray-400">PNG, JPG, WEBP - select multiple files</div>
-          </label>
-        </div>
+          <Upload size={28} aria-hidden="true" />
+          <span className="tb-v2-dropzone-text">Add images</span>
+          <span className="tb-v2-dropzone-hint">PNG, JPEG, WebP, GIF, or SVG. 2-12 images. {sourceLimitText}</span>
+        </button>
 
-        {images.length > 0 ? (
-          <>
-            <div className="flex gap-2 flex-wrap">
-              {images.map((img, idx) => (
-                <div key={idx} className="relative">
-                  <img src={img} alt={`Image ${idx + 1}`} className="w-20 h-20 object-cover rounded-lg" />
-                  <button
-                    type="button"
-                    onClick={() => removeImage(idx)}
-                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs"
-                  >
-                    x
-                  </button>
+        {errors.map((error) => <div key={error} className="tb-v2-banner tb-v2-banner-err" role="alert">{error}</div>)}
+        {loading && <div className="tb-v2-banner tb-v2-banner-info" role="status">Loading images...</div>}
+
+        {items.length > 0 && (
+          <div className={styles.sourceSection}>
+            <div className={styles.statsGrid}>
+              <div className={`tb-v2-stat-pill ${styles.statPill}`}><span className={`tb-v2-stat-pill-val ${styles.statValue}`}>{items.length}</span><span className={`tb-v2-stat-pill-lbl ${styles.statLabel}`}>Images</span></div>
+              <div className={`tb-v2-stat-pill ${styles.statPill}`}><span className={`tb-v2-stat-pill-val ${styles.statValue}`}>{combinePlan.width} x {combinePlan.height}</span><span className={`tb-v2-stat-pill-lbl ${styles.statLabel}`}>PNG output</span></div>
+              <div className={`tb-v2-stat-pill ${styles.statPill}`}><span className={`tb-v2-stat-pill-val ${styles.statValue}`}>{spacing}px</span><span className={`tb-v2-stat-pill-lbl ${styles.statLabel}`}>Spacing</span></div>
+            </div>
+
+            <div className="tb-v2-mode-tabs" role="group" aria-label="Combine layout">
+              {(['horizontal', 'vertical', 'grid'] as CombineLayoutMode[]).map((mode) => (
+                <button
+                  key={mode}
+                  type="button"
+                  onClick={() => { clearResult(); setLayout(mode); }}
+                  className={`tb-v2-mode-tab ${layout === mode ? 'on' : ''}`}
+                  aria-pressed={layout === mode}
+                >
+                  {mode[0].toUpperCase() + mode.slice(1)}
+                </button>
+              ))}
+            </div>
+
+            <label className="tb-v2-tool-label" htmlFor="combine-spacing">Spacing: {spacing}px</label>
+            <input
+              id="combine-spacing"
+              type="range"
+              min="0"
+              max="50"
+              value={spacing}
+              onChange={(event) => { clearResult(); setSpacing(Number(event.target.value)); }}
+              className="tb-v2-range"
+            />
+            <p className="tb-v2-dropzone-hint">{boundsText} Background is white. Images keep their original pixel sizes.</p>
+
+            <div className={styles.sourceGrid}>
+              {items.map((item, index) => (
+                <div key={item.id} className={styles.sourceCard}>
+                  <div className={styles.sourceMain}>
+                    <div className={styles.sourceThumb}>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={item.url} alt={`Image ${index + 1} preview`} />
+                    </div>
+                    <div className={styles.sourceText}>
+                      <div className={styles.sourceName} title={item.name}>{item.name}</div>
+                      <div className={styles.sourceMeta}>{getImageLayoutItemMeta(item)}</div>
+                      {item.notes.map((note) => <div className={styles.sourceMeta} key={note}>{note}</div>)}
+                    </div>
+                  </div>
+                  <input
+                    ref={(node) => { replaceInputRefs.current[item.id] = node; }}
+                    type="file"
+                    accept="image/*"
+                    hidden
+                    aria-label={`Choose replacement for image ${index + 1}`}
+                    onChange={(event) => {
+                      const file = event.target.files?.[0] ?? null;
+                      cancelExampleLoad();
+                      void replaceFile(item.id, file);
+                      event.target.value = '';
+                    }}
+                  />
+                  <div className={styles.sourceActions}>
+                    <button type="button" className={`tb-v2-btn ${styles.iconButton}`} onClick={() => moveItem(item.id, -1)} disabled={index === 0} aria-label={`Move image ${index + 1} earlier`}><ChevronLeft size={16} aria-hidden="true" /></button>
+                    <button type="button" className={`tb-v2-btn ${styles.iconButton}`} onClick={() => moveItem(item.id, 1)} disabled={index === items.length - 1} aria-label={`Move image ${index + 1} later`}><ChevronRight size={16} aria-hidden="true" /></button>
+                    <button type="button" className={`tb-v2-btn ${styles.actionButton}`} onClick={() => replaceInputRefs.current[item.id]?.click()} aria-label={`Replace image ${index + 1}`}><ImagePlus size={16} aria-hidden="true" /> Replace</button>
+                    <button type="button" className={`tb-v2-btn ${styles.actionButton}`} onClick={() => { cancelExampleLoad(); removeItem(item.id); }} aria-label={`Remove image ${index + 1}`}><Trash2 size={16} aria-hidden="true" /> Remove</button>
+                  </div>
                 </div>
               ))}
             </div>
 
-            <p className="text-sm text-gray-500">{images.length} images selected</p>
-
-            <div className="tb-v2-mode-tabs">
-              <button type="button" onClick={() => setLayout('horizontal')} className={`tb-v2-mode-tab ${layout === 'horizontal' ? 'on' : ''}`}>
-                Horizontal
-              </button>
-              <button type="button" onClick={() => setLayout('vertical')} className={`tb-v2-mode-tab ${layout === 'vertical' ? 'on' : ''}`}>
-                Vertical
-              </button>
-              <button type="button" onClick={() => setLayout('grid')} className={`tb-v2-mode-tab ${layout === 'grid' ? 'on' : ''}`}>
-                Grid
-              </button>
-            </div>
-
-            <div className="flex items-center gap-4">
-              <label className="text-sm font-medium text-gray-500">Spacing: {spacing}px</label>
-              <input
-                type="range"
-                min="0"
-                max="50"
-                value={spacing}
-                onChange={(e) => setSpacing(Number(e.target.value))}
-                className="tb-v2-range"
-              />
-            </div>
-
-            <button
-              type="button"
-              onClick={combineImages}
-              disabled={images.length < 2}
-              className="tb-v2-btn tb-v2-btn-primary disabled:opacity-50"
-            >
-              Combine Images
+            {actionError && <div className="tb-v2-banner tb-v2-banner-warn" role="alert">{actionError}</div>}
+            <button type="button" onClick={() => void combineImages()} disabled={!canCombine} className="tb-v2-btn tb-v2-btn-primary" aria-busy={exporting}>
+              {exporting ? 'Combining...' : 'Combine images'}
             </button>
-          </>
-        ) : (
-          <div className="tb-v2-empty">Upload two or more images to combine them</div>
+          </div>
         )}
 
-        <canvas ref={canvasRef} className="hidden" />
+        {items.length === 0 && <p className="tb-v2-empty">Add at least two images to combine them into one PNG.</p>}
 
-        {processedImage && (
-          <div>
-            <p className="tb-v2-tool-label" style={{ marginBottom: 8 }}>Combined Result</p>
-            <img src={processedImage} alt="Combined" className="max-w-full rounded-xl" />
-            <button type="button" onClick={handleDownload} className="tb-v2-btn mt-2">
-              Download
-            </button>
+        {result && (
+          <div aria-live="polite" className={styles.resultSection}>
+            <div className={styles.resultHead}>
+              <span className="tb-v2-tool-label">Combined PNG</span>
+              <span className={`tb-v2-dropzone-hint ${styles.resultMeta}`}>{result.width} x {result.height} px | {result.blob.type || 'image/png'} | {result.blob.size.toLocaleString()} bytes</span>
+            </div>
+            <div className={styles.resultFrame}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={result.url} alt="Combined image preview" className={styles.resultImage} />
+            </div>
+            <a href={result.url} download={result.filename} className={`tb-v2-btn tb-v2-btn-primary ${styles.resultDownload}`}>
+              <Download size={16} aria-hidden="true" /> Download PNG
+            </a>
           </div>
         )}
       </div>

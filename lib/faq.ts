@@ -825,9 +825,10 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'How is the gray value calculated?', a: 'Using the real luma formula, 0.299 times red plus 0.587 times green plus 0.114 times blue, the standard perceptual grayscale weighting, rather than a simple average of the three channels.' },
   ],
   'combine-images': [
-    { q: 'What layouts are available for combining images?', a: 'Three: horizontal (side by side), vertical (stacked), and grid (automatically arranged into rows and columns based on the number of images you upload).' },
-    { q: 'Can I control the spacing between images?', a: 'Yes, a slider from 0 to 50 pixels sets the gap drawn between each image in the combined canvas.' },
-    { q: 'Is there a minimum number of images required?', a: 'Yes, you need at least two images loaded before the Combine button becomes active, since combining a single image would have nothing to merge it with.' },
+    { q: 'What layouts are available?', a: 'Horizontal, vertical, and grid. The grid uses each column\'s widest image and each row\'s tallest image, so images keep their natural oriented pixel size without clipping.' },
+    { q: 'How many images can I combine?', a: 'Use at least 2 and up to 12 images. You can add, remove, or replace images before exporting.' },
+    { q: 'Can I control the spacing?', a: 'Yes. The gap slider runs from 0 to 50 pixels and defaults to 10 pixels. Empty grid cells stay white in the PNG output.' },
+    { q: 'What formats can I use?', a: 'You can load PNG, JPEG, WebP, GIF, or SVG images. GIFs are used as still images, SVGs are rasterized, and the output is a white-background PNG.' },
   ],
   'contrast-checker': [
     { q: 'How is this different from the Color Contrast Ratio Checker?', a: 'They use the same WCAG relative-luminance formula and check a single foreground and background pair, this tool additionally renders a live sample-text preview against your chosen colors so you can see the actual contrast, not just the ratio number.' },
@@ -1322,9 +1323,28 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'What accessibility issues does it check for?', a: 'Missing alt attributes on <img> tags, plus javascript: URLs in href attributes, which are flagged as both a security and accessibility concern.' },
   ],
   'collage-maker': [
-    { q: 'How many photos can I put in one collage?', a: 'It depends on the layout you pick, from a single 2x1 pair up to nine photos in the 3x3 grid, and the dropzone tells you how many slots the current layout has left.' },
-    { q: 'What counts as "customizing borders"?', a: 'A spacing slider controls the gap between photos from 0 to 30 pixels, and a background color picker sets what shows through that gap, together framing each photo like a border.' },
-    { q: 'What happens if I switch layouts after adding photos?', a: 'Changing the layout clears the photos you already added, since each layout has a different number of slots to fill from scratch.' },
+    { q: 'What collage layouts are available?', a: 'Eight fixed layouts are available: 2x1, 1x2, 2x2, 3x1, 1x3, 3x2, 2x3, and 3x3. Each slot is a 300 px square cell.' },
+    { q: 'Will my photos be cropped?', a: 'No. Each image is centered and contained inside its square cell, so the whole image stays visible. Blank slots show the selected background color.' },
+    { q: 'What happens if I switch layouts?', a: 'Your uploaded images stay loaded when you change layouts. If there are too many images for the selected layout, remove extras or choose a larger layout before exporting.' },
+    { q: 'Can I control the spacing and background?', a: 'Yes. The gap runs from 0 to 30 pixels and defaults to 10 pixels. The background is an opaque RGB color, and the download is a PNG.' },
+  ],
+  'border': [
+    { q: 'Where is the border added?', a: 'The border is added outside the image, so it does not cover the original pixels.' },
+    { q: 'How wide can the border be?', a: 'The border width can be set from 1 to 100 pixels. The output PNG grows by twice that width in each direction.' },
+    { q: 'Can the border be transparent?', a: 'No. The border color is opaque RGB. Transparency inside the original image is preserved.' },
+    { q: 'Can I start over or swap the image?', a: 'Yes. The tool includes an example image, Clear, and replace controls.' },
+  ],
+  'image-rotate': [
+    { q: 'Which rotation angles are available?', a: 'Clockwise 90, 180, and 270 degree turns. It does not do arbitrary angle rotation.' },
+    { q: 'What happens to the image size?', a: 'A 90 or 270 degree turn swaps the width and height. A 180 degree turn keeps the same dimensions.' },
+    { q: 'What format does the download use?', a: 'The result downloads as a PNG. Transparency is preserved when the source image has alpha.' },
+    { q: 'What image formats can I load?', a: 'PNG, JPEG, WebP, GIF, and SVG are accepted. GIFs are handled as still images and SVGs are rasterized before export.' },
+  ],
+  'image-flip': [
+    { q: 'What flip directions are available?', a: 'Horizontal, vertical, and both. The pixels are mirrored along the selected axis or axes.' },
+    { q: 'Does flipping change the size?', a: 'No. The output keeps the same width and height as the decoded image.' },
+    { q: 'What format does the download use?', a: 'The result downloads as a PNG. Transparency is preserved when the source image has alpha.' },
+    { q: 'What image formats can I load?', a: 'PNG, JPEG, WebP, GIF, and SVG are accepted. GIFs are handled as still images and SVGs are rasterized before export.' },
   ],
   'image-background-remover': [
     { q: 'How does Auto Detect know what the background is?', a: 'It samples the pixel colors at all four corners of the image, averages them into one background color, then flood-fills outward from those corners removing any pixel within your tolerance of that color.' },
