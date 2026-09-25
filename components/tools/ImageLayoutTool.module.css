@@ -49,6 +49,23 @@
   gap: 8px;
 }
 
+.advancedHelp {
+  color: var(--fg-2);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.advancedHelp summary,
+.sourceDetails summary {
+  width: fit-content;
+  cursor: pointer;
+}
+
+.advancedHelp p {
+  max-width: 74ch;
+  margin: 6px 0 0;
+}
+
 .colorInput {
   width: 44px;
   height: 36px;
@@ -69,27 +86,64 @@
 }
 
 .sourceCard {
+  position: relative;
   display: grid;
   min-width: 0;
-  gap: 9px;
-  padding: 10px;
+  gap: 7px;
+  padding: 8px;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: var(--surface);
+  cursor: grab;
+  transition: border-color 120ms ease, background-color 120ms ease, opacity 120ms ease;
+}
+
+.sourceCard:active {
+  cursor: grabbing;
+}
+
+.draggingCard {
+  opacity: 0.48;
+}
+
+.dropTargetCard {
+  border-color: var(--accent, #4c7cf3);
+  background: color-mix(in srgb, var(--accent, #4c7cf3) 7%, var(--surface));
+}
+
+.dropBefore::before,
+.dropAfter::after {
+  position: absolute;
+  z-index: 1;
+  top: 6px;
+  bottom: 6px;
+  width: 3px;
+  border-radius: 3px;
+  background: var(--accent, #4c7cf3);
+  content: '';
+  pointer-events: none;
+}
+
+.dropBefore::before {
+  left: -2px;
+}
+
+.dropAfter::after {
+  right: -2px;
 }
 
 .sourceMain {
   display: grid;
-  grid-template-columns: 72px minmax(0, 1fr);
-  gap: 10px;
+  grid-template-columns: 16px 56px minmax(0, 1fr);
+  gap: 8px;
   align-items: center;
   min-width: 0;
 }
 
 .sourceThumb {
   display: grid;
-  width: 72px;
-  height: 72px;
+  width: 56px;
+  height: 56px;
   place-items: center;
   overflow: hidden;
   border: 1px solid var(--line);
@@ -130,6 +184,25 @@
   overflow-wrap: anywhere;
 }
 
+.sourceDetails {
+  margin-top: 4px;
+  color: var(--fg-2);
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.sourceDetails > span {
+  display: block;
+  margin-top: 3px;
+  overflow-wrap: anywhere;
+}
+
+.dragHandle {
+  color: var(--fg-2);
+  align-self: center;
+  cursor: grab;
+}
+
 .sourceActions {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, max-content));
@@ -156,9 +229,11 @@
 
 .resultSection {
   display: grid;
-  gap: 12px;
-  padding-top: 16px;
-  border-top: 1px solid var(--line);
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
 }
 
 .resultHead {
@@ -176,7 +251,10 @@
 .resultFrame {
   padding: 12px;
   border-radius: 8px;
-  background: var(--surface-2);
+  background-color: var(--surface-2);
+  background-image: linear-gradient(45deg, color-mix(in srgb, var(--fg-2) 8%, transparent) 25%, transparent 25%), linear-gradient(-45deg, color-mix(in srgb, var(--fg-2) 8%, transparent) 25%, transparent 25%), linear-gradient(45deg, transparent 75%, color-mix(in srgb, var(--fg-2) 8%, transparent) 75%), linear-gradient(-45deg, transparent 75%, color-mix(in srgb, var(--fg-2) 8%, transparent) 75%);
+  background-position: 0 0, 0 8px, 8px -8px, -8px 0;
+  background-size: 16px 16px;
 }
 
 .resultImage {
@@ -189,6 +267,10 @@
 
 .resultDownload {
   justify-self: start;
+  min-height: 42px;
+  padding-inline: 18px;
+  font-size: 14px;
+  font-weight: 650;
 }
 
 @media (max-width: 420px) {
@@ -197,12 +279,12 @@
   }
 
   .sourceMain {
-    grid-template-columns: 64px minmax(0, 1fr);
+    grid-template-columns: 16px 52px minmax(0, 1fr);
   }
 
   .sourceThumb {
-    width: 64px;
-    height: 64px;
+    width: 52px;
+    height: 52px;
   }
 
   .sourceActions {
@@ -219,5 +301,16 @@
 
   .resultMeta {
     justify-self: stretch;
+  }
+
+  .resultDownload {
+    justify-self: stretch;
+    justify-content: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sourceCard {
+    transition: none;
   }
 }

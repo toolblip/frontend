@@ -8,7 +8,23 @@ import {
   getImageLayoutAggregateError,
   getImageLayoutCapacityError,
   getImageLayoutOutputError,
+  moveItemToIndex,
 } from './image-layout';
+
+describe('moveItemToIndex', () => {
+  it('moves an item to its requested insertion index', () => {
+    expect(moveItemToIndex(['a', 'b', 'c', 'd'], 1, 3)).toEqual(['a', 'c', 'd', 'b']);
+    expect(moveItemToIndex(['a', 'b', 'c', 'd'], 3, 1)).toEqual(['a', 'd', 'b', 'c']);
+  });
+
+  it('leaves the input unchanged for invalid or unchanged indices', () => {
+    const items = ['a', 'b', 'c'];
+    expect(moveItemToIndex(items, 1, 1)).toEqual(items);
+    expect(moveItemToIndex(items, -1, 1)).toEqual(items);
+    expect(moveItemToIndex(items, 1, 3)).toEqual(items);
+    expect(items).toEqual(['a', 'b', 'c']);
+  });
+});
 
 const dims = (width: number, height: number) => ({ width, height });
 

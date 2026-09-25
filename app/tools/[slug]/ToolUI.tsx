@@ -956,7 +956,7 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'binary-to-text-v2':
       return <BinaryToTextV2Client />;
     case 'border':
-      return <ImageBorderAdderClient />;
+      return <ImageBorderAdderClient live={true} />;
     case 'bmi-calculator':
       return <BmiCalculatorClient />;
     case 'bash-command-generator':

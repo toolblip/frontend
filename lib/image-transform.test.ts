@@ -1,14 +1,30 @@
 import { describe, expect, it } from 'vitest';
 import {
   getImageTransformPlan,
+  getImageTransformOutputFormat,
   mapImageTransformPixel,
   validateImageTransformDimensions,
   validateImageTransformFile,
-  verifyPngOutputSignature,
+  verifyImageTransformOutputSignature,
 } from './image-transform';
 
 const PNG_HEADER = new Uint8Array([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
 const JPEG_HEADER = new Uint8Array([0xff, 0xd8, 0xff, 0xe0]);
+
+describe('image transform output format', () => {
+  it('keeps PNG and JPEG sources in their format and rasterizes other formats to PNG', () => {
+    expect(getImageTransformOutputFormat('image/png')).toMatchObject({ mimeType: 'image/png', extension: 'png', label: 'PNG' });
+    expect(getImageTransformOutputFormat('image/jpeg')).toMatchObject({ mimeType: 'image/jpeg', extension: 'jpg', label: 'JPEG', quality: 0.9 });
+    expect(getImageTransformOutputFormat('image/webp')).toMatchObject({ mimeType: 'image/png', extension: 'png', label: 'PNG' });
+  });
+
+  it('requires the output signature to match its MIME type', () => {
+    expect(verifyImageTransformOutputSignature(PNG_HEADER, 'image/png')).toBe(true);
+    expect(verifyImageTransformOutputSignature(JPEG_HEADER, 'image/jpeg')).toBe(true);
+    expect(verifyImageTransformOutputSignature(PNG_HEADER, 'image/jpeg')).toBe(false);
+    expect(verifyImageTransformOutputSignature(JPEG_HEADER, 'image/png')).toBe(false);
+  });
+});
 
 describe('image transform dimensions', () => {
   it('swaps width and height only for quarter-turn rotations', () => {
@@ -54,8 +70,4 @@ describe('image transform validation', () => {
     expect(validateImageTransformFile(new File([new Uint8Array([1, 2, 3])], 'photo.bin'), '')).toBe('This does not look like a supported image file.');
   });
 
-  it('verifies PNG bytes instead of trusting blob metadata', () => {
-    expect(verifyPngOutputSignature(PNG_HEADER)).toBe(true);
-    expect(verifyPngOutputSignature(JPEG_HEADER)).toBe(false);
-  });
 });

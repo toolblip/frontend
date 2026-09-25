@@ -40,6 +40,19 @@ function cumulativeOffsets(sizes: number[], spacing: number) {
   return offsets;
 }
 
+export function moveItemToIndex<T>(items: T[], fromIndex: number, toIndex: number) {
+  if (
+    !Number.isInteger(fromIndex) || !Number.isInteger(toIndex) ||
+    fromIndex < 0 || fromIndex >= items.length || toIndex < 0 || toIndex >= items.length ||
+    fromIndex === toIndex
+  ) return items;
+
+  const next = [...items];
+  const [item] = next.splice(fromIndex, 1);
+  next.splice(toIndex, 0, item);
+  return next;
+}
+
 function assertUsableDimensions(images: ImageLayoutDimensions[]) {
   for (const image of images) {
     if (!Number.isFinite(image.width) || !Number.isFinite(image.height) || image.width < 1 || image.height < 1) {

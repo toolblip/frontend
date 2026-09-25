@@ -1,7 +1,10 @@
 import {
-  detectGeometryMimeFromHeader,
+  getGeometryExtension,
+  normalizeGeometryMime,
+  verifyGeometryOutputSignature,
   validateGeometryDimensions,
   validateGeometryFile,
+  type GeometryOutputMime,
   type GeometryValidation,
 } from './image-geometry';
 
@@ -21,8 +24,24 @@ export type ImageTransformPlan = {
   scaleY: number;
 };
 
-export const IMAGE_TRANSFORM_OUTPUT_MIME = 'image/png';
 export const ACCEPTED_IMAGE_TRANSFORM_TYPES = '.png,.jpg,.jpeg,.webp,.gif,.svg,image/png,image/jpeg,image/webp,image/gif,image/svg+xml';
+
+export type ImageTransformOutputFormat = {
+  mimeType: GeometryOutputMime;
+  extension: 'jpg' | 'png';
+  label: 'JPEG' | 'PNG';
+  quality?: number;
+};
+
+export function getImageTransformOutputFormat(sourceMimeType: string): ImageTransformOutputFormat {
+  const mimeType: GeometryOutputMime = normalizeGeometryMime(sourceMimeType) === 'image/jpeg' ? 'image/jpeg' : 'image/png';
+  return {
+    mimeType,
+    extension: getGeometryExtension(mimeType),
+    label: mimeType === 'image/jpeg' ? 'JPEG' : 'PNG',
+    ...(mimeType === 'image/jpeg' ? { quality: 0.9 } : {}),
+  };
+}
 
 export function validateImageTransformDimensions(width: number, height: number): GeometryValidation {
   return validateGeometryDimensions(width, height);
@@ -32,8 +51,8 @@ export function validateImageTransformFile(file: File, detectedMimeType: string)
   return validateGeometryFile(file, detectedMimeType);
 }
 
-export function verifyPngOutputSignature(header: Uint8Array) {
-  return detectGeometryMimeFromHeader(header) === IMAGE_TRANSFORM_OUTPUT_MIME;
+export function verifyImageTransformOutputSignature(header: Uint8Array, mimeType: GeometryOutputMime) {
+  return verifyGeometryOutputSignature(header, mimeType);
 }
 
 export function getImageTransformPlan(sourceWidth: number, sourceHeight: number, operation: ImageTransformOperation): ImageTransformPlan {

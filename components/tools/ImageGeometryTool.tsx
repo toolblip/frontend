@@ -97,12 +97,14 @@ function firstError(...messages: string[]) {
   return messages.find(Boolean) || '';
 }
 
-export default function ImageGeometryTool({ kind }: { kind: GeometryToolKind }) {
+export default function ImageGeometryTool({ kind, live = false }: { kind: GeometryToolKind; live?: boolean }) {
+  const liveBorder = kind === 'border' && live;
   const [source, setSource] = useState<SourceImage | null>(null);
   const [result, setResult] = useState<GeometryResult | null>(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [processing, setProcessing] = useState(false);
+  const [retryPreview, setRetryPreview] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [presetIndex, setPresetIndex] = useState(0);
   const [customSize, setCustomSize] = useState(false);
@@ -122,6 +124,7 @@ export default function ImageGeometryTool({ kind }: { kind: GeometryToolKind }) 
   const loadId = useRef(0);
   const processId = useRef(0);
   const abortRef = useRef<AbortController | null>(null);
+  const processImageRef = useRef<() => void>(() => {});
 
   useEffect(() => () => {
     loadId.current++;
@@ -136,6 +139,7 @@ export default function ImageGeometryTool({ kind }: { kind: GeometryToolKind }) 
     abortRef.current?.abort();
     abortRef.current = null;
     setProcessing(false);
+    setRetryPreview(false);
     if (resultUrlRef.current) {
       URL.revokeObjectURL(resultUrlRef.current);
       resultUrlRef.current = '';
@@ -163,6 +167,7 @@ export default function ImageGeometryTool({ kind }: { kind: GeometryToolKind }) 
     setError('');
     setLoading(false);
     setProcessing(false);
+    setRetryPreview(false);
     setIsDragging(false);
     setPresetIndex(0);
     setCustomSize(false);
@@ -314,7 +319,7 @@ export default function ImageGeometryTool({ kind }: { kind: GeometryToolKind }) 
     const height = source.height + borderParsed.value * 2;
     const validation = validateGeometryDimensions(width, height);
     if (!validation.valid) return { valid: false as const, error: validation.error };
-    return { valid: true as const, width, height, mimeType: 'image/png' as const, operation: `border-${borderParsed.value}px`, border: borderParsed.value };
+    return { valid: true as const, width, height, mimeType: liveBorder ? getDefaultGeometryFormat(source.mimeType) : 'image/png' as const, operation: `border-${borderParsed.value}px`, border: borderParsed.value };
   };
 
   const plan = getPlan();
@@ -354,25 +359,29 @@ export default function ImageGeometryTool({ kind }: { kind: GeometryToolKind }) 
     const sourceLoadId = loadId.current;
     const abortController = new AbortController();
     abortRef.current = abortController;
-    const canvas = canvasRef.current;
+    const canvas = liveBorder ? document.createElement('canvas') : canvasRef.current;
     if (!canvas) {
       setError('Could not create the export canvas in this browser.');
+      setRetryPreview(liveBorder);
       return;
     }
     const ctx = canvas.getContext('2d');
     if (!ctx) {
       setError('Could not start the image export in this browser.');
+      setRetryPreview(liveBorder);
       return;
     }
 
     setProcessing(true);
     setError('');
+    setRetryPreview(false);
     const isCancelled = () => id !== processId.current || sourceLoadId !== loadId.current || abortController.signal.aborted;
-    const fail = (message: string) => {
+    const fail = (message: string, canRetry = liveBorder) => {
       if (isCancelled()) return;
       if (abortRef.current === abortController) abortRef.current = null;
       setProcessing(false);
       setError(message);
+      setRetryPreview(liveBorder && canRetry);
     };
 
     const img = new Image();
@@ -393,7 +402,7 @@ export default function ImageGeometryTool({ kind }: { kind: GeometryToolKind }) 
         canvas.height = rect.canvasHeight;
         const nextCtx = canvas.getContext('2d');
         if (!nextCtx) {
-          fail('Could not finish the image export in this browser.');
+          fail('Could not finish the image export in this browser.', true);
           return;
         }
         drawGeometry(nextCtx, img, rect, plan.mimeType);
@@ -416,25 +425,40 @@ export default function ImageGeometryTool({ kind }: { kind: GeometryToolKind }) 
           }
         });
         const sameDimensions = source.width === plan.width && source.height === plan.height;
-        const encoded = await encodeGeometryBlobWithJpegRetry({
-          originalBytes: source.file.size,
-          requestedMimeType: plan.mimeType,
-          maxQuality: MAX_GEOMETRY_JPEG_QUALITY,
-          allowRetryWhenLarger: kind === 'resize' && plan.mimeType === 'image/jpeg' && sameDimensions,
-          encode,
-          isCancelled,
-        });
+        const encoded = liveBorder && plan.mimeType === 'image/jpeg'
+          ? await encode(plan.mimeType, 0.9).then((blob) => ({
+            blob,
+            actualQuality: blob ? 90 : null,
+            qualityAutoReduced: false,
+            failed: !blob,
+            cancelled: isCancelled(),
+            mimeMismatch: Boolean(blob && blob.type !== plan.mimeType),
+            error: undefined,
+          }))
+          : await encodeGeometryBlobWithJpegRetry({
+            originalBytes: source.file.size,
+            requestedMimeType: plan.mimeType,
+            maxQuality: MAX_GEOMETRY_JPEG_QUALITY,
+            allowRetryWhenLarger: kind === 'resize' && plan.mimeType === 'image/jpeg' && sameDimensions,
+            encode,
+            isCancelled,
+          });
 
         if (encoded.cancelled || isCancelled()) return;
         if (encoded.failed || !encoded.blob) {
-          fail(encoded.mimeMismatch ? `Your browser did not return ${getGeometryMimeLabel(plan.mimeType)}. Try another format.` : encoded.error || 'This image could not be exported. Try smaller dimensions or another image.');
+          fail(encoded.mimeMismatch ? `Your browser did not return ${getGeometryMimeLabel(plan.mimeType)}. Try another format.` : encoded.error || 'This image could not be exported. Try smaller dimensions or another image.', true);
+          return;
+        }
+
+        if (liveBorder && encoded.blob.type !== plan.mimeType) {
+          fail(`Your browser did not return ${getGeometryMimeLabel(plan.mimeType)}. Try another format.`, true);
           return;
         }
 
         const outputHeader = new Uint8Array(await encoded.blob.slice(0, 16).arrayBuffer());
         if (isCancelled()) return;
         if (!verifyGeometryOutputSignature(outputHeader, plan.mimeType)) {
-          fail(`The browser export did not produce valid ${getGeometryMimeLabel(plan.mimeType)} bytes. No download was created.`);
+          fail(`The browser export did not produce valid ${getGeometryMimeLabel(plan.mimeType)} bytes. No download was created.`, true);
           return;
         }
 
@@ -464,12 +488,20 @@ export default function ImageGeometryTool({ kind }: { kind: GeometryToolKind }) 
         if (abortRef.current === abortController) abortRef.current = null;
         setProcessing(false);
       } catch (err) {
-        fail(err instanceof Error && err.message ? err.message : 'This image could not be exported. Try another image.');
+        fail(err instanceof Error && err.message ? err.message : 'This image could not be exported. Try another image.', true);
       }
     };
     img.onerror = () => fail('This image could not be decoded for export.');
     img.src = source.url;
   };
+
+  processImageRef.current = processImage;
+
+  useEffect(() => {
+    if (!liveBorder || !source || loading) return;
+    const timeout = window.setTimeout(() => processImageRef.current(), 150);
+    return () => window.clearTimeout(timeout);
+  }, [liveBorder, source, borderWidth, borderColor, loading]);
 
   const download = () => {
     if (!result) return;
@@ -479,7 +511,9 @@ export default function ImageGeometryTool({ kind }: { kind: GeometryToolKind }) 
     link.click();
   };
 
-  const copy = TOOL_COPY[kind];
+  const copy = liveBorder
+    ? { ...TOOL_COPY.border, empty: 'Choose an image to preview its border.', action: 'Preview border', busy: 'Updating preview...' }
+    : TOOL_COPY[kind];
   const sourceMeta = source ? `${formatGeometryBytes(source.file.size)} · ${source.width} x ${source.height} px · ${getGeometryMimeLabel(source.mimeType)}` : '';
   const resizePlanHint = plan.valid ? `${plan.width} x ${plan.height} px output` : plan.error;
   const fitChoices: Array<{ value: FitMode; label: string; hint: string; hintId: string }> = [
@@ -731,9 +765,22 @@ export default function ImageGeometryTool({ kind }: { kind: GeometryToolKind }) 
               <p className="tb-image-hint">
                 {plan.valid ? `Output size: ${plan.width} x ${plan.height} px. Limit: ${MAX_IMAGE_GEOMETRY_SIDE} px per side and 32 megapixels.` : plan.error}
               </p>
-              <div className="tb-image-actions">
-                <button type="button" onClick={processImage} disabled={!canProcess} className="tb-v2-btn tb-v2-btn-primary">{processing ? copy.busy : copy.action}</button>
-              </div>
+              {liveBorder && source.mimeType === 'image/jpeg' && <p className="tb-image-hint">JPEG is re-encoded at 90% quality; file size can vary.</p>}
+              {kind === 'border' && !liveBorder && (
+                <div className="tb-image-actions">
+                  <button type="button" onClick={processImage} disabled={!canProcess} className="tb-v2-btn tb-v2-btn-primary">{processing ? copy.busy : copy.action}</button>
+                </div>
+              )}
+              {kind === 'square' && (
+                <div className="tb-image-actions">
+                  <button type="button" onClick={processImage} disabled={!canProcess} className="tb-v2-btn tb-v2-btn-primary">{processing ? copy.busy : copy.action}</button>
+                </div>
+              )}
+              {liveBorder && retryPreview && (
+                <div className="tb-image-actions">
+                  <button type="button" onClick={processImage} disabled={!canProcess} className="tb-v2-btn tb-v2-btn-primary">Retry preview</button>
+                </div>
+              )}
             </div>
 
             <div className={styles.workspace}>
