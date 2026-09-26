@@ -231,19 +231,19 @@ const OVERRIDES: Record<string, FAQ[]> = {
   ],
   'add-subtitles': [
     { q: "What does this tool do?", a: "Preview and burn plain SRT or WebVTT captions into a re-encoded WebM video with audio." },
-    { q: "What should I know before using it?", a: "The browser must support decoding the input and recording WebM with audio. Export re-encodes in real time and is limited to 60 seconds per range and 2,073,600 pixels. It doesn't preserve the original encoded stream." },
+    { q: "What should I know before using it?", a: "Use a source up to 30 MB, 120 seconds and 2,073,600 pixels. A browser-decodable audio track is required. Each export covers up to 60 seconds and re-encodes to WebM in real time. Keep the tab visible. Recording stops with an error if audio and video fall out of sync." },
   ],
   'mkv-to-mp3': [
-    { q: "What does this tool do?", a: "Extract decodable audio from MKV files and encode it as MP3." },
-    { q: "What should I know before using it?", a: "MP3 uses a local LAME encoder at 128 kbps for mono or stereo audio; WAV is also available. Supported input codecs depend on the browser. A valid container doesn't guarantee decodable audio. Limits are 20 MB, 120 decoded seconds and 24 million decoded samples across all channels." },
+    { q: "What does this tool do?", a: "Convert decodable MKV audio to 128 kbps mono or stereo MP3." },
+    { q: "What should I know before using it?", a: "MP3 uses a local LAME encoder; 16-bit PCM WAV output is also available. Limits are 20 MB, 120 decoded seconds and 24 million decoded samples across all channels. If the browser can't decode the container directly, a fallback handles supported AAC-LC tracks in MKV files. It preserves supported timing trims and rejects layouts it can't reproduce safely. Other codecs depend on browser support." },
   ],
   'mp4-to-mp3': [
-    { q: "What does this tool do?", a: "Extract decodable audio from MP4 files and encode it as MP3." },
-    { q: "What should I know before using it?", a: "MP3 uses a local LAME encoder at 128 kbps for mono or stereo audio; WAV is also available. Supported input codecs depend on the browser. A valid container doesn't guarantee decodable audio. Limits are 20 MB, 120 decoded seconds and 24 million decoded samples across all channels." },
+    { q: "What does this tool do?", a: "Convert decodable MP4 audio to 128 kbps mono or stereo MP3." },
+    { q: "What should I know before using it?", a: "MP3 uses a local LAME encoder; 16-bit PCM WAV output is also available. Limits are 20 MB, 120 decoded seconds and 24 million decoded samples across all channels. If the browser can't decode the container directly, a fallback handles supported AAC-LC tracks in MP4 files. It preserves supported timing trims and rejects layouts it can't reproduce safely. Other codecs depend on browser support." },
   ],
   'extract-audio': [
-    { q: "What does this tool do?", a: "Extract browser-decodable audio from supported containers to 16-bit PCM WAV." },
-    { q: "What should I know before using it?", a: "Input is limited to 20 MB and 120 decoded seconds, with a limit of 24 million decoded samples across all channels. The browser must decode the audio codec; the file extension alone doesn't guarantee support. WAV output doesn't restore detail lost in earlier compression." },
+    { q: "What does this tool do?", a: "Extract decodable audio from supported containers to 16-bit PCM WAV." },
+    { q: "What should I know before using it?", a: "Limits are 20 MB, 120 decoded seconds and 24 million decoded samples across all channels. If the browser can't decode the container directly, a fallback handles supported AAC-LC tracks in MP4/M4A and MKV files. It preserves supported timing trims and rejects layouts it can't reproduce safely. Other codecs depend on browser support. WAV output doesn't restore detail lost in earlier compression." },
   ],
   'excel-to-pdf': [
     { q: "What does this tool do?", a: "Export XLSX cell values as wrapped, paginated PDF text. Spreadsheet styling and charts are not preserved." },
@@ -438,6 +438,7 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Is the Base64 tool safe for sensitive data?', a: 'Yes. Encoding and decoding both happen in your browser. Nothing is uploaded or logged, so it is safe to use with API tokens, internal payloads, and other confidential content.' },
   ],
   'url-encode': [
+    { q: 'What happens if I try to decode text that is not validly encoded?', a: 'An error message is shown instead of garbled output, since decodeURIComponent throws on malformed percent-encoded sequences rather than guessing at the intended characters.' },
     { q: 'What is URL encoding?', a: 'URL encoding (percent-encoding) converts characters that have special meaning in URLs  -  like spaces, &, ?, and =  -  into a safe form so they can be passed in a link or query string without breaking the URL.' },
     { q: 'When do I need to URL-encode a string?', a: 'Any time you embed user input, paths, or query parameters into a URL  -  building deep links, constructing API requests, or debugging a broken redirect. Encode values individually, not the whole URL.' },
     { q: "What's the difference between encodeURI and encodeURIComponent?", a: 'encodeURIComponent encodes every reserved character, which is what you want for query values and is what this tool uses. encodeURI leaves URL structural characters (/ ? : etc.) alone, which is rarely what you want when encoding user-supplied data.' },
@@ -459,13 +460,15 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Is there a limit on how much text I can convert?', a: "No. The Case Converter handles paragraphs or entire documents in milliseconds, and it all happens in your browser so there's no upload limit." },
   ],
   'regex-tester': [
-    { q: 'What is the Regex Tester?', a: 'The Regex Tester is a free online playground for regular expressions. Type a pattern, paste the text to match against, and see matches and capture groups highlighted live with flag support (g, i, m, s, u).' },
+    { q: 'What is the Regex Tester?', a: 'The Regex Tester is a free online playground for regular expressions. Type a pattern, paste the text to match against, and see matches and capture groups highlighted live with flag controls (g, i, m, s, u, y).' },
     { q: 'Which regex flavor does the Regex Tester use?', a: 'The Regex Tester uses JavaScript (ECMAScript) regex, which is the flavor you ship in a web app, Node.js script, or browser-side code. Named groups, lookbehinds, and unicode property escapes are all supported in modern browsers.' },
     { q: 'Can I test multiline regex patterns?', a: 'Yes. Toggle the m flag to make ^ and $ match line boundaries, or s to let . match newlines. The Regex Tester shows exactly which flags are active.' },
-    { q: 'Does the Regex Tester explain my pattern?', a: 'Yes. The Regex Tester breaks down each token in the pattern  -  anchors, character classes, quantifiers, groups  -  into plain English so you can verify what it actually matches.' },
+    { q: 'Does it show capture groups?', a: 'Yes. The match list shows numbered and named capture groups for up to the first 100 matches, followed by the remaining match count. It does not explain regex tokens or preview replacements.' },
     { q: 'Is my regex and test text private?', a: 'Yes. Everything in the Regex Tester runs in your browser. Nothing is sent to any server, so you can test patterns against confidential logs and data.' },
   ],
   'jwt-decoder': [
+    { q: 'What standard claims does it surface?', a: 'The Standard claims section shows issuer, subject, audience, and token times when available. It formats iat, nbf, and exp as readable timestamps; the payload contains their original values.' },
+    { q: 'How can I tell if a token is expired at a glance?', a: 'A badge next to the input reads "Not expired," "Expired," or "Not yet valid" based on the exp and nbf claims compared against the current time, or "No exp claim" if the token does not set one.' },
     { q: 'What does the JWT Decoder show me?', a: 'The JWT Decoder splits a JSON Web Token into its three parts  -  header, payload, and signature  -  and pretty-prints the JSON so you can inspect claims like exp, iat, iss, and any custom fields.' },
     { q: 'Does the JWT Decoder verify the signature?', a: 'The JWT Decoder shows you what a token claims. Verification requires the secret or public key that issued the token and should be done server-side  -  never trust an unverified JWT for authorization.' },
     { q: 'Can I decode an expired JWT?', a: 'Yes. The JWT Decoder decodes any valid JWT regardless of expiry, which is useful for debugging expired-token bugs. Look at the exp claim to see when it was valid.' },
@@ -481,9 +484,9 @@ const OVERRIDES: Record<string, FAQ[]> = {
   ],
   'lorem-ipsum-generator': [
     { q: 'What is Lorem Ipsum?', a: 'Lorem Ipsum is pseudo-Latin placeholder text used by designers and developers since the 1500s. It fills layouts with realistic-looking content so you can evaluate typography, spacing, and hierarchy without being distracted by the meaning of the words.' },
-    { q: 'How much text can I generate?', a: 'Drag the slider for 1 to 20 paragraphs, each with 4–8 randomized sentences. Output regenerates instantly in your browser whenever you change the count or hit Regenerate.' },
+    { q: 'How much text can I generate?', a: 'Choose Words, Sentences, or Paragraphs, then enter a count from 1 to 100. The output updates when you change these settings or click Regenerate.' },
     { q: 'Does the Lorem Ipsum Generator start with "Lorem ipsum dolor sit amet"?', a: 'Yes by default  -  and you can toggle it off if you\'d rather jump straight into randomized content. Starting with the classic phrase signals "placeholder" to anyone reviewing the mockup.' },
-    { q: 'Can I generate HTML-wrapped Lorem Ipsum?', a: 'Yes. The Lorem Ipsum Generator outputs plain text by default, or wraps paragraphs in `<p>` tags with a single toggle so you can paste straight into a template.' },
+    { q: 'Can I generate a short placeholder for a label?', a: 'Choose Words and enter the length you need. The generator repeats a fixed source passage when needed and copies plain text, without HTML tags.' },
     { q: 'Is it OK to use Lorem Ipsum in a real product?', a: 'Only during design and prototyping. Ship with real copy  -  Lorem Ipsum left in production is the sort of thing that ends up on social media.' },
   ],
   'qr-code-generator': [
@@ -629,8 +632,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Does this affect my live SEO?', a: 'No  -  the SERP Preview is a visualizer. It doesn\'t crawl, modify, or submit anything to Google. Push your title/description to the live page first, then test it in Google Search Console for the real scrape.' },
   ],
   'aac-to-wav': [
-    { q: "What does this tool do?", a: "Decode browser-supported AAC audio to 16-bit PCM WAV. Maximum 20 MB and 120 decoded seconds." },
-    { q: "What should I know before using it?", a: "Input is limited to 20 MB and 120 decoded seconds, with a limit of 24 million decoded samples across all channels. The browser must decode the audio codec; the file extension alone doesn't guarantee support. WAV output doesn't restore detail lost in earlier compression." },
+    { q: "What does this tool do?", a: "Decode browser-supported AAC audio to 16-bit PCM WAV." },
+    { q: "What should I know before using it?", a: "Limits are 20 MB, 120 decoded seconds and 24 million decoded samples across all channels. The browser must decode the audio codec; the file extension alone doesn't guarantee support. WAV output doesn't restore detail lost in earlier compression." },
   ],
   'accessibility-checker': [
     { q: 'What does the Accessibility Checker actually inspect?', a: 'Paste in HTML and it parses the markup to flag missing image alt text, a missing lang attribute on the html tag, a missing page title, buttons and links without accessible names, form inputs without an associated label, and missing landmark elements like header, main, nav, and footer.' },
@@ -663,8 +666,9 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Can I edit the transcript after speaking?', a: 'Yes. The transcript appears in an editable area as you speak, and you can copy it to your clipboard once you\'re done, or replace it entirely using the manual input box.' },
   ],
   'automation-wizard': [
-    { q: "What does this tool do?", a: "Draft a workflow specification and export JSON or YAML." },
-    { q: "What should I know before using it?", a: "Trigger and action blocks describe a plan. They don't connect accounts, run tasks or use AI. Adapt the exported specification to your chosen runner; it's not a ready-to-run integration." },
+    { q: "Does the builder run my workflow?", a: "No. It records a draft in this browser tab. It does not run triggers or actions, send requests, schedule jobs or connect accounts." },
+    { q: "Can I import the output into an automation platform?", a: "The generic JSON and YAML schema has not been verified for compatibility with any runner. Use the outline as planning notes, then implement and test it in your chosen platform." },
+    { q: "What do the two copy formats include?", a: "JSON and YAML contain the same workflow: the first trigger and the remaining action or condition steps, including their entered settings. Copy your draft before leaving the page; it is not saved between visits." },
   ],
   'api-auth-header-generator': [
     { q: 'What types of auth headers can it build?', a: 'Bearer tokens, HTTP Basic auth from a username and password, and custom API-key headers with your own header name and optional prefix.' },
@@ -859,7 +863,7 @@ const OVERRIDES: Record<string, FAQ[]> = {
   ],
   'code-beautifier': [
     { q: "What does this tool do?", a: "Format JavaScript, TypeScript, JSON, CSS, HTML and Python with indentation controls." },
-    { q: "What should I know before using it?", a: "TypeScript Beautify keeps type syntax. Python formatting reindents existing blocks; HTML formatting uses conservative block boundaries. Neither is a full language-aware formatter." },
+    { q: "What should I know before using it?", a: "TypeScript formatting and minification preserve type annotations and declarations. Downloads keep the .ts extension. Python only reindents existing blocks, and Minify isn't available for Python. HTML formatting uses conservative block boundaries." },
   ],
   'code-diff': [
     { q: 'What algorithm does it use to compare two code blocks?', a: 'A longest common subsequence (LCS) algorithm, the same class of algorithm behind tools like diff and git diff, which finds the actual minimal set of added and removed lines rather than just flagging any line that moved as changed.' },
@@ -1148,8 +1152,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'How does it detect the request body?', a: 'It looks for a -d flag and assigns whatever follows to a data variable, passed to the requests call as data=data.' },
   ],
   'cutter': [
-    { q: "What does this tool do?", a: "Record a selected video range as WebM with audio. Real-time re-encoding, up to 60 seconds per export." },
-    { q: "What should I know before using it?", a: "The browser must support decoding the input and recording WebM with audio. Export re-encodes in real time and is limited to 60 seconds per range and 2,073,600 pixels. It doesn't preserve the original encoded stream." },
+    { q: "What does this tool do?", a: "Record a selected video range as WebM with audio." },
+    { q: "What should I know before using it?", a: "Use a source up to 30 MB, 120 seconds and 2,073,600 pixels. A browser-decodable audio track is required. Each export covers up to 60 seconds and re-encodes to WebM in real time. Keep the tab visible. Recording stops with an error if audio and video fall out of sync." },
   ],
   'data-size-converter': [
     { q: 'Does it use binary (1024) or decimal (1000) unit sizes?', a: 'Binary only, every unit step multiplies by 1024 (1 KB = 1024 bytes). There is no toggle for decimal, 1000-based units.' },
@@ -1617,8 +1621,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Is there a maximum word count?', a: 'The count field caps at 100 words per generation.' },
   ],
   'm4a-to-wav': [
-    { q: "What does this tool do?", a: "Decode browser-supported M4A audio to 16-bit PCM WAV. Maximum 20 MB and 120 decoded seconds." },
-    { q: "What should I know before using it?", a: "Input is limited to 20 MB and 120 decoded seconds, with a limit of 24 million decoded samples across all channels. The browser must decode the audio codec; the file extension alone doesn't guarantee support. WAV output doesn't restore detail lost in earlier compression." },
+    { q: "What does this tool do?", a: "Decode supported M4A audio to 16-bit PCM WAV." },
+    { q: "What should I know before using it?", a: "Limits are 20 MB, 120 decoded seconds and 24 million decoded samples across all channels. If the browser can't decode the container directly, a fallback handles supported AAC-LC tracks in M4A files. It preserves supported timing trims and rejects layouts it can't reproduce safely. Other codecs depend on browser support. WAV output doesn't restore detail lost in earlier compression." },
   ],
   'markdown-preview': [
     { q: 'Does the preview update as I type, or do I need to click a button?', a: 'It updates live on every keystroke, rendered with the marked library and GitHub Flavored Markdown enabled, no render or refresh button needed.' },
@@ -1672,8 +1676,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Does it tell me what service typically runs on an open port?', a: 'For about twenty well-known ports, like 22 for SSH, 443 for HTTPS, 3306 for MySQL, and 6379 for Redis, the results table shows the matching service name next to the port number.' },
   ],
   'mp4-to-wav': [
-    { q: "What does this tool do?", a: "Decode browser-supported MP4 audio to 16-bit PCM WAV. Files without decodable audio are rejected." },
-    { q: "What should I know before using it?", a: "Input is limited to 20 MB and 120 decoded seconds, with a limit of 24 million decoded samples across all channels. The browser must decode the audio codec; the file extension alone doesn't guarantee support. WAV output doesn't restore detail lost in earlier compression." },
+    { q: "What does this tool do?", a: "Decode supported MP4 audio to 16-bit PCM WAV. Files without decodable audio are rejected." },
+    { q: "What should I know before using it?", a: "Limits are 20 MB, 120 decoded seconds and 24 million decoded samples across all channels. If the browser can't decode the container directly, a fallback handles supported AAC-LC tracks in MP4 files. It preserves supported timing trims and rejects layouts it can't reproduce safely. Other codecs depend on browser support. WAV output doesn't restore detail lost in earlier compression." },
   ],
   'network-port-scanner': [
     { q: "What's the default port range if I don't change anything?", a: '1 to 1000 is pre-filled in the Ports field when you open the tool, covering most common services without needing to type a range yourself.' },
@@ -1825,6 +1829,7 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'What other stats besides the readability scores does it show?', a: 'Word count, sentence count, average word length, and average sentence length, all calculated the moment you type at least one word.' },
   ],
   'reading-time-calculator': [
+    { q: 'Can I adjust the assumed reading speed?', a: 'It starts at 200 words per minute. Adjust the slider from 100 to 500 in steps of 10; the estimate updates as you type. This estimates reading time, rather than measuring your reading speed.' },
     { q: 'What format does the time show for very short text?', a: 'Text estimated at under a minute displays as just a seconds value like "38s", switching to the combined "Xm Ys" format only once the estimate reaches a full minute.' },
     { q: 'How does it treat multiple punctuation marks in a row, like "?!" or "..."?', a: 'A run of consecutive ., !, or ? characters counts as a single sentence ending rather than one per character, so "Wait..." only adds one to the sentence count.' },
     { q: 'Do I need at least two blank lines to start a new paragraph?', a: 'Yes, the text is split wherever two or more consecutive line breaks appear, a single line break within a block is treated as part of the same paragraph.' },
@@ -2041,6 +2046,7 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Can I copy the reversed text without selecting it manually?', a: 'Yes, a Copy button appears next to the Reversed label as soon as there is output, copying the current mode\'s result to your clipboard in one click.' },
   ],
   'text-statistics': [
+    { q: 'Does sentence count work on text with no punctuation at all?', a: "Yes, if there's no period, question mark, or exclamation point anywhere but you've still entered words, it counts that as one sentence rather than showing zero." },
     { q: 'How is average sentence length calculated?', a: 'It counts sentences by matching runs of ".", "!", or "?" in your text, then divides your total word count by that sentence count to get words per sentence.' },
     { q: 'How does it estimate syllables per word?', a: 'It strips non-letters from each word, treats words of 3 letters or fewer as one syllable, drops a trailing silent e or -ed/-es ending, then counts groups of vowels (a, e, i, o, u, y) in what remains.' },
     { q: 'What other numbers show up besides syllables, sentence length, and word length?', a: 'The full grid also shows character count with and without spaces, paragraph count, estimated reading and speaking time in minutes, and a Flesch reading ease score.' },
@@ -2116,6 +2122,7 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Is there a shortcut for the current time?', a: 'Yes, a "Use current time" button fills in the present moment instantly instead of typing or picking it manually.' },
   ],
   'uptime-calculator': [
+    { q: 'How precise is the downtime figure?', a: 'The highlighted period shows allowed downtime to 4 decimal places in minutes, while the grid cells switch to a rounded minutes or hours display depending on which is more readable for that period.' },
     { q: 'How do I set the SLA percentage?', a: 'A slider and a matching number input let you set anything from 90% to 99.999% uptime in steps of 0.001%, covering everything from a loose SLA down to "five nines".' },
     { q: 'What time periods does it break the downtime down into?', a: 'Tabs for year, month, week, day, and hour, and the calculator shows the allowed downtime for all five periods at once in a results grid rather than one at a time.' },
     { q: 'What is the calculation based on?', a: 'It multiplies the length of each period by (100% minus your chosen SLA percentage) to get the allowed downtime, the same math used to translate an SLA target into a concrete outage budget.' },

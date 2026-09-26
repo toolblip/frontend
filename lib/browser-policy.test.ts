@@ -8,7 +8,7 @@ import { getToolPath } from '@/lib/tool-path';
 const network = ['domain-age-checker', 'broken-link-checker', 'http-headers-inspector', 'http-status-checker', 'url-redirect-checker', 'accessibility-checker', 'heading-tag-analyzer', 'meta-description-checker', 'page-title-checker', 'seo-title-analyzer', 'seo-meta-tag-analyzer', 'og-tag-debugger', 'robots-txt-analyzer', 'robots-txt-validator', 'robots-txt-editor', 'robots-txt-checker', 'sitemap-analyzer', 'sitemap-extractor'];
 const media = ['aac-to-wav', 'm4a-to-wav', 'mkv-to-mp3', 'mp4-to-mp3', 'mp4-to-wav', 'extract-audio', 'cutter', 'add-subtitles'];
 const dns = ['dns-lookup', 'dns-lookup-tool', 'ping-test'];
-const previews = ['html-live-preview', 'markdown-to-html', 'markdown-preview', 'markdown-editor', 'markdown-to-pdf', 'notebook-to-html'];
+const previews = ['html-live-preview', 'markdown-to-html', 'markdown-to-pdf', 'notebook-to-html'];
 const favicons = ['/tools/batch-favicon-downloader', '/tools/images/favicon-grabber'];
 const paths = (slugs: string[]) => slugs.map(slug => `/tools/${slug}`);
 const changed = new Set(['/tools/english-dictionary', ...paths(media), '/tools/graphql-playground', '/tools/websocket-tester', ...paths(network), ...paths(dns), ...paths(previews), ...favicons, '/tools/speech-to-text']);
@@ -123,6 +123,7 @@ describe('per-tool browser policy', () => {
       expect(changed.has(target)).toBe(true);
     }
     expect(await headers('/tools/favicon-grabber')).toEqual(base);
+    for (const alias of ['markdown-preview', 'markdown-editor']) expect(await headers(`/tools/${alias}`)).toEqual(base);
   });
 
   it('grants exceptions only to real canonical tools and preserves all other response headers', async () => {

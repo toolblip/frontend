@@ -94,9 +94,16 @@ export default function AutomationWizardClient() {
     <div className="tb-v2-flex tb-v2-flex-col tb-v2-gap-6 tb-v2-p-4">
       <ToolExampleClearActions onExample={() => { setWorkflowSteps([{id:'example-trigger',name:'Daily report',type:'trigger',config:{template:'schedule',interval:'daily',time:'09:00'}}]); }} onClear={() => { setWorkflowSteps([]); setStepName(''); setSelectedTemplate(''); setConfig({}); setShowTemplates(true); }}/>
       <div>
-        <h2 className="tb-v2-text-2xl tb-v2-font-bold">Automation Wizard</h2>
-        <p className="tb-v2-text-sm tb-v2-text-gray-500">Draft a workflow specification. This tool does not run actions or connect accounts.</p>
+        <h2 className="tb-v2-text-2xl tb-v2-font-bold">Workflow Outline Builder</h2>
+        <p className="tb-v2-text-sm tb-v2-text-gray-500">Outline planned triggers, actions, and conditions, then copy your draft.</p>
       </div>
+
+      <p className="tb-v2-text-sm tb-v2-text-gray-500">
+        This builder does not run triggers or actions, send requests, or connect apps.
+        JSON and YAML are generic planning formats; compatibility with automation runners
+        has not been verified. Implement and test the workflow separately. Both formats include
+        the step names, types and settings you entered.
+      </p>
 
       {/* Step Type Selection */}
       <div className="tb-v2-card">
@@ -121,7 +128,7 @@ export default function AutomationWizardClient() {
       {showTemplates && (
         <div className="tb-v2-card">
           <h3 className="tb-v2-text-lg tb-v2-font-semibold tb-v2-mb-3">
-            Select {selectedType.charAt(0).toUpperCase() + selectedType.slice(1)} Template
+            Select {selectedType.charAt(0).toUpperCase() + selectedType.slice(1)} Template (planning only)
           </h3>
           <div className="tb-v2-grid tb-v2-grid-cols-2 tb-v2-gap-3">
             {currentTemplates.map(template => (
@@ -428,7 +435,7 @@ export default function AutomationWizardClient() {
       {/* Export */}
       {workflowSteps.length > 0 && (
         <div className="tb-v2-card">
-          <h3 className="tb-v2-text-lg tb-v2-font-semibold tb-v2-mb-3">Export Workflow</h3>
+          <h3 className="tb-v2-text-lg tb-v2-font-semibold tb-v2-mb-3">Copy Workflow Outline</h3>
           <div className="tb-v2-flex tb-v2-gap-2">
             <button
               onClick={() => navigator.clipboard.writeText(generateWorkflowYaml())}

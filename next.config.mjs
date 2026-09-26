@@ -30,6 +30,25 @@ const nextConfig = {
   },
   async redirects() {
     return [
+      // Same component and behavior: retire duplicate pages with an HTTP 308.
+      { source: '/tools/text-case-converter', destination: '/tools/case-converter', permanent: true },
+      { source: '/tools/title-case-converter', destination: '/tools/case-converter', permanent: true },
+      { source: '/tools/url-encoder', destination: '/tools/url-encode', permanent: true },
+      { source: '/tools/regex-match-tester', destination: '/tools/regex-tester', permanent: true },
+      { source: '/tools/regex-pattern-tester', destination: '/tools/regex-tester', permanent: true },
+      { source: '/tools/random-password-generator', destination: '/tools/password-generator', permanent: true },
+      { source: '/tools/markdown-preview', destination: '/tools/markdown-to-html', permanent: true },
+      { source: '/tools/markdown-editor', destination: '/tools/markdown-to-html', permanent: true },
+      { source: '/tools/lorem-ipsum-words', destination: '/tools/lorem-ipsum-generator', permanent: true },
+      { source: '/tools/jwt-inspector', destination: '/tools/jwt-decoder', permanent: true },
+      { source: '/tools/jwt-token-decoder', destination: '/tools/jwt-decoder', permanent: true },
+      { source: '/tools/read-time-calculator', destination: '/tools/reading-time-calculator', permanent: true },
+      { source: '/tools/reading-pace-calculator', destination: '/tools/reading-time-calculator', permanent: true },
+      { source: '/tools/reading-time-estimator', destination: '/tools/reading-time-calculator', permanent: true },
+      { source: '/tools/text-statistics-calculator', destination: '/tools/text-statistics', permanent: true },
+      { source: '/tools/sla-uptime-calculator', destination: '/tools/uptime-calculator', permanent: true },
+      { source: '/tools/general-unit-converter', destination: '/tools/all-in-one-unit-converter', permanent: true },
+
       { source: '/tools/unblur', destination: '/tools/images/sharpen', permanent: true },
       { source: '/tools/images/unblur', destination: '/tools/images/sharpen', permanent: true },
       { source: '/tools/image-border-adder', destination: '/tools/images/border', permanent: true },

@@ -110,17 +110,12 @@ const FIX_BATCH_41: Record<string, FixBatchEntry> = {
   },
 
   'automation-wizard': {
-    description: `Connecting two apps so that one action automatically triggers another, a new form submission adding a row to a spreadsheet, a new file automatically getting a notification sent about it, is a task a lot of people assume needs writing code, when the actual logic behind most of these automations is simple: when this specific thing happens, do that specific thing in response. This tool builds that kind of trigger-and-action automation visually, connecting apps and defining what should happen automatically without writing a script or hiring someone who can. Useful for automating a repetitive manual task that currently gets done by hand every single time it comes up, connecting two apps that don't otherwise talk to each other directly, or setting up a simple automated workflow without learning to code just for one recurring task.`,
+    description: `Draft a workflow before implementing it. Add planned triggers, actions, and conditions, name each step, and put them in order. Copy the outline as JSON or YAML for planning or discussion. This tool does not connect apps, run steps, or schedule jobs. The export schema has not been verified for compatibility with any automation runner. JSON includes entered settings; YAML only lists names and step types, so it is not a complete configuration.`,
     examples: [
       {
-        title: 'Automate a repetitive notification task',
-        code: `Trigger: new file uploaded to a folder\nAction: send a notification message\nOutput: automation runs every time a new file appears`,
-        note: 'Replaces a manual check-and-notify task done by hand each time.',
-      },
-      {
-        title: 'Connect two apps without writing code',
-        code: `Trigger: new form submission\nAction: add a row to a spreadsheet\nOutput: automation created visually, no script written`,
-        note: 'Builds a working automation without needing a developer.',
+        title: 'Plan a scheduled notification',
+        code: `Trigger idea: daily schedule\nAction idea: send an email\nOutput: draft outline to implement and test separately`,
+        note: 'No schedule or email is created. Copy the draft before leaving the page.',
       },
     ],
   },

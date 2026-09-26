@@ -73,7 +73,7 @@ When you paste markdown and preview the HTML output side by side, those mistakes
 - **Indented code that should be fenced** — four-space indentation silently becomes a `<pre>` block you did not intend.
 - **Unescaped angle brackets** — text like `Vector<int>` can swallow following content unless it is inside a code span.
 
-Seeing the `<ul>`, `<pre>`, or escaped `&lt;` appear in real time tells you the structure is right before you paste it anywhere it matters. If you only need to check rendering rather than grab the HTML, the [Markdown preview tool](https://toolblip.com/tools/markdown-preview) shows the same output rendered as a page.
+Seeing the `<ul>`, `<pre>`, or escaped `&lt;` appear in real time tells you the structure is right before you paste it anywhere it matters. Switch to the Preview tab in the [Markdown to HTML tool](https://toolblip.com/tools/markdown-to-html) to check the rendered output.
 
 ## Convert a GitHub README to HTML for use outside GitHub
 
