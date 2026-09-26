@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
+import { readPdfToolFile, loadPdfForTools } from '@/lib/pdf-qa/pdf';
 import ToolExampleClearActions from "@/components/tools/ToolExampleClearActions";
 
 type AnnotationType = "highlight" | "rectangle" | "text";
@@ -30,6 +31,7 @@ function color01(hex: string) {
 
 export default function AnnotateClient() {
   const [fileBytes, setFileBytes] = useState<Uint8Array | null>(null);
+  const [loading, setLoading] = useState(false);
   const [fileName, setFileName] = useState("");
   const [pageCount, setPageCount] = useState(0);
   const [page, setPage] = useState(1);
@@ -58,6 +60,7 @@ export default function AnnotateClient() {
   const loadVersionRef = useRef(0);
 
   const resetDocument = () => {
+    setLoading(false);
     setFileBytes(null);
     setFileName("");
     setPageCount(0);
@@ -72,11 +75,12 @@ export default function AnnotateClient() {
     setDraftBox(null);
   };
 
-  const loadPdf = async (bytes: Uint8Array, name: string) => {
-    const version = ++loadVersionRef.current;
+  const loadPdf = async (bytes: Uint8Array, name: string, version = ++loadVersionRef.current) => {
+    if (version !== loadVersionRef.current) return;
     resetDocument();
+    setLoading(true);
     try {
-      const doc = await PDFDocument.load(bytes);
+      const doc = await loadPdfForTools(bytes);
       if (doc.getPageCount() === 0) throw new Error("The PDF has no pages.");
       if (version !== loadVersionRef.current) return;
       setFileBytes(bytes);
@@ -92,34 +96,42 @@ export default function AnnotateClient() {
       setError(
         "Could not read this file as a PDF. Make sure it is a valid, unencrypted PDF.",
       );
-    }
+    } finally { if (version === loadVersionRef.current) setLoading(false); }
   };
   const handleFile = async (file: File | undefined) => {
     if (!file) return;
+    const version = ++loadVersionRef.current;
     if (file.type !== "application/pdf" && !/\.pdf$/i.test(file.name)) {
       resetDocument();
       setError("Please choose a PDF file.");
       return;
     }
     resetDocument();
+    setLoading(true);
     try {
-      await loadPdf(new Uint8Array(await file.arrayBuffer()), file.name);
+      await loadPdf(new Uint8Array(await readPdfToolFile(file)), file.name, version);
     } catch {
+      if (version !== loadVersionRef.current) return;
       setError("Could not read this file. Please choose a valid PDF.");
-    }
+    } finally { if (version === loadVersionRef.current) setLoading(false); }
   };
   const loadExample = async () => {
-    const doc = await PDFDocument.create();
-    const font = await doc.embedFont(StandardFonts.Helvetica);
-    for (const title of ["Review sample PDF", "Second sample page"]) {
-      const p = doc.addPage([612, 792]);
-      p.drawText(title, { x: 60, y: 720, size: 22, font });
-      p.drawText(
-        "Select a markup type, set its position, then add it to this page.",
-        { x: 60, y: 680, size: 12, font, color: rgb(0.3, 0.3, 0.3) },
-      );
-    }
-    await loadPdf(await doc.save(), "annotate-sample.pdf");
+    const version = ++loadVersionRef.current;
+    setLoading(true);
+    try {
+      const doc = await PDFDocument.create();
+      const font = await doc.embedFont(StandardFonts.Helvetica);
+      for (const title of ["Review sample PDF", "Second sample page"]) {
+        const p = doc.addPage([612, 792]);
+        p.drawText(title, { x: 60, y: 720, size: 22, font });
+        p.drawText(
+          "Select a markup type, set its position, then add it to this page.",
+          { x: 60, y: 680, size: 12, font, color: rgb(0.3, 0.3, 0.3) },
+        );
+      }
+      await loadPdf(await doc.save(), "annotate-sample.pdf", version);
+    } catch { if (version === loadVersionRef.current) setError("Could not create the example PDF."); }
+    finally { if (version === loadVersionRef.current) setLoading(false); }
   };
   const clearAll = () => {
     loadVersionRef.current += 1;
@@ -135,13 +147,13 @@ export default function AnnotateClient() {
     setZoom(1);
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
+  useEffect(() => () => { ++loadVersionRef.current; }, []);
   useEffect(() => {
     if (!fileBytes) {
       setPreview(null);
       setPreviewLoading(false);
       return;
     }
-    const version = loadVersionRef.current;
     let active = true;
     setPreviewLoading(true);
     setPreviewFailed(false);
@@ -164,7 +176,7 @@ export default function AnnotateClient() {
           const context = canvas.getContext("2d");
           if (!context) throw new Error("Canvas unavailable.");
           await pdfPage.render({ canvas, canvasContext: context, viewport }).promise;
-          if (active && version === loadVersionRef.current) {
+          if (active) {
             setPreview(canvas.toDataURL("image/png"));
           }
           await task.destroy();
@@ -177,9 +189,9 @@ export default function AnnotateClient() {
           throw renderError;
         }
       } catch {
-        if (active && version === loadVersionRef.current) setPreviewFailed(true);
+        if (active) setPreviewFailed(true);
       } finally {
-        if (active && version === loadVersionRef.current) setPreviewLoading(false);
+        if (active) setPreviewLoading(false);
       }
     })();
     return () => {
@@ -240,6 +252,7 @@ export default function AnnotateClient() {
       setWidth(Math.max(1, Math.round(w)));
       setHeight(Math.max(1, Math.round(h)));
     }
+    ++loadVersionRef.current;
     setAnnotations((prev) => [
       ...prev,
       {
@@ -300,16 +313,17 @@ export default function AnnotateClient() {
       setError("Enter a comment or label before adding text.");
       return;
     }
+    ++loadVersionRef.current;
     setAnnotations((prev) => [
       ...prev,
       {
         id: nextAnnotationId++,
         type,
         page,
-        x: Math.max(0, x),
-        y: Math.max(0, y),
-        width: Math.max(1, width),
-        height: Math.max(1, height),
+        x: Math.max(0, Math.min(pageSize.width - 1, x)),
+        y: Math.max(0, Math.min(pageSize.height - 1, y)),
+        width: Math.max(1, Math.min(pageSize.width - Math.max(0, x), width)),
+        height: Math.max(1, Math.min(pageSize.height - Math.max(0, y), height)),
         text: text.trim(),
         fontSize: Math.max(8, Math.min(72, fontSize)),
         color,
@@ -319,10 +333,12 @@ export default function AnnotateClient() {
     setStatus("idle");
   };
   const undo = () => {
+    ++loadVersionRef.current;
     setAnnotations((prev) => prev.slice(0, -1));
     setStatus("idle");
   };
   const clearAnnotations = () => {
+    ++loadVersionRef.current;
     setAnnotations([]);
     setStatus("idle");
   };
@@ -330,8 +346,9 @@ export default function AnnotateClient() {
     if (!fileBytes || annotations.length === 0) return;
     setStatus("processing");
     setError("");
+    const exportVersion = loadVersionRef.current;
     try {
-      const doc = await PDFDocument.load(fileBytes);
+      const doc = await loadPdfForTools(fileBytes);
       const font = await doc.embedFont(StandardFonts.Helvetica);
       for (const ann of annotations) {
         const p = doc.getPages()[ann.page - 1];
@@ -362,7 +379,7 @@ export default function AnnotateClient() {
         else
           p.drawText(ann.text, {
             x: ann.x,
-            y: size.height - ann.y - 16,
+            y: size.height - ann.y - ann.fontSize,
             size: ann.fontSize,
             font,
             color: c,
@@ -371,6 +388,7 @@ export default function AnnotateClient() {
       const blob = new Blob([(await doc.save()) as BlobPart], {
         type: "application/pdf",
       });
+      if (exportVersion !== loadVersionRef.current) return;
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
@@ -379,6 +397,7 @@ export default function AnnotateClient() {
       URL.revokeObjectURL(url);
       setStatus("done");
     } catch {
+      if (exportVersion !== loadVersionRef.current) return;
       setError(
         "Could not export the annotated PDF. Try reloading the document.",
       );
@@ -387,13 +406,14 @@ export default function AnnotateClient() {
   };
 
   return (
-    <div className="tb-v2-tool-card tb-pdf-annotate-card">
+    <div className="tb-v2-tool-card tb-pdf-annotate-card" style={{ minWidth: 0, maxWidth: "100%", overflowWrap: "anywhere" }}>
+      <p className="tb-v2-empty">PDF limits: 25 MB per file, 100 pages, 2000 points per page side.</p>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">PDF File</span>
         <ToolExampleClearActions
           onExample={loadExample}
           onClear={clearAll}
-          canClear={Boolean(fileBytes || annotations.length || error)}
+          canClear={Boolean(fileBytes || annotations.length || error || loading)}
           exampleCount={1}
         />
       </div>
@@ -415,7 +435,7 @@ export default function AnnotateClient() {
             </span>
             <input
               ref={fileInputRef}
-              type="file"
+              aria-label="PDF file" type="file"
               accept="application/pdf"
               onChange={(e) => void handleFile(e.target.files?.[0])}
               style={{ display: "none" }}
@@ -432,6 +452,7 @@ export default function AnnotateClient() {
           </div>
         )}
       </div>
+      {loading && <p role="status" className="tb-v2-banner">Loading PDF...</p>}
       {fileBytes && (
         <div className="tb-pdf-annotate-editor">
           <div className="tb-v2-tool-output-head">

@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { PDFDocument, StandardFonts, degrees, rgb } from 'pdf-lib';
 import { useSubscription } from '@/hooks/useSubscription';
 import { checkFileSize } from '@/lib/tier-limits';
+import { readPdfToolFile, loadPdfForTools } from '@/lib/pdf-qa/pdf';
 import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 type WatermarkMode = 'text' | 'image';
@@ -203,8 +204,8 @@ export default function AddWatermarkToPDFClient() {
     }
     setStatus('loading');
     try {
-      const bytes = new Uint8Array(await selected.arrayBuffer());
-      const doc = await PDFDocument.load(bytes);
+      const bytes = new Uint8Array(await readPdfToolFile(selected));
+      const doc = await loadPdfForTools(bytes);
       if (doc.getPageCount() === 0) throw new Error('The PDF has no pages.');
       if (currentRequestId !== loadVersionRef.current) return;
       setFile(selected);
@@ -221,6 +222,7 @@ export default function AddWatermarkToPDFClient() {
   const loadExample = useCallback(async () => {
     if (status === 'processing') return;
     const requestId = ++loadVersionRef.current;
+    setStatus('loading');
     try {
       const doc = await PDFDocument.create();
       const font = await doc.embedFont(StandardFonts.HelveticaBold);
@@ -258,7 +260,10 @@ export default function AddWatermarkToPDFClient() {
       return;
     }
     try {
-      const bytes = new Uint8Array(await selected.arrayBuffer());
+      const bytes = new Uint8Array(await readPdfToolFile(selected));
+      const probe = await PDFDocument.create();
+      const image = selected.type === 'image/png' || /\.png$/i.test(selected.name) ? await probe.embedPng(bytes) : await probe.embedJpg(bytes);
+      if (image.width * image.height > 16000000) throw new Error('Image exceeds 16 million pixels.');
       if (requestId !== loadVersionRef.current) return;
       setImageFile(selected);
       setImageBytes(bytes);
@@ -289,7 +294,7 @@ export default function AddWatermarkToPDFClient() {
     setStatus('processing');
     setMessage('');
     try {
-      const doc = await PDFDocument.load(fileBytes);
+      const doc = await loadPdfForTools(fileBytes);
       const safeOpacity = Math.max(0.05, Math.min(1, opacity));
       const safeRotation = Math.max(-180, Math.min(180, rotation));
       if (mode === 'text') {
@@ -388,7 +393,8 @@ export default function AddWatermarkToPDFClient() {
   };
 
   return (
-    <div className="tb-v2-tool-card">
+    <div className="tb-v2-tool-card" style={{ minWidth: 0, maxWidth: "100%", overflowWrap: "anywhere" }}>
+      <p className="tb-v2-empty">PDF limits: 25 MB per file, 100 pages, 2000 points per page side.</p>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">PDF File</span>
         <ToolExampleClearActions
@@ -419,7 +425,7 @@ export default function AddWatermarkToPDFClient() {
           <span className="tb-v2-dropzone-hint">Add a text or image watermark to every page locally</span>
           <input
             ref={fileRef}
-            type="file"
+            aria-label="PDF file" type="file"
             accept="application/pdf,.pdf"
             onChange={(event) => void loadFile(event.target.files?.[0])}
             disabled={isProcessing}
@@ -476,7 +482,7 @@ export default function AddWatermarkToPDFClient() {
             <div style={{ marginTop: 14 }}>
               <span className="tb-v2-tool-label">Watermark image</span>
               <button type="button" onClick={() => { if (!isProcessing) imageRef.current?.click(); }} disabled={isProcessing} className="tb-v2-btn-sm" style={{ display: 'block', marginTop: 8 }}>{imageFile?.name || 'Choose PNG or JPG'}</button>
-              <input ref={imageRef} type="file" accept="image/png,image/jpeg,.png,.jpg,.jpeg" onChange={(event) => void handleImageFile(event.target.files?.[0])} disabled={isProcessing} style={{ display: 'none' }} />
+              <input ref={imageRef} aria-label="Image file" type="file" accept="image/png,image/jpeg,.png,.jpg,.jpeg" onChange={(event) => void handleImageFile(event.target.files?.[0])} disabled={isProcessing} style={{ display: 'none' }} />
             </div>
           )}
           <div className="tb-v2-grid-2" style={{ marginTop: 14 }}>

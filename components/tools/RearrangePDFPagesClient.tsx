@@ -2,6 +2,7 @@
 
 import { Fragment, useEffect, useRef, useState } from 'react';
 import { PDFDocument, degrees, StandardFonts, rgb } from 'pdf-lib';
+import { readPdfToolFile, loadPdfForTools } from '@/lib/pdf-qa/pdf';
 import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 interface PageItem {
@@ -90,6 +91,7 @@ export default function RearrangePDFPagesClient() {
       const dropAt = dropIndexRef.current;
       const to = from !== null && dropAt !== null && dropAt > from ? dropAt - 1 : dropAt;
       if (from !== null && to !== null && to !== from) {
+        ++loadVersionRef.current;
         setPages((current) => {
           if (from < 0 || from >= current.length || to < 0 || to > current.length - 1) return current;
           const next = [...current];
@@ -121,17 +123,21 @@ export default function RearrangePDFPagesClient() {
     setStatus('loading');
     setMessage('');
     setResultBlob(null);
+    setFile(null);
+    setPages([]);
     if (selectedFile.type !== 'application/pdf' && !/\.pdf$/i.test(selectedFile.name)) {
       setStatus('error');
       setMessage('Please choose a PDF file.');
       return;
     }
     try {
-      const bytes = new Uint8Array(await selectedFile.arrayBuffer());
-      const pdfDoc = await PDFDocument.load(bytes);
+      const bytes = new Uint8Array(await readPdfToolFile(selectedFile));
+      if (requestId !== loadVersionRef.current) return;
+      const pdfDoc = await loadPdfForTools(bytes);
       const pageCount = pdfDoc.getPageCount();
       const nextPages: PageItem[] = [];
       for (let index = 0; index < pageCount; index++) {
+        if (requestId !== loadVersionRef.current) return;
         nextPages.push({ originalIndex: index, rotation: ((pdfDoc.getPage(index).getRotation().angle % 360) + 360) % 360, previewUrl: await renderPageThumbnail(bytes, index + 1) });
       }
       if (requestId !== loadVersionRef.current) {
@@ -170,6 +176,7 @@ export default function RearrangePDFPagesClient() {
 
   const movePage = (from: number, to: number) => {
     if (to < 0 || to >= pages.length) return;
+    ++loadVersionRef.current;
     const next = [...pages];
     const [moved] = next.splice(from, 1);
     next.splice(to, 0, moved);
@@ -188,6 +195,7 @@ export default function RearrangePDFPagesClient() {
   };
 
   const rotatePage = (index: number) => {
+    ++loadVersionRef.current;
     setPages(current => current.map((page, pageIndex) => pageIndex === index ? { ...page, rotation: (page.rotation + 90) % 360 } : page));
     setResultBlob(null);
     setStatus('idle');
@@ -197,15 +205,19 @@ export default function RearrangePDFPagesClient() {
     if (!file || pages.length === 0) return;
     setStatus('processing');
     setMessage('');
+    const exportVersion = loadVersionRef.current;
     try {
-      const source = await PDFDocument.load(await file.arrayBuffer());
+      const source = await loadPdfForTools(await readPdfToolFile(file));
       const output = await PDFDocument.create();
       const copiedPages = await output.copyPages(source, pages.map(page => page.originalIndex));
       copiedPages.forEach((page, index) => { page.setRotation(degrees(pages[index].rotation)); output.addPage(page); });
-      setResultBlob(new Blob([await output.save() as BlobPart], { type: 'application/pdf' }));
+      const saved = await output.save();
+      if (exportVersion !== loadVersionRef.current) return;
+      setResultBlob(new Blob([saved as BlobPart], { type: 'application/pdf' }));
       setStatus('done');
       setMessage(`Reordered ${pages.length} pages successfully.`);
     } catch {
+      if (exportVersion !== loadVersionRef.current) return;
       setStatus('error');
       setMessage('Could not process this PDF. Please try again.');
     }
@@ -222,10 +234,11 @@ export default function RearrangePDFPagesClient() {
   };
 
   return (
-    <div className="tb-v2-tool-card">
+    <div className="tb-v2-tool-card" style={{ minWidth: 0, maxWidth: "100%", overflowWrap: "anywhere" }}>
+      <p className="tb-v2-empty">PDF limits: 25 MB per file, 100 pages, 2000 points per page side.</p>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">PDF file</span>
-        <ToolExampleClearActions onExample={() => void loadExample()} onClear={reset} canClear={Boolean(file || pages.length || message)} exampleCount={1} exampleDisabled={status === 'loading' || status === 'processing'} />
+        <ToolExampleClearActions onExample={() => void loadExample()} onClear={reset} canClear={Boolean(file || pages.length || message || status === 'loading')} exampleCount={1} exampleDisabled={status === 'loading' || status === 'processing'} />
       </div>
 
       {!file && (
@@ -234,7 +247,7 @@ export default function RearrangePDFPagesClient() {
             <span style={{ fontSize: 28 }}>📄</span>
             <span className="tb-v2-dropzone-text">{status === 'loading' ? 'Loading PDF...' : 'Click or drag a PDF here'}</span>
             <span className="tb-v2-dropzone-hint">Drag page cards to set the final order</span>
-            <input ref={fileRef} type="file" accept="application/pdf,.pdf" onChange={event => void handleFile(event.target.files?.[0])} style={{ display: 'none' }} />
+            <input ref={fileRef} aria-label="PDF file" type="file" accept="application/pdf,.pdf" onChange={event => void handleFile(event.target.files?.[0])} style={{ display: 'none' }} />
           </div>
         </div>
       )}
@@ -247,7 +260,7 @@ export default function RearrangePDFPagesClient() {
           <div className="tb-pdf-rearrange-summary">
             <span className="tb-v2-tool-label">{pages.length} page{pages.length === 1 ? '' : 's'} ready to arrange</span>
             <button type="button" className="tb-v2-btn-sm" onClick={() => fileRef.current?.click()}>＋ Replace PDF</button>
-            <input ref={fileRef} type="file" accept="application/pdf,.pdf" onChange={event => void handleFile(event.target.files?.[0])} style={{ display: 'none' }} />
+            <input ref={fileRef} aria-label="PDF file" type="file" accept="application/pdf,.pdf" onChange={event => void handleFile(event.target.files?.[0])} style={{ display: 'none' }} />
           </div>
           <p className="tb-pdf-rearrange-instruction">Drag a page card to reorder it, or use the arrow controls. Rotate any page before saving.</p>
           <div className="tb-pdf-rearrange-grid">

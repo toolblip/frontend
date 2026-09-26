@@ -2,6 +2,7 @@
 
 import { useRef, useState } from 'react';
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
+import { readPdfToolFile, loadPdfForTools } from '@/lib/pdf-qa/pdf';
 import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 import { useSubscription } from '@/hooks/useSubscription';
 import { checkFileSize } from '@/lib/tier-limits';
@@ -15,7 +16,7 @@ async function renderThumbnail(file: File): Promise<string | null> {
   try {
     const pdfjs = await import('pdfjs-dist/legacy/build/pdf.mjs');
     pdfjs.GlobalWorkerOptions.workerSrc = `${process.env.NEXT_PUBLIC_BASE_PATH || ''}/pdf-worker/pdf.worker.min.mjs`;
-    const task = pdfjs.getDocument({ data: new Uint8Array(await file.arrayBuffer()) });
+    const task = pdfjs.getDocument({ data: new Uint8Array(await readPdfToolFile(file)) });
     try {
       const doc = await task.promise;
       const page = await doc.getPage(1);
@@ -49,14 +50,22 @@ export default function MergeClient() {
   const loadFiles = async (selected: File[], replace = false, requestId = ++loadVersionRef.current) => {
     if (selected.length === 0) return;
     setLoading(true);
+    setProcessing(false);
     setResult(null);
     const nextFiles: PdfFile[] = [];
     try {
+      if (selected.length + (replace ? 0 : files.length) > 20) throw new Error('Merge up to 20 files at a time.');
+      let totalPages = replace ? 0 : files.reduce((sum, item) => sum + item.doc.getPageCount(), 0);
       for (const file of selected) {
+        if (requestId !== loadVersionRef.current) return;
         if (!isPdfFile(file)) throw new Error(`${file.name}: please choose a PDF file.`);
         const sizeError = checkFileSize(file, tier);
         if (sizeError) throw new Error(`${file.name}: ${sizeError}`);
-        const doc = await PDFDocument.load(await file.arrayBuffer());
+        const contents = await readPdfToolFile(file);
+        if (requestId !== loadVersionRef.current) return;
+        const doc = await loadPdfForTools(contents);
+        totalPages += doc.getPageCount();
+        if (totalPages > 100) throw new Error('Merge up to 100 pages at a time.');
         nextFiles.push({ file, doc, previewUrl: await renderThumbnail(file) });
       }
       if (requestId !== loadVersionRef.current) {
@@ -112,6 +121,7 @@ export default function MergeClient() {
     ++loadVersionRef.current;
     files.forEach(entry => { if (entry.previewUrl) URL.revokeObjectURL(entry.previewUrl); });
     setFiles([]);
+    setProcessing(false);
     setResult(null);
     setLoading(false);
     setIsDragging(false);
@@ -119,6 +129,8 @@ export default function MergeClient() {
   };
 
   const removeFile = (index: number) => {
+    ++loadVersionRef.current;
+    setProcessing(false);
     setFiles(current => {
       const removed = current[index];
       if (removed?.previewUrl) URL.revokeObjectURL(removed.previewUrl);
@@ -129,6 +141,8 @@ export default function MergeClient() {
 
   const moveFile = (from: number, to: number) => {
     if (to < 0 || to >= files.length) return;
+    ++loadVersionRef.current;
+    setProcessing(false);
     const next = [...files];
     const [moved] = next.splice(from, 1);
     next.splice(to, 0, moved);
@@ -149,6 +163,7 @@ export default function MergeClient() {
     }
     setProcessing(true);
     setResult(null);
+    const exportVersion = loadVersionRef.current;
     try {
       const mergedDoc = await PDFDocument.create();
       for (const { doc } of files) {
@@ -156,11 +171,13 @@ export default function MergeClient() {
         copiedPages.forEach(page => mergedDoc.addPage(page));
       }
       const pdfBytes = await mergedDoc.save();
+      if (exportVersion !== loadVersionRef.current) return;
       setResult({ success: true, message: `Merged ${files.length} PDFs into one document (${mergedDoc.getPageCount()} pages).`, blob: new Blob([pdfBytes as BlobPart], { type: 'application/pdf' }) });
     } catch (error) {
+      if (exportVersion !== loadVersionRef.current) return;
       setResult({ success: false, message: error instanceof Error ? error.message : 'Could not merge these PDF files.' });
     } finally {
-      setProcessing(false);
+      if (exportVersion === loadVersionRef.current) setProcessing(false);
     }
   };
 
@@ -175,7 +192,8 @@ export default function MergeClient() {
   };
 
   return (
-    <div className="tb-v2-tool-card">
+    <div className="tb-v2-tool-card" style={{ minWidth: 0, maxWidth: "100%", overflowWrap: "anywhere" }}>
+      <p className="tb-v2-empty">PDF limits: 25 MB per file, 100 pages, 2000 points per page side.</p>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">PDF files</span>
         <ToolExampleClearActions onExample={() => void loadExample()} onClear={clearAll} canClear={Boolean(files.length || result || loading)} exampleCount={1} exampleDisabled={loading || processing} />
@@ -187,7 +205,7 @@ export default function MergeClient() {
             <span style={{ fontSize: 28 }}>📄</span>
             <span className="tb-v2-dropzone-text">{loading ? 'Loading PDFs...' : 'Click or drag PDF files here'}</span>
             <span className="tb-v2-dropzone-hint">Choose two or more PDFs, then arrange them before merging</span>
-            <input ref={fileInputRef} type="file" accept="application/pdf,.pdf" multiple onChange={handleFilesChange} style={{ display: 'none' }} />
+            <input ref={fileInputRef} aria-label="PDF file" type="file" accept="application/pdf,.pdf" multiple onChange={handleFilesChange} style={{ display: 'none' }} />
           </div>
         </div>
       )}
@@ -200,7 +218,7 @@ export default function MergeClient() {
           <div className="tb-pdf-merge-summary">
             <span className="tb-v2-tool-label">{files.length} PDF{files.length === 1 ? '' : 's'} ready to merge</span>
             <button type="button" className="tb-v2-btn-sm" onClick={() => fileInputRef.current?.click()}>＋ Add files</button>
-            <input ref={fileInputRef} type="file" accept="application/pdf,.pdf" multiple onChange={handleFilesChange} style={{ display: 'none' }} />
+            <input ref={fileInputRef} aria-label="PDF file" type="file" accept="application/pdf,.pdf" multiple onChange={handleFilesChange} style={{ display: 'none' }} />
           </div>
           <p className="tb-pdf-merge-instruction">Drag and drop the cards to set the merge order.</p>
           <div className="tb-pdf-merge-file-list">

@@ -1,0 +1,549 @@
+{
+  "group": "pdf",
+  "status": "implementation-and-scoped-checks-complete; integrated-browser-verification-pending",
+  "assignedRouteCount": 11,
+  "inventoryReview": {
+    "source": "qa/automatic/inventory.json",
+    "relationshipsChecked": true,
+    "historicallyApprovedOwnedRoutes": [],
+    "sharedComponentRoutes": {
+      "PdfPasswordRemoverClient": [
+        "unlock-pdf",
+        "pdf-password-remover"
+      ]
+    },
+    "otherGroupFilesModified": false
+  },
+  "validation": [
+    {
+      "command": "./node_modules/.bin/vitest run lib/pdf-qa/pdf.test.ts",
+      "exitCode": 0,
+      "result": "9 tests passed: size/page/dimension bounds, real geometry, malformed unlock rejection, encrypted dispatch/output validation, whitespace, pixel transparency and truncated sample rejection"
+    },
+    {
+      "command": "node --test scripts/qa/pdf-fixtures.test.mjs",
+      "exitCode": 0,
+      "result": "4 tests passed: route coverage, real text/image/mask fixtures, independently verified encrypted PDF/password behavior via PDF.js, nested Form resources"
+    },
+    {
+      "command": "./node_modules/.bin/tsc --noEmit --incremental false",
+      "exitCode": 0,
+      "result": "No TypeScript errors"
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "No whitespace errors"
+    }
+  ],
+  "browserExecution": {
+    "run": false,
+    "reason": "Worker contract prohibits worker dev server/build/browser. Parent must run scripts/qa/cases/pdf.mjs against integrated local and production builds.",
+    "successMocks": false,
+    "controlledFailurePaths": [
+      "File.arrayBuffer rejection",
+      "held real file-read completion for Clear",
+      "held real canvas.toBlob callback for encrypted-render cancellation"
+    ]
+  },
+  "groupHelpers": [
+    "lib/pdf-qa/pdf.ts",
+    "lib/pdf-qa/pixels.ts",
+    "lib/pdf-qa/pdf.test.ts",
+    "scripts/qa/cases/pdf-fixtures.mjs",
+    "scripts/qa/pdf-fixtures.test.mjs"
+  ],
+  "commonFixtureCoverage": [
+    "malformed PDF bytes rejected with no download",
+    "101-page PDF rejected",
+    "30000-point page rejected",
+    "26 MB file rejected before reading",
+    "controlled File.arrayBuffer read failure then recovery",
+    "Clear while real file read is held; late bytes do not restore state",
+    "Example loads usable controls, followed by Clear",
+    "independent output fixture, downloaded using saveAs",
+    "320px horizontal overflow assertion",
+    "Clear removes current result and download"
+  ],
+  "routes": [
+    {
+      "slug": "pdf-password-remover",
+      "component": "PdfPasswordRemoverClient",
+      "historicallyApproved": false,
+      "auditStatus": "audited-and-updated",
+      "fixedFiles": [
+        "components/tools/PdfPasswordRemoverClient.tsx"
+      ],
+      "findings": [
+        "Removed false ignoreEncryption/save unlock success. Encrypted documents must render through PDF.js and output must reopen unencrypted.",
+        "Preserved password whitespace, added cancellable rendering and 30-second timeout; disclosed flattened output limitations."
+      ],
+      "caseFile": "scripts/qa/cases/pdf.mjs",
+      "fixtureCoverage": [
+        "malformed PDF bytes rejected with no download",
+        "101-page PDF rejected",
+        "30000-point page rejected",
+        "26 MB file rejected before reading",
+        "controlled File.arrayBuffer read failure then recovery",
+        "Clear while real file read is held; late bytes do not restore state",
+        "Example loads usable controls, followed by Clear",
+        "independent output fixture, downloaded using saveAs",
+        "320px horizontal overflow assertion",
+        "Clear removes current result and download",
+        "real RC4 R2 encrypted 321x456 PDF",
+        "wrong password has no download",
+        "Clear cancels real canvas rendering callback",
+        "exact opening password including spaces",
+        "output differs from encrypted source, opens with pdf-lib without password",
+        "rendered image pixels retain known red rectangle",
+        "password edit invalidates result",
+        "already-unencrypted three-page PDF preserves text and dimensions"
+      ],
+      "browserStatus": "not-run-parent-integration-required",
+      "remainingBlockers": [
+        "Integrated browser run is required to verify UI interactions, rendered outputs, cancellation and 320px layout."
+      ]
+    },
+    {
+      "slug": "add-pages-to-pdf",
+      "component": "PdfPageAdderClient",
+      "historicallyApproved": false,
+      "auditStatus": "audited-and-updated",
+      "fixedFiles": [
+        "components/tools/PdfPageAdderClient.tsx"
+      ],
+      "findings": [
+        "Kept source-page, blank-page, placement, reorder and delete workflows.",
+        "Added export and Example cancellation guards, aggregate source and result limits, result invalidation after edits.",
+        "Blank page dimensions now come from PDF geometry even when thumbnails fail; selected preview renders only selected page; PDF.js task destroyed."
+      ],
+      "caseFile": "scripts/qa/cases/pdf.mjs",
+      "fixtureCoverage": [
+        "malformed PDF bytes rejected with no download",
+        "101-page PDF rejected",
+        "30000-point page rejected",
+        "26 MB file rejected before reading",
+        "controlled File.arrayBuffer read failure then recovery",
+        "Clear while real file read is held; late bytes do not restore state",
+        "Example loads usable controls, followed by Clear",
+        "independent output fixture, downloaded using saveAs",
+        "320px horizontal overflow assertion",
+        "Clear removes current result and download",
+        "encrypted PDF rejected without fabricated output",
+        "insert 200x250 source page at beginning",
+        "append one blank page matching 321x456 base geometry",
+        "saved five-page order and source text validated with pdf-lib",
+        "blank page content stream is empty",
+        "moving page invalidates previous download"
+      ],
+      "browserStatus": "not-run-parent-integration-required",
+      "remainingBlockers": [
+        "Integrated browser run is required to verify UI interactions, rendered outputs, cancellation and 320px layout."
+      ]
+    },
+    {
+      "slug": "annotate-pdf",
+      "component": "AnnotateClient",
+      "historicallyApproved": false,
+      "auditStatus": "audited-and-updated",
+      "fixedFiles": [
+        "components/tools/AnnotateClient.tsx"
+      ],
+      "findings": [
+        "Kept text/rectangle/highlight workflows.",
+        "Corrected text baseline to actual font size; bounded manual markup rectangles.",
+        "Added read/example/export stale guards, loading feedback and document limits."
+      ],
+      "caseFile": "scripts/qa/cases/pdf.mjs",
+      "fixtureCoverage": [
+        "malformed PDF bytes rejected with no download",
+        "101-page PDF rejected",
+        "30000-point page rejected",
+        "26 MB file rejected before reading",
+        "controlled File.arrayBuffer read failure then recovery",
+        "Clear while real file read is held; late bytes do not restore state",
+        "Example loads usable controls, followed by Clear",
+        "independent output fixture, downloaded using saveAs",
+        "320px horizontal overflow assertion",
+        "Clear removes current result and download",
+        "encrypted PDF rejected without fabricated output",
+        "text, rectangle and highlight modes",
+        "QA_COMMENT at x=30 and baseline=392 for 24-point font on 456-point page",
+        "80x30 rectangle drawing operators",
+        "highlight ExtGState fill opacity=0.28",
+        "all three original page sizes and source text retained"
+      ],
+      "browserStatus": "not-run-parent-integration-required",
+      "remainingBlockers": [
+        "Integrated browser run is required to verify UI interactions, rendered outputs, cancellation and 320px layout."
+      ]
+    },
+    {
+      "slug": "edit-pdf",
+      "component": "EditClient",
+      "historicallyApproved": false,
+      "auditStatus": "audited-and-updated",
+      "fixedFiles": [
+        "components/tools/EditClient.tsx"
+      ],
+      "findings": [
+        "Kept text placement, replacement, white cover and image overlays.",
+        "Added limits, image byte/dimension validation, pending-read and export stale guards, image URL unmount cleanup.",
+        "Explained recoverable covered content; white cover is not secure redaction."
+      ],
+      "caseFile": "scripts/qa/cases/pdf.mjs",
+      "fixtureCoverage": [
+        "malformed PDF bytes rejected with no download",
+        "101-page PDF rejected",
+        "30000-point page rejected",
+        "26 MB file rejected before reading",
+        "controlled File.arrayBuffer read failure then recovery",
+        "Clear while real file read is held; late bytes do not restore state",
+        "Example loads usable controls, followed by Clear",
+        "independent output fixture, downloaded using saveAs",
+        "320px horizontal overflow assertion",
+        "Clear removes current result and download",
+        "encrypted PDF rejected without fabricated output",
+        "text placement produces QA_EDIT PDF text operator",
+        "PNG mode creates image XObject",
+        "select existing text, replace with QA_REPLACEMENT and verify white cover operators",
+        "original text remains recoverable and visible non-redaction notice is present",
+        "source text and page geometry preserved"
+      ],
+      "browserStatus": "not-run-parent-integration-required",
+      "remainingBlockers": [
+        "Integrated browser run is required to verify UI interactions, rendered outputs, cancellation and 320px layout."
+      ]
+    },
+    {
+      "slug": "extract-images-from-pdf",
+      "component": "ExtractImgClient",
+      "historicallyApproved": false,
+      "auditStatus": "audited-and-updated",
+      "fixedFiles": [
+        "components/tools/ExtractImgClient.tsx"
+      ],
+      "findings": [
+        "Removed ignoreEncryption extraction.",
+        "Preserved soft-mask transparency; traversed nested Form XObjects; rejected truncated pixels instead of inventing black pixels.",
+        "Bounded file/page/image/cumulative pixel sizes; explicitly skips unsupported masks, decode transforms, predictors and encodings."
+      ],
+      "caseFile": "scripts/qa/cases/pdf.mjs",
+      "fixtureCoverage": [
+        "malformed PDF bytes rejected with no download",
+        "101-page PDF rejected",
+        "30000-point page rejected",
+        "26 MB file rejected before reading",
+        "controlled File.arrayBuffer read failure then recovery",
+        "Clear while real file read is held; late bytes do not restore state",
+        "Example loads usable controls, followed by Clear",
+        "independent output fixture, downloaded using saveAs",
+        "320px horizontal overflow assertion",
+        "Clear removes current result and download",
+        "encrypted PDF rejected without fabricated output",
+        "known 2x2 RGBA PNG image, alpha 255/128/255/0",
+        "downloaded PNG decoded with UPNG, size and pixel values checked",
+        "ZIP local entry equals validated PNG bytes",
+        "nested Form XObject image and soft mask",
+        "DCT JPEG extraction byte-identical to existing public sample",
+        "text-only PDF reports no embedded images"
+      ],
+      "browserStatus": "not-run-parent-integration-required",
+      "remainingBlockers": [
+        "Integrated browser run is required to verify UI interactions, rendered outputs, cancellation and 320px layout."
+      ]
+    },
+    {
+      "slug": "merge-pdfs",
+      "component": "MergeClient",
+      "historicallyApproved": false,
+      "auditStatus": "audited-and-updated",
+      "fixedFiles": [
+        "components/tools/MergeClient.tsx"
+      ],
+      "findings": [
+        "Preserved merging and ordering.",
+        "Added maximum 20 files/100 combined pages and stale export invalidation on Clear/reorder/remove."
+      ],
+      "caseFile": "scripts/qa/cases/pdf.mjs",
+      "fixtureCoverage": [
+        "malformed PDF bytes rejected with no download",
+        "101-page PDF rejected",
+        "30000-point page rejected",
+        "26 MB file rejected before reading",
+        "controlled File.arrayBuffer read failure then recovery",
+        "Clear while real file read is held; late bytes do not restore state",
+        "Example loads usable controls, followed by Clear",
+        "independent output fixture, downloaded using saveAs",
+        "320px horizontal overflow assertion",
+        "Clear removes current result and download",
+        "encrypted PDF rejected without fabricated output",
+        "two independent source documents, dimensions 321x456 and 420x300/240x360",
+        "move second file before first",
+        "saved order, page sizes and original text operators",
+        "file reorder invalidates output"
+      ],
+      "browserStatus": "not-run-parent-integration-required",
+      "remainingBlockers": [
+        "Integrated browser run is required to verify UI interactions, rendered outputs, cancellation and 320px layout."
+      ]
+    },
+    {
+      "slug": "pdf-rearrange",
+      "component": "RearrangePDFPagesClient",
+      "historicallyApproved": false,
+      "auditStatus": "audited-and-updated",
+      "fixedFiles": [
+        "components/tools/RearrangePDFPagesClient.tsx"
+      ],
+      "findings": [
+        "Preserved reorder and rotation.",
+        "Added limits, cleared old source on invalid replacement, prevented stale save results after Clear or edits."
+      ],
+      "caseFile": "scripts/qa/cases/pdf.mjs",
+      "fixtureCoverage": [
+        "malformed PDF bytes rejected with no download",
+        "101-page PDF rejected",
+        "30000-point page rejected",
+        "26 MB file rejected before reading",
+        "controlled File.arrayBuffer read failure then recovery",
+        "Clear while real file read is held; late bytes do not restore state",
+        "Example loads usable controls, followed by Clear",
+        "independent output fixture, downloaded using saveAs",
+        "320px horizontal overflow assertion",
+        "Clear removes current result and download",
+        "encrypted PDF rejected without fabricated output",
+        "move page three to first",
+        "rotate moved page 90 degrees",
+        "download page order 3/1/2, original text, sizes and Rotate dictionary"
+      ],
+      "browserStatus": "not-run-parent-integration-required",
+      "remainingBlockers": [
+        "Integrated browser run is required to verify UI interactions, rendered outputs, cancellation and 320px layout."
+      ]
+    },
+    {
+      "slug": "delete-pages-from-pdf",
+      "component": "PdfPageDeleterClient",
+      "historicallyApproved": false,
+      "auditStatus": "audited-and-updated",
+      "fixedFiles": [
+        "components/tools/PdfPageDeleterClient.tsx"
+      ],
+      "findings": [
+        "Existing page selection and nonempty-document safeguards retained.",
+        "Added bounded parsing and cancellation checks before preview loops; existing export version guard retained."
+      ],
+      "caseFile": "scripts/qa/cases/pdf.mjs",
+      "fixtureCoverage": [
+        "malformed PDF bytes rejected with no download",
+        "101-page PDF rejected",
+        "30000-point page rejected",
+        "26 MB file rejected before reading",
+        "controlled File.arrayBuffer read failure then recovery",
+        "Clear while real file read is held; late bytes do not restore state",
+        "Example loads usable controls, followed by Clear",
+        "independent output fixture, downloaded using saveAs",
+        "320px horizontal overflow assertion",
+        "Clear removes current result and download",
+        "encrypted PDF rejected without fabricated output",
+        "Select all prevents zero-page export",
+        "Deselect all, select page two, delete",
+        "download contains only original pages one and three with exact geometry and text"
+      ],
+      "browserStatus": "not-run-parent-integration-required",
+      "remainingBlockers": [
+        "Integrated browser run is required to verify UI interactions, rendered outputs, cancellation and 320px layout."
+      ]
+    },
+    {
+      "slug": "sign-pdf",
+      "component": "SignPDFClient",
+      "historicallyApproved": false,
+      "auditStatus": "audited-and-updated",
+      "fixedFiles": [
+        "components/tools/SignPDFClient.tsx"
+      ],
+      "findings": [
+        "Retained real draw/type/upload image signatures and position clamping.",
+        "Added document/signature limits, readable control labels, read failures, pending Example cancellation and typed-name canvas width fitting."
+      ],
+      "caseFile": "scripts/qa/cases/pdf.mjs",
+      "fixtureCoverage": [
+        "malformed PDF bytes rejected with no download",
+        "101-page PDF rejected",
+        "30000-point page rejected",
+        "26 MB file rejected before reading",
+        "controlled File.arrayBuffer read failure then recovery",
+        "Clear while real file read is held; late bytes do not restore state",
+        "Example loads usable controls, followed by Clear",
+        "independent output fixture, downloaded using saveAs",
+        "320px horizontal overflow assertion",
+        "Clear removes current result and download",
+        "encrypted PDF rejected without fabricated output",
+        "empty typed name error and valid-name retry",
+        "typed signature XObject at 25,35 PDF points, only selected page changed",
+        "real pointer stroke drawing, then sign page two",
+        "upload known PNG signature, verify image Width=2",
+        "original document geometry and text retained"
+      ],
+      "browserStatus": "not-run-parent-integration-required",
+      "remainingBlockers": [
+        "Integrated browser run is required to verify UI interactions, rendered outputs, cancellation and 320px layout."
+      ]
+    },
+    {
+      "slug": "unlock-pdf",
+      "component": "PdfPasswordRemoverClient",
+      "historicallyApproved": false,
+      "auditStatus": "audited-and-updated",
+      "fixedFiles": [
+        "components/tools/PdfPasswordRemoverClient.tsx"
+      ],
+      "findings": [
+        "Same owned PdfPasswordRemoverClient fix and full independent browser case as pdf-password-remover."
+      ],
+      "caseFile": "scripts/qa/cases/pdf.mjs",
+      "fixtureCoverage": [
+        "malformed PDF bytes rejected with no download",
+        "101-page PDF rejected",
+        "30000-point page rejected",
+        "26 MB file rejected before reading",
+        "controlled File.arrayBuffer read failure then recovery",
+        "Clear while real file read is held; late bytes do not restore state",
+        "Example loads usable controls, followed by Clear",
+        "independent output fixture, downloaded using saveAs",
+        "320px horizontal overflow assertion",
+        "Clear removes current result and download",
+        "real RC4 R2 encrypted 321x456 PDF",
+        "wrong password has no download",
+        "Clear cancels real canvas rendering callback",
+        "exact opening password including spaces",
+        "output differs from encrypted source, opens with pdf-lib without password",
+        "rendered image pixels retain known red rectangle",
+        "password edit invalidates result",
+        "already-unencrypted three-page PDF preserves text and dimensions"
+      ],
+      "browserStatus": "not-run-parent-integration-required",
+      "remainingBlockers": [
+        "Integrated browser run is required to verify UI interactions, rendered outputs, cancellation and 320px layout."
+      ]
+    },
+    {
+      "slug": "add-watermark-to-pdf",
+      "component": "AddWatermarkToPDFClient",
+      "historicallyApproved": false,
+      "auditStatus": "audited-and-updated",
+      "fixedFiles": [
+        "components/tools/AddWatermarkToPDFClient.tsx"
+      ],
+      "findings": [
+        "Retained text/image watermarks, rotation fitting, opacity and all-page export.",
+        "Added document/image byte and pixel bounds, valid-image probing, clearable pending Examples and accessible upload names."
+      ],
+      "caseFile": "scripts/qa/cases/pdf.mjs",
+      "fixtureCoverage": [
+        "malformed PDF bytes rejected with no download",
+        "101-page PDF rejected",
+        "30000-point page rejected",
+        "26 MB file rejected before reading",
+        "controlled File.arrayBuffer read failure then recovery",
+        "Clear while real file read is held; late bytes do not restore state",
+        "Example loads usable controls, followed by Clear",
+        "independent output fixture, downloaded using saveAs",
+        "320px horizontal overflow assertion",
+        "Clear removes current result and download",
+        "encrypted PDF rejected without fabricated output",
+        "empty watermark error and text retry",
+        "QA_WATERMARK text stored on every page at zero rotation",
+        "PNG watermark image XObject on every page",
+        "original text and three distinct page sizes retained"
+      ],
+      "browserStatus": "not-run-parent-integration-required",
+      "remainingBlockers": [
+        "Integrated browser run is required to verify UI interactions, rendered outputs, cancellation and 320px layout."
+      ]
+    }
+  ],
+  "duplicateProposals": [
+    {
+      "from": "pdf-password-remover",
+      "to": "unlock-pdf",
+      "permanent": true,
+      "evidence": "Both routes map to the same PdfPasswordRemoverClient with identical UI and processing; full inventory shows no other routes on this component.",
+      "status": "proposal-only; coordinator owns redirect and metadata"
+    }
+  ],
+  "centralMetadataChanges": [
+    {
+      "file": "data/tool-content.ts",
+      "slugs": [
+        "unlock-pdf",
+        "pdf-password-remover"
+      ],
+      "change": "Remove re-save without permission metadata claim. Unencrypted files are already password-free; encrypted files are actually rendered after PDF.js accepts the password. Disclose loss of selectable text, links, forms and digital signatures and 25 MB/100-page/2000-point limits."
+    },
+    {
+      "file": "lib/faq.ts",
+      "slugs": [
+        "edit-pdf"
+      ],
+      "change": "Replace obsolete nine-anchor/pixel-offset claim with click-to-place PDF-point coordinates. Explain that replacement and removal add white overlays and leave original content recoverable."
+    },
+    {
+      "file": "lib/faq.ts",
+      "slugs": [
+        "extract-images-from-pdf"
+      ],
+      "change": "Qualify faithful-copy statement: DCT JPEG bytes preserved; supported 8-bit raster samples reconstructed with supported grayscale soft masks; CMYK conversion approximate; predictors, decode transforms, color-key masks and unsupported codecs are skipped."
+    },
+    {
+      "file": "data/tool-content.ts and lib/faq.ts",
+      "slugs": [
+        "pdf-password-remover",
+        "add-pages-to-pdf",
+        "annotate-pdf",
+        "edit-pdf",
+        "extract-images-from-pdf",
+        "merge-pdfs",
+        "pdf-rearrange",
+        "delete-pages-from-pdf",
+        "sign-pdf",
+        "unlock-pdf",
+        "add-watermark-to-pdf"
+      ],
+      "change": "Document 25 MB input, 100 pages and 2000-point page side limits. Merge has 20-file/100-total-page limit; add-pages has 20 insert files/100 source pages/100 final pages; extraction has 16M pixels per image/32M cumulative image pixels."
+    }
+  ],
+  "remainingBlockers": [
+    "Parent integrated browser checks have not run. Do not promote route status to browser-accepted before their assertions pass.",
+    "Unlock requires working PDF.js worker and browser Canvas. Genuine RC4 fixture is independently verified in Node, but encrypted rendering and output pixel checks remain pending in browser."
+  ],
+  "capabilityLimits": [
+    "Unlock flattens encrypted pages into images, not editable vector/text objects; no password guessing.",
+    "Annotation marks are drawn into page content, not editable comment objects.",
+    "Sign adds a visual image, not a cryptographic signature.",
+    "Edit white covers are not secure redaction.",
+    "Extraction explicitly skips unsupported encodings/transforms/masks and approximates DeviceCMYK colors.",
+    "Fixtures cover unrotated overlay source pages and explicit rearrange rotation. Cropped and pre-rotated overlay preview alignment has not been browser-verified."
+  ],
+  "fixedFiles": [
+    "components/tools/AddWatermarkToPDFClient.tsx",
+    "components/tools/AnnotateClient.tsx",
+    "components/tools/EditClient.tsx",
+    "components/tools/ExtractImgClient.tsx",
+    "components/tools/MergeClient.tsx",
+    "components/tools/PdfPageAdderClient.tsx",
+    "components/tools/PdfPageDeleterClient.tsx",
+    "components/tools/PdfPasswordRemoverClient.tsx",
+    "components/tools/RearrangePDFPagesClient.tsx",
+    "components/tools/SignPDFClient.tsx",
+    "lib/pdf-qa/pdf.test.ts",
+    "lib/pdf-qa/pdf.ts",
+    "lib/pdf-qa/pixels.ts",
+    "scripts/qa/cases/pdf-fixtures.mjs",
+    "scripts/qa/cases/pdf.mjs",
+    "scripts/qa/pdf-fixtures.test.mjs",
+    "scripts/qa/reports/pdf.json"
+  ]
+}

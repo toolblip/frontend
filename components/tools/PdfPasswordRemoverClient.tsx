@@ -1,15 +1,16 @@
 'use client';
 
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 import { useSubscription } from '@/hooks/useSubscription';
 import { checkFileSize } from '@/lib/tier-limits';
+import { assertPdfDocument, readPdfToolFile, unlockPdfBytes } from '@/lib/pdf-qa/pdf';
 import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 const isPdfFile = (file: File) =>
   file.type === 'application/pdf' || /\.pdf$/i.test(file.name);
 
-async function flattenPdfWithPassword(bytes: Uint8Array, password: string): Promise<Uint8Array> {
+async function flattenPdfWithPassword(bytes: Uint8Array, password: string, signal: AbortSignal): Promise<Uint8Array> {
   const pdfjs = await import('pdfjs-dist/legacy/build/pdf.mjs');
   pdfjs.GlobalWorkerOptions.workerSrc = `${process.env.NEXT_PUBLIC_BASE_PATH || ''}/pdf-worker/pdf.worker.min.mjs`;
   const loadingTask = pdfjs.getDocument({
@@ -17,13 +18,21 @@ async function flattenPdfWithPassword(bytes: Uint8Array, password: string): Prom
     data: bytes.slice() as any,
     password: password || undefined,
   });
+  const cancel = () => { void loadingTask.destroy(); };
+  signal.addEventListener('abort', cancel, { once: true });
+  let timedOut = false;
+  const timeout = window.setTimeout(() => { timedOut = true; cancel(); }, 30000);
   try {
+    signal.throwIfAborted();
     const source = await loadingTask.promise;
+    if (source.numPages < 1 || source.numPages > 100) throw new Error('Choose a PDF with 1 to 100 pages.');
     const output = await PDFDocument.create();
     for (let index = 1; index <= source.numPages; index += 1) {
+      signal.throwIfAborted();
       const sourcePage = await source.getPage(index);
       const viewport = sourcePage.getViewport({ scale: 1.5 });
       const pageSize = sourcePage.getViewport({ scale: 1 });
+      if (pageSize.width > 2000 || pageSize.height > 2000) throw new Error('PDF page dimensions exceed 2000 points.');
       const canvas = document.createElement('canvas');
       canvas.width = Math.ceil(viewport.width);
       canvas.height = Math.ceil(viewport.height);
@@ -33,6 +42,8 @@ async function flattenPdfWithPassword(bytes: Uint8Array, password: string): Prom
       const png = await new Promise<Blob>((resolve, reject) => {
         canvas.toBlob((blob) => blob ? resolve(blob) : reject(new Error('Could not render a PDF page.')), 'image/png');
       });
+      signal.throwIfAborted();
+      if (timedOut) throw new Error('PDF rendering timed out.');
       const image = await output.embedPng(new Uint8Array(await png.arrayBuffer()));
       const page = output.addPage([pageSize.width, pageSize.height]);
       page.drawImage(image, { x: 0, y: 0, width: pageSize.width, height: pageSize.height });
@@ -41,6 +52,8 @@ async function flattenPdfWithPassword(bytes: Uint8Array, password: string): Prom
     }
     return output.save();
   } finally {
+    clearTimeout(timeout);
+    signal.removeEventListener('abort', cancel);
     await loadingTask.destroy();
   }
 }
@@ -59,6 +72,8 @@ export default function PdfPasswordRemoverClient() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const loadVersionRef = useRef(0);
   const isProcessing = processing;
+  const abortRef = useRef<AbortController | null>(null);
+  useEffect(() => () => { abortRef.current?.abort(); ++loadVersionRef.current; }, []);
 
   const invalidateResult = () => {
     loadVersionRef.current += 1;
@@ -68,6 +83,7 @@ export default function PdfPasswordRemoverClient() {
   };
 
   const clearAll = () => {
+    abortRef.current?.abort();
     loadVersionRef.current += 1;
     setFile(null);
     setFileBytes(null);
@@ -103,26 +119,16 @@ export default function PdfPasswordRemoverClient() {
       return;
     }
     setLoading(true);
-    let bytes: Uint8Array | null = null;
+
     try {
-      const loadedBytes = new Uint8Array(await selected.arrayBuffer());
-      bytes = loadedBytes;
-      const doc = await PDFDocument.load(loadedBytes, { ignoreEncryption: true });
+      const loadedBytes = new Uint8Array(await readPdfToolFile(selected));
+      const doc = assertPdfDocument(await PDFDocument.load(loadedBytes, { ignoreEncryption: true }));
       if (doc.getPageCount() === 0) throw new Error('The PDF has no pages.');
       if (currentRequestId !== loadVersionRef.current) return;
       setFile(selected);
       setFileBytes(loadedBytes);
-    } catch {
-      if (currentRequestId === loadVersionRef.current) {
-        const header = bytes ? new TextDecoder().decode(bytes.subarray(0, 5)) : '';
-        if (bytes && header === '%PDF-') {
-          // pdf-lib cannot inspect encrypted files, but PDF.js can try the password later.
-          setFile(selected);
-          setFileBytes(bytes);
-        } else {
-          setError('Could not read this file as a PDF. It may be encrypted or invalid.');
-        }
-      }
+    } catch (caught) {
+      if (currentRequestId === loadVersionRef.current) setError(caught instanceof Error ? caught.message : 'Could not read this PDF.');
     } finally {
       if (currentRequestId === loadVersionRef.current) setLoading(false);
     }
@@ -131,6 +137,7 @@ export default function PdfPasswordRemoverClient() {
   const loadExample = useCallback(async () => {
     if (processing) return;
     const requestId = ++loadVersionRef.current;
+    setLoading(true);
     try {
       const doc = await PDFDocument.create();
       const font = await doc.embedFont(StandardFonts.HelveticaBold);
@@ -144,7 +151,7 @@ export default function PdfPasswordRemoverClient() {
       if (requestId !== loadVersionRef.current) return;
       await loadFile(new File([bytes as BlobPart], 'unlock-sample.pdf', { type: 'application/pdf' }), requestId);
     } catch {
-      if (requestId === loadVersionRef.current) setError('Could not create the sample PDF.');
+      if (requestId === loadVersionRef.current) { setLoading(false); setError('Could not create the sample PDF.'); }
     }
   }, [loadFile, processing]);
 
@@ -159,30 +166,18 @@ export default function PdfPasswordRemoverClient() {
     setError('');
     setResult(null);
     try {
-      let bytes: Uint8Array;
-      let message: string;
-      try {
-        const doc = await PDFDocument.load(fileBytes);
-        bytes = await doc.save();
-        message = 'PDF re-saved without its existing permission metadata.';
-      } catch {
-        try {
-          const doc = await PDFDocument.load(fileBytes, { ignoreEncryption: true });
-          bytes = await doc.save();
-          message = 'PDF re-saved without its existing permission metadata.';
-        } catch {
-          try {
-            bytes = await flattenPdfWithPassword(fileBytes, password.trim());
-            message = 'PDF unlocked and flattened into a new password-free PDF.';
-          } catch {
-            throw new Error(password.trim() ? 'The password was incorrect, or this PDF format is not supported.' : 'This PDF requires an opening password. Enter the correct password and try again.');
-          }
-        }
-      }
+      abortRef.current?.abort();
+      const controller = new AbortController();
+      abortRef.current = controller;
+      const { bytes, flattened } = await unlockPdfBytes(fileBytes, password, (source, secret) =>
+        flattenPdfWithPassword(source, secret, controller.signal));
+      const message = flattened
+        ? 'PDF unlocked and flattened into a new password-free PDF.'
+        : 'This PDF was already password-free. A new copy is ready.';
       if (requestId !== loadVersionRef.current) return;
       setResult({ message, blob: new Blob([bytes as BlobPart], { type: 'application/pdf' }) });
     } catch (caught) {
-      if (requestId === loadVersionRef.current) setError(caught instanceof Error ? caught.message : 'Could not unlock this PDF.');
+      if (requestId === loadVersionRef.current) setError('Could not unlock this PDF. Check the opening password and try again. The file may also exceed the 100-page or 2000-point page limits.');
     } finally {
       if (requestId === loadVersionRef.current) setProcessing(false);
     }
@@ -199,13 +194,13 @@ export default function PdfPasswordRemoverClient() {
   };
 
   return (
-    <div className="tb-v2-tool-card">
+    <div className="tb-v2-tool-card" style={{ minWidth: 0, maxWidth: "100%", overflowWrap: "anywhere" }}>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">PDF File</span>
         <ToolExampleClearActions
           onExample={() => void loadExample()}
           onClear={clearAll}
-          canClear={Boolean(file || result || error || password)}
+          canClear={Boolean(file || result || error || password || loading || processing)}
           exampleDisabled={isProcessing}
           exampleCount={1}
         />
@@ -231,7 +226,7 @@ export default function PdfPasswordRemoverClient() {
           <span className="tb-v2-dropzone-hint">Processing stays in your browser</span>
           <input
             ref={fileInputRef}
-            type="file"
+            aria-label="PDF file" type="file"
             accept="application/pdf,.pdf"
             onChange={(event) => void loadFile(event.target.files?.[0])}
             disabled={isProcessing}
@@ -281,7 +276,7 @@ export default function PdfPasswordRemoverClient() {
             {processing ? 'Processing...' : 'Unlock PDF'}
           </button>
           <div className="tb-v2-banner" style={{ marginTop: 12 }}>
-            Use this only on a PDF you have permission to unlock. Opening-password files are flattened into page images so the output no longer needs a password.
+            Use this only on a PDF you have permission to unlock. Encrypted files are flattened into page images. Text selection, links, forms and digital signatures are not preserved. Limits: 25 MB, 100 pages, 2000 points per page side.
           </div>
           {result?.blob && (
             <div className="tb-v2-banner tb-pdf-unlock-result" style={{ marginTop: 12 }}>

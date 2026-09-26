@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 import { useSubscription } from '@/hooks/useSubscription';
 import { checkFileSize } from '@/lib/tier-limits';
+import { readPdfToolFile, loadPdfForTools } from '@/lib/pdf-qa/pdf';
 import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 type Position = 'beginning' | 'end' | 'custom';
@@ -21,14 +22,14 @@ type Result = { success: boolean; message: string; blob?: Blob; url?: string };
 
 const isPdfFile = (file: File) => file.type === 'application/pdf' || /\.pdf$/i.test(file.name);
 
-async function renderPdfPages(bytes: Uint8Array, scale: number) {
+async function renderPdfPages(bytes: Uint8Array, scale: number, onlyPage?: number) {
   const pdfjs = await import('pdfjs-dist/legacy/build/pdf.mjs');
   pdfjs.GlobalWorkerOptions.workerSrc = `${process.env.NEXT_PUBLIC_BASE_PATH || ''}/pdf-worker/pdf.worker.min.mjs`;
   const loadingTask = pdfjs.getDocument({ data: bytes.slice() });
-  const document = await loadingTask.promise;
   const pages: Array<{ image: string; width: number; height: number }> = [];
   try {
-    for (let pageIndex = 0; pageIndex < document.numPages; pageIndex += 1) {
+    const document = await loadingTask.promise;
+    for (let pageIndex = onlyPage ?? 0; pageIndex < (onlyPage === undefined ? document.numPages : onlyPage + 1); pageIndex += 1) {
       const page = await document.getPage(pageIndex + 1);
       const viewport = page.getViewport({ scale });
       const canvas = window.document.createElement('canvas');
@@ -44,7 +45,7 @@ async function renderPdfPages(bytes: Uint8Array, scale: number) {
       });
     }
   } finally {
-    document.cleanup();
+    await loadingTask.destroy();
   }
   return pages;
 }
@@ -137,18 +138,17 @@ export default function PdfPageAdderClient() {
       return;
     }
 
-    const generation = generationRef.current;
     let active = true;
     setSelectedPreviewLoading(true);
     setSelectedPreview(null);
-    void renderPdfPages(source.bytes, 1.15).then((pages) => {
-      if (active && generation === generationRef.current) {
-        setSelectedPreview(pages[selectedEditor.pageIndex]?.image ?? null);
+    void renderPdfPages(source.bytes, 1.15, selectedEditor.pageIndex).then((pages) => {
+      if (active) {
+        setSelectedPreview(pages[0]?.image ?? null);
       }
     }).catch(() => {
-      if (active && generation === generationRef.current) setSelectedPreview(null);
+      if (active) setSelectedPreview(null);
     }).finally(() => {
-      if (active && generation === generationRef.current) setSelectedPreviewLoading(false);
+      if (active) setSelectedPreviewLoading(false);
     });
     return () => {
       active = false;
@@ -195,8 +195,9 @@ export default function PdfPageAdderClient() {
     }
 
     try {
-      const bytes = new Uint8Array(await file.arrayBuffer());
-      const document = await PDFDocument.load(bytes);
+      const bytes = new Uint8Array(await readPdfToolFile(file));
+      if (generation !== generationRef.current) return;
+      const document = await loadPdfForTools(bytes);
       if (!document.getPageCount()) throw new Error('The PDF has no pages.');
       let rendered: Array<{ image: string; width: number; height: number }> = [];
       try {
@@ -209,8 +210,8 @@ export default function PdfPageAdderClient() {
         sourceId: 'base',
         fileName: file.name,
         pageIndex,
-        width: rendered[pageIndex]?.width ?? 612,
-        height: rendered[pageIndex]?.height ?? 792,
+        width: document.getPage(pageIndex).getWidth(),
+        height: document.getPage(pageIndex).getHeight(),
         thumbnail: rendered[pageIndex]?.image,
       }));
       setBase({ id: 'base', file, bytes, pages });
@@ -226,7 +227,7 @@ export default function PdfPageAdderClient() {
     }
   }, [revokeResultUrl, tier]);
 
-  const loadInsertFiles = useCallback(async (files: FileList | File[] | undefined) => {
+  const loadInsertFiles = useCallback(async (files: FileList | File[] | undefined, replace = false) => {
     const selectedFiles = Array.from(files ?? []);
     if (!selectedFiles.length) return;
     const generation = ++generationRef.current;
@@ -236,13 +237,18 @@ export default function PdfPageAdderClient() {
     setLoading(true);
 
     try {
+      if ((replace ? 0 : inserts.length) + selectedFiles.length > 20) throw new Error('Use up to 20 insert files.');
       const loaded: SourceDocument[] = [];
+      let totalPages = replace ? 0 : inserts.reduce((count, source) => count + source.pages.length, 0);
       for (const file of selectedFiles) {
         if (!isPdfFile(file)) throw new Error(`${file.name} is not a PDF file.`);
         const sizeError = checkFileSize(file, tier);
         if (sizeError) throw new Error(sizeError);
-        const bytes = new Uint8Array(await file.arrayBuffer());
-        const document = await PDFDocument.load(bytes);
+        const bytes = new Uint8Array(await readPdfToolFile(file));
+        if (generation !== generationRef.current) return;
+        const document = await loadPdfForTools(bytes);
+        totalPages += document.getPageCount();
+        if (totalPages > 100) throw new Error('Use up to 100 source pages at a time.');
         if (!document.getPageCount()) throw new Error(`${file.name} has no pages.`);
         let rendered: Array<{ image: string; width: number; height: number }> = [];
         try {
@@ -255,14 +261,14 @@ export default function PdfPageAdderClient() {
           sourceId,
           fileName: file.name,
           pageIndex,
-          width: rendered[pageIndex]?.width ?? 612,
-          height: rendered[pageIndex]?.height ?? 792,
+          width: document.getPage(pageIndex).getWidth(),
+          height: document.getPage(pageIndex).getHeight(),
           thumbnail: rendered[pageIndex]?.image,
         }));
         loaded.push({ id: sourceId, file, bytes, pages });
       }
       if (generation !== generationRef.current) return;
-      setInserts((current) => [...current, ...loaded]);
+      setInserts((current) => replace ? loaded : [...current, ...loaded]);
       setSelectedSourceKeys([]);
     } catch (error) {
       if (generation === generationRef.current) {
@@ -271,13 +277,21 @@ export default function PdfPageAdderClient() {
     } finally {
       if (generation === generationRef.current) setLoading(false);
     }
-  }, [revokeResultUrl, tier]);
+  }, [revokeResultUrl, tier, inserts]);
 
   const loadExample = useCallback(async () => {
-    const baseFile = await createExample(['Base 1', 'Base 2']);
-    const insertFile = await createExample(['Insert 1', 'Insert 2']);
-    await loadBaseFile(baseFile);
-    await loadInsertFiles([insertFile]);
+    const generation = ++generationRef.current;
+    setLoading(true);
+    try {
+      const baseFile = await createExample(['Base 1', 'Base 2']);
+      const insertFile = await createExample(['Insert 1', 'Insert 2']);
+      if (generation !== generationRef.current) return;
+      await loadBaseFile(baseFile);
+      if (generation + 1 !== generationRef.current) return;
+      await loadInsertFiles([insertFile], true);
+    } catch {
+      if (generation === generationRef.current) { setLoading(false); setResult({ success: false, message: 'Could not create the sample PDF.' }); }
+    }
   }, [createExample, loadBaseFile, loadInsertFiles]);
 
   const insertSelectedPages = () => {
@@ -285,6 +299,12 @@ export default function PdfPageAdderClient() {
       setResult({ success: false, message: 'Select one or more source pages to insert.' });
       return;
     }
+    if (editorPages.length + (insertMode === 'blank' ? blankCount : selectedSourceKeys.length) > 100) {
+      setResult({ success: false, message: 'The final PDF can contain up to 100 pages.' }); return;
+    }
+    ++generationRef.current;
+    setProcessing(false);
+    revokeResultUrl();
     const instance = ++idRef.current;
     const blankWidth = base?.pages[0]?.width ?? 612;
     const blankHeight = base?.pages[0]?.height ?? 792;
@@ -322,21 +342,27 @@ export default function PdfPageAdderClient() {
     setResult(null);
   };
 
-  const movePage = (index: number, direction: -1 | 1) => setEditorPages((current) => {
-    const target = index + direction;
-    if (target < 0 || target >= current.length) return current;
-    const next = [...current];
-    [next[index], next[target]] = [next[target], next[index]];
-    return next;
-  });
+  const movePage = (index: number, direction: -1 | 1) => {
+    ++generationRef.current; setProcessing(false); setResult(null); revokeResultUrl();
+    setEditorPages((current) => {
+      const target = index + direction;
+      if (target < 0 || target >= current.length) return current;
+      const next = [...current];
+      [next[index], next[target]] = [next[target], next[index]];
+      return next;
+    });
+  };
 
-  const deletePage = (id: string) => setEditorPages((current) => {
-    if (current.length <= 1) return current;
-    const index = current.findIndex((page) => page.id === id);
-    const next = current.filter((page) => page.id !== id);
-    setSelectedEditorId(next[Math.min(index, next.length - 1)]?.id ?? null);
-    return next;
-  });
+  const deletePage = (id: string) => {
+    ++generationRef.current; setProcessing(false); setResult(null); revokeResultUrl();
+    setEditorPages((current) => {
+      if (current.length <= 1) return current;
+      const index = current.findIndex((page) => page.id === id);
+      const next = current.filter((page) => page.id !== id);
+      setSelectedEditorId(next[Math.min(index, next.length - 1)]?.id ?? null);
+      return next;
+    });
+  };
 
   const saveEditedPdf = async () => {
     if (!base || !editorPages.length) {
@@ -344,12 +370,14 @@ export default function PdfPageAdderClient() {
       return;
     }
     setProcessing(true);
+    revokeResultUrl();
     setResult(null);
+    const exportVersion = generationRef.current;
     try {
       const output = await PDFDocument.create();
-      const baseDocument = await PDFDocument.load(base.bytes);
+      const baseDocument = await loadPdfForTools(base.bytes);
       const insertDocuments = new Map<string, PDFDocument>();
-      for (const source of inserts) insertDocuments.set(source.id, await PDFDocument.load(source.bytes));
+      for (const source of inserts) insertDocuments.set(source.id, await loadPdfForTools(source.bytes));
       for (const page of editorPages) {
         if (page.kind === 'blank') {
           output.addPage([page.width, page.height]);
@@ -361,14 +389,16 @@ export default function PdfPageAdderClient() {
         output.addPage(copied);
       }
       const blob = new Blob([await output.save() as BlobPart], { type: 'application/pdf' });
+      if (exportVersion !== generationRef.current) return;
       revokeResultUrl();
       const url = URL.createObjectURL(blob);
       resultUrlRef.current = url;
       setResult({ success: true, message: `Edited PDF ready: ${editorPages.length} pages`, blob, url });
     } catch (error) {
+      if (exportVersion !== generationRef.current) return;
       setResult({ success: false, message: `Error exporting PDF: ${error instanceof Error ? error.message : 'Unknown error'}` });
     } finally {
-      setProcessing(false);
+      if (exportVersion === generationRef.current) setProcessing(false);
     }
   };
 
@@ -381,10 +411,11 @@ export default function PdfPageAdderClient() {
   };
 
   return (
-    <div className="tb-v2-tool-card tb-pdf-add-card">
+    <div className="tb-v2-tool-card tb-pdf-add-card" style={{ minWidth: 0, maxWidth: "100%", overflowWrap: "anywhere" }}>
+      <p className="tb-v2-empty">PDF limits: 25 MB per file, 100 pages, 2000 points per page side.</p>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">PDF page editor</span>
-        <ToolExampleClearActions onExample={() => void loadExample()} onClear={clearAll} canClear={Boolean(base || inserts.length || result)} exampleCount={1} />
+        <ToolExampleClearActions onExample={() => void loadExample()} onClear={clearAll} canClear={Boolean(base || inserts.length || result || loading || processing)} exampleCount={1} />
       </div>
       <div className="tb-pdf-add-workspace">
         <div className="tb-pdf-add-upload-grid">
