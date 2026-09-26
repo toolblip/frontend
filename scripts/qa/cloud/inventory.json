@@ -1,0 +1,4262 @@
+{
+  "generatedAt": "2026-09-26T08:36:40.829Z",
+  "tools": [
+    {
+      "slug": "lorem-ipsum-generator",
+      "name": "Lorem Ipsum Generator",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/lorem-ipsum-generator",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "punctuation-fixer",
+      "name": "Punctuation Fixer",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/punctuation-fixer",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "text-statistics",
+      "name": "Text Statistics",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/text-statistics",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "json-to-markdown-table",
+      "name": "JSON to Markdown Table",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/json-to-markdown-table",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "developer-data"
+    },
+    {
+      "slug": "css-class-generator",
+      "name": "CSS Class Generator",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/css-class-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "robots-txt-generator",
+      "name": "robots.txt Generator",
+      "category": "SEO",
+      "url": "https://toolblip.com/tools/robots-txt-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "seo-network"
+    },
+    {
+      "slug": "security-headers-generator",
+      "name": "Security Headers Generator",
+      "category": "SEO",
+      "url": "https://toolblip.com/tools/security-headers-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "seo-network"
+    },
+    {
+      "slug": "xml-sitemap-generator",
+      "name": "XML Sitemap Generator",
+      "category": "SEO",
+      "url": "https://toolblip.com/tools/xml-sitemap-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "seo-network"
+    },
+    {
+      "slug": "color-palette-generator",
+      "name": "Color Palette Generator",
+      "category": "Color",
+      "url": "https://toolblip.com/tools/color-palette-generator",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "image-aspect-ratio-calculator",
+      "name": "Image Aspect Ratio Calculator",
+      "category": "Image",
+      "url": "https://toolblip.com/tools/images/image-aspect-ratio-calculator",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "images"
+    },
+    {
+      "slug": "hash-from-text",
+      "name": "Hash from Text",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/hash-from-text",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-security"
+    },
+    {
+      "slug": "url-parameter-extractor",
+      "name": "URL Parameter Extractor",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/url-parameter-extractor",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "word-counter",
+      "name": "Word Counter",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/word-counter",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "character-counter",
+      "name": "Character Counter",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/character-counter",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "remove-duplicate-lines",
+      "name": "Remove Duplicate Lines",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/remove-duplicate-lines",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "case-converter",
+      "name": "Case Converter",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/case-converter",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "grammar-checker",
+      "name": "Grammar Checker",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/grammar-checker",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "readability-score",
+      "name": "Readability Score",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/readability-score",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "json-formatter",
+      "name": "JSON Formatter",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/json-formatter",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-data"
+    },
+    {
+      "slug": "json-ld-generator",
+      "name": "JSON-LD Generator",
+      "category": "SEO",
+      "url": "https://toolblip.com/tools/json-ld-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "seo-network"
+    },
+    {
+      "slug": "url-encode",
+      "name": "URL Encode / Decode",
+      "category": "Encoder",
+      "url": "https://toolblip.com/tools/url-encode",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-security"
+    },
+    {
+      "slug": "image-cropper",
+      "name": "Image Cropper",
+      "category": "Image",
+      "url": "https://toolblip.com/tools/images/image-cropper",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "images"
+    },
+    {
+      "slug": "image-trimmer",
+      "name": "Image Trimmer",
+      "category": "Image",
+      "url": "https://toolblip.com/tools/images/image-trimmer",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "images"
+    },
+    {
+      "slug": "erase-color",
+      "name": "Erase Color from Image",
+      "category": "Image",
+      "url": "https://toolblip.com/tools/images/erase-color",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "images"
+    },
+    {
+      "slug": "square-crop",
+      "name": "Square Crop",
+      "category": "Image",
+      "url": "https://toolblip.com/tools/images/square-crop",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "images"
+    },
+    {
+      "slug": "circle-crop",
+      "name": "Circle Crop",
+      "category": "Image",
+      "url": "https://toolblip.com/tools/images/circle-crop",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "images"
+    },
+    {
+      "slug": "image-format-converter",
+      "name": "Image Format Converter",
+      "category": "Image",
+      "url": "https://toolblip.com/tools/images/image-format-converter",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "images"
+    },
+    {
+      "slug": "favicon-generator",
+      "name": "Favicon Generator",
+      "category": "Image",
+      "url": "https://toolblip.com/tools/images/favicon-generator",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "images"
+    },
+    {
+      "slug": "image-resizer",
+      "name": "Image Resizer",
+      "category": "Image",
+      "url": "https://toolblip.com/tools/images/image-resizer",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "images"
+    },
+    {
+      "slug": "uuid-generator",
+      "name": "UUID Generator",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/uuid-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-security"
+    },
+    {
+      "slug": "markdown-to-html",
+      "name": "Markdown to HTML",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/markdown-to-html",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-data"
+    },
+    {
+      "slug": "json-yaml-converter",
+      "name": "JSON-YAML Converter",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/json-yaml-converter",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "html-encoder",
+      "name": "HTML Encoder / Decoder",
+      "category": "Encoder",
+      "url": "https://toolblip.com/tools/html-encoder",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "cron-parser",
+      "name": "Cron Expression Parser",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/cron-parser",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "cors-header-generator",
+      "name": "CORS Header Generator",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/cors-header-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "sha-256-hash",
+      "name": "SHA-256 Hash",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/sha-256-hash",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-security"
+    },
+    {
+      "slug": "screen-resolution-tester",
+      "name": "Screen Resolution Tester",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/screen-resolution-tester",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "url-slug-generator",
+      "name": "URL Slug Generator",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/url-slug-generator",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "regex-tester",
+      "name": "Regex Tester",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/regex-tester",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "jwt-decoder",
+      "name": "JWT Decoder",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/jwt-decoder",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-security"
+    },
+    {
+      "slug": "cron-generator",
+      "name": "Cron Expression Generator",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/cron-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "htaccess-redirect-generator",
+      "name": "Htaccess Redirect Generator",
+      "category": "SEO",
+      "url": "https://toolblip.com/tools/htaccess-redirect-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "seo-network"
+    },
+    {
+      "slug": "meta-tag-generator",
+      "name": "Meta Tag Generator",
+      "category": "SEO",
+      "url": "https://toolblip.com/tools/meta-tag-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "seo-network"
+    },
+    {
+      "slug": "serp-preview",
+      "name": "SERP Preview",
+      "category": "SEO",
+      "url": "https://toolblip.com/tools/serp-preview",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "seo-network"
+    },
+    {
+      "slug": "color-picker",
+      "name": "Color Picker",
+      "category": "Color",
+      "url": "https://toolblip.com/tools/color-picker",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "contrast-checker",
+      "name": "Contrast Checker",
+      "category": "Color",
+      "url": "https://toolblip.com/tools/contrast-checker",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "unit-converter",
+      "name": "Unit Converter",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/unit-converter",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "number-base-converter",
+      "name": "Number Base Converter",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/number-base-converter",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "percentage-calculator",
+      "name": "Percentage Calculator",
+      "category": "Math",
+      "url": "https://toolblip.com/tools/percentage-calculator",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "css-border-radius-generator",
+      "name": "CSS Border Radius Generator",
+      "category": "CSS",
+      "url": "https://toolblip.com/tools/css-border-radius-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "sass-to-css",
+      "name": "Sass to CSS",
+      "category": "CSS",
+      "url": "https://toolblip.com/tools/sass-to-css",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "css-gradient-generator",
+      "name": "CSS Gradient Generator",
+      "category": "CSS",
+      "url": "https://toolblip.com/tools/css-gradient-generator",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "xml-formatter",
+      "name": "XML Formatter",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/xml-formatter",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-data"
+    },
+    {
+      "slug": "sql-prettifier",
+      "name": "SQL Prettifier",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/sql-prettifier",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-data"
+    },
+    {
+      "slug": "js-minifier",
+      "name": "JavaScript Minifier",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/js-minifier",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "color-mixer",
+      "name": "Color Mixer",
+      "category": "Color",
+      "url": "https://toolblip.com/tools/color-mixer",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "gradient-generator",
+      "name": "Gradient Generator",
+      "category": "Color",
+      "url": "https://toolblip.com/tools/gradient-generator",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "qr-code-generator",
+      "name": "QR Code Generator",
+      "category": "Image",
+      "url": "https://toolblip.com/tools/images/qr-code-generator",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "images"
+    },
+    {
+      "slug": "image-compressor",
+      "name": "Image Compressor",
+      "category": "Image",
+      "url": "https://toolblip.com/tools/images/image-compressor",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "images"
+    },
+    {
+      "slug": "password-generator",
+      "name": "Password Generator",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/password-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-security"
+    },
+    {
+      "slug": "password-strength-checker",
+      "name": "Password Strength Checker",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/password-strength-checker",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-security"
+    },
+    {
+      "slug": "random-number-generator",
+      "name": "Random Number Generator",
+      "category": "Utility",
+      "url": "https://toolblip.com/tools/random-number-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "list-randomizer",
+      "name": "List Randomizer",
+      "category": "Utility",
+      "url": "https://toolblip.com/tools/list-randomizer",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "fake-data-generator",
+      "name": "Fake Data Generator",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/fake-data-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "hash-identifier",
+      "name": "Hash Identifier",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/hash-identifier",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-security"
+    },
+    {
+      "slug": "uptime-calculator",
+      "name": "Uptime Calculator",
+      "category": "Utility",
+      "url": "https://toolblip.com/tools/uptime-calculator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "json-to-typescript",
+      "name": "JSON to TypeScript",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/json-to-typescript",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-data"
+    },
+    {
+      "slug": "random-string-generator",
+      "name": "Random String Generator",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/random-string-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "url-parser",
+      "name": "URL Parser",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/url-parser",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "text-to-slug",
+      "name": "Text to Slug",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/text-to-slug",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "binary-to-text",
+      "name": "Binary to Text",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/binary-to-text",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "percentage-difference",
+      "name": "Percentage Difference",
+      "category": "Math",
+      "url": "https://toolblip.com/tools/percentage-difference",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "age-calculator",
+      "name": "Age Calculator",
+      "category": "Utility",
+      "url": "https://toolblip.com/tools/age-calculator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "countdown-timer",
+      "name": "Countdown Timer",
+      "category": "Utility",
+      "url": "https://toolblip.com/tools/countdown-timer",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "color-blindness-simulator",
+      "name": "Color Blindness Simulator",
+      "category": "Color",
+      "url": "https://toolblip.com/tools/color-blindness-simulator",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "html-to-markdown",
+      "name": "HTML to Markdown",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/html-to-markdown",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "json-path-tester",
+      "name": "JSON Path Tester",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/json-path-tester",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-data"
+    },
+    {
+      "slug": "json-xml-converter",
+      "name": "JSON-XML Converter",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/json-xml-converter",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "css-validator",
+      "name": "CSS Validator",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/css-validator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "html-validator",
+      "name": "HTML Validator",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/html-validator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "text-to-handwriting",
+      "name": "Text to Handwriting",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/text-to-handwriting",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "email-validator",
+      "name": "Email Validator",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/email-validator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-security"
+    },
+    {
+      "slug": "credit-card-validator",
+      "name": "Credit Card Validator",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/credit-card-validator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-security"
+    },
+    {
+      "slug": "random-uuid-v7",
+      "name": "Random UUID v7",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/random-uuid-v7",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-security"
+    },
+    {
+      "slug": "random-ip-address",
+      "name": "Random IP Address",
+      "category": "Utility",
+      "url": "https://toolblip.com/tools/random-ip-address",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "json-schema-validator",
+      "name": "JSON Schema Validator",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/json-schema-validator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-data"
+    },
+    {
+      "slug": "slug-permalink-checker",
+      "name": "Slug Permalink Checker",
+      "category": "SEO",
+      "url": "https://toolblip.com/tools/slug-permalink-checker",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "seo-network"
+    },
+    {
+      "slug": "keyword-density-checker",
+      "name": "Keyword Density Checker",
+      "category": "SEO",
+      "url": "https://toolblip.com/tools/keyword-density-checker",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "seo-network"
+    },
+    {
+      "slug": "slideshow-generator",
+      "name": "Slideshow Generator",
+      "category": "Utility",
+      "url": "https://toolblip.com/tools/slideshow-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "plain-text-counter",
+      "name": "Plain Text Counter",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/plain-text-counter",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "anagram-generator",
+      "name": "Anagram Generator",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/anagram-generator",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "quote-of-the-day",
+      "name": "Quote of the Day",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/quote-of-the-day",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "morse-code-translator",
+      "name": "Morse Code Translator",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/morse-code-translator",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "unix-timestamp-converter",
+      "name": "Unix Timestamp Converter",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/unix-timestamp-converter",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "email-generator",
+      "name": "Email Generator",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/email-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "time-zone-converter",
+      "name": "Time Zone Converter",
+      "category": "Utility",
+      "url": "https://toolblip.com/tools/time-zone-converter",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "random-fraction-generator",
+      "name": "Random Fraction Generator",
+      "category": "Math",
+      "url": "https://toolblip.com/tools/random-fraction-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "rot47-cipher",
+      "name": "ROT47 Cipher",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/rot47-cipher",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "hash-collision-finder",
+      "name": "Hash Collision Finder",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/hash-collision-finder",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-security"
+    },
+    {
+      "slug": "semver-checker",
+      "name": "SemVer Checker",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/semver-checker",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "ipv6-generator",
+      "name": "IPv6 Address Generator",
+      "category": "Utility",
+      "url": "https://toolblip.com/tools/ipv6-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "mac-address-generator",
+      "name": "MAC Address Generator",
+      "category": "Utility",
+      "url": "https://toolblip.com/tools/mac-address-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "seo-network"
+    },
+    {
+      "slug": "html-table-generator",
+      "name": "HTML Table Generator",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/html-table-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "base64-image-converter",
+      "name": "Base64 Image Converter",
+      "category": "Image",
+      "url": "https://toolblip.com/tools/images/base64-image-converter",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "images"
+    },
+    {
+      "slug": "color-harmony-generator",
+      "name": "Color Harmony Generator",
+      "category": "Color",
+      "url": "https://toolblip.com/tools/color-harmony-generator",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "open-graph-preview",
+      "name": "Open Graph Preview",
+      "category": "SEO",
+      "url": "https://toolblip.com/tools/open-graph-preview",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "seo-network"
+    },
+    {
+      "slug": "twitter-card-preview",
+      "name": "Twitter Card Preview",
+      "category": "SEO",
+      "url": "https://toolblip.com/tools/twitter-card-preview",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "seo-network"
+    },
+    {
+      "slug": "unicode-character-inspector",
+      "name": "Unicode Character Inspector",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/unicode-character-inspector",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "homoglyph-detector",
+      "name": "Homoglyph Detector",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/homoglyph-detector",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "shell-command-reference",
+      "name": "Shell Command Reference",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/shell-command-reference",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "user-agent-parser",
+      "name": "User Agent Parser",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/user-agent-parser",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "physics-constants-reference",
+      "name": "Physics Constants Reference",
+      "category": "Utility",
+      "url": "https://toolblip.com/tools/physics-constants-reference",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "text-sorter",
+      "name": "Text Sorter",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/text-sorter",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "emoji-finder",
+      "name": "Emoji Finder",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/emoji-finder",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "slug-generator",
+      "name": "Slug Generator",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/slug-generator",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "json-csv-converter",
+      "name": "JSON-CSV Converter",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/json-csv-converter",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "timestamp-converter",
+      "name": "Timestamp Converter",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/timestamp-converter",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "word-density-analyzer",
+      "name": "Word Density Analyzer",
+      "category": "SEO",
+      "url": "https://toolblip.com/tools/word-density-analyzer",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "seo-network"
+    },
+    {
+      "slug": "graphql-playground",
+      "name": "GraphQL Playground",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/graphql-playground",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "websocket-tester",
+      "name": "WebSocket Tester",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/websocket-tester",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "ping-test",
+      "name": "Ping Test",
+      "category": "Network",
+      "url": "https://toolblip.com/tools/ping-test",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "seo-network"
+    },
+    {
+      "slug": "ldap-filter-generator",
+      "name": "LDAP Filter Generator",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/ldap-filter-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "speech-to-text",
+      "name": "Speech to Text",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/speech-to-text",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "csv-tsv-converter",
+      "name": "CSV-TSV Converter",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/csv-tsv-converter",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "english-grammar-checker",
+      "name": "English Grammar Checker",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/english-grammar-checker",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "typo-checker",
+      "name": "Typo Checker",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/typo-checker",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "regex-pattern-generator",
+      "name": "Regex Pattern Generator",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/regex-pattern-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "css-to-scss",
+      "name": "CSS to SCSS",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/css-to-scss",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "robots-txt-analyzer",
+      "name": "Robots.txt Analyzer",
+      "category": "SEO",
+      "url": "https://toolblip.com/tools/robots-txt-analyzer",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "seo-network"
+    },
+    {
+      "slug": "roman-numeral-converter",
+      "name": "Roman Numeral Converter",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/roman-numeral-converter",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "fraction-to-decimal",
+      "name": "Fraction to Decimal",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/fraction-to-decimal",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "word-frequency-counter",
+      "name": "Word Frequency Counter",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/word-frequency-counter",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "palindrome-checker",
+      "name": "Palindrome Checker",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/palindrome-checker",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "reading-time-calculator",
+      "name": "Reading Time Calculator",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/reading-time-calculator",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "syllable-counter",
+      "name": "Syllable Counter",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/syllable-counter",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "image-to-base64",
+      "name": "Image to Base64",
+      "category": "Image",
+      "url": "https://toolblip.com/tools/images/image-to-base64",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "images"
+    },
+    {
+      "slug": "keyword-extractor",
+      "name": "Keyword Extractor",
+      "category": "SEO",
+      "url": "https://toolblip.com/tools/keyword-extractor",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "seo-network"
+    },
+    {
+      "slug": "length-converter",
+      "name": "Length Converter",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/length-converter",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "weight-converter",
+      "name": "Weight Converter",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/weight-converter",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "sticky-notes",
+      "name": "Sticky Notes",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/sticky-notes",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "fake-text-generator",
+      "name": "Fake Text Generator",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/fake-text-generator",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "duplicate-line-finder",
+      "name": "Duplicate Line Finder",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/duplicate-line-finder",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "env-parser",
+      "name": "Environment File Parser",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/env-parser",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "json-to-typescript-interface",
+      "name": "JSON to TypeScript Interface",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/json-to-typescript-interface",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-data"
+    },
+    {
+      "slug": "image-optimizer",
+      "name": "Image Optimizer",
+      "category": "Image",
+      "url": "https://toolblip.com/tools/images/image-optimizer",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "images"
+    },
+    {
+      "slug": "broken-link-checker",
+      "name": "Broken Link Checker",
+      "category": "SEO",
+      "url": "https://toolblip.com/tools/broken-link-checker",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "seo-network"
+    },
+    {
+      "slug": "google-algorithm-tracker",
+      "name": "Google Algorithm Update Tracker",
+      "category": "SEO",
+      "url": "https://toolblip.com/tools/google-algorithm-tracker",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "seo-network"
+    },
+    {
+      "slug": "color-name-finder",
+      "name": "Color Name Finder",
+      "category": "Color",
+      "url": "https://toolblip.com/tools/color-name-finder",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "currency-converter",
+      "name": "Currency Converter",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/currency-converter",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "ascii-art-generator",
+      "name": "ASCII Art Generator",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/ascii-art-generator",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "encodings-reference",
+      "name": "Encodings Reference",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/encodings-reference",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-security"
+    },
+    {
+      "slug": "mime-types-reference",
+      "name": "MIME Types Reference",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/mime-types-reference",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "css-grid-generator",
+      "name": "CSS Grid Generator",
+      "category": "CSS",
+      "url": "https://toolblip.com/tools/css-grid-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "css-flexbox-generator",
+      "name": "CSS Flexbox Generator",
+      "category": "CSS",
+      "url": "https://toolblip.com/tools/css-flexbox-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "json-editor",
+      "name": "JSON Editor",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/json-editor",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-data"
+    },
+    {
+      "slug": "json-toml-converter",
+      "name": "JSON-TOML Converter",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/json-toml-converter",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "docker-command-generator",
+      "name": "Docker Command Generator",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/docker-command-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "code-diff",
+      "name": "Code Diff",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/code-diff",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-data"
+    },
+    {
+      "slug": "json-tree-view",
+      "name": "JSON Tree View",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/json-tree-view",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-data"
+    },
+    {
+      "slug": "html-entity-encoder",
+      "name": "HTML Entity Encoder",
+      "category": "Encoder",
+      "url": "https://toolblip.com/tools/html-entity-encoder",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "md5-hash-generator",
+      "name": "MD5 Hash Generator",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/md5-hash-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-security"
+    },
+    {
+      "slug": "sha1-hash-generator",
+      "name": "SHA-1 Hash Generator",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/sha1-hash-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-security"
+    },
+    {
+      "slug": "sha256-hash-generator",
+      "name": "SHA-256 Hash Generator",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/sha256-hash-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-security"
+    },
+    {
+      "slug": "bcrypt-hash-generator",
+      "name": "Bcrypt Hash Generator",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/bcrypt-hash-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-security"
+    },
+    {
+      "slug": "text-permutation-generator",
+      "name": "Text Permutation Generator",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/text-permutation-generator",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "hash-diff-checker",
+      "name": "Hash Diff Checker",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/hash-diff-checker",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-security"
+    },
+    {
+      "slug": "uuid-v1-generator",
+      "name": "UUID v1 Generator",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/uuid-v1-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-security"
+    },
+    {
+      "slug": "broken-image-checker",
+      "name": "Broken Image Checker",
+      "category": "Image",
+      "url": "https://toolblip.com/tools/images/broken-image-checker",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "images"
+    },
+    {
+      "slug": "color-tint-generator",
+      "name": "Color Tint Generator",
+      "category": "Color",
+      "url": "https://toolblip.com/tools/color-tint-generator",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "number-to-words",
+      "name": "Number to Words",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/number-to-words",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "html-live-preview",
+      "name": "HTML Live Preview",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/html-live-preview",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "color-palette-extractor",
+      "name": "Color Palette Extractor",
+      "category": "Image",
+      "url": "https://toolblip.com/tools/images/color-palette-extractor",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "images"
+    },
+    {
+      "slug": "lorem-ipsum-detector",
+      "name": "Lorem Ipsum Detector",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/lorem-ipsum-detector",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "meta-description-checker",
+      "name": "Meta Description Checker",
+      "category": "SEO",
+      "url": "https://toolblip.com/tools/meta-description-checker",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "seo-network"
+    },
+    {
+      "slug": "word-cloud-generator",
+      "name": "Word Cloud Generator",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/word-cloud-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "text-redundancy-checker",
+      "name": "Text Redundancy Checker",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/text-redundancy-checker",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "line-counter",
+      "name": "Line Counter",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/line-counter",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "english-dictionary",
+      "name": "English Dictionary Lookup",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/english-dictionary",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "json-to-python",
+      "name": "JSON to Python",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/json-to-python",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-data"
+    },
+    {
+      "slug": "code-beautifier",
+      "name": "Code Beautifier",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/code-beautifier",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "xml-validator",
+      "name": "XML Validator",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/xml-validator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-data"
+    },
+    {
+      "slug": "css-to-tailwind",
+      "name": "CSS to Tailwind Converter",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/css-to-tailwind",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "sql-to-json",
+      "name": "SQL to JSON Converter",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/sql-to-json",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "domain-age-checker",
+      "name": "Domain Age Checker",
+      "category": "SEO",
+      "url": "https://toolblip.com/tools/domain-age-checker",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "seo-network"
+    },
+    {
+      "slug": "color-tone-generator",
+      "name": "Color Tone Generator",
+      "category": "Color",
+      "url": "https://toolblip.com/tools/color-tone-generator",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "data-uri-generator",
+      "name": "Data URI Generator",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/data-uri-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-security"
+    },
+    {
+      "slug": "accessibility-checker",
+      "name": "Accessibility Checker",
+      "category": "SEO",
+      "url": "https://toolblip.com/tools/accessibility-checker",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "seo-network"
+    },
+    {
+      "slug": "sitemap-analyzer",
+      "name": "Sitemap Analyzer",
+      "category": "SEO",
+      "url": "https://toolblip.com/tools/sitemap-analyzer",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "seo-network"
+    },
+    {
+      "slug": "webp-converter",
+      "name": "WebP Converter",
+      "category": "Image",
+      "url": "https://toolblip.com/tools/images/webp-converter",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "images"
+    },
+    {
+      "slug": "png-to-jpg",
+      "name": "PNG to JPG Converter",
+      "category": "Image",
+      "url": "https://toolblip.com/tools/images/png-to-jpg",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "images"
+    },
+    {
+      "slug": "text-highlighter",
+      "name": "Text Highlighter",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/text-highlighter",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "word-combinations-generator",
+      "name": "Word Combinations Generator",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/word-combinations-generator",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "sentiment-analyzer",
+      "name": "Sentiment Analyzer",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/sentiment-analyzer",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "english-collocations-checker",
+      "name": "English Collocations Checker",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/english-collocations-checker",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "article-title-generator",
+      "name": "Article Title Generator",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/article-title-generator",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "html-to-jsx",
+      "name": "HTML to JSX Converter",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/html-to-jsx",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-data"
+    },
+    {
+      "slug": "css-to-styled-components",
+      "name": "CSS to Styled Components",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/css-to-styled-components",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "url-redirect-checker",
+      "name": "URL Redirect Checker",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/url-redirect-checker",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "open-graph-generator",
+      "name": "Open Graph Generator",
+      "category": "SEO",
+      "url": "https://toolblip.com/tools/open-graph-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "seo-network"
+    },
+    {
+      "slug": "dominant-color-extractor",
+      "name": "Dominant Color Extractor",
+      "category": "Image",
+      "url": "https://toolblip.com/tools/images/dominant-color-extractor",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "images"
+    },
+    {
+      "slug": "hex-named-color-converter",
+      "name": "HEX-Named Color Converter",
+      "category": "Color",
+      "url": "https://toolblip.com/tools/hex-named-color-converter",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "grammar-checker-v2",
+      "name": "Grammar Checker V2",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/grammar-checker-v2",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "dns-lookup",
+      "name": "DNS Lookup",
+      "category": "Network",
+      "url": "https://toolblip.com/tools/dns-lookup",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "seo-network"
+    },
+    {
+      "slug": "api-spec-generator",
+      "name": "API Spec Generator",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/api-spec-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "ssh-key-generator",
+      "name": "SSH Key Generator",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/ssh-key-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-security"
+    },
+    {
+      "slug": "json-validator",
+      "name": "JSON Validator",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/json-validator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-data"
+    },
+    {
+      "slug": "text-reverser",
+      "name": "Text Reverser",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/text-reverser",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "character-frequency-counter",
+      "name": "Character Frequency Counter",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/character-frequency-counter",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "word-alphabetizer",
+      "name": "Word Alphabetizer",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/word-alphabetizer",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "random-sentence-generator",
+      "name": "Random Sentence Generator",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/random-sentence-generator",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "jwt-tester",
+      "name": "JSON Web Token Tester",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/jwt-tester",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-security"
+    },
+    {
+      "slug": "photo-resize",
+      "name": "Photo Resize Tool",
+      "category": "Image",
+      "url": "https://toolblip.com/tools/images/photo-resize",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "images"
+    },
+    {
+      "slug": "serp-snippet-preview",
+      "name": "SERP Snippet Preview",
+      "category": "SEO",
+      "url": "https://toolblip.com/tools/serp-snippet-preview",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "seo-network"
+    },
+    {
+      "slug": "color-contrast-auditor",
+      "name": "Color Contrast Auditor",
+      "category": "Color",
+      "url": "https://toolblip.com/tools/color-contrast-auditor",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "metric-imperial-converter",
+      "name": "Metric Imperial Converter",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/metric-imperial-converter",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "binary-decimal-hex-converter",
+      "name": "Binary Decimal Hex Converter",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/binary-decimal-hex-converter",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "sentence-counter",
+      "name": "Sentence Counter",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/sentence-counter",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "jwt-token-tester",
+      "name": "JWT Token Tester",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/jwt-token-tester",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-security"
+    },
+    {
+      "slug": "seo-meta-tag-analyzer",
+      "name": "SEO Meta Tag Analyzer",
+      "category": "SEO",
+      "url": "https://toolblip.com/tools/seo-meta-tag-analyzer",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "seo-network"
+    },
+    {
+      "slug": "text-to-speech",
+      "name": "Text to Speech",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/text-to-speech",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "exif-remover",
+      "name": "EXIF Remover",
+      "category": "Image",
+      "url": "https://toolblip.com/tools/images/exif-remover",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "images"
+    },
+    {
+      "slug": "uuid-validator",
+      "name": "UUID Validator",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/uuid-validator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-security"
+    },
+    {
+      "slug": "cidr-calculator",
+      "name": "CIDR Subnet Calculator",
+      "category": "Network",
+      "url": "https://toolblip.com/tools/cidr-calculator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "seo-network"
+    },
+    {
+      "slug": "ip-range-calculator",
+      "name": "IP Range Calculator",
+      "category": "Network",
+      "url": "https://toolblip.com/tools/ip-range-calculator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "seo-network"
+    },
+    {
+      "slug": "color-saturation-adjuster",
+      "name": "Color Saturation Adjuster",
+      "category": "Color",
+      "url": "https://toolblip.com/tools/color-saturation-adjuster",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "grammar-score-checker",
+      "name": "Grammar Score Checker",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/grammar-score-checker",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "regex-description-generator",
+      "name": "Regex Description Generator",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/regex-description-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "color-shade-tints",
+      "name": "Color Shade Tints",
+      "category": "Color",
+      "url": "https://toolblip.com/tools/color-shade-tints",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "grammar-checker-pro",
+      "name": "Grammar Checker Pro",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/grammar-checker-pro",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "dummy-text-detector",
+      "name": "Dummy Text Detector",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/dummy-text-detector",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "reading-level-estimator",
+      "name": "Reading Level Estimator",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/reading-level-estimator",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "robots-txt-validator",
+      "name": "robots.txt Validator",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/robots-txt-validator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "seo-network"
+    },
+    {
+      "slug": "image-square-fit",
+      "name": "Image Square Fit",
+      "category": "Image",
+      "url": "https://toolblip.com/tools/images/image-square-fit",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "images"
+    },
+    {
+      "slug": "hreflang-tag-generator",
+      "name": "Hreflang Tag Generator",
+      "category": "SEO",
+      "url": "https://toolblip.com/tools/hreflang-tag-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "seo-network"
+    },
+    {
+      "slug": "data-size-converter",
+      "name": "Data Size Converter",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/data-size-converter",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "decimal-to-binary",
+      "name": "Decimal to Binary Converter",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/decimal-to-binary",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "color-format-converter",
+      "name": "Color Format Converter",
+      "category": "Color",
+      "url": "https://toolblip.com/tools/color-format-converter",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "wcag-contrast-checker",
+      "name": "WCAG Contrast Checker",
+      "category": "Color",
+      "url": "https://toolblip.com/tools/wcag-contrast-checker",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "temperature-unit-converter",
+      "name": "Temperature Unit Converter",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/temperature-unit-converter",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "base-number-converter",
+      "name": "Base Number Converter",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/base-number-converter",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "regex-match-visualizer",
+      "name": "Regex Match Visualizer",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/regex-match-visualizer",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "cron-human-readable",
+      "name": "Cron Human-Readable",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/cron-human-readable",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "google-serp-preview",
+      "name": "Google SERP Preview",
+      "category": "SEO",
+      "url": "https://toolblip.com/tools/google-serp-preview",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "seo-network"
+    },
+    {
+      "slug": "keyword-generator",
+      "name": "Keyword Generator",
+      "category": "SEO",
+      "url": "https://toolblip.com/tools/keyword-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "seo-network"
+    },
+    {
+      "slug": "json-path-evaluator",
+      "name": "JSON Path Evaluator",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/json-path-evaluator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-data"
+    },
+    {
+      "slug": "curl-gen",
+      "name": "cURL Generator",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/curl-gen",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "temp-converter",
+      "name": "Temperature Converter",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/temp-converter",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "word-freq",
+      "name": "Word Frequency Analyzer",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/word-freq",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "rot13-express",
+      "name": "ROT13 Cipher",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/rot13-express",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "cron-schedule-generator",
+      "name": "Cron Schedule Generator",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/cron-schedule-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "regex-explainer",
+      "name": "Regex Explanation Tool",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/regex-explainer",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "cron-schedule-validator",
+      "name": "Cron Schedule Checker",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/cron-schedule-validator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "passive-voice-detector",
+      "name": "Passive Voice Detector",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/passive-voice-detector",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "word-frequency-table",
+      "name": "Word Frequency Table",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/word-frequency-table",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "api-auth-header-generator",
+      "name": "API Auth Header Generator",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/api-auth-header-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "image-rotate",
+      "name": "Image Rotate Tool",
+      "category": "Image",
+      "url": "https://toolblip.com/tools/images/image-rotate",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "images"
+    },
+    {
+      "slug": "image-flip",
+      "name": "Image Flip Tool",
+      "category": "Image",
+      "url": "https://toolblip.com/tools/images/image-flip",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "images"
+    },
+    {
+      "slug": "heading-tag-analyzer",
+      "name": "Heading Tag Analyzer",
+      "category": "SEO",
+      "url": "https://toolblip.com/tools/heading-tag-analyzer",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "seo-network"
+    },
+    {
+      "slug": "color-luminance-checker",
+      "name": "Color Luminance Checker",
+      "category": "Color",
+      "url": "https://toolblip.com/tools/color-luminance-checker",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "color-temperature-adjuster",
+      "name": "Color Temperature Adjuster",
+      "category": "Color",
+      "url": "https://toolblip.com/tools/color-temperature-adjuster",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "angle-unit-converter",
+      "name": "Angle Unit Converter",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/angle-unit-converter",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "word-scramble-generator",
+      "name": "Word Scramble Generator",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/word-scramble-generator",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "collocations-checker",
+      "name": "Collocation Checker",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/collocations-checker",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "paragraph-counter",
+      "name": "Paragraph Counter",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/paragraph-counter",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "csv-generator",
+      "name": "CSV Generator",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/csv-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-data"
+    },
+    {
+      "slug": "cron-validator",
+      "name": "Cron Schedule Validator",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/cron-validator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "uuid-normalizer",
+      "name": "UUID Normalizer",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/uuid-normalizer",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-security"
+    },
+    {
+      "slug": "page-title-checker",
+      "name": "Page Title Checker",
+      "category": "SEO",
+      "url": "https://toolblip.com/tools/page-title-checker",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "seo-network"
+    },
+    {
+      "slug": "pressure-converter",
+      "name": "Pressure Unit Converter",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/pressure-converter",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "energy-converter",
+      "name": "Energy Unit Converter",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/energy-converter",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "sitemap-extractor",
+      "name": "XML Sitemap URL Extractor",
+      "category": "SEO",
+      "url": "https://toolblip.com/tools/sitemap-extractor",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "seo-network"
+    },
+    {
+      "slug": "markdown-to-pdf",
+      "name": "Markdown to PDF Converter",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/markdown-to-pdf",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-data"
+    },
+    {
+      "slug": "pdf-password-remover",
+      "name": "PDF Password Remover",
+      "category": "Utility",
+      "url": "https://toolblip.com/tools/pdf-password-remover",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "pdf"
+    },
+    {
+      "slug": "base64-encoder-decoder",
+      "name": "Base64 Encoder/Decoder",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/base64-encoder-decoder",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-security"
+    },
+    {
+      "slug": "html-encoder-decoder",
+      "name": "HTML Encoder/Decoder",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/html-encoder-decoder",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-security"
+    },
+    {
+      "slug": "css-minifier",
+      "name": "CSS Minifier",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/css-minifier",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "binary-converter",
+      "name": "Binary Converter",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/binary-converter",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-security"
+    },
+    {
+      "slug": "tip-calculator",
+      "name": "Tip Calculator",
+      "category": "Utility",
+      "url": "https://toolblip.com/tools/tip-calculator",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "backslash-escape-unescape",
+      "name": "Backslash Escape/Unescape",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/backslash-escape-unescape",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-security"
+    },
+    {
+      "slug": "sql-formatter",
+      "name": "SQL Formatter",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/sql-formatter",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-data"
+    },
+    {
+      "slug": "aac-to-wav",
+      "name": "AAC to WAV Converter",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/aac-to-wav",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "add-pages-to-pdf",
+      "name": "Add Pages to PDF",
+      "category": "PDF Tools",
+      "url": "https://toolblip.com/tools/add-pages-to-pdf",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "pdf"
+    },
+    {
+      "slug": "add-subtitles",
+      "name": "Add Subtitles to Video",
+      "category": "Video Tools",
+      "url": "https://toolblip.com/tools/add-subtitles",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "annotate-pdf",
+      "name": "PDF Annotator",
+      "category": "PDF Tools",
+      "url": "https://toolblip.com/tools/annotate-pdf",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "pdf"
+    },
+    {
+      "slug": "automation-wizard",
+      "name": "Workflow Outline Builder",
+      "category": "Utility",
+      "url": "https://toolblip.com/tools/automation-wizard",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "bill-sale-generator",
+      "name": "Bill of Sale Generator",
+      "category": "Document Generator",
+      "url": "https://toolblip.com/tools/bill-sale-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "border",
+      "name": "Add Border to Image",
+      "category": "Image",
+      "url": "https://toolblip.com/tools/images/border",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "images"
+    },
+    {
+      "slug": "business-plan-generator",
+      "name": "Business Plan Generator",
+      "category": "Document Generator",
+      "url": "https://toolblip.com/tools/business-plan-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "chart-maker",
+      "name": "Chart Maker",
+      "category": "Utility",
+      "url": "https://toolblip.com/tools/chart-maker",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "collage-maker",
+      "name": "Image Collage Maker",
+      "category": "Image",
+      "url": "https://toolblip.com/tools/images/collage-maker",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "images"
+    },
+    {
+      "slug": "combine-images",
+      "name": "Combine Images",
+      "category": "Image",
+      "url": "https://toolblip.com/tools/images/combine-images",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "images"
+    },
+    {
+      "slug": "crop",
+      "name": "Crop Image",
+      "category": "Image",
+      "url": "https://toolblip.com/tools/images/crop",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "images"
+    },
+    {
+      "slug": "crop-circle",
+      "name": "Make Round Image",
+      "category": "Image",
+      "url": "https://toolblip.com/tools/images/crop-circle",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "images"
+    },
+    {
+      "slug": "csv-to-excel",
+      "name": "CSV to Excel Converter",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/csv-to-excel",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "csv-to-xml",
+      "name": "CSV to XML Converter",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/csv-to-xml",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "cutter",
+      "name": "Cut Video",
+      "category": "Video Tools",
+      "url": "https://toolblip.com/tools/cutter",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "detect",
+      "name": "Image Format Detector",
+      "category": "Image",
+      "url": "https://toolblip.com/tools/images/detect",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "images"
+    },
+    {
+      "slug": "edit-pdf",
+      "name": "Edit PDF",
+      "category": "PDF Tools",
+      "url": "https://toolblip.com/tools/edit-pdf",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "pdf"
+    },
+    {
+      "slug": "excel-to-csv",
+      "name": "Excel to CSV Converter",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/excel-to-csv",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "excel-to-pdf",
+      "name": "Excel to PDF Converter",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/excel-to-pdf",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "excel-to-xml",
+      "name": "Excel to XML Converter",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/excel-to-xml",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "extract-audio",
+      "name": "Extract Audio from Video",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/extract-audio",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "extract-images-from-pdf",
+      "name": "Extract Images from PDF",
+      "category": "PDF Tools",
+      "url": "https://toolblip.com/tools/extract-images-from-pdf",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "pdf"
+    },
+    {
+      "slug": "font-to-png",
+      "name": "Font to PNG Converter",
+      "category": "Image",
+      "url": "https://toolblip.com/tools/images/font-to-png",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "images"
+    },
+    {
+      "slug": "gif-to-apng",
+      "name": "GIF to APNG Converter",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/gif-to-apng",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "gif-to-jpg",
+      "name": "GIF to JPG Converter",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/gif-to-jpg",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "gif-to-png",
+      "name": "GIF to PNG Converter",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/gif-to-png",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "grayscale",
+      "name": "Grayscale Image Converter",
+      "category": "Image",
+      "url": "https://toolblip.com/tools/images/grayscale",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "images"
+    },
+    {
+      "slug": "heic-to-jpg",
+      "name": "HEIC to JPG Converter",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/heic-to-jpg",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "heic-to-png",
+      "name": "HEIC to PNG Converter",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/heic-to-png",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "jpg-to-png",
+      "name": "JPG to PNG Converter",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/jpg-to-png",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "jpg-to-webp",
+      "name": "JPG to WebP Converter",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/jpg-to-webp",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "m4a-to-wav",
+      "name": "M4A to WAV Converter",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/m4a-to-wav",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "meme-maker",
+      "name": "Meme Generator",
+      "category": "Image",
+      "url": "https://toolblip.com/tools/images/meme-maker",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "images"
+    },
+    {
+      "slug": "merge-pdfs",
+      "name": "Merge PDFs",
+      "category": "PDF Tools",
+      "url": "https://toolblip.com/tools/merge-pdfs",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "pdf"
+    },
+    {
+      "slug": "mkv-to-mp3",
+      "name": "MKV to MP3 Converter",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/mkv-to-mp3",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "mp4-to-mp3",
+      "name": "MP4 to MP3 Converter",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/mp4-to-mp3",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "mp4-to-wav",
+      "name": "MP4 to WAV Converter",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/mp4-to-wav",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "nda-generator",
+      "name": "Non-Disclosure Agreement Generator",
+      "category": "Document Generator",
+      "url": "https://toolblip.com/tools/nda-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "pixelate",
+      "name": "Pixelate Image",
+      "category": "Image",
+      "url": "https://toolblip.com/tools/images/pixelate",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "images"
+    },
+    {
+      "slug": "png-to-webp",
+      "name": "PNG to WebP Converter",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/png-to-webp",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "poll-generator",
+      "name": "Poll Generator",
+      "category": "Utility",
+      "url": "https://toolblip.com/tools/poll-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "press-release-generator",
+      "name": "Press Release Generator",
+      "category": "Document Generator",
+      "url": "https://toolblip.com/tools/press-release-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "privacy-policy-generator",
+      "name": "Privacy Policy Generator",
+      "category": "Document Generator",
+      "url": "https://toolblip.com/tools/privacy-policy-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "profile-photo",
+      "name": "Profile Photo Editor",
+      "category": "Image",
+      "url": "https://toolblip.com/tools/images/profile-photo",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "images"
+    },
+    {
+      "slug": "purchase-agreement-generator",
+      "name": "Purchase Agreement Generator",
+      "category": "Document Generator",
+      "url": "https://toolblip.com/tools/purchase-agreement-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "pdf-rearrange",
+      "name": "Rearrange PDF Pages",
+      "category": "PDF Tools",
+      "url": "https://toolblip.com/tools/pdf-rearrange",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "pdf"
+    },
+    {
+      "slug": "delete-pages-from-pdf",
+      "name": "Delete PDF Pages",
+      "category": "PDF Tools",
+      "url": "https://toolblip.com/tools/delete-pages-from-pdf",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "pdf"
+    },
+    {
+      "slug": "resize",
+      "name": "Resize Image",
+      "category": "Image",
+      "url": "https://toolblip.com/tools/images/resize",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "images"
+    },
+    {
+      "slug": "rotate",
+      "name": "Rotate Image",
+      "category": "Image",
+      "url": "https://toolblip.com/tools/images/rotate",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "images"
+    },
+    {
+      "slug": "sharpen",
+      "name": "Sharpen Image",
+      "category": "Image",
+      "url": "https://toolblip.com/tools/images/sharpen",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "images"
+    },
+    {
+      "slug": "sign-pdf",
+      "name": "Sign PDF",
+      "category": "PDF Tools",
+      "url": "https://toolblip.com/tools/sign-pdf",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "pdf"
+    },
+    {
+      "slug": "split-csv",
+      "name": "Split CSV File",
+      "category": "Utility",
+      "url": "https://toolblip.com/tools/split-csv",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "split-excel",
+      "name": "Split Excel File",
+      "category": "Utility",
+      "url": "https://toolblip.com/tools/split-excel",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "svg-to-png",
+      "name": "SVG to PNG Converter",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/svg-to-png",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "svg-to-jpg",
+      "name": "SVG to JPG Converter",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/svg-to-jpg",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "svg-to-webp",
+      "name": "SVG to WebP Converter",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/svg-to-webp",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "trace",
+      "name": "Logo Trace Converter",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/trace",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "unlock-pdf",
+      "name": "Unlock PDF",
+      "category": "PDF Tools",
+      "url": "https://toolblip.com/tools/unlock-pdf",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "pdf"
+    },
+    {
+      "slug": "add-watermark-to-pdf",
+      "name": "Add Watermark to PDF",
+      "category": "PDF Tools",
+      "url": "https://toolblip.com/tools/add-watermark-to-pdf",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "pdf"
+    },
+    {
+      "slug": "webp-to-jpg",
+      "name": "WebP to JPG Converter",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/webp-to-jpg",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "webp-to-png",
+      "name": "WebP to PNG Converter",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/webp-to-png",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "zip",
+      "name": "Create ZIP File",
+      "category": "Utility",
+      "url": "https://toolblip.com/tools/zip",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "unicode-escape-encoder",
+      "name": "Unicode Escape Encoder",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/unicode-escape-encoder",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "developer-security"
+    },
+    {
+      "slug": "punycode-encoder",
+      "name": "Punycode / IDN Converter",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/punycode-encoder",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-security"
+    },
+    {
+      "slug": "remove-extra-spaces",
+      "name": "Remove Extra Spaces",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/remove-extra-spaces",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "dpi-ppi-calculator",
+      "name": "DPI PPI Calculator",
+      "category": "Image",
+      "url": "https://toolblip.com/tools/images/dpi-ppi-calculator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "images"
+    },
+    {
+      "slug": "random-choice-wheel",
+      "name": "Random Choice Wheel",
+      "category": "Utility",
+      "url": "https://toolblip.com/tools/random-choice-wheel",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "ulid-generator",
+      "name": "ULID Generator",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/ulid-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-security"
+    },
+    {
+      "slug": "image-shadow-generator",
+      "name": "Image Shadow Generator",
+      "category": "CSS",
+      "url": "https://toolblip.com/tools/image-shadow-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "favicon-from-emoji",
+      "name": "Favicon from Emoji",
+      "category": "Image",
+      "url": "https://toolblip.com/tools/images/favicon-from-emoji",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "images"
+    },
+    {
+      "slug": "batch-favicon-downloader",
+      "name": "Batch Favicon Downloader",
+      "category": "SEO",
+      "url": "https://toolblip.com/tools/batch-favicon-downloader",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "seo-network"
+    },
+    {
+      "slug": "hmac-generator",
+      "name": "HMAC Generator",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/hmac-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-security"
+    },
+    {
+      "slug": "secure-random-generator",
+      "name": "Secure Random Generator",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/secure-random-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-security"
+    },
+    {
+      "slug": "json-escape-unescape",
+      "name": "JSON Escape/Unescape",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/json-escape-unescape",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-security"
+    },
+    {
+      "slug": "css-naming-convention",
+      "name": "CSS Naming Convention Converter",
+      "category": "CSS",
+      "url": "https://toolblip.com/tools/css-naming-convention",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "html-minifier",
+      "name": "HTML Minifier",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/html-minifier",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "random-pin-generator",
+      "name": "Random PIN Generator",
+      "category": "Utility",
+      "url": "https://toolblip.com/tools/random-pin-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "docker-compose-generator",
+      "name": "Docker Compose Generator",
+      "category": "Network",
+      "url": "https://toolblip.com/tools/docker-compose-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "seo-network"
+    },
+    {
+      "slug": "uuid-comparator",
+      "name": "UUID Comparator",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/uuid-comparator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-security"
+    },
+    {
+      "slug": "text-uniqueness-checker",
+      "name": "Text Uniqueness Checker",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/text-uniqueness-checker",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "duplicate-phrase-detector",
+      "name": "Duplicate Phrase Detector",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/duplicate-phrase-detector",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "filler-word-counter",
+      "name": "Filler Word Counter",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/filler-word-counter",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "token-builder",
+      "name": "Token Builder",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/token-builder",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-security"
+    },
+    {
+      "slug": "code-to-diagram-generator",
+      "name": "Code to Diagram Generator",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/code-to-diagram-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "algorithm-visualizer",
+      "name": "Algorithm Visualizer",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/algorithm-visualizer",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "image-scale-calculator",
+      "name": "Image Scale Calculator",
+      "category": "Image",
+      "url": "https://toolblip.com/tools/images/image-scale-calculator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "images"
+    },
+    {
+      "slug": "robots-txt-editor",
+      "name": "Robots.txt Editor",
+      "category": "SEO",
+      "url": "https://toolblip.com/tools/robots-txt-editor",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "seo-network"
+    },
+    {
+      "slug": "color-opacity-generator",
+      "name": "Color Opacity Generator",
+      "category": "Color",
+      "url": "https://toolblip.com/tools/color-opacity-generator",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "base64-image-decoder",
+      "name": "Base64 Image Decoder",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/base64-image-decoder",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "http-headers-inspector",
+      "name": "HTTP Headers Inspector",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/http-headers-inspector",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "headline-analyzer",
+      "name": "Headline Analyzer",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/headline-analyzer",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "text-structure-validator",
+      "name": "Text Structure Validator",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/text-structure-validator",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "character-variety-checker",
+      "name": "Character Variety Checker",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/character-variety-checker",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "api-doc-generator",
+      "name": "API Documentation Generator",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/api-doc-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "db-query-formatter",
+      "name": "Database Query Formatter",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/db-query-formatter",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-data"
+    },
+    {
+      "slug": "uuid-compare",
+      "name": "UUID Compare",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/uuid-compare",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-security"
+    },
+    {
+      "slug": "image-dimension-checker",
+      "name": "Image Dimension Checker",
+      "category": "Image",
+      "url": "https://toolblip.com/tools/images/image-dimension-checker",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "images"
+    },
+    {
+      "slug": "og-tag-debugger",
+      "name": "OG Tag Debugger",
+      "category": "SEO",
+      "url": "https://toolblip.com/tools/og-tag-debugger",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "seo-network"
+    },
+    {
+      "slug": "canonical-url-generator",
+      "name": "Canonical URL Generator",
+      "category": "SEO",
+      "url": "https://toolblip.com/tools/canonical-url-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "seo-network"
+    },
+    {
+      "slug": "image-background-remover",
+      "name": "Image Background Remover",
+      "category": "Image",
+      "url": "https://toolblip.com/tools/images/image-background-remover",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "images"
+    },
+    {
+      "slug": "byte-converter",
+      "name": "Byte Size Converter",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/byte-converter",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "area-converter",
+      "name": "Area Converter",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/area-converter",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "frequency-converter",
+      "name": "Frequency Converter",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/frequency-converter",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "force-converter",
+      "name": "Force Converter",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/force-converter",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "random-color-generator",
+      "name": "Random Color Generator",
+      "category": "Color",
+      "url": "https://toolblip.com/tools/random-color-generator",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "time-duration-calculator",
+      "name": "Time Duration Calculator",
+      "category": "Utility",
+      "url": "https://toolblip.com/tools/time-duration-calculator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "timestamp-diff-calculator",
+      "name": "Timestamp Diff Calculator",
+      "category": "Utility",
+      "url": "https://toolblip.com/tools/timestamp-diff-calculator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "pixel-density-calculator",
+      "name": "Pixel Density Calculator",
+      "category": "Image",
+      "url": "https://toolblip.com/tools/images/pixel-density-calculator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "images"
+    },
+    {
+      "slug": "html-to-plain-text",
+      "name": "HTML to Plain Text",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/html-to-plain-text",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "fake-address-generator",
+      "name": "Fake Address Generator",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/fake-address-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "random-mac-generator",
+      "name": "Random MAC Generator",
+      "category": "Network",
+      "url": "https://toolblip.com/tools/random-mac-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "seo-network"
+    },
+    {
+      "slug": "spelling-checker",
+      "name": "Spelling Checker",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/spelling-checker",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "text-complexity-analyzer",
+      "name": "Text Complexity Analyzer",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/text-complexity-analyzer",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "text-deduplicator",
+      "name": "Text Deduplicator",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/text-deduplicator",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "api-endpoint-debugger",
+      "name": "API Endpoint Debugger",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/api-endpoint-debugger",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "html-attribute-encoder",
+      "name": "HTML Attribute Encoder",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/html-attribute-encoder",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-security"
+    },
+    {
+      "slug": "base64-image-viewer",
+      "name": "Base64 Image Viewer",
+      "category": "Image",
+      "url": "https://toolblip.com/tools/images/base64-image-viewer",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "images"
+    },
+    {
+      "slug": "photo-metadata-remover",
+      "name": "Photo Metadata Remover",
+      "category": "Image",
+      "url": "https://toolblip.com/tools/images/photo-metadata-remover",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "images"
+    },
+    {
+      "slug": "seo-title-analyzer",
+      "name": "SEO Title Analyzer",
+      "category": "SEO",
+      "url": "https://toolblip.com/tools/seo-title-analyzer",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "seo-network"
+    },
+    {
+      "slug": "serp-simulator",
+      "name": "SERP Simulator",
+      "category": "SEO",
+      "url": "https://toolblip.com/tools/serp-simulator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "seo-network"
+    },
+    {
+      "slug": "robots-txt-checker",
+      "name": "Robots TXT Checker",
+      "category": "SEO",
+      "url": "https://toolblip.com/tools/robots-txt-checker",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "seo-network"
+    },
+    {
+      "slug": "color-luminance-calculator",
+      "name": "Color Luminance Calculator",
+      "category": "Color",
+      "url": "https://toolblip.com/tools/color-luminance-calculator",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "all-in-one-unit-converter",
+      "name": "All-in-One Unit Converter",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/all-in-one-unit-converter",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "octal-to-decimal",
+      "name": "Octal to Decimal Converter",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/octal-to-decimal",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "slug-health-checker",
+      "name": "Slug Health Checker",
+      "category": "SEO",
+      "url": "https://toolblip.com/tools/slug-health-checker",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "seo-network"
+    },
+    {
+      "slug": "duplicate-url-detector",
+      "name": "Duplicate URL Detector",
+      "category": "SEO",
+      "url": "https://toolblip.com/tools/duplicate-url-detector",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "seo-network"
+    },
+    {
+      "slug": "screen-density-simulator",
+      "name": "Screen Density Simulator",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/screen-density-simulator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "html-table-to-json",
+      "name": "HTML Table to JSON",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/html-table-to-json",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "text-sentence-shuffler",
+      "name": "Text Sentence Shuffler",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/text-sentence-shuffler",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "text-line-sorter",
+      "name": "Text Line Sorter",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/text-line-sorter",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "image-size-resizer",
+      "name": "Image Size Resizer",
+      "category": "Image",
+      "url": "https://toolblip.com/tools/images/image-size-resizer",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "images"
+    },
+    {
+      "slug": "cron-generator-dg",
+      "name": "Cron Generator",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/cron-generator-dg",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "flesch-kincaid-calculator",
+      "name": "Flesch-Kincaid Calculator",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/flesch-kincaid-calculator",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "regex-pattern-builder",
+      "name": "Regex Pattern Builder",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/regex-pattern-builder",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "cron-schedule-explainer",
+      "name": "Cron Schedule Explainer",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/cron-schedule-explainer",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "banner-generator",
+      "name": "Banner Generator",
+      "category": "Image",
+      "url": "https://toolblip.com/tools/images/banner-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "images"
+    },
+    {
+      "slug": "color-contrast-matrix",
+      "name": "Color Contrast Matrix",
+      "category": "Color",
+      "url": "https://toolblip.com/tools/color-contrast-matrix",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "binary-to-decimal",
+      "name": "Binary to Decimal",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/binary-to-decimal",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "css-animation-generator",
+      "name": "CSS Animation Generator",
+      "category": "CSS",
+      "url": "https://toolblip.com/tools/css-animation-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "scientific-notation-converter",
+      "name": "Scientific Notation Converter",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/scientific-notation-converter",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "curl-to-python",
+      "name": "cURL to Python",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/curl-to-python",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "curl-to-javascript",
+      "name": "cURL to JavaScript",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/curl-to-javascript",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "image-dpi-resizer",
+      "name": "Image DPI Resizer",
+      "category": "Image",
+      "url": "https://toolblip.com/tools/images/image-dpi-resizer",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "images"
+    },
+    {
+      "slug": "css-cursor-generator",
+      "name": "CSS Cursor Generator",
+      "category": "CSS",
+      "url": "https://toolblip.com/tools/css-cursor-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "markdown-table-from-json",
+      "name": "Markdown Table from JSON",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/markdown-table-from-json",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "http-status-checker",
+      "name": "HTTP Status Checker",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/http-status-checker",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "color-shade-gen",
+      "name": "Color Shade Generator",
+      "category": "Color",
+      "url": "https://toolblip.com/tools/color-shade-gen",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "batch-image-resizer",
+      "name": "Batch Image Resizer",
+      "category": "Image",
+      "url": "https://toolblip.com/tools/images/batch-image-resizer",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "images"
+    },
+    {
+      "slug": "keyword-density-analyzer",
+      "name": "Keyword Density Analyzer",
+      "category": "SEO",
+      "url": "https://toolblip.com/tools/keyword-density-analyzer",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "seo-network"
+    },
+    {
+      "slug": "percentage-change-calc",
+      "name": "Percentage Change Calculator",
+      "category": "Math",
+      "url": "https://toolblip.com/tools/percentage-change-calc",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "browser-image-resizer",
+      "name": "Browser Image Resizer",
+      "category": "Image",
+      "url": "https://toolblip.com/tools/images/browser-image-resizer",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "images"
+    },
+    {
+      "slug": "random-choice-picker",
+      "name": "Random Choice Picker",
+      "category": "Utility",
+      "url": "https://toolblip.com/tools/random-choice-picker",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "discount-calculator",
+      "name": "Discount Calculator",
+      "category": "Math",
+      "url": "https://toolblip.com/tools/discount-calculator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "list-difference-finder",
+      "name": "List Difference Finder",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/list-difference-finder",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "word-combinations",
+      "name": "Word Combinations",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/word-combinations",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "regex-escape",
+      "name": "Regex Escape",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/regex-escape",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-security"
+    },
+    {
+      "slug": "base64-file-encoder",
+      "name": "Base64 File Encoder",
+      "category": "Encoder",
+      "url": "https://toolblip.com/tools/base64-file-encoder",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "what-if-scenario-calculator",
+      "name": "What-If Scenario Calculator",
+      "category": "Math",
+      "url": "https://toolblip.com/tools/what-if-scenario-calculator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "bill-splitter",
+      "name": "Bill Splitter",
+      "category": "Math",
+      "url": "https://toolblip.com/tools/bill-splitter",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "word-finder",
+      "name": "Word Finder",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/word-finder",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "shell-command-generator",
+      "name": "Shell Command Generator",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/shell-command-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "favicon-grabber",
+      "name": "Favicon Grabber",
+      "category": "Image",
+      "url": "https://toolblip.com/tools/images/favicon-grabber",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "seo-network"
+    },
+    {
+      "slug": "bmi-calculator",
+      "name": "BMI Calculator",
+      "category": "Utility",
+      "url": "https://toolblip.com/tools/bmi-calculator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "sentence-extractor",
+      "name": "Sentence Extractor",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/sentence-extractor",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "homophone-checker",
+      "name": "Homophone Checker",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/homophone-checker",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "api-endpoint-documenter",
+      "name": "API Endpoint Documenter",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/api-endpoint-documenter",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "json-to-typescript-types",
+      "name": "JSON to TypeScript Types",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/json-to-typescript-types",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-data"
+    },
+    {
+      "slug": "favicon-png-maker",
+      "name": "Favicon PNG Generator",
+      "category": "Image",
+      "url": "https://toolblip.com/tools/images/favicon-png-maker",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "images"
+    },
+    {
+      "slug": "color-palette-from-image",
+      "name": "Color Palette from Image",
+      "category": "Color",
+      "url": "https://toolblip.com/tools/color-palette-from-image",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "cooking-unit-converter",
+      "name": "Cooking Unit Converter",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/cooking-unit-converter",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "hex-to-decimal-converter",
+      "name": "Hex to Decimal Converter",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/hex-to-decimal-converter",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "decimal-to-hex-converter",
+      "name": "Decimal to Hex Converter",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/decimal-to-hex-converter",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "paragraph-generator",
+      "name": "Paragraph Generator",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/paragraph-generator",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "curl-command-builder",
+      "name": "cURL Command Builder",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/curl-command-builder",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-general"
+    },
+    {
+      "slug": "dns-lookup-tool",
+      "name": "DNS Lookup Tool",
+      "category": "Network",
+      "url": "https://toolblip.com/tools/dns-lookup-tool",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "seo-network"
+    },
+    {
+      "slug": "fraction-calculator",
+      "name": "Fraction Calculator",
+      "category": "Math",
+      "url": "https://toolblip.com/tools/fraction-calculator",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "random-id-generator",
+      "name": "Random ID Generator",
+      "category": "Utility",
+      "url": "https://toolblip.com/tools/random-id-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "readability-score-calculator",
+      "name": "Readability Score Calculator",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/readability-score-calculator",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "favicon-icon-generator",
+      "name": "Favicon Icon Generator",
+      "category": "Image",
+      "url": "https://toolblip.com/tools/images/favicon-icon-generator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "images"
+    },
+    {
+      "slug": "google-serp-simulator",
+      "name": "Google SERP Simulator",
+      "category": "SEO",
+      "url": "https://toolblip.com/tools/google-serp-simulator",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "seo-network"
+    },
+    {
+      "slug": "color-contrast-ratio-checker",
+      "name": "Color Contrast Ratio Checker",
+      "category": "Color",
+      "url": "https://toolblip.com/tools/color-contrast-ratio-checker",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "smart-text-sorter",
+      "name": "Smart Text Sorter",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/smart-text-sorter",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "jwt-token-inspector",
+      "name": "JWT Token Inspector",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/jwt-token-inspector",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-security"
+    },
+    {
+      "slug": "tweet-to-image-converter",
+      "name": "Tweet to Image Converter",
+      "category": "Image",
+      "url": "https://toolblip.com/tools/images/tweet-to-image-converter",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "images"
+    },
+    {
+      "slug": "color-picker-wheel",
+      "name": "Color Picker Wheel",
+      "category": "Color",
+      "url": "https://toolblip.com/tools/color-picker-wheel",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "wcag-contrast-auditor",
+      "name": "WCAG Contrast Auditor",
+      "category": "Color",
+      "url": "https://toolblip.com/tools/wcag-contrast-auditor",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "bin-hex-dec-converter",
+      "name": "BIN HEX DEC Converter",
+      "category": "Conversion",
+      "url": "https://toolblip.com/tools/bin-hex-dec-converter",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "media-conversion"
+    },
+    {
+      "slug": "notebook-to-html",
+      "name": "Notebook to HTML",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/notebook-to-html",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-data"
+    },
+    {
+      "slug": "ipynb-formatter",
+      "name": "IPynb Formatter",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/ipynb-formatter",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-data"
+    },
+    {
+      "slug": "jupyter-cleaner",
+      "name": "Jupyter Cleaner",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/jupyter-cleaner",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-data"
+    },
+    {
+      "slug": "oxford-comma",
+      "name": "Oxford Comma Fixer",
+      "category": "Text",
+      "url": "https://toolblip.com/tools/oxford-comma",
+      "historicallyApproved": true,
+      "canonicalAlias": null,
+      "group": "utility-design"
+    },
+    {
+      "slug": "json-graph-visualizer",
+      "name": "JSON Graph Visualizer",
+      "category": "Developer",
+      "url": "https://toolblip.com/tools/json-graph-visualizer",
+      "historicallyApproved": false,
+      "canonicalAlias": null,
+      "group": "developer-data"
+    }
+  ]
+}

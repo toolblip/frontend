@@ -124,10 +124,10 @@ export default function PurchaseAgreementGeneratorClient() {
   };
 
   return (<UtilityDesignLayout>
-    <div className="tb-v2-tool-card" style={{ padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: 16 }}>
+    <div onChangeCapture={() => { revision.current++; setExporting(false); setExportError(''); }} className="tb-v2-tool-card" style={{ padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: 16 }}>
       <ToolExampleClearActions onExample={() => { revision.current++; setExporting(false); setExportError(''); setBuyerName('John Buyer'); setSellerName('Acme Sales LLC'); setItemDescription('2019 Ford F-150, VIN 1FTFW1E5XKFA00000, including all standard accessories.'); setPrice('15000'); setPaymentTerms('Full payment due at signing via cashier\'s check or wire transfer.'); setDeliveryDate(''); setGoverningState('California'); }} onClear={() => { revision.current++; setExportError(''); setExporting(false); setBuyerName(''); setSellerName(''); setItemDescription(''); setPrice(''); setPaymentTerms(''); setDeliveryDate(''); setGoverningState(''); }}/>
       <div className="tb-v2-grid-2">
-        <div onChangeCapture={() => { revision.current++; setExporting(false); setExportError(''); }}>
+        <div>
       {exportError && <p role="alert">{exportError}</p>}
       {exporting && <p role="status">Preparing PDF…</p>}
       <p>Editable template draft. Verify all statements and applicable requirements before use; legal validity or compliance is not guaranteed.</p>

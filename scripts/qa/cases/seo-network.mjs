@@ -194,7 +194,7 @@ async function favicon(ctx) {
   check(await image.evaluate(img => img.complete && img.naturalWidth > 0), 'Downloaded image decodes in the browser.');
   await clear(ctx); await expect(image).toHaveCount(0);
   await tool.getByLabel('URLs input', { exact: true }).fill('bad host'); await tool.getByRole('button', { name: 'Fetch Favicons', exact: true }).click(); await expect(tool.getByRole('alert')).toBeVisible();
-  await page.route('**/api/favicon?*', route => route.abort('failed'));
+  await page.route('**/api/favicon?*', route => ctx.abortExpectedRequest(route, 'Controlled favicon network failure verifies that no download or success image is exposed'));
   try { await example(ctx); await tool.getByRole('button', { name: 'Fetch Favicons', exact: true }).click(); await expect(tool.getByLabel('Result', { exact: true })).toContainText('google.com:'); await expect(button).toHaveCount(0); check(true, '[controlled-error] Favicon failure exposes no download or success image.'); } finally { await page.unroute('**/api/favicon?*'); }
   await clear(ctx);
 }

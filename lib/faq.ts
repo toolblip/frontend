@@ -1289,8 +1289,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'What does it show when a pairing looks off?', a: 'It highlights the phrase in your text and suggests the more natural pairing from its dictionary in its place.' },
   ],
   'english-dictionary': [
-    { q: 'Where do the definitions come from?', a: 'A live lookup against the Free Dictionary API, not a static built-in wordlist.' },
-    { q: 'What information does it show beyond the definition?', a: 'Phonetic spelling with audio playback where available, example sentences, and synonyms and antonyms listed under each meaning.' },
+    { q: 'Where do the definitions come from?', a: 'Definitions come from Wiktionary through FreeDictionaryAPI.com under CC BY-SA 4.0. Each result links to the original entry. An internet connection is required.' },
+    { q: 'What information does it show beyond the definition?', a: 'IPA pronunciation, example sentences, synonyms and antonyms. This provider does not supply pronunciation audio.' },
     { q: 'What happens if I search a word that isn\'t found?', a: 'It shows a specific not-found message rather than a generic error, so you know the lookup worked but the word wasn\'t recognized.' },
   ],
   'english-grammar-checker': [

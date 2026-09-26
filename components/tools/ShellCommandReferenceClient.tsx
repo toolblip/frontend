@@ -96,6 +96,17 @@ const COMMANDS: ShellCommand[] = [
 
 const CATEGORY_ORDER: Category[] = ['File Ops', 'Text', 'Process', 'Network', 'Git', 'Archive', 'Disk'];
 
+function protectedExample(example: string): string {
+  // Cloudflare otherwise rewrites user@host examples into email-protection links,
+  // changing the server HTML before React hydrates. Escape text before adding
+  // its documented, narrowly scoped email-obfuscation opt-out comments.
+  const entities: Record<string, string> = {
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+  };
+  const escaped = example.replace(/[&<>"']/g, character => entities[character]);
+  return `<!--email_off-->$ ${escaped}<!--/email_off-->`;
+}
+
 export default function ShellCommandReferenceClient() {
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState<Category | 'All'>('All');
@@ -152,9 +163,7 @@ export default function ShellCommandReferenceClient() {
               </div>
               <div style={{ fontFamily: 'var(--f-mono)', fontSize: 12, color: 'var(--fg-2)', marginTop: 2 }}>{c.syntax}</div>
               <p style={{ fontSize: 13, marginTop: 4 }}>{c.description}</p>
-              <div style={{ fontFamily: 'var(--f-mono)', fontSize: 12, marginTop: 4, background: 'var(--bg-2, rgba(0,0,0,0.04))', padding: '4px 8px', borderRadius: 6 }}>
-                $ {c.example}
-              </div>
+              <div style={{ fontFamily: 'var(--f-mono)', fontSize: 12, marginTop: 4, background: 'var(--bg-2, rgba(0,0,0,0.04))', padding: '4px 8px', borderRadius: 6 }} dangerouslySetInnerHTML={{ __html: protectedExample(c.example) }} />
             </div>
           ))
         )}

@@ -1215,7 +1215,7 @@ Output: brochure-updated.pdf`,
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["Clean interface", "Fast processing", "No signup required", "Internet connection required"]
   },
   "english-grammar-checker": {
     description: `A sentence can be grammatically correct and still read poorly, wordy where it should be tight, passive where an active voice would actually be clearer, and catching that kind of issue takes an editorial pass beyond simply checking whether each rule of grammar was technically followed. This tool checks English grammar with detailed suggestions covering punctuation, style, and clarity together, going past bare correctness to flag a sentence that's technically fine but could actually read better. Useful for tightening an unnecessarily wordy sentence that's grammatically correct but hard to follow, catching an awkward passive-voice construction that muddies who's actually doing what, or getting a detailed explanation of a style suggestion rather than a bare grammar correction with no reasoning given.`,
