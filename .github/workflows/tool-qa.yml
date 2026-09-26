@@ -26,12 +26,25 @@ jobs:
       matrix:
         engine: [chrome, webkit]
     steps:
-      - name: Checkout reviewed workflow and pilot configuration
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
-          fetch-depth: 0
-          persist-credentials: false
+      # actions/checkout credential cleanup runs submodule foreach, which fails
+      # on this repository's preexisting api/mcp gitlinks without .gitmodules.
+      # The repository is public: anonymous fetch needs no checkout credentials.
+      - name: Checkout reviewed workflow without submodule traversal
+        env:
+          QA_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/tool-qa"
+          printf '{"runId":"%s","attempt":"%s","reviewedHead":"%s"}\n' "$GITHUB_RUN_ID" "$GITHUB_RUN_ATTEMPT" "$QA_HEAD" > "$RUNNER_TEMP/tool-qa/bootstrap.json"
+          git init .
+          git remote add origin https://github.com/toolblip/frontend.git
+          GIT_TERMINAL_PROMPT=0 GIT_CONFIG_NOSYSTEM=1 GIT_CONFIG_GLOBAL=/dev/null git fetch --no-tags origin "$QA_HEAD"
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$QA_HEAD"
+          if git config --local --name-only --get-regexp 'extraheader|credential|sshcommand'; then
+            echo 'Unexpected persisted authentication configuration' >&2
+            exit 1
+          fi
       - name: Preserve cloud launcher and inventory outside source checkout
         shell: bash
         run: |
