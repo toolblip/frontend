@@ -1,0 +1,710 @@
+{
+  "status": "bundle architecture fixed; same five focused cases have passing Chrome and WebKit evidence across recorded runs; full shared-group stability not claimed",
+  "changes": {
+    "ToolUI.tsx": "681 default static tool imports replaced in place with literal next/dynamic factories; SSR defaults retained; names and inferred props retained; routing/wrapper body byte-identical to pre-edit snapshot including parallel media routes",
+    "browser.mjs": "Hydration 45 seconds; intercepted document fetch explicit 30 seconds; existing fetch error recording/abort retained; Chrome loopback permission scoped to audit origin only with strip-dev-upgrade-csp; error filters unchanged",
+    "csp.test.mjs": "Tests explicit timeout, preservation of other CSP directives, and original failure recording"
+  },
+  "bundle": {
+    "before": {
+      "bytes": 38364987,
+      "source": "scripts/qa/reports/pdf.json remainingBlockers; corroborated developer-data report: 35717120 bytes still transferring after 40 seconds",
+      "independentlyRemeasured": false,
+      "freshBeforeProbe": "Timed out at 45 seconds with zero document bytes"
+    },
+    "after": {
+      "routeChunkBytes": 2368230,
+      "downloadSeconds": 2.858245,
+      "reductionPercent": 93.83,
+      "selectedToolChunkBytes": 78766,
+      "totalDevelopmentScriptBytes": 17024851,
+      "mainAppDevelopmentScriptBytes": 11997426,
+      "evidence": "/tmp/shared-bundle-network.json",
+      "rawChunk": "/tmp/shared-page-after.js",
+      "SSR": "Raw HTML includes tool card and JSON textarea; no BAILOUT_TO_CLIENT_SIDE_RENDERING; canonical https://toolblip.com/tools/json-validator",
+      "html": "/tmp/shared-bundle-after.html"
+    }
+  },
+  "validation": {
+    "tscInitial": "./node_modules/.bin/tsc --noEmit --incremental false exited 0; /tmp/shared-tsc.log",
+    "harness": "32 tests passed, exit 0; /tmp/shared-all-tests-final.log",
+    "diffCheck": "Scoped git diff --check passed",
+    "mapping": "Byte-for-byte comparison with /tmp/toolui-before.json passed",
+    "tscFinal": "Fresh ./node_modules/.bin/tsc --noEmit --incremental false exited 0 after concurrent conflict resolution; /tmp/shared-tsc-final.log"
+  },
+  "browserEvidence": [
+    {
+      "engine": "chrome",
+      "slug": "json-formatter",
+      "status": "passed",
+      "hydration": {
+        "status": "passed",
+        "evidence": "react-tool-descendants"
+      },
+      "functional": {
+        "status": "passed",
+        "evidence": [
+          {
+            "passed": true,
+            "message": "Formatted and minified JSON preserve nested values.",
+            "at": "2026-09-26T06:48:48.086Z"
+          },
+          {
+            "passed": true,
+            "message": "Clear removes the previous output.",
+            "at": "2026-09-26T06:48:48.254Z"
+          },
+          {
+            "passed": true,
+            "message": "Clear resets input and errors.",
+            "at": "2026-09-26T06:48:48.254Z"
+          }
+        ]
+      },
+      "canonical": {
+        "status": "passed",
+        "actual": "https://toolblip.com/tools/json-formatter",
+        "expected": "https://toolblip.com/tools/json-formatter",
+        "reason": null
+      },
+      "pageErrors": [],
+      "blockingConsoleErrors": [],
+      "layouts": [
+        {
+          "width": 1280,
+          "status": "passed"
+        },
+        {
+          "width": 390,
+          "status": "passed"
+        },
+        {
+          "width": 320,
+          "status": "passed"
+        }
+      ],
+      "rawEvidence": "/tmp/shared-five-chrome/json-formatter.json"
+    },
+    {
+      "engine": "chrome",
+      "slug": "json-validator",
+      "status": "passed",
+      "hydration": {
+        "status": "passed",
+        "evidence": "react-tool-descendants"
+      },
+      "functional": {
+        "status": "passed",
+        "evidence": [
+          {
+            "passed": true,
+            "message": "Invalid input produces a visible error and removes stale output.",
+            "at": "2026-09-26T06:49:01.304Z"
+          },
+          {
+            "passed": true,
+            "message": "JSON null and large valid numbers are syntactically valid; malformed object is rejected.",
+            "at": "2026-09-26T06:49:01.304Z"
+          },
+          {
+            "passed": true,
+            "message": "Clear resets input and errors.",
+            "at": "2026-09-26T06:49:01.379Z"
+          }
+        ]
+      },
+      "canonical": {
+        "status": "passed",
+        "actual": "https://toolblip.com/tools/json-validator",
+        "expected": "https://toolblip.com/tools/json-validator",
+        "reason": null
+      },
+      "pageErrors": [],
+      "blockingConsoleErrors": [],
+      "layouts": [
+        {
+          "width": 1280,
+          "status": "passed"
+        },
+        {
+          "width": 390,
+          "status": "passed"
+        },
+        {
+          "width": 320,
+          "status": "passed"
+        }
+      ],
+      "rawEvidence": "/tmp/shared-five-chrome/json-validator.json"
+    },
+    {
+      "engine": "chrome",
+      "slug": "dpi-ppi-calculator",
+      "status": "passed",
+      "hydration": {
+        "status": "passed",
+        "evidence": "react-tool-descendants"
+      },
+      "functional": {
+        "status": "passed",
+        "evidence": [
+          {
+            "passed": true,
+            "message": "3000 pixels / 20 inches = 150 DPI",
+            "at": "2026-09-26T06:49:13.383Z"
+          },
+          {
+            "passed": true,
+            "message": "1920 \u00d7 1080 at 15.6 inches rounds to 141 PPI",
+            "at": "2026-09-26T06:49:13.468Z"
+          },
+          {
+            "passed": true,
+            "message": "Clear removes downloadable output",
+            "at": "2026-09-26T06:49:13.549Z"
+          }
+        ]
+      },
+      "canonical": {
+        "status": "passed",
+        "actual": "https://toolblip.com/tools/images/dpi-ppi-calculator",
+        "expected": "https://toolblip.com/tools/images/dpi-ppi-calculator",
+        "reason": null
+      },
+      "pageErrors": [],
+      "blockingConsoleErrors": [],
+      "layouts": [
+        {
+          "width": 1280,
+          "status": "passed"
+        },
+        {
+          "width": 390,
+          "status": "passed"
+        },
+        {
+          "width": 320,
+          "status": "passed"
+        }
+      ],
+      "rawEvidence": "/tmp/shared-five-chrome/dpi-ppi-calculator.json"
+    },
+    {
+      "engine": "chrome",
+      "slug": "pixel-density-calculator",
+      "status": "passed",
+      "hydration": {
+        "status": "passed",
+        "evidence": "react-tool-descendants"
+      },
+      "functional": {
+        "status": "passed",
+        "evidence": [
+          {
+            "passed": true,
+            "message": "2540 pixels / 25.4 cm = 254 PPI on both axes and diagonal",
+            "at": "2026-09-26T06:49:42.612Z"
+          },
+          {
+            "passed": true,
+            "message": "Clear removes downloadable output",
+            "at": "2026-09-26T06:49:42.986Z"
+          }
+        ]
+      },
+      "canonical": {
+        "status": "passed",
+        "actual": "https://toolblip.com/tools/images/pixel-density-calculator",
+        "expected": "https://toolblip.com/tools/images/pixel-density-calculator",
+        "reason": null
+      },
+      "pageErrors": [],
+      "blockingConsoleErrors": [],
+      "layouts": [
+        {
+          "width": 1280,
+          "status": "passed"
+        },
+        {
+          "width": 390,
+          "status": "passed"
+        },
+        {
+          "width": 320,
+          "status": "passed"
+        }
+      ],
+      "rawEvidence": "/tmp/shared-five-chrome/pixel-density-calculator.json"
+    },
+    {
+      "engine": "webkit",
+      "slug": "json-validator",
+      "status": "passed",
+      "hydration": {
+        "status": "passed",
+        "evidence": "react-tool-descendants"
+      },
+      "functional": {
+        "status": "passed",
+        "evidence": [
+          {
+            "passed": true,
+            "message": "Invalid input produces a visible error and removes stale output.",
+            "at": "2026-09-26T06:49:39.962Z"
+          },
+          {
+            "passed": true,
+            "message": "JSON null and large valid numbers are syntactically valid; malformed object is rejected.",
+            "at": "2026-09-26T06:49:39.962Z"
+          },
+          {
+            "passed": true,
+            "message": "Clear resets input and errors.",
+            "at": "2026-09-26T06:49:40.166Z"
+          }
+        ]
+      },
+      "canonical": {
+        "status": "passed",
+        "actual": "https://toolblip.com/tools/json-validator",
+        "expected": "https://toolblip.com/tools/json-validator",
+        "reason": null
+      },
+      "pageErrors": [],
+      "blockingConsoleErrors": [],
+      "layouts": [
+        {
+          "width": 1280,
+          "status": "passed"
+        },
+        {
+          "width": 390,
+          "status": "passed"
+        },
+        {
+          "width": 320,
+          "status": "passed"
+        }
+      ],
+      "rawEvidence": "/tmp/shared-five-webkit/json-validator.json"
+    },
+    {
+      "engine": "webkit",
+      "slug": "dpi-ppi-calculator",
+      "status": "passed",
+      "hydration": {
+        "status": "passed",
+        "evidence": "react-tool-descendants"
+      },
+      "functional": {
+        "status": "passed",
+        "evidence": [
+          {
+            "passed": true,
+            "message": "3000 pixels / 20 inches = 150 DPI",
+            "at": "2026-09-26T06:49:53.116Z"
+          },
+          {
+            "passed": true,
+            "message": "1920 \u00d7 1080 at 15.6 inches rounds to 141 PPI",
+            "at": "2026-09-26T06:49:53.244Z"
+          },
+          {
+            "passed": true,
+            "message": "Clear removes downloadable output",
+            "at": "2026-09-26T06:49:53.572Z"
+          }
+        ]
+      },
+      "canonical": {
+        "status": "passed",
+        "actual": "https://toolblip.com/tools/images/dpi-ppi-calculator",
+        "expected": "https://toolblip.com/tools/images/dpi-ppi-calculator",
+        "reason": null
+      },
+      "pageErrors": [],
+      "blockingConsoleErrors": [],
+      "layouts": [
+        {
+          "width": 1280,
+          "status": "passed"
+        },
+        {
+          "width": 390,
+          "status": "passed"
+        },
+        {
+          "width": 320,
+          "status": "passed"
+        }
+      ],
+      "rawEvidence": "/tmp/shared-five-webkit/dpi-ppi-calculator.json"
+    },
+    {
+      "engine": "webkit",
+      "slug": "json-formatter",
+      "status": "passed",
+      "hydration": {
+        "status": "passed",
+        "evidence": "react-tool-descendants"
+      },
+      "functional": {
+        "status": "passed",
+        "evidence": [
+          {
+            "passed": true,
+            "message": "Formatted and minified JSON preserve nested values.",
+            "at": "2026-09-26T06:51:41.204Z"
+          },
+          {
+            "passed": true,
+            "message": "Clear removes the previous output.",
+            "at": "2026-09-26T06:51:42.722Z"
+          },
+          {
+            "passed": true,
+            "message": "Clear resets input and errors.",
+            "at": "2026-09-26T06:51:42.722Z"
+          }
+        ]
+      },
+      "canonical": {
+        "status": "passed",
+        "actual": "https://toolblip.com/tools/json-formatter",
+        "expected": "https://toolblip.com/tools/json-formatter",
+        "reason": null
+      },
+      "pageErrors": [],
+      "blockingConsoleErrors": [],
+      "layouts": [
+        {
+          "width": 1280,
+          "status": "passed"
+        },
+        {
+          "width": 390,
+          "status": "passed"
+        },
+        {
+          "width": 320,
+          "status": "passed"
+        }
+      ],
+      "rawEvidence": "/tmp/shared-five-webkit-retry/json-formatter.json"
+    },
+    {
+      "engine": "webkit",
+      "slug": "pixel-density-calculator",
+      "status": "passed",
+      "hydration": {
+        "status": "passed",
+        "evidence": "react-tool-descendants"
+      },
+      "functional": {
+        "status": "passed",
+        "evidence": [
+          {
+            "passed": true,
+            "message": "2540 pixels / 25.4 cm = 254 PPI on both axes and diagonal",
+            "at": "2026-09-26T06:51:50.596Z"
+          },
+          {
+            "passed": true,
+            "message": "Clear removes downloadable output",
+            "at": "2026-09-26T06:51:50.663Z"
+          }
+        ]
+      },
+      "canonical": {
+        "status": "passed",
+        "actual": "https://toolblip.com/tools/images/pixel-density-calculator",
+        "expected": "https://toolblip.com/tools/images/pixel-density-calculator",
+        "reason": null
+      },
+      "pageErrors": [],
+      "blockingConsoleErrors": [],
+      "layouts": [
+        {
+          "width": 1280,
+          "status": "passed"
+        },
+        {
+          "width": 390,
+          "status": "passed"
+        },
+        {
+          "width": 320,
+          "status": "passed"
+        }
+      ],
+      "rawEvidence": "/tmp/shared-five-webkit-retry/pixel-density-calculator.json"
+    },
+    {
+      "engine": "webkit",
+      "slug": "merge-pdfs",
+      "status": "passed",
+      "hydration": {
+        "status": "passed",
+        "evidence": "react-tool-descendants"
+      },
+      "functional": {
+        "status": "passed",
+        "evidence": [
+          {
+            "passed": true,
+            "message": "Real downloaded PDF is unencrypted with three pages",
+            "at": "2026-09-26T06:51:58.897Z"
+          },
+          {
+            "passed": true,
+            "message": "Merged page 1 has independently expected geometry 420 x 300",
+            "at": "2026-09-26T06:51:58.897Z"
+          },
+          {
+            "passed": true,
+            "message": "Merged page 1 retains original text",
+            "at": "2026-09-26T06:51:58.897Z"
+          },
+          {
+            "passed": true,
+            "message": "Merged page 2 has independently expected geometry 240 x 360",
+            "at": "2026-09-26T06:51:58.897Z"
+          },
+          {
+            "passed": true,
+            "message": "Merged page 2 retains original text",
+            "at": "2026-09-26T06:51:58.897Z"
+          },
+          {
+            "passed": true,
+            "message": "Merged page 3 has independently expected geometry 321 x 456",
+            "at": "2026-09-26T06:51:58.897Z"
+          },
+          {
+            "passed": true,
+            "message": "Merged page 3 retains original text",
+            "at": "2026-09-26T06:51:58.897Z"
+          },
+          {
+            "passed": true,
+            "message": "Clear removes downloadable output",
+            "at": "2026-09-26T06:52:00.439Z"
+          }
+        ]
+      },
+      "canonical": {
+        "status": "passed",
+        "actual": "https://toolblip.com/tools/merge-pdfs",
+        "expected": "https://toolblip.com/tools/merge-pdfs",
+        "reason": null
+      },
+      "pageErrors": [],
+      "blockingConsoleErrors": [],
+      "layouts": [
+        {
+          "width": 1280,
+          "status": "passed"
+        },
+        {
+          "width": 390,
+          "status": "passed"
+        },
+        {
+          "width": 320,
+          "status": "passed"
+        }
+      ],
+      "rawEvidence": "/tmp/shared-five-webkit-retry/merge-pdfs.json"
+    },
+    {
+      "engine": "chrome",
+      "slug": "unlock-pdf",
+      "status": "passed",
+      "hydration": {
+        "status": "passed",
+        "evidence": "react-tool-descendants"
+      },
+      "functional": {
+        "status": "passed",
+        "evidence": [
+          {
+            "passed": true,
+            "message": "Downloaded unencrypted PDF retains three pages",
+            "at": "2026-09-26T06:56:13.411Z"
+          },
+          {
+            "passed": true,
+            "message": "Page 1 retains 321 x 456 geometry",
+            "at": "2026-09-26T06:56:13.411Z"
+          },
+          {
+            "passed": true,
+            "message": "Page 1 retains original text",
+            "at": "2026-09-26T06:56:13.411Z"
+          },
+          {
+            "passed": true,
+            "message": "Page 2 retains 420 x 300 geometry",
+            "at": "2026-09-26T06:56:13.411Z"
+          },
+          {
+            "passed": true,
+            "message": "Page 2 retains original text",
+            "at": "2026-09-26T06:56:13.411Z"
+          },
+          {
+            "passed": true,
+            "message": "Page 3 retains 240 x 360 geometry",
+            "at": "2026-09-26T06:56:13.411Z"
+          },
+          {
+            "passed": true,
+            "message": "Page 3 retains original text",
+            "at": "2026-09-26T06:56:13.411Z"
+          },
+          {
+            "passed": true,
+            "message": "Clear removes PDF output",
+            "at": "2026-09-26T06:56:14.703Z"
+          }
+        ]
+      },
+      "canonical": {
+        "status": "passed",
+        "actual": "https://toolblip.com/tools/unlock-pdf",
+        "expected": "https://toolblip.com/tools/unlock-pdf",
+        "reason": null
+      },
+      "pageErrors": [],
+      "blockingConsoleErrors": [],
+      "layouts": [
+        {
+          "width": 1280,
+          "status": "passed"
+        },
+        {
+          "width": 390,
+          "status": "passed"
+        },
+        {
+          "width": 320,
+          "status": "passed"
+        }
+      ],
+      "rawEvidence": "/tmp/shared-five-chrome-unencrypted/unlock-pdf.json"
+    },
+    {
+      "engine": "webkit",
+      "slug": "unlock-pdf",
+      "status": "passed",
+      "hydration": {
+        "status": "passed",
+        "evidence": "react-tool-descendants"
+      },
+      "functional": {
+        "status": "passed",
+        "evidence": [
+          {
+            "passed": true,
+            "message": "Downloaded unencrypted PDF retains three pages",
+            "at": "2026-09-26T06:56:30.405Z"
+          },
+          {
+            "passed": true,
+            "message": "Page 1 retains 321 x 456 geometry",
+            "at": "2026-09-26T06:56:30.405Z"
+          },
+          {
+            "passed": true,
+            "message": "Page 1 retains original text",
+            "at": "2026-09-26T06:56:30.405Z"
+          },
+          {
+            "passed": true,
+            "message": "Page 2 retains 420 x 300 geometry",
+            "at": "2026-09-26T06:56:30.406Z"
+          },
+          {
+            "passed": true,
+            "message": "Page 2 retains original text",
+            "at": "2026-09-26T06:56:30.406Z"
+          },
+          {
+            "passed": true,
+            "message": "Page 3 retains 240 x 360 geometry",
+            "at": "2026-09-26T06:56:30.406Z"
+          },
+          {
+            "passed": true,
+            "message": "Page 3 retains original text",
+            "at": "2026-09-26T06:56:30.406Z"
+          },
+          {
+            "passed": true,
+            "message": "Clear removes PDF output",
+            "at": "2026-09-26T06:56:30.882Z"
+          }
+        ]
+      },
+      "canonical": {
+        "status": "passed",
+        "actual": "https://toolblip.com/tools/unlock-pdf",
+        "expected": "https://toolblip.com/tools/unlock-pdf",
+        "reason": null
+      },
+      "pageErrors": [],
+      "blockingConsoleErrors": [],
+      "layouts": [
+        {
+          "width": 1280,
+          "status": "passed"
+        },
+        {
+          "width": 390,
+          "status": "passed"
+        },
+        {
+          "width": 320,
+          "status": "passed"
+        }
+      ],
+      "rawEvidence": "/tmp/shared-five-webkit-unencrypted/unlock-pdf.json"
+    }
+  ],
+  "failuresRetained": [
+    "/tmp/shared-fix-chrome-1",
+    "/tmp/shared-fix-chrome-2",
+    "/tmp/shared-fix-webkit-1",
+    "/tmp/shared-five-chrome",
+    "/tmp/shared-five-webkit",
+    "/tmp/shared-five-chrome-retry",
+    "/tmp/shared-five-chrome-final",
+    "/tmp/shared-five-chrome-post-integration"
+  ],
+  "limitations": [
+    "Passing evidence is across multiple runs, not one uninterrupted clean full-group run.",
+    "Intermittent Invalid or unexpected token / Unexpected EOF and hydration timeouts remain in failed attempts.",
+    "WebKit focused JSON formatter retry initially failed Clear assertion; subsequent retry passed.",
+    "PDF initial attempts exceeded thumbnail-ready action timeout or were interrupted by dev navigation; focused test uses bounded 30-second PDF-ready wait.",
+    "Final Chrome PDF attempt was blocked by Next dev overlay reporting merge-conflict markers in concurrently edited components/tools/ExtractImgClient.tsx lines 174-181; file left to owner.",
+    "No build, server start/restart, commit, central metadata/package/global style changes, or worker-owned mapping/PDF component changes.",
+    "Concurrent ExtractImgClient conflict resolved by its owner. Subsequent Chrome merge retry was interrupted by another dev navigation without page/console errors. Direct unencrypted-copy case subsequently passed in both engines."
+  ],
+  "apiInvestigation": {
+    "primary": "https://api.toolblip.com/api/tools with Origin http://localhost:3190 timed out after 20.005 seconds with zero response bytes; no CORS headers available",
+    "alternate": "https://toolblip-api-production.up.railway.app/api/tools returned HTTP 404, x-railway-fallback true, Application not found",
+    "local": "http://localhost:3190/api/tools timed out at 15 seconds, again at 10 seconds; no root API tools route exists in app/api",
+    "decision": "No proven valid backend target or local-only CORS root cause. No dev API config change or masking. Browser failed API health request remains in raw evidence, alongside expected anonymous auth 401."
+  },
+  "focusedReproduction": "/tmp/shared-five.cjs (existing JSON/DPI fixtures; independent PDF cases validate actual downloads). Each retry has a separate output directory; failed runs retained.",
+  "webkitExecutable": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/webkit-qa/pw_run.sh",
+  "webkitOptions": "--strip-dev-upgrade-csp local HTTP only",
+  "focusedFive": [
+    "json-formatter",
+    "json-validator",
+    "dpi-ppi-calculator",
+    "pixel-density-calculator",
+    "unlock-pdf"
+  ],
+  "extraWebKitEvidence": "merge-pdfs also passed known unencrypted merge, geometry, order, text and Clear checks"
+}
