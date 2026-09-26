@@ -34,6 +34,99 @@ export function assertRecordingTiming(recordedSeconds: number, videoSeconds: num
     throw new Error('Video and audio fell out of sync while recording. Keep this tab visible and try again when your device is less busy.');
   }
 }
+const MAX_RECORDED_BYTES = 128 * 1024 * 1024;
+const RECORDING_TIMING_ERROR = 'The video encoder dropped or mistimed part of the selected range. Keep this tab visible and try again.';
+/** Inspect encoded timestamps, independently of playback and recorder wall clocks.
+ * This bounded reader accepts MediaRecorder WebM, not arbitrary Matroska files.
+ * Fixed container levels avoid recursive parsing; payloads are never copied.
+ */
+export function validateRecordedWebM(bytes: Uint8Array, expectedSeconds: number) {
+  const invalid = (): never => { throw new Error('The recorded WebM could not be verified. Try converting again in another browser.'); };
+  if (bytes.length > MAX_RECORDED_BYTES || bytes.length < 4 || !Number.isFinite(expectedSeconds) || expectedSeconds <= 0 || expectedSeconds > 60) invalid();
+  let elementCount = 0;
+  const vint = (at: number, end: number, id = false) => {
+    const first = bytes[at]; if (at >= end || !first) return invalid();
+    let length = 1, mask = 128;
+    while (!(first & mask)) { length++; mask >>= 1; }
+    if (length > (id ? 4 : 8) || at + length > end) return invalid();
+    let value = id ? first : first & (mask - 1), unknown = !id && value === mask - 1;
+    for (let i = 1; i < length; i++) { value = value * 256 + bytes[at + i]; unknown = unknown && bytes[at + i] === 255; }
+    if (!unknown && !Number.isSafeInteger(value)) return invalid();
+    return { length, value, unknown };
+  };
+  type Element = { id: number; start: number; end: number; unknown: boolean };
+  const read = (at: number, end: number): Element => {
+    if (++elementCount > 100000) return invalid();
+    const id = vint(at, end, true), size = vint(at + id.length, end), start = at + id.length + size.length;
+    const next = size.unknown ? end : start + size.value;
+    if (next > end || start > next || next <= at) return invalid();
+    return { id: id.value, start, end: next, unknown: size.unknown };
+  };
+  const segmentIds = new Set([0x1f43b675, 0x1549a966, 0x1654ae6b, 0x1c53bb6b, 0x114d9b74, 0x1254c367]);
+  const elements = (start: number, end: number, segmentChildren = false, topLevel = false): Element[] => {
+    const result: Element[] = [];
+    while (start < end) {
+      const element = read(start, end);
+      if (element.unknown && !(topLevel && element.id === 0x18538067)) {
+        if (!segmentChildren || element.id !== 0x1f43b675) return invalid();
+        // Streaming encoders may omit Cluster lengths. Stop at the next
+        // segment-level element boundary, never a marker inside frame data.
+        let at = element.start;
+        while (at < end) {
+          const child = read(at, end);
+          if (segmentIds.has(child.id)) break;
+          if (child.unknown) return invalid();
+          at = child.end;
+        }
+        element.end = at;
+      }
+      result.push(element); start = element.end;
+    }
+    return result;
+  };
+  const uint = (element?: Element) => {
+    if (!element || element.end <= element.start || element.end - element.start > 6) return invalid();
+    let value = 0; for (let at = element.start; at < element.end; at++) value = value * 256 + bytes[at];
+    return value;
+  };
+  const top = elements(0, bytes.length, false, true);
+  if (top[0]?.id !== 0x1a45dfa3 || top.filter(e => e.id === 0x18538067).length !== 1) invalid();
+  const segment = top.find(e => e.id === 0x18538067)!;
+  const children = elements(segment.start, segment.end, true);
+  const info = children.find(e => e.id === 0x1549a966), tracks = children.find(e => e.id === 0x1654ae6b);
+  if (!tracks) return invalid();
+  const scaleElement = info && elements(info.start, info.end).find(e => e.id === 0x2ad7b1);
+  const scale = (scaleElement ? uint(scaleElement) : 1000000) / 1e9;
+  if (!(scale > 0 && scale <= 0.001)) return invalid();
+  const timing = new Map<number, { type: number; first: number; last: number; count: number }>();
+  for (const entry of elements(tracks.start, tracks.end).filter(e => e.id === 0xae)) {
+    const fields = elements(entry.start, entry.end), id = uint(fields.find(e => e.id === 0xd7)), type = uint(fields.find(e => e.id === 0x83));
+    if (!id || timing.has(id) || ![1, 2].includes(type)) return invalid();
+    timing.set(id, { type, first: Infinity, last: -Infinity, count: 0 });
+  }
+  if (timing.size !== 2 || ![1, 2].every(type => [...timing.values()].some(track => track.type === type))) return invalid();
+  for (const cluster of children.filter(e => e.id === 0x1f43b675)) {
+    const fields = elements(cluster.start, cluster.end), clusterTime = uint(fields.find(e => e.id === 0xe7));
+    for (const field of fields) {
+      const block = field.id === 0xa3 ? field : field.id === 0xa0 ? elements(field.start, field.end).find(e => e.id === 0xa1) : undefined;
+      if (!block) continue;
+      const id = vint(block.start, block.end), at = block.start + id.length, track = timing.get(id.value);
+      if (!track || at + 3 >= block.end || (bytes[at + 2] & 6)) return invalid(); // No laced blocks.
+      const relative = new DataView(bytes.buffer, bytes.byteOffset + at, 2).getInt16(0);
+      const timestamp = (clusterTime + relative) * scale;
+      if (!Number.isFinite(timestamp) || timestamp < track.last) throw new Error(RECORDING_TIMING_ERROR);
+      track.first = Math.min(track.first, timestamp); track.last = timestamp; track.count++;
+    }
+  }
+  // Cap skew at the 150ms export-QA tolerance; shorter selections use 15%
+  // with a 40ms floor for one 30fps frame plus codec priming. Sub-frame
+  // selections cannot prove finer timing from packet start timestamps alone.
+  const tolerance = Math.min(0.15, Math.max(0.04, expectedSeconds * 0.15));
+  for (const track of timing.values()) {
+    if (!track.count || Math.abs(track.first) > tolerance || Math.abs(track.last - expectedSeconds) > tolerance || Math.abs(track.last - track.first - expectedSeconds) > tolerance) throw new Error(RECORDING_TIMING_ERROR);
+  }
+  return [...timing.values()];
+}
 export function waitMedia(video: HTMLVideoElement, event: string, signal: AbortSignal) {
   return new Promise<void>((resolve, reject) => {
     const cleanup = () => { clearTimeout(timer); video.removeEventListener(event, done); video.removeEventListener('error', error); signal.removeEventListener('abort', abort); };
@@ -116,12 +209,15 @@ export async function renderVideo(file: File, start: number, end: number, cues: 
       rec.onstop = () => { cleanup(); if (failed) return; const result = new Blob(chunks, { type: 'video/webm' }); if (result.size < 100) reject(new Error('Encoder produced no video.')); else resolve(result); };
       signal.addEventListener('abort', abort, { once: true }); video.addEventListener('error', error); video.addEventListener('ended', ended);
       const tick = () => { if (failed || rec.state === 'inactive') return; try { assertTiming(); paint(); } catch (e) { fail((e as Error).message); return; } if (video.currentTime >= end) stop(); else raf = requestAnimationFrame(tick); };
-      video.play().then(() => { if (failed || signal.aborted) return; paint(); recordingStartedAt = performance.now(); audioStartedAt = context!.currentTime; rec.start(250); source!.start(audioStartedAt, start, end - start); raf = requestAnimationFrame(tick); }).catch(() => fail('Playback was blocked by the browser. Try converting again.'));
+      video.play().then(() => { if (failed || signal.aborted) return; paint(); recordingStartedAt = performance.now(); audioStartedAt = context!.currentTime; // A single final flush avoids overlapping periodic drains with stop().
+      rec.start(); source!.start(audioStartedAt, start, end - start); raf = requestAnimationFrame(tick); }).catch(() => fail('Playback was blocked by the browser. Try converting again.'));
       if (signal.aborted) abort();
     });
     signal.throwIfAborted();
-    const head = new Uint8Array(await blob.slice(0, 4).arrayBuffer());
-    if (head[0] !== 0x1a || head[1] !== 0x45 || head[2] !== 0xdf || head[3] !== 0xa3) throw new Error('Encoder output is not WebM.');
+    if (blob.size > MAX_RECORDED_BYTES) throw new Error('Recorded video exceeds the 128 MB verification limit. Choose a shorter range.');
+    const encoded = new Uint8Array(await blob.arrayBuffer());
+    signal.throwIfAborted();
+    validateRecordedWebM(encoded, end - start);
     return { blob, width, height };
   } finally {
     signal.removeEventListener('abort', abortResources);
