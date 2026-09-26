@@ -1,7 +1,10 @@
+import { publishedTutorialTools, type PublishedTutorialSlug } from '@/data/reviewed-tools';
+import { getToolBySlug } from '@/data/tools';
+import { getToolPath } from '@/lib/tool-path';
 import { notFound, redirect } from 'next/navigation';
 import Link from 'next/link';
 import type { Metadata } from 'next';
-import { getBlogPost, getBlogPosts, type BlogPost } from '@/lib/blog';
+import { getBlogPost, getBlogPosts } from '@/lib/blog';
 import BlogShareButton from '@/components/share/BlogShareButton';
 
 interface PageProps {
@@ -46,8 +49,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function BlogPostPage({ params }: PageProps) {
   const { slug } = await params;
   const post = getBlogPost(slug);
-  const currentPost: BlogPost = post!;
-  if (!currentPost.content) notFound();
+  if (!post?.content) notFound();
+  const currentPost = { ...post, content: post.content };
+  const tutorialTools = (publishedTutorialTools[post.slug as PublishedTutorialSlug] ?? []).flatMap(slug => {
+    const tool = getToolBySlug(slug);
+    return tool ? [tool] : [];
+  });
   if (slug !== currentPost.slug) redirect(`/blog/${currentPost.slug}`);
 
   const relatedReading =
@@ -157,6 +164,18 @@ export default async function BlogPostPage({ params }: PageProps) {
           }}
           dangerouslySetInnerHTML={{ __html: currentPost.content }}
         />
+
+        {tutorialTools.length > 0 && (
+          <section className="mt-10" aria-label="Try the tool">
+            <h2>Try the tool</h2>
+            {tutorialTools.map(tool => (
+              <div key={tool.slug} className="mt-3">
+                <Link href={getToolPath(tool)}>{tool.name}</Link>
+                <p>{tool.description}</p>
+              </div>
+            ))}
+          </section>
+        )}
 
         {currentPost.tags && currentPost.tags.length > 0 && (
           <div className="mt-10 pt-8 border-t border-[var(--line)]">

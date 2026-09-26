@@ -3,7 +3,7 @@ import { copySecurityText, MAX_TEXT, MAX_BASE64_INPUT } from '@/lib/developer-se
 import DeveloperSecurityFrame, { useSecurityTask } from './DeveloperSecurityFrame';
 import { encodeBase64 as base64Encode, decodeBase64 as base64Decode } from '@/lib/developer-security/primitives';
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import ToolContextControls from '@/components/tools/ToolContextControls';
 import { useToolContext } from '@/components/tools/useToolContext';
 
@@ -29,6 +29,14 @@ export default function Base64EncoderDecoderClient() {
   const [showExamples, setShowExamples] = useState(false);
 
   const toolContext = useToolContext<Base64Context>('base64-encoder-decoder');
+
+  const appliedSaved = useRef(false);
+  useEffect(() => {
+    if (appliedSaved.current || !toolContext.saved) return;
+    const savedMode = toolContext.saved.mode;
+    if (savedMode === 'encode' || savedMode === 'decode') setMode(savedMode);
+    appliedSaved.current = true;
+  }, [toolContext.saved]);
 
   const process = useCallback(() => {
     setError('');
@@ -58,6 +66,7 @@ export default function Base64EncoderDecoderClient() {
   }, [output, mode]);
 
   const loadExample = (data: string) => {
+    setMode('encode');
     setInput(data);
     setOutput('');
     setError('');

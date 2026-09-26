@@ -78,7 +78,7 @@ If you're ready to start optimizing, Toolblip has everything you need - all proc
 
 - **[Image Resizer](/tools/image-resizer)** - Resize and convert images in one place. Pick your format, set dimensions, and download the result.
 - **[Favicon Generator](/tools/favicon-generator)** - Need a favicon in multiple sizes? This tool generates all the formats you need from a single upload, ready to drop into your project.
-- **[Image to Base64](/tools/image-to-base64)** - Convert any image to a Base64 data URL. Useful for embedding images directly in CSS or HTML without external files.
+- **[Image to Base64](/tools/images/base64-image-converter)** - Convert any image to a Base64 data URL. Useful for embedding images directly in CSS or HTML without external files.
 
 ## Quick Tips for Better Image Optimization
 

@@ -1,0 +1,50 @@
+name: GSC recovery tracking
+
+on:
+  schedule:
+    - cron: '0 3 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: gsc-recovery
+  cancel-in-progress: false
+
+jobs:
+  track:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Collect fixed-cohort report
+        env:
+          GSC_SERVICE_ACCOUNT: ${{ secrets.GSC_SERVICE_ACCOUNT }}
+          GSC_SITE_URL: ${{ vars.GSC_SITE_URL || 'sc-domain:toolblip.com' }}
+        run: node scripts/gsc-recovery.mjs
+      - name: Add report to run summary
+        if: always()
+        shell: bash
+        run: |
+          if [[ -f test-results/gsc-recovery/report.md ]]; then
+            cat test-results/gsc-recovery/report.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo 'GSC recovery report unavailable; check the failed setup or collection step.' >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Preserve reports, including partial failures
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: gsc-recovery-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            test-results/gsc-recovery/report.json
+            test-results/gsc-recovery/report.md
+          retention-days: 90
+          if-no-files-found: error

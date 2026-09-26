@@ -15,8 +15,9 @@ export default function ReadingTimeCalculatorClient() {
     const charCount = text.replace(/\s/g, '').length;
     const sentenceCount = (text.match(/[.!?]+/g) || []).length || (wordCount > 0 ? 1 : 0);
     const paragraphCount = text.split(/\n\n+/).filter(p => p.trim()).length || (text.trim() ? 1 : 0);
-    const minutes = wordCount / wpm;
-    const seconds = Math.round((minutes % 1) * 60);
+    const totalSeconds = Math.round(wordCount * 60 / wpm);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
     return { wordCount, charCount, sentenceCount, paragraphCount, minutes, seconds };
   })();
 

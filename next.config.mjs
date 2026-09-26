@@ -30,6 +30,45 @@ const nextConfig = {
   },
   async redirects() {
     return [
+      { source: '/tools/markdown-table-from-json', destination: '/tools/json-to-markdown-table', permanent: true },
+      // Reviewed same-behavior aliases (2026-09-26); Next preserves query parameters.
+      { source: '/tools/image-to-base64', destination: '/tools/images/base64-image-converter', permanent: true },
+      { source: '/tools/images/image-to-base64', destination: '/tools/images/base64-image-converter', permanent: true },
+      { source: '/tools/text-sorter', destination: '/tools/text-line-sorter', permanent: true },
+      { source: '/tools/smart-text-sorter', destination: '/tools/text-line-sorter', permanent: true },
+      { source: '/tools/serp-simulator', destination: '/tools/serp-preview', permanent: true },
+      { source: '/tools/serp-snippet-preview', destination: '/tools/serp-preview', permanent: true },
+      { source: '/tools/readability-score-calculator', destination: '/tools/readability-score', permanent: true },
+      { source: '/tools/image-size-resizer', destination: '/tools/images/image-resizer', permanent: true },
+      { source: '/tools/images/image-size-resizer', destination: '/tools/images/image-resizer', permanent: true },
+      { source: '/tools/resize', destination: '/tools/images/image-resizer', permanent: true },
+      { source: '/tools/images/resize', destination: '/tools/images/image-resizer', permanent: true },
+      { source: '/tools/spelling-checker', destination: '/tools/grammar-checker', permanent: true },
+      { source: '/tools/favicon-png-maker', destination: '/tools/images/favicon-generator', permanent: true },
+      { source: '/tools/images/favicon-png-maker', destination: '/tools/images/favicon-generator', permanent: true },
+      { source: '/tools/favicon-icon-generator', destination: '/tools/images/favicon-generator', permanent: true },
+      { source: '/tools/images/favicon-icon-generator', destination: '/tools/images/favicon-generator', permanent: true },
+      { source: '/tools/favicon-grabber', destination: '/tools/batch-favicon-downloader', permanent: true },
+      { source: '/tools/images/favicon-grabber', destination: '/tools/batch-favicon-downloader', permanent: true },
+      { source: '/tools/json-path-evaluator', destination: '/tools/json-path-tester', permanent: true },
+      { source: '/tools/json-to-typescript-interface', destination: '/tools/json-to-typescript', permanent: true },
+      { source: '/tools/json-to-typescript-types', destination: '/tools/json-to-typescript', permanent: true },
+      { source: '/tools/keyword-density-analyzer', destination: '/tools/keyword-density-checker', permanent: true },
+      { source: '/tools/random-mac-generator', destination: '/tools/mac-address-generator', permanent: true },
+      { source: '/tools/json-escape-unescape', destination: '/tools/backslash-escape-unescape', permanent: true },
+      { source: '/tools/image-dimension-checker', destination: '/tools/images/detect', permanent: true },
+      { source: '/tools/images/image-dimension-checker', destination: '/tools/images/detect', permanent: true },
+      { source: '/tools/rotate', destination: '/tools/images/image-rotate', permanent: true },
+      { source: '/tools/images/rotate', destination: '/tools/images/image-rotate', permanent: true },
+      { source: '/tools/robots-txt-editor', destination: '/tools/robots-txt-checker', permanent: true },
+      { source: '/tools/robots-txt-validator', destination: '/tools/robots-txt-checker', permanent: true },
+      { source: '/tools/robots-txt-analyzer', destination: '/tools/robots-txt-checker', permanent: true },
+      { source: '/tools/sitemap-extractor', destination: '/tools/sitemap-analyzer', permanent: true },
+      { source: '/tools/word-density-analyzer', destination: '/tools/word-frequency-table', permanent: true },
+      { source: '/tools/unlock-pdf', destination: '/tools/pdf-password-remover', permanent: true },
+      { source: '/tools/pdf/unlock-pdf', destination: '/tools/pdf-password-remover', permanent: true },
+      { source: '/tools/jwt-tester', destination: '/tools/jwt-token-tester', permanent: true },
+      { source: '/tools/word-combinations', destination: '/tools/word-combinations-generator', permanent: true },
       // Same component and behavior: retire duplicate pages with an HTTP 308.
       { source: '/tools/text-case-converter', destination: '/tools/case-converter', permanent: true },
       { source: '/tools/title-case-converter', destination: '/tools/case-converter', permanent: true },
@@ -85,7 +124,7 @@ const nextConfig = {
       // duplicating the real image-background-remover tool), so
       // image-clipper now goes straight to the homepage.
       { source: '/tools/image-clipper', destination: '/', permanent: true },
-      { source: '/tools/image-orientation-fixer', destination: '/tools/images/rotate', permanent: true },
+      { source: '/tools/image-orientation-fixer', destination: '/tools/images/image-rotate', permanent: true },
       // "Text to Image Generator" promised social-graphic creation from
       // text; the page rendered the live-microphone speech-to-text tool.
       // banner-generator does what was actually promised (text -> a real
@@ -136,7 +175,7 @@ const nextConfig = {
       { source: '/tools/text-difference-checker', destination: '/tools/code-diff', permanent: true },
       { source: '/tools/text-fluency-checker', destination: '/tools/readability-score', permanent: true },
       { source: '/tools/word-complexity-analyzer', destination: '/tools/readability-score', permanent: true },
-      { source: '/tools/favicon-checker', destination: '/tools/images/favicon-grabber', permanent: true },
+      { source: '/tools/favicon-checker', destination: '/tools/batch-favicon-downloader', permanent: true },
       { source: '/tools/sitemap-xml-validator', destination: '/tools/xml-validator', permanent: true },
       // MOBI to AZW3 needed a .mobi upload; Azw3ToMobiClient only accepts
       // .azw3 (it only ever did the reverse direction). azw3-to-mobi was
@@ -158,7 +197,7 @@ const nextConfig = {
       // microphone recognizer with no video/URL input path - same as the
       // audio-to-text fix above, redirecting to speech-to-text rather than
       // to a YouTube-transcription feature nothing in the catalog has.
-      { source: '/tools/text-combinations-generator', destination: '/tools/word-combinations', permanent: true },
+      { source: '/tools/text-combinations-generator', destination: '/tools/word-combinations-generator', permanent: true },
       { source: '/tools/length-weight-converter', destination: '/tools/all-in-one-unit-converter', permanent: true },
       // Color format family → one hub (color-format-converter). Pairwise
       // converters and format pickers were the same product under many URLs.
@@ -217,7 +256,7 @@ const nextConfig = {
       { source: '/tools/text-line-deduplicator', destination: '/tools/text-deduplicator', permanent: true },
       { source: '/tools/color-format-converter-v2', destination: '/tools/color-format-converter', permanent: true },
       { source: '/tools/keyword-generator-express', destination: '/tools/keyword-generator', permanent: true },
-      { source: '/tools/json-path-evaluator-express', destination: '/tools/json-path-evaluator', permanent: true },
+      { source: '/tools/json-path-evaluator-express', destination: '/tools/json-path-tester', permanent: true },
       { source: '/tools/curl-gen-express', destination: '/tools/curl-gen', permanent: true },
       { source: '/tools/temp-converter-express', destination: '/tools/temp-converter', permanent: true },
       // ip-address-info itself is gone (family-verification pass -
@@ -269,13 +308,13 @@ const nextConfig = {
       { source: '/tools/image-rotate-tool', destination: '/tools/images/image-rotate', permanent: true },
       { source: '/tools/image-flip-tool', destination: '/tools/images/image-flip', permanent: true },
       { source: '/tools/html-to-plain-text-tool', destination: '/tools/html-to-plain-text', permanent: true },
-      { source: '/tools/spelling-checker-tool', destination: '/tools/spelling-checker', permanent: true },
+      { source: '/tools/spelling-checker-tool', destination: '/tools/grammar-checker', permanent: true },
       // No longer redirected to /tools/favicon-preview: the family-
       // verification pass below removed that slug too (no real ICO/favicon
       // preview implementation exists), so this now 404s directly instead
       // of redirecting into another 404.
       { source: '/tools/jsonpath-query-tool', destination: '/', permanent: true },
-      { source: '/tools/keyword-density-analyzer-new', destination: '/tools/keyword-density-analyzer', permanent: true },
+      { source: '/tools/keyword-density-analyzer-new', destination: '/tools/keyword-density-checker', permanent: true },
       // css-units-converter itself is gone (family-verification pass -
       // CssValidatorClient validates syntax, it has no px/rem/em unit
       // conversion at all despite the slug's own description promising
@@ -438,7 +477,7 @@ const nextConfig = {
       // SyllableCounterClient counts syllables per word only - no
       // Flesch-Kincaid/grade-level calculation despite "estimate reading
       // level" promising one; readability-score-calculator is real.
-      { source: '/tools/syllable-word-counter', destination: '/tools/readability-score-calculator', permanent: true },
+      { source: '/tools/syllable-word-counter', destination: '/tools/readability-score', permanent: true },
       // RandomParagraphGeneratorClient generates templated tech-jargon
       // mad-libs sentences with zero actual Latin lorem ipsum text, despite
       // the slug's own description explicitly promising "lorem ipsum text".

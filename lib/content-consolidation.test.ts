@@ -1,8 +1,10 @@
+import config from '../next.config.mjs';
+import { isToolIndexable } from '@/lib/indexable-tools';
 import { describe, expect, it, vi } from 'vitest';
 import { tools, getCanonicalToolSlug, getToolBySlug, getToolRouteSlugs } from '@/data/tools';
 import { getToolPathBySlug } from '@/lib/tool-path';
 import { GET } from '@/app/sitemap-tools.xml/route';
-import { consolidatedAliases } from '@/e2e/content-aliases';
+import { categoricalAliases, consolidatedAliases } from '@/e2e/content-aliases';
 import { getToolContent } from '@/data/tool-content';
 import { getFaqs } from '@/lib/faq';
 import { buildToolMetadata } from '@/app/tools/tool-page-meta';
@@ -15,27 +17,29 @@ describe('confirmed same-intent aliases', () => {
   it.each(Object.entries(consolidatedAliases))('%s resolves directly to %s', async (alias, canonical) => {
     expect(getCanonicalToolSlug(alias)).toBe(canonical);
     expect(getToolBySlug(alias)?.slug).toBe(canonical);
-    expect(getToolPathBySlug(alias)).toBe(`/tools/${canonical}`);
+    expect(getToolPathBySlug(alias)).toBe(getToolPathBySlug(canonical));
     expect(tools.some(tool => tool.slug === alias)).toBe(false);
     expect(tools.filter(tool => tool.slug === canonical)).toHaveLength(1);
     expect(await generateStaticParams()).toContainEqual({ slug: alias });
     await expect(ToolDetailPage({ params: Promise.resolve({ slug: alias }) }))
-      .rejects.toMatchObject({ digest: `NEXT_REDIRECT;replace;/tools/${canonical};308;` });
-    const metadata = await generateMetadata({ params: Promise.resolve({ slug: canonical }) });
-    expect(metadata.alternates?.canonical).toBe(`https://toolblip.com/tools/${canonical}`);
-    expect(metadata.robots).toEqual({ index: true, follow: true });
+      .rejects.toMatchObject({ digest: `NEXT_REDIRECT;replace;${getToolPathBySlug(canonical)};308;` });
+    const metadata = buildToolMetadata(getToolBySlug(canonical)!);
+    expect(metadata.alternates?.canonical).toBe(`https://toolblip.com${getToolPathBySlug(canonical)}`);
+    expect(metadata.robots).toEqual({ index: isToolIndexable(canonical), follow: true });
     const xml = await (await GET()).text();
     expect(xml).not.toContain(`<loc>https://toolblip.com/tools/${alias}</loc>`);
-    expect(xml).toContain(`<loc>https://toolblip.com/tools/${canonical}</loc>`);
+    expect(xml.includes(`<loc>https://toolblip.com${getToolPathBySlug(canonical)}</loc>`)).toBe(isToolIndexable(canonical));
   });
 
   it('provides one permanent HTTP redirect per selected alias without redirecting destinations', async () => {
-    const { default: config } = await import('../next.config.mjs');
     const redirects = await config.redirects!();
     for (const [alias, canonical] of Object.entries(consolidatedAliases)) {
       expect(redirects.filter((entry: { source: string }) => entry.source === `/tools/${alias}`))
-        .toEqual([{ source: `/tools/${alias}`, destination: `/tools/${canonical}`, permanent: true }]);
-      expect(redirects.some((entry: { source: string }) => entry.source === `/tools/${canonical}`)).toBe(false);
+        .toEqual([{ source: `/tools/${alias}`, destination: getToolPathBySlug(canonical), permanent: true }]);
+      expect(redirects.some((entry: { source: string }) => entry.source === getToolPathBySlug(canonical))).toBe(false);
+    }
+    for (const [source, canonical] of Object.entries(categoricalAliases)) {
+      expect(redirects.filter((entry: { source: string }) => entry.source === source)).toEqual([{ source, destination: getToolPathBySlug(canonical), permanent: true }]);
     }
     for (const entry of redirects) {
       expect(Object.keys(consolidatedAliases).map(slug => `/tools/${slug}`)).not.toContain(entry.destination);
@@ -43,7 +47,6 @@ describe('confirmed same-intent aliases', () => {
   });
 
   it('has no conflicting or cyclic configured redirects, including legacy chains', async () => {
-    const { default: config } = await import('../next.config.mjs');
     const redirects = await config.redirects!();
     const destinations = new Map<string, string>();
     for (const redirect of redirects) {
@@ -70,7 +73,7 @@ describe('confirmed same-intent aliases', () => {
     ['random-string', 'password-generator'],
   ])('routes older alias %s straight to %s', async (alias, canonical) => {
     await expect(ToolDetailPage({ params: Promise.resolve({ slug: alias }) }))
-      .rejects.toMatchObject({ digest: `NEXT_REDIRECT;replace;/tools/${canonical};308;` });
+      .rejects.toMatchObject({ digest: `NEXT_REDIRECT;replace;${getToolPathBySlug(canonical)};308;` });
   });
 
   it('keeps legacy resolution idempotent and free of cycles', () => {
