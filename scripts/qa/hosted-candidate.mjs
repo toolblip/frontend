@@ -17,7 +17,7 @@ const env = { ...process.env };
 for (const key of Object.keys(env)) if (/TOKEN|SECRET|PASSWORD|CREDENTIAL/i.test(key) || key.startsWith('ACTIONS_')) delete env[key];
 const slugs = ['english-dictionary', 'shell-command-reference', 'notebook-to-html', 'base64-encoder-decoder', 'binary-converter', 'markdown-to-pdf', 'json-schema-validator', 'favicon-grabber', 'batch-favicon-downloader'];
 const report = { purpose: 'candidate-only-not-production-approval', source: git('rev-parse', 'HEAD'), sourceTree: git('rev-parse', 'HEAD^{tree}'), reviewedHead: process.env.QA_REVIEWED_HEAD, startedAt: new Date().toISOString(), baseURL: 'http://127.0.0.1:3190', slugs, csp: 'Only upgrade-insecure-requests removed by existing explicit local-HTTP QA option; all other CSP directives retained.', engines: [] };
-const sourceFiles = ['scripts/qa/hosted-candidate.mjs', 'scripts/qa/run.mjs', 'scripts/qa/browser.mjs', 'scripts/qa/runtime.mjs', 'scripts/qa/cases/developer-data.mjs', 'scripts/qa/cases/developer-general.mjs', 'scripts/qa/cases/developer-security.mjs', 'scripts/qa/cases/utility-design.mjs', 'scripts/qa/cases/seo-network.mjs', 'lib/blog.ts', 'lib/utility-design/dictionary.ts', 'lib/developer-data/use-schema-validation.ts', 'components/tools/EnglishDictionaryClient.tsx', 'components/tools/ShellCommandReferenceClient.tsx'];
+const sourceFiles = ['scripts/qa/hosted-candidate.mjs', 'scripts/qa/hosted-notebook-scroll.mjs', 'scripts/qa/run.mjs', 'scripts/qa/browser.mjs', 'scripts/qa/runtime.mjs', 'scripts/qa/cases/developer-data.mjs', 'scripts/qa/cases/developer-general.mjs', 'scripts/qa/cases/developer-security.mjs', 'scripts/qa/cases/utility-design.mjs', 'scripts/qa/cases/seo-network.mjs', 'lib/blog.ts', 'lib/utility-design/dictionary.ts', 'lib/developer-data/use-schema-validation.ts', 'components/tools/EnglishDictionaryClient.tsx', 'components/tools/ShellCommandReferenceClient.tsx'];
 const hashSources = async () => Object.fromEntries(await Promise.all(sourceFiles.map(async file => [file, createHash('sha256').update(await readFile(file)).digest('hex')])));
 report.sourceFilesBefore = await hashSources();
 const save = () => writeFile(path.join(output, 'candidate.json'), JSON.stringify(report, null, 2) + '\n');
@@ -57,6 +57,12 @@ try {
       if (entry.exitCode !== 0 || aggregate.summary.exitCode !== 0) process.exitCode = 1;
     } catch (error) { entry.error = String(error.stack ?? error); process.exitCode = 1; }
     finally { await log.close(); entry.finishedAt = new Date().toISOString(); await save(); }
+    const diagnosticLog = await open(path.join(output, `${engine}-scroll.log`), 'wx');
+    try {
+      entry.scrollDiagnosticExitCode = await run(process.execPath, ['scripts/qa/hosted-notebook-scroll.mjs', path.join(output, `${engine}-scroll`), engine, report.baseURL], 3 * 60 * 1000, diagnosticLog.fd);
+    } catch (error) { entry.scrollDiagnosticError = String(error.stack ?? error); }
+    finally { await diagnosticLog.close(); await save(); }
+    // Diagnostic observations never grant acceptance or overwrite the core audit verdict.
   }
 } catch (error) { report.error = String(error.stack ?? error); process.exitCode = 1; }
 finally {
