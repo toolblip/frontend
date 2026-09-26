@@ -189,6 +189,27 @@ function templateFaqs(t: Tool): FAQ[] {
 }
 
 const OVERRIDES: Record<string, FAQ[]> = {
+  'json-to-markdown-table': [
+    { q: 'Which JSON shapes are supported?', a: 'One object or a nonempty array of objects. Every array row must be an object. Columns include keys from later rows.' },
+    { q: 'What happens to nested values and table syntax?', a: 'Nested arrays and objects use JSON text. Pipes, HTML and line breaks are escaped for Markdown table cells. Missing and null values produce empty cells.' },
+    { q: 'Can I download the table?', a: 'Yes. Use Prepare download to create a Markdown file, or Copy for the table text. There are no column-alignment controls.' },
+  ],
+
+  'jwt-token-tester': [
+    { q: "Which signatures can it verify?", a: "Shared-secret HMAC signatures using HS256, HS384 or HS512. It does not verify RSA or elliptic-curve signatures." },
+    { q: "Does a valid signature establish trust?", a: "No. You still need to validate the intended issuer, audience and claims in your application." },
+  ],
+
+  'word-combinations-generator': [
+    { q: "How many results can I generate?", a: "The output is capped at 2,000 results." },
+    { q: "Which modes are available?", a: "Two- or three-word combinations and ordered permutations. Large inputs may produce more possibilities than the cap allows." },
+  ],
+
+  'json-to-typescript': [
+    { q: "Which controls are available?", a: "Root and item names, interface or type output, quote style and semicolons. There are no strict-nullability or readonly controls." },
+    { q: "Are inferred types a schema?", a: "No. They describe the supplied sample. Review the result against the full range of data your application accepts." },
+  ],
+
   'svg-to-webp': [
     { q: "What does this tool do?", a: "Convert SVG images to WEBP and compare the measured output size." },
     { q: "What should I know before using it?", a: "Inputs are limited to 10 MB and 16 megapixels. Output size is measured and can be larger than the input. WebP export uses a browser encoder with a local codec fallback. SVG must be self-contained and static; external resources and scripts are rejected." },
@@ -388,19 +409,14 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: "What should I know before using it?", a: "CSS is valid SCSS. This tool doesn't turn runtime custom properties into Sass variables or infer a nested stylesheet architecture." },
   ],
   'json-formatter': [
-    { q: 'What is a JSON formatter?', a: 'A JSON formatter pretty-prints raw JSON into a readable, indented structure so you can scan, debug, and share it. The Toolblip JSON Formatter also validates syntax in real time and surfaces the parser error so you can find the broken character.' },
-    { q: 'How do I format JSON online for free?', a: 'Paste your JSON into the editor on this page and it is formatted instantly. Switch between pretty-print and minified output, choose 2- or 4-space indentation, and copy the result with one click. No account or upload required.' },
-    { q: 'Does the JSON Formatter fix invalid JSON?', a: 'No  -  it tells you exactly what is wrong (missing commas, trailing commas, unquoted keys, mismatched brackets) and where, but it does not silently rewrite invalid input. You stay in control of the fix.' },
-    { q: 'Is the JSON Formatter safe for production data?', a: 'Yes. Everything happens in your browser. Your JSON is never uploaded, logged, or cached on any server, so it is safe to paste API responses that contain customer data or secrets.' },
-    { q: "What's the difference between format and minify?", a: 'Format (pretty-print) adds indentation and newlines for human reading. Minify strips all whitespace for a compact payload you send over the wire. The JSON Formatter does both with a single toggle.' },
-    { q: 'Can the JSON Formatter handle large JSON files?', a: 'It handles megabytes of JSON in the browser. For multi-megabyte payloads you may see a short delay while the browser parses the tree  -  everything still stays local.' },
+    { q: "Does it fix invalid JSON?", a: "No. It shows the parser error. Correct invalid input before formatting; comments and trailing commas are rejected." },
+    { q: "What changes between Format and Minify?", a: "Format adds two or four spaces of indentation. Minify removes insignificant whitespace, keeping spaces inside strings." },
+    { q: "What limits apply?", a: "Input is limited to 100,000 characters, 10,000 values and 64 nesting levels. Unsafe integers are rejected; quote large identifiers to preserve their digits." },
   ],
   'word-counter': [
-    { q: 'What is the Word Counter?', a: 'The Word Counter is a free online tool that counts words, characters, sentences, paragraphs, and estimated reading time the moment you paste text. It is designed for writers, students, and anyone trimming copy to fit a limit.' },
-    { q: 'How accurate is the word count?', a: 'The Word Counter splits on whitespace, which matches the convention every major editor (Google Docs, Microsoft Word, Pages) uses for plain prose. For text with unusual punctuation (code, hyphenated compounds) the count may differ from those editors by a few words.' },
-    { q: 'What is the reading time estimate based on?', a: 'Reading time assumes 200 words per minute, the typical adult silent-reading speed. Pace varies by reader and material  -  technical writing reads slower, simple prose faster  -  so treat the number as a useful estimate rather than a hard truth.' },
-    { q: 'Does the Word Counter save what I type?', a: 'No. Everything is processed in your browser in real time. Nothing is uploaded, stored, or sent to any server, so it is safe to paste unpublished drafts or confidential content.' },
-    { q: 'Can I count characters with and without spaces?', a: 'Yes. The Word Counter shows both character totals alongside the word count, plus sentence and paragraph counts, updating as you type.' },
+    { q: "How are words counted?", a: "Words are separated by whitespace. Sentence counts use punctuation heuristics; results can differ from a language-aware editor." },
+    { q: "What do reading and speaking time mean?", a: "Reading time uses 200 words per minute and speaking time uses 130. Both round up to whole minutes." },
+    { q: "Do character counts include spaces?", a: "Both totals are shown. The no-spaces count removes all whitespace. JavaScript string length counts some emoji as more than one character." },
   ],
   'http-method-tester': [
     { q: 'What is the HTTP Method Tester?', a: 'The HTTP Method Tester is a browser-based HTTP tester for sending GET, POST, PUT, DELETE, and other requests with custom headers and body content.' },
@@ -431,49 +447,34 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Does the Character Counter work offline?', a: 'Yes. Once this page has loaded, the Character Counter runs entirely in your browser  -  no server calls, no tracking, and no signup.' },
   ],
   'base64-encoder-decoder': [
-    { q: 'What is Base64 encoding?', a: 'Base64 is a way of representing binary data  -  images, files, keys  -  using 64 printable ASCII characters. It is commonly used to embed files in JSON, transport data through email, and inline images into CSS and HTML.' },
-    { q: 'How do I encode text to Base64?', a: 'Paste your text into the editor on this page and the Base64 output appears instantly. Toggle the mode to decode a Base64 string back to its original text. Unicode and emoji are handled correctly.' },
-    { q: 'Is Base64 encryption?', a: 'No. Base64 is an encoding, not encryption. Anyone with the output can decode it back to the original  -  do not use Base64 to hide secrets. For security, combine it with actual encryption like AES.' },
-    { q: 'Why does Base64 output end in "=" characters?', a: 'The equals signs are padding. Base64 encodes data in groups of three bytes, so when the input length is not a multiple of three, "=" pads the final group to the right length.' },
-    { q: 'Is the Base64 tool safe for sensitive data?', a: 'Yes. Encoding and decoding both happen in your browser. Nothing is uploaded or logged, so it is safe to use with API tokens, internal payloads, and other confidential content.' },
+    { q: "Does this support files or images?", a: "This page encodes UTF-8 text and decodes Base64 back to UTF-8 text. It has no file upload or image preview." },
+    { q: "Is Base64 encryption?", a: "No. Anyone can reverse the encoding. It does not protect a secret." },
+    { q: "Why does Base64 end in equals signs?", a: "Equals signs pad the final group when the input byte length is not a multiple of three. This decoder expects the standard +/ alphabet, not Base64URL." },
   ],
   'url-encode': [
-    { q: 'What happens if I try to decode text that is not validly encoded?', a: 'An error message is shown instead of garbled output, since decodeURIComponent throws on malformed percent-encoded sequences rather than guessing at the intended characters.' },
-    { q: 'What is URL encoding?', a: 'URL encoding (percent-encoding) converts characters that have special meaning in URLs  -  like spaces, &, ?, and =  -  into a safe form so they can be passed in a link or query string without breaking the URL.' },
-    { q: 'When do I need to URL-encode a string?', a: 'Any time you embed user input, paths, or query parameters into a URL  -  building deep links, constructing API requests, or debugging a broken redirect. Encode values individually, not the whole URL.' },
-    { q: "What's the difference between encodeURI and encodeURIComponent?", a: 'encodeURIComponent encodes every reserved character, which is what you want for query values and is what this tool uses. encodeURI leaves URL structural characters (/ ? : etc.) alone, which is rarely what you want when encoding user-supplied data.' },
-    { q: 'Does URL encoding change my original data?', a: 'No. URL encoding is fully reversible  -  decoding gives you back the exact original string, byte for byte. The tool provides both directions.' },
-    { q: 'Is the URL Encode tool safe for private URLs?', a: 'Yes. All encoding happens in your browser. URLs with tokens, session IDs, or other private parameters are not logged or sent anywhere.' },
+    { q: "Should I paste a complete URL?", a: "Encode individual component values when you need to preserve URL structure. This page uses encodeURIComponent, which also escapes URL separators." },
+    { q: "Does decoding turn plus into a space?", a: "No. A plus sign stays a plus sign. Spaces encode as %20." },
+    { q: "What happens with invalid input?", a: "Malformed percent escapes and invalid UTF-8 sequences produce an error. Input is limited to 100,000 characters." },
   ],
   'uuid-generator': [
-    { q: 'What is a UUID?', a: 'A UUID (Universally Unique Identifier) is a 128-bit ID  -  typically shown as 36 characters with dashes  -  that is extremely unlikely to collide across systems, which makes it ideal for database keys, file names, and distributed IDs.' },
-    { q: 'What version of UUID does this tool generate?', a: 'The UUID Generator produces v4 UUIDs  -  random  -  using the browser\'s native crypto.randomUUID() function. That matches the recommendation in RFC 4122 for most application-level IDs.' },
-    { q: 'Can I get the UUID without hyphens or in uppercase?', a: 'Yes. Toggle the hyphens off to get a 32-character compact form, and toggle UPPER to switch the hex digits to uppercase. The output updates in place.' },
-    { q: 'Are these UUIDs cryptographically secure?', a: 'The UUID Generator uses crypto.randomUUID(), which is backed by the platform CSPRNG. That said, UUIDs are identifiers  -  use them for IDs, not for secrets.' },
-    { q: 'Does the UUID Generator work offline?', a: 'Yes. Once the page is loaded, the generator runs entirely in your browser with no network calls.' },
+    { q: "Which UUID version is generated?", a: "Version 4 only, using browser randomness. You can change letter case and remove hyphens." },
+    { q: "Does it keep a history?", a: "It keeps the last five generated values in page memory. Reloading clears them." },
+    { q: "Can I use a UUID as a password?", a: "Use UUIDs as identifiers. Use a password generator for passwords and an appropriate token generator for access tokens." },
   ],
   'case-converter': [
-    { q: 'What case conversions does the Case Converter support?', a: 'The Case Converter turns text into UPPERCASE, lowercase, Title Case, Sentence case, camelCase, snake_case, kebab-case, and CONSTANT_CASE. All eight versions appear at once as you type, so you can copy whichever one you need.' },
-    { q: 'How do I convert text to camelCase online?', a: 'Type or paste your text into the Case Converter and the camelCase version updates live. Spaces, hyphens, and underscores are stripped and every word after the first is capitalized  -  "my variable name" becomes "myVariableName".' },
-    { q: "What's the difference between snake_case and kebab-case?", a: 'snake_case uses underscores (my_variable); kebab-case uses hyphens (my-variable). Python and Rust idiomatically use snake_case; CSS classes and URL slugs use kebab-case.' },
-    { q: 'Does the Case Converter handle existing word boundaries?', a: 'Yes. The Case Converter splits on whitespace, hyphens, underscores, and the boundary between a lowercase and uppercase letter, so it can convert from camelCase or PascalCase to any other style without losing word breaks.' },
-    { q: 'Is there a limit on how much text I can convert?', a: "No. The Case Converter handles paragraphs or entire documents in milliseconds, and it all happens in your browser so there's no upload limit." },
+    { q: "Which conversions are available?", a: "Uppercase, lowercase, title case, sentence case, camelCase, snake_case, kebab-case and CONSTANT_CASE appear together." },
+    { q: "Does title case follow an editorial guide?", a: "No. It capitalizes words without rules for short articles or prepositions. Sentence mode capitalizes only the first input character." },
+    { q: "How are identifiers split?", a: "Splitting handles whitespace, underscores, hyphens, dots, slashes and lowercase-to-uppercase boundaries. Review acronyms and punctuation before using the result." },
   ],
   'regex-tester': [
-    { q: 'What is the Regex Tester?', a: 'The Regex Tester is a free online playground for regular expressions. Type a pattern, paste the text to match against, and see matches and capture groups highlighted live with flag controls (g, i, m, s, u, y).' },
-    { q: 'Which regex flavor does the Regex Tester use?', a: 'The Regex Tester uses JavaScript (ECMAScript) regex, which is the flavor you ship in a web app, Node.js script, or browser-side code. Named groups, lookbehinds, and unicode property escapes are all supported in modern browsers.' },
-    { q: 'Can I test multiline regex patterns?', a: 'Yes. Toggle the m flag to make ^ and $ match line boundaries, or s to let . match newlines. The Regex Tester shows exactly which flags are active.' },
-    { q: 'Does it show capture groups?', a: 'Yes. The match list shows numbered and named capture groups for up to the first 100 matches, followed by the remaining match count. It does not explain regex tokens or preview replacements.' },
-    { q: 'Is my regex and test text private?', a: 'Yes. Everything in the Regex Tester runs in your browser. Nothing is sent to any server, so you can test patterns against confidential logs and data.' },
+    { q: "Which regex syntax does it use?", a: "JavaScript regular expressions. Enter a pattern without surrounding slashes and choose flags using the controls." },
+    { q: "What are the limits?", a: "2,000 pattern characters, 50,000 test characters and 1,000 matches. A worker stops after 500 ms. The detailed list shows the first 100 matches." },
+    { q: "Can I inspect capture groups?", a: "Yes. The result lists match offsets and numbered or named capture groups. This page tests matches; it does not replace text." },
   ],
   'jwt-decoder': [
-    { q: 'What standard claims does it surface?', a: 'The Standard claims section shows issuer, subject, audience, and token times when available. It formats iat, nbf, and exp as readable timestamps; the payload contains their original values.' },
-    { q: 'How can I tell if a token is expired at a glance?', a: 'A badge next to the input reads "Not expired," "Expired," or "Not yet valid" based on the exp and nbf claims compared against the current time, or "No exp claim" if the token does not set one.' },
-    { q: 'What does the JWT Decoder show me?', a: 'The JWT Decoder splits a JSON Web Token into its three parts  -  header, payload, and signature  -  and pretty-prints the JSON so you can inspect claims like exp, iat, iss, and any custom fields.' },
-    { q: 'Does the JWT Decoder verify the signature?', a: 'The JWT Decoder shows you what a token claims. Verification requires the secret or public key that issued the token and should be done server-side  -  never trust an unverified JWT for authorization.' },
-    { q: 'Can I decode an expired JWT?', a: 'Yes. The JWT Decoder decodes any valid JWT regardless of expiry, which is useful for debugging expired-token bugs. Look at the exp claim to see when it was valid.' },
-    { q: 'Is it safe to paste a JWT into the JWT Decoder?', a: 'The decoding happens in your browser, so the token is never sent to any server. That said, a JWT is a credential  -  if you paste a production token anywhere, rotate it when you\'re done.' },
-    { q: 'Why is the signature garbled after decoding?', a: 'The first two segments of a JWT are base64-encoded JSON; the third is a binary signature. The JWT Decoder shows it unchanged because the raw bytes are not meant to be human-readable.' },
+    { q: "Does decoding verify a token?", a: "No. A readable header and payload do not verify the signature, issuer or audience." },
+    { q: "How are dates interpreted?", a: "Numeric date claims are displayed in UTC. Expiry status uses your device clock when the token is decoded; it does not continuously recheck an unchanged token." },
+    { q: "What input does it accept?", a: "A three-part JWT, up to 100,000 characters. You can copy the header, payload and signature text separately." },
   ],
   'cron-parser': [
     { q: 'What does the Cron Expression Parser do?', a: 'The Cron Expression Parser takes any 5-field cron expression and shows you what it means in plain English, plus the next five times it will run, so you catch mistakes before you deploy.' },
@@ -504,11 +505,9 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Does the Color Picker work offline?', a: 'Yes. Once the page has loaded, the Color Picker runs entirely in your browser. Bookmark it and reach for it even without an internet connection.' },
   ],
   'password-generator': [
-    { q: 'How strong are the passwords from the Password Generator?', a: 'The Password Generator uses the browser\'s crypto.getRandomValues  -  cryptographically secure randomness  -  so a 16-character password with full character variety is well beyond brute-force range for any modern attacker.' },
-    { q: 'Does the Password Generator store or log my passwords?', a: 'No. Passwords are generated in your browser and never sent anywhere. Nothing is logged, stored, or cached  -  close the tab and the password is gone unless you saved it to your password manager.' },
-    { q: 'What length should I choose?', a: 'Use at least 16 characters for everyday accounts, and 20+ for high-value logins (banking, email, password-manager master passwords). Length beats complexity  -  every extra character roughly doubles the brute-force cost.' },
-    { q: 'Should I include special characters?', a: 'Yes, unless a site blocks them. Special characters expand the search space and defeat dictionary attacks. The Password Generator lets you exclude ambiguous characters (like l/1 and O/0) for when you need to type the password by hand.' },
-    { q: 'What does the strength indicator mean?', a: 'It estimates entropy from the chosen length and the size of the active character pool. "Weak" is below ~36 bits, "Fair" up to ~60, "Strong" up to ~100, and "Very strong" beyond that. For online accounts, aim for Strong or higher.' },
+    { q: "How is the password generated?", a: "The tool uses browser cryptographic randomness. Each selected character group appears in the result." },
+    { q: "What does No look-alikes exclude?", a: "O, 0, I, l and 1. You can also choose uppercase, lowercase, digits and symbols, with a length from 8 to 64." },
+    { q: "What does the strength label mean?", a: "It is an estimate based on length and the selected character pool, not a guarantee. Generate a new password for each account." },
   ],
   'hash-generator': [
     { q: 'Which hash algorithms does the Hash Generator support?', a: 'The Hash Generator produces MD5, SHA-1, SHA-256, and SHA-512 hashes simultaneously. SHA hashes are computed via the browser\'s native Web Crypto API; MD5 is computed in pure JavaScript locally. For password hashing specifically, use bcrypt, scrypt, or Argon2 instead.' },
@@ -544,11 +543,9 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Will my data be uploaded?', a: 'No. The Remove Duplicate Lines tool is fully client-side. Whatever you paste  -  addresses, IDs, log lines  -  never leaves your browser.' },
   ],
   'markdown-to-html': [
-    { q: 'What flavor of Markdown does this tool support?', a: 'The Markdown to HTML converter uses GitHub Flavored Markdown (GFM)  -  headings, lists, links, tables, fenced code blocks, blockquotes, and inline formatting all work the same way they do on GitHub.' },
-    { q: 'Can I see the rendered output and the HTML source?', a: 'Yes. Toggle the right pane between Preview (rendered HTML) and HTML (the raw source). The Copy button always copies the HTML source so you can paste it straight into a CMS or an email template.' },
-    { q: 'Is the rendered HTML safe to copy into my site?', a: 'It\'s clean HTML  -  no inline styles, no scripts, no class names  -  so it drops cleanly into most CMSes. If your input contains raw HTML, GFM passes it through; sanitize before publishing user-supplied input.' },
-    { q: 'Does the Markdown to HTML tool work offline?', a: 'Yes. Conversion happens entirely in your browser via the marked library. Once the page is loaded you can use it without an internet connection, and nothing you paste leaves your device.' },
-    { q: 'Why isn\'t my Markdown rendering the way I expect?', a: 'Most surprises come from blank-line rules  -  Markdown needs a blank line before a heading, a list, or a code fence for them to be recognized. Switch to the HTML view to see exactly what was produced.' },
+    { q: "Which Markdown features are supported?", a: "Headings, lists, links, fenced code and GitHub-style tables. Check the preview for the output you intend to publish." },
+    { q: "Is raw HTML passed through unchanged?", a: "No. The output is sanitized to remove scripts and unsafe markup. Review the result for your destination before publishing." },
+    { q: "Can the preview make network requests?", a: "Conversion runs locally, but the preview can load HTTPS images referenced in the input. It is not an offline-only renderer." },
   ],
   'yaml-to-json': [
     { q: 'What\'s the difference between YAML and JSON?', a: 'They describe the same shape of data  -  objects, arrays, strings, numbers, booleans, null. YAML is friendlier to read and supports comments; JSON is stricter and more universal as an interchange format. Most config files in modern tooling are YAML; most APIs speak JSON.' },
@@ -625,11 +622,9 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'How do I test the result?', a: 'Paste the live URL into the social-share debugger from each platform  -  Meta\'s Sharing Debugger, X\'s Card Validator, LinkedIn\'s Post Inspector. Those tools also let you re-scrape the page after you push changes.' },
   ],
   'serp-preview': [
-    { q: 'What length should my title and description be?', a: 'Keep titles under 60 characters and meta descriptions under 160. Google truncates anything longer in search results  -  those limits are based on pixel width on desktop and shrink slightly on mobile.' },
-    { q: 'Will Google use the description I write?', a: 'Sometimes. Google rewrites about 60% of meta descriptions to better match the user\'s query, so treat the description as a strong hint rather than a guarantee. A clear, query-relevant description gives you the best chance.' },
-    { q: 'Is the preview pixel-perfect?', a: 'It\'s a close approximation of how Google renders the result on a typical desktop or mobile screen. Real SERP layout varies by query, device, sitelinks, and personalisation  -  use the preview as a guide, not a pixel-exact mirror.' },
-    { q: 'Why does the URL show as a breadcrumb?', a: 'Google replaced raw URLs with breadcrumb paths derived from your URL structure in 2020. Sites with clean, hierarchical URLs (`/category/post-slug`) get cleaner breadcrumbs in search.' },
-    { q: 'Does this affect my live SEO?', a: 'No  -  the SERP Preview is a visualizer. It doesn\'t crawl, modify, or submit anything to Google. Push your title/description to the live page first, then test it in Google Search Console for the real scrape.' },
+    { q: "Is the preview pixel-perfect?", a: "No. It is an approximate manual preview. Actual search snippets can vary by query and device, and titles or descriptions may be rewritten." },
+    { q: "Does it fetch my page?", a: "No. Enter the title, URL and description yourself. The tool does not crawl, publish or submit a page." },
+    { q: "Are character counts a display guarantee?", a: "No. Character counts are editing guides, not fixed search-result display limits." },
   ],
   'aac-to-wav': [
     { q: "What does this tool do?", a: "Decode browser-supported AAC audio to 16-bit PCM WAV." },
@@ -1591,9 +1586,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Is the analysis case-sensitive?', a: 'No, both the content and the keyword are lowercased before comparison, so "SEO Tips" and "seo tips" are treated as the same match.' },
   ],
   'keyword-density-checker': [
-    { q: 'How does it count multi-word keyword phrases?', a: 'It splits your keyword on spaces and slides a window of that many words across the text, counting a match every time the sequence appears in order, so "content marketing strategy" is checked as an exact three-word phrase rather than three separate word counts.' },
-    { q: 'What counts as the ideal density range?', a: 'The bar and message turn green between 1% and 3% keyword density, below 1% it flags the keyword as underused, and above 3% it warns the density may look spammy to search engines.' },
-    { q: 'Does it strip out numbers or punctuation when counting total words?', a: 'Yes, the total word count only matches sequences of letters, so numbers, punctuation, and symbols are excluded from both the total word count and the keyword search.' },
+    { q: "Should I paste HTML?", a: "Paste plain text. The tool does not extract readable text from HTML, so markup can affect its counts." },
+    { q: "How are phrases counted?", a: "The analyzer compares word windows with the supplied phrase. It reports frequency within the pasted text; it does not recommend a ranking target." },
   ],
   'length-converter': [
     { q: 'Which units can I convert between?', a: 'Meters, kilometers, centimeters, millimeters, miles, yards, feet, and inches, selectable from the From Unit dropdown, with the Convert button showing your value in all eight at once.' },
@@ -1824,15 +1818,14 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'What do the "Quick read" and "Long read" labels mean?', a: 'Results under 1 minute are labeled Quick read, under 3 minutes Short read, under 7 minutes Medium read, and anything longer Long read.' },
   ],
   'readability-score': [
-    { q: 'How does it estimate syllable count for the readability formulas?', a: 'It approximates syllables by counting vowel letters (a, e, i, o, u) in the text rather than performing true syllable segmentation, a fast approximation used in both the Flesch Reading Ease and Flesch-Kincaid Grade calculations.' },
-    { q: 'What scores does it calculate?', a: 'Three: Flesch Reading Ease on a 0 to 100 scale labeled Easy, Moderate, or Difficult, the Flesch-Kincaid Grade Level, and the SMOG Index, each shown with a grade-level interpretation.' },
-    { q: 'What other stats besides the readability scores does it show?', a: 'Word count, sentence count, average word length, and average sentence length, all calculated the moment you type at least one word.' },
+    { q: "Which formulas are available?", a: "Flesch Reading Ease, Flesch-Kincaid Grade and SMOG. ARI and Coleman-Liau are not implemented." },
+    { q: "How precise are the results?", a: "Word, sentence and syllable counts are estimates. Scores describe text patterns and do not measure comprehension for a particular reader." },
   ],
   'reading-time-calculator': [
-    { q: 'Can I adjust the assumed reading speed?', a: 'It starts at 200 words per minute. Adjust the slider from 100 to 500 in steps of 10; the estimate updates as you type. This estimates reading time, rather than measuring your reading speed.' },
-    { q: 'What format does the time show for very short text?', a: 'Text estimated at under a minute displays as just a seconds value like "38s", switching to the combined "Xm Ys" format only once the estimate reaches a full minute.' },
-    { q: 'How does it treat multiple punctuation marks in a row, like "?!" or "..."?', a: 'A run of consecutive ., !, or ? characters counts as a single sentence ending rather than one per character, so "Wait..." only adds one to the sentence count.' },
-    { q: 'Do I need at least two blank lines to start a new paragraph?', a: 'Yes, the text is split wherever two or more consecutive line breaks appear, a single line break within a block is treated as part of the same paragraph.' },
+    { q: "Can I change the reading speed?", a: "The default is 200 words per minute. The slider runs from 100 to 500 in steps of 10." },
+    { q: "How is the displayed time rounded?", a: "The total estimate rounds to the nearest second, then divides into minutes and seconds. For example, 199 words at 200 wpm displays 1m 0s." },
+    { q: "Does it detect difficult text?", a: "No. It divides whitespace-separated word count by your chosen speed. Images, diagrams and text complexity are not included." },
+    { q: "What separates paragraphs?", a: "Two or more consecutive line breaks separate paragraphs. A single line break stays within the same paragraph." },
   ],
   'reading-time-estimator': [
     { q: 'What reading speed does it assume before I touch the slider?', a: 'It starts at 200 words per minute, before you drag the slider anywhere from 100 to 500 to match your own pace.' },

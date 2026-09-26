@@ -1,7 +1,6 @@
-import fs from 'fs';
-import path from 'path';
+import { getBlogPosts } from '@/lib/blog';
+import { reviewedToolSlugs } from '@/data/reviewed-tools';
 import Link from 'next/link';
-import matter from 'gray-matter';
 import type { Metadata } from 'next';
 import { tools } from '@/data/tools';
 import Hero from '@/components/v2/home/Hero';
@@ -14,7 +13,6 @@ import { getCategoryMeta, categoryAnchor } from '@/lib/v2/categoryMeta';
 import { getToolPath } from '@/lib/tool-path';
 import { IconArrowUR } from '@/components/v2/icons';
 
-const POPULAR_CATEGORIES = ['Text', 'Developer', 'SEO', 'Color', 'Encoder'];
 
 export const dynamic = 'force-dynamic';
 
@@ -50,25 +48,7 @@ export const metadata: Metadata = {
 };
 
 function getRecentPosts() {
-  const blogDir = path.join(process.cwd(), 'blog');
-  if (!fs.existsSync(blogDir)) return [];
-  return fs
-    .readdirSync(blogDir)
-    .filter((f) => f.endsWith('.md'))
-    .map((file) => {
-      const raw = fs.readFileSync(path.join(blogDir, file), 'utf-8');
-      const { data } = matter(raw);
-      return {
-        slug: (data.slug as string) || file.replace('.md', ''),
-        title: data.title as string,
-        description: data.description as string,
-        date: (data.date as string) || (data.publishDate as string) || '',
-        category: (data.category as string) || 'Developer Tools',
-        readingTime: (data.readingTime as string) || '5 min',
-      };
-    })
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-    .slice(0, 3);
+  return getBlogPosts().sort((a, b) => b.date.localeCompare(a.date)).slice(0, 3);
 }
 
 export default function HomePage() {
@@ -86,9 +66,7 @@ export default function HomePage() {
   const categoryCount = categories.length;
   const categoriesWithCounts = categories.map((c) => ({ ...c, count: categoryCounts[c.name] }));
 
-  const popularTools = POPULAR_CATEGORIES.flatMap((cat) =>
-    tools.filter((t) => t.category === cat).slice(0, 6),
-  );
+  const popularTools = reviewedToolSlugs.flatMap(slug => tools.filter(tool => tool.slug === slug));
 
   return (
     <>
@@ -105,12 +83,11 @@ export default function HomePage() {
         <div className="tb-v2-container">
           <div className="tb-v2-band-head">
             <div>
-              <div className="tb-v2-kicker">Popular tools</div>
-              <h2>Start with what people search for most.</h2>
+              <div className="tb-v2-kicker">Reviewed tools</div>
+              <h2>Tools for everyday tasks.</h2>
             </div>
             <div className="tb-v2-band-head-side">
-              A hand-picked set from Text, Developer, SEO, Color, and Encoder &mdash; five of the busiest categories on
-              Toolblip.
+              Format data, work with text, generate identifiers or resize an image.
             </div>
           </div>
           <div className="tb-v2-dir-grid">

@@ -1,15 +1,19 @@
+import { getToolPathBySlug } from '../lib/tool-path';
+import { isToolIndexable } from '../lib/indexable-tools';
 import { test, expect } from '@playwright/test';
-import { consolidatedAliases } from './content-aliases';
+import { categoricalAliases, consolidatedAliases } from './content-aliases';
 
 for (const [alias, canonical] of Object.entries(consolidatedAliases)) {
   test(`${alias} returns an HTTP permanent redirect to ${canonical}`, async ({ request }) => {
     const response = await request.get(`/tools/${alias}?source=legacy`, { maxRedirects: 0 });
     expect([301, 308]).toContain(response.status());
-    expect(new URL(response.headers().location, response.url()).pathname).toBe(`/tools/${canonical}`);
+    expect(new URL(response.headers().location, response.url()).pathname).toBe(getToolPathBySlug(canonical));
     expect(new URL(response.headers().location, response.url()).search).toBe('?source=legacy');
-    const target = await request.get(`/tools/${canonical}`, { maxRedirects: 0 });
+    const target = await request.get(getToolPathBySlug(canonical), { maxRedirects: 0 });
     expect(target.status()).toBe(200);
-    expect(await target.text()).toContain(`<link rel="canonical" href="https://toolblip.com/tools/${canonical}"`);
+    const html = await target.text();
+    expect(html).toContain(`<link rel="canonical" href="https://toolblip.com${getToolPathBySlug(canonical)}"`);
+    expect(html).toContain(`<meta name="robots" content="${isToolIndexable(canonical) ? 'index, follow' : 'noindex, follow'}"`);
   });
 }
 
@@ -20,7 +24,7 @@ test('public directory and sitemap link only to consolidated destinations', asyn
     const body = await response.text();
     for (const [alias, canonical] of Object.entries(consolidatedAliases)) {
       expect(body).not.toMatch(new RegExp(`(?:href="|<loc>https://toolblip.com)/tools/${alias}(?:"|<)`));
-      expect(body).toContain(`/tools/${canonical}`);
+      if (path !== '/sitemap-tools.xml' || isToolIndexable(canonical)) expect(body).toContain(getToolPathBySlug(canonical));
     }
   }
 });
@@ -51,7 +55,7 @@ test('legacy links still resolve to the canonical tool', async ({ request }) => 
     expect([301, 308], alias).toContain(response.status());
     const location = response.headers().location;
     expect(location, alias).toBeTruthy();
-    expect(new URL(location, response.url()).pathname, alias).toBe(`/tools/${canonical}`);
+    expect(new URL(location, response.url()).pathname, alias).toBe(getToolPathBySlug(canonical));
   }
 });
 
@@ -63,3 +67,14 @@ test('URL Encoder serves its encoding UI at the retained canonical URL', async (
   expect(html).toMatch(/role="tab"[^>]*>Encode<\/button>/);
   expect(html).toMatch(/role="tab"[^>]*>Decode<\/button>/);
 });
+
+for (const [source, canonical] of Object.entries(categoricalAliases)) {
+  test(`${source} redirects directly and preserves query parameters`, async ({ request }) => {
+    const response = await request.get(`${source}?source=legacy&value=a%26b`, { maxRedirects: 0 });
+    expect([301, 308]).toContain(response.status());
+    const target = new URL(response.headers().location, response.url());
+    expect(target.pathname).toBe(getToolPathBySlug(canonical));
+    expect(target.searchParams.get('source')).toBe('legacy');
+    expect(target.searchParams.get('value')).toBe('a&b');
+  });
+}

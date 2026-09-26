@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 const CASES = [
@@ -54,17 +54,28 @@ function convert(text: string, key: CaseKey): string {
 
 export default function CaseConverterClient() {
   const [text, setText] = useState('');
+  const [copyError, setCopyError] = useState('');
+  const copyAttempt = useRef(0);
   const [copied, setCopied] = useState<CaseKey | null>(null);
 
-  const copy = (val: string, key: CaseKey) => {
+  const copy = async (val: string, key: CaseKey) => {
     if (!val) return;
-    navigator.clipboard.writeText(val).catch(() => {});
-    setCopied(key);
-    setTimeout(() => setCopied(null), 1500);
+    const attempt = ++copyAttempt.current;
+    setCopyError('');
+    setCopied(null);
+    try {
+      await navigator.clipboard.writeText(val);
+      if (attempt !== copyAttempt.current) return;
+      setCopied(key);
+      setTimeout(() => { if (attempt === copyAttempt.current) setCopied(null); }, 1500);
+    } catch {
+      if (attempt === copyAttempt.current) setCopyError('Clipboard access failed. Select and copy manually.');
+    }
   };
 
   return (
     <div>
+      {copyError && <p role="alert">{copyError}</p>}
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Input</span>
         <ToolExampleClearActions

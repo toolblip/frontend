@@ -1,3 +1,4 @@
+import { reviewedRelatedTools, type ReviewedToolSlug } from '@/data/reviewed-tools';
 import Link from 'next/link';
 import { tools, type Tool } from '@/data/tools';
 import { getToolPath } from '@/lib/tool-path';
@@ -32,7 +33,7 @@ export default function RelatedTools({ slug, category }: RelatedToolsProps) {
   const current = tools.find((tool) => tool.slug === slug);
   const candidates = tools.filter((tool) => tool.slug !== slug && tool.category === category);
 
-  if (candidates.length === 0) return null;
+
 
   const ranked = [...candidates].sort((a, b) => {
     const tagDiff = (current ? sharedTagCount(current, b) : 0) - (current ? sharedTagCount(current, a) : 0);
@@ -40,12 +41,15 @@ export default function RelatedTools({ slug, category }: RelatedToolsProps) {
     return shuffleKey(slug, a.slug) - shuffleKey(slug, b.slug);
   });
 
-  const related = ranked.slice(0, Math.min(MAX_RELATED, Math.max(MIN_RELATED, ranked.length)));
+  const curated = reviewedRelatedTools[slug as ReviewedToolSlug]?.flatMap(target => tools.filter(tool => tool.slug === target && tool.slug !== slug));
+  const related = curated?.length ? curated : ranked.slice(0, Math.min(MAX_RELATED, Math.max(MIN_RELATED, ranked.length)));
+  if (!related.length) return null;
+  const sameCategory = related.every(tool => tool.category === category);
 
   return (
     <section aria-labelledby="related-tools-title" className="mb-10">
       <h2 id="related-tools-title" className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-        Related {category} tools
+        Related {sameCategory ? `${category} tools` : 'tools'}
       </h2>
       <div className="flex gap-3 overflow-x-auto pb-2 -mx-1 px-1">
         {related.map((tool) => (

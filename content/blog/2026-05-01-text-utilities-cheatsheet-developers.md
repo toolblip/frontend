@@ -153,7 +153,7 @@ keysToCamel({ user_name: "Alice", user_address: { zip_code: "10001" } });
 
 For instant conversions without writing helper functions, use [Toolblip's Case Converter](/tools/case-converter). Handles camelCase, PascalCase, snake_case, kebab-case, CONSTANT_CASE, and more in a single interface.
 
-## Text Sorter  -  `/tools/text-sorter`
+## Text Sorter  -  `/tools/text-line-sorter`
 
 Sorting lines of text comes up more often than you expect: organizing import statements, sorting a list of environment variable names, arranging feature flags, deduplicating and ordering a list.
 
@@ -205,7 +205,7 @@ function shuffle(arr) {
 // → [1, 2, 10]  ← correct
 ```
 
-[Toolblip's Text Sorter](/tools/text-sorter) handles alphabetical, reverse, case-insensitive, numeric, and random sort  -  plus remove duplicate lines in one click.
+[Toolblip's Text Sorter](/tools/text-line-sorter) handles alphabetical, reverse, case-insensitive, numeric, and random sort  -  plus remove duplicate lines in one click.
 
 ## Readability Score  -  `/tools/readability-score`
 
@@ -267,7 +267,7 @@ For user-facing developer content (docs, README, error messages), aim for 60–8
 | [Word Counter](/tools/word-counter) | Word, sentence, paragraph count | In-browser, instant |
 | [Character Counter](/tools/character-counter) | Characters with/without spaces, Twitter preview | In-browser, instant |
 | [Case Converter](/tools/case-converter) | camelCase, snake_case, kebab-case, etc. | In-browser, instant |
-| [Text Sorter](/tools/text-sorter) | Sort, reverse, randomize, deduplicate lines | In-browser, instant |
+| [Text Sorter](/tools/text-line-sorter) | Sort, reverse, randomize, deduplicate lines | In-browser, instant |
 | [Readability Score](/tools/readability-score) | Flesch scores, grade level, syllable count | In-browser, instant |
 
 All five tools run entirely in your browser. No data is sent to any server  -  which matters when you are working with proprietary copy, internal documentation, or anything you would rather not upload.
@@ -279,7 +279,7 @@ These utilities shine when chained together:
 1. Paste draft documentation into [Character Counter](/tools/character-counter) to check meta description length
 2. Run it through [Readability Score](/tools/readability-score) to catch over-complex sentences
 3. Use [Case Converter](/tools/case-converter) to standardize terminology
-4. Sort with [Text Sorter](/tools/text-sorter) and deduplicate a list of terms
+4. Sort with [Text Sorter](/tools/text-line-sorter) and deduplicate a list of terms
 5. Check final word count with [Word Counter](/tools/word-counter)
 
 None of these require a signup. Open the tab once, keep it in your toolbar, and reach for it the next time you need to quickly count, convert, sort, or score text.

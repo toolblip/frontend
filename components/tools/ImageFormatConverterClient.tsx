@@ -1,4 +1,5 @@
 'use client';
+import { encodeCanvas } from '@/lib/media-conversion/image';
 
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { useSubscription } from '@/hooks/useSubscription';
@@ -154,16 +155,7 @@ export default function ImageFormatConverterClient() {
       // PNG is lossless - quality param is ignored
       const qualityValue = outputFormat === 'image/png' ? undefined : quality / 100;
 
-      const blob = await new Promise<Blob>((resolve, reject) => {
-        canvas.toBlob(
-          (b) => {
-            if (b) resolve(b);
-            else reject(new Error('Conversion failed. This format may not be supported by your browser.'));
-          },
-          outputFormat,
-          qualityValue,
-        );
-      });
+      const blob = await encodeCanvas(canvas, outputFormat, qualityValue ?? 1, new AbortController().signal);
 
       if (prevResultUrl.current) URL.revokeObjectURL(prevResultUrl.current);
       const url = URL.createObjectURL(blob);

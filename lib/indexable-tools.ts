@@ -1,13 +1,53 @@
-import { hasFaqOverride } from '@/lib/faq';
+import { getCanonicalToolSlug, tools } from '@/data/tools';
+import {
+  LEGACY_ELIGIBLE_TOOL_SLUGS,
+  TOOL_INDEXING_DECISIONS,
+  type ToolIndexingDecision,
+} from '@/data/tool-indexing-policy';
 
-/**
- * Whether a tool page should be submitted for indexing (sitemap + robots).
- *
- * Tools without a hand-written FAQ override still render template FAQs for
- * readers. This is the current submission gate, not a full quality review:
- * FAQ presence alone does not establish unique functionality or accurate copy,
- * and a crawled-not-indexed report does not prove Google's reason for exclusion.
+export type ToolIndexingStatus =
+  | 'legacy-eligible-needs-review'
+  | 'pending'
+  | 'hold'
+  | 'reviewed'
+  | 'alias'
+  | 'not-in-catalog';
+
+const legacyEligible = new Set(LEGACY_ELIGIBLE_TOOL_SLUGS);
+const catalogSlugs = new Set(tools.map(tool => tool.slug));
+
+function hasReviewEvidence(decision: ToolIndexingDecision): boolean {
+  if (decision.status !== 'reviewed') return false;
+  const { reviewedAt, evidence } = decision;
+  if (typeof reviewedAt !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(reviewedAt)) return false;
+  const date = new Date(`${reviewedAt}T00:00:00.000Z`);
+  return !Number.isNaN(date.getTime())
+    && date.toISOString().slice(0, 10) === reviewedAt
+    && typeof evidence === 'string'
+    && evidence.trim().length > 0;
+}
+
+/** Audit the effective status; optional decisions allow evaluating proposed reviews.
+ * Invalid review metadata fails closed as hold. Evidence content needs human review.
+ * Catalog membership and canonical routing always take precedence over decisions.
  */
-export function isToolIndexable(slug: string): boolean {
-  return hasFaqOverride(slug);
+export function getToolIndexingStatus(
+  slug: string,
+  decisions: Readonly<Record<string, ToolIndexingDecision>> = TOOL_INDEXING_DECISIONS,
+): ToolIndexingStatus {
+  if (getCanonicalToolSlug(slug) !== slug) return 'alias';
+  if (!catalogSlugs.has(slug)) return 'not-in-catalog';
+  if (Object.prototype.hasOwnProperty.call(decisions, slug)) {
+    return hasReviewEvidence(decisions[slug]) ? 'reviewed' : 'hold';
+  }
+  return legacyEligible.has(slug) ? 'legacy-eligible-needs-review' : 'pending';
+}
+
+/** Shared robots/sitemap gate. FAQ content never grants or removes eligibility. */
+export function isToolIndexable(
+  slug: string,
+  decisions: Readonly<Record<string, ToolIndexingDecision>> = TOOL_INDEXING_DECISIONS,
+): boolean {
+  const status = getToolIndexingStatus(slug, decisions);
+  return status === 'legacy-eligible-needs-review' || status === 'reviewed';
 }

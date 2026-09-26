@@ -1,0 +1,4337 @@
+{
+  "snapshotSource": "5556e22",
+  "snapshotDate": "2026-09-26",
+  "archiveDate": "2026-09-26",
+  "scope": "Complete original noindex inventory; source and committed historical QA evidence only. No fresh public browser QA. Dispositions reflect the shared catalog when archived, not deployed redirect verification.",
+  "baselineCounts": {
+    "catalog": 473,
+    "eligible": 354,
+    "noindex": 119,
+    "staleEarlierNoindexCount": 169
+  },
+  "classificationCounts": {
+    "keep-noindex": 99,
+    "promote-review": 8,
+    "duplicate": 12
+  },
+  "historicalSignedOffNoindexCount": 49,
+  "recordedBothEnginePassNoindexCount": 40,
+  "evidenceLimits": [
+    "Historical human signoff is not current acceptance.",
+    "Recorded Chrome/WebKit results describe local scenarios, not production or all modes.",
+    "Developer-data route passes coexist with run shutdown failures; utility/general results are mixed; security/network/image integration remains qualified.",
+    "The original shortlist prose and three structured rows disagree about both-engine evidence; row gaps preserve that discrepancy.",
+    "Private absolute artifact paths and full report logs are omitted; repository-relative report references and route assertions are retained."
+  ],
+  "rows": [
+    {
+      "slug": "json-to-markdown-table",
+      "component": "components/tools/JsonToMarkdownTableClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": null,
+        "reportStatus": "no committed route summary",
+        "engines": {
+          "chrome": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": true,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved.",
+        "No per-route result located in committed PR364 reports. Historical signoff is not a current functional pass."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "image-aspect-ratio-calculator",
+      "component": "components/tools/ImageAspectRatioCalculatorClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": null,
+        "reportStatus": "no committed route summary",
+        "engines": {
+          "chrome": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": false,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved.",
+        "No per-route result located in committed PR364 reports. Historical signoff is not a current functional pass."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "hash-from-text",
+      "component": "components/tools/HashFromTextClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/developer-security.json",
+        "reportStatus": "implemented_scoped_checks_passed_browser_pending",
+        "engines": {
+          "chrome": {
+            "overall": "failed",
+            "functional": "not-run"
+          },
+          "webkit": {
+            "overall": "failed",
+            "functional": "not-run"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": false,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "image-trimmer",
+      "component": "components/tools/ImageTrimmerClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": null,
+        "reportStatus": "no committed route summary",
+        "engines": {
+          "chrome": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": false,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved.",
+        "No per-route result located in committed PR364 reports. Historical signoff is not a current functional pass."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "erase-color",
+      "component": "components/tools/EraseColorClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": null,
+        "reportStatus": "no committed route summary",
+        "engines": {
+          "chrome": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": true,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved.",
+        "No per-route result located in committed PR364 reports. Historical signoff is not a current functional pass."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "square-crop",
+      "component": "components/tools/SquareCropClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": null,
+        "reportStatus": "no committed route summary",
+        "engines": {
+          "chrome": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": false,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved.",
+        "No per-route result located in committed PR364 reports. Historical signoff is not a current functional pass."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "htaccess-redirect-generator",
+      "component": "components/tools/HtaccessRedirectGeneratorClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/seo-network.json",
+        "reportStatus": "blocked: integrated functional acceptance not completed",
+        "engines": {
+          "chrome": {
+            "overall": "not verified",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not verified",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": true,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "percentage-calculator",
+      "component": "components/tools/PercentageCalculatorClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": null,
+        "reportStatus": "no committed route summary",
+        "engines": {
+          "chrome": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": true,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved.",
+        "No per-route result located in committed PR364 reports. Historical signoff is not a current functional pass."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "gradient-generator",
+      "component": "components/tools/GradientGeneratorClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": null,
+        "reportStatus": "no committed route summary",
+        "engines": {
+          "chrome": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": true,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved.",
+        "No per-route result located in committed PR364 reports. Historical signoff is not a current functional pass."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "json-to-typescript",
+      "component": "components/tools/JsonToTypescriptClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/developer-data.json",
+        "reportStatus": "no committed route summary",
+        "engines": {
+          "chrome": {
+            "overall": "passed",
+            "functional": "passed"
+          },
+          "webkit": {
+            "overall": "passed",
+            "functional": "passed"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": true,
+      "historicalSignoff": false,
+      "gaps": [
+        "Recorded local scenario passes require current public-route verification and accurate unique copy review; no blanket all-mode acceptance."
+      ],
+      "recommendation": {
+        "baseline": "promote-review",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "slug-permalink-checker",
+      "component": "components/tools/SlugPermalinkCheckerClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": null,
+        "reportStatus": "no committed route summary",
+        "engines": {
+          "chrome": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": true,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved.",
+        "No per-route result located in committed PR364 reports. Historical signoff is not a current functional pass."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "slideshow-generator",
+      "component": "components/tools/SlideshowGeneratorClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/utility-design.json",
+        "reportStatus": "browser-verified-both-engines",
+        "engines": {
+          "chrome": {
+            "overall": "passed",
+            "functional": "passed"
+          },
+          "webkit": {
+            "overall": "passed",
+            "functional": "passed"
+          }
+        },
+        "assertions": [
+          "HTML download contains both supplied slides",
+          "Downloaded standalone HTML executes Next/Prev navigation independently of the app",
+          "Tool fits a 320px viewport"
+        ]
+      },
+      "bothEngine": true,
+      "historicalSignoff": false,
+      "gaps": [
+        "Recorded local scenario passes require current public-route verification and accurate unique copy review; no blanket all-mode acceptance."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "quote-of-the-day",
+      "component": "components/tools/QuoteOfTheDayClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/utility-design.json",
+        "reportStatus": "browser-verified-both-engines",
+        "engines": {
+          "chrome": {
+            "overall": "passed",
+            "functional": "passed"
+          },
+          "webkit": {
+            "overall": "passed",
+            "functional": "passed"
+          }
+        },
+        "assertions": [
+          "Shuffle changes quote and daily reset restores exact quote",
+          "Tool fits a 320px viewport"
+        ]
+      },
+      "bothEngine": true,
+      "historicalSignoff": false,
+      "gaps": [
+        "Recorded local scenario passes require current public-route verification and accurate unique copy review; no blanket all-mode acceptance."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "morse-code-translator",
+      "component": "components/tools/MorseCodeTranslatorClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": null,
+        "reportStatus": "no committed route summary",
+        "engines": {
+          "chrome": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": true,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved.",
+        "No per-route result located in committed PR364 reports. Historical signoff is not a current functional pass."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "time-zone-converter",
+      "component": "components/tools/TimeZoneConverterClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/utility-design.json",
+        "reportStatus": "browser-verified-both-engines",
+        "engines": {
+          "chrome": {
+            "overall": "passed",
+            "functional": "passed"
+          },
+          "webkit": {
+            "overall": "passed",
+            "functional": "passed"
+          }
+        },
+        "assertions": [
+          "Summer NY/London/Tokyo conversion and both DST ambiguity paths",
+          "Tool fits a 320px viewport"
+        ]
+      },
+      "bothEngine": true,
+      "historicalSignoff": false,
+      "gaps": [
+        "Recorded local scenario passes require current public-route verification and accurate unique copy review; no blanket all-mode acceptance."
+      ],
+      "recommendation": {
+        "baseline": "promote-review",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "html-table-generator",
+      "component": "components/tools/HtmlTableGeneratorClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/developer-general.json",
+        "reportStatus": "browser_scenario_passed",
+        "engines": {
+          "chrome": {
+            "overall": "passed",
+            "functional": "passed"
+          },
+          "webkit": {
+            "overall": "passed",
+            "functional": "passed"
+          }
+        },
+        "assertions": [
+          "Quoted CSV comma stays in one table cell",
+          "Populated result or error state fits a 320px viewport before Clear",
+          "Tool contents fit a 320px viewport"
+        ]
+      },
+      "bothEngine": true,
+      "historicalSignoff": false,
+      "gaps": [
+        "Recorded local scenario passes require current public-route verification and accurate unique copy review; no blanket all-mode acceptance."
+      ],
+      "recommendation": {
+        "baseline": "promote-review",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "twitter-card-preview",
+      "component": "components/tools/TwitterCardPreviewClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/seo-network.json",
+        "reportStatus": "blocked: integrated functional acceptance not completed",
+        "engines": {
+          "chrome": {
+            "overall": "not verified",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not verified",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": false,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "shell-command-reference",
+      "component": "components/tools/ShellCommandReferenceClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/developer-general.json",
+        "reportStatus": "browser_scenario_passed",
+        "engines": {
+          "chrome": {
+            "overall": "passed",
+            "functional": "passed"
+          },
+          "webkit": {
+            "overall": "passed",
+            "functional": "passed"
+          }
+        },
+        "assertions": [
+          "pwd reference describes current directory",
+          "Populated result or error state fits a 320px viewport before Clear",
+          "Tool contents fit a 320px viewport"
+        ]
+      },
+      "bothEngine": true,
+      "historicalSignoff": false,
+      "gaps": [
+        "Recorded local scenario passes require current public-route verification and accurate unique copy review; no blanket all-mode acceptance."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "physics-constants-reference",
+      "component": "components/tools/PhysicsConstantsReferenceClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/utility-design.json",
+        "reportStatus": "browser-verified-both-engines",
+        "engines": {
+          "chrome": {
+            "overall": "passed",
+            "functional": "passed"
+          },
+          "webkit": {
+            "overall": "passed",
+            "functional": "passed"
+          }
+        },
+        "assertions": [
+          "Filtered reference returns the exact SI speed of light and clears filters",
+          "Tool fits a 320px viewport"
+        ]
+      },
+      "bothEngine": true,
+      "historicalSignoff": false,
+      "gaps": [
+        "Recorded local scenario passes require current public-route verification and accurate unique copy review; no blanket all-mode acceptance."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "text-sorter",
+      "component": "components/tools/TextSorterClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "historical-redirect",
+        "canonical": "text-line-sorter"
+      },
+      "evidence": {
+        "report": null,
+        "reportStatus": "no committed route summary",
+        "engines": {
+          "chrome": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": [],
+        "duplicateSource": {
+          "canonical": "text-line-sorter",
+          "evidence": "TextSorterClient.tsx:11-42",
+          "reason": "Identical sorting modes, case sensitivity and deduplication. Prefer the already indexable text-line-sorter over the two currently nonindexable names."
+        }
+      },
+      "bothEngine": false,
+      "historicalSignoff": true,
+      "gaps": [
+        "Identical route-independent dispatched component and props; consolidate into text-line-sorter after preserving capabilities and redirects.",
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved.",
+        "No per-route result located in committed PR364 reports. Historical signoff is not a current functional pass."
+      ],
+      "recommendation": {
+        "baseline": "duplicate",
+        "canonicalCandidate": "text-line-sorter",
+        "action": "retain historical redirect; not live pending inventory"
+      }
+    },
+    {
+      "slug": "slug-generator",
+      "component": "components/tools/SlugGeneratorClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": null,
+        "reportStatus": "no committed route summary",
+        "engines": {
+          "chrome": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": true,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved.",
+        "No per-route result located in committed PR364 reports. Historical signoff is not a current functional pass."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "graphql-playground",
+      "component": "components/tools/GraphqlPlaygroundClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/developer-general.json",
+        "reportStatus": "browser_integration_failed",
+        "engines": {
+          "chrome": {
+            "overall": "failed",
+            "functional": "failed"
+          },
+          "webkit": {
+            "overall": "failed",
+            "functional": "failed"
+          }
+        },
+        "assertions": [
+          "Invalid variables rejected and Clear resets the endpoint"
+        ]
+      },
+      "bothEngine": false,
+      "historicalSignoff": false,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved.",
+        "Positive fixture depends on public read-only countries.trevorblades.com endpoint and its CORS availability."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "websocket-tester",
+      "component": "components/tools/WebSocketTesterClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/developer-general.json",
+        "reportStatus": "browser_integration_failed",
+        "engines": {
+          "chrome": {
+            "overall": "failed",
+            "functional": "failed"
+          },
+          "webkit": {
+            "overall": "failed",
+            "functional": "failed"
+          }
+        },
+        "assertions": [
+          "Non-WebSocket URL rejected and Clear resets URL"
+        ]
+      },
+      "bothEngine": false,
+      "historicalSignoff": false,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved.",
+        "Positive fixture depends on public echo.websocket.org availability; parent must verify the real echo round trip."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "ldap-filter-generator",
+      "component": "components/tools/LdapFilterGeneratorClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/developer-general.json",
+        "reportStatus": "browser_scenario_passed",
+        "engines": {
+          "chrome": {
+            "overall": "passed",
+            "functional": "passed"
+          },
+          "webkit": {
+            "overall": "passed",
+            "functional": "passed"
+          }
+        },
+        "assertions": [
+          "LDAP parentheses escaped as RFC filter octets",
+          "Populated result or error state fits a 320px viewport before Clear",
+          "Tool contents fit a 320px viewport"
+        ]
+      },
+      "bothEngine": true,
+      "historicalSignoff": false,
+      "gaps": [
+        "Recorded local scenario passes require current public-route verification and accurate unique copy review; no blanket all-mode acceptance."
+      ],
+      "recommendation": {
+        "baseline": "promote-review",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "regex-pattern-generator",
+      "component": "components/tools/RegexPatternGeneratorClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/developer-general.json",
+        "reportStatus": "browser_scenario_passed",
+        "engines": {
+          "chrome": {
+            "overall": "passed",
+            "functional": "passed"
+          },
+          "webkit": {
+            "overall": "passed",
+            "functional": "passed"
+          }
+        },
+        "assertions": [
+          "Generated IPv4 regex enforces octet limit",
+          "Populated result or error state fits a 320px viewport before Clear",
+          "Tool contents fit a 320px viewport"
+        ]
+      },
+      "bothEngine": true,
+      "historicalSignoff": false,
+      "gaps": [
+        "Recorded local scenario passes require current public-route verification and accurate unique copy review; no blanket all-mode acceptance."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "image-to-base64",
+      "component": "components/tools/Base64ImageConverterClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "historical-redirect",
+        "canonical": "base64-image-converter"
+      },
+      "evidence": {
+        "report": null,
+        "reportStatus": "no committed route summary",
+        "engines": {
+          "chrome": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": [],
+        "duplicateSource": {
+          "canonical": "base64-image-converter",
+          "evidence": "Base64ImageConverterClient.tsx:208-224",
+          "reason": "Both start in encode mode and expose the same encode/decode controls, verified image parsing and downloads."
+        }
+      },
+      "bothEngine": false,
+      "historicalSignoff": false,
+      "gaps": [
+        "Identical route-independent dispatched component and props; consolidate into base64-image-converter after preserving capabilities and redirects.",
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved.",
+        "No per-route result located in committed PR364 reports. Historical signoff is not a current functional pass."
+      ],
+      "recommendation": {
+        "baseline": "duplicate",
+        "canonicalCandidate": "base64-image-converter",
+        "action": "retain historical redirect; not live pending inventory"
+      }
+    },
+    {
+      "slug": "json-to-typescript-interface",
+      "component": "components/tools/JsonToTypescriptClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "historical-redirect",
+        "canonical": "json-to-typescript"
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/developer-data.json",
+        "reportStatus": "no committed route summary",
+        "engines": {
+          "chrome": {
+            "overall": "passed",
+            "functional": "passed"
+          },
+          "webkit": {
+            "overall": "passed",
+            "functional": "passed"
+          }
+        },
+        "assertions": [],
+        "duplicateSource": {
+          "canonical": "json-to-typescript",
+          "evidence": "JsonToTypescriptClient.tsx:2; developer-data/Converters.tsx:11-15; lib/developer-data/core.ts:40-63",
+          "reason": "Same inferred interfaces/types with root/item names, quote and semicolon controls. No strict/nullability/readonly options. Descriptive canonical covers all generated forms."
+        }
+      },
+      "bothEngine": true,
+      "historicalSignoff": false,
+      "gaps": [
+        "Identical route-independent dispatched component and props; consolidate into json-to-typescript after preserving capabilities and redirects.",
+        "Recorded local scenario passes require current public-route verification and accurate unique copy review; no blanket all-mode acceptance."
+      ],
+      "recommendation": {
+        "baseline": "duplicate",
+        "canonicalCandidate": "json-to-typescript",
+        "action": "retain historical redirect; not live pending inventory"
+      }
+    },
+    {
+      "slug": "currency-converter",
+      "component": "components/tools/CurrencyConverterClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": null,
+        "reportStatus": "no committed route summary",
+        "engines": {
+          "chrome": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": true,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved.",
+        "No per-route result located in committed PR364 reports. Historical signoff is not a current functional pass."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "mime-types-reference",
+      "component": "components/tools/MIMETypesReferenceClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/developer-general.json",
+        "reportStatus": "browser_scenario_passed",
+        "engines": {
+          "chrome": {
+            "overall": "passed",
+            "functional": "passed"
+          },
+          "webkit": {
+            "overall": "passed",
+            "functional": "passed"
+          }
+        },
+        "assertions": [
+          "JSON extension maps to application/json in same row",
+          "Populated result or error state fits a 320px viewport before Clear",
+          "Tool contents fit a 320px viewport"
+        ]
+      },
+      "bothEngine": true,
+      "historicalSignoff": false,
+      "gaps": [
+        "Recorded local scenario passes require current public-route verification and accurate unique copy review; no blanket all-mode acceptance."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "json-editor",
+      "component": "components/tools/JsonEditorClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/developer-data.json",
+        "reportStatus": "no committed route summary",
+        "engines": {
+          "chrome": {
+            "overall": "passed",
+            "functional": "passed"
+          },
+          "webkit": {
+            "overall": "passed",
+            "functional": "passed"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": true,
+      "historicalSignoff": false,
+      "gaps": [
+        "Recorded local scenario passes require current public-route verification and accurate unique copy review; no blanket all-mode acceptance."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "json-tree-view",
+      "component": "components/tools/JsonTreeViewClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/developer-data.json",
+        "reportStatus": "no committed route summary",
+        "engines": {
+          "chrome": {
+            "overall": "passed",
+            "functional": "passed"
+          },
+          "webkit": {
+            "overall": "passed",
+            "functional": "passed"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": true,
+      "historicalSignoff": false,
+      "gaps": [
+        "Recorded local scenario passes require current public-route verification and accurate unique copy review; no blanket all-mode acceptance."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "html-entity-encoder",
+      "component": "components/tools/HtmlEntityEncoderClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/utility-design.json",
+        "reportStatus": "browser-verified-both-engines",
+        "engines": {
+          "chrome": {
+            "overall": "passed",
+            "functional": "passed"
+          },
+          "webkit": {
+            "overall": "passed",
+            "functional": "passed"
+          }
+        },
+        "assertions": [
+          "Single-pass entity decoding preserves literal entities and handles invalid code points",
+          "Tool fits a 320px viewport"
+        ]
+      },
+      "bothEngine": true,
+      "historicalSignoff": false,
+      "gaps": [
+        "Recorded local scenario passes require current public-route verification and accurate unique copy review; no blanket all-mode acceptance."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "md5-hash-generator",
+      "component": "components/tools/HashGeneratorClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/developer-security.json",
+        "reportStatus": "implemented_scoped_checks_passed_browser_pending",
+        "engines": {
+          "chrome": {
+            "overall": "failed",
+            "functional": "not-run"
+          },
+          "webkit": {
+            "overall": "failed",
+            "functional": "not-run"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": false,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved.",
+        "Shared HashGeneratorClient selects MD5 from pathname; shared component alone does not establish duplication."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "hash-diff-checker",
+      "component": "components/tools/HashDiffCheckerClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/developer-security.json",
+        "reportStatus": "implemented_scoped_checks_passed_browser_pending",
+        "engines": {
+          "chrome": {
+            "overall": "failed",
+            "functional": "not-run"
+          },
+          "webkit": {
+            "overall": "failed",
+            "functional": "not-run"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": false,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "lorem-ipsum-detector",
+      "component": "components/tools/LoremIpsumDetectorClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": null,
+        "reportStatus": "no committed route summary",
+        "engines": {
+          "chrome": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": true,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved.",
+        "No per-route result located in committed PR364 reports. Historical signoff is not a current functional pass."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "word-cloud-generator",
+      "component": "components/tools/WordCloudGeneratorClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/utility-design.json",
+        "reportStatus": "browser-acceptance-incomplete-or-failed",
+        "engines": {
+          "chrome": {
+            "overall": "failed",
+            "functional": "not-run"
+          },
+          "webkit": {
+            "overall": "passed",
+            "functional": "passed"
+          }
+        },
+        "assertions": [
+          "Word cloud counts three filtered words and two unique words",
+          "Download is genuine PNG",
+          "PNG dimensions 760\u00d7440",
+          "Decoded PNG contains nonblank rendered pixels",
+          "Tool fits a 320px viewport"
+        ]
+      },
+      "bothEngine": false,
+      "historicalSignoff": false,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved.",
+        "chrome: failed"
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "json-to-python",
+      "component": "components/tools/JsonToPythonClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/developer-data.json",
+        "reportStatus": "no committed route summary",
+        "engines": {
+          "chrome": {
+            "overall": "passed",
+            "functional": "passed"
+          },
+          "webkit": {
+            "overall": "passed",
+            "functional": "passed"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": true,
+      "historicalSignoff": false,
+      "gaps": [
+        "Recorded local scenario passes require current public-route verification and accurate unique copy review; no blanket all-mode acceptance."
+      ],
+      "recommendation": {
+        "baseline": "promote-review",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "text-highlighter",
+      "component": "components/tools/TextHighlighterClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": null,
+        "reportStatus": "no committed route summary",
+        "engines": {
+          "chrome": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": true,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved.",
+        "No per-route result located in committed PR364 reports. Historical signoff is not a current functional pass."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "word-combinations-generator",
+      "component": "components/tools/WordCombinationsGeneratorClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": null,
+        "reportStatus": "no committed route summary",
+        "engines": {
+          "chrome": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": true,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved.",
+        "No per-route result located in committed PR364 reports. Historical signoff is not a current functional pass."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "sentiment-analyzer",
+      "component": "components/tools/SentimentAnalyzerClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": null,
+        "reportStatus": "no committed route summary",
+        "engines": {
+          "chrome": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": true,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved.",
+        "No per-route result located in committed PR364 reports. Historical signoff is not a current functional pass."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "hex-named-color-converter",
+      "component": "components/tools/HexToNamedColorClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": null,
+        "reportStatus": "no committed route summary",
+        "engines": {
+          "chrome": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": true,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved.",
+        "No per-route result located in committed PR364 reports. Historical signoff is not a current functional pass."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "grammar-checker-v2",
+      "component": "components/tools/GrammarCheckerV2Client.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": null,
+        "reportStatus": "no committed route summary",
+        "engines": {
+          "chrome": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": true,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved.",
+        "No per-route result located in committed PR364 reports. Historical signoff is not a current functional pass."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "json-validator",
+      "component": "components/tools/JsonValidatorClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/developer-data.json",
+        "reportStatus": "no committed route summary",
+        "engines": {
+          "chrome": {
+            "overall": "passed",
+            "functional": "passed"
+          },
+          "webkit": {
+            "overall": "passed",
+            "functional": "passed"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": true,
+      "historicalSignoff": false,
+      "gaps": [
+        "Recorded local scenario passes require current public-route verification and accurate unique copy review; no blanket all-mode acceptance."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "word-alphabetizer",
+      "component": "components/tools/WordAlphabetizerClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": null,
+        "reportStatus": "no committed route summary",
+        "engines": {
+          "chrome": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": true,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved.",
+        "No per-route result located in committed PR364 reports. Historical signoff is not a current functional pass."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "jwt-tester",
+      "component": "components/tools/JwtTokenTesterClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "historical-redirect",
+        "canonical": "jwt-token-tester"
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/developer-security.json",
+        "reportStatus": "implemented_scoped_checks_passed_browser_pending",
+        "engines": {
+          "chrome": {
+            "overall": "failed",
+            "functional": "not-run"
+          },
+          "webkit": {
+            "overall": "passed",
+            "functional": "passed"
+          }
+        },
+        "assertions": [],
+        "duplicateSource": {
+          "canonical": "jwt-token-tester",
+          "evidence": "JwtTokenTesterClient.tsx:65-72,126-136,233-265",
+          "reason": "Identical JWT decode and HMAC verification workflow; only HS256/384/512 verification supported. Keep descriptive token tester canonical; both currently nonindexable."
+        }
+      },
+      "bothEngine": false,
+      "historicalSignoff": false,
+      "gaps": [
+        "Identical route-independent dispatched component and props; consolidate into jwt-token-tester after preserving capabilities and redirects.",
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved."
+      ],
+      "recommendation": {
+        "baseline": "duplicate",
+        "canonicalCandidate": "jwt-token-tester",
+        "action": "retain historical redirect; not live pending inventory"
+      }
+    },
+    {
+      "slug": "metric-imperial-converter",
+      "component": "components/tools/MetricImperialConverterClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": null,
+        "reportStatus": "no committed route summary",
+        "engines": {
+          "chrome": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": true,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved.",
+        "No per-route result located in committed PR364 reports. Historical signoff is not a current functional pass."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "jwt-token-tester",
+      "component": "components/tools/JwtTokenTesterClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/developer-security.json",
+        "reportStatus": "implemented_scoped_checks_passed_browser_pending",
+        "engines": {
+          "chrome": {
+            "overall": "failed",
+            "functional": "not-run"
+          },
+          "webkit": {
+            "overall": "failed",
+            "functional": "not-run"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": false,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "grammar-score-checker",
+      "component": "components/tools/GrammarScoreCheckerClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": null,
+        "reportStatus": "no committed route summary",
+        "engines": {
+          "chrome": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": true,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved.",
+        "No per-route result located in committed PR364 reports. Historical signoff is not a current functional pass."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "regex-description-generator",
+      "component": "components/tools/RegexDescriptionGeneratorClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/developer-general.json",
+        "reportStatus": "browser_scenario_passed",
+        "engines": {
+          "chrome": {
+            "overall": "passed",
+            "functional": "passed"
+          },
+          "webkit": {
+            "overall": "passed",
+            "functional": "passed"
+          }
+        },
+        "assertions": [
+          "Digit token explanation accompanies actual match",
+          "Populated result or error state fits a 320px viewport before Clear",
+          "Tool contents fit a 320px viewport"
+        ]
+      },
+      "bothEngine": true,
+      "historicalSignoff": false,
+      "gaps": [
+        "Recorded local scenario passes require current public-route verification and accurate unique copy review; no blanket all-mode acceptance."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "grammar-checker-pro",
+      "component": "components/tools/GrammarCheckerProClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": null,
+        "reportStatus": "no committed route summary",
+        "engines": {
+          "chrome": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": true,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved.",
+        "No per-route result located in committed PR364 reports. Historical signoff is not a current functional pass."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "reading-level-estimator",
+      "component": "components/tools/ReadingLevelEstimatorClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": null,
+        "reportStatus": "no committed route summary",
+        "engines": {
+          "chrome": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": true,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved.",
+        "No per-route result located in committed PR364 reports. Historical signoff is not a current functional pass."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "color-format-converter",
+      "component": "components/tools/ColorFormatConverterV2Client.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": null,
+        "reportStatus": "no committed route summary",
+        "engines": {
+          "chrome": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": true,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved.",
+        "No per-route result located in committed PR364 reports. Historical signoff is not a current functional pass."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "google-serp-preview",
+      "component": "components/tools/GoogleSerpPreviewClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/seo-network.json",
+        "reportStatus": "blocked: integrated functional acceptance not completed",
+        "engines": {
+          "chrome": {
+            "overall": "not verified",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not verified",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": false,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "curl-gen",
+      "component": "components/tools/CurlGenExpressClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/developer-general.json",
+        "reportStatus": "browser_scenario_passed",
+        "engines": {
+          "chrome": {
+            "overall": "passed",
+            "functional": "passed"
+          },
+          "webkit": {
+            "overall": "passed",
+            "functional": "passed"
+          }
+        },
+        "assertions": [
+          "Raw HTTP request preserves path, method and body",
+          "Populated result or error state fits a 320px viewport before Clear",
+          "Tool contents fit a 320px viewport"
+        ]
+      },
+      "bothEngine": true,
+      "historicalSignoff": false,
+      "gaps": [
+        "Recorded local scenario passes require current public-route verification and accurate unique copy review; no blanket all-mode acceptance."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "temp-converter",
+      "component": "components/tools/TempConverterExpressClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": null,
+        "reportStatus": "no committed route summary",
+        "engines": {
+          "chrome": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": true,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved.",
+        "No per-route result located in committed PR364 reports. Historical signoff is not a current functional pass."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "word-freq",
+      "component": "components/tools/WordFreqExpressClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": null,
+        "reportStatus": "no committed route summary",
+        "engines": {
+          "chrome": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": true,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved.",
+        "No per-route result located in committed PR364 reports. Historical signoff is not a current functional pass."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "regex-explainer",
+      "component": "components/tools/RegexExplainerClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/developer-general.json",
+        "reportStatus": "browser_scenario_passed_with_disclosed_limits",
+        "engines": {
+          "chrome": {
+            "overall": "passed",
+            "functional": "passed"
+          },
+          "webkit": {
+            "overall": "passed",
+            "functional": "passed"
+          }
+        },
+        "assertions": [
+          "Digit token explanation accompanies actual match",
+          "Populated result or error state fits a 320px viewport before Clear",
+          "Tool contents fit a 320px viewport"
+        ]
+      },
+      "bothEngine": true,
+      "historicalSignoff": false,
+      "gaps": [
+        "Token hints are not a complete semantic parse of every nested regex construct.",
+        "Recorded local scenario passes require current public-route verification and accurate unique copy review; no blanket all-mode acceptance."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "passive-voice-detector",
+      "component": "components/tools/PassiveVoiceDetectorClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": null,
+        "reportStatus": "no committed route summary",
+        "engines": {
+          "chrome": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": true,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved.",
+        "No per-route result located in committed PR364 reports. Historical signoff is not a current functional pass."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "word-scramble-generator",
+      "component": "components/tools/WordScrambleGeneratorClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": null,
+        "reportStatus": "no committed route summary",
+        "engines": {
+          "chrome": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": true,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved.",
+        "No per-route result located in committed PR364 reports. Historical signoff is not a current functional pass."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "uuid-normalizer",
+      "component": "components/tools/UUIDNormalizerClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/developer-security.json",
+        "reportStatus": "implemented_scoped_checks_passed_browser_pending",
+        "engines": {
+          "chrome": {
+            "overall": "failed",
+            "functional": "not-run"
+          },
+          "webkit": {
+            "overall": "failed",
+            "functional": "not-run"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": false,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "pressure-converter",
+      "component": "components/tools/PressureConverterClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": null,
+        "reportStatus": "no committed route summary",
+        "engines": {
+          "chrome": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": true,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved.",
+        "No per-route result located in committed PR364 reports. Historical signoff is not a current functional pass."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "energy-converter",
+      "component": "components/tools/EnergyConverterClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": null,
+        "reportStatus": "no committed route summary",
+        "engines": {
+          "chrome": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": true,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved.",
+        "No per-route result located in committed PR364 reports. Historical signoff is not a current functional pass."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "business-plan-generator",
+      "component": "components/tools/BusinessPlanGeneratorClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/utility-design.json",
+        "reportStatus": "browser-verified-both-engines",
+        "engines": {
+          "chrome": {
+            "overall": "passed",
+            "functional": "passed"
+          },
+          "webkit": {
+            "overall": "passed",
+            "functional": "passed"
+          }
+        },
+        "assertions": [
+          "Outline reflects all supplied inputs and does not fabricate financial projections",
+          "Tool fits a 320px viewport"
+        ]
+      },
+      "bothEngine": true,
+      "historicalSignoff": false,
+      "gaps": [
+        "Recorded local scenario passes require current public-route verification and accurate unique copy review; no blanket all-mode acceptance."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "font-to-png",
+      "component": "components/tools/FontToPngClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/images.json",
+        "reportStatus": "passed-local-both-engines",
+        "engines": {
+          "chrome": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": false,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "press-release-generator",
+      "component": "components/tools/PressReleaseGeneratorClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/utility-design.json",
+        "reportStatus": "browser-acceptance-incomplete-or-failed",
+        "engines": {
+          "chrome": {
+            "overall": "failed",
+            "functional": "failed"
+          },
+          "webkit": {
+            "overall": "failed",
+            "functional": "failed"
+          }
+        },
+        "assertions": [
+          "TXT export preserves every tested field",
+          "PDF bytes parse as a real paginated PDF",
+          "Independent PDF.js extraction preserves every tested document field"
+        ]
+      },
+      "bothEngine": false,
+      "historicalSignoff": false,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved.",
+        "chrome: failed; webkit: failed"
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "split-csv",
+      "component": "components/tools/SplitCSVFileClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/utility-design.json",
+        "reportStatus": "browser-verified-both-engines",
+        "engines": {
+          "chrome": {
+            "overall": "passed",
+            "functional": "passed"
+          },
+          "webkit": {
+            "overall": "passed",
+            "functional": "passed"
+          }
+        },
+        "assertions": [
+          "CSV bytes preserve embedded newline, commas and escaped quotes",
+          "Tool fits a 320px viewport"
+        ]
+      },
+      "bothEngine": true,
+      "historicalSignoff": false,
+      "gaps": [
+        "Recorded local scenario passes require current public-route verification and accurate unique copy review; no blanket all-mode acceptance."
+      ],
+      "recommendation": {
+        "baseline": "promote-review",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "unicode-escape-encoder",
+      "component": "components/tools/UnicodeEscapeEncoderClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": null,
+        "reportStatus": "no committed route summary",
+        "engines": {
+          "chrome": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": true,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved.",
+        "No per-route result located in committed PR364 reports. Historical signoff is not a current functional pass.",
+        "Security integration report explicitly records missing fixture."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "remove-extra-spaces",
+      "component": "components/tools/RemoveExtraSpacesClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": null,
+        "reportStatus": "no committed route summary",
+        "engines": {
+          "chrome": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": true,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved.",
+        "No per-route result located in committed PR364 reports. Historical signoff is not a current functional pass."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "random-choice-wheel",
+      "component": "components/tools/RandomChoiceWheelClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/utility-design.json",
+        "reportStatus": "browser-verified-both-engines",
+        "engines": {
+          "chrome": {
+            "overall": "passed",
+            "functional": "passed"
+          },
+          "webkit": {
+            "overall": "passed",
+            "functional": "passed"
+          }
+        },
+        "assertions": [
+          "Zero-weight choice cannot win; Clear cancels animation",
+          "Tool fits a 320px viewport"
+        ]
+      },
+      "bothEngine": true,
+      "historicalSignoff": false,
+      "gaps": [
+        "Recorded local scenario passes require current public-route verification and accurate unique copy review; no blanket all-mode acceptance."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "image-shadow-generator",
+      "component": "components/tools/ImageShadowGeneratorClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/utility-design.json",
+        "reportStatus": "browser-verified-both-engines",
+        "engines": {
+          "chrome": {
+            "overall": "passed",
+            "functional": "passed"
+          },
+          "webkit": {
+            "overall": "passed",
+            "functional": "passed"
+          }
+        },
+        "assertions": [
+          "Download is genuine PNG",
+          "PNG dimensions 180\u00d7140",
+          "Decoded PNG contains nonblank rendered pixels",
+          "Rendered PNG adds correct transparent shadow padding and Clear removes result",
+          "Tool fits a 320px viewport"
+        ]
+      },
+      "bothEngine": true,
+      "historicalSignoff": false,
+      "gaps": [
+        "Recorded local scenario passes require current public-route verification and accurate unique copy review; no blanket all-mode acceptance."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "hmac-generator",
+      "component": "components/tools/HmacGeneratorClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/developer-security.json",
+        "reportStatus": "implemented_scoped_checks_passed_browser_pending",
+        "engines": {
+          "chrome": {
+            "overall": "failed",
+            "functional": "not-run"
+          },
+          "webkit": {
+            "overall": "passed",
+            "functional": "passed"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": false,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "secure-random-generator",
+      "component": "components/tools/SecureRandomGeneratorClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/developer-security.json",
+        "reportStatus": "implemented_scoped_checks_passed_browser_pending",
+        "engines": {
+          "chrome": {
+            "overall": "failed",
+            "functional": "not-run"
+          },
+          "webkit": {
+            "overall": "passed",
+            "functional": "passed"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": false,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "css-naming-convention",
+      "component": "components/tools/CssNamingConventionClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/utility-design.json",
+        "reportStatus": "browser-verified-both-engines",
+        "engines": {
+          "chrome": {
+            "overall": "passed",
+            "functional": "passed"
+          },
+          "webkit": {
+            "overall": "passed",
+            "functional": "passed"
+          }
+        },
+        "assertions": [
+          "Acronyms split into complete words in kebab, camel and constant case",
+          "Tool fits a 320px viewport"
+        ]
+      },
+      "bothEngine": true,
+      "historicalSignoff": false,
+      "gaps": [
+        "Recorded local scenario passes require current public-route verification and accurate unique copy review; no blanket all-mode acceptance."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "html-minifier",
+      "component": "components/tools/HtmlMinifierClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/developer-general.json",
+        "reportStatus": "browser_scenario_passed",
+        "engines": {
+          "chrome": {
+            "overall": "passed",
+            "functional": "passed"
+          },
+          "webkit": {
+            "overall": "passed",
+            "functional": "passed"
+          }
+        },
+        "assertions": [
+          "Closing script tag and inline word separator preserved",
+          "Populated result or error state fits a 320px viewport before Clear",
+          "Tool contents fit a 320px viewport"
+        ]
+      },
+      "bothEngine": true,
+      "historicalSignoff": false,
+      "gaps": [
+        "Recorded local scenario passes require current public-route verification and accurate unique copy review; no blanket all-mode acceptance."
+      ],
+      "recommendation": {
+        "baseline": "promote-review",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "random-pin-generator",
+      "component": "components/tools/RandomPinGeneratorClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/utility-design.json",
+        "reportStatus": "browser-verified-both-engines",
+        "engines": {
+          "chrome": {
+            "overall": "passed",
+            "functional": "passed"
+          },
+          "webkit": {
+            "overall": "passed",
+            "functional": "passed"
+          }
+        },
+        "assertions": [
+          "Generated count, alphabet, length and prefix match controls",
+          "Tool fits a 320px viewport"
+        ]
+      },
+      "bothEngine": true,
+      "historicalSignoff": false,
+      "gaps": [
+        "Recorded local scenario passes require current public-route verification and accurate unique copy review; no blanket all-mode acceptance."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "uuid-comparator",
+      "component": "components/tools/UUIDComparatorClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/developer-security.json",
+        "reportStatus": "implemented_scoped_checks_passed_browser_pending",
+        "engines": {
+          "chrome": {
+            "overall": "failed",
+            "functional": "not-run"
+          },
+          "webkit": {
+            "overall": "passed",
+            "functional": "passed"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": false,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "token-builder",
+      "component": "components/tools/TokenBuilderClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/developer-security.json",
+        "reportStatus": "implemented_scoped_checks_passed_browser_pending",
+        "engines": {
+          "chrome": {
+            "overall": "passed",
+            "functional": "passed"
+          },
+          "webkit": {
+            "overall": "failed",
+            "functional": "not-run"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": false,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "image-scale-calculator",
+      "component": "components/tools/ImageScaleCalculatorClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/images.json",
+        "reportStatus": "partial-browser-evidence; integration-blocked",
+        "engines": {
+          "chrome": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": false,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "http-headers-inspector",
+      "component": "components/tools/HttpHeadersInspectorClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/developer-general.json",
+        "reportStatus": "browser_scenario_passed",
+        "engines": {
+          "chrome": {
+            "overall": "passed",
+            "functional": "passed"
+          },
+          "webkit": {
+            "overall": "passed",
+            "functional": "passed"
+          }
+        },
+        "assertions": [
+          "Actual health response has HTTP 200 and JSON content type",
+          "Real public read-only HTTP endpoint returns JSON response headers",
+          "Populated result or error state fits a 320px viewport before Clear",
+          "Tool contents fit a 320px viewport"
+        ]
+      },
+      "bothEngine": true,
+      "historicalSignoff": false,
+      "gaps": [
+        "Recorded local scenario passes require current public-route verification and accurate unique copy review; no blanket all-mode acceptance."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "headline-analyzer",
+      "component": "components/tools/HeadlineAnalyzerClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": null,
+        "reportStatus": "no committed route summary",
+        "engines": {
+          "chrome": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": true,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved.",
+        "No per-route result located in committed PR364 reports. Historical signoff is not a current functional pass."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "text-structure-validator",
+      "component": "components/tools/TextStructureValidatorClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": null,
+        "reportStatus": "no committed route summary",
+        "engines": {
+          "chrome": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": true,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved.",
+        "No per-route result located in committed PR364 reports. Historical signoff is not a current functional pass."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "uuid-compare",
+      "component": "components/tools/UUIDCompareClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/developer-security.json",
+        "reportStatus": "implemented_scoped_checks_passed_browser_pending",
+        "engines": {
+          "chrome": {
+            "overall": "passed",
+            "functional": "passed"
+          },
+          "webkit": {
+            "overall": "failed",
+            "functional": "not-run"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": false,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "frequency-converter",
+      "component": "components/tools/FrequencyConverterClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": null,
+        "reportStatus": "no committed route summary",
+        "engines": {
+          "chrome": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": true,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved.",
+        "No per-route result located in committed PR364 reports. Historical signoff is not a current functional pass."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "force-converter",
+      "component": "components/tools/ForceConverterClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": null,
+        "reportStatus": "no committed route summary",
+        "engines": {
+          "chrome": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": true,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved.",
+        "No per-route result located in committed PR364 reports. Historical signoff is not a current functional pass."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "random-color-generator",
+      "component": "components/tools/RandomColorGeneratorClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": null,
+        "reportStatus": "no committed route summary",
+        "engines": {
+          "chrome": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": true,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved.",
+        "No per-route result located in committed PR364 reports. Historical signoff is not a current functional pass."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "time-duration-calculator",
+      "component": "components/tools/TimeDurationCalculatorClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/utility-design.json",
+        "reportStatus": "browser-verified-both-engines",
+        "engines": {
+          "chrome": {
+            "overall": "passed",
+            "functional": "passed"
+          },
+          "webkit": {
+            "overall": "passed",
+            "functional": "passed"
+          }
+        },
+        "assertions": [
+          "23:30 plus two hours rolls into next day; invalid clock time rejected",
+          "Tool fits a 320px viewport"
+        ]
+      },
+      "bothEngine": true,
+      "historicalSignoff": false,
+      "gaps": [
+        "Recorded local scenario passes require current public-route verification and accurate unique copy review; no blanket all-mode acceptance."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "timestamp-diff-calculator",
+      "component": "components/tools/TimestampDiffCalculatorClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/utility-design.json",
+        "reportStatus": "browser-verified-both-engines",
+        "engines": {
+          "chrome": {
+            "overall": "passed",
+            "functional": "passed"
+          },
+          "webkit": {
+            "overall": "passed",
+            "functional": "passed"
+          }
+        },
+        "assertions": [
+          "DST offset timestamp difference is exactly 3600 seconds",
+          "Tool fits a 320px viewport"
+        ]
+      },
+      "bothEngine": true,
+      "historicalSignoff": false,
+      "gaps": [
+        "Recorded local scenario passes require current public-route verification and accurate unique copy review; no blanket all-mode acceptance."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "pixel-density-calculator",
+      "component": "components/tools/PixelDensityCalculatorClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/images.json",
+        "reportStatus": "partial-browser-evidence; integration-blocked",
+        "engines": {
+          "chrome": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": false,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "html-to-plain-text",
+      "component": "components/tools/HtmlToPlainTextClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": null,
+        "reportStatus": "no committed route summary",
+        "engines": {
+          "chrome": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": true,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved.",
+        "No per-route result located in committed PR364 reports. Historical signoff is not a current functional pass."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "spelling-checker",
+      "component": "components/tools/GrammarCheckerClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "historical-redirect",
+        "canonical": "grammar-checker"
+      },
+      "evidence": {
+        "report": null,
+        "reportStatus": "no committed route summary",
+        "engines": {
+          "chrome": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": [],
+        "duplicateSource": {
+          "canonical": "grammar-checker",
+          "evidence": "GrammarCheckerClient.tsx:20-47,52-56",
+          "reason": "Same en-US grammar API request and correction UI; spelling route has no spelling-only filtering."
+        }
+      },
+      "bothEngine": false,
+      "historicalSignoff": true,
+      "gaps": [
+        "Identical route-independent dispatched component and props; consolidate into grammar-checker after preserving capabilities and redirects.",
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved.",
+        "No per-route result located in committed PR364 reports. Historical signoff is not a current functional pass."
+      ],
+      "recommendation": {
+        "baseline": "duplicate",
+        "canonicalCandidate": "grammar-checker",
+        "action": "retain historical redirect; not live pending inventory"
+      }
+    },
+    {
+      "slug": "text-complexity-analyzer",
+      "component": "components/tools/TextComplexityAnalyzerClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": null,
+        "reportStatus": "no committed route summary",
+        "engines": {
+          "chrome": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": true,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved.",
+        "No per-route result located in committed PR364 reports. Historical signoff is not a current functional pass."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "text-deduplicator",
+      "component": "components/tools/TextDeduplicatorClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": null,
+        "reportStatus": "no committed route summary",
+        "engines": {
+          "chrome": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": true,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved.",
+        "No per-route result located in committed PR364 reports. Historical signoff is not a current functional pass."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "slug-health-checker",
+      "component": "components/tools/SlugHealthCheckerClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": null,
+        "reportStatus": "no committed route summary",
+        "engines": {
+          "chrome": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": true,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved.",
+        "No per-route result located in committed PR364 reports. Historical signoff is not a current functional pass."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "text-sentence-shuffler",
+      "component": "components/tools/TextSentenceShufflerClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": null,
+        "reportStatus": "no committed route summary",
+        "engines": {
+          "chrome": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": true,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved.",
+        "No per-route result located in committed PR364 reports. Historical signoff is not a current functional pass."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "regex-pattern-builder",
+      "component": "components/tools/RegexPatternBuilderClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/developer-general.json",
+        "reportStatus": "browser_scenario_passed",
+        "engines": {
+          "chrome": {
+            "overall": "passed",
+            "functional": "passed"
+          },
+          "webkit": {
+            "overall": "passed",
+            "functional": "passed"
+          }
+        },
+        "assertions": [
+          "Constructed regex accepts email example and rejects malformed input",
+          "Populated result or error state fits a 320px viewport before Clear",
+          "Tool contents fit a 320px viewport"
+        ]
+      },
+      "bothEngine": true,
+      "historicalSignoff": false,
+      "gaps": [
+        "Recorded local scenario passes require current public-route verification and accurate unique copy review; no blanket all-mode acceptance."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "css-animation-generator",
+      "component": "components/tools/CssAnimationGeneratorClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/utility-design.json",
+        "reportStatus": "browser-verified-both-engines",
+        "engines": {
+          "chrome": {
+            "overall": "passed",
+            "functional": "passed"
+          },
+          "webkit": {
+            "overall": "passed",
+            "functional": "passed"
+          }
+        },
+        "assertions": [
+          "Animation example and Clear produce corresponding keyframes and timing",
+          "Tool fits a 320px viewport"
+        ]
+      },
+      "bothEngine": true,
+      "historicalSignoff": false,
+      "gaps": [
+        "Recorded local scenario passes require current public-route verification and accurate unique copy review; no blanket all-mode acceptance."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "scientific-notation-converter",
+      "component": "components/tools/ScientificNotationConverterClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": null,
+        "reportStatus": "no committed route summary",
+        "engines": {
+          "chrome": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": true,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved.",
+        "No per-route result located in committed PR364 reports. Historical signoff is not a current functional pass."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "css-cursor-generator",
+      "component": "components/tools/CssCursorGeneratorClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/utility-design.json",
+        "reportStatus": "browser-verified-both-engines",
+        "engines": {
+          "chrome": {
+            "overall": "passed",
+            "functional": "passed"
+          },
+          "webkit": {
+            "overall": "passed",
+            "functional": "passed"
+          }
+        },
+        "assertions": [
+          "Cursor CSS uses a quoted URL without breaking apostrophes",
+          "Tool fits a 320px viewport"
+        ]
+      },
+      "bothEngine": true,
+      "historicalSignoff": false,
+      "gaps": [
+        "Recorded local scenario passes require current public-route verification and accurate unique copy review; no blanket all-mode acceptance."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "http-status-checker",
+      "component": "components/tools/HttpStatusCheckerClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/developer-general.json",
+        "reportStatus": "browser_scenario_passed",
+        "engines": {
+          "chrome": {
+            "overall": "passed",
+            "functional": "passed"
+          },
+          "webkit": {
+            "overall": "passed",
+            "functional": "passed"
+          }
+        },
+        "assertions": [
+          "Actual health response has HTTP 200 and JSON content type",
+          "Real public read-only HTTP endpoint returns JSON response headers",
+          "Populated result or error state fits a 320px viewport before Clear",
+          "Tool contents fit a 320px viewport"
+        ]
+      },
+      "bothEngine": true,
+      "historicalSignoff": false,
+      "gaps": [
+        "Recorded local scenario passes require current public-route verification and accurate unique copy review; no blanket all-mode acceptance."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "keyword-density-analyzer",
+      "component": "components/tools/KeywordDensityCheckerClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "historical-redirect",
+        "canonical": "keyword-density-checker"
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/seo-network.json",
+        "reportStatus": "blocked: integrated functional acceptance not completed",
+        "engines": {
+          "chrome": {
+            "overall": "not verified",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not verified",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": [],
+        "duplicateSource": {
+          "canonical": "keyword-density-checker",
+          "evidence": "KeywordDensityCheckerClient.tsx:3; SeoNetworkTextClient.tsx:31-35,62,81; lib/seo-network/core.ts:70-85",
+          "reason": "Both run the same plain-text phrase/window frequency analyzer. No HTML extraction mode."
+        }
+      },
+      "bothEngine": false,
+      "historicalSignoff": false,
+      "gaps": [
+        "Identical route-independent dispatched component and props; consolidate into keyword-density-checker after preserving capabilities and redirects.",
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved."
+      ],
+      "recommendation": {
+        "baseline": "duplicate",
+        "canonicalCandidate": "keyword-density-checker",
+        "action": "retain historical redirect; not live pending inventory"
+      }
+    },
+    {
+      "slug": "random-choice-picker",
+      "component": "components/tools/RandomChoicePickerClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/utility-design.json",
+        "reportStatus": "browser-verified-both-engines",
+        "engines": {
+          "chrome": {
+            "overall": "passed",
+            "functional": "passed"
+          },
+          "webkit": {
+            "overall": "passed",
+            "functional": "passed"
+          }
+        },
+        "assertions": [
+          "Single option is selected exactly; both existing Clear controls reset result/input and empty list disables picking",
+          "Tool fits a 320px viewport"
+        ]
+      },
+      "bothEngine": true,
+      "historicalSignoff": false,
+      "gaps": [
+        "Recorded local scenario passes require current public-route verification and accurate unique copy review; no blanket all-mode acceptance."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "list-difference-finder",
+      "component": "components/tools/ListDifferenceFinderClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": null,
+        "reportStatus": "no committed route summary",
+        "engines": {
+          "chrome": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": true,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved.",
+        "No per-route result located in committed PR364 reports. Historical signoff is not a current functional pass."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "word-combinations",
+      "component": "components/tools/WordCombinationsGeneratorClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "historical-redirect",
+        "canonical": "word-combinations-generator"
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/utility-design.json",
+        "reportStatus": "browser-verified-both-engines",
+        "engines": {
+          "chrome": {
+            "overall": "passed",
+            "functional": "passed"
+          },
+          "webkit": {
+            "overall": "passed",
+            "functional": "passed"
+          }
+        },
+        "assertions": [
+          "Three distinct words yield six ordered pairs",
+          "Tool fits a 320px viewport"
+        ],
+        "duplicateSource": {
+          "canonical": "word-combinations-generator",
+          "evidence": "WordCombinationsGeneratorClient.tsx:6,81-96,147-149",
+          "reason": "Same 2-/3-word combinations or ordered permutations and 2,000-result cap. Generator name states the purpose; both currently nonindexable."
+        }
+      },
+      "bothEngine": true,
+      "historicalSignoff": false,
+      "gaps": [
+        "Identical route-independent dispatched component and props; consolidate into word-combinations-generator after preserving capabilities and redirects.",
+        "Recorded local scenario passes require current public-route verification and accurate unique copy review; no blanket all-mode acceptance."
+      ],
+      "recommendation": {
+        "baseline": "duplicate",
+        "canonicalCandidate": "word-combinations-generator",
+        "action": "retain historical redirect; not live pending inventory"
+      }
+    },
+    {
+      "slug": "regex-escape",
+      "component": "components/tools/RegexEscapeClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/developer-security.json",
+        "reportStatus": "implemented_scoped_checks_passed_browser_pending",
+        "engines": {
+          "chrome": {
+            "overall": "passed",
+            "functional": "passed"
+          },
+          "webkit": {
+            "overall": "failed",
+            "functional": "not-run"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": false,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "what-if-scenario-calculator",
+      "component": "components/tools/WhatIfScenarioCalculatorClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/utility-design.json",
+        "reportStatus": "browser-verified-both-engines",
+        "engines": {
+          "chrome": {
+            "overall": "passed",
+            "functional": "passed"
+          },
+          "webkit": {
+            "overall": "passed",
+            "functional": "passed"
+          }
+        },
+        "assertions": [
+          "Arithmetic uses conventional exponent precedence and rejects division by zero",
+          "Tool fits a 320px viewport"
+        ]
+      },
+      "bothEngine": true,
+      "historicalSignoff": false,
+      "gaps": [
+        "Recorded local scenario passes require current public-route verification and accurate unique copy review; no blanket all-mode acceptance."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "word-finder",
+      "component": "components/tools/WordFinderClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": null,
+        "reportStatus": "no committed route summary",
+        "engines": {
+          "chrome": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": true,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved.",
+        "No per-route result located in committed PR364 reports. Historical signoff is not a current functional pass."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "shell-command-generator",
+      "component": "components/tools/BashCommandGeneratorClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/developer-general.json",
+        "reportStatus": "browser_scenario_passed",
+        "engines": {
+          "chrome": {
+            "overall": "passed",
+            "functional": "passed"
+          },
+          "webkit": {
+            "overall": "passed",
+            "functional": "passed"
+          }
+        },
+        "assertions": [
+          "Selected command produces exact git status",
+          "Populated result or error state fits a 320px viewport before Clear",
+          "Tool contents fit a 320px viewport"
+        ]
+      },
+      "bothEngine": true,
+      "historicalSignoff": false,
+      "gaps": [
+        "Recorded local scenario passes require current public-route verification and accurate unique copy review; no blanket all-mode acceptance."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "sentence-extractor",
+      "component": "components/tools/SentenceExtractorClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": null,
+        "reportStatus": "no committed route summary",
+        "engines": {
+          "chrome": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": true,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved.",
+        "No per-route result located in committed PR364 reports. Historical signoff is not a current functional pass."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "json-to-typescript-types",
+      "component": "components/tools/JsonToTypescriptClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "historical-redirect",
+        "canonical": "json-to-typescript"
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/developer-data.json",
+        "reportStatus": "no committed route summary",
+        "engines": {
+          "chrome": {
+            "overall": "passed",
+            "functional": "passed"
+          },
+          "webkit": {
+            "overall": "passed",
+            "functional": "passed"
+          }
+        },
+        "assertions": [],
+        "duplicateSource": {
+          "canonical": "json-to-typescript",
+          "evidence": "JsonToTypescriptClient.tsx:2; developer-data/Converters.tsx:11-15; lib/developer-data/core.ts:40-63",
+          "reason": "Same inferred interfaces/types with root/item names, quote and semicolon controls. No strict/nullability/readonly options. Descriptive canonical covers all generated forms."
+        }
+      },
+      "bothEngine": true,
+      "historicalSignoff": false,
+      "gaps": [
+        "Identical route-independent dispatched component and props; consolidate into json-to-typescript after preserving capabilities and redirects.",
+        "Recorded local scenario passes require current public-route verification and accurate unique copy review; no blanket all-mode acceptance."
+      ],
+      "recommendation": {
+        "baseline": "duplicate",
+        "canonicalCandidate": "json-to-typescript",
+        "action": "retain historical redirect; not live pending inventory"
+      }
+    },
+    {
+      "slug": "favicon-png-maker",
+      "component": "components/tools/FaviconGeneratorClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "historical-redirect",
+        "canonical": "favicon-generator"
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/images.json",
+        "reportStatus": "partial-browser-evidence; integration-blocked",
+        "engines": {
+          "chrome": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": [],
+        "duplicateSource": {
+          "canonical": "favicon-generator",
+          "evidence": "FaviconGeneratorClient.tsx:103-116,532-559",
+          "reason": "Same emoji/text/logo modes and PNG/ICO/SVG exports. PNG alias has no PNG-only mode or transparent default; transparent is an explicit option."
+        }
+      },
+      "bothEngine": false,
+      "historicalSignoff": false,
+      "gaps": [
+        "Identical route-independent dispatched component and props; consolidate into favicon-generator after preserving capabilities and redirects.",
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved."
+      ],
+      "recommendation": {
+        "baseline": "duplicate",
+        "canonicalCandidate": "favicon-generator",
+        "action": "retain historical redirect; not live pending inventory"
+      }
+    },
+    {
+      "slug": "hex-to-decimal-converter",
+      "component": "components/tools/HexToDecimalConverterClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": null,
+        "reportStatus": "no committed route summary",
+        "engines": {
+          "chrome": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": true,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved.",
+        "No per-route result located in committed PR364 reports. Historical signoff is not a current functional pass."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "paragraph-generator",
+      "component": "components/tools/RandomParagraphGeneratorClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": null,
+        "reportStatus": "no committed route summary",
+        "engines": {
+          "chrome": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": true,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved.",
+        "No per-route result located in committed PR364 reports. Historical signoff is not a current functional pass."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "random-id-generator",
+      "component": "components/tools/RandomIdGeneratorClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/utility-design.json",
+        "reportStatus": "browser-verified-both-engines",
+        "engines": {
+          "chrome": {
+            "overall": "passed",
+            "functional": "passed"
+          },
+          "webkit": {
+            "overall": "passed",
+            "functional": "passed"
+          }
+        },
+        "assertions": [
+          "Generated count, alphabet, length and prefix match controls",
+          "Tool fits a 320px viewport"
+        ]
+      },
+      "bothEngine": true,
+      "historicalSignoff": false,
+      "gaps": [
+        "Recorded local scenario passes require current public-route verification and accurate unique copy review; no blanket all-mode acceptance."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "readability-score-calculator",
+      "component": "components/tools/ReadabilityScoreClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "historical-redirect",
+        "canonical": "readability-score"
+      },
+      "evidence": {
+        "report": null,
+        "reportStatus": "no committed route summary",
+        "engines": {
+          "chrome": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": [],
+        "duplicateSource": {
+          "canonical": "readability-score",
+          "evidence": "ReadabilityScoreClient.tsx:38-46,94-112",
+          "reason": "Same Flesch reading ease, Flesch-Kincaid grade and SMOG calculations. ARI and Coleman-Liau are not implemented."
+        }
+      },
+      "bothEngine": false,
+      "historicalSignoff": true,
+      "gaps": [
+        "Identical route-independent dispatched component and props; consolidate into readability-score after preserving capabilities and redirects.",
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved.",
+        "No per-route result located in committed PR364 reports. Historical signoff is not a current functional pass."
+      ],
+      "recommendation": {
+        "baseline": "duplicate",
+        "canonicalCandidate": "readability-score",
+        "action": "retain historical redirect; not live pending inventory"
+      }
+    },
+    {
+      "slug": "favicon-icon-generator",
+      "component": "components/tools/FaviconGeneratorClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "historical-redirect",
+        "canonical": "favicon-generator"
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/images.json",
+        "reportStatus": "partial-browser-evidence; integration-blocked",
+        "engines": {
+          "chrome": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": [],
+        "duplicateSource": {
+          "canonical": "favicon-generator",
+          "evidence": "FaviconGeneratorClient.tsx:103-116,532-559",
+          "reason": "Same emoji/text/logo modes and PNG/ICO/SVG exports. PNG alias has no PNG-only mode or transparent default; transparent is an explicit option."
+        }
+      },
+      "bothEngine": false,
+      "historicalSignoff": false,
+      "gaps": [
+        "Identical route-independent dispatched component and props; consolidate into favicon-generator after preserving capabilities and redirects.",
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved."
+      ],
+      "recommendation": {
+        "baseline": "duplicate",
+        "canonicalCandidate": "favicon-generator",
+        "action": "retain historical redirect; not live pending inventory"
+      }
+    },
+    {
+      "slug": "google-serp-simulator",
+      "component": "components/tools/GoogleSerpSimulatorClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/seo-network.json",
+        "reportStatus": "blocked: integrated functional acceptance not completed",
+        "engines": {
+          "chrome": {
+            "overall": "not verified",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not verified",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": false,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "smart-text-sorter",
+      "component": "components/tools/TextSorterClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "historical-redirect",
+        "canonical": "text-line-sorter"
+      },
+      "evidence": {
+        "report": null,
+        "reportStatus": "no committed route summary",
+        "engines": {
+          "chrome": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          },
+          "webkit": {
+            "overall": "not-recorded",
+            "functional": "not-recorded"
+          }
+        },
+        "assertions": [],
+        "duplicateSource": {
+          "canonical": "text-line-sorter",
+          "evidence": "TextSorterClient.tsx:11-42",
+          "reason": "Identical sorting modes, case sensitivity and deduplication. Prefer the already indexable text-line-sorter over the two currently nonindexable names."
+        }
+      },
+      "bothEngine": false,
+      "historicalSignoff": true,
+      "gaps": [
+        "Identical route-independent dispatched component and props; consolidate into text-line-sorter after preserving capabilities and redirects.",
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved.",
+        "No per-route result located in committed PR364 reports. Historical signoff is not a current functional pass."
+      ],
+      "recommendation": {
+        "baseline": "duplicate",
+        "canonicalCandidate": "text-line-sorter",
+        "action": "retain historical redirect; not live pending inventory"
+      }
+    },
+    {
+      "slug": "jwt-token-inspector",
+      "component": "components/tools/JwtTokenInspectorClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/developer-security.json",
+        "reportStatus": "implemented_scoped_checks_passed_browser_pending",
+        "engines": {
+          "chrome": {
+            "overall": "passed",
+            "functional": "passed"
+          },
+          "webkit": {
+            "overall": "failed",
+            "functional": "not-run"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": false,
+      "historicalSignoff": false,
+      "gaps": [
+        "No complete recorded both-engine integrated acceptance for this route; missing, failed, or not-run checks must be resolved."
+      ],
+      "recommendation": {
+        "baseline": "keep-noindex",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    },
+    {
+      "slug": "ipynb-formatter",
+      "component": "components/tools/IPynbFormatterClient.tsx",
+      "status": {
+        "baseline": "noindex",
+        "disposition": "current-canonical-at-archive",
+        "canonical": null
+      },
+      "evidence": {
+        "report": "scripts/qa/reports/developer-data.json",
+        "reportStatus": "no committed route summary",
+        "engines": {
+          "chrome": {
+            "overall": "passed",
+            "functional": "passed"
+          },
+          "webkit": {
+            "overall": "passed",
+            "functional": "passed"
+          }
+        },
+        "assertions": []
+      },
+      "bothEngine": true,
+      "historicalSignoff": false,
+      "gaps": [
+        "Recorded local scenario passes require current public-route verification and accurate unique copy review; no blanket all-mode acceptance."
+      ],
+      "recommendation": {
+        "baseline": "promote-review",
+        "canonicalCandidate": null,
+        "action": "remain noindex pending explicit review"
+      }
+    }
+  ],
+  "sourceInspection": [
+    "Dispatch and component file existence inspected; implementation excerpts reviewed for shortlisted and duplicate routes. No browser execution by this audit."
+  ]
+}

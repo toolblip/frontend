@@ -5,6 +5,7 @@ import * as jsxRuntime from 'react/jsx-runtime';
 import { renderToStaticMarkup } from 'react-dom/server';
 import ts from 'typescript';
 import { beforeAll, describe, expect, it } from 'vitest';
+import { reviewedToolSlugs } from '@/data/reviewed-tools';
 import { consolidatedAliases } from '@/e2e/content-aliases';
 
 // Execute the real dispatcher, isolating its hundreds of browser-only imports.
@@ -32,6 +33,33 @@ runInNewContext(compiled, {
 });
 
 const destinations = [
+  ['json-formatter', 'JsonFormatterClient'],
+  ['base64-encoder-decoder', 'Base64EncoderDecoderClient'],
+  ['uuid-generator', 'UuidGeneratorClient'],
+  ['word-counter', 'WordCounterClient'],
+  ['json-to-markdown-table', 'JsonToMarkdownTableClient'],
+  ['base64-image-converter', 'Base64ImageConverterClient'],
+  ['text-line-sorter', 'TextSorterClient'],
+  ['serp-preview', 'SerpPreviewClient'],
+  ['readability-score', 'ReadabilityScoreClient'],
+  ['image-resizer', 'ImageResizerClient'],
+  ['grammar-checker', 'GrammarCheckerClient'],
+  ['favicon-generator', 'FaviconGeneratorClient'],
+  ['batch-favicon-downloader', 'BatchFaviconDownloaderClient'],
+  ['json-path-tester', 'JsonPathTesterClient'],
+  ['json-to-typescript', 'JsonToTypescriptClient'],
+  ['keyword-density-checker', 'KeywordDensityCheckerClient'],
+  ['mac-address-generator', 'MacAddressGeneratorClient'],
+  ['backslash-escape-unescape', 'BackslashEscapeUnescapeClient'],
+  ['detect', 'DetectClient'],
+  ['image-rotate', 'ImageRotateToolClient'],
+  ['robots-txt-checker', 'RobotsTxtEditorClient'],
+  ['sitemap-analyzer', 'SitemapAnalyzerClient'],
+  ['word-frequency-table', 'WordFrequencyAnalyzerClient'],
+  ['pdf-password-remover', 'PdfPasswordRemoverClient'],
+  ['jwt-token-tester', 'JwtTokenTesterClient'],
+  ['word-combinations-generator', 'WordCombinationsGeneratorClient'],
+
   ['case-converter', 'CaseConverterClient'],
   ['url-encode', 'UrlEncodeClient'],
   ['regex-tester', 'RegexTesterClient'],
@@ -49,7 +77,11 @@ describe('retained canonical tool dispatch', () => {
   beforeAll(async () => { await Promise.all(pending); });
   it('covers every unique consolidation destination', () => {
     expect(destinations.map(([slug]) => slug).sort())
-      .toEqual([...new Set(Object.values(consolidatedAliases))].sort());
+      .toEqual([...new Set([...Object.values(consolidatedAliases), ...reviewedToolSlugs])].sort());
+  });
+
+  it('removes retired switch labels without leaving fallthrough blocks', () => {
+    for (const alias of Object.keys(consolidatedAliases)) expect(source).not.toContain(`case '${alias}':`);
   });
 
   it.each(destinations)('%s renders %s', (slug, component) => {

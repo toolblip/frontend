@@ -5,11 +5,11 @@ import { getPathMatch } from 'next/dist/shared/lib/router/utils/path-match';
 import { tools, getCanonicalToolSlug } from '@/data/tools';
 import { getToolPath } from '@/lib/tool-path';
 
-const network = ['domain-age-checker', 'broken-link-checker', 'http-headers-inspector', 'http-status-checker', 'url-redirect-checker', 'accessibility-checker', 'heading-tag-analyzer', 'meta-description-checker', 'page-title-checker', 'seo-title-analyzer', 'seo-meta-tag-analyzer', 'og-tag-debugger', 'robots-txt-analyzer', 'robots-txt-validator', 'robots-txt-editor', 'robots-txt-checker', 'sitemap-analyzer', 'sitemap-extractor'];
+const network = ['domain-age-checker', 'broken-link-checker', 'http-headers-inspector', 'http-status-checker', 'url-redirect-checker', 'accessibility-checker', 'heading-tag-analyzer', 'meta-description-checker', 'page-title-checker', 'seo-title-analyzer', 'seo-meta-tag-analyzer', 'og-tag-debugger', 'robots-txt-checker', 'sitemap-analyzer'];
 const media = ['aac-to-wav', 'm4a-to-wav', 'mkv-to-mp3', 'mp4-to-mp3', 'mp4-to-wav', 'extract-audio', 'cutter', 'add-subtitles'];
 const dns = ['dns-lookup', 'dns-lookup-tool', 'ping-test'];
 const previews = ['html-live-preview', 'markdown-to-html', 'markdown-to-pdf', 'notebook-to-html'];
-const favicons = ['/tools/batch-favicon-downloader', '/tools/images/favicon-grabber'];
+const favicons = ['/tools/batch-favicon-downloader'];
 const paths = (slugs: string[]) => slugs.map(slug => `/tools/${slug}`);
 const changed = new Set(['/tools/english-dictionary', ...paths(media), '/tools/graphql-playground', '/tools/websocket-tester', ...paths(network), ...paths(dns), ...paths(previews), ...favicons, '/tools/speech-to-text']);
 
@@ -117,13 +117,13 @@ describe('per-tool browser policy', () => {
       expect(changed.has(`/tools/${getCanonicalToolSlug(alias)}`)).toBe(true);
     }
     const redirects = await config.redirects!();
-    for (const [alias, target] of [['audio-to-text', '/tools/speech-to-text'], ['favicon-checker', '/tools/images/favicon-grabber']]) {
+    for (const [alias, target] of [['audio-to-text', '/tools/speech-to-text'], ['favicon-checker', '/tools/batch-favicon-downloader']]) {
       expect(redirects.find(rule => rule.source === `/tools/${alias}`)?.destination).toBe(target);
       expect(await headers(`/tools/${alias}`)).toEqual(base);
       expect(changed.has(target)).toBe(true);
     }
     expect(await headers('/tools/favicon-grabber')).toEqual(base);
-    for (const alias of ['markdown-preview', 'markdown-editor']) expect(await headers(`/tools/${alias}`)).toEqual(base);
+    for (const alias of ['markdown-preview', 'markdown-editor', 'robots-txt-analyzer', 'robots-txt-validator', 'robots-txt-editor', 'sitemap-extractor', 'images/favicon-grabber']) expect(await headers(`/tools/${alias}`)).toEqual(base);
   });
 
   it('grants exceptions only to real canonical tools and preserves all other response headers', async () => {
@@ -155,7 +155,7 @@ describe('document navigation policy identity', () => {
 
   it('distinguishes every permissions and CSP scope in both directions', () => {
     const variants = ['/tools', '/tools/dns-lookup', '/tools/domain-age-checker',
-      '/tools/images/favicon-grabber', '/tools/html-live-preview', '/tools/speech-to-text'];
+      '/tools/batch-favicon-downloader', '/tools/html-live-preview', '/tools/speech-to-text'];
     expect(new Set(variants.map(path => browserPolicyKey(path))).size).toBe(variants.length);
     expect(browserPolicyKey('/tools/dns-lookup')).toBe(browserPolicyKey('/tools/ping-test'));
     expect(browserPolicyKey('/tools')).toBe(browserPolicyKey('/tools/word-counter'));
