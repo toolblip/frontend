@@ -1,6 +1,6 @@
 export type SitemapUrlEntry = {
   url: string;
-  lastModified: Date;
+  lastModified?: Date;
   changeFrequency: 'always' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'never';
   priority: number;
 };
@@ -29,7 +29,9 @@ export function sitemapXmlResponse(entries: SitemapUrlEntry[]): Response {
       .map(
         (e) =>
           `<url><loc>${escapeXml(e.url)}</loc>` +
-          `<lastmod>${e.lastModified.toISOString()}</lastmod>` +
+          (e.lastModified && Number.isFinite(e.lastModified.getTime())
+            ? `<lastmod>${e.lastModified.toISOString()}</lastmod>`
+            : '') +
           `<changefreq>${e.changeFrequency}</changefreq>` +
           `<priority>${e.priority}</priority></url>`
       )

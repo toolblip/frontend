@@ -10,7 +10,7 @@ export async function GET(): Promise<Response> {
 
   const entries: SitemapUrlEntry[] = getBlogPosts().map((post) => ({
     url: `${baseUrl}/blog/${post.slug}`,
-    lastModified: post.date ? new Date(post.date) : new Date('2026-08-19T00:00:00.000Z'),
+    lastModified: post.date ? new Date(post.date) : undefined,
     changeFrequency: 'monthly',
     priority: 0.6,
   }));

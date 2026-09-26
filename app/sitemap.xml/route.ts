@@ -5,14 +5,14 @@
  */
 export async function GET(): Promise<Response> {
   const baseUrl = 'https://toolblip.com';
-  const lastModified = new Date('2026-08-25T00:00:00.000Z');
+  // Omit lastmod until reliable child sitemap modification dates are available.
 
   const body =
     `<?xml version="1.0" encoding="UTF-8"?>\n` +
     `<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
-    `<sitemap><loc>${baseUrl}/sitemap-core.xml</loc><lastmod>${lastModified.toISOString()}</lastmod></sitemap>\n` +
-    `<sitemap><loc>${baseUrl}/sitemap-tools.xml</loc><lastmod>${lastModified.toISOString()}</lastmod></sitemap>\n` +
-    `<sitemap><loc>${baseUrl}/sitemap-blog.xml</loc><lastmod>${lastModified.toISOString()}</lastmod></sitemap>\n` +
+    `<sitemap><loc>${baseUrl}/sitemap-core.xml</loc></sitemap>\n` +
+    `<sitemap><loc>${baseUrl}/sitemap-tools.xml</loc></sitemap>\n` +
+    `<sitemap><loc>${baseUrl}/sitemap-blog.xml</loc></sitemap>\n` +
     `</sitemapindex>`;
 
   return new Response(body, {
