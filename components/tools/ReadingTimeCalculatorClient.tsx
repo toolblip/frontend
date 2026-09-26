@@ -38,14 +38,15 @@ export default function ReadingTimeCalculatorClient() {
         style={{ minHeight: 120 }}
       />
       <div className="tb-v2-tool-output-body" style={{ marginTop: 10 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 12 }}>
           <span style={{ fontSize: 13, color: 'var(--tb-text-secondary)', whiteSpace: 'nowrap' }}>Reading speed:</span>
           <input
             type="range"
             min={100} max={500} step={10}
             value={wpm}
             onChange={e => setWpm(parseInt(e.target.value))}
-            style={{ flex: 1, accentColor: 'var(--tb-accent)' }}
+            aria-label="Reading speed"
+            style={{ flex: '1 1 100px', minWidth: 0, maxWidth: '100%', accentColor: 'var(--tb-accent)' }}
           />
           <span style={{ fontSize: 13, fontFamily: 'var(--f-mono)', minWidth: 50, textAlign: 'right' }}>{wpm} wpm</span>
         </div>
@@ -54,7 +55,7 @@ export default function ReadingTimeCalculatorClient() {
       <div className="tb-v2-tool-output-body">
         {analysis ? (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 16 }}>
               <div style={{ fontSize: 42, fontWeight: 700, color: 'var(--tb-accent)' }}>
                 {analysis.minutes < 1 ? `${analysis.seconds}s` : `${Math.floor(analysis.minutes)}m ${analysis.seconds}s`}
               </div>
