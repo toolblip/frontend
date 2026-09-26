@@ -1,8 +1,10 @@
 import { test, expect, type Page } from '@playwright/test';
+import { waitForToolHandler } from './react-readiness';
 
 async function dismissCookies(page: Page) {
   const accept = page.getByRole('button', { name: /accept analytics cookies/i });
   if (await accept.isVisible().catch(() => false)) {
+    await waitForToolHandler(accept, 'onClick');
     await accept.click();
   }
 }
@@ -15,6 +17,7 @@ test.describe('Punycode / IDN converter', () => {
     const left = page.getByPlaceholder('Enter Unicode/IDN domains, one per line...');
     const right = page.getByPlaceholder('Enter Punycode/ASCII domains, one per line...');
 
+    await waitForToolHandler(left, 'onChange');
     await left.fill('münchen.de');
     await expect(right).toHaveValue('xn--mnchen-3ya.de');
   });
@@ -26,6 +29,7 @@ test.describe('Punycode / IDN converter', () => {
     const left = page.getByPlaceholder('Enter Unicode/IDN domains, one per line...');
     const right = page.getByPlaceholder('Enter Punycode/ASCII domains, one per line...');
 
+    await waitForToolHandler(right, 'onChange');
     await right.fill('xn--mnchen-3ya.de');
     await expect(left).toHaveValue('münchen.de');
   });
@@ -36,6 +40,7 @@ test.describe('Punycode / IDN converter', () => {
 
     const right = page.getByPlaceholder('Enter Punycode/ASCII domains, one per line...');
 
+    await waitForToolHandler(right, 'onChange');
     await right.fill('xn--');
     await expect(page.locator('p.tb-v2-error')).toBeVisible();
   });

@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { waitForToolHandler } from './react-readiness';
 
 test.describe('Poll Generator', () => {
   test('turns a topic into ready-to-post poll formats instead of echoing the input', async ({ page }) => {
@@ -6,10 +7,13 @@ test.describe('Poll Generator', () => {
 
     const accept = page.getByRole('button', { name: /accept analytics cookies/i });
     if (await accept.isVisible().catch(() => false)) {
+      await waitForToolHandler(accept, 'onClick');
       await accept.click();
     }
 
-    await page.getByPlaceholder('Enter your text...').fill('Best browser tool');
+    const input = page.getByPlaceholder('Enter your text...');
+    await waitForToolHandler(input, 'onChange');
+    await input.fill('Best browser tool');
     await page.getByRole('button', { name: 'Process' }).click();
 
     const output = page.locator('#poll-output');
@@ -34,10 +38,13 @@ test.describe('Poll Generator', () => {
 
     const accept = page.getByRole('button', { name: /accept analytics cookies/i });
     if (await accept.isVisible().catch(() => false)) {
+      await waitForToolHandler(accept, 'onClick');
       await accept.click();
     }
 
-    await page.getByPlaceholder('Enter your text...').fill('Best browser tool');
+    const input = page.getByPlaceholder('Enter your text...');
+    await waitForToolHandler(input, 'onChange');
+    await input.fill('Best browser tool');
     await page.getByRole('button', { name: 'Process' }).click();
 
     const output = page.locator('#poll-output');

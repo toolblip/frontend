@@ -1,6 +1,7 @@
-import { test, expect, type Page, type Locator } from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
 import { readFile } from 'node:fs/promises';
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
+import { waitForToolHandler } from './react-readiness';
 
 // Stage 2 Feature 1 Group B: verify representative real browser-only tool
 // execution paths still run end to end. Focused coverage across distinct
@@ -9,18 +10,17 @@ import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 async function dismissCookies(page: Page) {
   const accept = page.getByRole('button', { name: /accept analytics cookies/i });
   if (await accept.isVisible().catch(() => false)) {
+    await waitForToolHandler(accept, 'onClick');
     await accept.click();
   }
-}
-
-// Server-rendered controls can appear before React attaches event handlers.
-// Wait for the handler used by this action, rather than sleeping or retrying it.
-async function waitForToolHandler(locator: Locator, handler: 'onClick' | 'onChange') {
-  await expect(locator).toBeVisible();
-  await expect.poll(() => locator.evaluate((element, eventName) => {
-    const node = element as unknown as Record<string, Record<string, unknown>>;
-    return Object.keys(node).some(key => key.startsWith('__reactProps$') && typeof node[key]?.[eventName] === 'function');
-  }, handler)).toBe(true);
+  // Every PDF route exercised here has an Example action owned by its tool
+  // component. Its handler is a readiness boundary for the upload controls too.
+  const slug = new URL(page.url()).pathname.split('/').pop();
+  if (slug && ['add-pages-to-pdf', 'annotate-pdf', 'edit-pdf', 'extract-images-from-pdf',
+    'merge-pdfs', 'pdf-rearrange', 'delete-pages-from-pdf', 'sign-pdf',
+    'unlock-pdf', 'add-watermark-to-pdf'].includes(slug)) {
+    await waitForToolHandler(page.getByRole('button', { name: 'Example', exact: true }), 'onClick');
+  }
 }
 
 test.describe('Browser tool execution paths', () => {
@@ -83,6 +83,7 @@ test.describe('Browser tool execution paths', () => {
     await page.goto('/tools/add-pages-to-pdf');
     await dismissCookies(page);
 
+    await waitForToolHandler(page.locator('#base-pdf-upload'), 'onChange');
     await page.locator('#base-pdf-upload').setInputFiles({
       name: 'base.pdf',
       mimeType: 'application/pdf',
