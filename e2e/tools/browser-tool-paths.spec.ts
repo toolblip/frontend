@@ -312,13 +312,16 @@ test.describe('Browser tool execution paths', () => {
     await page.goto('/tools/base64-encoder-decoder');
     await dismissCookies(page);
 
-    await page.getByPlaceholder('Enter text to Base64 encode...').fill('hello');
-    await page.getByRole('button', { name: 'Encode → Base64' }).click();
+    const input = page.getByLabel('Input', { exact: true });
+    await waitForToolHandler(input, 'onChange');
+    await input.fill('hello');
+    await expect(input).toHaveValue('hello');
+    await page.getByRole('button', { name: 'Encode to Base64' }).click();
     await expect(page.getByText('aGVsbG8=', { exact: true })).toBeVisible();
 
-    await page.getByRole('button', { name: 'Decode', exact: true }).click();
+    await page.getByRole('tab', { name: 'Decode', exact: true }).click();
     await page.getByPlaceholder('Enter Base64 string to decode...').fill('aGVsbG8=');
-    await page.getByRole('button', { name: 'Decode ← Base64' }).click();
+    await page.getByRole('button', { name: 'Decode from Base64' }).click();
     await expect(page.getByText('hello', { exact: true })).toBeVisible();
   });
 
@@ -340,10 +343,11 @@ test.describe('Browser tool execution paths', () => {
     await page.goto('/tools/hex-to-rgb');
     await dismissCookies(page);
 
-    // Seeded default converts immediately.
-    await expect(page.getByText('rgb(239, 68, 68)', { exact: true })).toBeVisible();
+    await expect(page).toHaveURL(/\/tools\/color-format-converter$/);
+    await expect(page.getByText('rgb(52, 152, 219)', { exact: true })).toBeVisible();
 
-    const hex = page.getByPlaceholder('#EF4444');
+    const hex = page.getByPlaceholder('#3498db');
+    await waitForToolHandler(hex, 'onChange');
     await hex.fill('#ffffff');
     await expect(page.getByText('rgb(255, 255, 255)', { exact: true })).toBeVisible();
   });

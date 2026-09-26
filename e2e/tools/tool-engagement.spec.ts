@@ -45,30 +45,40 @@ test('tool pages render templated share left, inert views, and favorite hard rig
   await expect(page.getByRole('dialog', { name: /Share JSON Formatter/i })).toHaveCount(0);
   await expect(page.getByRole('dialog', { name: /Sign in to favorite JSON Formatter/i })).toHaveCount(0);
 
+  const shortened = page.waitForResponse(response => response.url().endsWith('/api/shorten') && response.request().method() === 'POST');
   await shareCount.click();
+  const shortResponse = await shortened;
+  expect(shortResponse.status()).toBe(200);
+  const { short_url: shortUrl } = await shortResponse.json();
+  const redirect = await page.request.get(new URL(shortUrl).pathname, { maxRedirects: 0 });
+  expect(redirect.status()).toBe(302);
+  expect(redirect.headers().location).toBe(page.url());
   const shareDialog = page.getByRole('dialog', { name: /Share JSON Formatter/i });
   await expect(shareDialog).toBeVisible();
-  await expect(shareDialog).not.toContainText(/JSON Formatter/i);
-  const shareOnFacebook = shareDialog.getByRole('link', { name: /Share on Facebook/i });
-  const shareOnX = shareDialog.getByRole('link', { name: /Share on X/i });
-  const shareOnLinkedIn = shareDialog.getByRole('link', { name: /Share on LinkedIn/i });
+  await expect(shareDialog).toContainText('JSON Formatter | Toolblip');
+  const shareOnFacebook = shareDialog.getByRole('link', { name: /Share via Facebook/i });
+  const shareOnX = shareDialog.getByRole('link', { name: /Share via X/i });
+  const shareOnLinkedIn = shareDialog.getByRole('link', { name: /Share via LinkedIn/i });
   const copyLink = shareDialog.getByRole('button', { name: /Copy link/i });
-  const shareLink = shareDialog.getByLabel(/Share link/i);
+  await expect(shareDialog.getByRole('img', { name: 'QR code' })).toBeVisible();
 
   await expect(shareOnFacebook).toBeVisible();
   await expect(shareOnX).toBeVisible();
   await expect(shareOnLinkedIn).toBeVisible();
   await expect(copyLink).toBeVisible();
-  await expect(shareOnFacebook).not.toContainText('Share on Facebook');
-  await expect(shareOnX).not.toContainText('Share on X');
-  await expect(shareOnLinkedIn).not.toContainText('Share on LinkedIn');
-  await expect(shareLink).toBeDisabled();
-  await expect(shareLink).toHaveValue(/\/tools\/json-formatter$/);
+  await expect(shareOnFacebook).not.toContainText('Share via Facebook');
+  await expect(shareOnX).not.toContainText('Share via X');
+  await expect(shareOnLinkedIn).not.toContainText('Share via LinkedIn');
+  expect(new URL((await shareOnFacebook.getAttribute('href'))!).searchParams.get('u')).toBe(shortUrl);
+  expect(new URL((await shareOnX.getAttribute('href'))!).searchParams.get('url')).toBe(shortUrl);
+  expect(new URL((await shareOnLinkedIn.getAttribute('href'))!).searchParams.get('url')).toBe(shortUrl);
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
 
   await copyLink.click();
   await expect(shareDialog).toBeVisible();
   await expect(shareDialog.getByText(/Copied!/i)).toBeVisible();
   await expect(shareCount).toHaveText('1');
+  expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(shortUrl);
 
   await favoriteButton.click();
   await expect(shareDialog).toBeHidden();
@@ -91,7 +101,7 @@ test('tool pages render templated share left, inert views, and favorite hard rig
   await page.getByLabel(/Remember me/i).check();
   await page.getByRole('button', { name: /^Sign in$/i }).click();
 
-  expect(loginRequestBody?.remember_me).toBe(true);
+  await expect.poll(() => loginRequestBody?.remember_me).toBe(true);
 
   await expect(favoriteButton).toContainText('Favorited');
   await expect(page.getByRole('dialog', { name: /Sign in to favorite JSON Formatter/i })).toHaveCount(0);

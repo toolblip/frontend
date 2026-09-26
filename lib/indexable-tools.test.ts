@@ -11,13 +11,13 @@ const baselineEligible = new Set(baselineTools.filter(t => t.indexable).map(t =>
 afterEach(() => { vi.doUnmock('@/lib/faq'); vi.doUnmock('@/data/tools'); vi.resetModules(); });
 
 describe('explicit tool indexing policy', () => {
-  it('preserves original eligibility for every surviving canonical baseline tool', () => {
+  it('preserves original eligibility without explicit decisions for every surviving canonical baseline tool', () => {
     expect(baselineTools).toHaveLength(473);
     expect(baselineEligible.size).toBe(354);
     const current = new Set(tools.map(t => t.slug));
     for (const tool of baselineTools) {
       const survives = current.has(tool.slug) && getCanonicalToolSlug(tool.slug) === tool.slug;
-      expect(indexing.isToolIndexable(tool.slug), tool.slug).toBe(survives && baselineEligible.has(tool.slug));
+      expect(indexing.isToolIndexable(tool.slug, {}), tool.slug).toBe(survives && baselineEligible.has(tool.slug));
     }
   });
 
@@ -32,17 +32,22 @@ describe('explicit tool indexing policy', () => {
     vi.resetModules();
     const fresh = await import('@/lib/indexable-tools');
     for (const tool of tools) {
-      expect(fresh.isToolIndexable(tool.slug), tool.slug).toBe(baselineEligible.has(tool.slug) && getCanonicalToolSlug(tool.slug) === tool.slug);
+      expect(fresh.isToolIndexable(tool.slug), tool.slug).toBe(indexing.isToolIndexable(tool.slug));
     }
   });
 });
 
 
 describe('policy decisions and audit statuses', () => {
-  it('freezes exactly the independently evaluated baseline eligible set without promotions', () => {
+  it('freezes the independently evaluated legacy baseline while recording explicit candidate decisions', () => {
     expect(new Set(LEGACY_ELIGIBLE_TOOL_SLUGS)).toEqual(baselineEligible);
     expect(LEGACY_ELIGIBLE_TOOL_SLUGS).toHaveLength(354);
-    expect(Object.values(TOOL_INDEXING_DECISIONS).filter(d => d.status === 'reviewed')).toHaveLength(0);
+    expect(Object.entries(TOOL_INDEXING_DECISIONS).filter(([, d]) => d.status === 'reviewed').map(([slug]) => slug).sort()).toEqual(['html-table-generator', 'ipynb-formatter', 'json-to-python', 'json-to-typescript']);
+    for (const slug of ['ldap-filter-generator', 'time-zone-converter', 'split-csv', 'html-minifier']) {
+      expect(indexing.getToolIndexingStatus(slug)).toBe('hold');
+      expect(indexing.isToolIndexable(slug)).toBe(false);
+    }
+    expect(tools.filter(t => indexing.isToolIndexable(t.slug))).toHaveLength(341);
     expect(indexing.getToolIndexingStatus('lorem-ipsum-generator')).toBe('legacy-eligible-needs-review');
     expect(indexing.getToolIndexingStatus('json-to-markdown-table')).toBe('pending');
     expect(indexing.getToolIndexingStatus('unknown-future-tool')).toBe('not-in-catalog');

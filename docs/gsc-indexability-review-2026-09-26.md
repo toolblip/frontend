@@ -1,5 +1,7 @@
 # Tool indexing review, 2026-09-26
 
+Follow-up: [fresh candidate QA and decisions](gsc-candidate-review-2026-09-26.md) supersede the eight pending recommendations below. Four have explicit reviewed decisions; four local repairs remain held for postdeploy public verification. This document and its JSON inventory retain the original audit snapshot.
+
 ## Snapshot and scope
 
 Source revision: `5556e22`. The original catalog had **473 tools: 354 eligible and 119 noindex**. The earlier 169 noindex count is stale. The [JSON inventory](gsc-indexability-inventory-2026-09-26.json) archives all 119 original rows, including tools subsequently retired as redirects. It isn't a live count of pending tools.

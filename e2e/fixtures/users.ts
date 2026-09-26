@@ -105,3 +105,14 @@ export async function expectLoggedInCookie(page: Page) {
   expect(cookie?.httpOnly).toBe(true);
   return cookie;
 }
+
+// Identity is no longer rendered on the dashboard overview. Assert the session
+// contract and authenticated navigation, rather than a removed email label.
+export async function expectAuthenticatedUser(page: Page, user: Pick<TestUser, 'name' | 'email'>) {
+  await expect(page.getByRole('button', { name: 'Account menu' })).toBeVisible();
+  const me = await page.request.get('/api/auth/me');
+  expect(me.status()).toBe(200);
+  const body = await me.json();
+  expect(body.user).toMatchObject({ name: user.name, email: user.email });
+  expect(body.user.id).toEqual(expect.any(Number));
+}

@@ -12,9 +12,11 @@ test.describe('soft navigation', () => {
       if (req.url().includes('/api/auth/me')) meRequests += 1;
     });
 
+    const initialSession = page.waitForResponse(response => response.url().endsWith('/api/auth/me'));
     await page.goto('/');
+    expect((await initialSession).status()).toBe(401);
     await expect(page.locator('#main-content')).toBeVisible();
-    expect(meRequests).toBeLessThanOrEqual(1);
+    expect(meRequests).toBe(1);
     const meAfterHome = meRequests;
     const docsAfterHome = documentRequests;
 

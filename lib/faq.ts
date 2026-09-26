@@ -189,6 +189,87 @@ function templateFaqs(t: Tool): FAQ[] {
 }
 
 const OVERRIDES: Record<string, FAQ[]> = {
+  "json-to-typescript": [
+    {
+      "q": "What does this tool produce?",
+      "a": "Infer TypeScript declarations from a JSON sample. Objects become interfaces; arrays and primitive values become type aliases. Mixed arrays retain their observed member types, including null. Review the result against data your sample does not cover."
+    },
+    {
+      "q": "What are the limits and important options?",
+      "a": "The class property is boolean; items contains number, string and null. Choose valid, non-reserved root and array-item names. Limits: 100,000 characters, 10,000 values and 64 nesting levels. Unsafe integers are rejected."
+    }
+  ],
+  "time-zone-converter": [
+    {
+      "q": "What does this tool produce?",
+      "a": "Convert a dated local time to several IANA time zones. Compare a meeting time in New York with London and Tokyo, including date changes and daylight-saving offsets for that date."
+    },
+    {
+      "q": "What are the limits and important options?",
+      "a": "Choose a date and time, a source zone and target zones. Times that occur twice or do not exist during a DST transition produce an error; choose another time. Rules come from your browser, not a live time service."
+    }
+  ],
+  "html-table-generator": [
+    {
+      "q": "What does this tool produce?",
+      "a": "Turn CSV rows and a separate header row into an HTML table. Quoted commas stay in one cell, and HTML characters are escaped in headers and values. Preview the table before copying its markup."
+    },
+    {
+      "q": "What are the limits and important options?",
+      "a": "Use Generate Table after changing input or options. Headers set the column count: extra data cells are omitted and missing cells are blank. Leave headers empty to keep each row’s cells. Limits: 100,000 input characters and 8,000 header characters."
+    }
+  ],
+  "ldap-filter-generator": [
+    {
+      "q": "What does this tool produce?",
+      "a": "Build an LDAP search filter from attribute, operator and value rows. Combine clauses with AND or OR, or negate the whole filter. Values are treated as literals; use the presence operator to match any value."
+    },
+    {
+      "q": "What are the limits and important options?",
+      "a": "Parentheses, NUL, asterisk and backslash are escaped as filter octets. Attribute names or numeric OIDs are checked locally. This does not connect to a directory or validate its schema. Each attribute and value is limited to 8,000 characters."
+    }
+  ],
+  "json-to-python": [
+    {
+      "q": "What does this tool produce?",
+      "a": "Convert JSON into a Python data assignment containing dictionaries, lists and scalar literals. JSON true, false and null become True, False and None. Quoted dictionary keys and nested lists are preserved."
+    },
+    {
+      "q": "What are the limits and important options?",
+      "a": "Output is indented Python literals, not Pydantic models, dataclasses or executable conversion logic. Limits: 100,000 characters, 10,000 values and 64 nesting levels. Unsafe integers are rejected; represent large IDs as strings."
+    }
+  ],
+  "split-csv": [
+    {
+      "q": "What does this tool produce?",
+      "a": "Split a UTF-8 CSV file into smaller downloads by data-row count. The first record is treated as the header and repeated in every part. Quoted newlines stay inside a record instead of becoming extra rows."
+    },
+    {
+      "q": "What are the limits and important options?",
+      "a": "Choose Rows Per File after upload. Downloads arrive individually, so your browser may ask to allow multiple files. Limits: 10 MiB and 100,000 data rows. Record separators become LF; field quoting and embedded line breaks are preserved."
+    }
+  ],
+  "html-minifier": [
+    {
+      "q": "What does this tool produce?",
+      "a": "Remove ordinary HTML comments and trim whitespace at the start and end of a snippet. This conservative minifier keeps text spacing, quoted attributes and raw-element contents intact so inline words do not run together."
+    },
+    {
+      "q": "What are the limits and important options?",
+      "a": "It preserves script, style, pre, title and textarea contents, conditional comments and comments beginning with <!--!. It does not minify JavaScript or CSS, collapse internal whitespace or remove optional tags. Unclosed comments, tags and raw elements return errors. Input limit: 100,000 characters."
+    }
+  ],
+  "ipynb-formatter": [
+    {
+      "q": "What does this tool produce?",
+      "a": "Pretty-print a Jupyter notebook’s JSON with two-space indentation. Formatting preserves cell sources, outputs and metadata. Optionally sort cells by execution count when you intend to change their document order."
+    },
+    {
+      "q": "What are the limits and important options?",
+      "a": "Limits: 10 MiB, 64 nesting levels and 100,000 JSON values. The tool checks notebook structure, not executable code or every detail of the official schema. Sorting moves cells without execution counts to the end. It does not execute cells or clear outputs."
+    }
+  ],
+
   'json-to-markdown-table': [
     { q: 'Which JSON shapes are supported?', a: 'One object or a nonempty array of objects. Every array row must be an object. Columns include keys from later rows.' },
     { q: 'What happens to nested values and table syntax?', a: 'Nested arrays and objects use JSON text. Pipes, HTML and line breaks are escaped for Markdown table cells. Missing and null values produce empty cells.' },
@@ -205,10 +286,7 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: "Which modes are available?", a: "Two- or three-word combinations and ordered permutations. Large inputs may produce more possibilities than the cap allows." },
   ],
 
-  'json-to-typescript': [
-    { q: "Which controls are available?", a: "Root and item names, interface or type output, quote style and semicolons. There are no strict-nullability or readonly controls." },
-    { q: "Are inferred types a schema?", a: "No. They describe the supplied sample. Review the result against the full range of data your application accepts." },
-  ],
+
 
   'svg-to-webp': [
     { q: "What does this tool do?", a: "Convert SVG images to WEBP and compare the measured output size." },

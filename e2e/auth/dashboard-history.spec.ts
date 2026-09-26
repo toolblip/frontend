@@ -46,8 +46,14 @@ test.describe('Dashboard recent tool history', () => {
     const recents = page.locator('#recent-tools');
     await expect(recents).toBeVisible();
 
-    const recentLinks = recents.locator('a[href^="/tools/"]');
+    // Each row has a named tool link and a separate View action. Count rows
+    // through their named links, and verify both View destinations separately.
+    const recentLinks = recents.getByRole('link', { name: /UUID Generator|JSON Formatter/ });
     await expect(recentLinks).toHaveCount(2);
+    const viewLinks = recents.getByRole('link', { name: 'View', exact: true });
+    await expect(viewLinks).toHaveCount(2);
+    await expect(viewLinks.nth(0)).toHaveAttribute('href', '/tools/uuid-generator');
+    await expect(viewLinks.nth(1)).toHaveAttribute('href', '/tools/json-formatter');
     // Most recently opened (uuid-generator) is first.
     await expect(recentLinks.first()).toHaveAttribute('href', '/tools/uuid-generator');
     await expect(recents.getByRole('link', { name: /JSON Formatter/ })).toHaveAttribute(
