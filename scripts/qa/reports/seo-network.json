@@ -2,8 +2,8 @@
   "group": "seo-network",
   "assignedRoutes": 47,
   "ownedComponents": 38,
-  "status": "implementation-complete; awaiting parent integrated browser fixtures",
-  "branch": "fix/auto-qa-seo-network",
+  "status": "blocked: integrated browser acceptance incomplete; zero functional passes",
+  "branch": "fix/automatic-tool-qa",
   "verification": [
     {
       "command": "./node_modules/.bin/vitest run lib/seo-network lib/network-tools.test.ts",
@@ -31,11 +31,10 @@
     }
   ],
   "notRun": [
-    "Browser automation (parent owns integrated fixtures)",
-    "Dev server",
-    "Production build",
-    "Full repository test suite (scoped worker checks requested)",
-    "External publication/deployment"
+    "Complete integrated acceptance in either browser",
+    "Production build (explicitly prohibited)",
+    "Full repository test suite",
+    "Deployment/publication"
   ],
   "fixedFiles": [
     "components/tools/AccessibilityCheckerClient.tsx",
@@ -95,470 +94,658 @@
       "url": "https://toolblip.com/tools/robots-txt-generator",
       "component": "RobotsTxtGeneratorClient",
       "historicallyApproved": false,
-      "status": "implemented; browser acceptance pending parent",
+      "status": "blocked: integrated functional acceptance not completed",
       "finding": "Live generation; dedicated bot groups retain common access rules; bounded rows; crawl-delay support caveat; real robots.txt download.",
       "case": "scripts/qa/cases/seo-network.mjs#robots-txt-generator",
-      "remainingWorkerBlockers": []
+      "remainingWorkerBlockers": [],
+      "browserAcceptance": {
+        "chrome": "not verified",
+        "webkit": "not verified"
+      }
     },
     {
       "slug": "security-headers-generator",
       "url": "https://toolblip.com/tools/security-headers-generator",
       "component": "SecurityHeadersGeneratorClient",
       "historicallyApproved": false,
-      "status": "implemented; browser acceptance pending parent",
+      "status": "blocked: integrated functional acceptance not completed",
       "finding": "All four formats retained; header name validation, bounded custom headers, Nginx dollar escaping, explicit clipboard errors, disabled legacy XSS preset, clear removes generated headers.",
       "case": "scripts/qa/cases/seo-network.mjs#security-headers-generator",
-      "remainingWorkerBlockers": []
+      "remainingWorkerBlockers": [],
+      "browserAcceptance": {
+        "chrome": "not verified",
+        "webkit": "not verified"
+      }
     },
     {
       "slug": "xml-sitemap-generator",
       "url": "https://toolblip.com/tools/xml-sitemap-generator",
       "component": "XmlSitemapGeneratorClient",
       "historicallyApproved": false,
-      "status": "implemented; browser acceptance pending parent",
+      "status": "blocked: integrated functional acceptance not completed",
       "finding": "Live escaped XML; URL resolution, one-host and date validation, bounded entries; image namespace and real XML download.",
       "case": "scripts/qa/cases/seo-network.mjs#xml-sitemap-generator",
-      "remainingWorkerBlockers": []
+      "remainingWorkerBlockers": [],
+      "browserAcceptance": {
+        "chrome": "not verified",
+        "webkit": "not verified"
+      }
     },
     {
       "slug": "json-ld-generator",
       "url": "https://toolblip.com/tools/json-ld-generator",
       "component": "JsonLdGeneratorClient",
       "historicallyApproved": false,
-      "status": "implemented; browser acceptance pending parent",
+      "status": "blocked: integrated functional acceptance not completed",
       "finding": "All 13 schemas retained; live current output, safe script escaping, complete row/date/price validation; removed invented InStock availability; download.",
       "case": "scripts/qa/cases/seo-network.mjs#json-ld-generator",
-      "remainingWorkerBlockers": []
+      "remainingWorkerBlockers": [],
+      "browserAcceptance": {
+        "chrome": "not verified",
+        "webkit": "not verified"
+      }
     },
     {
       "slug": "htaccess-redirect-generator",
       "url": "https://toolblip.com/tools/htaccess-redirect-generator",
       "component": "HtaccessRedirectGeneratorClient",
       "historicallyApproved": false,
-      "status": "implemented; browser acceptance pending parent",
+      "status": "blocked: integrated functional acceptance not completed",
       "finding": "Live exact-path rules; config injection validation, explicit base domain for protocol redirects, all four status modes, download.",
       "case": "scripts/qa/cases/seo-network.mjs#htaccess-redirect-generator",
-      "remainingWorkerBlockers": []
+      "remainingWorkerBlockers": [],
+      "browserAcceptance": {
+        "chrome": "not verified",
+        "webkit": "not verified"
+      }
     },
     {
       "slug": "meta-tag-generator",
       "url": "https://toolblip.com/tools/meta-tag-generator",
       "component": "MetaTagGeneratorClient",
       "historicallyApproved": false,
-      "status": "implemented; browser acceptance pending parent",
+      "status": "blocked: integrated functional acceptance not completed",
       "finding": "Shared live escaped tag generation and responsive preview; desktop/mobile, social platform/card modes where relevant, HTTP(S) validation, examples/clear and current tag download; explicitly approximate.",
       "case": "scripts/qa/cases/seo-network.mjs#meta-tag-generator",
-      "remainingWorkerBlockers": []
+      "remainingWorkerBlockers": [],
+      "browserAcceptance": {
+        "chrome": "not verified",
+        "webkit": "not verified"
+      }
     },
     {
       "slug": "serp-preview",
       "url": "https://toolblip.com/tools/serp-preview",
       "component": "SerpPreviewClient",
       "historicallyApproved": false,
-      "status": "implemented; browser acceptance pending parent",
+      "status": "blocked: integrated functional acceptance not completed",
       "finding": "Shared live escaped tag generation and responsive preview; desktop/mobile, social platform/card modes where relevant, HTTP(S) validation, examples/clear and current tag download; explicitly approximate.",
       "case": "scripts/qa/cases/seo-network.mjs#serp-preview",
-      "remainingWorkerBlockers": []
+      "remainingWorkerBlockers": [],
+      "browserAcceptance": {
+        "chrome": "not verified",
+        "webkit": "not verified"
+      }
     },
     {
       "slug": "keyword-density-checker",
       "url": "https://toolblip.com/tools/keyword-density-checker",
       "component": "KeywordDensityCheckerClient",
       "historicallyApproved": false,
-      "status": "implemented; browser acceptance pending parent",
+      "status": "blocked: integrated functional acceptance not completed",
       "finding": "Whole Unicode words and 1/2/3-word windows; explicit density denominator; live output.",
       "case": "scripts/qa/cases/seo-network.mjs#keyword-density-checker",
-      "remainingWorkerBlockers": []
+      "remainingWorkerBlockers": [],
+      "browserAcceptance": {
+        "chrome": "not verified",
+        "webkit": "not verified"
+      }
     },
     {
       "slug": "mac-address-generator",
       "url": "https://toolblip.com/tools/mac-address-generator",
       "component": "MacAddressGeneratorClient",
       "historicallyApproved": false,
-      "status": "implemented; browser acceptance pending parent",
+      "status": "blocked: integrated functional acceptance not completed",
       "finding": "Shared by both assigned slugs; Web Crypto local-unicast generation, three formats, bounded integer count and collision attempts, explicit errors, current-result download.",
       "case": "scripts/qa/cases/seo-network.mjs#mac-address-generator",
-      "remainingWorkerBlockers": []
+      "remainingWorkerBlockers": [],
+      "browserAcceptance": {
+        "chrome": "not verified",
+        "webkit": "not verified"
+      }
     },
     {
       "slug": "open-graph-preview",
       "url": "https://toolblip.com/tools/open-graph-preview",
       "component": "OpenGraphPreviewClient",
       "historicallyApproved": false,
-      "status": "implemented; browser acceptance pending parent",
+      "status": "blocked: integrated functional acceptance not completed",
       "finding": "Shared live escaped tag generation and responsive preview; desktop/mobile, social platform/card modes where relevant, HTTP(S) validation, examples/clear and current tag download; explicitly approximate.",
       "case": "scripts/qa/cases/seo-network.mjs#open-graph-preview",
-      "remainingWorkerBlockers": []
+      "remainingWorkerBlockers": [],
+      "browserAcceptance": {
+        "chrome": "not verified",
+        "webkit": "not verified"
+      }
     },
     {
       "slug": "twitter-card-preview",
       "url": "https://toolblip.com/tools/twitter-card-preview",
       "component": "TwitterCardPreviewClient",
       "historicallyApproved": false,
-      "status": "implemented; browser acceptance pending parent",
+      "status": "blocked: integrated functional acceptance not completed",
       "finding": "Shared live escaped tag generation and responsive preview; desktop/mobile, social platform/card modes where relevant, HTTP(S) validation, examples/clear and current tag download; explicitly approximate.",
       "case": "scripts/qa/cases/seo-network.mjs#twitter-card-preview",
-      "remainingWorkerBlockers": []
+      "remainingWorkerBlockers": [],
+      "browserAcceptance": {
+        "chrome": "not verified",
+        "webkit": "not verified"
+      }
     },
     {
       "slug": "ping-test",
       "url": "https://toolblip.com/tools/ping-test",
       "component": "PingTestClient",
       "historicallyApproved": false,
-      "status": "implemented; browser acceptance pending parent",
+      "status": "blocked: integrated functional acceptance not completed",
       "finding": "Bounded and cancellable real read-only lookups; stale-result invalidation on edits/modes/clear/unmount; input and concurrency limits; explicit network errors; current JSON report download. DNS timing is explicitly not ICMP or host reachability.",
       "case": "scripts/qa/cases/seo-network.mjs#ping-test",
-      "remainingWorkerBlockers": []
+      "remainingWorkerBlockers": [],
+      "browserAcceptance": {
+        "chrome": "not verified",
+        "webkit": "not verified"
+      }
     },
     {
       "slug": "robots-txt-analyzer",
       "url": "https://toolblip.com/tools/robots-txt-analyzer",
       "component": "RobotsTxtEditorClient",
       "historicallyApproved": false,
-      "status": "implemented; browser acceptance pending parent",
+      "status": "blocked: integrated functional acceptance not completed",
       "finding": "RFC-style group parsing, merged matching groups, whole-path wildcard/end-anchor handling, allow tie-break, empty rules, UTF-8/percent encoding, extension warnings and path test.",
       "case": "scripts/qa/cases/seo-network.mjs#robots-txt-analyzer",
-      "remainingWorkerBlockers": []
+      "remainingWorkerBlockers": [],
+      "browserAcceptance": {
+        "chrome": "not verified",
+        "webkit": "not verified"
+      }
     },
     {
       "slug": "keyword-extractor",
       "url": "https://toolblip.com/tools/keyword-extractor",
       "component": "KeywordExtractorClient",
       "historicallyApproved": false,
-      "status": "implemented; browser acceptance pending parent",
+      "status": "blocked: integrated functional acceptance not completed",
       "finding": "Frequency extraction with documented English stop-word filtering and phrase sizes.",
       "case": "scripts/qa/cases/seo-network.mjs#keyword-extractor",
-      "remainingWorkerBlockers": []
+      "remainingWorkerBlockers": [],
+      "browserAcceptance": {
+        "chrome": "not verified",
+        "webkit": "not verified"
+      }
     },
     {
       "slug": "broken-link-checker",
       "url": "https://toolblip.com/tools/broken-link-checker",
       "component": "BrokenLinkCheckerClient",
       "historicallyApproved": false,
-      "status": "implemented; browser acceptance pending parent",
+      "status": "blocked: integrated functional acceptance not completed",
       "finding": "Bounded and cancellable real read-only lookups; stale-result invalidation on edits/modes/clear/unmount; input and concurrency limits; explicit network errors; current JSON report download. CORS/network/unsupported HEAD stays Unknown; only observed HTTP errors are reported as HTTP errors.",
       "case": "scripts/qa/cases/seo-network.mjs#broken-link-checker",
-      "remainingWorkerBlockers": []
+      "remainingWorkerBlockers": [],
+      "browserAcceptance": {
+        "chrome": "not verified",
+        "webkit": "not verified"
+      }
     },
     {
       "slug": "google-algorithm-tracker",
       "url": "https://toolblip.com/tools/google-algorithm-tracker",
       "component": "GoogleAlgorithmTrackerClient",
       "historicallyApproved": false,
-      "status": "implemented; browser acceptance pending parent",
+      "status": "blocked: integrated functional acceptance not completed",
       "finding": "Existing historical filter retained; examples/clear; identifies static coverage through December 2024, corrected misleading historical descriptions, authoritative live-history link.",
       "case": "scripts/qa/cases/seo-network.mjs#google-algorithm-tracker",
-      "remainingWorkerBlockers": []
+      "remainingWorkerBlockers": [],
+      "browserAcceptance": {
+        "chrome": "not verified",
+        "webkit": "not verified"
+      }
     },
     {
       "slug": "meta-description-checker",
       "url": "https://toolblip.com/tools/meta-description-checker",
       "component": "MetaDescriptionCheckerClient",
       "historicallyApproved": false,
-      "status": "implemented; browser acceptance pending parent",
+      "status": "blocked: integrated functional acceptance not completed",
       "finding": "Text/HTML/URL modes; Unicode counts and optional phrase match, no SEO grade.",
       "case": "scripts/qa/cases/seo-network.mjs#meta-description-checker",
-      "remainingWorkerBlockers": []
+      "remainingWorkerBlockers": [],
+      "browserAcceptance": {
+        "chrome": "not verified",
+        "webkit": "not verified"
+      }
     },
     {
       "slug": "domain-age-checker",
       "url": "https://toolblip.com/tools/domain-age-checker",
       "component": "DomainAgeCheckerClient",
       "historicallyApproved": false,
-      "status": "implemented; browser acceptance pending parent",
+      "status": "blocked: integrated functional acceptance not completed",
       "finding": "Bounded and cancellable real read-only lookups; stale-result invalidation on edits/modes/clear/unmount; input and concurrency limits; explicit network errors; current JSON report download. RDAP missing/future/invalid dates are handled; age uses signed elapsed UTC days.",
       "case": "scripts/qa/cases/seo-network.mjs#domain-age-checker",
-      "remainingWorkerBlockers": []
+      "remainingWorkerBlockers": [],
+      "browserAcceptance": {
+        "chrome": "not verified",
+        "webkit": "not verified"
+      }
     },
     {
       "slug": "accessibility-checker",
       "url": "https://toolblip.com/tools/accessibility-checker",
       "component": "AccessibilityCheckerClient",
       "historicallyApproved": false,
-      "status": "implemented; browser acceptance pending parent",
+      "status": "blocked: integrated functional acceptance not completed",
       "finding": "Static scope explicitly limited; wrapped/referenced labels, image-link names and hidden controls handled.",
       "case": "scripts/qa/cases/seo-network.mjs#accessibility-checker",
-      "remainingWorkerBlockers": []
+      "remainingWorkerBlockers": [],
+      "browserAcceptance": {
+        "chrome": "not verified",
+        "webkit": "not verified"
+      }
     },
     {
       "slug": "sitemap-analyzer",
       "url": "https://toolblip.com/tools/sitemap-analyzer",
       "component": "SitemapAnalyzerClient",
       "historicallyApproved": false,
-      "status": "implemented; browser acceptance pending parent",
+      "status": "blocked: integrated functional acceptance not completed",
       "finding": "DOM XML parser, namespace-aware urlset/index entries, malformed XML and DTD rejection, decoded complete URL export.",
       "case": "scripts/qa/cases/seo-network.mjs#sitemap-analyzer",
-      "remainingWorkerBlockers": []
+      "remainingWorkerBlockers": [],
+      "browserAcceptance": {
+        "chrome": "not verified",
+        "webkit": "not verified"
+      }
     },
     {
       "slug": "open-graph-generator",
       "url": "https://toolblip.com/tools/open-graph-generator",
       "component": "OpenGraphGeneratorClient",
       "historicallyApproved": false,
-      "status": "implemented; browser acceptance pending parent",
+      "status": "blocked: integrated functional acceptance not completed",
       "finding": "Shared live escaped tag generation and responsive preview; desktop/mobile, social platform/card modes where relevant, HTTP(S) validation, examples/clear and current tag download; explicitly approximate.",
       "case": "scripts/qa/cases/seo-network.mjs#open-graph-generator",
-      "remainingWorkerBlockers": []
+      "remainingWorkerBlockers": [],
+      "browserAcceptance": {
+        "chrome": "not verified",
+        "webkit": "not verified"
+      }
     },
     {
       "slug": "dns-lookup",
       "url": "https://toolblip.com/tools/dns-lookup",
       "component": "DnsLookupV2Client",
       "historicallyApproved": false,
-      "status": "implemented; browser acceptance pending parent",
+      "status": "blocked: integrated functional acceptance not completed",
       "finding": "Bounded and cancellable real read-only lookups; stale-result invalidation on edits/modes/clear/unmount; input and concurrency limits; explicit network errors; current JSON report download.",
       "case": "scripts/qa/cases/seo-network.mjs#dns-lookup",
-      "remainingWorkerBlockers": []
+      "remainingWorkerBlockers": [],
+      "browserAcceptance": {
+        "chrome": "not verified",
+        "webkit": "not verified"
+      }
     },
     {
       "slug": "serp-snippet-preview",
       "url": "https://toolblip.com/tools/serp-snippet-preview",
       "component": "SerpPreviewClient",
       "historicallyApproved": false,
-      "status": "implemented; browser acceptance pending parent",
+      "status": "blocked: integrated functional acceptance not completed",
       "finding": "Shared live escaped tag generation and responsive preview; desktop/mobile, social platform/card modes where relevant, HTTP(S) validation, examples/clear and current tag download; explicitly approximate.",
       "case": "scripts/qa/cases/seo-network.mjs#serp-snippet-preview",
-      "remainingWorkerBlockers": []
+      "remainingWorkerBlockers": [],
+      "browserAcceptance": {
+        "chrome": "not verified",
+        "webkit": "not verified"
+      }
     },
     {
       "slug": "seo-meta-tag-analyzer",
       "url": "https://toolblip.com/tools/seo-meta-tag-analyzer",
       "component": "SeoMetaTagAnalyzerClient",
       "historicallyApproved": false,
-      "status": "implemented; browser acceptance pending parent",
+      "status": "blocked: integrated functional acceptance not completed",
       "finding": "Real inert HTML metadata extraction, duplicates and missing-tag observations; no arbitrary SEO grade.",
       "case": "scripts/qa/cases/seo-network.mjs#seo-meta-tag-analyzer",
-      "remainingWorkerBlockers": []
+      "remainingWorkerBlockers": [],
+      "browserAcceptance": {
+        "chrome": "not verified",
+        "webkit": "not verified"
+      }
     },
     {
       "slug": "cidr-calculator",
       "url": "https://toolblip.com/tools/cidr-calculator",
       "component": "CidrCalculatorClient",
       "historicallyApproved": false,
-      "status": "implemented; browser acceptance pending parent",
+      "status": "blocked: integrated functional acceptance not completed",
       "finding": "Live validated IPv4 calculation; /31-/32 labels avoid claiming broadcast; input limits, clipboard error feedback and download.",
       "case": "scripts/qa/cases/seo-network.mjs#cidr-calculator",
-      "remainingWorkerBlockers": []
+      "remainingWorkerBlockers": [],
+      "browserAcceptance": {
+        "chrome": "not verified",
+        "webkit": "not verified"
+      }
     },
     {
       "slug": "ip-range-calculator",
       "url": "https://toolblip.com/tools/ip-range-calculator",
       "component": "IpRangeCalculatorClient",
       "historicallyApproved": false,
-      "status": "implemented; browser acceptance pending parent",
+      "status": "blocked: integrated functional acceptance not completed",
       "finding": "Live inclusive range and enclosing CIDR; input limits, clipboard error feedback and download.",
       "case": "scripts/qa/cases/seo-network.mjs#ip-range-calculator",
-      "remainingWorkerBlockers": []
+      "remainingWorkerBlockers": [],
+      "browserAcceptance": {
+        "chrome": "not verified",
+        "webkit": "not verified"
+      }
     },
     {
       "slug": "robots-txt-validator",
       "url": "https://toolblip.com/tools/robots-txt-validator",
       "component": "RobotsTxtEditorClient",
       "historicallyApproved": false,
-      "status": "implemented; browser acceptance pending parent",
+      "status": "blocked: integrated functional acceptance not completed",
       "finding": "RFC-style group parsing, merged matching groups, whole-path wildcard/end-anchor handling, allow tie-break, empty rules, UTF-8/percent encoding, extension warnings and path test.",
       "case": "scripts/qa/cases/seo-network.mjs#robots-txt-validator",
-      "remainingWorkerBlockers": []
+      "remainingWorkerBlockers": [],
+      "browserAcceptance": {
+        "chrome": "not verified",
+        "webkit": "not verified"
+      }
     },
     {
       "slug": "hreflang-tag-generator",
       "url": "https://toolblip.com/tools/hreflang-tag-generator",
       "component": "HreflangTagGeneratorClient",
       "historicallyApproved": false,
-      "status": "implemented; browser acceptance pending parent",
+      "status": "blocked: integrated functional acceptance not completed",
       "finding": "HTML/JSON/sitemap modes; validated unique languages and URLs, escaped output, full reciprocal alternates in every sitemap entry.",
       "case": "scripts/qa/cases/seo-network.mjs#hreflang-tag-generator",
-      "remainingWorkerBlockers": []
+      "remainingWorkerBlockers": [],
+      "browserAcceptance": {
+        "chrome": "not verified",
+        "webkit": "not verified"
+      }
     },
     {
       "slug": "google-serp-preview",
       "url": "https://toolblip.com/tools/google-serp-preview",
       "component": "GoogleSerpPreviewClient",
       "historicallyApproved": false,
-      "status": "implemented; browser acceptance pending parent",
+      "status": "blocked: integrated functional acceptance not completed",
       "finding": "Shared live escaped tag generation and responsive preview; desktop/mobile, social platform/card modes where relevant, HTTP(S) validation, examples/clear and current tag download; explicitly approximate.",
       "case": "scripts/qa/cases/seo-network.mjs#google-serp-preview",
-      "remainingWorkerBlockers": []
+      "remainingWorkerBlockers": [],
+      "browserAcceptance": {
+        "chrome": "not verified",
+        "webkit": "not verified"
+      }
     },
     {
       "slug": "keyword-generator",
       "url": "https://toolblip.com/tools/keyword-generator",
       "component": "KeywordGeneratorExpressClient",
       "historicallyApproved": false,
-      "status": "implemented; browser acceptance pending parent",
+      "status": "blocked: integrated functional acceptance not completed",
       "finding": "Local question/preposition/modifier templates; explicitly no live volume/competition claims.",
       "case": "scripts/qa/cases/seo-network.mjs#keyword-generator",
-      "remainingWorkerBlockers": []
+      "remainingWorkerBlockers": [],
+      "browserAcceptance": {
+        "chrome": "not verified",
+        "webkit": "not verified"
+      }
     },
     {
       "slug": "heading-tag-analyzer",
       "url": "https://toolblip.com/tools/heading-tag-analyzer",
       "component": "HeadingTagAnalyzerClient",
       "historicallyApproved": false,
-      "status": "implemented; browser acceptance pending parent",
+      "status": "blocked: integrated functional acceptance not completed",
       "finding": "DOM parsing preserves nested heading text and document order; review prompts for skips.",
       "case": "scripts/qa/cases/seo-network.mjs#heading-tag-analyzer",
-      "remainingWorkerBlockers": []
+      "remainingWorkerBlockers": [],
+      "browserAcceptance": {
+        "chrome": "not verified",
+        "webkit": "not verified"
+      }
     },
     {
       "slug": "page-title-checker",
       "url": "https://toolblip.com/tools/page-title-checker",
       "component": "PageTitleCheckerClient",
       "historicallyApproved": false,
-      "status": "implemented; browser acceptance pending parent",
+      "status": "blocked: integrated functional acceptance not completed",
       "finding": "Text/HTML/URL modes; Unicode counts, duplicate/missing title observations without a ranking score.",
       "case": "scripts/qa/cases/seo-network.mjs#page-title-checker",
-      "remainingWorkerBlockers": []
+      "remainingWorkerBlockers": [],
+      "browserAcceptance": {
+        "chrome": "not verified",
+        "webkit": "not verified"
+      }
     },
     {
       "slug": "sitemap-extractor",
       "url": "https://toolblip.com/tools/sitemap-extractor",
       "component": "SitemapAnalyzerClient",
       "historicallyApproved": false,
-      "status": "implemented; browser acceptance pending parent",
+      "status": "blocked: integrated functional acceptance not completed",
       "finding": "DOM XML parser, namespace-aware urlset/index entries, malformed XML and DTD rejection, decoded complete URL export.",
       "case": "scripts/qa/cases/seo-network.mjs#sitemap-extractor",
-      "remainingWorkerBlockers": []
+      "remainingWorkerBlockers": [],
+      "browserAcceptance": {
+        "chrome": "not verified",
+        "webkit": "not verified"
+      }
     },
     {
       "slug": "batch-favicon-downloader",
       "url": "https://toolblip.com/tools/batch-favicon-downloader",
       "component": "BatchFaviconDownloaderClient",
       "historicallyApproved": false,
-      "status": "implemented; browser acceptance pending parent",
+      "status": "blocked: integrated functional acceptance not completed",
       "finding": "Shared by both assigned slugs; 20-domain/3-request limit, bounded streamed image bytes, signature/dimension/decode validation, cancellation, file-read race protection, object URL cleanup, real per-image and bulk downloads; provider fallback caveat.",
       "case": "scripts/qa/cases/seo-network.mjs#batch-favicon-downloader",
-      "remainingWorkerBlockers": []
+      "remainingWorkerBlockers": [],
+      "browserAcceptance": {
+        "chrome": "not verified",
+        "webkit": "not verified"
+      }
     },
     {
       "slug": "docker-compose-generator",
       "url": "https://toolblip.com/tools/docker-compose-generator",
       "component": "DockerComposeGeneratorClient",
       "historicallyApproved": false,
-      "status": "implemented; browser acceptance pending parent",
+      "status": "blocked: integrated functional acceptance not completed",
       "finding": "Six templates retained; prevents db/cache service collisions, escapes Compose dollar interpolation, YAML downloads, bounded labeled inputs.",
       "case": "scripts/qa/cases/seo-network.mjs#docker-compose-generator",
-      "remainingWorkerBlockers": []
+      "remainingWorkerBlockers": [],
+      "browserAcceptance": {
+        "chrome": "not verified",
+        "webkit": "not verified"
+      }
     },
     {
       "slug": "robots-txt-editor",
       "url": "https://toolblip.com/tools/robots-txt-editor",
       "component": "RobotsTxtEditorClient",
       "historicallyApproved": false,
-      "status": "implemented; browser acceptance pending parent",
+      "status": "blocked: integrated functional acceptance not completed",
       "finding": "RFC-style group parsing, merged matching groups, whole-path wildcard/end-anchor handling, allow tie-break, empty rules, UTF-8/percent encoding, extension warnings and path test.",
       "case": "scripts/qa/cases/seo-network.mjs#robots-txt-editor",
-      "remainingWorkerBlockers": []
+      "remainingWorkerBlockers": [],
+      "browserAcceptance": {
+        "chrome": "not verified",
+        "webkit": "not verified"
+      }
     },
     {
       "slug": "og-tag-debugger",
       "url": "https://toolblip.com/tools/og-tag-debugger",
       "component": "OgTagDebuggerClient",
       "historicallyApproved": false,
-      "status": "implemented; browser acceptance pending parent",
+      "status": "blocked: integrated functional acceptance not completed",
       "finding": "Real HTML/URL inspection plus retained editable tag/preview workflow; safe escaping.",
       "case": "scripts/qa/cases/seo-network.mjs#og-tag-debugger",
-      "remainingWorkerBlockers": []
+      "remainingWorkerBlockers": [],
+      "browserAcceptance": {
+        "chrome": "not verified",
+        "webkit": "not verified"
+      }
     },
     {
       "slug": "canonical-url-generator",
       "url": "https://toolblip.com/tools/canonical-url-generator",
       "component": "CanonicalUrlGeneratorClient",
       "historicallyApproved": false,
-      "status": "implemented; browser acceptance pending parent",
+      "status": "blocked: integrated functional acceptance not completed",
       "finding": "Explicit HTTP(S) transformations; preserves query semantics by default; safe HTML escaping.",
       "case": "scripts/qa/cases/seo-network.mjs#canonical-url-generator",
-      "remainingWorkerBlockers": []
+      "remainingWorkerBlockers": [],
+      "browserAcceptance": {
+        "chrome": "not verified",
+        "webkit": "not verified"
+      }
     },
     {
       "slug": "random-mac-generator",
       "url": "https://toolblip.com/tools/random-mac-generator",
       "component": "MacAddressGeneratorClient",
       "historicallyApproved": false,
-      "status": "implemented; browser acceptance pending parent",
+      "status": "blocked: integrated functional acceptance not completed",
       "finding": "Shared by both assigned slugs; Web Crypto local-unicast generation, three formats, bounded integer count and collision attempts, explicit errors, current-result download.",
       "case": "scripts/qa/cases/seo-network.mjs#random-mac-generator",
-      "remainingWorkerBlockers": []
+      "remainingWorkerBlockers": [],
+      "browserAcceptance": {
+        "chrome": "not verified",
+        "webkit": "not verified"
+      }
     },
     {
       "slug": "seo-title-analyzer",
       "url": "https://toolblip.com/tools/seo-title-analyzer",
       "component": "SEOTitleAnalyzerClient",
       "historicallyApproved": false,
-      "status": "implemented; browser acceptance pending parent",
+      "status": "blocked: integrated functional acceptance not completed",
       "finding": "Text/HTML/URL modes; Unicode counts and missing title observations without a ranking score.",
       "case": "scripts/qa/cases/seo-network.mjs#seo-title-analyzer",
-      "remainingWorkerBlockers": []
+      "remainingWorkerBlockers": [],
+      "browserAcceptance": {
+        "chrome": "not verified",
+        "webkit": "not verified"
+      }
     },
     {
       "slug": "serp-simulator",
       "url": "https://toolblip.com/tools/serp-simulator",
       "component": "SerpPreviewClient",
       "historicallyApproved": false,
-      "status": "implemented; browser acceptance pending parent",
+      "status": "blocked: integrated functional acceptance not completed",
       "finding": "Shared live escaped tag generation and responsive preview; desktop/mobile, social platform/card modes where relevant, HTTP(S) validation, examples/clear and current tag download; explicitly approximate.",
       "case": "scripts/qa/cases/seo-network.mjs#serp-simulator",
-      "remainingWorkerBlockers": []
+      "remainingWorkerBlockers": [],
+      "browserAcceptance": {
+        "chrome": "not verified",
+        "webkit": "not verified"
+      }
     },
     {
       "slug": "robots-txt-checker",
       "url": "https://toolblip.com/tools/robots-txt-checker",
       "component": "RobotsTxtEditorClient",
       "historicallyApproved": false,
-      "status": "implemented; browser acceptance pending parent",
+      "status": "blocked: integrated functional acceptance not completed",
       "finding": "RFC-style group parsing, merged matching groups, whole-path wildcard/end-anchor handling, allow tie-break, empty rules, UTF-8/percent encoding, extension warnings and path test.",
       "case": "scripts/qa/cases/seo-network.mjs#robots-txt-checker",
-      "remainingWorkerBlockers": []
+      "remainingWorkerBlockers": [],
+      "browserAcceptance": {
+        "chrome": "not verified",
+        "webkit": "not verified"
+      }
     },
     {
       "slug": "duplicate-url-detector",
       "url": "https://toolblip.com/tools/duplicate-url-detector",
       "component": "DuplicateUrlDetectorClient",
       "historicallyApproved": false,
-      "status": "implemented; browser acceptance pending parent",
+      "status": "blocked: integrated functional acceptance not completed",
       "finding": "Exact normalized URL grouping by default, opt-in transformations, invalid URLs reported, decoded query delimiters never conflated.",
       "case": "scripts/qa/cases/seo-network.mjs#duplicate-url-detector",
-      "remainingWorkerBlockers": []
+      "remainingWorkerBlockers": [],
+      "browserAcceptance": {
+        "chrome": "not verified",
+        "webkit": "not verified"
+      }
     },
     {
       "slug": "keyword-density-analyzer",
       "url": "https://toolblip.com/tools/keyword-density-analyzer",
       "component": "KeywordDensityCheckerClient",
       "historicallyApproved": false,
-      "status": "implemented; browser acceptance pending parent",
+      "status": "blocked: integrated functional acceptance not completed",
       "finding": "Whole Unicode words and 1/2/3-word windows; explicit density denominator; live output.",
       "case": "scripts/qa/cases/seo-network.mjs#keyword-density-analyzer",
-      "remainingWorkerBlockers": []
+      "remainingWorkerBlockers": [],
+      "browserAcceptance": {
+        "chrome": "not verified",
+        "webkit": "not verified"
+      }
     },
     {
       "slug": "favicon-grabber",
       "url": "https://toolblip.com/tools/images/favicon-grabber",
       "component": "BatchFaviconDownloaderClient",
       "historicallyApproved": false,
-      "status": "implemented; browser acceptance pending parent",
+      "status": "blocked: integrated functional acceptance not completed",
       "finding": "Shared by both assigned slugs; 20-domain/3-request limit, bounded streamed image bytes, signature/dimension/decode validation, cancellation, file-read race protection, object URL cleanup, real per-image and bulk downloads; provider fallback caveat.",
       "case": "scripts/qa/cases/seo-network.mjs#favicon-grabber",
-      "remainingWorkerBlockers": []
+      "remainingWorkerBlockers": [],
+      "browserAcceptance": {
+        "chrome": "not verified",
+        "webkit": "not verified"
+      }
     },
     {
       "slug": "dns-lookup-tool",
       "url": "https://toolblip.com/tools/dns-lookup-tool",
       "component": "DnsLookupToolClient",
       "historicallyApproved": false,
-      "status": "implemented; browser acceptance pending parent",
+      "status": "blocked: integrated functional acceptance not completed",
       "finding": "Bounded and cancellable real read-only lookups; stale-result invalidation on edits/modes/clear/unmount; input and concurrency limits; explicit network errors; current JSON report download.",
       "case": "scripts/qa/cases/seo-network.mjs#dns-lookup-tool",
-      "remainingWorkerBlockers": []
+      "remainingWorkerBlockers": [],
+      "browserAcceptance": {
+        "chrome": "not verified",
+        "webkit": "not verified"
+      }
     },
     {
       "slug": "google-serp-simulator",
       "url": "https://toolblip.com/tools/google-serp-simulator",
       "component": "GoogleSerpSimulatorClient",
       "historicallyApproved": false,
-      "status": "implemented; browser acceptance pending parent",
+      "status": "blocked: integrated functional acceptance not completed",
       "finding": "Shared live escaped tag generation and responsive preview; desktop/mobile, social platform/card modes where relevant, HTTP(S) validation, examples/clear and current tag download; explicitly approximate.",
       "case": "scripts/qa/cases/seo-network.mjs#google-serp-simulator",
-      "remainingWorkerBlockers": []
+      "remainingWorkerBlockers": [],
+      "browserAcceptance": {
+        "chrome": "not verified",
+        "webkit": "not verified"
+      }
     }
   ],
   "duplicateProposals": [
@@ -701,7 +888,11 @@
       "finding": "Existing shared server resolver does not allow NS and buffers JSON. Owned clients query bounded Google DoH directly to preserve NS and distinct resolver errors."
     }
   ],
-  "remainingBlockers": [],
+  "remainingBlockers": [
+    "Shared navigation/hydration latency prevents fixture execution.",
+    "Shared CSP denies direct real DNS and RDAP requests.",
+    "Full 47-route known-output, 320px and Clear acceptance remains pending in both engines."
+  ],
   "integrationRisks": [
     "Live RDAP, DoH and favicon fixture success depends on actual provider availability. Browser cases fail visibly if the live prerequisite fails; only controlled failure paths are mocked.",
     "Browser XML/HTML parsing, downloads, responsive layout and image decoding are covered by authored cases but not claimed verified until parent runs them.",
@@ -717,5 +908,175 @@
     "No central catalog, FAQ, ToolUI, dependencies, or existing shared helper edits.",
     "Dependency symlink remains untracked.",
     "ai-seo-geo-aeo was not found in the available skill roots or Hermes skill tree; parsing work used primary protocol references."
-  ]
+  ],
+  "integratedVerification": {
+    "date": "2026-09-26",
+    "baseURL": "http://localhost:3190",
+    "assignedRoutes": 47,
+    "inventoryGroupRoutes": 50,
+    "additionalHistoricallyApprovedRoutes": [
+      "slug-permalink-checker",
+      "word-density-analyzer",
+      "slug-health-checker"
+    ],
+    "functionalPasses": 0,
+    "runs": [
+      {
+        "path": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-seo-chrome-1",
+        "recordedTools": 0,
+        "functionalCounts": {},
+        "completion": "launch failed",
+        "recordedSlugs": []
+      },
+      {
+        "path": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-seo-chrome-2",
+        "recordedTools": 12,
+        "functionalCounts": {
+          "not-run": 11,
+          "needs-fixture": 1
+        },
+        "completion": "stopped after repeated infrastructure failures; partial evidence retained",
+        "recordedSlugs": [
+          "htaccess-redirect-generator",
+          "json-ld-generator",
+          "keyword-density-checker",
+          "mac-address-generator",
+          "meta-tag-generator",
+          "open-graph-preview",
+          "robots-txt-generator",
+          "security-headers-generator",
+          "serp-preview",
+          "slug-permalink-checker",
+          "twitter-card-preview",
+          "xml-sitemap-generator"
+        ]
+      },
+      {
+        "path": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-seo-chrome-3",
+        "recordedTools": 6,
+        "functionalCounts": {
+          "not-run": 6
+        },
+        "completion": "stopped after repeated infrastructure failures; partial evidence retained",
+        "recordedSlugs": [
+          "htaccess-redirect-generator",
+          "json-ld-generator",
+          "meta-tag-generator",
+          "robots-txt-generator",
+          "security-headers-generator",
+          "xml-sitemap-generator"
+        ]
+      },
+      {
+        "path": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-seo-webkit-1",
+        "recordedTools": 6,
+        "functionalCounts": {
+          "not-run": 6
+        },
+        "completion": "runner crashed before completion",
+        "recordedSlugs": [
+          "htaccess-redirect-generator",
+          "json-ld-generator",
+          "meta-tag-generator",
+          "robots-txt-generator",
+          "security-headers-generator",
+          "xml-sitemap-generator"
+        ]
+      }
+    ],
+    "validation": [
+      {
+        "command": "./node_modules/.bin/vitest run lib/seo-network lib/network-tools.test.ts",
+        "exitCode": 0,
+        "files": 4,
+        "tests": 27
+      },
+      {
+        "command": "./node_modules/.bin/tsc --noEmit --incremental false",
+        "exitCode": 0
+      },
+      {
+        "command": "node --check scripts/qa/cases/seo-network.mjs",
+        "exitCode": 0
+      }
+    ],
+    "changes": [
+      "Favicon example and live fixture use google.com: example.com provider request returns HTTP 404, google.com returns HTTP 200 PNG.",
+      "All 47 fixtures invoke the shared example helper, which now checks container overflow at 320px; JSON reports and shared Clear paths also check at 320px. These assertions remain unverified in the integrated browser.",
+      "Shared Clear helper records result/error removal evidence.",
+      "Live public/read-only assertion messages and controlled error assertion messages are explicitly labeled."
+    ],
+    "providerProbes": [
+      {
+        "target": "https://dns.google/resolve?name=dns.google&type=A",
+        "layer": "host HTTP, not component acceptance",
+        "status": 200,
+        "answer": [
+          "8.8.4.4",
+          "8.8.8.8"
+        ]
+      },
+      {
+        "target": "https://rdap.org/domain/example.com",
+        "layer": "host HTTP, follows redirect to Verisign",
+        "status": 200,
+        "registration": "1995-08-14T04:00:00Z"
+      },
+      {
+        "target": "https://www.google.com/s2/favicons?domain=example.com&sz=64",
+        "layer": "host HTTP, follows redirect",
+        "status": 404,
+        "bytes": 726
+      },
+      {
+        "target": "https://www.google.com/s2/favicons?domain=google.com&sz=128",
+        "layer": "host HTTP, follows redirect",
+        "status": 200,
+        "contentType": "image/png",
+        "bytes": 2326
+      },
+      {
+        "target": "http://localhost:3190/api/favicon?domain=google.com&sz=128",
+        "layer": "local backend HTTP, not component acceptance",
+        "status": 200,
+        "contentType": "image/png",
+        "bytes": 2326
+      },
+      {
+        "target": [
+          "https://dns.google/resolve?name=dns.google&type=A",
+          "https://rdap.org/domain/example.com"
+        ],
+        "layer": "real Chrome fetch from local origin with deployed CSP",
+        "status": "blocked by connect-src",
+        "evidence": "Browser console explicitly reports Content Security Policy violations for both URLs; fetch rejects with Failed to fetch."
+      }
+    ],
+    "sharedOwnerBlockers": [
+      {
+        "file": "scripts/qa/browser.mjs",
+        "cause": "15-second hydration allowance expires while the 38,392,480-byte tool-page JavaScript chunk takes 23.817 seconds to download. Some documents also exceed 30-second navigation timeout.",
+        "action": "Shared runner/server owner must restore usable asset/navigation latency or adjust diagnostic timeout policy; no shared runner/server edits made."
+      },
+      {
+        "file": "scripts/qa/browser.mjs",
+        "cause": "Initial WebKit run crashed on unhandled route.fetch timeout after 8 seconds in stripDevUpgradeCSP. Another worker subsequently added error handling; this does not establish a rerun pass.",
+        "action": "Rerun WebKit after shared fixes, preserving local-only CSP override."
+      },
+      {
+        "file": "next.config.mjs",
+        "cause": "connect-src excludes dns.google, rdap.org and the redirected RDAP registry. Actual Chrome fetch confirms policy denial, distinct from public provider availability. Arbitrary HTML/robots/sitemap public fetch modes face the same policy restriction.",
+        "action": "Shared owner must provide an approved transport or policy configuration. Existing /api/dns/resolve supports only five record types, not NS; /api/proxy rejects localhost:3190. Do not drop useful modes or classify denied requests as success."
+      }
+    ],
+    "scopePreserved": [
+      "No shared runner, central copy, ToolUI, package, server, build, commit or delegation changes."
+    ],
+    "acceptance": "Incomplete: all 47 routes still require integrated known-output, 320px and Clear acceptance in both engines. Provider probes and unit tests are not functional browser passes.",
+    "faviconDiagnostic": {
+      "status": "not verified",
+      "timeoutMs": 120000,
+      "failure": "page.goto timed out waiting for load on /tools/batch-favicon-downloader. Earlier hydrated diagnostic failed to find Download google.com. Local backend success alone is not component acceptance."
+    }
+  }
 }

@@ -4,15 +4,23 @@ import yaml from 'js-yaml';
 
 // Independent fixture values. These cases never mock a successful service response.
 // Network availability failures should fail the integration run, not silently pass.
-async function example({ tool }) { await tool.getByRole('button', { name: /^Examples?$/ }).click(); }
-async function clear({ tool, expect }) {
+async function example(ctx) {
+  await ctx.tool.getByRole('button', { name: /^Examples?$/ }).click();
+  await responsive(ctx);
+}
+async function clear(ctx) {
+  const { tool, expect, check } = ctx;
+  await responsive(ctx);
   await tool.getByRole('button', { name: 'Clear', exact: true }).click();
   await expect(tool.getByLabel('Result', { exact: true })).toHaveCount(0);
   await expect(tool.getByRole('alert')).toHaveCount(0);
+  check(true, 'Clear removes the result and error state.');
 }
-async function report({ tool, expect }) {
+async function report(ctx) {
+  const { tool, expect } = ctx;
   const output = tool.getByLabel('Result', { exact: true });
   await expect(output).toBeVisible();
+  await responsive(ctx);
   return JSON.parse(await output.innerText());
 }
 async function download(ctx, button = 'Download') {
@@ -145,9 +153,9 @@ async function lookup(ctx, kind) {
   await tool.getByRole('button', { name: 'Lookup', exact: true }).click();
   await expect(tool.getByLabel('Result', { exact: true })).toBeVisible({ timeout: 25000 });
   const result = await report(ctx);
-  if (kind === 'links') check(result[0].status === 200, 'Real same-origin HEAD request returns HTTP 200.');
-  else if (kind === 'rdap') check(result.registered.startsWith('1995-08-14') && result.ageDays > 10000, 'Public example.com RDAP registration date matches 1995-08-14.');
-  else { const results = kind === 'ping' ? result.results : result; const records = results.flatMap(r => r.records ?? []); check(records.some(r => r.data === '8.8.8.8'), 'Real dns.google A lookup contains the documented resolver address 8.8.8.8.'); }
+  if (kind === 'links') check(result[0].status === 200, '[live-read-only] Real same-origin HEAD request returns HTTP 200.');
+  else if (kind === 'rdap') check(result.registered.startsWith('1995-08-14') && result.ageDays > 10000, '[live-public] Public example.com RDAP registration date matches 1995-08-14.');
+  else { const results = kind === 'ping' ? result.results : result; const records = results.flatMap(r => r.records ?? []); check(records.some(r => r.data === '8.8.8.8'), '[live-public] Real dns.google A lookup contains the documented resolver address 8.8.8.8.'); }
   check(JSON.parse((await download(ctx)).toString()) !== null, 'Current network report downloads as JSON.');
   // Controlled FAILURE only; no synthetic success response.
   const pattern = kind === 'rdap' ? '**/rdap.org/**' : kind === 'links' ? `${baseURL}/**` : '**/dns.google/resolve?*';
@@ -157,7 +165,7 @@ async function lookup(ctx, kind) {
     if (kind === 'rdap') await expect(tool.getByRole('alert')).toBeVisible();
     else {
       const failed = await report(ctx);
-      check(kind === 'links' ? failed[0].result === 'Unknown' && failed[0].status === null : (kind === 'ping' ? failed.results : failed).every(r => r.error), 'Controlled network failure is explicit, never a false no-records or broken-link result.');
+      check(kind === 'links' ? failed[0].result === 'Unknown' && failed[0].status === null : (kind === 'ping' ? failed.results : failed).every(r => r.error), '[controlled-error] Network failure is explicit, never a false no-records or broken-link result.');
     }
   } finally { await page.unroute(pattern); }
   await input.fill('bad host'); await tool.getByRole('button', { name: 'Lookup', exact: true }).click(); await expect(tool.getByRole('alert')).toBeVisible();
@@ -178,15 +186,15 @@ async function mac(ctx) {
 async function favicon(ctx) {
   const { tool, check, expect, page } = ctx; await example(ctx);
   await tool.getByRole('button', { name: 'Fetch Favicons', exact: true }).click();
-  const button = tool.getByRole('button', { name: 'Download example.com', exact: true }); await expect(button).toBeVisible({ timeout: 20000 });
-  const bytes = await download(ctx, 'Download example.com');
-  check(bytes.length > 24 && (bytes.subarray(0, 8).equals(Buffer.from([137,80,78,71,13,10,26,10])) || bytes.subarray(0,4).equals(Buffer.from([0,0,1,0]))), 'Download contains actual PNG/ICO bytes, not a cross-origin link or HTML page.');
-  const image = tool.getByRole('img', { name: 'Provider favicon for example.com' }); await expect(image).toBeVisible();
+  const button = tool.getByRole('button', { name: 'Download google.com', exact: true }); await expect(button).toBeVisible({ timeout: 20000 });
+  const bytes = await download(ctx, 'Download google.com');
+  check(bytes.length > 24 && (bytes.subarray(0, 8).equals(Buffer.from([137,80,78,71,13,10,26,10])) || bytes.subarray(0,4).equals(Buffer.from([0,0,1,0]))), '[live-public] Download contains actual PNG/ICO bytes, not a cross-origin link or HTML page.');
+  const image = tool.getByRole('img', { name: 'Provider favicon for google.com' }); await expect(image).toBeVisible();
   check(await image.evaluate(img => img.complete && img.naturalWidth > 0), 'Downloaded image decodes in the browser.');
   await clear(ctx); await expect(image).toHaveCount(0);
   await tool.getByLabel('URLs input', { exact: true }).fill('bad host'); await tool.getByRole('button', { name: 'Fetch Favicons', exact: true }).click(); await expect(tool.getByRole('alert')).toBeVisible();
   await page.route('**/api/favicon?*', route => route.abort('failed'));
-  try { await example(ctx); await tool.getByRole('button', { name: 'Fetch Favicons', exact: true }).click(); await expect(tool.getByLabel('Result', { exact: true })).toContainText('example.com:'); await expect(button).toHaveCount(0); check(true, 'Controlled favicon failure exposes no download or success image.'); } finally { await page.unroute('**/api/favicon?*'); }
+  try { await example(ctx); await tool.getByRole('button', { name: 'Fetch Favicons', exact: true }).click(); await expect(tool.getByLabel('Result', { exact: true })).toContainText('google.com:'); await expect(button).toHaveCount(0); check(true, '[controlled-error] Favicon failure exposes no download or success image.'); } finally { await page.unroute('**/api/favicon?*'); }
   await clear(ctx);
 }
 async function robotGenerator(ctx) {

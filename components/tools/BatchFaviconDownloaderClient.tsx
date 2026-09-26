@@ -43,7 +43,7 @@ export default function BatchFaviconDownloaderClient() {
     }, values => setResults(values.map(value => { if (!value.blob) return value; const url = URL.createObjectURL(value.blob); urls.current.push(url); return { ...value, url }; })));
   };
   const download = (r: Result) => { if (r.blob) downloadBlob(r.blob, `favicon-${r.host}.${r.blob.type === 'image/png' ? 'png' : 'ico'}`); };
-  return <SeoFrame note="Downloads images from Google's favicon service through Toolblip's favicon endpoint. The provider may return a generic fallback; a returned image does not prove the site's own favicon exists. Up to 20 domains, three concurrent requests." example={() => update('example.com')} clear={clear}>
+  return <SeoFrame note="Downloads images from Google's favicon service through Toolblip's favicon endpoint. The provider may return a generic fallback; a returned image does not prove the site's own favicon exists. Up to 20 domains, three concurrent requests." example={() => update('google.com')} clear={clear}>
     <SeoField label="URLs input" value={input} onChange={update} multiline maxLength={10000} />
     <label>Load URLs from file<input ref={file} type="file" accept=".txt,text/plain" aria-label="Load URLs from file" onChange={e => {
       const selected = e.target.files?.[0]; if (!selected) return;
