@@ -1,8 +1,8 @@
-import { mkdir, readFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { PDFDocument, PDFName, decodePDFRawStream } from 'pdf-lib';
 import UPNG from 'upng-js';
-import { fixture, encryptedFixture, png, pageOperators, hasText, imageObjects } from './pdf-fixtures.mjs';
+import { fixture, encryptedFixture, png, pageOperators, hasText, imageObjects } from '../helpers/pdf-fixtures.mjs';
 
 const slugs = ['pdf-password-remover','add-pages-to-pdf','annotate-pdf','edit-pdf','extract-images-from-pdf','merge-pdfs','pdf-rearrange','delete-pages-from-pdf','sign-pdf','unlock-pdf','add-watermark-to-pdf'];
 const dimensions = [[321,456],[420,300],[240,360]];
@@ -19,10 +19,16 @@ export default slugs.map(slug => ({ slug, async test({ page, tool, check, expect
     if (await clearButton(tool).isEnabled()) await clearButton(tool).click();
     await expect(tool.getByRole('button', { name: /^Download/ })).toHaveCount(0);
   }
-  async function load(buffer = bytes, name = 'fixture.pdf') { await input(tool, slug).setInputFiles(upload(buffer, name)); }
+  async function load(buffer = bytes, name = 'fixture.pdf') {
+    if (buffer.length > 25 * 1024 * 1024) {
+      await mkdir(artifactsDir, { recursive: true });
+      const source = path.join(artifactsDir, name);
+      await writeFile(source, buffer);
+      await input(tool, slug).setInputFiles(source);
+    } else await input(tool, slug).setInputFiles(upload(buffer, name));
+  }
   async function download(button) {
-    const event = page.waitForEvent('download'); await button.click();
-    const file = await event; await mkdir(artifactsDir, { recursive: true });
+    const [file] = await Promise.all([page.waitForEvent('download'), button.click()]); await mkdir(artifactsDir, { recursive: true });
     const destination = path.join(artifactsDir, `${slug}-${++number}-${file.suggestedFilename()}`);
     await file.saveAs(destination); // Required: do not use download.path().
     return readFile(destination);

@@ -23,7 +23,13 @@ async function saveDownload(ctx, button, filename) {
  const pending=ctx.page.waitForEvent('download');await ctx.tool.getByRole('button',{name:button,exact:true}).click();const download=await pending;const path=join(ctx.artifactsDir,filename);await download.saveAs(path);return readFile(path);
 }
 const cases=[];
-function add(slugs,test){for(const slug of slugs) cases.push({slug,requiresExample:true,requiresClear:true,test});}
+async function waitForActions(ctx) {
+  // Framework scripts can arrive before the tool's React handlers are attached.
+  await ctx.expect.poll(() => ctx.tool.getByRole('button', {name:/^Examples?$/}).evaluate(button =>
+    Object.keys(button).some(key => key.startsWith('__reactProps$') && typeof button[key]?.onClick === 'function')
+  ), {timeout: 30_000, message: 'Examples has a hydrated React click handler'}).toBe(true);
+}
+function add(slugs,test){for(const slug of slugs) cases.push({slug,requiresExample:true,requiresClear:true,test:async ctx=>{await waitForActions(ctx);await test(ctx);}});}
 add(['json-to-python'],async ctx=>{const{tool,expect,check}=ctx;await example(ctx);await input(tool).fill('{"a":[true,null,2]}');await expect(out(tool)).toHaveText('data = {\n    "a": [\n        True,\n        None,\n        2\n    ]\n}');check(true,'Python output has quoted keys, literal nested values and one assignment.');await invalid(ctx);await reset(ctx);});
 add(['json-to-typescript','json-to-typescript-interface','json-to-typescript-types'],async ctx=>{const{tool,expect,check}=ctx;await example(ctx);await input(tool).fill('{"a":[1,"x",null]}');await expect(out(tool)).toHaveText('interface Root {\n  a: (number | string | null)[];\n}\n');check(true,'TypeScript array union is parenthesized and retains [].');await tool.getByLabel('Root type name',{exact:true}).fill('class');await expect(tool.getByRole('alert')).toContainText('identifiers');await tool.getByLabel('Root type name',{exact:true}).fill('Root');await input(tool).fill('{}');await expect(out(tool)).toHaveText('type Root = Record<string, never>;\n');await invalid(ctx);await reset(ctx);});
 add(['json-path-tester','json-path-evaluator'],async ctx=>{const{tool,expect,check}=ctx;await example(ctx);await expect(out(tool)).toHaveText('[\n  "One",\n  "Two"\n]');await tool.getByLabel('JSONPath expression',{exact:true}).fill('$..book[?(@.price > 20)].title');await expect(out(tool)).toHaveText('[\n  "Two"\n]');await tool.getByLabel('JSONPath expression',{exact:true}).fill('$.missing');await expect(out(tool)).toHaveText('[]');await tool.getByLabel('JSONPath expression',{exact:true}).fill('$[?(@.x == alert(1))]');await expect(tool.getByRole('alert')).toBeVisible();check(true,'Wildcard projection, recursive comparison and no-match results are exact; executable expressions rejected.');await reset(ctx);});

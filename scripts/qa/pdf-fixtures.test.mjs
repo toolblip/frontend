@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { PDFDocument, PDFName, decodePDFRawStream } from 'pdf-lib';
-import { fixture, encryptedFixture, pageOperators, hasText, imageObjects } from './cases/pdf-fixtures.mjs';
+import { fixture, encryptedFixture, pageOperators, hasText, imageObjects } from './helpers/pdf-fixtures.mjs';
 import cases from './cases/pdf.mjs';
 
 test('all eleven assigned routes have independent browser cases', () => {
@@ -16,6 +16,7 @@ test('geometry, text and image fixtures carry known real PDF objects', async () 
   assert.equal(image.dict.get(PDFName.of('Width')).asNumber(),2);
   assert.deepEqual([...decodePDFRawStream(image).decode()].slice(0,6),[255,0,0,0,255,0]);
   const mask=doc.context.lookup(image.dict.get(PDFName.of('SMask')));
+  assert.deepEqual(mask.dict.lookup(PDFName.of('Decode')).asArray().map(value => value.asNumber()), [0,1]);
   assert.deepEqual([...decodePDFRawStream(mask).decode()],[255,128,255,0]);
 });
 test('encrypted fixture rejects missing/wrong passwords and decrypts exact password with PDF.js', async () => {
@@ -42,5 +43,6 @@ test('nested Form fixture contains resolved image and mask streams', async () =>
   const image=doc.context.lookup(imageRef);
   assert.equal(image.dict.get(PDFName.of('Subtype')),PDFName.of('Image'));
   const mask=doc.context.lookup(image.dict.get(PDFName.of('SMask')));
+  assert.deepEqual(mask.dict.lookup(PDFName.of('Decode')).asArray().map(value => value.asNumber()), [0,1]);
   assert.deepEqual([...decodePDFRawStream(mask).decode()],[255,128,255,0]);
 });

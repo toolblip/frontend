@@ -400,7 +400,7 @@ export default function AddWatermarkToPDFClient() {
         <ToolExampleClearActions
           onExample={() => void loadExample()}
           onClear={clearAll}
-          canClear={Boolean(file || imageFile || resultBlob || message)}
+          canClear={status === 'loading' || Boolean(file || imageFile || resultBlob || message)}
           exampleDisabled={status === 'processing'}
           exampleCount={1}
         />

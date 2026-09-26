@@ -3,7 +3,7 @@
   "branch": "fix/auto-qa-developer-data",
   "assignedRouteCount": 27,
   "implementedFixtureCount": 27,
-  "status": "implemented; parent browser acceptance pending",
+  "status": "local integration blocked; no production acceptance",
   "inventoryReview": {
     "source": "/Users/rayhan/.herdr/worktrees/toolblip-workspace/manually-check-all-tools/qa/automatic/inventory.json",
     "historicallyApprovedSharingAssignedComponents": [],
@@ -74,9 +74,8 @@
     }
   ],
   "notRun": [
-    "dev server",
+    "new server",
     "build",
-    "browser/Playwright",
     "production checks",
     "visual PDF acceptance"
   ],
@@ -84,7 +83,7 @@
     {
       "slug": "json-formatter",
       "component": "components/tools/JsonFormatterClient.tsx",
-      "status": "implemented; fixture not executed in worker",
+      "status": "local Chrome passed",
       "findingsAndFixes": "Preserves saved settings and format/minify/indent; adds bounded parsing, v2 reset and truthful clipboard feedback.",
       "coverage": {
         "case": "scripts/qa/cases/developer-data.mjs#json-formatter",
@@ -94,15 +93,35 @@
           "Examples",
           "Clear"
         ],
-        "browserStatus": "parent run required"
+        "browserStatus": "See integrationProgress.runs for per-engine evidence; production pending"
       },
       "limitations": [],
-      "blockers": []
+      "blockers": [],
+      "integrationChrome": {
+        "status": "passed",
+        "functional": "passed",
+        "canonical": "passed",
+        "layouts": [
+          {
+            "width": 1280,
+            "status": "passed"
+          },
+          {
+            "width": 390,
+            "status": "passed"
+          },
+          {
+            "width": 320,
+            "status": "passed"
+          }
+        ],
+        "errors": []
+      }
     },
     {
       "slug": "markdown-to-html",
       "component": "components/tools/MarkdownToHtmlClient.tsx",
-      "status": "implemented; fixture not executed in worker",
+      "status": "local Chrome failed",
       "findingsAndFixes": "Uses GFM parser, HTML allowlist sanitization, sandboxed preview, current copy output and v2 reset.",
       "coverage": {
         "case": "scripts/qa/cases/developer-data.mjs#markdown-to-html",
@@ -112,15 +131,24 @@
           "Examples",
           "Clear"
         ],
-        "browserStatus": "parent run required"
+        "browserStatus": "See integrationProgress.runs for per-engine evidence; production pending"
       },
       "limitations": [],
-      "blockers": []
+      "blockers": [],
+      "integrationChrome": {
+        "status": "failed",
+        "functional": "not-run",
+        "canonical": "passed",
+        "layouts": [],
+        "errors": [
+          "page.waitForFunction: Timeout 15000ms exceeded."
+        ]
+      }
     },
     {
       "slug": "xml-formatter",
       "component": "components/tools/XmlFormatterClient.tsx",
-      "status": "implemented; fixture not executed in worker",
+      "status": "local Chrome failed",
       "findingsAndFixes": "Replaces destructive recursion with DOM serialization preserving single children, mixed text, CDATA, comments and namespaces; retains format/minify/indent.",
       "coverage": {
         "case": "scripts/qa/cases/developer-data.mjs#xml-formatter",
@@ -130,17 +158,26 @@
           "Examples",
           "Clear"
         ],
-        "browserStatus": "parent run required"
+        "browserStatus": "See integrationProgress.runs for per-engine evidence; production pending"
       },
       "limitations": [
         "No DTD support; minify removes whitespace between child elements except mixed/CDATA/xml:space preserved content."
       ],
-      "blockers": []
+      "blockers": [],
+      "integrationChrome": {
+        "status": "failed",
+        "functional": "not-run",
+        "canonical": "passed",
+        "layouts": [],
+        "errors": [
+          "page.waitForFunction: Timeout 15000ms exceeded."
+        ]
+      }
     },
     {
       "slug": "sql-prettifier",
       "component": "components/tools/SqlPrettifierClient.tsx",
-      "status": "implemented; fixture not executed in worker",
+      "status": "local Chrome passed",
       "findingsAndFixes": "Shares lexical formatter that protects strings, comments, bind prefixes and operators; reports lexical balance failures.",
       "coverage": {
         "case": "scripts/qa/cases/developer-data.mjs#sql-prettifier",
@@ -150,17 +187,37 @@
           "Examples",
           "Clear"
         ],
-        "browserStatus": "parent run required"
+        "browserStatus": "See integrationProgress.runs for per-engine evidence; production pending"
       },
       "limitations": [
         "Lexical formatter, not a database grammar validator."
       ],
-      "blockers": []
+      "blockers": [],
+      "integrationChrome": {
+        "status": "passed",
+        "functional": "passed",
+        "canonical": "passed",
+        "layouts": [
+          {
+            "width": 1280,
+            "status": "passed"
+          },
+          {
+            "width": 390,
+            "status": "passed"
+          },
+          {
+            "width": 320,
+            "status": "passed"
+          }
+        ],
+        "errors": []
+      }
     },
     {
       "slug": "json-to-typescript",
       "component": "components/tools/JsonToTypescriptClient.tsx",
-      "status": "implemented; fixture not executed in worker",
+      "status": "local Chrome passed",
       "findingsAndFixes": "Fixes invalid nested declarations, missing array suffixes, heterogeneous arrays, quoted keys and unsafe type names; retains name/quote/semicolon options.",
       "coverage": {
         "case": "scripts/qa/cases/developer-data.mjs#json-to-typescript",
@@ -170,15 +227,35 @@
           "Examples",
           "Clear"
         ],
-        "browserStatus": "parent run required"
+        "browserStatus": "See integrationProgress.runs for per-engine evidence; production pending"
       },
       "limitations": [],
-      "blockers": []
+      "blockers": [],
+      "integrationChrome": {
+        "status": "passed",
+        "functional": "passed",
+        "canonical": "passed",
+        "layouts": [
+          {
+            "width": 1280,
+            "status": "passed"
+          },
+          {
+            "width": 390,
+            "status": "passed"
+          },
+          {
+            "width": 320,
+            "status": "passed"
+          }
+        ],
+        "errors": []
+      }
     },
     {
       "slug": "json-path-tester",
       "component": "components/tools/JsonPathTesterClient.tsx",
-      "status": "implemented; fixture not executed in worker",
+      "status": "local Chrome passed",
       "findingsAndFixes": "Uses bounded grammar and node-set evaluation for root, keys, indexes, wildcard, recursive descent and simple comparisons; rejects unsupported expressions without eval.",
       "coverage": {
         "case": "scripts/qa/cases/developer-data.mjs#json-path-tester",
@@ -188,17 +265,37 @@
           "Examples",
           "Clear"
         ],
-        "browserStatus": "parent run required"
+        "browserStatus": "See integrationProgress.runs for per-engine evidence; production pending"
       },
       "limitations": [
         "Documented JSONPath subset. Slices, unions and arbitrary script expressions explicitly rejected."
       ],
-      "blockers": []
+      "blockers": [],
+      "integrationChrome": {
+        "status": "passed",
+        "functional": "passed",
+        "canonical": "passed",
+        "layouts": [
+          {
+            "width": 1280,
+            "status": "passed"
+          },
+          {
+            "width": 390,
+            "status": "passed"
+          },
+          {
+            "width": 320,
+            "status": "passed"
+          }
+        ],
+        "errors": []
+      }
     },
     {
       "slug": "json-schema-validator",
       "component": "components/tools/JsonSchemaValidatorClient.tsx",
-      "status": "implemented; fixture not executed in worker",
+      "status": "local Chrome failed",
       "findingsAndFixes": "Corrects null/object/integer types, falsy const, boolean subschemas, deep enum/uniqueness and own-property required checks; unsupported keywords fail visibly.",
       "coverage": {
         "case": "scripts/qa/cases/developer-data.mjs#json-schema-validator",
@@ -208,17 +305,26 @@
           "Examples",
           "Clear"
         ],
-        "browserStatus": "parent run required"
+        "browserStatus": "See integrationProgress.runs for per-engine evidence; production pending"
       },
       "limitations": [
         "Draft-07 subset only. References, patterns, formats, tuple items and unlisted keywords explicitly rejected."
       ],
-      "blockers": []
+      "blockers": [],
+      "integrationChrome": {
+        "status": "failed",
+        "functional": "not-run",
+        "canonical": "passed",
+        "layouts": [],
+        "errors": [
+          "page.waitForFunction: Timeout 15000ms exceeded."
+        ]
+      }
     },
     {
       "slug": "json-to-typescript-interface",
       "component": "components/tools/JsonToTypescriptClient.tsx",
-      "status": "implemented; fixture not executed in worker",
+      "status": "local Chrome passed",
       "findingsAndFixes": "Fixes invalid nested declarations, missing array suffixes, heterogeneous arrays, quoted keys and unsafe type names; retains name/quote/semicolon options.",
       "coverage": {
         "case": "scripts/qa/cases/developer-data.mjs#json-to-typescript-interface",
@@ -228,15 +334,35 @@
           "Examples",
           "Clear"
         ],
-        "browserStatus": "parent run required"
+        "browserStatus": "See integrationProgress.runs for per-engine evidence; production pending"
       },
       "limitations": [],
-      "blockers": []
+      "blockers": [],
+      "integrationChrome": {
+        "status": "passed",
+        "functional": "passed",
+        "canonical": "passed",
+        "layouts": [
+          {
+            "width": 1280,
+            "status": "passed"
+          },
+          {
+            "width": 390,
+            "status": "passed"
+          },
+          {
+            "width": 320,
+            "status": "passed"
+          }
+        ],
+        "errors": []
+      }
     },
     {
       "slug": "json-editor",
       "component": "components/tools/JsonEditorClient.tsx",
-      "status": "implemented; fixture not executed in worker",
+      "status": "local Chrome passed",
       "findingsAndFixes": "Preserves format/minify and tree workflows; clear becomes a neutral empty state; bounds parsing and reports clipboard errors.",
       "coverage": {
         "case": "scripts/qa/cases/developer-data.mjs#json-editor",
@@ -246,15 +372,35 @@
           "Examples",
           "Clear"
         ],
-        "browserStatus": "parent run required"
+        "browserStatus": "See integrationProgress.runs for per-engine evidence; production pending"
       },
       "limitations": [],
-      "blockers": []
+      "blockers": [],
+      "integrationChrome": {
+        "status": "passed",
+        "functional": "passed",
+        "canonical": "passed",
+        "layouts": [
+          {
+            "width": 1280,
+            "status": "passed"
+          },
+          {
+            "width": 390,
+            "status": "passed"
+          },
+          {
+            "width": 320,
+            "status": "passed"
+          }
+        ],
+        "errors": []
+      }
     },
     {
       "slug": "code-diff",
       "component": "components/tools/CodeDiffClient.tsx",
-      "status": "implemented; fixture not executed in worker",
+      "status": "local Chrome passed",
       "findingsAndFixes": "Uses bounded LCS, handles empty inputs correctly and updates live to prevent stale output/copy.",
       "coverage": {
         "case": "scripts/qa/cases/developer-data.mjs#code-diff",
@@ -264,15 +410,35 @@
           "Examples",
           "Clear"
         ],
-        "browserStatus": "parent run required"
+        "browserStatus": "See integrationProgress.runs for per-engine evidence; production pending"
       },
       "limitations": [],
-      "blockers": []
+      "blockers": [],
+      "integrationChrome": {
+        "status": "passed",
+        "functional": "passed",
+        "canonical": "passed",
+        "layouts": [
+          {
+            "width": 1280,
+            "status": "passed"
+          },
+          {
+            "width": 390,
+            "status": "passed"
+          },
+          {
+            "width": 320,
+            "status": "passed"
+          }
+        ],
+        "errors": []
+      }
     },
     {
       "slug": "json-tree-view",
       "component": "components/tools/JsonTreeViewClient.tsx",
-      "status": "implemented; fixture not executed in worker",
+      "status": "local Chrome failed",
       "findingsAndFixes": "Preserves search/expand/collapse; adds bounded parsing, escaped copy paths, clipboard failure feedback and v2 reset.",
       "coverage": {
         "case": "scripts/qa/cases/developer-data.mjs#json-tree-view",
@@ -282,15 +448,24 @@
           "Examples",
           "Clear"
         ],
-        "browserStatus": "parent run required"
+        "browserStatus": "See integrationProgress.runs for per-engine evidence; production pending"
       },
       "limitations": [],
-      "blockers": []
+      "blockers": [],
+      "integrationChrome": {
+        "status": "failed",
+        "functional": "not-run",
+        "canonical": "passed",
+        "layouts": [],
+        "errors": [
+          "page.waitForFunction: Timeout 15000ms exceeded."
+        ]
+      }
     },
     {
       "slug": "json-to-python",
       "component": "components/tools/JsonToPythonClient.tsx",
-      "status": "implemented; fixture not executed in worker",
+      "status": "local Chrome failed",
       "findingsAndFixes": "Generates one assignment with nested Python literals and quoted dictionary keys rather than invalid embedded assignments.",
       "coverage": {
         "case": "scripts/qa/cases/developer-data.mjs#json-to-python",
@@ -300,15 +475,24 @@
           "Examples",
           "Clear"
         ],
-        "browserStatus": "parent run required"
+        "browserStatus": "See integrationProgress.runs for per-engine evidence; production pending"
       },
       "limitations": [],
-      "blockers": []
+      "blockers": [],
+      "integrationChrome": {
+        "status": "failed",
+        "functional": "not-run",
+        "canonical": "passed",
+        "layouts": [],
+        "errors": [
+          "page.waitForFunction: Timeout 15000ms exceeded."
+        ]
+      }
     },
     {
       "slug": "xml-validator",
       "component": "components/tools/XmlValidatorClient.tsx",
-      "status": "implemented; fixture not executed in worker",
+      "status": "local Chrome failed",
       "findingsAndFixes": "Uses bounded real DOM parsing, live validation and reset; distinguishes well-formedness from schema validation.",
       "coverage": {
         "case": "scripts/qa/cases/developer-data.mjs#xml-validator",
@@ -318,17 +502,26 @@
           "Examples",
           "Clear"
         ],
-        "browserStatus": "parent run required"
+        "browserStatus": "See integrationProgress.runs for per-engine evidence; production pending"
       },
       "limitations": [
         "Well-formedness only, no XSD/DTD validation."
       ],
-      "blockers": []
+      "blockers": [],
+      "integrationChrome": {
+        "status": "failed",
+        "functional": "not-run",
+        "canonical": "passed",
+        "layouts": [],
+        "errors": [
+          "page.waitForFunction: Timeout 15000ms exceeded."
+        ]
+      }
     },
     {
       "slug": "html-to-jsx",
       "component": "components/tools/HtmlToJsxClient.tsx",
-      "status": "implemented; fixture not executed in worker",
+      "status": "local Chrome failed",
       "findingsAndFixes": "Uses real HTML DOM parsing, valid JSX string expressions, style objects, void tags and attribute names; rejects executable content and inline handlers.",
       "coverage": {
         "case": "scripts/qa/cases/developer-data.mjs#html-to-jsx",
@@ -338,15 +531,24 @@
           "Examples",
           "Clear"
         ],
-        "browserStatus": "parent run required"
+        "browserStatus": "See integrationProgress.runs for per-engine evidence; production pending"
       },
       "limitations": [],
-      "blockers": []
+      "blockers": [],
+      "integrationChrome": {
+        "status": "failed",
+        "functional": "not-run",
+        "canonical": "passed",
+        "layouts": [],
+        "errors": [
+          "page.waitForFunction: Timeout 15000ms exceeded."
+        ]
+      }
     },
     {
       "slug": "json-validator",
       "component": "components/tools/JsonValidatorClient.tsx",
-      "status": "implemented; fixture not executed in worker",
+      "status": "local Chrome failed",
       "findingsAndFixes": "Preserves syntax validation including valid large JSON numbers; adds input bounds, v2 reset and truthful clipboard feedback.",
       "coverage": {
         "case": "scripts/qa/cases/developer-data.mjs#json-validator",
@@ -356,15 +558,24 @@
           "Examples",
           "Clear"
         ],
-        "browserStatus": "parent run required"
+        "browserStatus": "See integrationProgress.runs for per-engine evidence; production pending"
       },
       "limitations": [],
-      "blockers": []
+      "blockers": [],
+      "integrationChrome": {
+        "status": "failed",
+        "functional": "not-run",
+        "canonical": "passed",
+        "layouts": [],
+        "errors": [
+          "page.waitForFunction: Timeout 15000ms exceeded."
+        ]
+      }
     },
     {
       "slug": "markdown-preview",
       "component": "components/tools/MarkdownToHtmlClient.tsx",
-      "status": "implemented; fixture not executed in worker",
+      "status": "local Chrome failed",
       "findingsAndFixes": "Uses GFM parser, HTML allowlist sanitization, sandboxed preview, current copy output and v2 reset.",
       "coverage": {
         "case": "scripts/qa/cases/developer-data.mjs#markdown-preview",
@@ -374,15 +585,24 @@
           "Examples",
           "Clear"
         ],
-        "browserStatus": "parent run required"
+        "browserStatus": "See integrationProgress.runs for per-engine evidence; production pending"
       },
       "limitations": [],
-      "blockers": []
+      "blockers": [],
+      "integrationChrome": {
+        "status": "failed",
+        "functional": "not-run",
+        "canonical": "passed",
+        "layouts": [],
+        "errors": [
+          "page.waitForFunction: Timeout 15000ms exceeded."
+        ]
+      }
     },
     {
       "slug": "json-path-evaluator",
       "component": "components/tools/JsonPathTesterClient.tsx",
-      "status": "implemented; fixture not executed in worker",
+      "status": "local Chrome failed",
       "findingsAndFixes": "Uses bounded grammar and node-set evaluation for root, keys, indexes, wildcard, recursive descent and simple comparisons; rejects unsupported expressions without eval.",
       "coverage": {
         "case": "scripts/qa/cases/developer-data.mjs#json-path-evaluator",
@@ -392,17 +612,26 @@
           "Examples",
           "Clear"
         ],
-        "browserStatus": "parent run required"
+        "browserStatus": "See integrationProgress.runs for per-engine evidence; production pending"
       },
       "limitations": [
         "Documented JSONPath subset. Slices, unions and arbitrary script expressions explicitly rejected."
       ],
-      "blockers": []
+      "blockers": [],
+      "integrationChrome": {
+        "status": "failed",
+        "functional": "not-run",
+        "canonical": "passed",
+        "layouts": [],
+        "errors": [
+          "page.waitForFunction: Timeout 15000ms exceeded."
+        ]
+      }
     },
     {
       "slug": "csv-generator",
       "component": "components/tools/CsvGeneratorClient.tsx",
-      "status": "implemented; fixture not executed in worker",
+      "status": "local Chrome failed",
       "findingsAndFixes": "Retains table builder; quotes CR/LF/comma/quotes, emits CRLF records, bounds table size, labels cells, resets fully and cleans up download URLs.",
       "coverage": {
         "case": "scripts/qa/cases/developer-data.mjs#csv-generator",
@@ -412,15 +641,24 @@
           "Examples",
           "Clear"
         ],
-        "browserStatus": "parent run required"
+        "browserStatus": "See integrationProgress.runs for per-engine evidence; production pending"
       },
       "limitations": [],
-      "blockers": []
+      "blockers": [],
+      "integrationChrome": {
+        "status": "failed",
+        "functional": "not-run",
+        "canonical": "not-run",
+        "layouts": [],
+        "errors": [
+          "page.goto: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3190/tools/csv-generator\", waiting until \"domcontentloaded\"\u001b[22m\n"
+        ]
+      }
     },
     {
       "slug": "markdown-to-pdf",
       "component": "components/tools/MarkdownToPdfClient.tsx",
-      "status": "implemented; fixture not executed in worker",
+      "status": "local Chrome failed",
       "findingsAndFixes": "Adds real paginated ASCII text PDF bytes, bounds/errors/cancellation and sanitized GFM preview; retains print workflow for rich content and Unicode.",
       "coverage": {
         "case": "scripts/qa/cases/developer-data.mjs#markdown-to-pdf",
@@ -430,17 +668,26 @@
           "Examples",
           "Clear"
         ],
-        "browserStatus": "parent run required"
+        "browserStatus": "See integrationProgress.runs for per-engine evidence; production pending"
       },
       "limitations": [
         "Direct PDF supports ASCII text. Unicode/images/tables use browser Print / Save PDF; print dialog and visual PDF layout require parent acceptance."
       ],
-      "blockers": []
+      "blockers": [],
+      "integrationChrome": {
+        "status": "failed",
+        "functional": "not-run",
+        "canonical": "passed",
+        "layouts": [],
+        "errors": [
+          "page.waitForFunction: Timeout 15000ms exceeded."
+        ]
+      }
     },
     {
       "slug": "markdown-editor",
       "component": "components/tools/MarkdownToHtmlClient.tsx",
-      "status": "implemented; fixture not executed in worker",
+      "status": "local Chrome failed",
       "findingsAndFixes": "Uses GFM parser, HTML allowlist sanitization, sandboxed preview, current copy output and v2 reset.",
       "coverage": {
         "case": "scripts/qa/cases/developer-data.mjs#markdown-editor",
@@ -450,15 +697,24 @@
           "Examples",
           "Clear"
         ],
-        "browserStatus": "parent run required"
+        "browserStatus": "See integrationProgress.runs for per-engine evidence; production pending"
       },
       "limitations": [],
-      "blockers": []
+      "blockers": [],
+      "integrationChrome": {
+        "status": "failed",
+        "functional": "not-run",
+        "canonical": "passed",
+        "layouts": [],
+        "errors": [
+          "page.waitForFunction: Timeout 15000ms exceeded."
+        ]
+      }
     },
     {
       "slug": "sql-formatter",
       "component": "components/tools/SqlFormatterClient.tsx",
-      "status": "implemented; fixture not executed in worker",
+      "status": "local Chrome failed",
       "findingsAndFixes": "Shares lexical formatter protecting literal whitespace, escaped/dollar quotes, comments, prefixes and operators; retains uppercase and indent options.",
       "coverage": {
         "case": "scripts/qa/cases/developer-data.mjs#sql-formatter",
@@ -468,17 +724,26 @@
           "Examples",
           "Clear"
         ],
-        "browserStatus": "parent run required"
+        "browserStatus": "See integrationProgress.runs for per-engine evidence; production pending"
       },
       "limitations": [
         "Lexical formatter, not a database grammar validator."
       ],
-      "blockers": []
+      "blockers": [],
+      "integrationChrome": {
+        "status": "failed",
+        "functional": "not-run",
+        "canonical": "passed",
+        "layouts": [],
+        "errors": [
+          "page.waitForFunction: Timeout 15000ms exceeded."
+        ]
+      }
     },
     {
       "slug": "db-query-formatter",
       "component": "components/tools/DbQueryFormatterClient.tsx",
-      "status": "implemented; fixture not executed in worker",
+      "status": "local Chrome failed",
       "findingsAndFixes": "Shares lexical formatter; avoids modifying literal/comment contents or appending semicolons; adds current copy/reset and format controls.",
       "coverage": {
         "case": "scripts/qa/cases/developer-data.mjs#db-query-formatter",
@@ -488,17 +753,26 @@
           "Examples",
           "Clear"
         ],
-        "browserStatus": "parent run required"
+        "browserStatus": "See integrationProgress.runs for per-engine evidence; production pending"
       },
       "limitations": [
         "Lexical formatter, not a database grammar validator."
       ],
-      "blockers": []
+      "blockers": [],
+      "integrationChrome": {
+        "status": "failed",
+        "functional": "not-run",
+        "canonical": "passed",
+        "layouts": [],
+        "errors": [
+          "page.waitForFunction: Timeout 15000ms exceeded."
+        ]
+      }
     },
     {
       "slug": "json-to-typescript-types",
       "component": "components/tools/JsonToTypescriptClient.tsx",
-      "status": "implemented; fixture not executed in worker",
+      "status": "local Chrome failed",
       "findingsAndFixes": "Fixes invalid nested declarations, missing array suffixes, heterogeneous arrays, quoted keys and unsafe type names; retains name/quote/semicolon options.",
       "coverage": {
         "case": "scripts/qa/cases/developer-data.mjs#json-to-typescript-types",
@@ -508,15 +782,24 @@
           "Examples",
           "Clear"
         ],
-        "browserStatus": "parent run required"
+        "browserStatus": "See integrationProgress.runs for per-engine evidence; production pending"
       },
       "limitations": [],
-      "blockers": []
+      "blockers": [],
+      "integrationChrome": {
+        "status": "failed",
+        "functional": "not-run",
+        "canonical": "passed",
+        "layouts": [],
+        "errors": [
+          "page.waitForFunction: Timeout 15000ms exceeded."
+        ]
+      }
     },
     {
       "slug": "notebook-to-html",
       "component": "components/tools/NotebookToHtmlClient.tsx",
-      "status": "implemented; fixture not executed in worker",
+      "status": "local Chrome failed",
       "findingsAndFixes": "Validates v4 cell structure; safely renders Markdown, raw/code and text outputs; adds bounded upload, stale-read invalidation, download and reset.",
       "coverage": {
         "case": "scripts/qa/cases/developer-data.mjs#notebook-to-html",
@@ -526,17 +809,26 @@
           "Examples",
           "Clear"
         ],
-        "browserStatus": "parent run required"
+        "browserStatus": "See integrationProgress.runs for per-engine evidence; production pending"
       },
       "limitations": [
         "Only text outputs exported; binary plots, widgets and rich MIME outputs visibly omitted."
       ],
-      "blockers": []
+      "blockers": [],
+      "integrationChrome": {
+        "status": "failed",
+        "functional": "not-run",
+        "canonical": "passed",
+        "layouts": [],
+        "errors": [
+          "page.waitForFunction: Timeout 15000ms exceeded."
+        ]
+      }
     },
     {
       "slug": "ipynb-formatter",
       "component": "components/tools/IPynbFormatterClient.tsx",
-      "status": "implemented; fixture not executed in worker",
+      "status": "local Chrome failed",
       "findingsAndFixes": "Validates notebook/cells before rendering; preserves order by default and retains explicit execution sorting and valid downloads.",
       "coverage": {
         "case": "scripts/qa/cases/developer-data.mjs#ipynb-formatter",
@@ -546,15 +838,24 @@
           "Examples",
           "Clear"
         ],
-        "browserStatus": "parent run required"
+        "browserStatus": "See integrationProgress.runs for per-engine evidence; production pending"
       },
       "limitations": [],
-      "blockers": []
+      "blockers": [],
+      "integrationChrome": {
+        "status": "failed",
+        "functional": "not-run",
+        "canonical": "passed",
+        "layouts": [],
+        "errors": [
+          "page.waitForFunction: Timeout 15000ms exceeded."
+        ]
+      }
     },
     {
       "slug": "jupyter-cleaner",
       "component": "components/tools/JupyterCleanerClient.tsx",
-      "status": "implemented; fixture not executed in worker",
+      "status": "local Chrome failed",
       "findingsAndFixes": "Removes outputs/execution state while preserving cell IDs, attachments, source and unrelated metadata; bounded upload/current download/reset.",
       "coverage": {
         "case": "scripts/qa/cases/developer-data.mjs#jupyter-cleaner",
@@ -564,15 +865,24 @@
           "Examples",
           "Clear"
         ],
-        "browserStatus": "parent run required"
+        "browserStatus": "See integrationProgress.runs for per-engine evidence; production pending"
       },
       "limitations": [],
-      "blockers": []
+      "blockers": [],
+      "integrationChrome": {
+        "status": "failed",
+        "functional": "not-run",
+        "canonical": "passed",
+        "layouts": [],
+        "errors": [
+          "page.waitForFunction: Timeout 15000ms exceeded."
+        ]
+      }
     },
     {
       "slug": "json-graph-visualizer",
       "component": "components/tools/JsonGraphVisualizerClient.tsx",
-      "status": "implemented; fixture not executed in worker",
+      "status": "local Chrome failed",
       "findingsAndFixes": "Fixes duplicate primitive edges, caps graphs at 200 values, expands viewBox and removes impossible shared-reference toggle; v2 reset.",
       "coverage": {
         "case": "scripts/qa/cases/developer-data.mjs#json-graph-visualizer",
@@ -582,10 +892,19 @@
           "Examples",
           "Clear"
         ],
-        "browserStatus": "parent run required"
+        "browserStatus": "See integrationProgress.runs for per-engine evidence; production pending"
       },
       "limitations": [],
-      "blockers": []
+      "blockers": [],
+      "integrationChrome": {
+        "status": "failed",
+        "functional": "not-run",
+        "canonical": "passed",
+        "layouts": [],
+        "errors": [
+          "page.waitForFunction: Timeout 15000ms exceeded."
+        ]
+      }
     }
   ],
   "duplicateProposals": [
@@ -728,12 +1047,16 @@
   ],
   "remainingBlockers": [
     {
-      "scope": "release acceptance",
-      "reason": "Parent must run all 27 fixtures on integrated local/production app, downloads, 320px layout, DOMParser behavior and previews."
+      "scope": "local integration",
+      "reason": "Final Chrome pass completes 27 routes: 7 pass, 20 fail before functional execution at shared hydration gate. Shared bundle still transferring after 40 seconds. WebKit interceptor crashes prevent completing all 27. Runner fixes belong to PDF integration worker."
+    },
+    {
+      "scope": "production acceptance",
+      "reason": "Parent must run production audit and remaining download/visual/print checks after local blockers resolve."
     },
     {
       "scope": "central copy",
-      "reason": "Coordinator must reconcile central claims above. Worker cannot edit central catalog/FAQ/ToolUI/redirect configuration."
+      "reason": "Existing centralMetadataChanges still require coordinator reconciliation; this worker did not edit central files."
     }
   ],
   "ownership": {
@@ -741,5 +1064,336 @@
     "dependenciesChanged": false,
     "nodeModulesSymlink": "left untracked",
     "pushOrMerge": false
+  },
+  "integrationProgress": {
+    "status": "blocked",
+    "localBase": "http://localhost:3190",
+    "fixtureChange": "Wait for React onClick handler on Examples before using server-rendered controls; independent expected outputs unchanged.",
+    "initialChrome": {
+      "out": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-data-chrome-1",
+      "total": 28,
+      "passed": 1,
+      "failed": 26,
+      "needsFixture": 1,
+      "fatal": "Browser server close timeout after 5000ms"
+    },
+    "inventoryMismatch": "Current developer-data group contains 28 routes; json-to-markdown-table is outside the 27 assigned fixtures and needs a separate owner/fixture.",
+    "harnessFindings": [
+      "Framework-code-loaded can precede attached React click handlers; owned fixture now waits for the Examples onClick handler.",
+      "WebKit stripDevUpgradeCSP route.fetch inherits 8000ms timeout and throws uncaught; three runs aborted. Runner owned by PDF integration worker.",
+      "Hydration error screenshots add caret-color:transparent before delayed React hydration; observed mismatch names this screenshot-only style."
+    ],
+    "backendFinding": "Anonymous GET /api/auth/me returns 401 locally before backend fetch when auth_token is absent (app/api/auth/me/route.ts). No missing backend cause found for assigned tools.",
+    "centralFilesChanged": false,
+    "runs": [
+      {
+        "out": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-data-chrome-1",
+        "completed": 28,
+        "passed": [
+          "sql-formatter"
+        ],
+        "failed": [
+          "json-tree-view",
+          "sql-prettifier",
+          "json-path-tester",
+          "json-to-typescript-interface",
+          "xml-formatter",
+          "json-graph-visualizer",
+          "json-schema-validator",
+          "jupyter-cleaner",
+          "csv-generator",
+          "json-editor",
+          "notebook-to-html",
+          "code-diff",
+          "json-validator",
+          "xml-validator",
+          "markdown-to-pdf",
+          "json-to-typescript",
+          "markdown-to-html",
+          "json-formatter",
+          "ipynb-formatter",
+          "markdown-preview",
+          "markdown-editor",
+          "json-path-evaluator",
+          "json-to-python",
+          "db-query-formatter",
+          "json-to-typescript-types",
+          "html-to-jsx"
+        ],
+        "missingFixtures": [
+          "json-to-markdown-table"
+        ],
+        "uncompleted": [],
+        "aggregatePresent": true,
+        "summary": {
+          "total": 28,
+          "passed": 1,
+          "failed": 26,
+          "needsFixture": 1,
+          "smokeOnly": 0,
+          "exitCode": 3
+        },
+        "fatal": {
+          "name": "Error",
+          "message": "Browser server close timeout after 5000ms",
+          "stack": "Error: Browser server close timeout after 5000ms\n    at Timeout.<anonymous> (file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/core.mjs:85:37)\n    at listOnTimeout (node:internal/timers:685:17)\n    at process.processTimers (node:internal/timers:618:7)"
+        },
+        "environmentObservations": {
+          "count": 0,
+          "affectedTools": [],
+          "status": "not-observed",
+          "observations": []
+        }
+      },
+      {
+        "out": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-data-chrome-diagnostic-2",
+        "completed": 3,
+        "passed": [
+          "json-to-typescript",
+          "markdown-to-html",
+          "json-formatter"
+        ],
+        "failed": [],
+        "missingFixtures": [],
+        "uncompleted": [],
+        "aggregatePresent": true,
+        "summary": {
+          "total": 3,
+          "passed": 3,
+          "failed": 0,
+          "needsFixture": 0,
+          "smokeOnly": 0,
+          "exitCode": 0
+        },
+        "fatal": null,
+        "environmentObservations": {
+          "count": 0,
+          "affectedTools": [],
+          "status": "not-observed",
+          "observations": []
+        }
+      },
+      {
+        "out": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-data-chrome-2",
+        "completed": 27,
+        "passed": [
+          "sql-prettifier",
+          "json-path-tester",
+          "json-to-typescript-interface",
+          "json-editor",
+          "code-diff",
+          "json-to-typescript",
+          "json-formatter"
+        ],
+        "failed": [
+          "json-tree-view",
+          "sql-formatter",
+          "xml-formatter",
+          "json-graph-visualizer",
+          "json-schema-validator",
+          "jupyter-cleaner",
+          "csv-generator",
+          "notebook-to-html",
+          "json-validator",
+          "xml-validator",
+          "markdown-to-pdf",
+          "markdown-to-html",
+          "ipynb-formatter",
+          "markdown-preview",
+          "markdown-editor",
+          "json-path-evaluator",
+          "json-to-python",
+          "db-query-formatter",
+          "json-to-typescript-types",
+          "html-to-jsx"
+        ],
+        "missingFixtures": [],
+        "uncompleted": [],
+        "aggregatePresent": true,
+        "summary": {
+          "total": 27,
+          "passed": 7,
+          "failed": 20,
+          "needsFixture": 0,
+          "smokeOnly": 20,
+          "exitCode": 3
+        },
+        "fatal": {
+          "name": "Error",
+          "message": "Browser server close timeout after 5000ms",
+          "stack": "Error: Browser server close timeout after 5000ms\n    at Timeout.<anonymous> (file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/core.mjs:85:37)\n    at listOnTimeout (node:internal/timers:685:17)\n    at process.processTimers (node:internal/timers:618:7)"
+        },
+        "environmentObservations": {
+          "count": 0,
+          "affectedTools": [],
+          "status": "not-observed",
+          "observations": []
+        }
+      },
+      {
+        "out": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-data-webkit-1",
+        "completed": 15,
+        "passed": [
+          "json-to-python"
+        ],
+        "failed": [
+          "json-tree-view",
+          "sql-prettifier",
+          "json-path-tester",
+          "json-to-typescript-interface",
+          "xml-formatter",
+          "json-schema-validator",
+          "json-editor",
+          "code-diff",
+          "xml-validator",
+          "json-to-typescript",
+          "markdown-to-html",
+          "json-formatter",
+          "json-to-markdown-table",
+          "html-to-jsx"
+        ],
+        "missingFixtures": [
+          "json-to-markdown-table"
+        ],
+        "uncompleted": [
+          "json-validator",
+          "markdown-preview",
+          "json-path-evaluator",
+          "csv-generator",
+          "markdown-to-pdf",
+          "markdown-editor",
+          "sql-formatter",
+          "db-query-formatter",
+          "json-to-typescript-types",
+          "notebook-to-html",
+          "ipynb-formatter",
+          "jupyter-cleaner",
+          "json-graph-visualizer"
+        ],
+        "aggregatePresent": false,
+        "summary": null,
+        "fatal": "Uncaught stripDevUpgradeCSP route.fetch timeout after 8000ms; process exit 1.",
+        "environmentObservations": null
+      },
+      {
+        "out": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-data-webkit-2",
+        "completed": 1,
+        "passed": [
+          "json-formatter"
+        ],
+        "failed": [],
+        "missingFixtures": [],
+        "uncompleted": [
+          "markdown-to-html",
+          "xml-formatter",
+          "sql-prettifier",
+          "json-to-typescript",
+          "json-path-tester",
+          "json-schema-validator",
+          "json-to-typescript-interface",
+          "json-editor",
+          "code-diff",
+          "json-tree-view",
+          "json-to-python",
+          "xml-validator",
+          "html-to-jsx",
+          "json-validator",
+          "markdown-preview",
+          "json-path-evaluator",
+          "csv-generator",
+          "markdown-to-pdf",
+          "markdown-editor",
+          "sql-formatter",
+          "db-query-formatter",
+          "json-to-typescript-types",
+          "notebook-to-html",
+          "ipynb-formatter",
+          "jupyter-cleaner",
+          "json-graph-visualizer"
+        ],
+        "aggregatePresent": false,
+        "summary": null,
+        "fatal": "Uncaught stripDevUpgradeCSP route.fetch timeout after 8000ms; process exit 1.",
+        "environmentObservations": null
+      },
+      {
+        "out": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-data-webkit-3",
+        "completed": 0,
+        "passed": [],
+        "failed": [],
+        "missingFixtures": [],
+        "uncompleted": [
+          "markdown-to-html",
+          "xml-formatter",
+          "sql-prettifier",
+          "json-to-typescript",
+          "json-path-tester",
+          "json-schema-validator",
+          "json-to-typescript-interface",
+          "json-editor",
+          "code-diff",
+          "json-tree-view",
+          "json-to-python",
+          "xml-validator",
+          "html-to-jsx",
+          "json-validator",
+          "markdown-preview",
+          "json-path-evaluator",
+          "csv-generator",
+          "markdown-to-pdf",
+          "markdown-editor",
+          "sql-formatter",
+          "db-query-formatter",
+          "json-to-typescript-types",
+          "notebook-to-html",
+          "ipynb-formatter",
+          "jupyter-cleaner",
+          "json-graph-visualizer"
+        ],
+        "aggregatePresent": false,
+        "summary": null,
+        "fatal": "Uncaught stripDevUpgradeCSP route.fetch timeout after 8000ms; process exit 1.",
+        "environmentObservations": null
+      }
+    ],
+    "sharedBundleEvidence": {
+      "probeRoute": "/tools/json-validator",
+      "afterSeconds": 16,
+      "documentReadyState": "interactive",
+      "ReactButtonProperties": [],
+      "pendingScripts": [
+        "/_next/static/chunks/main-app.js",
+        "/_next/static/chunks/app/tools/%5Bslug%5D/page.js"
+      ],
+      "curlToolBundle": {
+        "http": 200,
+        "firstByteSeconds": 0.424115,
+        "elapsedSeconds": 40.004304,
+        "receivedBytes": 35717120,
+        "exitCode": 28,
+        "meaning": "Response body still transferring at 40 second timeout; shared development JavaScript delivery exceeds hydration budget."
+      }
+    },
+    "checksThisIntegration": [
+      {
+        "command": "npx vitest run lib/developer-data/core.test.ts",
+        "exitCode": 0,
+        "passedTests": 72
+      },
+      {
+        "command": "npx tsc --noEmit --incremental false",
+        "exitCode": 0
+      },
+      {
+        "command": "node --check scripts/qa/cases/developer-data.mjs",
+        "exitCode": 0
+      },
+      {
+        "command": "git diff --check -- scripts/qa/cases/developer-data.mjs scripts/qa/reports/developer-data.json",
+        "exitCode": 0
+      }
+    ],
+    "scope": "Changed only developer-data fixture and this report. No component defect established from completed hydrated cases; no app components changed.",
+    "remainingAcceptance": "Real download fixtures and 20 routes remain unverified in final Chrome pass; WebKit did not complete all routes. Production, print dialog and visual PDF acceptance remain parent work."
   }
 }

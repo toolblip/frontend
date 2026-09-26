@@ -1,6 +1,6 @@
 {
   "group": "pdf",
-  "status": "implementation-and-scoped-checks-complete; integrated-browser-verification-pending",
+  "status": "integration-fixes-applied; integrated-browser-acceptance-blocked",
   "assignedRouteCount": 11,
   "inventoryReview": {
     "source": "qa/automatic/inventory.json",
@@ -37,20 +37,263 @@
     }
   ],
   "browserExecution": {
-    "run": false,
-    "reason": "Worker contract prohibits worker dev server/build/browser. Parent must run scripts/qa/cases/pdf.mjs against integrated local and production builds.",
+    "run": true,
+    "reason": "Integrated local Chrome and WebKit runs executed against parent-owned localhost:3190 server. Latest runs remain failed; no browser acceptance claimed.",
     "successMocks": false,
     "controlledFailurePaths": [
       "File.arrayBuffer rejection",
       "held real file-read completion for Clear",
       "held real canvas.toBlob callback for encrypted-render cancellation"
+    ],
+    "runs": [
+      {
+        "out": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-pdf-chrome-1",
+        "aggregateWritten": true,
+        "recordedToolCount": 0,
+        "functionalPassed": [],
+        "summary": {
+          "total": 0,
+          "passed": 0,
+          "failed": 0,
+          "needsFixture": 0,
+          "smokeOnly": 0,
+          "exitCode": 1
+        },
+        "fatal": {
+          "name": "Error",
+          "message": "Protocol error (Browser.getVersion): Internal server error, session closed. Failed to launch browser.\n<launching> /Applications/Google Chrome.app/Contents/MacOS/Google Chrome --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument,OptimizationHints --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/playwright_chromiumdev_profile-YEoejL --remote-debugging-pipe --no-startup-window\n<launched> pid=11121\n[pid=11121] <gracefully close start>\n[pid=11121] <kill>\n[pid=11121] <will force kill>\n[pid=11121] exception while trying to kill process: Error: kill EPERM\n[pid=11121] <process did exit: exitCode=null, signal=SIGABRT>\n[pid=11121] starting temporary directories cleanup\n[pid=11121] finished temporary directories cleanup\n[pid=11121] <gracefully close end>",
+          "stack": "Error: Protocol error (Browser.getVersion): Internal server error, session closed. Failed to launch browser.\n<launching> /Applications/Google Chrome.app/Contents/MacOS/Google Chrome --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument,OptimizationHints --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/playwright_chromiumdev_profile-YEoejL --remote-debugging-pipe --no-startup-window\n<launched> pid=11121\n[pid=11121] <gracefully close start>\n[pid=11121] <kill>\n[pid=11121] <will force kill>\n[pid=11121] exception while trying to kill process: Error: kill EPERM\n[pid=11121] <process did exit: exitCode=null, signal=SIGABRT>\n[pid=11121] starting temporary directories cleanup\n[pid=11121] finished temporary directories cleanup\n[pid=11121] <gracefully close end>\n    at /Users/rayhan/Work/toolblip/frontend/node_modules/playwright-core/lib/server/chromium/crConnection.js:111:57\n    at new Promise (<anonymous>)\n    at CRSession.send (/Users/rayhan/Work/toolblip/frontend/node_modules/playwright-core/lib/server/chromium/crConnection.js:110:12)\n    at CRBrowser.connect (/Users/rayhan/Work/toolblip/frontend/node_modules/playwright-core/lib/server/chromium/crBrowser.js:79:35)\n    at Chromium.connectToTransport (/Users/rayhan/Work/toolblip/frontend/node_modules/playwright-core/lib/server/chromium/chromium.js:140:47)\n    at Chromium._innerLaunch (/Users/rayhan/Work/toolblip/frontend/node_modules/playwright-core/lib/server/browserType.js:138:48)\n    at async Chromium._innerLaunchWithRetries (/Users/rayhan/Work/toolblip/frontend/node_modules/playwright-core/lib/server/browserType.js:99:14)\n    at async /Users/rayhan/Work/toolblip/frontend/node_modules/playwright-core/lib/browserServerImpl.js:77:18\n    at async ProgressController.run (/Users/rayhan/Work/toolblip/frontend/node_modules/playwright-core/lib/server/progress.js:104:22)\n    at async BrowserServerLauncherImpl.launchServer (/Users/rayhan/Work/toolblip/frontend/node_modules/playwright-core/lib/browserServerImpl.js:68:17)"
+        },
+        "commandOptions": {
+          "inventory": "/Users/rayhan/.herdr/worktrees/toolblip-workspace/manually-check-all-tools/qa/automatic/inventory-current.json",
+          "base": "http://localhost:3190",
+          "engine": "chrome",
+          "group": "pdf",
+          "concurrency": 2,
+          "out": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-pdf-chrome-1",
+          "smoke-only": false,
+          "pending-only": false,
+          "strip-dev-upgrade-csp": false
+        }
+      },
+      {
+        "out": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-pdf-chrome-2",
+        "aggregateWritten": false,
+        "recordedToolCount": 5,
+        "functionalPassed": [
+          "add-pages-to-pdf",
+          "annotate-pdf",
+          "edit-pdf",
+          "merge-pdfs",
+          "pdf-password-remover"
+        ],
+        "termination": "Process terminated before aggregate: unhandled download rejection (Chrome 2) or CSP route.fetch rejection (WebKit 1); fixed subsequently."
+      },
+      {
+        "out": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-pdf-chrome-extract-1",
+        "aggregateWritten": true,
+        "recordedToolCount": 1,
+        "functionalPassed": [],
+        "summary": {
+          "total": 1,
+          "passed": 0,
+          "failed": 1,
+          "needsFixture": 0,
+          "smokeOnly": 0,
+          "exitCode": 1
+        },
+        "fatal": {
+          "name": "Error",
+          "message": "Browser server close timeout after 5000ms",
+          "stack": "Error: Browser server close timeout after 5000ms\n    at Timeout.<anonymous> (file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/core.mjs:85:37)\n    at listOnTimeout (node:internal/timers:685:17)\n    at process.processTimers (node:internal/timers:618:7)"
+        },
+        "commandOptions": {
+          "inventory": "/Users/rayhan/.herdr/worktrees/toolblip-workspace/manually-check-all-tools/qa/automatic/inventory-current.json",
+          "base": "http://localhost:3190",
+          "engine": "chrome",
+          "group": "pdf",
+          "slugs": [
+            "extract-images-from-pdf"
+          ],
+          "concurrency": 2,
+          "out": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-pdf-chrome-extract-1",
+          "smoke-only": false,
+          "pending-only": false,
+          "strip-dev-upgrade-csp": false
+        }
+      },
+      {
+        "out": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-pdf-chrome-extract-2",
+        "aggregateWritten": true,
+        "recordedToolCount": 1,
+        "functionalPassed": [],
+        "summary": {
+          "total": 1,
+          "passed": 0,
+          "failed": 1,
+          "needsFixture": 0,
+          "smokeOnly": 0,
+          "exitCode": 1
+        },
+        "fatal": {
+          "name": "Error",
+          "message": "Browser server close timeout after 5000ms",
+          "stack": "Error: Browser server close timeout after 5000ms\n    at Timeout.<anonymous> (file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/core.mjs:85:37)\n    at listOnTimeout (node:internal/timers:685:17)\n    at process.processTimers (node:internal/timers:618:7)"
+        },
+        "commandOptions": {
+          "inventory": "/Users/rayhan/.herdr/worktrees/toolblip-workspace/manually-check-all-tools/qa/automatic/inventory-current.json",
+          "base": "http://localhost:3190",
+          "engine": "chrome",
+          "group": "pdf",
+          "slugs": [
+            "extract-images-from-pdf"
+          ],
+          "concurrency": 2,
+          "out": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-pdf-chrome-extract-2",
+          "smoke-only": false,
+          "pending-only": false,
+          "strip-dev-upgrade-csp": false
+        }
+      },
+      {
+        "out": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-pdf-chrome-extract-3",
+        "aggregateWritten": true,
+        "recordedToolCount": 1,
+        "functionalPassed": [],
+        "summary": {
+          "total": 1,
+          "passed": 0,
+          "failed": 1,
+          "needsFixture": 0,
+          "smokeOnly": 0,
+          "exitCode": 1
+        },
+        "fatal": {
+          "name": "Error",
+          "message": "Browser server close timeout after 5000ms",
+          "stack": "Error: Browser server close timeout after 5000ms\n    at Timeout.<anonymous> (file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/core.mjs:85:37)\n    at listOnTimeout (node:internal/timers:685:17)\n    at process.processTimers (node:internal/timers:618:7)"
+        },
+        "commandOptions": {
+          "inventory": "/Users/rayhan/.herdr/worktrees/toolblip-workspace/manually-check-all-tools/qa/automatic/inventory-current.json",
+          "base": "http://localhost:3190",
+          "engine": "chrome",
+          "group": "pdf",
+          "slugs": [
+            "extract-images-from-pdf"
+          ],
+          "concurrency": 2,
+          "out": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-pdf-chrome-extract-3",
+          "smoke-only": false,
+          "pending-only": false,
+          "strip-dev-upgrade-csp": false
+        }
+      },
+      {
+        "out": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-pdf-chrome-3",
+        "aggregateWritten": true,
+        "recordedToolCount": 11,
+        "functionalPassed": [
+          "pdf-rearrange"
+        ],
+        "summary": {
+          "total": 11,
+          "passed": 1,
+          "failed": 10,
+          "needsFixture": 0,
+          "smokeOnly": 6,
+          "exitCode": 3
+        },
+        "fatal": {
+          "name": "Error",
+          "message": "Browser server close timeout after 5000ms",
+          "stack": "Error: Browser server close timeout after 5000ms\n    at Timeout.<anonymous> (file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/core.mjs:85:37)\n    at listOnTimeout (node:internal/timers:685:17)\n    at process.processTimers (node:internal/timers:618:7)"
+        },
+        "commandOptions": {
+          "inventory": "/Users/rayhan/.herdr/worktrees/toolblip-workspace/manually-check-all-tools/qa/automatic/inventory-current.json",
+          "base": "http://localhost:3190",
+          "engine": "chrome",
+          "group": "pdf",
+          "concurrency": 2,
+          "out": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-pdf-chrome-3",
+          "smoke-only": false,
+          "pending-only": false,
+          "strip-dev-upgrade-csp": false
+        }
+      },
+      {
+        "out": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-pdf-chrome-fixes-1",
+        "aggregateWritten": true,
+        "recordedToolCount": 2,
+        "functionalPassed": [],
+        "summary": {
+          "total": 2,
+          "passed": 0,
+          "failed": 2,
+          "needsFixture": 0,
+          "smokeOnly": 2,
+          "exitCode": 3
+        },
+        "fatal": {
+          "name": "Error",
+          "message": "Browser server close timeout after 5000ms",
+          "stack": "Error: Browser server close timeout after 5000ms\n    at Timeout.<anonymous> (file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/core.mjs:85:37)\n    at listOnTimeout (node:internal/timers:685:17)\n    at process.processTimers (node:internal/timers:618:7)"
+        },
+        "commandOptions": {
+          "inventory": "/Users/rayhan/.herdr/worktrees/toolblip-workspace/manually-check-all-tools/qa/automatic/inventory-current.json",
+          "base": "http://localhost:3190",
+          "engine": "chrome",
+          "group": "pdf",
+          "slugs": [
+            "extract-images-from-pdf",
+            "add-watermark-to-pdf"
+          ],
+          "concurrency": 1,
+          "out": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-pdf-chrome-fixes-1",
+          "smoke-only": false,
+          "pending-only": false,
+          "strip-dev-upgrade-csp": false
+        }
+      },
+      {
+        "out": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-pdf-webkit-1",
+        "aggregateWritten": false,
+        "recordedToolCount": 7,
+        "functionalPassed": [],
+        "termination": "Process terminated before aggregate: unhandled download rejection (Chrome 2) or CSP route.fetch rejection (WebKit 1); fixed subsequently."
+      },
+      {
+        "out": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-pdf-webkit-2",
+        "aggregateWritten": true,
+        "recordedToolCount": 11,
+        "functionalPassed": [],
+        "summary": {
+          "total": 11,
+          "passed": 0,
+          "failed": 11,
+          "needsFixture": 0,
+          "smokeOnly": 11,
+          "exitCode": 3
+        },
+        "fatal": null,
+        "commandOptions": {
+          "inventory": "/Users/rayhan/.herdr/worktrees/toolblip-workspace/manually-check-all-tools/qa/automatic/inventory-current.json",
+          "base": "http://localhost:3190",
+          "engine": "webkit",
+          "group": "pdf",
+          "concurrency": 1,
+          "strip-dev-upgrade-csp": true,
+          "out": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-pdf-webkit-2",
+          "smoke-only": false,
+          "pending-only": false
+        }
+      }
     ]
   },
   "groupHelpers": [
     "lib/pdf-qa/pdf.ts",
     "lib/pdf-qa/pixels.ts",
     "lib/pdf-qa/pdf.test.ts",
-    "scripts/qa/cases/pdf-fixtures.mjs",
+    "scripts/qa/helpers/pdf-fixtures.mjs",
     "scripts/qa/pdf-fixtures.test.mjs"
   ],
   "commonFixtureCoverage": [
@@ -516,8 +759,12 @@
     }
   ],
   "remainingBlockers": [
-    "Parent integrated browser checks have not run. Do not promote route status to browser-accepted before their assertions pass.",
-    "Unlock requires working PDF.js worker and browser Canvas. Genuine RC4 fixture is independently verified in Node, but encrypted rendering and output pixel checks remain pending in browser."
+    "Latest complete Chrome run: 1 passed, 10 failed; 6 functional cases not run. It predates watermark Clear and file-backed oversized upload fixes. Subsequent extraction/watermark retry: both failed hydration before functional checks.",
+    "Latest complete WebKit run: 0 passed, 11 failed; all functional cases not run. Navigation CSP fetch timeouts and hydration timeouts retained. Earlier WebKit run recorded Unexpected EOF in Next.js page/layout chunks.",
+    "Initial Chrome run recorded five functional passes (add-pages, annotate, edit, merge, password-remover) but all failed runtime checks due to backend CORS. Do not equate functional passes with overall acceptance.",
+    "Shared subscription/API-status fetches to https://api.toolblip.com/api/plans and /api/tools failed CORS from localhost. Direct API probe timed out after 15 seconds; localhost /api/plans returned 404. Classified as environment/backend dependency observations; not suppressed in harness.",
+    "Multiple simultaneous browser groups and TypeScript processes observed. Directly fetched page chunk was 38364987 bytes and parsed successfully, including 1074 embedded modules, despite browser chunk syntax/hydration failures. Root cause of delivery/runtime failure remains unresolved.",
+    "Component fixes for extraction soft-mask Decode and watermark pending-read Clear still need successful integrated browser verification. Parent must stabilize local server/runtime before rerunning failures; no server restart/build performed here."
   ],
   "capabilityLimits": [
     "Unlock flattens encrypted pages into images, not editable vector/text objects; no password guessing.",
@@ -541,9 +788,46 @@
     "lib/pdf-qa/pdf.test.ts",
     "lib/pdf-qa/pdf.ts",
     "lib/pdf-qa/pixels.ts",
-    "scripts/qa/cases/pdf-fixtures.mjs",
+    "scripts/qa/helpers/pdf-fixtures.mjs",
     "scripts/qa/cases/pdf.mjs",
     "scripts/qa/pdf-fixtures.test.mjs",
-    "scripts/qa/reports/pdf.json"
+    "scripts/qa/reports/pdf.json",
+    "scripts/qa/browser.mjs",
+    "scripts/qa/browser.test.mjs",
+    "scripts/qa/csp.test.mjs"
+  ],
+  "integrationFixes": [
+    "Moved pdf-fixtures.mjs from cases to helpers; updated imports and report paths. Strict loader array validation unchanged.",
+    "Paired download event and button click in Promise.all so timeouts are reported without unhandled rejection terminating the group.",
+    "Upload the unchanged 26 MB oversized fixture from an artifact file to avoid serializing its bytes through the browser protocol.",
+    "ExtractImgClient accepts explicit identity soft-mask Decode [0 1]; unsupported transforms, predictors and Matte remain rejected. Independent RGB/alpha checks unchanged; fixture unit tests now assert identity Decode.",
+    "AddWatermarkToPDFClient enables Clear during loading so its existing version invalidation can cancel a pending read.",
+    "Browser harness requires React properties on tool descendants; script download alone no longer proves hydration. Regression failed before fix and passed after.",
+    "Development CSP routing retains original fetch errors, aborts the failed navigation and records failed cases instead of crashing the process. Regression failed before fix and passed after."
+  ],
+  "integrationValidation": [
+    {
+      "command": "node --test scripts/qa/csp.test.mjs scripts/qa/core.test.mjs scripts/qa/runtime.test.mjs scripts/qa/pdf-fixtures.test.mjs",
+      "exitCode": 0,
+      "passed": 22
+    },
+    {
+      "command": "./node_modules/.bin/vitest run lib/pdf-qa/pdf.test.ts",
+      "exitCode": 0,
+      "passed": 9
+    },
+    {
+      "command": "node --test scripts/qa/browser.test.mjs",
+      "exitCode": 0,
+      "passed": 9
+    },
+    {
+      "command": "./node_modules/.bin/tsc --noEmit --incremental false",
+      "exitCode": 0
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0
+    }
   ]
 }

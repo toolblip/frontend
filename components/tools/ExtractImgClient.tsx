@@ -170,7 +170,10 @@ async function extractImages(bytes: Uint8Array, active: () => boolean): Promise<
         let alpha: Uint8Array | undefined;
         const mask = xObject.dict.lookup(PDFName.of('SMask'));
         if (mask) {
-          if (!(mask instanceof PDFRawStream) || mask.dict.lookup(PDFName.of('Width'))?.toString() !== String(width) || mask.dict.lookup(PDFName.of('Height'))?.toString() !== String(height) || mask.dict.lookup(PDFName.of('BitsPerComponent'))?.toString() !== '8' || mask.dict.lookup(PDFName.of('ColorSpace')) !== PDFName.of('DeviceGray') || ['Decode', 'DecodeParms', 'Matte'].some(key => mask.dict.has(PDFName.of(key)))) { skipped++; continue; }
+          if (!(mask instanceof PDFRawStream) || mask.dict.lookup(PDFName.of('Width'))?.toString() !== String(width) || mask.dict.lookup(PDFName.of('Height'))?.toString() !== String(height) || mask.dict.lookup(PDFName.of('BitsPerComponent'))?.toString() !== '8' || mask.dict.lookup(PDFName.of('ColorSpace')) !== PDFName.of('DeviceGray') || ['DecodeParms', 'Matte'].some(key => mask.dict.has(PDFName.of(key)))) { skipped++; continue; }
+          // PDF producers explicitly write the default grayscale decode range.
+          const decode = mask.dict.lookup(PDFName.of('Decode'));
+          if (decode && (!(decode instanceof PDFArray) || decode.size() !== 2 || decode.lookup(0)?.toString() !== '0' || decode.lookup(1)?.toString() !== '1')) { skipped++; continue; }
           alpha = decodePDFRawStream(mask).decode();
         }
 
