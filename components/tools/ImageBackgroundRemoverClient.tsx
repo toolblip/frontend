@@ -5,6 +5,9 @@ import { convertHeicIfNeeded } from '@/lib/heic';
 import { useSubscription } from '@/hooks/useSubscription';
 import { FileSizeError, UpgradeNotice } from '@/components/FileSizeGuard';
 
+import ToolExampleClearActions from './ToolExampleClearActions';
+import {readImage,exampleFile} from '@/lib/images-qa';
+
 type RemovalMethod = 'floodfill' | 'chroma' | 'ai';
 
 // Self-hosted instead of fetched from IMG.LY's CDN (staticimgly.com).
@@ -94,27 +97,21 @@ export default function ImageBackgroundRemoverClient() {
   };
 
   const selectMethod = (next: RemovalMethod) => {
+    invalidateResult();
     setMethod(next);
     setAiError(null);
   };
 
-  const loadImage = async (file: File) => {
-    setSelectedFile(file);
-    requestIdRef.current += 1;
-    releaseProcessedBlobUrl();
-
-    setIsConvertingHeic(true);
-    const decodable = await convertHeicIfNeeded(file);
-    setIsConvertingHeic(false);
-
-    setImageFile(decodable);
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      setImage(event.target?.result as string);
-      setProcessedImage(null);
-      setAiError(null);
-    };
-    reader.readAsDataURL(decodable);
+  const clear=()=>{requestIdRef.current++;releaseProcessedBlobUrl();setImage(null);setImageFile(null);setSelectedFile(null);setProcessedImage(null);setAiError(null);setIsProcessing(false);setIsConvertingHeic(false);setAiProgress(null);if(fileInputRef.current)fileInputRef.current.value='';};
+  useEffect(()=>()=>{requestIdRef.current++;releaseProcessedBlobUrl();},[]);
+  useEffect(()=>()=>{if(image?.startsWith('blob:'))URL.revokeObjectURL(image);},[image]);
+  const invalidateResult=()=>{requestIdRef.current++;releaseProcessedBlobUrl();setProcessedImage(null);setIsProcessing(false);};
+  const loadImage=async(file:File)=>{
+    clear();setSelectedFile(file);const id=requestIdRef.current;setIsConvertingHeic(true);
+    try{if(file.size>Math.min(maxSizeMB,20)*1024*1024)throw Error('Image exceeds the file size limit.');
+      const decodable=await convertHeicIfNeeded(file);const {mime,bytes}=await readImage(decodable);
+      if(id!==requestIdRef.current)return;setImageFile(new File([bytes],file.name,{type:mime}));setImage(URL.createObjectURL(new Blob([bytes],{type:mime})));
+    }catch(e){if(id===requestIdRef.current)setAiError((e as Error).message);}finally{if(id===requestIdRef.current)setIsConvertingHeic(false);}
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -155,6 +152,7 @@ export default function ImageBackgroundRemoverClient() {
     if (!imageFile) return;
 
     const requestId = ++requestIdRef.current;
+    setProcessedImage(null);
     setIsProcessing(true);
     setAiProgress(0);
     setAiStage('fetch');
@@ -216,6 +214,7 @@ export default function ImageBackgroundRemoverClient() {
     if (!image || !canvasRef.current) return;
 
     const requestId = ++requestIdRef.current;
+    setProcessedImage(null);
     setIsProcessing(true);
 
     const canvas = canvasRef.current;
@@ -373,8 +372,8 @@ export default function ImageBackgroundRemoverClient() {
   };
 
   return (
-    <div className="flex flex-col gap-4 p-4">
-      <h2 className="text-2xl font-bold">Background Remover</h2>
+    <div className="tb-v2-tool-card flex flex-col gap-4 p-4"><style jsx>{`input,textarea,select {max-width:100%;min-width:0} .tb-v2-tool-card {min-width:0;max-width:100%;overflow-wrap:anywhere} .tb-v2-tool-input-head {flex-wrap:wrap;gap:8px} .tb-v2-range-row {flex-wrap:wrap} .tb-v2-range {min-width:0;flex:1}`}</style>
+      <div className="tb-v2-tool-input-head"><span>Background Remover</span><ToolExampleClearActions onExample={()=>loadImage(exampleFile())} onClear={clear}/></div>{aiError&&!image&&<p role="alert">{aiError}</p>}{isProcessing&&<button className="tb-v2-btn" onClick={invalidateResult}>Cancel result</button>}<p className="tb-v2-hint">AI segmentation downloads a model on first use and runs locally. Cancel discards the result; inference may finish in the background. Color Key and Auto Detect use color matching, not AI.</p>
 
       <input
         ref={fileInputRef}
@@ -448,7 +447,7 @@ export default function ImageBackgroundRemoverClient() {
 
           {method === 'ai' && !isProcessing && (
             <p className="text-sm text-gray-500">
-              Uses an AI segmentation model to cut out the subject, even against busy or uneven backgrounds.
+              Uses AI segmentation to estimate the subject. Results vary, especially around fine edges and complex backgrounds.
             </p>
           )}
 
@@ -503,7 +502,7 @@ export default function ImageBackgroundRemoverClient() {
               <input
                 type="color"
                 value={chromaKeyColor}
-                onChange={(e) => setChromaKeyColor(e.target.value)}
+                onChange={(e) => {invalidateResult();setChromaKeyColor(e.target.value);}}
                 className="w-10 h-10 rounded"
               />
             </div>
@@ -517,7 +516,7 @@ export default function ImageBackgroundRemoverClient() {
                 min="1"
                 max="128"
                 value={tolerance}
-                onChange={(e) => setTolerance(Number(e.target.value))}
+                onChange={(e) => {invalidateResult();setTolerance(Number(e.target.value));}}
                 className="tb-v2-range"
               />
             </div>
@@ -550,7 +549,7 @@ export default function ImageBackgroundRemoverClient() {
           </div>
 
           {aiError && (
-            <div className="p-4 bg-red-100 text-red-700 rounded-lg">{aiError}</div>
+            <div role="alert" className="p-4 bg-red-100 text-red-700 rounded-lg">{aiError}</div>
           )}
         </>
       )}
@@ -616,7 +615,7 @@ export default function ImageBackgroundRemoverClient() {
       <div className="text-sm text-gray-500 mt-4">
         <p className="font-medium">Tips:</p>
         <ul className="list-disc pl-5">
-          <li><strong>AI Remove:</strong> AI segmentation model - best for photos, works on any background</li>
+          <li><strong>AI Remove:</strong> Best suited to photos with a clear foreground subject. Review the edges before downloading.</li>
           <li><strong>Auto Detect:</strong> Samples corners to identify and remove background color</li>
           <li><strong>Color Key:</strong> Removes a specific color (e.g., green screen)</li>
           <li>Auto Detect and Color Key both use the Tolerance slider - raise it for more color variation</li>

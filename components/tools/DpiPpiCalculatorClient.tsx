@@ -1,4 +1,6 @@
 'use client';
+import ToolExampleClearActions from './ToolExampleClearActions';
+import { positive } from '@/lib/images-qa';
 
 import { useState } from 'react';
 
@@ -36,24 +38,24 @@ export default function DpiPpiCalculatorClient() {
     setPrintHeight('6.67');
   };
 
-  const wPx = parseFloat(pxWidth) || 0;
-  const hPx = parseFloat(pxHeight) || 0;
-  const wPhysIn = unit === 'in' ? parseFloat(printWidth) || 0 : (parseFloat(printWidth) || 0) / CM_PER_IN;
-  const hPhysIn = unit === 'in' ? parseFloat(printHeight) || 0 : (parseFloat(printHeight) || 0) / CM_PER_IN;
+  const wPx = (positive(pxWidth) ?? 0) || 0;
+  const hPx = (positive(pxHeight) ?? 0) || 0;
+  const wPhysIn = unit === 'in' ? (positive(printWidth) ?? 0) || 0 : ((positive(printWidth) ?? 0) || 0) / CM_PER_IN;
+  const hPhysIn = unit === 'in' ? (positive(printHeight) ?? 0) || 0 : ((positive(printHeight) ?? 0) || 0) / CM_PER_IN;
 
   const horizontalDpi = wPhysIn > 0 ? wPx / wPhysIn : 0;
   const verticalDpi = hPhysIn > 0 ? hPx / hPhysIn : 0;
 
-  const sWPx = parseFloat(screenWidth) || 0;
-  const sHPx = parseFloat(screenHeight) || 0;
-  const diagIn = parseFloat(diagonal) || 0;
+  const sWPx = (positive(screenWidth) ?? 0) || 0;
+  const sHPx = (positive(screenHeight) ?? 0) || 0;
+  const diagIn = (positive(diagonal) ?? 0) || 0;
   const screenPpi = diagIn > 0 ? Math.sqrt(sWPx * sWPx + sHPx * sHPx) / diagIn : 0;
 
   return (
-    <div className="tb-v2-tool-card">
-      <div className="tb-v2-tool-input-head">
+    <div className="tb-v2-tool-card"><style jsx>{`input,textarea,select {max-width:100%;min-width:0} .tb-v2-tool-card {min-width:0;max-width:100%;overflow-wrap:anywhere} .tb-v2-tool-input-head {flex-wrap:wrap;gap:8px} .tb-v2-range-row {flex-wrap:wrap} .tb-v2-range {min-width:0;flex:1}`}</style>
+      <div className="tb-v2-tool-input-head" style={{flexWrap:"wrap"}}><ToolExampleClearActions onExample={() => {loadExample()}} onClear={() => {setPxWidth('');setPxHeight('');setPrintWidth('');setPrintHeight('');setScreenWidth('');setScreenHeight('');setDiagonal('');}} />
         <span className="tb-v2-tool-label">DPI / PPI Calculator</span>
-        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">Load Example</button>
+
       </div>
       <div style={{ padding: 20 }} className="flex flex-col gap-4">
         <div className="tb-v2-mode-tabs" role="group">
@@ -63,24 +65,24 @@ export default function DpiPpiCalculatorClient() {
 
         {mode === 'print' ? (
           <>
-            <div style={{ display: 'flex', gap: 12 }}>
-              <div className="flex flex-col gap-1" style={{ flex: 1 }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
+              <div className="flex flex-col gap-1" style={{ flex: 1, minWidth: 0 }}>
                 <label className="tb-v2-tool-label">Image Width (px)</label>
-                <input type="number" value={pxWidth} onChange={e => setPxWidth(e.target.value)} className="tb-v2-input" min="0" />
+                <input aria-label="Image Width (px)" type="number" value={pxWidth} onChange={e => setPxWidth(e.target.value)} className="tb-v2-input" min="0" />
               </div>
-              <div className="flex flex-col gap-1" style={{ flex: 1 }}>
+              <div className="flex flex-col gap-1" style={{ flex: 1, minWidth: 0 }}>
                 <label className="tb-v2-tool-label">Image Height (px)</label>
-                <input type="number" value={pxHeight} onChange={e => setPxHeight(e.target.value)} className="tb-v2-input" min="0" />
+                <input aria-label="Image Height (px)" type="number" value={pxHeight} onChange={e => setPxHeight(e.target.value)} className="tb-v2-input" min="0" />
               </div>
             </div>
-            <div style={{ display: 'flex', gap: 12, alignItems: 'flex-end' }}>
-              <div className="flex flex-col gap-1" style={{ flex: 1 }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, alignItems: 'flex-end' }}>
+              <div className="flex flex-col gap-1" style={{ flex: 1, minWidth: 0 }}>
                 <label className="tb-v2-tool-label">Print Width ({unit})</label>
-                <input type="number" value={printWidth} onChange={e => setPrintWidth(e.target.value)} className="tb-v2-input" min="0" step="0.01" />
+                <input aria-label="Print Width" type="number" value={printWidth} onChange={e => setPrintWidth(e.target.value)} className="tb-v2-input" min="0" step="0.01" />
               </div>
-              <div className="flex flex-col gap-1" style={{ flex: 1 }}>
+              <div className="flex flex-col gap-1" style={{ flex: 1, minWidth: 0 }}>
                 <label className="tb-v2-tool-label">Print Height ({unit})</label>
-                <input type="number" value={printHeight} onChange={e => setPrintHeight(e.target.value)} className="tb-v2-input" min="0" step="0.01" />
+                <input aria-label="Print Height" type="number" value={printHeight} onChange={e => setPrintHeight(e.target.value)} className="tb-v2-input" min="0" step="0.01" />
               </div>
               <div className="tb-v2-mode-tabs" role="group">
                 <button type="button" onClick={() => setUnit('in')} className={`tb-v2-mode-tab ${unit === 'in' ? 'on' : ''}`}>in</button>
@@ -90,19 +92,19 @@ export default function DpiPpiCalculatorClient() {
           </>
         ) : (
           <>
-            <div style={{ display: 'flex', gap: 12 }}>
-              <div className="flex flex-col gap-1" style={{ flex: 1 }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
+              <div className="flex flex-col gap-1" style={{ flex: 1, minWidth: 0 }}>
                 <label className="tb-v2-tool-label">Horizontal Resolution (px)</label>
-                <input type="number" value={screenWidth} onChange={e => setScreenWidth(e.target.value)} className="tb-v2-input" min="0" />
+                <input aria-label="Horizontal Resolution (px)" type="number" value={screenWidth} onChange={e => setScreenWidth(e.target.value)} className="tb-v2-input" min="0" />
               </div>
-              <div className="flex flex-col gap-1" style={{ flex: 1 }}>
+              <div className="flex flex-col gap-1" style={{ flex: 1, minWidth: 0 }}>
                 <label className="tb-v2-tool-label">Vertical Resolution (px)</label>
-                <input type="number" value={screenHeight} onChange={e => setScreenHeight(e.target.value)} className="tb-v2-input" min="0" />
+                <input aria-label="Vertical Resolution (px)" type="number" value={screenHeight} onChange={e => setScreenHeight(e.target.value)} className="tb-v2-input" min="0" />
               </div>
             </div>
             <div className="flex flex-col gap-1">
               <label className="tb-v2-tool-label">Diagonal Screen Size (in)</label>
-              <input type="number" value={diagonal} onChange={e => setDiagonal(e.target.value)} className="tb-v2-input" min="0" step="0.1" />
+              <input aria-label="Diagonal Screen Size (in)" type="number" value={diagonal} onChange={e => setDiagonal(e.target.value)} className="tb-v2-input" min="0" step="0.1" />
             </div>
           </>
         )}

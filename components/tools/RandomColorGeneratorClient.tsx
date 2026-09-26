@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 const EXAMPLE_COLOR = '#e11d48';
@@ -43,8 +43,13 @@ function rgbToHsl(r: number, g: number, b: number): { h: number; s: number; l: n
 }
 
 export default function RandomColorGeneratorClient() {
-  const [color, setColor] = useState(() => randomHex());
+  const [color, setColor] = useState(EXAMPLE_COLOR);
   const [copied, setCopied] = useState('');
+
+  // Match the server's first render, then generate the initial client color.
+  useEffect(() => {
+    setColor(randomHex());
+  }, []);
 
   const rgb = hexToRgb(color);
   const hsl = rgb ? rgbToHsl(rgb.r, rgb.g, rgb.b) : null;

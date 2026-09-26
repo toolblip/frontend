@@ -1,4 +1,5 @@
 'use client';
+import UtilityDesignLayout from './UtilityDesignLayout';
 
 import { useState, useMemo, useCallback } from 'react';
 
@@ -81,16 +82,15 @@ const QUOTES: Quote[] = [
 ];
 
 function dayOfYear(d: Date): number {
-  const start = new Date(d.getFullYear(), 0, 0);
-  const diff = d.getTime() - start.getTime();
+  const start = Date.UTC(d.getFullYear(), 0, 0);
+  const diff = Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()) - start;
   return Math.floor(diff / 86400000);
 }
 
 function randomIndex(exclude?: number): number {
   if (QUOTES.length <= 1) return 0;
-  let idx = Math.floor(Math.random() * QUOTES.length);
-  while (idx === exclude) idx = Math.floor(Math.random() * QUOTES.length);
-  return idx;
+  const idx = Math.floor(Math.random() * (QUOTES.length - (exclude === undefined ? 0 : 1)));
+  return exclude !== undefined && idx >= exclude ? idx + 1 : idx;
 }
 
 export default function QuoteOfTheDayClient() {
@@ -112,12 +112,11 @@ export default function QuoteOfTheDayClient() {
   };
 
   const copyQuote = () => {
-    navigator.clipboard.writeText(`"${quote.text}" — ${quote.author}`).catch(() => {});
-    setCopied(true);
+    navigator.clipboard.writeText(`"${quote.text}" — ${quote.author}`).then(() => setCopied(true), () => setCopied(false));
     setTimeout(() => setCopied(false), 1500);
   };
 
-  return (
+  return (<UtilityDesignLayout>
     <div className="tb-v2-tool-card">
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">{isDaily ? "Today's Quote" : 'Random Quote'}</span>
@@ -149,8 +148,9 @@ export default function QuoteOfTheDayClient() {
 
       <div className="tb-v2-section" style={{ fontSize: 12.5, color: 'var(--fg-3)' }}>
         Quote of the Day is picked deterministically from the date, so it stays the same all day and
-        changes tomorrow. All quotes are from public-domain authors. {QUOTES.length} quotes in the collection.
+        changes tomorrow. Historical quotations; attributions and translations may vary. {QUOTES.length} quotes in the collection.
       </div>
     </div>
+  </UtilityDesignLayout>
   );
 }

@@ -75,18 +75,20 @@ export default function ParagraphCounterClient() {
             <span className="tb-v2-tool-label">Statistics</span>
           </div>
           <div className="tb-v2-tool-output-body" style={{ marginTop: 8 }}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 10 }}>
+            <div className="grid grid-cols-1 sm:grid-cols-2" style={{ gap: 10 }}>
               {stats.map((stat, i) => (
                 <div key={i} style={{ 
                   padding: 12, 
                   background: 'var(--tb-bg-secondary)', 
                   borderRadius: 6,
                   display: 'flex',
+                  minWidth: 0,
+                  gap: 8,
                   justifyContent: 'space-between',
                   alignItems: 'center'
                 }}>
-                  <span style={{ fontSize: 12, color: 'var(--tb-text-secondary)' }}>{stat.label}</span>
-                  <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--tb-accent)' }}>
+                  <span style={{ fontSize: 12, overflowWrap: 'anywhere', color: 'var(--tb-text-secondary)' }}>{stat.label}</span>
+                  <span style={{ fontSize: 14, fontWeight: 600, flexShrink: 0, color: 'var(--tb-accent)' }}>
                     {stat.value}
                   </span>
                 </div>

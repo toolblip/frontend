@@ -4,6 +4,7 @@ import { useCallback, useRef, useState } from 'react';
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 import { useSubscription } from '@/hooks/useSubscription';
 import { checkFileSize } from '@/lib/tier-limits';
+import { readPdfToolFile, loadPdfForTools } from '@/lib/pdf-qa/pdf';
 import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 const isPdfFile = (file: File) => file.type === 'application/pdf' || /\.pdf$/i.test(file.name);
@@ -97,12 +98,14 @@ export default function PdfPageDeleterClient() {
     }
     setLoading(true);
     try {
-      const bytes = new Uint8Array(await selected.arrayBuffer());
-      const doc = await PDFDocument.load(bytes);
+      const bytes = new Uint8Array(await readPdfToolFile(selected));
+      if (requestId !== loadVersionRef.current) return;
+      const doc = await loadPdfForTools(bytes);
       const pageCount = doc.getPageCount();
       if (pageCount === 0) throw new Error('The PDF has no pages.');
       const nextPages: PageState[] = [];
       for (let index = 0; index < pageCount; index += 1) {
+        if (requestId !== loadVersionRef.current) return;
         nextPages.push({ index, selected: false, previewUrl: await renderPagePreview(bytes, index + 1, 0.28) });
       }
       if (requestId !== loadVersionRef.current) {
@@ -208,7 +211,7 @@ export default function PdfPageDeleterClient() {
     setProcessing(true);
     setError('');
     try {
-      const source = await PDFDocument.load(fileBytes);
+      const source = await loadPdfForTools(fileBytes);
       const output = await PDFDocument.create();
       const pagesToKeep = pages.filter((page) => !page.selected).map((page) => page.index);
       const copiedPages = await output.copyPages(source, pagesToKeep);
@@ -239,7 +242,8 @@ export default function PdfPageDeleterClient() {
   const selectedCount = pages.filter((page) => page.selected).length;
 
   return (
-    <div className="tb-v2-tool-card">
+    <div className="tb-v2-tool-card" style={{ minWidth: 0, maxWidth: "100%", overflowWrap: "anywhere" }}>
+      <p className="tb-v2-empty">PDF limits: 25 MB per file, 100 pages, 2000 points per page side.</p>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">PDF file</span>
         <ToolExampleClearActions
@@ -263,7 +267,7 @@ export default function PdfPageDeleterClient() {
             <span style={{ fontSize: 28 }}>📄</span>
             <span className="tb-v2-dropzone-text">{loading ? 'Loading PDF...' : 'Click or drag a PDF here'}</span>
             <span className="tb-v2-dropzone-hint">Select the pages to remove, then download a new PDF</span>
-            <input ref={fileInputRef} type="file" accept="application/pdf,.pdf" onChange={(event) => void loadFile(event.target.files?.[0])} style={{ display: 'none' }} />
+            <input ref={fileInputRef} aria-label="PDF file" type="file" accept="application/pdf,.pdf" onChange={(event) => void loadFile(event.target.files?.[0])} style={{ display: 'none' }} />
           </div>
         </div>
       )}
@@ -276,7 +280,7 @@ export default function PdfPageDeleterClient() {
           <div className="tb-pdf-delete-summary">
             <span className="tb-v2-tool-label">{pages.length} pages · {selectedCount} selected to delete</span>
             <button type="button" className="tb-v2-btn-sm" onClick={() => fileInputRef.current?.click()}>＋ Replace PDF</button>
-            <input ref={fileInputRef} type="file" accept="application/pdf,.pdf" onChange={(event) => void loadFile(event.target.files?.[0])} style={{ display: 'none' }} />
+            <input ref={fileInputRef} aria-label="PDF file" type="file" accept="application/pdf,.pdf" onChange={(event) => void loadFile(event.target.files?.[0])} style={{ display: 'none' }} />
           </div>
           <p className="tb-pdf-delete-instruction">Select one or more page cards to remove. Keep at least one page.</p>
           <div className="tb-pdf-delete-controls">

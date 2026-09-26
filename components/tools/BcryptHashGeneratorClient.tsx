@@ -1,4 +1,6 @@
 'use client';
+import { useSecurityTask } from './DeveloperSecurityFrame';
+import DeveloperSecurityFrame from './DeveloperSecurityFrame';
 
 import { useState } from 'react';
 import bcrypt from 'bcryptjs';
@@ -14,17 +16,18 @@ export default function BcryptHashGeneratorClient() {
   const [verifyPassword, setVerifyPassword] = useState('');
   const [verifyResult, setVerifyResult] = useState<'match' | 'no-match' | null>(null);
 
+  const task=useSecurityTask();
+  const [error,setError]=useState('');
+  const invalidate=()=>{task.current++;setHash('');setVerifyResult(null);setGenerating(false);setError('');};
+
   const generate = async () => {
-    if (!password) return;
+    invalidate(); const id=task.current;
+    if(new TextEncoder().encode(password).length>72){setError('bcrypt accepts at most 72 UTF-8 bytes. Shorten the password to avoid truncation.');return;}
+    if(!password){setError('Enter a password.');return;}
     setGenerating(true);
-    try {
-      const salt = bcrypt.genSaltSync(rounds);
-      const h = bcrypt.hashSync(password, salt);
-      setHash(h);
-    } catch {
-      setHash('Error generating hash');
-    }
-    setGenerating(false);
+    try { const h=await bcrypt.hash(password,rounds); if(id===task.current)setHash(h); }
+    catch(e){if(id===task.current)setError((e as Error).message);}
+    finally{if(id===task.current)setGenerating(false);}
   };
 
   const copy = () => {
@@ -34,25 +37,25 @@ export default function BcryptHashGeneratorClient() {
     setTimeout(() => setCopied(false), 1500);
   };
 
-  const verify = () => {
-    if (!verifyPassword || !hash) return;
-    const match = bcrypt.compareSync(verifyPassword, hash);
-    setVerifyResult(match ? 'match' : 'no-match');
+  const verify = async () => {
+    if (!hash) return; const id=++task.current;setVerifyResult(null);
+    if(new TextEncoder().encode(verifyPassword).length>72){setError('Verification password exceeds 72 UTF-8 bytes.');return;}
+    try{const match=await bcrypt.compare(verifyPassword,hash);if(id===task.current)setVerifyResult(match?'match':'no-match');}
+    catch(e){if(id===task.current)setError((e as Error).message);}
   };
 
   return (
-    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
+    <DeveloperSecurityFrame onExample={()=>{invalidate();setPassword('correct horse battery staple');}} onClear={()=>{invalidate();setPassword('');setVerifyPassword('');setCopied(false);}}>
+    <>{error && <p className="tb-v2-error" role="alert">{error}</p>}<div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
       <div>
         <div className="tb-v2-tool-input-head">
           <span className="tb-v2-tool-label">Password</span>
-          <button type="button" onClick={() => setPassword('correct horse battery staple')} className="tb-v2-btn-sm">
-            Load Example
-          </button>
+
         </div>
-        <input
+        <input maxLength={100000}
           type="text"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={(e) => {invalidate();setPassword(e.target.value);}}
           placeholder="Enter password to hash..."
           className="tb-v2-tool-input"
           style={{ fontFamily: 'var(--f-mono)' }}
@@ -69,7 +72,7 @@ export default function BcryptHashGeneratorClient() {
           min={4}
           max={14}
           value={rounds}
-          onChange={(e) => setRounds(Number(e.target.value))}
+          onChange={(e) => {invalidate();setRounds(Number(e.target.value));}}
           className="tb-v2-range"
           aria-label="Cost factor rounds"
         />
@@ -116,10 +119,10 @@ export default function BcryptHashGeneratorClient() {
           <span className="tb-v2-tool-label">Verify Password</span>
         </div>
         <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
-          <input
+          <input maxLength={100000}
             type="text"
             value={verifyPassword}
-            onChange={(e) => setVerifyPassword(e.target.value)}
+            onChange={(e) => {task.current++;setVerifyResult(null);setError('');setVerifyPassword(e.target.value);}}
             placeholder="Enter password to verify..."
             className="tb-v2-tool-input"
             style={{ flex: 1, fontFamily: 'var(--f-mono)' }}
@@ -149,5 +152,6 @@ export default function BcryptHashGeneratorClient() {
         </p>
       </div>
     </div>
+    </></DeveloperSecurityFrame>
   );
 }

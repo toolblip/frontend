@@ -1,5 +1,8 @@
 'use client';
+import DeveloperGeneralFrame from './DeveloperGeneralFrame';
 
+import ToolExampleClearActions from './ToolExampleClearActions';
+import { useSafeRegex } from '@/lib/developer-general/use-safe-regex';
 import { Fragment, useMemo, useState } from 'react';
 
 type TokenType = 'digit' | 'word' | 'whitespace' | 'literal' | 'any' | 'class';
@@ -101,31 +104,6 @@ function quantifierSuffix(row: Row): string {
 
 interface Segment { text: string; hit: boolean }
 
-function highlight(pattern: string, sample: string): { segments: Segment[]; count: number; error: string } {
-  if (!pattern || !sample) return { segments: [{ text: sample, hit: false }], count: 0, error: '' };
-  let re: RegExp;
-  try {
-    re = new RegExp(pattern, 'g');
-  } catch (e) {
-    return { segments: [{ text: sample, hit: false }], count: 0, error: (e as Error).message };
-  }
-  const segments: Segment[] = [];
-  let last = 0;
-  let count = 0;
-  let m: RegExpExecArray | null;
-  let safety = 0;
-  while ((m = re.exec(sample)) !== null) {
-    if (safety++ > 5000) break;
-    if (m[0] === '' && re.lastIndex === m.index) { re.lastIndex++; continue; }
-    if (m.index > last) segments.push({ text: sample.slice(last, m.index), hit: false });
-    segments.push({ text: m[0], hit: true });
-    last = m.index + m[0].length;
-    count++;
-  }
-  if (last < sample.length) segments.push({ text: sample.slice(last), hit: false });
-  if (segments.length === 0) segments.push({ text: sample, hit: false });
-  return { segments, count, error: '' };
-}
 
 export default function RegexPatternBuilderClient() {
   const [rows, setRows] = useState<Row[]>(() => PRESETS.Email());
@@ -138,7 +116,7 @@ export default function RegexPatternBuilderClient() {
     return `${startAnchor ? '^' : ''}${body}${endAnchor ? '$' : ''}`;
   }, [rows, startAnchor, endAnchor]);
 
-  const result = useMemo(() => highlight(pattern, testString), [pattern, testString]);
+  const result = useSafeRegex(pattern, 'g', testString);
 
   const updateRow = (id: number, patch: Partial<Row>) => {
     setRows(cur => cur.map(r => (r.id === id ? { ...r, ...patch } : r)));
@@ -148,7 +126,8 @@ export default function RegexPatternBuilderClient() {
   const loadPreset = (name: string) => setRows(PRESETS[name]());
 
   return (
-    <div className="tb-v2-tool-card">
+    <DeveloperGeneralFrame><div className="tb-v2-tool-card">
+      <ToolExampleClearActions onExample={() => {setRows(PRESETS.Email());setStartAnchor(true);setEndAnchor(true);setTestString('ada@example.com');}} onClear={() => {setRows([]);setTestString('');setStartAnchor(false);setEndAnchor(false);}} />
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Start from a preset</span>
       </div>
@@ -168,13 +147,13 @@ export default function RegexPatternBuilderClient() {
         {rows.length === 0 && <p className="tb-v2-empty">Add a row to start building your pattern.</p>}
         {rows.map(row => (
           <div key={row.id} className="tb-v2-grid-2" style={{ gridTemplateColumns: '1fr 1fr auto', alignItems: 'center', gap: 8 }}>
-            <select value={row.type} onChange={e => updateRow(row.id, { type: e.target.value as TokenType })} className="tb-v2-input">
+            <select aria-label="Row type" value={row.type} onChange={e => updateRow(row.id, { type: e.target.value as TokenType })} className="tb-v2-input">
               {(Object.keys(TOKEN_LABELS) as TokenType[]).map(t => (
                 <option key={t} value={t}>{TOKEN_LABELS[t]}</option>
               ))}
             </select>
             {(row.type === 'literal' || row.type === 'class') && (
-              <input
+              <input aria-label="Row text" maxLength={8000}
                 type="text"
                 value={row.text}
                 onChange={e => updateRow(row.id, { text: e.target.value })}
@@ -185,7 +164,7 @@ export default function RegexPatternBuilderClient() {
             )}
             <button type="button" onClick={() => removeRow(row.id)} className="tb-v2-btn tb-v2-btn-sm">Remove</button>
 
-            <select
+            <select aria-label="Row quantifier"
               value={row.quantifier}
               onChange={e => updateRow(row.id, { quantifier: e.target.value as Quantifier })}
               className="tb-v2-input"
@@ -196,7 +175,7 @@ export default function RegexPatternBuilderClient() {
               ))}
             </select>
             {row.quantifier === 'exact' && (
-              <input
+              <input aria-label="Row exact"
                 type="number"
                 min={0}
                 value={row.exact}
@@ -206,8 +185,8 @@ export default function RegexPatternBuilderClient() {
             )}
             {row.quantifier === 'range' && (
               <div style={{ display: 'flex', gap: 4 }}>
-                <input type="number" min={0} value={row.rangeMin} onChange={e => updateRow(row.id, { rangeMin: e.target.value })} className="tb-v2-input" placeholder="min" />
-                <input type="number" min={0} value={row.rangeMax} onChange={e => updateRow(row.id, { rangeMax: e.target.value })} className="tb-v2-input" placeholder="max" />
+                <input aria-label="Row range Min" type="number" min={0} value={row.rangeMin} onChange={e => updateRow(row.id, { rangeMin: e.target.value })} className="tb-v2-input" placeholder="min" />
+                <input aria-label="Row range Max" type="number" min={0} value={row.rangeMax} onChange={e => updateRow(row.id, { rangeMax: e.target.value })} className="tb-v2-input" placeholder="max" />
               </div>
             )}
           </div>
@@ -239,7 +218,7 @@ export default function RegexPatternBuilderClient() {
         <span className="tb-v2-tool-label">Test string</span>
         <span className="tb-v2-hash-stats">{result.error ? ' - ' : `${result.count} match${result.count === 1 ? '' : 'es'}`}</span>
       </div>
-      <textarea
+      <textarea aria-label="Test String" maxLength={100000}
         value={testString}
         onChange={e => setTestString(e.target.value)}
         placeholder="Paste text to test the pattern against..."
@@ -264,6 +243,6 @@ export default function RegexPatternBuilderClient() {
           {!testString && ' - '}
         </pre>
       </div>
-    </div>
+    </div></DeveloperGeneralFrame>
   );
 }

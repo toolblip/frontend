@@ -1,4 +1,6 @@
 'use client';
+import UtilityDesignLayout from './UtilityDesignLayout';
+import ToolExampleClearActions from './ToolExampleClearActions';
 
 import { useState } from 'react';
 
@@ -20,19 +22,20 @@ export default function TextToHandwritingClient() {
   const [copied, setCopied] = useState(false);
 
   const copy = () => {
-    navigator.clipboard.writeText(input);
-    setCopied(true);
+    navigator.clipboard.writeText(input).then(() => setCopied(true), () => setCopied(false));
     setTimeout(() => setCopied(false), 1500);
   };
 
-  return (
+  return (<UtilityDesignLayout>
     <div>
+      <p>Font preview uses fonts installed on your device, with a cursive fallback. Copy exports plain text.</p>
+      <ToolExampleClearActions onExample={() => { setInput('The quick brown fox jumps over the lazy dog.'); }} onClear={() => { setInput(''); setCopied(false); }}/>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Text</span>
         <span className="text-xs text-gray-500">{input.length > 0 ? `${input.length} chars` : ''}</span>
       </div>
 
-      <textarea
+      <textarea maxLength={100000} aria-label="Input"
         value={input}
         onChange={(e) => setInput(e.target.value)}
         className="tb-v2-tool-textarea"
@@ -65,7 +68,7 @@ export default function TextToHandwritingClient() {
       <div className="flex flex-wrap gap-4">
         <div className="flex-1 min-w-[150px]">
           <label className="tb-v2-tool-label">Size: {fontSize}px</label>
-          <input
+          <input aria-label="Font Size"
             type="range"
             min={12}
             max={64}
@@ -124,5 +127,6 @@ export default function TextToHandwritingClient() {
         </div>
       )}
     </div>
+  </UtilityDesignLayout>
   );
 }

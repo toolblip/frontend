@@ -1,6 +1,9 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
+
+import ToolExampleClearActions from './ToolExampleClearActions';
+import { readImage, exampleFile } from '@/lib/images-qa';
 
 interface ColorInfo {
   bitDepth: string;
@@ -15,36 +18,6 @@ interface ImageDetails {
   height: number;
   sizeBytes: number;
   color?: ColorInfo;
-}
-
-function bytesToAscii(bytes: Uint8Array, start: number, len: number): string {
-  return Array.from(bytes.slice(start, start + len)).map(b => String.fromCharCode(b)).join('');
-}
-
-function detectFormat(bytes: Uint8Array): { format: string; mime: string } | null {
-  if (bytes.length >= 8 && bytes[0] === 0x89 && bytes[1] === 0x50 && bytes[2] === 0x4e && bytes[3] === 0x47) {
-    return { format: 'PNG', mime: 'image/png' };
-  }
-  if (bytes.length >= 3 && bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff) {
-    return { format: 'JPEG', mime: 'image/jpeg' };
-  }
-  if (bytes.length >= 6 && bytesToAscii(bytes, 0, 4) === 'GIF8') {
-    return { format: 'GIF', mime: 'image/gif' };
-  }
-  if (bytes.length >= 2 && bytesToAscii(bytes, 0, 2) === 'BM') {
-    return { format: 'BMP', mime: 'image/bmp' };
-  }
-  if (bytes.length >= 12 && bytesToAscii(bytes, 0, 4) === 'RIFF' && bytesToAscii(bytes, 8, 4) === 'WEBP') {
-    return { format: 'WebP', mime: 'image/webp' };
-  }
-  if (bytes.length >= 4 && bytes[0] === 0x00 && bytes[1] === 0x00 && bytes[2] === 0x01 && bytes[3] === 0x00) {
-    return { format: 'ICO', mime: 'image/x-icon' };
-  }
-  const head = bytesToAscii(bytes, 0, Math.min(300, bytes.length));
-  if (head.includes('<svg') || (head.includes('<?xml') && head.toLowerCase().includes('svg'))) {
-    return { format: 'SVG', mime: 'image/svg+xml' };
-  }
-  return null;
 }
 
 function parseColorInfo(bytes: Uint8Array, format: string): ColorInfo | undefined {
@@ -118,36 +91,22 @@ export default function DetectClient() {
   const [error, setError] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const request = useRef(0);
+  const [loading, setLoading] = useState(false);
+  useEffect(() => () => { request.current++; }, []);
+  useEffect(() => () => { if (preview) URL.revokeObjectURL(preview); }, [preview]);
+  const clear = () => { request.current++; setPreview(''); setDetails(null); setError(''); setLoading(false); if(fileInputRef.current) fileInputRef.current.value=''; };
   const loadFile = async (file: File | undefined) => {
     if (!file) return;
-    setError('');
-    setDetails(null);
-
-    const buffer = await file.arrayBuffer();
-    const bytes = new Uint8Array(buffer);
-    const detected = detectFormat(bytes);
-
-    if (!detected) {
-      setError('Could not detect a known image format from this file\'s contents.');
-      return;
-    }
-
-    const url = URL.createObjectURL(file);
-    const img = new Image();
-    img.onload = () => {
-      setPreview(url);
-      setDetails({
-        format: detected.format,
-        mime: detected.mime,
-        browserMime: file.type || 'unknown',
-        width: img.naturalWidth,
-        height: img.naturalHeight,
-        sizeBytes: file.size,
-        color: parseColorInfo(bytes, detected.format),
-      });
-    };
-    img.onerror = () => setError('The file matched an image signature but could not be decoded as an image.');
-    img.src = url;
+    clear(); const id = request.current; setLoading(true);
+    try {
+      const { img, mime, bytes } = await readImage(file);
+      if(id !== request.current) return;
+      const format = mime === 'image/jpeg' ? 'JPEG' : mime.split('/')[1].toUpperCase();
+      setPreview(URL.createObjectURL(new Blob([bytes], {type:mime})));
+      setDetails({format, mime, browserMime:file.type || 'unknown', width:img.naturalWidth, height:img.naturalHeight, sizeBytes:file.size, color:parseColorInfo(bytes,format)});
+    } catch(e) { if(id === request.current) setError(e instanceof Error ? e.message : 'Could not read image.'); }
+    finally { if(id === request.current) setLoading(false); }
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => loadFile(e.target.files?.[0]);
@@ -159,9 +118,9 @@ export default function DetectClient() {
   };
 
   return (
-    <div className="tb-v2-tool-card">
+    <div className="tb-v2-tool-card"><style jsx>{`input,textarea,select {max-width:100%;min-width:0} .tb-v2-tool-card {min-width:0;max-width:100%;overflow-wrap:anywhere} .tb-v2-tool-input-head {flex-wrap:wrap;gap:8px} .tb-v2-range-row {flex-wrap:wrap} .tb-v2-range {min-width:0;flex:1}`}</style>
       <div className="tb-v2-tool-input-head">
-        <span className="tb-v2-tool-label">Upload Image</span>
+        <span className="tb-v2-tool-label">Upload Image</span><ToolExampleClearActions onExample={() => loadFile(exampleFile())} onClear={clear} />
       </div>
       <div style={{ padding: 20 }}>
         <div
@@ -174,9 +133,10 @@ export default function DetectClient() {
           <span style={{ fontSize: 28 }}>🖼️</span>
           <span className="tb-v2-dropzone-text">Click or drag any image file here</span>
           <span className="tb-v2-dropzone-hint">Format is detected from file bytes, entirely in your browser</span>
-          <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFileChange} style={{ display: 'none' }} />
+          <input aria-label="Upload image" ref={fileInputRef} type="file" accept="image/*" onChange={handleFileChange} style={{ display: 'none' }} />
         </div>
-        {error && <div className="tb-v2-banner tb-v2-banner-err" style={{ marginTop: 12 }}>{error}</div>}
+        {loading && <p role="status">Reading image…</p>}
+        {error && <div role="alert" className="tb-v2-banner tb-v2-banner-err" style={{ marginTop: 12 }}>{error}</div>}
         {preview && (
           <div style={{ marginTop: 12, maxHeight: 220, overflow: 'auto', borderRadius: 8, border: '1px solid var(--line)' }}>
             <img src={preview} alt="Uploaded" style={{ width: '100%', display: 'block' }} />

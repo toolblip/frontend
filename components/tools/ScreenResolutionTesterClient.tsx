@@ -1,5 +1,7 @@
 'use client';
+import DeveloperGeneralFrame from './DeveloperGeneralFrame';
 
+import ToolExampleClearActions from './ToolExampleClearActions';
 import { useState, useCallback } from 'react';
 
 interface Preset {
@@ -41,7 +43,8 @@ export default function ScreenResolutionTesterClient() {
   const aspectRatio = (width / height).toFixed(3);
 
   return (
-    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
+    <DeveloperGeneralFrame><div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
+      <ToolExampleClearActions onExample={() => {selectPreset(PRESETS[0]);}} onClear={() => {setWidth(1);setHeight(1);setLabel('');}} />
       {/* Preset grid */}
       <div>
         <label className="block text-xs text-gray-500 uppercase tracking-wide font-medium mb-2">
@@ -71,7 +74,7 @@ export default function ScreenResolutionTesterClient() {
           <label className="block text-xs text-gray-500 uppercase tracking-wide font-medium mb-2">
             Width (px)
           </label>
-          <input
+          <input aria-label="Width"
             type="number"
             min={1}
             max={7680}
@@ -87,7 +90,7 @@ export default function ScreenResolutionTesterClient() {
           <label className="block text-xs text-gray-500 uppercase tracking-wide font-medium mb-2">
             Height (px)
           </label>
-          <input
+          <input aria-label="Height"
             type="number"
             min={1}
             max={4320}
@@ -150,17 +153,17 @@ export default function ScreenResolutionTesterClient() {
           </div>
         </div>
         <p className="text-xs text-gray-600 mt-2 text-center">
-          Scaled preview - actual viewport is {width}×{height}px
+          Scaled preview - requested dimensions: {width}×{height}px
         </p>
       </div>
 
       {/* Open in new tab (triggers actual viewport change) */}
-      <a
-        href={`javascript:void(window.open('about:blank','_blank','width=${width},height=${height}'))`}
+      <button type="button"
+        onClick={() => window.open('about:blank','_blank',`width=${width},height=${height},noopener`)}
         className="block w-full text-center bg-gray-800 hover:bg-gray-700 border border-gray-700 hover:border-gray-600 text-gray-300 font-medium py-2.5 rounded-lg transition-colors text-sm"
       >
         Open {width}×{height} in New Window
-      </a>
-    </div>
+      </button>
+    </div></DeveloperGeneralFrame>
   );
 }

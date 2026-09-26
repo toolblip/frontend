@@ -1,6 +1,9 @@
 'use client';
+import UtilityDesignLayout from './UtilityDesignLayout';
+import ToolExampleClearActions from './ToolExampleClearActions';
 
 import { useState } from 'react';
+import { saveBlob } from '@/lib/utility-design/core';
 
 interface FormData {
   sellerName: string;
@@ -38,19 +41,21 @@ const initial: FormData = {
 
 export default function BillSaleGeneratorClient() {
   const [form, setForm] = useState<FormData>(initial);
+  const [error, setError] = useState('');
   const [generated, setGenerated] = useState(false);
 
   const set = (key: keyof FormData, value: string | boolean) =>
-    setForm((f) => ({ ...f, [key]: value }));
+    { setGenerated(false); setError(''); setForm((f) => ({ ...f, [key]: value, ...(key === 'soldAsIs' && value ? {warranty:false} : {}), ...(key === 'warranty' && value ? {soldAsIs:false} : {}) })); }
 
   const subtotal = parseFloat(form.salePrice) || 0;
   const tax = subtotal * (parseFloat(form.taxRate) || 0) / 100;
   const total = subtotal + tax;
 
-  const generate = () => setGenerated(true);
+  const generate = () => { if(!form.sellerName.trim() || !form.buyerName.trim() || !form.itemDescription.trim() || !form.date || !form.salePrice.trim() || !Number.isFinite(Number(form.salePrice)) || Number(form.salePrice)<0 || !Number.isFinite(Number(form.taxRate)) || Number(form.taxRate)<0 || Number(form.taxRate)>100) { setError('Enter buyer, seller, item, date, a non-negative price, and tax from 0 to 100%.'); setGenerated(false); return; } setError(''); setGenerated(true); };
 
   const download = () => {
-    window.print();
+    const text = document.getElementById('bill-of-sale-document')?.innerText;
+    if(text) saveBlob(new Blob([text], {type:'text/plain;charset=utf-8'}), 'bill-of-sale.txt');
   };
 
   const reset = () => {
@@ -76,7 +81,7 @@ export default function BillSaleGeneratorClient() {
   const Textarea = ({ id, label, placeholder, value }: { id: keyof FormData; label: string; placeholder: string; value: string }) => (
     <div>
       <label className="tb-v2-tool-label" style={{ display: 'block', marginBottom: '0.25rem' }}>{label}</label>
-      <textarea
+      <textarea maxLength={100000}
         id={id}
         value={value}
         onChange={(e) => set(id, e.target.value)}
@@ -88,42 +93,45 @@ export default function BillSaleGeneratorClient() {
     </div>
   );
 
-  return (
+  return (<UtilityDesignLayout>
     <div>
+      <ToolExampleClearActions onExample={() => { setForm({...initial,sellerName:'Alex Seller',buyerName:'Sam Buyer',itemDescription:'Used bicycle, serial B-101',salePrice:'200',taxRate:'5',date:'2024-07-01'}); setGenerated(false); setError(''); }} onClear={() => { reset(); setError(''); }}/>
+      <p>Template draft; legal validity is not guaranteed. Review before signing.</p>
+      {error && <p role="alert">{error}</p>}
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Bill of Sale Details</span>
       </div>
 
       <div className="tb-v2-grid-2" style={{ gap: '0.75rem', marginTop: '0.75rem' }}>
-        <Input id="date" label="Date of Sale" value={form.date} type="date" placeholder="" />
-        <Input id="paymentMethod" label="Payment Method" value={form.paymentMethod} placeholder="Cash, Check, etc." />
+        {Input({id: "date", label: "Date of Sale", value: form.date, type: "date", placeholder: ""})}
+        {Input({id: "paymentMethod", label: "Payment Method", value: form.paymentMethod, placeholder: "Cash, Check, etc."})}
       </div>
 
       <div style={{ marginTop: '1rem' }}>
         <h3 style={{ fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.5rem', color: 'var(--tb-text)' }}>Seller Information</h3>
         <div className="tb-v2-grid-2" style={{ gap: '0.5rem' }}>
-          <Input id="sellerName" label="Seller Name" value={form.sellerName} placeholder="Full legal name" />
-          <Input id="sellerAddress" label="Address" value={form.sellerAddress} placeholder="Street address" />
-          <Input id="sellerCity" label="City, State, ZIP" value={form.sellerCity} placeholder="City, State, ZIP" />
+          {Input({id: "sellerName", label: "Seller Name", value: form.sellerName, placeholder: "Full legal name"})}
+          {Input({id: "sellerAddress", label: "Address", value: form.sellerAddress, placeholder: "Street address"})}
+          {Input({id: "sellerCity", label: "City, State, ZIP", value: form.sellerCity, placeholder: "City, State, ZIP"})}
         </div>
       </div>
 
       <div style={{ marginTop: '1rem' }}>
         <h3 style={{ fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.5rem', color: 'var(--tb-text)' }}>Buyer Information</h3>
         <div className="tb-v2-grid-2" style={{ gap: '0.5rem' }}>
-          <Input id="buyerName" label="Buyer Name" value={form.buyerName} placeholder="Full legal name" />
-          <Input id="buyerAddress" label="Address" value={form.buyerAddress} placeholder="Street address" />
-          <Input id="buyerCity" label="City, State, ZIP" value={form.buyerCity} placeholder="City, State, ZIP" />
+          {Input({id: "buyerName", label: "Buyer Name", value: form.buyerName, placeholder: "Full legal name"})}
+          {Input({id: "buyerAddress", label: "Address", value: form.buyerAddress, placeholder: "Street address"})}
+          {Input({id: "buyerCity", label: "City, State, ZIP", value: form.buyerCity, placeholder: "City, State, ZIP"})}
         </div>
       </div>
 
       <div style={{ marginTop: '1rem' }}>
-        <Textarea id="itemDescription" label="Item Description" value={form.itemDescription} placeholder="Year, Make, Model, VIN / Serial Number, Condition, etc." />
+        {Textarea({id: "itemDescription", label: "Item Description", value: form.itemDescription, placeholder: "Year, Make, Model, VIN / Serial Number, Condition, etc."})}
       </div>
 
       <div className="tb-v2-grid-2" style={{ gap: '0.75rem', marginTop: '0.75rem' }}>
-        <Input id="salePrice" label="Sale Price ($)" value={form.salePrice} placeholder="0.00" />
-        <Input id="taxRate" label="Tax Rate (%)" value={form.taxRate} placeholder="0" />
+        {Input({id: "salePrice", label: "Sale Price ($)", value: form.salePrice, placeholder: "0.00"})}
+        {Input({id: "taxRate", label: "Tax Rate (%)", value: form.taxRate, placeholder: "0"})}
       </div>
 
       <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
@@ -138,7 +146,7 @@ export default function BillSaleGeneratorClient() {
       </div>
 
       <div style={{ marginTop: '1rem' }}>
-        <Textarea id="additionalTerms" label="Additional Terms (optional)" value={form.additionalTerms} placeholder="Any additional terms or conditions..." />
+        {Textarea({id: "additionalTerms", label: "Additional Terms (optional)", value: form.additionalTerms, placeholder: "Any additional terms or conditions..."})}
       </div>
 
       <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1rem' }}>
@@ -155,7 +163,7 @@ export default function BillSaleGeneratorClient() {
           <div className="tb-v2-tool-output-head">
             <span className="tb-v2-tool-label">Bill of Sale Document</span>
             <button type="button" onClick={download} className="tb-v2-copy-btn">
-              Print / Save PDF
+              Download TXT
             </button>
           </div>
           <div className="tb-v2-tool-output-body" id="bill-of-sale-document" style={{ background: '#fff', color: '#000', padding: '2rem', borderRadius: '0.5rem' }}>
@@ -208,7 +216,7 @@ export default function BillSaleGeneratorClient() {
             </div>
 
             <div style={{ marginBottom: '1rem' }}>
-              <p>✅ Seller acknowledges receipt of payment in full.</p>
+              <p>Payment receipt: to be confirmed by the seller before signing.</p>
               {form.warranty && <p>✅ This sale includes an implied warranty of merchantability.</p>}
               {form.soldAsIs && <p>⚠️ This item is sold AS-IS with no warranties express or implied.</p>}
             </div>
@@ -240,5 +248,6 @@ export default function BillSaleGeneratorClient() {
         </div>
       )}
     </div>
+  </UtilityDesignLayout>
   );
 }

@@ -1,6 +1,8 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
+
+import ToolExampleClearActions from './ToolExampleClearActions';
 
 const SIZES = [16, 32, 48, 64, 128, 180, 192, 512];
 
@@ -12,7 +14,7 @@ export default function FaviconFromEmojiClient() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const generate = () => {
-    if (!emoji.trim()) return;
+    if (!emoji.trim()) {setResults([]);return;}
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d')!;
@@ -28,11 +30,13 @@ export default function FaviconFromEmojiClient() {
       ctx.font = `${Math.round(size * 0.75)}px "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText(emoji, size / 2, size / 2 + size * 0.05);
+      ctx.fillText(emoji, size / 2, size / 2 + size * 0.05,size*0.9);
       return { size, url: canvas.toDataURL('image/png') };
     });
     setResults(out);
   };
+
+  useEffect(()=>{generate();},[emoji,bgColor,transparent]);
 
   const downloadOne = (size: number, url: string) => {
     const a = document.createElement('a');
@@ -42,13 +46,13 @@ export default function FaviconFromEmojiClient() {
   };
 
   return (
-    <div className="tb-v2-tool-card">
+    <div className="tb-v2-tool-card"><style jsx>{`input,textarea,select {max-width:100%;min-width:0} .tb-v2-tool-card {min-width:0;max-width:100%;overflow-wrap:anywhere} .tb-v2-tool-input-head {flex-wrap:wrap;gap:8px} .tb-v2-range-row {flex-wrap:wrap} .tb-v2-range {min-width:0;flex:1}`}</style><div className="tb-v2-tool-input-head"><span>Emoji favicon</span><ToolExampleClearActions onExample={()=>setEmoji('😀')} onClear={()=>{setEmoji('');setResults([]);}}/></div>
       <div className="tb-v2-grid-2">
         <div>
           <span className="tb-v2-tool-label">Emoji</span>
           <input
             type="text"
-            value={emoji}
+            aria-label="Emoji" value={emoji}
             onChange={e => setEmoji(e.target.value)}
             maxLength={8}
             className="tb-v2-input"

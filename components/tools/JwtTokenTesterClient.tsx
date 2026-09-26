@@ -1,8 +1,11 @@
 'use client';
+import { copySecurityText } from '@/lib/developer-security/primitives';
+import DeveloperSecurityFrame, { useSecurityTask } from './DeveloperSecurityFrame';
+import { decodeJwt as parseJwt } from '@/lib/developer-security/primitives';
 
 import { useEffect, useMemo, useState } from 'react';
 
-const SAMPLE = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0Ijo3NTE2MjM5MDIyLCJleHAiOjkwMDAwMDAwMDB9.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
+const SAMPLE = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
 
 interface Decoded {
   header: unknown;
@@ -33,36 +36,13 @@ function base64UrlDecode(s: string): string {
 }
 
 function decodeJwt(token: string): { result: Decoded | null; error: string } {
-  const t = token.trim();
-  if (!t) return { result: null, error: '' };
-  const parts = t.split('.');
-  if (parts.length !== 3) {
-    return { result: null, error: 'A JWT has three dot-separated parts: header.payload.signature' };
-  }
-  try {
-    const rawHeader = base64UrlDecode(parts[0]);
-    const rawPayload = base64UrlDecode(parts[1]);
-    const header = JSON.parse(rawHeader);
-    const payload = JSON.parse(rawPayload);
-    return {
-      result: {
-        header,
-        payload,
-        signature: parts[2],
-        rawHeader,
-        rawPayload,
-        signingInput: `${parts[0]}.${parts[1]}`,
-      },
-      error: '',
-    };
-  } catch (e) {
-    return { result: null, error: `Could not decode: ${(e as Error).message}` };
-  }
+  if (!token.trim()) return {result:null,error:''};
+  try { return {result:parseJwt(token),error:''}; } catch(e) { return {result:null,error:(e as Error).message}; }
 }
 
 function fmtTime(t: unknown): string | null {
   if (typeof t !== 'number') return null;
-  const ms = t > 1e12 ? t : t * 1000;
+  const ms = t * 1000;
   const d = new Date(ms);
   if (isNaN(d.getTime())) return null;
   return d.toISOString().replace('T', ' ').replace(/\.\d+Z$/, ' UTC');
@@ -83,6 +63,8 @@ type VerifyState =
   | { status: 'error'; message: string };
 
 export default function JwtTokenTesterClient() {
+  const [clipboardError,setClipboardError]=useState('');
+  const clipboardTask=useSecurityTask();
   const [token, setToken] = useState(SAMPLE);
   const [secret, setSecret] = useState('');
   const [copied, setCopied] = useState<string | null>(null);
@@ -108,7 +90,7 @@ export default function JwtTokenTesterClient() {
     const exp = typeof p.exp === 'number' ? p.exp : null;
     const nbf = typeof p.nbf === 'number' ? p.nbf : null;
     let status: 'valid' | 'expired' | 'not-yet' | 'unknown' = 'unknown';
-    if (exp !== null && exp < now) status = 'expired';
+    if (exp !== null && exp <= now) status = 'expired';
     else if (nbf !== null && nbf > now) status = 'not-yet';
     else if (exp !== null) status = 'valid';
     return {
@@ -128,7 +110,8 @@ export default function JwtTokenTesterClient() {
       setVerify({ status: 'idle' });
       return;
     }
-    if (!(alg in HMAC_ALGS)) {
+    if (result && typeof result.header==='object' && result.header && ('crit' in result.header || ('b64' in result.header && result.header.b64===false))) {setVerify({status:'error',message:'Critical extensions and unencoded payloads are not supported.'});return;}
+    if (!(Object.hasOwn(HMAC_ALGS, alg))) {
       setVerify({ status: 'unsupported', alg });
       return;
     }
@@ -163,12 +146,14 @@ export default function JwtTokenTesterClient() {
 
   const copy = (id: string, val: string) => {
     if (!val) return;
-    navigator.clipboard.writeText(val).catch(() => {});
-    setCopied(id);
+    const copyId=++clipboardTask.current;setClipboardError('');
+    copySecurityText(val).then(()=>{if(copyId!==clipboardTask.current)return;setCopied(id);}).catch(()=>{if(copyId===clipboardTask.current)setClipboardError('Clipboard access failed. Select and copy the output manually.');});
     setTimeout(() => setCopied(null), 1500);
   };
 
   return (
+    <DeveloperSecurityFrame onExample={()=>{clipboardTask.current++;setToken(SAMPLE);setSecret('your-256-bit-secret');}} onClear={()=>{clipboardTask.current++;setClipboardError('');setToken('');setSecret('');setDecoded({result:null,error:''});setVerify({status:'idle'});setCopied(null);}}>
+    {clipboardError&&<p role="alert" className="tb-v2-error">{clipboardError}</p>}
     <div>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">JWT</span>
@@ -181,7 +166,7 @@ export default function JwtTokenTesterClient() {
           </span>
         )}
       </div>
-      <textarea
+      <textarea maxLength={100000}
         value={token}
         onChange={(e) => setToken(e.target.value)}
         placeholder="Paste a JWT (header.payload.signature)…"
@@ -253,12 +238,12 @@ export default function JwtTokenTesterClient() {
             {verify.status === 'checking' && <span className="tb-v2-status tb-v2-status-info">Checking…</span>}
           </div>
           <div className="tb-v2-tool-output-body">
-            {alg && alg in HMAC_ALGS ? (
+            {alg && Object.hasOwn(HMAC_ALGS, alg) ? (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                 <span className="tb-v2-tool-label" style={{ fontWeight: 400 }}>
                   Secret used to sign this token ({alg})
                 </span>
-                <input
+                <input maxLength={100000}
                   type="text"
                   value={secret}
                   onChange={(e) => setSecret(e.target.value)}
@@ -277,7 +262,7 @@ export default function JwtTokenTesterClient() {
             ) : (
               <p className="tb-v2-hash-stats">
                 {alg
-                  ? `Signature verification for "${alg}" requires a public key — not yet supported here. Only HS256 / HS384 / HS512 (shared-secret HMAC) can be verified in the browser.`
+                  ? `Signature verification for "${alg}" is not supported here. Only HS256 / HS384 / HS512 (shared-secret HMAC) can be verified in the browser.`
                   : 'No "alg" claim found in the header.'}
               </p>
             )}
@@ -299,5 +284,6 @@ export default function JwtTokenTesterClient() {
         </>
       )}
     </div>
+    </DeveloperSecurityFrame>
   );
 }

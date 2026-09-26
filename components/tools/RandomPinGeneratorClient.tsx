@@ -1,4 +1,6 @@
 'use client';
+import UtilityDesignLayout from './UtilityDesignLayout';
+import ToolExampleClearActions from './ToolExampleClearActions';
 
 import { useState } from 'react';
 import { randomFromAlphabet } from '@/lib/secureRandom';
@@ -12,23 +14,23 @@ export default function RandomPinGeneratorClient() {
   const [copied, setCopied] = useState(false);
 
   const generate = () => {
-    const n = Math.max(1, Math.min(50, count));
-    const len = Math.max(1, Math.min(32, length));
+    const n = Math.max(1, Math.min(50, Math.trunc(count)||1));
+    const len = Math.max(1, Math.min(32, Math.trunc(length)||1));
     setPins(Array.from({ length: n }, () => randomFromAlphabet(DIGITS, len)));
     setCopied(false);
   };
 
   const copy = () => {
-    navigator.clipboard.writeText(pins.join('\n'));
-    setCopied(true);
+    navigator.clipboard.writeText(pins.join('\n')).then(() => setCopied(true), () => setCopied(false));
   };
 
-  return (
-    <div className="tb-v2-tool-card">
+  return (<UtilityDesignLayout>
+    <div onChangeCapture={() => { setPins([]); }} className="tb-v2-tool-card">
+      <ToolExampleClearActions onExample={() => { setLength(6); setCount(3); setPins([]); }} onClear={() => { setPins([]); setCount(1); setLength(6); setCopied(false); }}/>
       <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
         <label className="tb-v2-tool-label">
           PIN length
-          <input
+          <input aria-label="Length"
             type="number"
             className="tb-v2-input"
             value={length}
@@ -39,7 +41,7 @@ export default function RandomPinGeneratorClient() {
         </label>
         <label className="tb-v2-tool-label">
           How many
-          <input
+          <input aria-label="Count"
             type="number"
             className="tb-v2-input"
             value={count}
@@ -68,5 +70,6 @@ export default function RandomPinGeneratorClient() {
         </div>
       )}
     </div>
+  </UtilityDesignLayout>
   );
 }

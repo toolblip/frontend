@@ -1,4 +1,6 @@
 'use client';
+import { copySecurityText } from '@/lib/developer-security/primitives';
+import DeveloperSecurityFrame, { useSecurityTask } from './DeveloperSecurityFrame';
 
 import { useState, useEffect } from 'react';
 
@@ -11,30 +13,31 @@ function format(uuid: string, opts: { hyphens: boolean; uppercase: boolean }): s
 }
 
 export default function UuidGeneratorClient() {
+  const [clipboardError,setClipboardError]=useState('');
+  const clipboardTask=useSecurityTask();
   const [history, setHistory] = useState<string[] | null>(null);
   const [hyphens, setHyphens] = useState(true);
   const [uppercase, setUppercase] = useState(false);
   const [copied, setCopied] = useState<number | null>(null);
 
-  useEffect(() => {
-    setHistory([crypto.randomUUID()]);
-  }, []);
+  const [error,setError]=useState('');
+  useEffect(()=>{try{setHistory([crypto.randomUUID()]);}catch(e){setHistory([]);setError((e as Error).message);}},[]);
 
   const generate = () => {
-    setHistory((prev) => [crypto.randomUUID(), ...(prev ?? [])].slice(0, HISTORY_SIZE));
+    try{const value=crypto.randomUUID();setHistory(prev=>[value,...(prev??[])].slice(0,HISTORY_SIZE));setError('');}catch(e){setError((e as Error).message);}
   };
 
   const copy = (val: string, idx: number) => {
-    navigator.clipboard.writeText(val).catch(() => {});
-    setCopied(idx);
+    const copyId=++clipboardTask.current;setClipboardError('');
+    copySecurityText(val).then(()=>{if(copyId!==clipboardTask.current)return;setCopied(idx);}).catch(()=>{if(copyId===clipboardTask.current)setClipboardError('Clipboard access failed. Select and copy the output manually.');});
     setTimeout(() => setCopied(null), 1500);
   };
 
   const copyAll = () => {
     if (!history) return;
     const all = history.map((u) => format(u, { hyphens, uppercase })).join('\n');
-    navigator.clipboard.writeText(all).catch(() => {});
-    setCopied(-1);
+    const copyId=++clipboardTask.current;setClipboardError('');
+    copySecurityText(all).then(()=>{if(copyId!==clipboardTask.current)return;setCopied(-1);}).catch(()=>{if(copyId===clipboardTask.current)setClipboardError('Clipboard access failed. Select and copy the output manually.');});
     setTimeout(() => setCopied(null), 1500);
   };
 
@@ -62,6 +65,9 @@ export default function UuidGeneratorClient() {
   }
 
   return (
+    <DeveloperSecurityFrame onExample={()=>{clipboardTask.current++;generate();}} onClear={()=>{clipboardTask.current++;setClipboardError('');setHistory([]);setCopied(null);setError('');}}>
+    {clipboardError&&<p role="alert" className="tb-v2-error">{clipboardError}</p>}
+    {error&&<p role="alert" className="tb-v2-error">{error}</p>}
     <div>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">UUID v4</span>
@@ -127,5 +133,6 @@ export default function UuidGeneratorClient() {
         )}
       </div>
     </div>
+    </DeveloperSecurityFrame>
   );
 }

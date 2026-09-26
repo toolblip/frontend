@@ -1,6 +1,9 @@
 'use client';
+import UtilityDesignLayout from './UtilityDesignLayout';
+import ToolExampleClearActions from './ToolExampleClearActions';
 
 import { useState, useMemo, useEffect } from 'react';
+import { zonedInstant, zoneParts } from '@/lib/utility-design/core';
 
 const timeZones = [
   { value: 'America/New_York', label: 'New York (EST/EDT)', offset: -5 },
@@ -33,11 +36,7 @@ export default function TimeZoneConverterClient() {
 
   useEffect(() => {
     setIsMounted(true);
-    const offset = new Date().getTimezoneOffset();
-    const hours = Math.abs(Math.floor(offset / 60));
-    const minutes = offset % 60;
-    const sign = offset <= 0 ? '+' : '-';
-    setLocalTimezone(`UTC${sign}${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`);
+    setLocalTimezone(Intl.DateTimeFormat().resolvedOptions().timeZone);
   }, []);
 
   const getLocalTimezone = () => {
@@ -45,38 +44,16 @@ export default function TimeZoneConverterClient() {
     return localTimezone;
   };
 
-  const convertedTimes = useMemo(() => {
-    if (!inputTime) return [];
-
-    const [hours, minutes] = inputTime.split(':').map(Number);
-    const date = inputDate ? new Date(inputDate) : new Date();
-    date.setHours(hours, minutes, 0, 0);
-
-    return targetZones.map(zoneValue => {
-      const targetZone = timeZones.find(tz => tz.value === zoneValue);
-      const sourceZone = timeZones.find(tz => tz.value === fromZone);
-
-      if (!targetZone || !sourceZone) return null;
-
-      const sourceOffset = sourceZone.offset;
-      const targetOffset = targetZone.offset;
-      const diff = targetOffset - sourceOffset;
-
-      const targetDate = new Date(date.getTime() + diff * 60 * 60 * 1000);
-      
-      const targetHours = targetDate.getUTCHours();
-      const targetMinutes = targetDate.getUTCMinutes();
-      const timeStr = `${targetHours.toString().padStart(2, '0')}:${targetMinutes.toString().padStart(2, '0')}`;
-      
-      const isNextDay = targetDate.getDate() !== date.getDate();
-      const isPrevDay = targetDate.getTime() < date.getTime() - 23 * 60 * 60 * 1000;
-
-      return {
-        zone: targetZone,
-        time: timeStr,
-        dayIndicator: isNextDay ? '+1 day' : isPrevDay ? '-1 day' : '',
-      };
-    }).filter(Boolean);
+  const { convertedTimes, conversionError } = useMemo(() => {
+    if (!inputTime || !inputDate) return { convertedTimes: [], conversionError: '' };
+    try {
+      const instant = zonedInstant(inputDate, inputTime, fromZone);
+      return { convertedTimes: targetZones.map(zoneValue => {
+        const zone = timeZones.find(z => z.value === zoneValue)!;
+        const wall = zoneParts(instant, zoneValue);
+        return { zone, time: wall.replace('T', ' '), dayIndicator: '' };
+      }), conversionError: '' };
+    } catch (e) { return { convertedTimes: [], conversionError: (e as Error).message }; }
   }, [inputTime, inputDate, fromZone, targetZones]);
 
   const toggleZone = (zoneValue: string) => {
@@ -93,8 +70,9 @@ export default function TimeZoneConverterClient() {
     navigator.clipboard.writeText(time);
   };
 
-  return (
+  return (<UtilityDesignLayout>
     <div className="" style={{padding:"20px"}}>
+      <ToolExampleClearActions onExample={() => { setInputDate('2024-07-01'); setInputTime('12:00'); setFromZone('America/New_York'); setTargetZones(['Europe/London','Asia/Tokyo']); }} onClear={() => { setInputDate(''); setInputTime(''); setTargetZones([]); }}/>
       {isMounted ? (
       <>
       <h1 className="text-2xl font-bold mb-6">Time Zone Converter</h1>
@@ -102,7 +80,7 @@ export default function TimeZoneConverterClient() {
       <div className="grid md:grid-cols-2 gap-6 mb-6">
         <div>
           <label className="tb-v2-tool-label" style={{marginBottom:8}}>Time</label>
-          <input
+          <input aria-label="Input Time"
             type="time"
             value={inputTime}
             onChange={(e) => setInputTime(e.target.value)}
@@ -110,8 +88,8 @@ export default function TimeZoneConverterClient() {
           />
         </div>
         <div>
-          <label className="tb-v2-tool-label" style={{marginBottom:8}}>Date (optional)</label>
-          <input
+          <label className="tb-v2-tool-label" style={{marginBottom:8}}>Date</label>
+          <input aria-label="Input Date"
             type="date"
             value={inputDate}
             onChange={(e) => setInputDate(e.target.value)}
@@ -122,7 +100,7 @@ export default function TimeZoneConverterClient() {
 
       <div className="mb-6">
         <label className="tb-v2-tool-label" style={{marginBottom:8}}>From Timezone</label>
-        <select
+        <select aria-label="From Zone"
           value={fromZone}
           onChange={(e) => setFromZone(e.target.value)}
           className="tb-v2-input"
@@ -146,7 +124,7 @@ export default function TimeZoneConverterClient() {
                   : 'border-gray-200 dark:border-gray-700 hover:border-gray-300'
               }`}
             >
-              <input
+              <input aria-label={tz.label}
                 type="checkbox"
                 checked={targetZones.includes(tz.value)}
                 onChange={() => toggleZone(tz.value)}
@@ -158,6 +136,7 @@ export default function TimeZoneConverterClient() {
         </div>
       </div>
 
+      {conversionError && <p role="alert">{conversionError}</p>}
       {convertedTimes.length > 0 && (
         <div className="mb-6">
           <label className="block text-sm font-medium mb-3">Converted Times</label>
@@ -169,7 +148,7 @@ export default function TimeZoneConverterClient() {
               >
                 <div>
                   <div className="font-medium">{result.zone.label}</div>
-                  <div className="text-xs text-gray-500">UTC{result.zone.offset >= 0 ? '+' : ''}{result.zone.offset}</div>
+
                 </div>
                 <div className="flex items-center gap-3">
                   <span className="text-2xl font-mono font-bold">{result.time}</span>
@@ -194,11 +173,12 @@ export default function TimeZoneConverterClient() {
         <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
           <li>• Select multiple target timezones to compare</li>
           <li>• Add a date to see times across different days</li>
-          <li>• DST (Daylight Saving Time) transitions are not automatically handled</li>
+          <li>• Uses IANA daylight-saving rules. Ambiguous and nonexistent local times require another time.</li>
         </ul>
       </div>
       </>
       ) : <div className="" style={{padding:"20px"}}><span className="text-gray-400">Loading…</span></div>}
     </div>
+  </UtilityDesignLayout>
   );
 }

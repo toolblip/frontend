@@ -1,45 +1,52 @@
 'use client';
+import { copySecurityText } from '@/lib/developer-security/primitives';
+import DeveloperSecurityFrame, { useSecurityTask } from './DeveloperSecurityFrame';
 
 import { useState } from 'react';
 
-const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
-type UuidVersion = 'v1' | 'v4' | 'v7' | 'unknown';
+type UuidVersion = string;
 
 function detectVersion(uuid: string): UuidVersion {
   const parts = uuid.split('-');
   if (parts.length !== 5) return 'unknown';
-  
-  const version = parts[1][0];
+
+  const version = parts[2][0];
   switch (version) {
     case '1': return 'v1';
     case '4': return 'v4';
     case '7': return 'v7';
-    default: return 'unknown';
+    default: return `v${version}`;
   }
 }
 
 export default function UuidValidatorClient() {
+  const [clipboardError,setClipboardError]=useState('');
+  const clipboardTask=useSecurityTask();
   const [input, setInput] = useState('');
   const [copied, setCopied] = useState(false);
 
   const trimmed = input.trim();
-  const isValid = UUID_REGEX.test(trimmed);
-  const version = isValid ? detectVersion(trimmed) : 'unknown';
+  const special = /^0{8}-0{4}-0{4}-0{4}-0{12}$/.test(trimmed) ? 'Nil' : /^f{8}-f{4}-f{4}-f{4}-f{12}$/i.test(trimmed) ? 'Max' : '';
+  const isValid = !!special || UUID_REGEX.test(trimmed);
+  const version = special || (isValid ? detectVersion(trimmed) : 'unknown');
 
   const copy = () => {
     if (!trimmed) return;
-    navigator.clipboard.writeText(trimmed).catch(() => {});
-    setCopied(true);
+    const copyId=++clipboardTask.current;setClipboardError('');
+    copySecurityText(trimmed).then(()=>{if(copyId!==clipboardTask.current)return;setCopied(true);}).catch(()=>{if(copyId===clipboardTask.current)setClipboardError('Clipboard access failed. Select and copy the output manually.');});
     setTimeout(() => setCopied(false), 1500);
   };
 
   return (
+    <DeveloperSecurityFrame onExample={()=>{clipboardTask.current++;setInput('017f22e2-79b0-7cc3-98c4-dc0c0c07398f');}} onClear={()=>{clipboardTask.current++;setClipboardError('');setInput('');setCopied(false);}}>
+    {clipboardError&&<p role="alert" className="tb-v2-error">{clipboardError}</p>}
     <div>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">UUID Input</span>
       </div>
-      <textarea
+      <textarea maxLength={100000}
         value={input}
         onChange={(e) => setInput(e.target.value)}
         placeholder="Enter a UUID to validate (e.g., 550e8400-e29b-41d4-a716-446655440000)..."
@@ -74,7 +81,7 @@ export default function UuidValidatorClient() {
                 </div>
                 <div style={{ padding: 8, background: 'var(--tb-bg-secondary)', borderRadius: 6 }}>
                   <span style={{ fontSize: 11, color: 'var(--tb-text-secondary)' }}>Format</span>
-                  <div style={{ fontWeight: 600 }}>RFC 4122</div>
+                  <div style={{ fontWeight: 600 }}>RFC 9562</div>
                 </div>
               </div>
             )}
@@ -87,5 +94,6 @@ export default function UuidValidatorClient() {
         )}
       </div>
     </div>
+    </DeveloperSecurityFrame>
   );
 }

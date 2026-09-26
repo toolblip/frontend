@@ -1,4 +1,6 @@
 'use client';
+import UtilityDesignLayout from './UtilityDesignLayout';
+import ToolExampleClearActions from './ToolExampleClearActions';
 
 import { useEffect, useRef, useState } from 'react';
 
@@ -69,7 +71,7 @@ function pickWeightedWinner(choices: Choice[]): number {
   let r = Math.random() * total;
   for (let i = 0; i < choices.length; i++) {
     r -= Math.max(0, choices[i].weight);
-    if (r <= 0) return i;
+    if (r < 0) return i;
   }
   return choices.length - 1;
 }
@@ -79,6 +81,7 @@ function easeOutCubic(t: number): number {
 }
 
 export default function RandomChoiceWheelClient() {
+  const [error,setError]=useState('');
   const [choices, setChoices] = useState<Choice[]>([
     { id: nextId++, label: 'Pizza', weight: 1 },
     { id: nextId++, label: 'Sushi', weight: 1 },
@@ -103,19 +106,25 @@ export default function RandomChoiceWheelClient() {
   }, []);
 
   const updateChoice = (id: number, field: 'label' | 'weight', value: string) => {
-    setChoices(cs => cs.map(c => (c.id === id ? { ...c, [field]: field === 'weight' ? Math.max(0, parseFloat(value) || 0) : value } : c)));
+    if(animRef.current!==null)cancelAnimationFrame(animRef.current); setSpinning(false); setWinner(null);
+    setChoices(cs => cs.map(c => (c.id === id ? { ...c, [field]: field === 'weight' ? Math.min(1000000, Math.max(0, parseFloat(value) || 0)) : value } : c)));
   };
 
   const addChoice = () => {
+    if(animRef.current!==null)cancelAnimationFrame(animRef.current);setSpinning(false);setWinner(null);setError('');
+    if(choices.length>=50)return;
     setChoices(cs => [...cs, { id: nextId++, label: `Option ${cs.length + 1}`, weight: 1 }]);
   };
 
   const removeChoice = (id: number) => {
+    if(animRef.current!==null)cancelAnimationFrame(animRef.current);setSpinning(false);setWinner(null);setError('');
     setChoices(cs => (cs.length > 2 ? cs.filter(c => c.id !== id) : cs));
   };
 
   const spin = () => {
-    if (spinning || choices.length < 2) return;
+    if(spinning)return;
+    if(choices.length<2 || choices.some(c=>!c.label.trim() || !Number.isFinite(c.weight)) || choices.reduce((sum,c)=>sum+c.weight,0)<=0) {setError('Add two named choices and at least one positive weight.');return;}
+    setError('');
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -164,8 +173,10 @@ export default function RandomChoiceWheelClient() {
     animRef.current = requestAnimationFrame(tick);
   };
 
-  return (
+  return (<UtilityDesignLayout>
     <div className="tb-v2-tool-card">
+      {error && <p role="alert">{error}</p>}
+      <ToolExampleClearActions onExample={() => { if(animRef.current!==null) cancelAnimationFrame(animRef.current); setSpinning(false); setWinner(null); setChoices([{id:1,label:'Tea',weight:1},{id:2,label:'Coffee',weight:1}]); }} onClear={() => { setError(''); if(animRef.current!==null) cancelAnimationFrame(animRef.current); setSpinning(false); setWinner(null); setChoices([]); rotationRef.current=0; }}/>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Choices</span>
         <button type="button" onClick={addChoice} className="tb-v2-btn-sm">+ Add Choice</button>
@@ -173,7 +184,7 @@ export default function RandomChoiceWheelClient() {
       <div style={{ padding: 20, display: 'flex', flexDirection: 'column', gap: 8 }}>
         {choices.map(c => (
           <div key={c.id} style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-            <input
+            <input maxLength={100000} aria-label="C label"
               type="text"
               value={c.label}
               onChange={e => updateChoice(c.id, 'label', e.target.value)}
@@ -181,7 +192,7 @@ export default function RandomChoiceWheelClient() {
               style={{ flex: 1 }}
               placeholder="Label"
             />
-            <input
+            <input aria-label="C weight"
               type="number"
               min={0}
               step={0.1}
@@ -229,5 +240,6 @@ export default function RandomChoiceWheelClient() {
         )}
       </div>
     </div>
+  </UtilityDesignLayout>
   );
 }

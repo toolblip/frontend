@@ -1,6 +1,9 @@
 'use client';
+import { downloadText } from '@/lib/seo-network/request';
+import { SeoOwnedBoundary } from './SeoNetworkShared';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { validDate } from '@/lib/seo-network/documents';
 import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 interface UrlEntry {
@@ -21,7 +24,7 @@ function isHttpUrl(value: string): boolean {
   }
 }
 
-export default function XmlSitemapGeneratorClient() {
+function XmlSitemapGeneratorForm() {
   const [baseUrl, setBaseUrl] = useState('');
   const [urls, setUrls] = useState<UrlEntry[]>([]);
   const [newUrl, setNewUrl] = useState('');
@@ -38,21 +41,16 @@ export default function XmlSitemapGeneratorClient() {
     if (!enteredUrl) return;
 
     const trimmedBaseUrl = baseUrl.trim();
-    const fullUrl = /^https?:\/\//i.test(enteredUrl)
-      ? enteredUrl
-      : trimmedBaseUrl
-        ? `${trimmedBaseUrl.replace(/\/$/, '')}/${enteredUrl.replace(/^\//, '')}`
-        : enteredUrl;
-
+    let fullUrl: string;
     try {
-      const parsedUrl = new URL(fullUrl);
-      if (parsedUrl.protocol !== 'http:' && parsedUrl.protocol !== 'https:') {
-        throw new Error('Unsupported protocol');
-      }
-    } catch {
-      setError('Enter an absolute http(s) URL or add a valid Base URL first.');
-      return;
-    }
+      const resolved = new URL(enteredUrl, trimmedBaseUrl || undefined);
+      if (!['http:', 'https:'].includes(resolved.protocol) || resolved.username || resolved.password || resolved.hash) throw new Error();
+      fullUrl = resolved.href;
+    } catch { setError('Enter an absolute HTTP(S) URL or a valid Base URL. Credentials and fragments are not supported.'); return; }
+    if (urls.length >= 1000) { setError('This editor supports at most 1,000 URLs.'); return; }
+    if (lastmod && !validDate(lastmod)) { setError('Enter a valid last-modified date.'); return; }
+    if (urls.some(row => new URL(row.loc).host !== new URL(fullUrl).host)) { setError('A sitemap must use a single host.'); return; }
+
 
     const image = imageUrl.trim();
     if (image && !isHttpUrl(image)) {
@@ -83,8 +81,9 @@ export default function XmlSitemapGeneratorClient() {
   };
 
   const generateSitemap = () => {
+    if (!urls.length) { setGenerated(''); setError('Add at least one URL.'); return; }
     let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
-    
+
     if (includeImages) {
       xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n';
       xml += '         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n';
@@ -127,19 +126,10 @@ export default function XmlSitemapGeneratorClient() {
   };
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(generated).catch(() => {});
+    navigator.clipboard.writeText(generated).catch(() => setError('Clipboard unavailable. Select the result to copy.'));
   };
 
-  const downloadFile = () => {
-    const blob = new Blob([generated], { type: 'application/xml' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'sitemap.xml';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+  const downloadFile = () => { downloadText(generated, 'sitemap.xml', 'application/xml');
   };
 
   const loadExample = () => {
@@ -189,6 +179,11 @@ export default function XmlSitemapGeneratorClient() {
 
   const changefreqs: UrlEntry['changefreq'][] = ['always', 'hourly', 'daily', 'weekly', 'monthly', 'yearly', 'never'];
 
+  useEffect(() => {
+    if (urls.length) generateSitemap();
+    else { setGenerated(''); setError(''); }
+  }, [urls, includeImages]);
+
   return (
     <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
       <div>
@@ -202,6 +197,7 @@ export default function XmlSitemapGeneratorClient() {
           />
         </div>
         <input
+          maxLength={2048}
           id="sitemap-base-url"
           type="url"
           value={baseUrl}
@@ -214,9 +210,10 @@ export default function XmlSitemapGeneratorClient() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
           <h3 className="font-medium">Add URLs</h3>
-          
+
           <div className="tb-v2-mode-tabs">
             <input
+          maxLength={2048}
               type="text"
               value={newUrl}
               onChange={(e) => setNewUrl(e.target.value)}
@@ -228,7 +225,7 @@ export default function XmlSitemapGeneratorClient() {
             <button
               type="button"
               onClick={addUrl}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              className="px-4 py-2 tb-v2-btn tb-v2-btn-primary"
             >
               Add
             </button>
@@ -238,6 +235,7 @@ export default function XmlSitemapGeneratorClient() {
             <div>
                <label className="block text-sm text-gray-600 mb-1" htmlFor="sitemap-last-modified">Last Modified</label>
                <input
+          maxLength={2048}
                  id="sitemap-last-modified"
                 type="date"
                 value={lastmod}
@@ -278,6 +276,7 @@ export default function XmlSitemapGeneratorClient() {
             <div>
               <label className="block text-sm text-gray-600 mb-1" htmlFor="sitemap-image-url">Image URL (optional)</label>
               <input
+          maxLength={2048}
                 id="sitemap-image-url"
                 type="url"
                 value={imageUrl}
@@ -290,6 +289,7 @@ export default function XmlSitemapGeneratorClient() {
 
           <div className="flex items-center gap-2">
             <input
+          maxLength={2048}
               type="checkbox"
               id="include-images"
               checked={includeImages}
@@ -334,7 +334,7 @@ export default function XmlSitemapGeneratorClient() {
             <button
               type="button"
               onClick={generateSitemap}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              className="px-4 py-2 tb-v2-btn tb-v2-btn-primary"
             >
               Generate XML
             </button>
@@ -342,8 +342,8 @@ export default function XmlSitemapGeneratorClient() {
 
           {generated && (
             <>
-              <div className="bg-gray-900 rounded-lg p-4 max-h-96 overflow-auto">
-                <pre className="text-green-400 text-xs font-mono whitespace-pre-wrap">{generated}</pre>
+              <div className="tb-v2-tool-output-body rounded-lg p-4 max-h-96 overflow-auto">
+                <pre className="tb-v2-tool-pre">{generated}</pre>
               </div>
                <div className="flex gap-4 flex-wrap">
                 <button
@@ -380,3 +380,5 @@ export default function XmlSitemapGeneratorClient() {
     </div>
   );
 }
+
+export default function XmlSitemapGeneratorClient() { return <SeoOwnedBoundary><XmlSitemapGeneratorForm /></SeoOwnedBoundary>; }

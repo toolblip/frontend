@@ -1,13 +1,11 @@
 "use client";
+import DeveloperGeneralFrame from './DeveloperGeneralFrame';
+import ToolExampleClearActions from './ToolExampleClearActions';
 import { useState, useMemo } from 'react';
 
 function cssToScss(css: string): string {
-  let scss = css;
-  // Convert CSS custom properties to SCSS variables
-  scss = scss.replace(/--([\w-]+)\s*:\s*([^;]+);/g, (m, name, val) => `$${name}: ${val.trim()};`);
-  // Convert var() to SCSS variables
-  scss = scss.replace(/var\(--([\w-]+)\)/g, (m, name) => `$${name}`);
-  return scss;
+  // CSS is valid SCSS. Preserve runtime custom properties, fallback values and scope.
+  return css;
 }
 
 export default function CssToScssConverterClient() {
@@ -34,20 +32,21 @@ export default function CssToScssConverterClient() {
   };
 
   return (
-    <div>
+    <DeveloperGeneralFrame><div>
+      <ToolExampleClearActions onExample={() => {setInput(':root { --color: red; }\n.card { color: var(--color); }');}} onClear={() => {setInput('');setCopied(false);}} />
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">CSS Input</span>
       </div>
-      <textarea value={input} onChange={e => setInput(e.target.value)} spellCheck={false}
+      <textarea aria-label="Input" maxLength={100000} value={input} onChange={e => setInput(e.target.value)} spellCheck={false}
         className="tb-v2-tool-textarea" style={{ fontFamily: 'monospace', fontSize: '0.875rem', minHeight: '200px' }} />
       <div className="tb-v2-tool-input-head" style={{ marginTop: '1rem' }}>
-        <span className="tb-v2-tool-label">SCSS Output</span>
+        <span className="tb-v2-tool-label">SCSS Output (CSS syntax preserved)</span>
         <button type="button" onClick={copy} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}>
           {copied ? 'Copied' : 'Copy'}
         </button>
       </div>
       <pre style={{ background: '#1a1a2e', color: '#a5f3fc', padding: '1rem', borderRadius: '8px',
         fontFamily: 'monospace', fontSize: '0.875rem', minHeight: '200px', whiteSpace: 'pre-wrap' }}>{result}</pre>
-    </div>
+    </div></DeveloperGeneralFrame>
   );
 }

@@ -1,4 +1,6 @@
 'use client';
+import UtilityDesignLayout from './UtilityDesignLayout';
+import ToolExampleClearActions from './ToolExampleClearActions';
 
 import { useState } from 'react';
 
@@ -13,7 +15,7 @@ function generateIPv4(): string {
 }
 
 function generateIPv6(): string {
-  const hex = () => Math.floor(Math.random() * 0xFFFF).toString(16).padStart(4, '0');
+  const hex = () => Math.floor(Math.random() * 0x10000).toString(16).padStart(4, '0');
   const groups = Array.from({ length: 8 }, hex);
   const shortcuts = [4, 6];
   if (shortcuts.includes(4) && Math.random() > 0.3) {
@@ -32,7 +34,7 @@ export default function RandomIpAddressClient() {
 
   const generate = () => {
     const ips: string[] = [];
-    for (let i = 0; i < count; i++) {
+    for (let i = 0; i < Math.min(100,Math.max(1,count)); i++) {
       ips.push(type === 'v4' ? generateIPv4() : generateIPv6());
     }
     setAddresses(ips);
@@ -43,18 +45,19 @@ export default function RandomIpAddressClient() {
     navigator.clipboard.writeText(addresses.join('\n')).catch(() => {});
   };
 
-  return (
-    <div>
+  return (<UtilityDesignLayout>
+    <div onChangeCapture={() => { setAddresses([]); }}>
+      <ToolExampleClearActions onExample={() => { setType('v4'); setCount(5); setAddresses([]); }} onClear={() => { setCount(5); setAddresses([]); }}/>
       <div className="tb-v2-tool-input-head"><span className="tb-v2-tool-label">Options</span></div>
       <div className="tb-v2-tool-output-body" style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
         <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}>
           <div className="tb-v2-mode-tabs" role="group">
-            <button type="button" onClick={() => setType('v4')} className={`tb-v2-mode-tab ${type === 'v4' ? 'on' : ''}`}>IPv4</button>
-            <button type="button" onClick={() => setType('v6')} className={`tb-v2-mode-tab ${type === 'v6' ? 'on' : ''}`}>IPv6</button>
+            <button type="button" onClick={() => {setType('v4');setAddresses([]);}} className={`tb-v2-mode-tab ${type === 'v4' ? 'on' : ''}`}>IPv4</button>
+            <button type="button" onClick={() => {setType('v6');setAddresses([]);}} className={`tb-v2-mode-tab ${type === 'v6' ? 'on' : ''}`}>IPv6</button>
           </div>
           <label style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
             <span style={{ fontSize: 13 }}>Count</span>
-            <input type="number" value={count} onChange={e => setCount(Math.max(1, parseInt(e.target.value) || 1))} className="tb-v2-tool-textarea" style={{ width: 70, minHeight: 32, resize: 'none', textAlign: 'center' }} min={1} max={100} />
+            <input aria-label="Count" type="number" value={count} onChange={e => setCount(Math.max(1, parseInt(e.target.value) || 1))} className="tb-v2-tool-textarea" style={{ width: 70, minHeight: 32, resize: 'none', textAlign: 'center' }} min={1} max={100} />
           </label>
         </div>
         <button onClick={generate} className="tb-v2-btn-primary">Generate {type === 'v4' ? 'IPv4' : 'IPv6'} Addresses</button>
@@ -73,5 +76,6 @@ export default function RandomIpAddressClient() {
         )}
       </div>
     </div>
+  </UtilityDesignLayout>
   );
 }

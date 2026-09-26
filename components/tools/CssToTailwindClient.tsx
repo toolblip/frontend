@@ -1,5 +1,8 @@
 'use client';
+import DeveloperGeneralFrame from './DeveloperGeneralFrame';
 
+import { cssSyntax } from '@/lib/developer-general/code';
+import ToolExampleClearActions from './ToolExampleClearActions';
 import { useState, useMemo } from 'react';
 
 const EXAMPLE = `display: flex;
@@ -110,22 +113,19 @@ function convertDeclaration(prop: string, value: string): string {
 }
 
 function parseDeclarations(css: string): { prop: string; value: string }[] {
-  const inner = css.includes('{') ? css.slice(css.indexOf('{') + 1, css.lastIndexOf('}')) : css;
-  return inner
-    .split(';')
-    .map(s => s.trim())
-    .filter(Boolean)
-    .map(s => {
-      const idx = s.indexOf(':');
-      if (idx === -1) return null;
-      return { prop: s.slice(0, idx).trim(), value: s.slice(idx + 1).trim() };
-    })
-    .filter((d): d is { prop: string; value: string } => d !== null);
+  if(!css.trim())return [];
+  const root=cssSyntax(css.includes('{')?css:`.input{${css}}`);
+  if(root.nodes.filter(n=>n.type!=='comment').length!==1)throw new Error('Convert one rule at a time.');
+  const rule=root.nodes.find(n=>n.type==='rule');
+  if(!rule||rule.type!=='rule')throw new Error('Expected CSS declarations or one rule.');
+  const result:{prop:string;value:string}[]=[];
+  rule.each(n=>{if(n.type==='comment')return;if(n.type!=='decl')throw new Error('Nested rules require separate conversion.');result.push({prop:n.prop,value:n.value+(n.important?' !important':'')});});
+  return result;
 }
 
 function cssToTailwind(css: string): string {
   return parseDeclarations(css)
-    .map(({ prop, value }) => convertDeclaration(prop, value))
+    .map(({ prop, value }) => /[\s!]/.test(value)||value.startsWith('-') ? `[${prop}:${value.replace(/_/g,'\\_').replace(/\s/g,'_')}]` : convertDeclaration(prop, value))
     .join(' ');
 }
 
@@ -133,7 +133,7 @@ export default function CssToTailwindClient() {
   const [input, setInput] = useState(EXAMPLE);
   const [copied, setCopied] = useState(false);
 
-  const result = useMemo(() => cssToTailwind(input), [input]);
+  const {result,error} = useMemo(() => {try{return {result:cssToTailwind(input),error:''};}catch(e){return {result:'',error:(e as Error).message};}}, [input]);
 
   const loadExample = () => setInput(EXAMPLE);
 
@@ -144,12 +144,13 @@ export default function CssToTailwindClient() {
   };
 
   return (
-    <div>
+    <DeveloperGeneralFrame><div>
+      <ToolExampleClearActions onExample={() => {loadExample();}} onClear={() => {setInput('');setCopied(false);}} />
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">CSS Declarations</span>
-        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">Load Example</button>
+
       </div>
-      <textarea
+      <textarea aria-label="Input" maxLength={100000}
         value={input}
         onChange={e => setInput(e.target.value)}
         spellCheck={false}
@@ -163,8 +164,8 @@ export default function CssToTailwindClient() {
         </button>
       </div>
       <div className="tb-v2-tool-output-body">
-        <pre style={{ margin: 0, whiteSpace: 'pre-wrap', fontFamily: 'var(--f-mono)', fontSize: 13 }}>{result || ' - '}</pre>
+        <p role="alert" className="tb-v2-error">{error}</p><pre style={{ margin: 0, whiteSpace: 'pre-wrap', fontFamily: 'var(--f-mono)', fontSize: 13 }}>{result || ' - '}</pre>
       </div>
-    </div>
+    </div></DeveloperGeneralFrame>
   );
 }

@@ -1,5 +1,8 @@
 'use client';
+import DeveloperGeneralFrame from './DeveloperGeneralFrame';
 
+import ToolExampleClearActions from './ToolExampleClearActions';
+import { useSafeRegex } from '@/lib/developer-general/use-safe-regex';
 import { Fragment, useMemo, useState } from 'react';
 
 interface Preset {
@@ -38,37 +41,11 @@ const PRESETS: Preset[] = [
   { id: 'integer', label: 'Integer', keywords: ['integer', 'number', 'int'], pattern: '^-?\\d+$', flags: '', explanation: 'Matches a positive or negative whole number.', example: '-42' },
   { id: 'decimal', label: 'Decimal number', keywords: ['decimal', 'float', 'number'], pattern: '^-?\\d+\\.\\d+$', flags: '', explanation: 'Matches a positive or negative decimal number with at least one digit on each side of the dot.', example: '3.14' },
   { id: 'whitespace-trim', label: 'Leading/trailing whitespace', keywords: ['whitespace', 'trim', 'space'], pattern: '^\\s+|\\s+$', flags: 'g', explanation: 'Matches whitespace at the very start or end of a string — useful for trimming.', example: '   padded text   ' },
-  { id: 'non-empty', label: 'Non-empty string', keywords: ['non-empty', 'required', 'not blank'], pattern: '^\\S+$', flags: '', explanation: 'Matches a string that has at least one non-whitespace character.', example: 'hello' },
+  { id: 'non-empty', label: 'Non-empty string', keywords: ['non-empty', 'required', 'not blank'], pattern: '^(?=[\\s\\S]*\\S)[\\s\\S]+$', flags: '', explanation: 'Matches a string that has at least one non-whitespace character.', example: 'hello' },
 ];
 
 interface Segment { text: string; hit: boolean }
 
-function highlight(pattern: string, flags: string, sample: string): { segments: Segment[]; count: number; error: string } {
-  if (!pattern || !sample) return { segments: [{ text: sample, hit: false }], count: 0, error: '' };
-  let re: RegExp;
-  try {
-    const f = flags.includes('g') ? flags : flags + 'g';
-    re = new RegExp(pattern, f);
-  } catch (e) {
-    return { segments: [{ text: sample, hit: false }], count: 0, error: (e as Error).message };
-  }
-  const segments: Segment[] = [];
-  let last = 0;
-  let count = 0;
-  let m: RegExpExecArray | null;
-  let safety = 0;
-  while ((m = re.exec(sample)) !== null) {
-    if (safety++ > 5000) break;
-    if (m[0] === '' && re.lastIndex === m.index) { re.lastIndex++; continue; }
-    if (m.index > last) segments.push({ text: sample.slice(last, m.index), hit: false });
-    segments.push({ text: m[0], hit: true });
-    last = m.index + m[0].length;
-    count++;
-  }
-  if (last < sample.length) segments.push({ text: sample.slice(last), hit: false });
-  if (segments.length === 0) segments.push({ text: sample, hit: false });
-  return { segments, count, error: '' };
-}
 
 export default function RegexPatternGeneratorClient() {
   const [search, setSearch] = useState('');
@@ -82,14 +59,15 @@ export default function RegexPatternGeneratorClient() {
   }, [search]);
 
   const preset = useMemo(() => PRESETS.find(p => p.id === selectedId) ?? PRESETS[0], [selectedId]);
-  const result = useMemo(() => highlight(preset.pattern, preset.flags, testString), [preset, testString]);
+  const result = useSafeRegex(selectedId ? preset.pattern : '', preset.flags, testString);
 
   return (
-    <div className="tb-v2-tool-card">
+    <DeveloperGeneralFrame><div className="tb-v2-tool-card">
+      <ToolExampleClearActions onExample={() => {setSearch('');setSelectedId('email');setTestString('ada@example.com');}} onClear={() => {setSearch('');setSelectedId('');setTestString('');}} />
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Describe what you need</span>
       </div>
-      <input
+      <input aria-label="Search" maxLength={8000}
         type="text"
         value={search}
         onChange={e => setSearch(e.target.value)}
@@ -122,24 +100,24 @@ export default function RegexPatternGeneratorClient() {
         <button
           type="button"
           className="tb-v2-copy-btn"
-          onClick={() => navigator.clipboard.writeText(preset.pattern).catch(() => {})}
+          onClick={() => navigator.clipboard.writeText(selectedId ? preset.pattern : '').catch(() => {})}
         >
           Copy
         </button>
       </div>
       <div className="tb-v2-tool-output-body">
         <pre className="tb-v2-tool-pre" style={{ fontFamily: 'var(--f-mono)' }}>
-          /{preset.pattern}/{preset.flags}
+          {selectedId ? `/${preset.pattern}/${preset.flags}` : ''}
         </pre>
-        <p style={{ marginTop: 8, fontSize: 13, color: 'var(--fg-2)' }}>{preset.explanation}</p>
-        <p style={{ marginTop: 4, fontSize: 12, color: 'var(--fg-2)' }}>Example match: <code>{preset.example}</code></p>
+        <p style={{ marginTop: 8, fontSize: 13, color: 'var(--fg-2)' }}>{selectedId ? preset.explanation : ''}</p>
+        <p style={{ marginTop: 4, fontSize: 12, color: 'var(--fg-2)' }}>Example match: <code>{selectedId ? preset.example : ''}</code></p>
       </div>
 
       <div className="tb-v2-tool-input-head" style={{ marginTop: 16 }}>
         <span className="tb-v2-tool-label">Test string</span>
         <span className="tb-v2-hash-stats">{result.error ? ' - ' : `${result.count} match${result.count === 1 ? '' : 'es'}`}</span>
       </div>
-      <textarea
+      <textarea aria-label="Test String" maxLength={100000}
         value={testString}
         onChange={e => setTestString(e.target.value)}
         placeholder="Paste text to test the pattern against..."
@@ -164,6 +142,6 @@ export default function RegexPatternGeneratorClient() {
           {!testString && ' - '}
         </pre>
       </div>
-    </div>
+    </div></DeveloperGeneralFrame>
   );
 }

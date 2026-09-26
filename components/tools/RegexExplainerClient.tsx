@@ -1,5 +1,8 @@
 'use client';
+import DeveloperGeneralFrame from './DeveloperGeneralFrame';
 
+import ToolExampleClearActions from './ToolExampleClearActions';
+import { useSafeRegex } from '@/lib/developer-general/use-safe-regex';
 import { Fragment, useMemo, useState } from 'react';
 
 interface Token {
@@ -32,7 +35,7 @@ function describeQuantifierRange(inner: string): string {
   return 'A custom repetition count for the preceding token';
 }
 
-function tokenize(pattern: string): Token[] {
+export function tokenize(pattern: string): Token[] {
   const tokens: Token[] = [];
   const n = pattern.length;
   let i = 0;
@@ -117,38 +120,13 @@ function tokenize(pattern: string): Token[] {
 
 interface Segment { text: string; hit: boolean }
 
-function highlight(pattern: string, sample: string): { segments: Segment[]; count: number; error: string } {
-  if (!pattern || !sample) return { segments: [{ text: sample, hit: false }], count: 0, error: '' };
-  let re: RegExp;
-  try {
-    re = new RegExp(pattern, 'g');
-  } catch (e) {
-    return { segments: [{ text: sample, hit: false }], count: 0, error: (e as Error).message };
-  }
-  const segments: Segment[] = [];
-  let last = 0;
-  let count = 0;
-  let m: RegExpExecArray | null;
-  let safety = 0;
-  while ((m = re.exec(sample)) !== null) {
-    if (safety++ > 5000) break;
-    if (m[0] === '' && re.lastIndex === m.index) { re.lastIndex++; continue; }
-    if (m.index > last) segments.push({ text: sample.slice(last, m.index), hit: false });
-    segments.push({ text: m[0], hit: true });
-    last = m.index + m[0].length;
-    count++;
-  }
-  if (last < sample.length) segments.push({ text: sample.slice(last), hit: false });
-  if (segments.length === 0) segments.push({ text: sample, hit: false });
-  return { segments, count, error: '' };
-}
 
 export default function RegexExplainerClient() {
   const [pattern, setPattern] = useState('\\b\\w+@\\w+\\.\\w+\\b');
   const [testString, setTestString] = useState('Email ada@example.com or grace@toolblip.com to confirm.');
 
   const tokens = useMemo(() => tokenize(pattern), [pattern]);
-  const result = useMemo(() => highlight(pattern, testString), [pattern, testString]);
+  const result = useSafeRegex(pattern, 'g', testString);
 
   const validity = useMemo(() => {
     if (!pattern) return { valid: false, message: 'Enter a regex pattern to get started.' };
@@ -161,13 +139,14 @@ export default function RegexExplainerClient() {
   }, [pattern]);
 
   return (
-    <div className="tb-v2-tool-card">
+    <DeveloperGeneralFrame><div className="tb-v2-tool-card">
+      <ToolExampleClearActions onExample={() => {setPattern('\\d+');setTestString('Order 12');}} onClear={() => {setPattern('');setTestString('');}} />
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Regex pattern</span>
       </div>
       <div className="tb-v2-rgx-pattern">
         <span className="tb-v2-rgx-slash">/</span>
-        <input
+        <input maxLength={8000}
           value={pattern}
           onChange={e => setPattern(e.target.value)}
           spellCheck={false}
@@ -204,7 +183,7 @@ export default function RegexExplainerClient() {
         <span className="tb-v2-tool-label">Test this regex</span>
         <span className="tb-v2-hash-stats">{result.error ? ' - ' : `${result.count} match${result.count === 1 ? '' : 'es'}`}</span>
       </div>
-      <textarea
+      <textarea aria-label="Test String" maxLength={100000}
         value={testString}
         onChange={e => setTestString(e.target.value)}
         placeholder="Paste text to test the pattern against..."
@@ -223,6 +202,6 @@ export default function RegexExplainerClient() {
           {!testString && ' - '}
         </pre>
       </div>
-    </div>
+    </div></DeveloperGeneralFrame>
   );
 }

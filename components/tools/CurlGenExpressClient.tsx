@@ -1,5 +1,7 @@
 'use client';
+import DeveloperGeneralFrame from './DeveloperGeneralFrame';
 
+import ToolExampleClearActions from './ToolExampleClearActions';
 import { useState, useMemo } from 'react';
 
 const EXAMPLE = `POST /v1/users HTTP/1.1
@@ -20,7 +22,7 @@ function requestToCurl(raw: string): string {
   const lines = text.split('\n');
   const requestLine = lines[0]?.trim() ?? '';
   const requestMatch = requestLine.match(/^(\w+)\s+(\S+)(?:\s+HTTP\/[\d.]+)?$/);
-  if (!requestMatch) return '';
+  if (!requestMatch) throw new Error('Expected METHOD /path HTTP/1.1');
 
   const method = requestMatch[1].toUpperCase();
   const path = requestMatch[2];
@@ -32,7 +34,7 @@ function requestToCurl(raw: string): string {
     const line = lines[i];
     if (line.trim() === '') { i++; break; }
     const colonIdx = line.indexOf(':');
-    if (colonIdx === -1) continue;
+    if (colonIdx < 1) throw new Error('Each header needs a name and colon');
     const key = line.slice(0, colonIdx).trim();
     const val = line.slice(colonIdx + 1).trim();
     if (key.toLowerCase() === 'host') {
@@ -44,8 +46,10 @@ function requestToCurl(raw: string): string {
 
   const body = lines.slice(i).join('\n').trim();
 
+  if(!host && !/^https?:\/\//i.test(path))throw new Error('A relative request target requires a Host header');
   const url = /^https?:\/\//i.test(path) ? path : `https://${host}${path}`;
 
+  const parsed=new URL(url);if(!['http:','https:'].includes(parsed.protocol))throw new Error('Use HTTP(S)');
   const parts: string[] = ['curl'];
   if (method !== 'GET') parts.push(`-X ${method}`);
   parts.push(...headers);
@@ -61,7 +65,7 @@ export default function CurlGenExpressClient() {
   const [input, setInput] = useState(EXAMPLE);
   const [copied, setCopied] = useState(false);
 
-  const output = useMemo(() => requestToCurl(input), [input]);
+  const {output,error}=useMemo(()=>{try{return {output:requestToCurl(input),error:''};}catch(e){return {output:'',error:(e as Error).message};}},[input]);
 
   const loadExample = () => setInput(EXAMPLE);
 
@@ -73,12 +77,13 @@ export default function CurlGenExpressClient() {
   };
 
   return (
-    <div className="tb-v2-tool-card">
+    <DeveloperGeneralFrame><div className="tb-v2-tool-card">
+      <ToolExampleClearActions onExample={() => {loadExample();}} onClear={() => {setInput('');setCopied(false);}} />
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Raw HTTP Request</span>
-        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">Load Example</button>
+
       </div>
-      <textarea
+      <textarea aria-label="Input" maxLength={100000}
         value={input}
         onChange={e => setInput(e.target.value)}
         placeholder={'POST /path HTTP/1.1\nHost: api.example.com\nContent-Type: application/json\n\n{"key":"value"}'}
@@ -86,6 +91,7 @@ export default function CurlGenExpressClient() {
         style={{ minHeight: 160, fontFamily: 'var(--f-mono)', fontSize: 13 }}
       />
 
+      {error&&<p role="alert" className="tb-v2-error">{error}</p>}
       <div className="tb-v2-tool-output-head">
         <span className="tb-v2-tool-label">curl Command</span>
         <button type="button" onClick={copy} disabled={!output} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}>
@@ -99,6 +105,6 @@ export default function CurlGenExpressClient() {
           <p className="tb-v2-empty">Paste a raw HTTP request above (request line, headers, blank line, body) to generate a curl command.</p>
         )}
       </div>
-    </div>
+    </div></DeveloperGeneralFrame>
   );
 }

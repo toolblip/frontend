@@ -189,13 +189,184 @@ function templateFaqs(t: Tool): FAQ[] {
 }
 
 const OVERRIDES: Record<string, FAQ[]> = {
+  'svg-to-webp': [
+    { q: "What does this tool do?", a: "Convert SVG images to WEBP and compare the measured output size." },
+    { q: "What should I know before using it?", a: "Inputs are limited to 10 MB and 16 megapixels. Output size is measured and can be larger than the input. WebP export uses a browser encoder with a local codec fallback. SVG must be self-contained and static; external resources and scripts are rejected." },
+  ],
+  'svg-to-jpg': [
+    { q: "What does this tool do?", a: "Convert SVG images to JPG and compare the measured output size." },
+    { q: "What should I know before using it?", a: "Inputs are limited to 10 MB and 16 megapixels. Output size is measured and can be larger than the input. SVG must be self-contained and static; external resources and scripts are rejected. JPEG export flattens transparency onto the chosen background and uses lossy compression." },
+  ],
+  'svg-to-png': [
+    { q: "What does this tool do?", a: "Convert SVG images to PNG and compare the measured output size." },
+    { q: "What should I know before using it?", a: "Inputs are limited to 10 MB and 16 megapixels. Output size is measured and can be larger than the input. SVG must be self-contained and static; external resources and scripts are rejected." },
+  ],
+  'markdown-table-from-json': [
+    { q: "What does this tool do?", a: "Convert JSON objects to a Markdown table with the union of their keys and escaped cell text." },
+    { q: "What should I know before using it?", a: "Columns use the union of object keys. Cell text is escaped so pipes and line breaks do not split the table structure." },
+  ],
+  'trace': [
+    { q: "What does this tool do?", a: "Trace a raster image up to one megapixel into SVG paths using selectable tracing presets." },
+    { q: "What should I know before using it?", a: "Inputs are limited to 10 MB and 16 megapixels. Output size is measured and can be larger than the input. Tracing has a stricter one-megapixel limit and creates paths, not editable text or original vector shapes." },
+  ],
+  'heic-to-png': [
+    { q: "What does this tool do?", a: "Convert the first image in supported HEIC/HEIF files to PNG using the bundled decoder. Unsupported variants report an error." },
+    { q: "What should I know before using it?", a: "Inputs are limited to 10 MB and 16 megapixels. Output size is measured and can be larger than the input. The bundled decoder exports the first image; unsupported HEIF variants report an error." },
+  ],
+  'heic-to-jpg': [
+    { q: "What does this tool do?", a: "Convert the first image in supported HEIC/HEIF files to JPEG using the bundled decoder. Unsupported variants report an error." },
+    { q: "What should I know before using it?", a: "Inputs are limited to 10 MB and 16 megapixels. Output size is measured and can be larger than the input. The bundled decoder exports the first image; unsupported HEIF variants report an error." },
+  ],
+  'gif-to-png': [
+    { q: "What does this tool do?", a: "Export a selected composited GIF frame to a static PNG." },
+    { q: "What should I know before using it?", a: "Inputs are limited to 10 MB and 16 megapixels. Output size is measured and can be larger than the input. GIF decoding is limited to 200 frames and 16 million total frame pixels." },
+  ],
+  'gif-to-jpg': [
+    { q: "What does this tool do?", a: "Export a selected composited GIF frame to JPEG with a chosen background color." },
+    { q: "What should I know before using it?", a: "Inputs are limited to 10 MB and 16 megapixels. Output size is measured and can be larger than the input. GIF decoding is limited to 200 frames and 16 million total frame pixels." },
+  ],
+  'gif-to-apng': [
+    { q: "What does this tool do?", a: "Convert composited GIF animation frames to PNG/APNG. Output size is measured and may be larger." },
+    { q: "What should I know before using it?", a: "Inputs are limited to 10 MB and 16 megapixels. Output size is measured and can be larger than the input. GIF decoding is limited to 200 frames and 16 million total frame pixels." },
+  ],
+  'add-subtitles': [
+    { q: "What does this tool do?", a: "Preview and burn plain SRT or WebVTT captions into a re-encoded WebM video with audio." },
+    { q: "What should I know before using it?", a: "Use a source up to 30 MB, 120 seconds and 2,073,600 pixels. A browser-decodable audio track is required. Each export covers up to 60 seconds and re-encodes to WebM in real time. Keep the tab visible. Recording stops with an error if audio and video fall out of sync." },
+  ],
+  'mkv-to-mp3': [
+    { q: "What does this tool do?", a: "Convert decodable MKV audio to 128 kbps mono or stereo MP3." },
+    { q: "What should I know before using it?", a: "MP3 uses a local LAME encoder; 16-bit PCM WAV output is also available. Limits are 20 MB, 120 decoded seconds and 24 million decoded samples across all channels. If the browser can't decode the container directly, a fallback handles supported AAC-LC tracks in MKV files. It preserves supported timing trims and rejects layouts it can't reproduce safely. Other codecs depend on browser support." },
+  ],
+  'mp4-to-mp3': [
+    { q: "What does this tool do?", a: "Convert decodable MP4 audio to 128 kbps mono or stereo MP3." },
+    { q: "What should I know before using it?", a: "MP3 uses a local LAME encoder; 16-bit PCM WAV output is also available. Limits are 20 MB, 120 decoded seconds and 24 million decoded samples across all channels. If the browser can't decode the container directly, a fallback handles supported AAC-LC tracks in MP4 files. It preserves supported timing trims and rejects layouts it can't reproduce safely. Other codecs depend on browser support." },
+  ],
+  'extract-audio': [
+    { q: "What does this tool do?", a: "Extract decodable audio from supported containers to 16-bit PCM WAV." },
+    { q: "What should I know before using it?", a: "Limits are 20 MB, 120 decoded seconds and 24 million decoded samples across all channels. If the browser can't decode the container directly, a fallback handles supported AAC-LC tracks in MP4/M4A and MKV files. It preserves supported timing trims and rejects layouts it can't reproduce safely. Other codecs depend on browser support. WAV output doesn't restore detail lost in earlier compression." },
+  ],
+  'excel-to-pdf': [
+    { q: "What does this tool do?", a: "Export XLSX cell values as wrapped, paginated PDF text. Spreadsheet styling and charts are not preserved." },
+    { q: "What should I know before using it?", a: "Choose one sheet from an XLSX workbook. Exports use displayed cell values and cached formula results, without recalculating formulas or preserving workbook styles, charts or macros. Inputs are limited to 5 MB and 50 sheets, with per-sheet row, column and cell limits. PDF uses wrapped, paginated text rather than spreadsheet layout. Characters the PDF font can't encode require CSV or XML export." },
+  ],
+  'purchase-agreement-generator': [
+    { q: "What does this tool do?", a: "Draft a purchase agreement from the details you enter, then review and edit it." },
+    { q: "What should I know before using it?", a: "The document uses editable templates, not AI or a legal review. It doesn't guarantee legal validity or compliance. Download TXT or PDF. PDF export rejects characters its font cannot encode; use TXT to preserve those characters." },
+  ],
+  'privacy-policy-generator': [
+    { q: "What does this tool do?", a: "Draft a privacy policy from the details you enter, then review and edit it." },
+    { q: "What should I know before using it?", a: "The document uses editable templates, not AI or a legal review. It doesn't guarantee legal validity or compliance. Download TXT or PDF. PDF export rejects characters its font cannot encode; use TXT to preserve those characters." },
+  ],
+  'nda-generator': [
+    { q: "What does this tool do?", a: "Draft a non-disclosure agreement from the details you enter, then review and edit it." },
+    { q: "What should I know before using it?", a: "The document uses editable templates, not AI or a legal review. It doesn't guarantee legal validity or compliance. Download TXT or PDF. PDF export rejects characters its font cannot encode; use TXT to preserve those characters." },
+  ],
+  'split-excel': [
+    { q: "What does this tool do?", a: "Split worksheet values into XLSX files using cached formula results." },
+    { q: "What should I know before using it?", a: "Formulas aren't recalculated or preserved as formulas. Cell formatting, charts and macros aren't preserved in the exported files." },
+  ],
+  'text-to-handwriting': [
+    { q: "What does this tool do?", a: "Preview text with device-installed handwriting fonts and a cursive fallback." },
+    { q: "What should I know before using it?", a: "The result depends on fonts installed on your device. Copy exports plain text, without the visual font styling." },
+  ],
+  'api-endpoint-debugger': [
+    { q: "What does this tool do?", a: "Generate request code from an endpoint, method, headers and body." },
+    { q: "What should I know before using it?", a: "This tool doesn't send the request or inspect a live API response. Review the generated code before running it in your own environment." },
+  ],
+  'screen-density-simulator': [
+    { q: "What does this tool do?", a: "Calculate physical pixel dimensions and preview a CSS viewport at a chosen pixel ratio." },
+    { q: "What should I know before using it?", a: "The preview doesn't change your browser's devicePixelRatio or emulate a real device display." },
+  ],
+  'image-size-resizer': [
+    { q: 'What does this tool support?', a: "Resize one image locally with an optional aspect ratio lock. Choose Auto, PNG, JPEG or WebP output. Auto keeps supported source formats and otherwise uses PNG; the download reports the actual browser-encoded format. Review the generated result before saving. Use Batch Image Resizer for multiple files." },
+  ],
+  'ssh-key-generator': [
+    { q: "What does this tool support?", a: "Generate RSA, ECDSA or Ed25519 key pairs using browser cryptography. The public key is an OpenSSH line; the private key is unencrypted PKCS8 PEM. Some SSH clients need a converted private-key format, particularly for Ed25519. Browser algorithm support varies." },
+  ],
+  'sql-prettifier': [
+    { q: "What does this tool support?", a: "Make SQL easier to read with 2- or 4-space indentation and optional uppercase keywords. Lexical formatting preserves quoted text and comments and checks quote and parenthesis balance. It does not validate SQL grammar or database-specific semantics. The current output is plain text." },
+  ],
+  'seo-title-analyzer': [
+    { q: "What does this tool support?", a: "Review title text and Unicode character counts from pasted text, HTML or a URL that permits cross-origin requests. HTML inspection reports missing title markup. Counts are descriptive, not ranking scores or a guarantee that a title will fit every search result. Page scripts are not executed." },
+  ],
+  'robots-txt-editor': [
+    { q: "Can I paste or fetch robots.txt?", a: "Yes. Paste and edit the rules locally, or fetch a URL that permits CORS. Validation reports errors and extension warnings; it does not enforce access restrictions." },
+    { q: "How does path testing work?", a: "Matching user-agent groups are combined. The most specific matching rule wins, with Allow winning ties. Wildcards, end anchors and empty rules are handled; empty Allow or Disallow values have no effect." },
+    { q: "Does this guarantee how every crawler behaves?", a: "No. Crawler extensions and implementation differences still need review. robots.txt is not authentication or access control." },
+  ],
+  'random-mac-generator': [
+    { q: "What does this tool support?", a: "Generate locally administered unicast MAC addresses using Web Crypto, with colon, hyphen or no-separator formatting. These are test values, not vendor assignments, hardware identities or guaranteed globally unique addresses." },
+  ],
+  'profile-photo': [
+    { q: "What does this tool support?", a: "Choose a circle or square crop, zoom and pan the image, then adjust brightness, contrast and saturation. Set the output size and download the current PNG preview. These are crop and color controls, not skin retouching tools." },
+  ],
+  'photo-metadata-remover': [
+    { q: "What does this tool support?", a: "Re-encode decoded pixels into a new image without copying source metadata. JPEG inputs stay JPEG and may change pixels or quality; other supported inputs export PNG, preserving transparency. Animation is flattened. The common-JPEG-tag scan is incomplete, so an empty scan is not proof that a source has no metadata." },
+  ],
+  'page-title-checker': [
+    { q: "What does this tool support?", a: "Review title text and Unicode character counts from pasted text, HTML or a URL that permits cross-origin requests. HTML inspection reports missing title markup. Counts are descriptive, not ranking scores or a guarantee that a title will fit every search result. Page scripts are not executed." },
+  ],
+  'og-tag-debugger': [
+    { q: "What does this tool support?", a: "Inspect Open Graph tags in pasted HTML or a CORS-accessible URL. The separate editor retains editable tags and an approximate social preview. Page scripts are not executed, and previews do not reproduce platform caches or guarantee a published card’s appearance." },
+  ],
+  'meme-maker': [
+    { q: "What does this tool support?", a: "Upload an image or load the example, then add top and bottom captions. Adjust font size, text color and outline color while the PNG preview updates. Download the current result; there is no library of popular meme templates." },
+  ],
+  'markdown-to-pdf': [
+    { q: "What does this tool support?", a: "Preview sanitized Markdown and its HTML. Direct PDF download produces paginated ASCII text with headings and code blocks; Unicode, images and tables require Print / Save PDF. Browser printing retains richer styling and depends on browser print settings. There is no custom-theme selector." },
+  ],
+  'mac-address-generator': [
+    { q: "What does this tool support?", a: "Generate locally administered unicast MAC addresses using Web Crypto, with colon, hyphen or no-separator formatting. These are test values, not vendor assignments, hardware identities or guaranteed globally unique addresses." },
+  ],
+  'keyword-generator': [
+    { q: "What does this tool support?", a: "Expand a seed phrase using local question, preposition and modifier templates. These are brainstorming suggestions, not live search suggestions, search-volume data or competition estimates." },
+  ],
+  'keyword-extractor': [
+    { q: "What does this tool support?", a: "Count words and phrases in supplied text, with phrase-size options and English stop-word filtering. Results reflect frequency in your input, not semantic AI analysis, search volume or keyword competition." },
+  ],
+  'json-path-evaluator': [
+    { q: "What does this tool support?", a: "Query JSON using $, dot or quoted keys, positive or negative indexes, wildcards, recursive descent and simple property comparison filters. Slices, unions and JavaScript expressions are not supported. Results update as you edit; [] means no matches. Examples loads sample JSON and a path. Expressions are limited to 2,000 characters, 50,000 visits and 10,000 matches." },
+  ],
+  'json-graph-visualizer': [
+    { q: "What does this tool support?", a: "Visualize nested JSON values and their parent-child relationships in a graph, with a limit of 200 values. This shows document structure, not references between records with matching IDs. It does not detect dangling ID references or provide graph export." },
+  ],
+  'image-dpi-resizer': [
+    { q: "What does this tool support?", a: "Enter an assumed current DPI and a target DPI to resample pixels while retaining the corresponding print size. Current DPI is not read from the file. Export PNG with target DPI metadata. Images are limited to 20 MiB input, 8,192 pixels per side and 24 megapixels; upscaling cannot recover lost detail." },
+  ],
+  'image-dimension-checker': [
+    { q: "What does this tool support?", a: "Inspect PNG, JPEG, GIF, WebP, BMP, ICO or SVG files by signature and actual browser decoding. See dimensions, file size, available color-depth data and reported-type mismatches. Files are limited to 20 MiB, 8,192 pixels per side and 24 megapixels. A recognized signature alone is not enough if the browser cannot decode the image." },
+  ],
+  'html-to-jsx': [
+    { q: "What does this tool support?", a: "Convert HTML attributes such as class and for, inline styles and text into JSX. The browser parser may repair malformed markup before conversion. Inline event-handler strings, executable embeds, JavaScript URLs and CSS !important are rejected. Arbitrary JavaScript is not converted; add React handlers yourself." },
+  ],
+  'heading-tag-analyzer': [
+    { q: "What does this tool support?", a: "Parse HTML headings from H1 through H6, including nested text, in document order. Review missing headings, repeated H1s and skipped levels as prompts for editorial review. These observations are not ranking predictions or a complete accessibility audit." },
+  ],
+  'hash-collision-finder': [
+    { q: "What does this tool support?", a: "Search for matching truncated SHA-1 or SHA-256 prefixes, with a limit of 100,000 attempts. This demonstrates the birthday paradox; it does not find full-length hash collisions or break either algorithm." },
+  ],
+  'google-algorithm-tracker': [
+    { q: "What does this tool support?", a: "Browse and filter a selected historical list of Google algorithm updates through December 2024. It is not a live tracker or an explanation of any particular traffic change. Use the linked official Google Search Status Dashboard history for current updates: https://status.search.google.com/products/rGHU1u87FJnkP6W2GwMi/history." },
+  ],
+  'favicon-grabber': [
+    { q: "What does this tool support?", a: "Fetch favicons for up to 20 domains from Google’s favicon service through Toolblip’s endpoint. Download returned PNG or ICO images individually or in a batch. The provider may return a generic fallback, so an image does not prove the site has its own favicon. SVG retrieval and direct site crawling are not provided." },
+  ],
+  'crop-circle': [
+    { q: "What does this tool support?", a: "Crop a centered circle from an image, adjust its size and border width or color, and download PNG with transparent corners. Rectangular sources use a centered square crop without stretching. There is no separate oval control." },
+  ],
+  'broken-link-checker': [
+    { q: "What does this tool support?", a: "Paste up to 20 URLs to inspect HTTP HEAD responses, with three concurrent requests. CORS blocks, timeouts and unsupported HEAD requests produce Unknown results, not proof of a broken link. Only observed HTTP errors are labeled as such. This tool does not crawl an entire website." },
+  ],
+  'annotate-pdf': [
+    { q: "What PDF limits apply?", a: "Up to 25 MiB per input PDF, 100 pages and 2,000 points per page side." },
+  ],
+  'add-pages-to-pdf': [
+    { q: "What does this tool support?", a: "Insert blank pages or pages from another PDF at a chosen position. Reorder or delete pages before exporting; blank pages use the base document’s geometry. Input PDFs are limited to 25 MiB, 100 pages and 2,000 points per page side. Plan-specific upload limits may be lower. Up to 20 insert files, 100 source pages and 100 final pages are allowed." },
+    { q: "What PDF limits apply?", a: "Up to 25 MiB per input PDF, 100 pages and 2,000 points per page side. Up to 20 insert files, 100 source pages and 100 final pages." },
+  ],
   'sass-to-css': [
-    { q: 'What does the Sass to CSS tool do?', a: 'It compiles SCSS or indented Sass into clean CSS in your browser. Paste your source, click convert, and copy the result when it is ready.' },
-    { q: 'Can it handle variables, nesting, and mixins?', a: 'Yes. The Sass to CSS tool supports the Sass features people use most often, including variables, mixins, and nested selectors.' },
-    { q: 'Do I need to install Sass locally?', a: 'No. The tool runs in your browser, so you can test a snippet without setting up a build step or local Sass install.' },
-    { q: 'Does it support both SCSS and indented Sass syntax?', a: 'Yes. It can compile either syntax, so you can paste whichever format your project uses.' },
-    { q: 'Is my Sass uploaded anywhere?', a: 'No. The conversion happens locally in your browser, so your code stays on your device.' },
-    { q: 'Can I use the CSS output directly in my stylesheet?', a: 'Yes. The output is standard CSS, so you can copy it into your stylesheet or hand it back to a teammate.' },
+    { q: "What does this tool do?", a: "Compile SCSS or indented Sass to CSS in a browser worker." },
+    { q: "What should I know before using it?", a: "Choose Compile to process local input. Execution is bounded; the tool reports compilation errors instead of treating invalid Sass as CSS." },
   ],
   'banner-generator': [
     { q: 'What is the Banner Generator?', a: 'The Banner Generator creates polished 1200×630 blog covers, banners, and Open Graph images in your browser. It is designed for quick social previews, blog headers, and share cards without sending your design content to a server.' },
@@ -213,12 +384,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'What do Examples and Clear do?', a: 'Examples loads a sample for the current input mode. Clear removes the active input and preview so old output cannot be downloaded by mistake.' },
   ],
   'css-to-scss': [
-    { q: 'What does the CSS to SCSS tool do?', a: 'It rewrites flat CSS into SCSS with nested selectors where that structure is obvious. That makes styles easier to read and edit.' },
-    { q: 'Can it turn repeated selectors into nesting?', a: 'Yes. The tool groups descendant selectors into nested blocks so the output looks like hand-written SCSS.' },
-    { q: 'Does it preserve properties and values?', a: 'Yes. It keeps the declarations intact and focuses on restructuring the selector tree.' },
-    { q: 'Do I need to install anything?', a: 'No. Everything runs in the browser, so you can use it on any machine without a setup step.' },
-    { q: 'Is my CSS uploaded anywhere?', a: 'No. The conversion is local to your browser, so your styles never leave the page.' },
-    { q: 'Can I use the SCSS output right away?', a: 'Yes. You can copy it into your project and then refine the nesting or variables by hand if you want.' },
+    { q: "What does this tool do?", a: "Use CSS as compatible SCSS while keeping its custom properties and var() expressions." },
+    { q: "What should I know before using it?", a: "CSS is valid SCSS. This tool doesn't turn runtime custom properties into Sass variables or infer a nested stylesheet architecture." },
   ],
   'json-formatter': [
     { q: 'What is a JSON formatter?', a: 'A JSON formatter pretty-prints raw JSON into a readable, indented structure so you can scan, debug, and share it. The Toolblip JSON Formatter also validates syntax in real time and surfaces the parser error so you can find the broken character.' },
@@ -359,12 +526,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'What makes a good GIF from MP4?', a: 'Short clips with clear motion and a tight crop usually produce the best GIFs. Keep the segment brief to balance file size and quality.' },
   ],
   'poll-generator': [
-    { q: 'What does the Poll Generator do?', a: 'It helps you create simple polls with answer options you can share on social platforms, in chats, or in audience surveys. Paste your topic, add your choices, and copy the finished poll text.' },
-    { q: 'How do I create a poll online?', a: 'Open the Poll Generator, type your question, add answer choices, and copy the output for Twitter, Instagram, or a survey form. The tool formats the poll for quick sharing.' },
-    { q: 'Can I make a Twitter poll with this tool?', a: 'Yes. The Poll Generator is useful for creating Twitter-style poll options and concise captions that are easy to post.' },
-    { q: 'Is the Poll Generator free?', a: 'Yes. The Poll Generator is free to use and does not require an account.' },
-    { q: 'Can I use it for audience surveys?', a: 'Yes. It works well for quick audience surveys, product feedback prompts, and lightweight community questions.' },
-    { q: 'Does the Poll Generator save my questions?', a: 'No. The content is only used to generate the poll text in your browser, so your draft stays on your device.' },
+    { q: "What does this tool do?", a: "Draft poll questions and options for copying into a platform of your choice." },
+    { q: "What should I know before using it?", a: "Review the destination platform's limits before posting. This tool doesn't publish polls, host voting or collect responses." },
   ],
   'text-diff': [
     { q: 'How does the Text Diff tool compare my text?', a: 'It splits both inputs into lines and runs a longest-common-subsequence diff. Lines that match are shown unchanged, lines only in the original are marked as removed (−), and lines only in the changed text are marked as added (+).' },
@@ -416,11 +579,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Is my data uploaded anywhere?', a: 'No. Conversion runs entirely in your browser.' },
   ],
   'sql-to-json': [
-    { q: 'What does the SQL to JSON tool do?', a: 'It parses SQL `INSERT INTO table (cols...) VALUES (...)` statements and emits the rows as a JSON array  -  handy when you need to load fixture data into an app, generate seed JSON from a SQL dump, or eyeball a few rows.' },
-    { q: 'Can it run SELECT queries?', a: 'No. There\'s no database in your browser, so the tool can\'t execute queries against your data. It parses INSERT statements only  -  the structured form where rows live inline in the SQL text.' },
-    { q: 'Which SQL dialects work?', a: 'Standard MySQL, PostgreSQL, and SQLite-style INSERTs all parse cleanly: backtick or double-quoted identifiers, single-quoted strings, NULL/TRUE/FALSE literals, numeric values, multiple rows per VALUES clause, and -- or /* */ comments.' },
-    { q: 'What about INSERT statements without column names?', a: 'They work  -  values are emitted as `col1`, `col2`, etc. Add an explicit column list (`INSERT INTO t (a, b) VALUES (...)`) to get meaningful keys in the JSON output.' },
-    { q: 'Is my SQL sent anywhere?', a: 'No. Parsing happens locally in your browser. Database dumps often contain PII, internal IDs, and credentials in connection strings  -  nothing leaves the page.' },
+    { q: "What does this tool do?", a: "Convert SQL INSERT VALUES literals to JSON. Unsupported expressions and unsafe integer literals are rejected." },
+    { q: "What should I know before using it?", a: "Use INSERT statements with literal VALUES. This isn't a SQL engine: expressions and integer literals outside safe numeric precision are rejected." },
   ],
   'js-minifier': [
     { q: 'What does this minifier actually do?', a: 'It strips comments, collapses runs of whitespace, and removes unnecessary spacing around operators  -  the safe rewrites that don\'t change behaviour. It does NOT rename variables or perform tree-shaking; for production use, run terser or esbuild as part of your build.' },
@@ -472,13 +632,12 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Does this affect my live SEO?', a: 'No  -  the SERP Preview is a visualizer. It doesn\'t crawl, modify, or submit anything to Google. Push your title/description to the live page first, then test it in Google Search Console for the real scrape.' },
   ],
   'aac-to-wav': [
-    { q: 'How does the AAC to WAV conversion work?', a: 'The tool decodes your AAC audio with the browser\'s Web Audio API, then writes the decoded samples into a standard 16-bit PCM WAV file at the same sample rate and channel count as the source.' },
-    { q: 'Is the WAV output lossless?', a: 'The step from decoded audio to 16-bit PCM WAV adds no further compression, so you get the full decoded signal. Quality lost during the original AAC encoding can\'t be recovered at this stage, since AAC is a lossy format.' },
-    { q: 'Does it handle stereo audio correctly?', a: 'Yes. The tool reads the channel count from the decoded audio buffer and writes each channel into the WAV file, so mono and stereo sources both convert correctly.' },
+    { q: "What does this tool do?", a: "Decode browser-supported AAC audio to 16-bit PCM WAV." },
+    { q: "What should I know before using it?", a: "Limits are 20 MB, 120 decoded seconds and 24 million decoded samples across all channels. The browser must decode the audio codec; the file extension alone doesn't guarantee support. WAV output doesn't restore detail lost in earlier compression." },
   ],
   'accessibility-checker': [
     { q: 'What does the Accessibility Checker actually inspect?', a: 'Paste in HTML and it parses the markup to flag missing image alt text, a missing lang attribute on the html tag, a missing page title, buttons and links without accessible names, form inputs without an associated label, and missing landmark elements like header, main, nav, and footer.' },
-    { q: 'Does it measure color contrast like a full WCAG audit?', a: 'It runs a basic heuristic scan for likely contrast problems rather than computing rendered contrast ratios the way a browser DevTools audit or axe-core would. Use it as a first pass, then verify contrast-sensitive pages with a dedicated contrast checker.' },
+    { q: "Does it measure contrast or certify WCAG compliance?", a: "No. It checks static HTML only. It does not measure rendered contrast or test keyboard navigation, focus order or runtime behavior. Manual accessibility review is still needed." },
     { q: 'Do I need to give it a live URL?', a: 'No. Paste raw HTML directly into the tool and it parses it with the browser\'s built-in DOMParser, so you can check a page before it\'s even deployed.' },
   ],
   'age-calculator': [
@@ -507,9 +666,9 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Can I edit the transcript after speaking?', a: 'Yes. The transcript appears in an editable area as you speak, and you can copy it to your clipboard once you\'re done, or replace it entirely using the manual input box.' },
   ],
   'automation-wizard': [
-    { q: 'Does the builder run my workflow?', a: 'No. It records a draft in this browser tab. It does not run triggers or actions, send requests, schedule jobs, or connect accounts.' },
-    { q: 'Can I import the output into an automation platform?', a: 'The generic JSON and YAML schema has not been verified for compatibility with any runner. Use the outline as planning notes, then implement and test it in your chosen platform.' },
-    { q: 'What do the two copy formats include?', a: 'JSON includes the first trigger and the remaining action or condition steps, with their entered settings. YAML includes names and types but omits those settings. Copy your draft before leaving the page; it is not saved between visits.' },
+    { q: "Does the builder run my workflow?", a: "No. It records a draft in this browser tab. It does not run triggers or actions, send requests, schedule jobs or connect accounts." },
+    { q: "Can I import the output into an automation platform?", a: "The generic JSON and YAML schema has not been verified for compatibility with any runner. Use the outline as planning notes, then implement and test it in your chosen platform." },
+    { q: "What do the two copy formats include?", a: "JSON and YAML contain the same workflow: the first trigger and the remaining action or condition steps, including their entered settings. Copy your draft before leaving the page; it is not saved between visits." },
   ],
   'api-auth-header-generator': [
     { q: 'What types of auth headers can it build?', a: 'Bearer tokens, HTTP Basic auth from a username and password, and custom API-key headers with your own header name and optional prefix.' },
@@ -532,9 +691,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Is this a complete, validated OpenAPI spec?', a: 'It\'s a starting skeleton, not a full spec, since it can only infer structure from one example response. Run the output through an OpenAPI validator before relying on it for codegen or docs hosting.' },
   ],
   'all-in-one-unit-converter': [
-    { q: 'Which unit categories does it cover?', a: 'Length, weight, temperature, area, volume, and speed. Selecting a category updates both unit dropdowns.' },
-    { q: 'How does it handle temperature, since that isn\'t a simple multiply?', a: 'Temperature uses a dedicated formula-based conversion between Celsius, Fahrenheit, and Kelvin, rather than the multiply-by-factor math used for length, weight, and volume.' },
-    { q: 'How accurate are the conversions?', a: 'Length, weight, and volume conversions use fixed numeric factors between units, so results are exact to floating-point precision, not rounded estimates.' },
+    { q: "What does this tool do?", a: "Convert length, weight, temperature, area, volume and speed with live validated results." },
+    { q: "What should I know before using it?", a: "Results update as you change the value and units. Invalid numbers are rejected, as are temperatures below absolute zero. Calculations use floating-point arithmetic, so displayed results can be rounded." },
   ],
   'anagram-generator': [
     { q: 'Does it only return real English words?', a: 'No. It generates every possible letter rearrangement of your input and filters by minimum length, but it doesn\'t check results against a dictionary, so nonsense letter strings show up mixed in with real words.' },
@@ -572,9 +730,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Can I go from escaped text back to plain text?', a: 'Yes. Switch to Unescape mode, or use the Swap button to flip the current output back into the input box with the mode reversed, and the same context-specific rules run in reverse.' },
   ],
   'base-number-converter': [
-    { q: 'Which number bases does it support?', a: 'Binary, octal, decimal, hexadecimal, and base-32, selectable independently as both the source and target base, so you can convert directly between any two, not just to and from decimal.' },
-    { q: 'What happens if I enter digits invalid for the selected base?', a: 'The conversion returns "Invalid input for selected base" rather than silently producing a wrong number, since JavaScript\'s parseInt would otherwise interpret out-of-range digits unpredictably.' },
-    { q: 'Can I quickly reverse the conversion?', a: 'Yes. The swap button flips the From and To bases and moves the current result into the input field, so you can convert back without retyping anything.' },
+    { q: "What does this tool do?", a: "Convert whole integers exactly between bases 2 through 36. Invalid digits and fractions are rejected." },
+    { q: "What should I know before using it?", a: "Whole integers are converted with arbitrary-precision integer arithmetic. Invalid digits and fractions are rejected; this isn't a floating-point converter." },
   ],
   'base64-file-encoder': [
     { q: 'Does this work with any file type, or just text?', a: 'Any file type. It reads the file as raw bytes via the FileReader API and Base64-encodes the binary data directly, so PDFs, images, zip archives, and executables all encode correctly, not just plain text.' },
@@ -587,9 +744,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Can I download the decoded image?', a: 'Yes. Decode mode keeps the original decoded bytes and downloads them with the matching extension. Encode mode also offers the uploaded image bytes for download. Base64 is encoding, not compression, so the text is usually larger than the image file.' },
   ],
   'base64-image-decoder': [
-    { q: 'How is this different from the Base64 Image Converter?', a: 'This tool is decode-only: paste or load a Base64 string and it reconstructs the image and gives you a download link. It doesn\'t have an encode mode for turning an image into Base64, which is what the Converter tool is for.' },
-    { q: 'Can I load Base64 data from a file instead of pasting it?', a: 'Yes. The Load from file button accepts a .txt or .b64 file containing the Base64 string, reads it as text, and decodes it the same way as pasted input.' },
-    { q: 'What happens with invalid Base64 data?', a: 'You\'ll see an "Invalid Base64 image data" message instead of a broken image, since the decode step wraps the atob call in error handling rather than letting it fail silently.' },
+    { q: "What does this tool do?", a: "Decode and validate Base64 PNG, JPEG, WebP or GIF data and download the original raster format." },
+    { q: "What should I know before using it?", a: "The decoded bytes are validated as PNG, JPEG, WebP or GIF. Download keeps the original raster format; it doesn't convert every input to PNG." },
   ],
   'base64-image-viewer': [
     { q: 'Does this tool decode the Base64 data like the Decoder does?', a: 'No. It validates that your input is a proper data:image/...;base64,... URL and then hands that string straight to an <img> tag\'s src attribute, letting the browser do the actual decoding. There\'s no atob step or downloadable file, just a live preview.' },
@@ -597,13 +753,13 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Can I copy the data URL back out after loading it?', a: 'Yes, once the input validates successfully, a Copy Data URL button appears above the preview.' },
   ],
   'batch-favicon-downloader': [
-    { q: 'Where do the favicon images actually come from?', a: 'Google\'s public favicon service (www.google.com/s2/favicons), requested at 128px for each domain you list. The tool doesn\'t crawl or host favicons itself, it builds the request URL from each domain and lets Google\'s service return the icon.' },
-    { q: 'How many URLs can I process at once?', a: 'As many as you paste in, one per line. Each line is parsed into a domain and turned into its own favicon request, so a list of dozens of sites is fetched in one batch.' },
-    { q: 'What if a site has no favicon Google can find?', a: 'You\'ll see a red X placeholder for that entry instead of a broken image, since the img tag\'s onError handler catches the failed load and hides the broken icon.' },
+    { q: "Where do the favicon images come from?", a: "Google’s favicon service, accessed through Toolblip’s favicon endpoint. The tool validates returned PNG or ICO bytes; it does not crawl the target site." },
+    { q: "How many domains can I process?", a: "Up to 20 domains, with three requests at a time. You can paste a list or load a text file, then download individual images or all results." },
+    { q: "Does a returned icon prove the site has a favicon?", a: "No. The provider can return a generic fallback. A failed request is reported separately; returned bytes are not proof that a site-specific icon exists." },
   ],
   'batch-image-resizer': [
-    { q: 'Can I resize multiple images at once?', a: 'Yes. Drop or select several files and each one is resized independently to the same target dimensions using its own canvas pass, then all results appear as a downloadable grid.' },
-    { q: 'Does resizing crop or stretch my images?', a: 'Neither. Images are scaled to fit within the target box while preserving their aspect ratio, then centered on a white background, so nothing is cropped and nothing is distorted, unlike a straight stretch-to-fit resize.' },
+    { q: "How many images can I resize?", a: "Up to 20 images and 100 MiB total input, with at most 100 megapixels of total output. Results can be downloaded individually or together." },
+    { q: "Does resizing crop or stretch images?", a: "Images fit inside the target box while retaining their proportions. JPEG output has white padding; other supported inputs export PNG with transparent padding. File size may increase." },
     { q: 'What size presets are available?', a: 'Common video and thumbnail sizes like HD, Full HD, Square, Portrait, and Thumbnail, or you can type in custom width and height with an optional aspect-ratio lock that keeps the two in proportion as you edit either field.' },
   ],
   'bcrypt-hash-generator': [
@@ -612,9 +768,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Can I check whether a password matches an existing hash?', a: 'Yes. The Verify Password field runs bcrypt.compareSync against the hash currently shown, and reports a clear match or no-match result.' },
   ],
   'bill-sale-generator': [
-    { q: 'What does the generated document actually cover?', a: 'Seller and buyer names and addresses, an item description, sale price with optional tax, payment method, and toggles for as-is sale versus implied warranty, formatted as a printable bill of sale with signature lines at the bottom.' },
-    { q: 'How do I save it as a PDF?', a: 'The Print / Save PDF button triggers your browser\'s print dialog, where choosing "Save as PDF" as the destination produces a PDF version of the generated document.' },
-    { q: 'Is this a legally binding contract template?', a: 'The generated document includes a disclaimer that it\'s provided for informational purposes only and isn\'t legal advice, since requirements for a valid bill of sale vary by state and item type.' },
+    { q: "What does this tool do?", a: "Draft a bill of sale from the details you enter, then review and edit it." },
+    { q: "What should I know before using it?", a: "The document uses editable templates, not AI or a legal review. It doesn't guarantee legal validity or compliance. Download TXT to keep the draft as text." },
   ],
   'bill-splitter': [
     { q: 'How are tax and tip calculated?', a: 'Both are calculated from the pre-tax subtotal. In equal mode that subtotal is divided across the group first; in custom mode each person gets tax and tip based on their own amount.' },
@@ -622,9 +777,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'What does round each share up do?', a: 'It rounds every calculated share up to the next whole dollar and shows the exact pre-rounding total so the group can see the difference.' },
   ],
   'bin-hex-dec-converter': [
-    { q: 'Do I need to convert one pair of bases at a time?', a: 'No. Pick a single input base and enter a number, and the result shows all three: binary, decimal, and hexadecimal, at once, rather than making you choose a separate output base each time.' },
-    { q: 'What does the Next Base button do?', a: 'It cycles the input base through binary, decimal, and hexadecimal in sequence and clears the current input, a quick way to switch what you\'re typing without opening a dropdown.' },
-    { q: 'Can I feed one of the results back in as new input?', a: 'Yes. Each conversion result has a "Use as input" link that loads that value, in its matching base, back into the input field so you can continue converting from there.' },
+    { q: "What does this tool do?", a: "Convert whole integers exactly between binary, decimal and hexadecimal, including values above JavaScript’s safe integer range." },
+    { q: "What should I know before using it?", a: "Whole integers are converted with arbitrary-precision integer arithmetic. Invalid digits and fractions are rejected; this isn't a floating-point converter." },
   ],
   'binary-converter': [
     { q: 'Does this convert numbers between bases like binary-to-hex?', a: 'No. This tool converts text to and from raw binary byte values (each character becomes an 8-bit ASCII code and back), not numeric base conversion. For converting a number like 255 into binary, use a base or hex converter instead.' },
@@ -632,9 +786,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'What happens if I paste invalid binary in Binary to Text mode?', a: 'You\'ll get an explicit "Invalid binary string" error if the cleaned input contains anything other than 0s and 1s, rather than a garbled or silently wrong text result.' },
   ],
   'binary-decimal-hex-converter': [
-    { q: 'How is this different from the Bin-Hex-Dec Converter?', a: 'Both convert one input base to all three bases at once, but this version presents each result in its own color-coded card (blue for binary, green for decimal, purple for hex) with a "Convert to All" button, rather than the cycling next-base swap the other tool uses.' },
-    { q: 'Can I chain conversions using a previous result?', a: 'Yes. Each result card has a "Use as input" link that loads that exact value back into the input field with the matching base already selected.' },
-    { q: 'Does it handle negative numbers?', a: 'Yes. Negative decimal input converts to a minus-signed binary and hex representation rather than using two\'s complement encoding.' },
+    { q: "What does this tool do?", a: "Convert whole integers exactly between binary, decimal and hexadecimal, including values above JavaScript’s safe integer range." },
+    { q: "What should I know before using it?", a: "Whole integers are converted with arbitrary-precision integer arithmetic. Invalid digits and fractions are rejected; this isn't a floating-point converter." },
   ],
   'binary-to-decimal': [
     { q: 'Does it only convert to decimal, or other bases too?', a: 'Despite the name, it converts your binary input to decimal, hexadecimal, and octal all at once, showing all three with individual copy buttons rather than requiring three separate lookups.' },
@@ -659,7 +812,7 @@ const OVERRIDES: Record<string, FAQ[]> = {
   'browser-image-resizer': [
     { q: 'Does my photo get uploaded to a server to resize it?', a: 'No. Resizing happens entirely in a canvas element in your browser, so the file never leaves your device.' },
     { q: 'Can I resize without distorting the image?', a: 'Yes, a lock aspect ratio toggle recalculates the height automatically whenever you change the width (or vice versa), so the proportions stay correct unless you deliberately unlock it.' },
-    { q: 'What file format does the resized image download as?', a: 'The output is exported as a PNG generated from the canvas, regardless of whether your source image was a JPEG, PNG, or another format.' },
+    { q: 'What file format does the resized image download as?', a: 'Choose Auto, PNG, JPEG or WebP. Auto preserves supported source formats and otherwise uses PNG. The result reports the actual encoded format if the browser falls back.' },
   ],
   'image-resizer': [
     { q: 'Can I resize multiple images at once?', a: 'No. This tool resizes one image at a time. Use the Batch Image Resizer when you need to process several files together.' },
@@ -709,9 +862,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Will this match my printed output exactly?', a: 'It uses the standard mathematical conversion, not an ICC color profile calibrated to a specific printer or paper stock, so it is meant for approximate on-screen reference rather than exact print color matching.' },
   ],
   'code-beautifier': [
-    { q: 'Which languages can it format?', a: 'JavaScript, TypeScript, Python, HTML, CSS, and JSON each have their own dedicated formatting logic tailored to that language\'s syntax, rather than one generic formatter applied to everything.' },
-    { q: 'Can it minify code as well as beautify it?', a: 'Yes, a separate minify mode strips unnecessary whitespace and line breaks (or uses compact JSON.stringify output for JSON), producing a condensed version of the same code.' },
-    { q: 'Can I choose tabs vs spaces and the indent size?', a: 'Yes, both are configurable options that control how the beautified output is indented across all supported languages.' },
+    { q: "What does this tool do?", a: "Format JavaScript, TypeScript, JSON, CSS, HTML and Python with indentation controls." },
+    { q: "What should I know before using it?", a: "TypeScript formatting and minification preserve type annotations and declarations. Downloads keep the .ts extension. Python only reindents existing blocks, and Minify isn't available for Python. HTML formatting uses conservative block boundaries." },
   ],
   'code-diff': [
     { q: 'What algorithm does it use to compare two code blocks?', a: 'A longest common subsequence (LCS) algorithm, the same class of algorithm behind tools like diff and git diff, which finds the actual minimal set of added and removed lines rather than just flagging any line that moved as changed.' },
@@ -719,9 +871,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Can I copy the diff output?', a: 'Yes, the result copies as plain text with +, -, and space prefixes on each line, a format you can paste elsewhere or include in notes.' },
   ],
   'code-to-diagram-generator': [
-    { q: 'Does it use AI to understand what my code does?', a: 'No, it applies a line-based heuristic, for example treating each non-empty line as a node for a flowchart, or looking for arrow-like patterns for a sequence diagram, and outputs Mermaid syntax rather than analyzing program logic.' },
-    { q: 'Which diagram types can it generate?', a: 'Flowchart, sequence, class, and generic Mermaid graph syntax, selectable based on the shape of diagram you want from your pasted code or pseudocode.' },
-    { q: 'How do I actually view the diagram it generates?', a: 'The tool outputs Mermaid syntax as text and links to mermaid.live, where you paste it to render the visual diagram, it does not render the diagram itself.' },
+    { q: "What does this tool do?", a: "Generate Mermaid source from ordered lines or simple class and sequence declarations." },
+    { q: "What should I know before using it?", a: "Copy the source into a Mermaid renderer to view it. The tool doesn't use AI, infer control flow or render diagrams itself." },
   ],
   'color-blindness-simulator': [
     { q: 'Which types of color blindness does it simulate?', a: 'Protanopia, deuteranopia, and tritanopia, each using a published color transformation matrix specific to that condition rather than a generic desaturation filter.' },
@@ -899,7 +1050,7 @@ const OVERRIDES: Record<string, FAQ[]> = {
   ],
   'crop': [
     { q: 'How do I select the crop area?', a: 'Click and drag directly on the uploaded image preview, a blue selection box follows your drag and shows exactly what will be kept.' },
-    { q: 'Does cropping reduce the image quality?', a: 'No, the selected region is copied pixel-for-pixel onto a same-size canvas and exported as PNG, without any recompression of the retained pixels.' },
+    { q: 'Does cropping reduce the image quality?', a: 'The selected region keeps its pixel dimensions. JPEG inputs are re-encoded as JPEG at 92% quality; other supported inputs export PNG. JPEG quality can change, and animation is flattened.' },
     { q: 'Can I resize a selection after drawing it?', a: 'Not by dragging its edges, releasing the mouse locks in that selection, draw a new one on the image if you want to change the crop area.' },
   ],
   'css-border-radius-generator': [
@@ -943,9 +1094,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Does it convert pixel values to Tailwind\'s spacing scale automatically?', a: 'Yes, for padding, margin, gap, width, and height it divides pixel values by 4 to match Tailwind\'s spacing units, so 16px becomes p-4 rather than an arbitrary value.' },
   ],
   'css-validator': [
-    { q: 'What kinds of CSS errors does it catch?', a: 'Missing colons in declarations, incomplete hex colors, empty rule sets, properties with no value, incomplete calc() expressions, and var() calls missing a variable name.' },
-    { q: 'Does it check brace and bracket matching?', a: 'Yes, it tracks braces, parentheses, and brackets separately and flags unbalanced counts as errors, noting whether a closing character is missing or extra.' },
-    { q: 'Does it flag errors by line number?', a: 'Yes, most issues show the exact line number where the problem was found so you can jump straight to it in your stylesheet.' },
+    { q: "What does this tool do?", a: "Check CSS syntax and report parsing errors." },
+    { q: "What should I know before using it?", a: "Syntax checks don't confirm that property values are valid or supported by every browser." },
   ],
   'csv-generator': [
     { q: 'Does it auto-generate rows based on a number I enter?', a: 'No, rows and columns are added and edited manually with the + Row and + Column buttons and inline text inputs, there\'s no numeric row-count field that bulk-fills sample data.' },
@@ -953,9 +1103,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Can I download the result directly?', a: 'Yes, a Download button saves the current table as generated.csv, alongside a Copy button for the raw text.' },
   ],
   'csv-to-excel': [
-    { q: 'What file format does the download actually use?', a: 'It downloads a .xls file, an HTML table wrapped in Excel\'s legacy SpreadsheetML markup, which Excel, Numbers, and Google Sheets all open correctly, rather than a true .xlsx file.' },
-    { q: 'Does it handle quoted fields with embedded commas?', a: 'Yes, the CSV parser tracks quote state character by character, so commas or line breaks inside quoted fields don\'t break the columns.' },
-    { q: 'Can I preview the data before downloading?', a: 'Yes, a table renders your parsed rows with the first row as headers, so you can check the columns lined up correctly before downloading.' },
+    { q: "What does this tool do?", a: "Convert well-formed CSV text to a real XLSX workbook while preserving cell text." },
+    { q: "What should I know before using it?", a: "Cell text stays text, including leading zeros. This creates a new XLSX workbook; it doesn't recreate spreadsheet formulas, formatting or charts from CSV." },
   ],
   'csv-to-json': [
     { q: 'Does it convert both ways?', a: 'Yes. This page redirects to the JSON-CSV Converter: paste JSON on the left or CSV on the right and the other pane updates live.' },
@@ -979,9 +1128,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Does it require a header row?', a: 'No, it converts every line the same way, tab-delimited into comma-delimited, whether or not the first line happens to be a header.' },
   ],
   'csv-to-xml': [
-    { q: 'How are column names turned into XML tags?', a: 'Header names are sanitized into valid XML tag names, non-alphanumeric characters become underscores, and a leading underscore is added if the name would otherwise start with a digit.' },
-    { q: 'Does it handle CSV fields with embedded commas or quotes?', a: 'Yes, the CSV parser tracks quote state character by character, so quoted fields containing commas or line breaks are parsed correctly.' },
-    { q: 'What is the structure of the generated XML?', a: 'Each data row becomes a <row> element containing one child element per column, all wrapped in a root <rows> element with an XML declaration at the top.' },
+    { q: "What does this tool do?", a: "Convert CSV rows to XML fields with column names preserved as attributes." },
+    { q: "What should I know before using it?", a: "Each field keeps its column name in an attribute, so headers need not be valid XML element names. XML-sensitive cell characters are escaped." },
   ],
   'curl-command-builder': [
     { q: 'What request options can I configure?', a: 'HTTP method, one or more headers, a request body (hidden automatically for GET and HEAD), basic auth credentials, and flags for following redirects, insecure mode, verbose output, and compression.' },
@@ -1004,9 +1152,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'How does it detect the request body?', a: 'It looks for a -d flag and assigns whatever follows to a data variable, passed to the requests call as data=data.' },
   ],
   'cutter': [
-    { q: 'What output format does the trimmed clip use?', a: 'WebM (VP9 or VP8), since the cut is produced by recording the video\'s playback with the browser\'s MediaRecorder API, regardless of the original file\'s format.' },
-    { q: 'How long does cutting take?', a: 'About as long as the clip itself, the tool plays the selected range in real time while capturing it rather than processing the file instantly.' },
-    { q: 'What if my browser does not support in-browser cutting?', a: 'You will see a fallback FFmpeg command (ffmpeg -ss START -to END -i input.mp4 -c copy output.mp4) to run locally instead, which cuts losslessly without re-encoding.' },
+    { q: "What does this tool do?", a: "Record a selected video range as WebM with audio." },
+    { q: "What should I know before using it?", a: "Use a source up to 30 MB, 120 seconds and 2,073,600 pixels. A browser-decodable audio track is required. Each export covers up to 60 seconds and re-encodes to WebM in real time. Keep the tab visible. Recording stops with an error if audio and video fall out of sync." },
   ],
   'data-size-converter': [
     { q: 'Does it use binary (1024) or decimal (1000) unit sizes?', a: 'Binary only, every unit step multiplies by 1024 (1 KB = 1024 bytes). There is no toggle for decimal, 1000-based units.' },
@@ -1020,7 +1167,7 @@ const OVERRIDES: Record<string, FAQ[]> = {
   ],
   'db-query-formatter': [
     { q: 'Which SQL keywords get their own line?', a: 'Major clauses like SELECT, FROM, WHERE, the JOIN variants, GROUP BY, ORDER BY, HAVING, LIMIT, and more each start a new line, with AND/OR conditions indented beneath them.' },
-    { q: 'Does it validate that my SQL is correct?', a: 'No, it only reformats and highlights keywords in whatever text you provide, it does not parse or check the query\'s SQL syntax.' },
+    { q: "Does it validate SQL?", a: "It checks quote and parenthesis balance while formatting tokens. It does not validate SQL grammar, execute queries or provide database-specific validation. Output is plain text." },
     { q: 'What SQL dialect does the keyword list target?', a: 'A general ANSI-style vocabulary covering SELECT, INSERT, UPDATE, DELETE, and common clauses, not a database-specific dialect like PL/pgSQL or T-SQL extensions.' },
   ],
   'decimal-to-binary': [
@@ -1037,6 +1184,7 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'How do I choose which pages to remove?', a: 'Click any page tile to mark it for deletion, or use Select All / Deselect All to toggle every page at once.' },
     { q: 'Can I delete every page in the document?', a: 'No, the tool blocks deleting all pages since that would leave an empty PDF, at least one page must remain.' },
     { q: 'Does it re-render or compress the remaining pages?', a: 'The remaining pages are copied into a new PDF in their original order. Page content is kept, but document-level metadata and some interactive features may not carry over.' },
+    { q: "What PDF limits apply?", a: "Up to 25 MiB per input PDF, 100 pages and 2,000 points per page side. Plan-specific upload limits may be lower." },
   ],
   'discount-calculator': [
     { q: 'Can it apply two discounts in sequence?', a: 'Yes. The optional Additional Discount is applied to the already-reduced price, so 30% followed by 10% produces a 37% combined discount rather than 40%.' },
@@ -1075,9 +1223,9 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Are leading zeros accepted in IPv4 input?', a: 'No. Strict dotted-quad input is used so malformed octets, empty sections, and trailing characters are rejected instead of being interpreted ambiguously.' },
   ],
   'domain-age-checker': [
-    { q: 'Where does the registration data come from?', a: 'A live RDAP query to rdap.org, not cached WHOIS data.' },
-    { q: 'What happens if a domain has no public registration record?', a: 'It shows a message that no record was found, which can mean the domain is unregistered or uses a registry without public RDAP data.' },
-    { q: 'What information does it show beyond the age?', a: 'Expiry status with days or years remaining, the registration and expiry dates, and the domain\'s nameservers.' },
+    { q: "Where does registration data come from?", a: "A browser request to public RDAP via rdap.org. Registry availability, missing fields and CORS restrictions can prevent a result." },
+    { q: "Does a failed lookup mean the domain is unregistered?", a: "No. The registry may lack public data, omit dates or block the request. A failed lookup is not proof of availability." },
+    { q: "What does the report include?", a: "Available registration, expiration and last-changed dates, elapsed registration age in days, nameservers and status. Registration age is not website age." },
   ],
   'dominant-color-extractor': [
     { q: 'How does it determine the dominant colors?', a: 'It draws the image to a canvas, groups pixels into color buckets, and returns the six buckets with the most pixels along with each one\'s percentage of the image.' },
@@ -1110,9 +1258,10 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Can I get a cleaned, deduplicated list?', a: 'Yes, a Deduplicated URL List section outputs one canonical URL per unique page, ready to copy.' },
   ],
   'edit-pdf': [
-    { q: 'Does it let me edit the original text already in the PDF?', a: 'No, it adds new text and image overlays on top of the page rather than modifying existing PDF content.' },
-    { q: 'Can I position overlays precisely?', a: 'Yes, anchor to any of 9 positions (left, center, or right combined with top, middle, or bottom) with pixel offsets, and a marker preview shows roughly where each overlay will land.' },
+    { q: "Does this edit or securely redact the original content?", a: "Text and images are added as overlays. Replacement and removal add white overlays, leaving the original content recoverable. This is not secure redaction." },
+    { q: "Can I position overlays precisely?", a: "Click the page preview to place an overlay, then adjust its position in PDF points. The coordinates are tied to the selected PDF page." },
     { q: 'Can I add overlays to specific pages in a multi-page PDF?', a: 'Yes, use Prev and Next to switch pages, and each overlay you add is tied to whichever page was active when you added it.' },
+    { q: "What PDF limits apply?", a: "Up to 25 MiB per input PDF, 100 pages and 2,000 points per page side." },
   ],
   'email-generator': [
     { q: 'Are the generated emails real, active inboxes?', a: 'No, they\'re randomly assembled addresses for testing forms, seeding databases, or demos, not real mailboxes.' },
@@ -1120,8 +1269,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Can I set my own domain instead of the built-in list?', a: 'Yes, choose "Custom domain..." from the Domain dropdown and type any domain you want appended.' },
   ],
   'email-validator': [
-    { q: 'Does it check whether the email address actually exists?', a: 'No, it only checks the format, things like local part length, domain length, and allowed characters, not whether the mailbox is real or receives mail.' },
-    { q: 'What specific rules does it check?', a: 'Presence of exactly one @, a local part under 64 characters with valid characters, and a domain under 253 characters matching valid hostname label formatting.' },
+    { q: "Does it check DNS or mailbox existence?", a: "No. It checks unquoted ASCII email syntax locally, without DNS, MX, mailbox or deliverability checks." },
+    { q: "What syntax does it check?", a: "It checks lengths, allowed ASCII characters, local-part dot placement and hostname labels. Quoted local parts and internationalized email syntax are outside this tool’s scope." },
     { q: 'What does it tell me when an email is invalid?', a: 'A specific reason, such as a missing @ symbol, invalid characters in the local part, or an invalid domain format.' },
   ],
   'emoji-finder': [
@@ -1155,14 +1304,12 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'How are corrections shown?', a: 'Each match highlights the specific phrase in your text and offers the corrected wording to swap in.' },
   ],
   'excel-to-csv': [
-    { q: 'What Excel format does it accept?', a: '.xlsx files, read directly from the file\'s internal XML and shared-strings data in your browser, nothing is uploaded to a server.' },
-    { q: 'Does it handle workbooks with multiple sheets?', a: 'Yes, every sheet gets its own tab so you can switch between them before copying or downloading.' },
-    { q: 'Is there a row limit?', a: 'The on-screen preview shows the first 200 rows, but the downloaded CSV always includes every row in the sheet.' },
+    { q: "What does this tool do?", a: "Export cell values from a selected XLSX sheet to quoted CSV." },
+    { q: "What should I know before using it?", a: "Choose one sheet from an XLSX workbook. Exports use displayed cell values and cached formula results, without recalculating formulas or preserving workbook styles, charts or macros. Inputs are limited to 5 MB and 50 sheets, with per-sheet row, column and cell limits." },
   ],
   'excel-to-xml': [
-    { q: 'What does the generated XML look like?', a: 'Each sheet becomes a Worksheet element containing Row elements, and each Row contains Cell elements tagged with a column index.' },
-    { q: 'Does it handle workbooks with multiple sheets?', a: 'Yes, a tab switcher lets you pick which sheet to export, and the XML preview and download update to match.' },
-    { q: 'Can I copy the XML instead of downloading a file?', a: 'Yes, a Copy XML button puts the full generated markup on your clipboard.' },
+    { q: "What does this tool do?", a: "Export a selected XLSX sheet to XML fields; the first row supplies field names." },
+    { q: "What should I know before using it?", a: "Choose one sheet from an XLSX workbook. Exports use displayed cell values and cached formula results, without recalculating formulas or preserving workbook styles, charts or macros. Inputs are limited to 5 MB and 50 sheets, with per-sheet row, column and cell limits." },
   ],
   'exif-remover': [
     { q: 'What image formats does it accept?', a: 'JPEG, PNG, WebP, GIF, and SVG files up to 20 MiB. JPEG exports back to JPEG at quality 95. PNG, WebP, GIF, and SVG export as PNG, with GIF cleaned as a still frame and SVG rasterized.' },
@@ -1171,9 +1318,10 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'What does the metadata report mean?', a: 'It shows recognized EXIF fields when they can be parsed and labels GPS as present without showing coordinates. A zero recognized-field count only means no named fields were identified.' },
   ],
   'extract-images-from-pdf': [
-    { q: 'What image encodings can it pull out of a PDF?', a: 'JPEG images are extracted directly, and grayscale, RGB, CMYK, and indexed-RGB images are rebuilt pixel by pixel into PNG files.' },
-    { q: 'Are there image types it can\'t extract?', a: 'Yes, less common encodings like JPEG2000 or CCITT fax compression are skipped rather than guessed at, so every image you get back is a faithful copy of the original.' },
-    { q: 'Can I download every extracted image at once?', a: 'Yes, a Download All as ZIP option bundles every image found in the PDF into a single archive built in your browser.' },
+    { q: "Which embedded images can it extract?", a: "Supported DCT JPEG streams retain their original bytes. Supported 8-bit grayscale, RGB, CMYK and indexed-RGB samples are reconstructed as PNG, with supported grayscale soft-mask transparency. CMYK conversion is approximate." },
+    { q: "Will every image be an exact copy?", a: "No. Unsupported codecs, predictors, decode transforms and color-key masks are skipped. Reconstructed PNGs are not a guarantee of exact color fidelity." },
+    { q: "Can I download all extracted images?", a: "Yes, Download All as ZIP bundles successfully extracted images. Extraction is limited to 16 million pixels per image and 32 million cumulative image pixels." },
+    { q: "What PDF limits apply?", a: "Up to 25 MiB per input PDF, 100 pages and 2,000 points per page side." },
   ],
   'favicon-from-emoji': [
     { q: 'Can I set custom foreground and background colors?', a: 'Yes, both the emoji\'s background fill and the canvas size are adjustable before you generate the icon.' },
@@ -1216,9 +1364,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'What happens with an invalid fraction?', a: 'It shows a specific error message telling you the expected format instead of a blank or broken result.' },
   ],
   'general-unit-converter': [
-    { q: 'Which categories of units does it cover?', a: 'Length, weight, temperature, area, volume, and speed, switchable from a category selector above the conversion fields.' },
-    { q: 'How does it handle temperature conversions?', a: 'Temperature uses its own formula rather than a simple multiplier, since Celsius, Fahrenheit, and Kelvin don\'t share a common zero point.' },
-    { q: 'Does the unit list change based on the category?', a: 'Yes, picking a category updates both dropdowns to only show units that belong to it.' },
+    { q: "What does this tool do?", a: "Convert length, weight, temperature, area, volume and speed with live validated results." },
+    { q: "What should I know before using it?", a: "Results update as you change the value and units. Invalid numbers are rejected, as are temperatures below absolute zero. Calculations use floating-point arithmetic, so displayed results can be rounded." },
   ],
   'grammar-checker': [
     { q: 'Where do the grammar and spelling checks come from?', a: 'A live call to the LanguageTool grammar API, not a small built-in rule list, so it can catch a much wider range of errors than simple pattern matching.' },
@@ -1321,9 +1468,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'How is extra whitespace handled?', a: 'Every run of consecutive whitespace left behind after tags are removed is collapsed into a single space.' },
   ],
   'html-validator': [
-    { q: 'What counts as a "missing tag" error?', a: 'It tracks opening and closing tags with a stack as it scans, and flags both unclosed tags left on the stack and closing tags that do not match the tag that was actually open.' },
-    { q: 'Which deprecated tags does it flag?', a: 'Old presentational tags like <center>, <font>, <marquee>, <blink>, and <strike>, with a suggestion to use CSS instead.' },
-    { q: 'What accessibility issues does it check for?', a: 'Missing alt attributes on <img> tags, plus javascript: URLs in href attributes, which are flagged as both a security and accessibility concern.' },
+    { q: "What does this tool do?", a: "Check HTML for common tag, nesting and attribute issues with basic lint rules." },
+    { q: "What should I know before using it?", a: "These checks aren't a complete HTML standards or accessibility audit. A clean result doesn't prove the page will render correctly." },
   ],
   'collage-maker': [
     { q: 'Does the preview update when I change files or settings?', a: 'Yes. The preview updates as you add, remove, reorder, or replace files and change collage settings. Drag source cards to reorder them, or use the accessible Move earlier and Move later controls.' },
@@ -1353,6 +1499,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'How does Auto Detect know what the background is?', a: 'It samples the pixel colors at all four corners of the image, averages them into one background color, then flood-fills outward from those corners removing any pixel within your tolerance of that color.' },
     { q: 'When should I use Color Key instead?', a: 'Color Key removes a specific color you choose with the color picker, such as green screen footage, rather than guessing the background from the corners.' },
     { q: 'What does the Tolerance slider control?', a: 'It sets how close a pixel\'s color has to be to the detected or chosen background color to get made transparent, so raising it removes more color variation like shadows or gradients.' },
+    { q: "How is AI mode different from color matching?", a: "AI mode downloads an IMG.LY model and runs segmentation locally. Auto Detect and Color Key use pixel-color matching instead. Downloads or runtime setup can fail. Cancel discards the result but may not stop computation." },
+    { q: "What is downloaded?", a: "A PNG with the current background-removal result." },
   ],
   'image-compressor': [
     { q: 'Which output formats can I compress to?', a: 'JPEG, PNG, or WebP, chosen with a button group. JPEG and WebP use a maximum quality setting; PNG stays lossless.' },
@@ -1381,6 +1529,7 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'How can it tell the real format if the file extension is wrong?', a: 'It reads the first few bytes of the file and checks them against the magic-number signatures for PNG, JPEG, GIF, BMP, WebP, ICO, and SVG, which is the same way image formats identify themselves regardless of what the filename says.' },
     { q: 'What does the mismatch warning mean?', a: 'It shows up when the MIME type your browser reports for the file does not match what the file\'s own byte signature says it is, a sign the extension or reported type may be misleading.' },
     { q: 'What color information does it show?', a: 'Bit depth and color type read directly from the format\'s header, such as PNG\'s color type byte or a JPEG\'s SOF marker, showing things like RGBA truecolor or an indexed palette.' },
+    { q: "Which files and limits apply?", a: "PNG, JPEG, GIF, WebP, BMP, ICO and SVG must pass signature checks and browser decoding. Inputs are limited to 20 MiB, 8,192 pixels per side and 24 megapixels." },
   ],
   'image-format-converter': [
     { q: 'Which formats can I convert between?', a: 'JPEG, PNG, WebP, and AVIF as output formats, with JPEG, PNG, WebP, AVIF, and GIF all accepted as input.' },
@@ -1393,14 +1542,12 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Are these real, routable addresses?', a: 'No, every group is randomly generated, so they are meant for filling test data or documentation, not for addresses that exist on any real network.' },
   ],
   'jpg-to-png': [
-    { q: 'Does it accept formats other than JPEG?', a: 'Yes, the upload also accepts PNG, WebP, GIF, and BMP up to 20MB, though the tool is built around converting a JPEG source into PNG output.' },
-    { q: 'Does converting JPEG to PNG restore detail lost to JPEG compression?', a: 'No, PNG is lossless going forward, so no further quality is lost during this conversion, but any detail already discarded by the original JPEG compression cannot be recovered.' },
-    { q: 'What is actually happening during the conversion?', a: 'The uploaded image is drawn onto a canvas at its full resolution, then read back out as PNG data, which is why the output keeps the same pixel dimensions as the source file.' },
+    { q: "What does this tool do?", a: "Convert JPG images to PNG and compare the measured output size." },
+    { q: "What should I know before using it?", a: "Inputs are limited to 10 MB and 16 megapixels. Output size is measured and can be larger than the input." },
   ],
   'jpg-to-webp': [
-    { q: 'How much smaller does the WebP version end up?', a: 'It varies by image, so the tool shows the exact before-and-after file sizes plus a percentage difference after each conversion rather than a fixed number.' },
-    { q: 'Can I control the WebP compression level?', a: 'Yes, a quality slider from 1 to 100 adjusts the WebP encoding, letting you trade off file size against visual quality before downloading.' },
-    { q: 'Can I convert to a different format instead if I change my mind?', a: 'Yes, the same output format buttons also offer JPEG, PNG, and AVIF, so you can switch targets without re-uploading the image.' },
+    { q: "What does this tool do?", a: "Convert JPG images to WEBP and compare the measured output size." },
+    { q: "What should I know before using it?", a: "Inputs are limited to 10 MB and 16 megapixels. Output size is measured and can be larger than the input. WebP export uses a browser encoder with a local codec fallback." },
   ],
   'json-escape-unescape': [
     { q: 'Does it only escape for JSON, or other languages too?', a: 'JSON is the default context, but a context selector also covers JavaScript, regex, HTML, and a general backslash mode, each escaping a different set of characters like quotes, angle brackets, or regex metacharacters.' },
@@ -1408,14 +1555,15 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'What exactly gets escaped in JSON mode?', a: 'Backslashes, double quotes, newlines, carriage returns, and tabs, each converted to its two-character JSON escape sequence like \\n or \\t so the string is safe to embed inside a JSON value.' },
   ],
   'json-path-tester': [
-    { q: 'What JSONPath syntax does it support?', a: 'Dot notation for object keys, the * wildcard for all values, numeric array indexes, and simple filter expressions like [?(@.price > 20)] for comparing a field against a value.' },
-    { q: 'Are there example paths I can try?', a: 'Yes, buttons above the path field load ready-made expressions like "All books" or "Expensive items" against the sample bookstore JSON that is preloaded when you first open the tool.' },
-    { q: 'What happens if my path matches nothing?', a: 'The results panel shows a literal "(no matches)" entry instead of an empty list, so you can tell a valid path that found nothing apart from a JSON or syntax error.' },
+    { q: "What JSONPath grammar is supported?", a: "Root $, dot and quoted keys, positive and negative indexes, wildcards, recursive descent and simple property comparisons using ==, !=, >, <, >= or <=. Slices, unions and JavaScript expressions are unsupported." },
+    { q: "How do I load sample data?", a: "Choose Examples to load sample bookstore JSON and a matching path. The path shortcut buttons change the expression; data is not preloaded on first opening." },
+    { q: "What happens when nothing matches?", a: "A valid path with no matches returns []. Invalid JSON and unsupported path syntax return errors." },
   ],
   'json-schema-validator': [
-    { q: 'Which JSON Schema keywords does it check?', a: 'Type, enum, const, minimum/maximum and their exclusive variants, minLength/maxLength, pattern, format (email, uri, date-time, ipv4), array constraints like minItems and uniqueItems, and object constraints like required and additionalProperties.' },
+    { q: "Which schema checks are supported?", a: "The draft-07 subset supports type, enum, const, minimum, maximum, exclusiveMinimum, exclusiveMaximum, multipleOf, minLength, maxLength, minItems, maxItems, uniqueItems, single-schema items, minProperties, maxProperties, required, properties, additionalProperties, allOf, anyOf, oneOf and not, plus boolean schemas. References, pattern, format, tuple items and other unsupported keywords return errors." },
     { q: 'How specific are the error messages?', a: 'Each violation lists the exact property path where it occurred alongside a plain-language description, such as which required property is missing or which minimum a number fell below.' },
     { q: 'Can I clean up messy schema or data JSON before validating?', a: 'Yes, a Format button above each textarea re-indents that panel\'s JSON if it already parses, without needing to run the validation first.' },
+    { q: "What schema metadata and limits apply?", a: "The $schema identifier, when supplied, must be http://json-schema.org/draft-07/schema#. title, description, default, examples and $comment are accepted as annotations, not additional checks. Inputs are limited to 100,000 characters, schemas to 500 subschemas and validation to 20,000 checks. uniqueItems accepts at most 1,000 array items." },
   ],
   'json-ld-generator': [
     { q: 'Which Schema.org types can I generate?', a: 'WebSite, WebPage, Article, NewsArticle, BlogPosting, Product, LocalBusiness, Restaurant, Event, Person, Organization, BreadcrumbList, and FAQPage, selected from a row of tabs above the form fields.' },
@@ -1423,8 +1571,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Can I add more than one breadcrumb or FAQ entry?', a: 'Yes, both the BreadcrumbList and FAQPage forms have an "Add" button to append additional items, each with its own remove button.' },
   ],
   'jupyter-cleaner': [
-    { q: 'What exactly gets stripped from the notebook?', a: 'Every code cell\'s outputs array is emptied, its execution_count is reset to null, and cell-level metadata like collapsed and scrolled flags are removed, while source code and markdown cells are left untouched.' },
-    { q: 'Does it keep any notebook-level metadata?', a: 'Yes, it preserves the kernelspec and a trimmed language_info (just the name and version), since those are usually needed to reopen the notebook correctly, and discards everything else.' },
+    { q: "What gets removed?", a: "Code-cell outputs are emptied, execution_count becomes null, and execution, collapsed and scrolled metadata is removed from code cells. Source content is preserved." },
+    { q: "Which metadata is preserved?", a: "Notebook-level metadata, cell IDs, attachments and all other cell metadata are preserved. Markdown and raw cells are retained." },
     { q: 'Can I upload a file instead of pasting JSON?', a: 'Yes, an upload field accepts a .ipynb file directly and loads its contents into the editor, or you can paste the notebook JSON by hand.' },
   ],
   'jwt-inspector': [
@@ -1473,9 +1621,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Is there a maximum word count?', a: 'The count field caps at 100 words per generation.' },
   ],
   'm4a-to-wav': [
-    { q: 'Is this a real audio conversion or just a renamed file?', a: 'A real one, the tool decodes the uploaded audio through the Web Audio API and manually writes a 16-bit PCM WAV file with a proper RIFF header, not just a file extension swap.' },
-    { q: 'What input formats does it accept?', a: 'AAC, M4A, and MP4 files, either by clicking the upload area or dragging a file directly onto it.' },
-    { q: 'Does it preserve the original number of audio channels and sample rate?', a: 'Yes, both are read from the decoded audio buffer and written into the WAV header exactly as they were in the source file, mono stays mono and the sample rate is not resampled.' },
+    { q: "What does this tool do?", a: "Decode supported M4A audio to 16-bit PCM WAV." },
+    { q: "What should I know before using it?", a: "Limits are 20 MB, 120 decoded seconds and 24 million decoded samples across all channels. If the browser can't decode the container directly, a fallback handles supported AAC-LC tracks in M4A files. It preserves supported timing trims and rejects layouts it can't reproduce safely. Other codecs depend on browser support. WAV output doesn't restore detail lost in earlier compression." },
   ],
   'markdown-preview': [
     { q: 'Does the preview update as I type, or do I need to click a button?', a: 'It updates live on every keystroke, rendered with the marked library and GitHub Flavored Markdown enabled, no render or refresh button needed.' },
@@ -1484,38 +1631,44 @@ const OVERRIDES: Record<string, FAQ[]> = {
   ],
   'merge-pdfs': [
     { q: 'Can I change the order of the PDFs before merging?', a: 'Yes, each file in the list has up and down arrows to reorder it, so pages appear in your merged document in whatever sequence you choose.' },
-    { q: 'What happens if I select a non-PDF file?', a: 'It is silently skipped, only files with a PDF mime type are added to the merge list, so dragging in a mixed folder only picks up the PDFs.' },
+    { q: 'What happens if I select a non-PDF file?', a: 'The tool reports an error for non-PDF files or files that fail parsing. Remove the invalid file and try again.' },
     { q: 'How do I know the merge worked correctly?', a: 'The result message reports the exact combined page count, calculated by copying every source PDF\'s pages in order into the new document with pdf-lib.' },
+    { q: "What PDF limits apply?", a: "Up to 25 MiB per input PDF, 100 pages and 2,000 points per page side. Plan-specific upload limits may be lower. Merge up to 20 files with 100 pages total." },
   ],
   'pdf-rearrange': [
     { q: 'How do I change the page order?', a: 'Drag a page row to a new position, or use its Up and Down buttons. The saved PDF follows the displayed order.' },
     { q: 'Can I rotate one page without rotating the others?', a: 'Yes, Rotate adds 90 degrees to the selected page only. Repeat it to reach 180 or 270 degrees.' },
     { q: 'Does it edit the content inside a page?', a: 'No, it rearranges and rotates whole pages. Pages are copied into a new PDF, so document-level metadata may not carry over.' },
+    { q: "What PDF limits apply?", a: "Up to 25 MiB per input PDF, 100 pages and 2,000 points per page side." },
   ],
   'sign-pdf': [
     { q: 'What signature methods are supported?', a: 'Draw a signature with a mouse, trackpad, or finger, type a name in a script-style font, or upload a PNG or JPG signature image.' },
     { q: 'Can I choose which page receives the signature?', a: 'Yes, select a page and set the signature position and size in PDF points before signing.' },
     { q: 'Is this a legal or cryptographic digital signature?', a: 'No. The tool places a visual signature image on the PDF. It does not create a certificate-based digital signature or guarantee legal acceptance.' },
+    { q: "What PDF limits apply?", a: "Up to 25 MiB per input PDF, 100 pages and 2,000 points per page side. Plan-specific upload limits may be lower." },
   ],
   'unlock-pdf': [
     { q: 'Can it unlock a PDF that asks for a password?', a: 'Yes, provide the current opening password. The browser renders the visible pages into a new password-free PDF.' },
-    { q: 'What happens to a password-protected PDF\'s text and forms?', a: 'The password-protected path creates a flattened PDF. The pages remain visible, but the original selectable text and interactive form structure are not preserved.' },
+    { q: "What changes in encrypted PDF output?", a: "Encrypted PDFs become rasterized page images. Selectable text, links, interactive forms and digital signatures are not preserved. Already-unencrypted PDFs are re-saved without rasterization." },
     { q: 'Are my PDF or password uploaded?', a: 'No. PDF parsing, password handling, and output generation happen locally in your browser.' },
+    { q: "What PDF limits apply?", a: "Up to 25 MiB per input PDF, 100 pages and 2,000 points per page side. Plan-specific upload limits may be lower." },
   ],
   'pdf-password-remover': [
     { q: 'Can it unlock a PDF that asks for a password?', a: 'Yes, provide the current opening password. The browser renders the visible pages into a new password-free PDF.' },
-    { q: 'What happens to a password-protected PDF\'s text and forms?', a: 'The password-protected path creates a flattened PDF. The pages remain visible, but the original selectable text and interactive form structure are not preserved.' },
+    { q: "What changes in encrypted PDF output?", a: "Encrypted PDFs become rasterized page images. Selectable text, links, interactive forms and digital signatures are not preserved. Already-unencrypted PDFs are re-saved without rasterization." },
     { q: 'Are my PDF or password uploaded?', a: 'No. PDF parsing, password handling, and output generation happen locally in your browser.' },
+    { q: "What PDF limits apply?", a: "Up to 25 MiB per input PDF, 100 pages and 2,000 points per page side. Plan-specific upload limits may be lower." },
   ],
   'add-watermark-to-pdf': [
     { q: 'Can I use text or an image as the watermark?', a: 'Yes, choose Text for a typed mark such as CONFIDENTIAL, or Image for a PNG or JPG logo.' },
     { q: 'Does the watermark appear on every page?', a: 'Yes, the selected watermark is applied to every page. Opacity, rotation, and image width can be adjusted before processing.' },
     { q: 'Does a watermark protect a PDF from access?', a: 'No. It is a visible label or deterrent, not encryption, access control, or a replacement for document permissions.' },
+    { q: "What PDF limits apply?", a: "Up to 25 MiB per input PDF, 100 pages and 2,000 points per page side. Plan-specific upload limits may be lower." },
   ],
   'meta-description-checker': [
-    { q: 'What character range counts as ideal?', a: '120 to 160 characters shows a green optimal-range badge, under 120 or over 160 shows a warning message telling you how many characters to add or trim.' },
-    { q: 'What happens if my description goes past 200 characters?', a: 'An extra warning appears noting it will likely be truncated in search results, layered on top of the over-160 length warning.' },
-    { q: 'Does the page title field affect the score?', a: 'No, only the meta description length drives the score and messages, the title field is there for context but is not itself scored.' },
+    { q: "Is there an ideal character range?", a: "The tool reports Unicode character counts rather than an optimal-length grade. A count does not guarantee how a search snippet will display." },
+    { q: "Can I inspect HTML or a URL?", a: "Yes. Paste text or HTML, or fetch a URL where CORS permits. URL reads inspect source HTML without running page scripts." },
+    { q: "Does it predict rankings?", a: "No. It counts description characters and checks an optional phrase. Search engines may choose a different snippet." },
   ],
   'mock-port-scanner-full': [
     { q: 'What does a "filtered" result mean compared to "closed"?', a: 'Filtered means the scan request to a given port errored out or timed out after one second without a clear answer, closed means the port responded but reported as not open, and open means it responded as accepting connections.' },
@@ -1523,9 +1676,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Does it tell me what service typically runs on an open port?', a: 'For about twenty well-known ports, like 22 for SSH, 443 for HTTPS, 3306 for MySQL, and 6379 for Redis, the results table shows the matching service name next to the port number.' },
   ],
   'mp4-to-wav': [
-    { q: 'Does this work on the video file directly, or do I need to extract audio first?', a: 'You upload the MP4 video directly, the tool decodes its audio track through the Web Audio API and writes it straight to a WAV file, no separate audio-extraction step needed.' },
-    { q: 'What happens to the video portion of my MP4 file?', a: 'It is discarded, only the decoded audio stream is used to build the WAV file, so the output is audio-only with no video frames.' },
-    { q: 'Will the output be stereo or mono?', a: 'Whatever the source audio track is, mono stays mono and stereo stays stereo, since the channel count is read straight from the decoded audio buffer rather than forced to one setting.' },
+    { q: "What does this tool do?", a: "Decode supported MP4 audio to 16-bit PCM WAV. Files without decodable audio are rejected." },
+    { q: "What should I know before using it?", a: "Limits are 20 MB, 120 decoded seconds and 24 million decoded samples across all channels. If the browser can't decode the container directly, a fallback handles supported AAC-LC tracks in MP4 files. It preserves supported timing trims and rejects layouts it can't reproduce safely. Other codecs depend on browser support. WAV output doesn't restore detail lost in earlier compression." },
   ],
   'network-port-scanner': [
     { q: "What's the default port range if I don't change anything?", a: '1 to 1000 is pre-filled in the Ports field when you open the tool, covering most common services without needing to type a range yourself.' },
@@ -1533,9 +1685,9 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Does it check every port one at a time?', a: 'No, ports are grouped into batches of 50 and checked concurrently, with the progress bar and results table updating after each batch finishes.' },
   ],
   'notebook-to-html': [
-    { q: 'Do I need to run the notebook first, or can I paste one that already has outputs?', a: 'Paste the raw .ipynb JSON as-is, including any stream text, execute_result, or error outputs already saved in the file, they are rendered directly without re-executing any code.' },
-    { q: 'Does the code get real syntax highlighting?', a: 'Yes, a built-in tokenizer highlights strings, comments, numbers, keywords, and function calls in code cells using pattern matching, no external highlighting library is loaded.' },
-    { q: 'Can I get a standalone HTML file out of this, not just a preview?', a: 'Yes, Copy HTML on the HTML tab copies a complete self-contained HTML document with inline CSS for every cell type, ready to save and open on its own.' },
+    { q: "Does it execute notebook code?", a: "No. It reads v4 notebook JSON and includes saved stream, error and text/plain outputs. Rich images, plots and widget outputs are omitted." },
+    { q: "Is the code syntax highlighted?", a: "The current export shows plain code and raw-cell text alongside sanitized Markdown. It does not reproduce Jupyter’s full rendering." },
+    { q: "Can I save the HTML?", a: "Yes. Copy the generated HTML or download a standalone HTML document. Referenced Markdown images still require their external URLs to be available." },
   ],
   'number-to-words': [
     { q: "What's the largest number it can spell out?", a: 'Up to 1 quadrillion, 1,000,000,000,000,000, anything larger returns a "Number too large" message instead of a result.' },
@@ -1578,9 +1730,9 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Is the placeholder text regenerated automatically when I change the count?', a: 'Yes, changing the unit or the count number regenerates the output immediately, there is also a Regenerate button if you want a fresh variation using the same settings.' },
   ],
   'password-strength-checker': [
-    { q: 'How is the entropy number calculated?', a: "It multiplies your password's length by the log2 of the character pool size implied by what you used, lowercase, uppercase, digits, symbols, or other characters, so a longer password drawing from more character types scores higher entropy." },
-    { q: 'What does the crack time estimate assume about the attacker?', a: 'It assumes ten billion guesses per second, then divides two to the power of your entropy by that rate, ranging from instant for weak passwords up to figures like "3.2 billion years" for very strong ones.' },
-    { q: 'Is my password sent anywhere to be checked?', a: 'No, every calculation, the entropy, crack time, and suggestions, runs in your browser using the characters you typed, the Show/Hide toggle only affects the input field\'s own masking.' },
+    { q: "What do the score and random-model bits mean?", a: "The score uses composition and obvious-pattern heuristics. Random-model bits are a theoretical upper bound assuming independently sampled characters, not measured password entropy." },
+    { q: "Does it predict crack time or check breaches?", a: "No. It does not predict an attacker’s cracking time or query breach databases." },
+    { q: "Is my password uploaded?", a: "No. These checks run locally on the characters you enter. Show/Hide changes only the input’s masking." },
   ],
   'percentage-change-calc': [
     { q: 'How does it show whether the change was an increase or a decrease?', a: 'The Difference and % Change figures switch between a "+" prefix and no sign automatically based on your Old and New values, so a lower New Value produces negative numbers indicating a decrease, and a higher one produces positive numbers indicating an increase.' },
@@ -1618,9 +1770,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Can the border be transparent?', a: 'No. The border control is a native color picker, so the border itself is an opaque RGB color. Any alpha inside the original image is preserved in the PNG output.' },
   ],
   'png-to-webp': [
-    { q: 'How much smaller does WebP actually end up compared to my PNG?', a: 'It varies by image, the After panel shows the converted file size next to a note like "42% smaller" or "smaller/larger", calculated directly by comparing the two file sizes after conversion.' },
-    { q: 'Is transparency preserved when converting to WebP?', a: 'Yes, unlike a JPEG conversion, WebP supports an alpha channel, so transparent areas in your source PNG stay transparent in the converted file.' },
-    { q: 'Can I fine-tune the compression instead of using a fixed setting?', a: 'Yes, a 1 to 100 quality slider controls the WebP encoding, and you can re-run the conversion at a different quality and compare the resulting file size before deciding which to download.' },
+    { q: "What does this tool do?", a: "Convert PNG images to WEBP and compare the measured output size." },
+    { q: "What should I know before using it?", a: "Inputs are limited to 10 MB and 16 megapixels. Output size is measured and can be larger than the input. WebP export uses a browser encoder with a local codec fallback." },
   ],
   'punctuation-fixer': [
     { q: 'What does the Smart Quotes option actually change?', a: 'It converts straight double and single quote characters into their curly Unicode equivalents, so plain " and \' marks come out looking like typeset quotation marks instead of typewriter-style straight ones.' },
@@ -1719,14 +1870,14 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'What happens to numbers and punctuation?', a: 'Only the 26 letters, upper and lower case, get shifted, digits, spaces, and punctuation pass through unchanged.' },
   ],
   'robots-txt-analyzer': [
-    { q: "Does it flag directives it doesn't recognize?", a: 'Yes, running Validate checks every line against the known directive set (User-agent, Allow, Disallow, Sitemap, Crawl-delay, Clean-param) and reports "Unknown directive" by line number for anything else.' },
-    { q: 'How does it check Sitemap lines?', a: 'It confirms the value after Sitemap: starts with http, flagging it as an error if you paste a relative path instead of a full URL.' },
-    { q: 'What does the rule breakdown look like?', a: 'Below the editor, every Allow and Disallow line is listed with its user agent and path, color coded green for allowed and red for disallowed, so crawler directives and blocked paths are easy to scan.' },
+    { q: "Can I paste or fetch robots.txt?", a: "Yes. Paste and edit the rules locally, or fetch a URL that permits CORS. Validation reports errors and extension warnings; it does not enforce access restrictions." },
+    { q: "How does path testing work?", a: "Matching user-agent groups are combined. The most specific matching rule wins, with Allow winning ties. Wildcards, end anchors and empty rules are handled; empty Allow or Disallow values have no effect." },
+    { q: "Does this guarantee how every crawler behaves?", a: "No. Crawler extensions and implementation differences still need review. robots.txt is not authentication or access control." },
   ],
   'robots-txt-checker': [
-    { q: 'What counts as a blocked path?', a: 'Every Disallow rule you\'ve written is parsed and listed in the Preview/Rules panel with a red DISALLOW badge next to the user agent and path it applies to, so you can see at a glance what\'s off limits.' },
-    { q: 'What kind of validation does it run?', a: 'Clicking Validate checks for missing values after User-agent, Allow, or Disallow, flags the deprecated bare wildcard *, and flags any directive it doesn\'t recognize, listing each problem by line number.' },
-    { q: 'Does it group rules by user agent?', a: "Yes, the parsed rule list tags each Allow or Disallow entry with the User-agent block it belongs to, so rules for Googlebot and rules for * don't get mixed together." },
+    { q: "Can I paste or fetch robots.txt?", a: "Yes. Paste and edit the rules locally, or fetch a URL that permits CORS. Validation reports errors and extension warnings; it does not enforce access restrictions." },
+    { q: "How does path testing work?", a: "Matching user-agent groups are combined. The most specific matching rule wins, with Allow winning ties. Wildcards, end anchors and empty rules are handled; empty Allow or Disallow values have no effect." },
+    { q: "Does this guarantee how every crawler behaves?", a: "No. Crawler extensions and implementation differences still need review. robots.txt is not authentication or access control." },
   ],
   'robots-txt-generator': [
     { q: 'What crawler-specific controls does it offer?', a: 'A per-bot Crawl-delay setting, pick a bot like Googlebot, Bingbot, or Yandex from a dropdown and assign it a delay in seconds, alongside a one-click list of common paths like /wp-admin/ and /checkout/ to disallow.' },
@@ -1734,9 +1885,9 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Does the generated file include a timestamp?', a: 'If you fill in the Site URL field, the output starts with a comment line showing that URL and the exact generation timestamp, both omitted if you leave Site URL blank.' },
   ],
   'robots-txt-validator': [
-    { q: 'What specific errors does it catch?', a: 'Missing values after User-agent, Allow, or Disallow, the deprecated bare wildcard * used as a path, non-absolute Sitemap URLs, and any directive outside the recognized set, each reported with its line number.' },
-    { q: 'Does it edit in place or just report errors?', a: 'Both, the same textarea you type or paste your robots.txt into is what gets validated, so you can fix a flagged line and re-run Validate immediately.' },
-    { q: 'What happens if there are no errors?', a: "The Validation Errors panel simply doesn't appear, and the Preview/Rules panel below shows your parsed Allow and Disallow rules as confirmation the file was read correctly." },
+    { q: "Can I paste or fetch robots.txt?", a: "Yes. Paste and edit the rules locally, or fetch a URL that permits CORS. Validation reports errors and extension warnings; it does not enforce access restrictions." },
+    { q: "How does path testing work?", a: "Matching user-agent groups are combined. The most specific matching rule wins, with Allow winning ties. Wildcards, end anchors and empty rules are handled; empty Allow or Disallow values have no effect." },
+    { q: "Does this guarantee how every crawler behaves?", a: "No. Crawler extensions and implementation differences still need review. robots.txt is not authentication or access control." },
   ],
   'rot47-cipher': [
     { q: 'How is ROT47 different from ROT13?', a: 'ROT47 shifts across the full 94 printable ASCII characters from ! through ~, not just the 26 letters, so it also scrambles digits, punctuation, and symbols, while ROT13 only rotates letters.' },
@@ -1774,8 +1925,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'What does the unique word count measure?', a: "It's a distinct count of the words in your text, so if you use the same word five times it only adds one to that total, separate from the plain word count above it." },
   ],
   'seo-meta-tag-analyzer': [
-    { q: 'How does it read another site\'s meta tags?', a: "You enter a URL and it fetches that page's raw HTML through a CORS proxy (api.allorigins.win), then extracts the title, description, keywords, Open Graph tags, Twitter Card tags, canonical link, robots directive, and author tag with regex." },
-    { q: 'How is the SEO score calculated?', a: 'Out of 100 points: 20 each for the title and meta description, 15 each for og:title and og:description, 10 each for og:image and twitter:card, and 5 each for keywords and a canonical URL, with every missing piece listed as an issue underneath.' },
+    { q: "How does it read metadata?", a: "Paste HTML or fetch a URL that permits browser cross-origin requests. An inert HTML parser reads titles, meta tags and canonical links without running scripts." },
+    { q: "Is there an SEO score?", a: "No. Missing and duplicate tags are observations for review, not a numeric grade or a ranking prediction." },
     { q: 'What happens if the page blocks the request?', a: 'You get a message saying the site could not be fetched because it may block cross-origin requests or be unreachable, instead of a partial or broken result.' },
   ],
   'serp-simulator': [
@@ -1827,9 +1978,9 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'How do I save or reset the result?', a: 'Download current image saves the encoded preview. It’s disabled while a new preview is processing. Clear removes the image and cancels pending work. File sizes are shown in exact bytes; the result may be larger than the source.' },
   ],
   'sitemap-analyzer': [
-    { q: 'Do I paste the sitemap or point it at a URL?', a: 'You paste the raw XML directly into the text box, there\'s no fetch-by-URL option, a "Load Sample" button fills in a working three-URL example if you want to see the format first.' },
-    { q: 'What specific problems does it flag?', a: 'A missing <?xml version="1.0"?> declaration, a missing <urlset> root element, a missing xmlns namespace, any <url> block without a <loc>, and any <loc> value that doesn\'t start with http:// or https://.' },
-    { q: 'Does it handle a sitemap index file, not just a regular sitemap?', a: 'Yes, if it detects a <sitemapindex> tag it switches to counting and listing the child sitemap URLs instead of page URLs.' },
+    { q: "Can I paste XML or use a URL?", a: "Both. URL reads require CORS permission; paste the XML when a site blocks browser access." },
+    { q: "What does it parse?", a: "Namespace-aware urlset and sitemapindex entries. Malformed XML, DTD declarations and invalid locations are reported. An XML declaration is not required." },
+    { q: "Does it crawl child sitemaps?", a: "No. For a sitemap index it lists and exports child sitemap locations. Download URLs exports the locations present in the supplied document." },
   ],
   'sla-uptime-calculator': [
     { q: 'What SLA range can I enter?', a: 'A slider and a linked number input both range from 90% to 99.999% in steps of 0.001%, so you can dial in figures like the common 99.9% or 99.95% precisely.' },
@@ -1837,14 +1988,13 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'How precise is the downtime figure?', a: 'The highlighted period shows allowed downtime to 4 decimal places in minutes, while the grid cells switch to a rounded minutes or hours display depending on which is more readable for that period.' },
   ],
   'speech-to-text': [
-    { q: 'Does it need a specific browser to work?', a: "It uses the browser's built-in Web Speech API, which Chrome, Edge, and Safari support, if your browser lacks it you'll see an unsupported message instead of the microphone controls." },
-    { q: 'What happens to words while I\'m still mid-sentence?', a: "Interim results appear in square brackets at the end of the transcript and get replaced with plain finalized text once the recognition engine settles on that phrase." },
-    { q: 'Can I use it without a microphone?', a: 'Yes, a manual paste area below the microphone controls lets you type or paste a transcript directly and click "Use This Text" instead of recording anything.' },
+    { q: "What does this tool do?", a: "Transcribe live microphone input with a supported browser speech service." },
+    { q: "What should I know before using it?", a: "SpeechRecognition or webkitSpeechRecognition, microphone permission and an available speech service are required. Recognition uses en-US and may depend on a network service; offline or on-device processing isn't guaranteed. Manual transcript entry is separate and doesn't test microphone recognition. Audio-file transcription isn't supported." },
   ],
   'sql-formatter': [
-    { q: 'What does the UPPERCASE keywords toggle do?', a: 'When checked, every recognized SQL keyword in your query, SELECT, FROM, JOIN, GROUP BY, and around 70 others, gets forced to uppercase in the formatted output, unchecking it leaves your original casing untouched.' },
-    { q: 'How does the indent size setting work?', a: 'A dropdown lets you choose 2 or 4 spaces, that value controls how far each nested clause like AND, OR, JOIN, or ON is indented under the SELECT or FROM line above it.' },
-    { q: 'Does the syntax highlighting distinguish more than just keywords?', a: 'Yes, keywords appear in blue, functions like COUNT and SUBSTRING in purple, quoted string literals in green, and numbers in orange, all shown live with a color key underneath the formatted output.' },
+    { q: "What does Uppercase keywords do?", a: "It uppercases recognized SQL keywords while preserving quoted text and comments. Turn it off to retain keyword casing." },
+    { q: "Which indentation options are available?", a: "Choose 2 or 4 spaces for lexical SQL formatting." },
+    { q: "Does the output validate SQL or provide highlighting?", a: "The current output is plain text. It checks quote and parenthesis balance, not SQL grammar or database-specific semantics." },
   ],
   'sticky-notes': [
     { q: 'Do my notes get saved if I close the tab?', a: "Yes, every note is saved to your browser's localStorage as soon as it changes, reopening the page restores the same notes with their text, color, and position intact." },
@@ -1867,9 +2017,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'How many decimal places does the result show?', a: 'Each of the three converted values, Celsius, Fahrenheit, and Kelvin, is displayed to 4 decimal places.' },
   ],
   'temperature-unit-converter': [
-    { q: "What's the colored badge above the three converted values?", a: 'A temperature category label ranging from "Extremely Cold" to "Extremely Hot" based on the Celsius value, each category has its own background color from dark blue through to red.' },
-    { q: 'What do the preset buttons like "Oven (High)" or "Sun Surface" do?', a: 'Each one loads a known reference temperature, converted into whichever unit you currently have selected, so you can instantly see it displayed across all three scales.' },
-    { q: 'Is there a visual way to see where my temperature falls on a scale?', a: 'Yes, a gradient bar running from -50°C to 100°C shows a white marker positioned at your converted Celsius value, and all six conversion formulas are also listed further down the page.' },
+    { q: "What does this tool do?", a: "Convert Celsius, Fahrenheit and Kelvin with live results, presets and absolute-zero validation." },
+    { q: "What should I know before using it?", a: "Results update as you change the value and units. Invalid numbers are rejected, as are temperatures below absolute zero. Calculations use floating-point arithmetic, so displayed results can be rounded." },
   ],
   'text-case-converter': [
     { q: 'How many case formats does it convert to at once?', a: 'Eight: UPPER, lower, Title Case, Sentence case, camelCase, snake_case, kebab-case, and CONSTANT_CASE, all calculated simultaneously from the same input, each with its own Copy button.' },
@@ -1943,9 +2092,9 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Does it support nested tables or arrays?', a: 'It handles single-level [section] tables and flat key = value pairs. TOML arrays, inline tables, and multi-line strings are not supported yet.' },
   ],
   'tweet-to-image-converter': [
-    { q: 'What are the two ways to create the image?', a: 'The default General mode fetches a real tweet by URL through oEmbed and renders its author, text, and stats, while a Customize mode on paid plans lets you type your own author name, handle, and tweet text from scratch.' },
+    { q: "What input modes are available?", a: "General mode requests tweet text through third-party oEmbed and can fail because of availability or CORS. Paid Customize mode lets you enter author and text manually. Examples loads labeled sample text, not a live tweet." },
     { q: 'What sizes can I export besides the default tweet card?', a: 'Switching the Platform dropdown gives you presets for Instagram (square, portrait, story), LinkedIn, Twitter/X, and Facebook, each with its own aspect ratio, plus a fully custom width and height in General mode.' },
-    { q: 'Can I share the image without downloading it first?', a: 'Yes, a "Share to" button copies the rendered PNG straight to your clipboard so you can paste it directly into a post, alongside the Download PNG button.' },
+    { q: "Can I copy the image?", a: "Where image clipboard support and permission are available, Share to copies the rendered PNG. Download PNG saves the current result. Unsupported or failed clipboard writes are reported." },
   ],
   'typo-checker': [
     { q: 'How large is the typo dictionary it checks against?', a: 'It compares every word in your text, lowercased and stripped of punctuation, against a built-in list of over 100 common misspellings like "recieve", "definately", and "seperate".' },
@@ -1954,7 +2103,7 @@ const OVERRIDES: Record<string, FAQ[]> = {
   ],
   'ulid-generator': [
     { q: 'How many ULIDs can I generate at once?', a: 'Between 1 and 100 at a time, set with the number input, each one generated fresh with its own timestamp and random portion.' },
-    { q: 'What encoding does it use for the output?', a: "Crockford's Base32, the same 26 character alphabet ULIDs are defined with, which excludes the letters I, L, O, and U to avoid visual confusion with digits." },
+    { q: "How are ULIDs encoded and ordered?", a: "A ULID is 26 characters encoded with the 32-symbol Crockford Base32 alphabet. It excludes I, L, O and U but includes 0 and 1. Timestamp prefixes order different milliseconds; cryptographically random suffixes do not guarantee ordering within one millisecond." },
     { q: 'Can I get the letters in lowercase instead?', a: 'Yes, an UPPERCASE checkbox is checked by default, unchecking it converts every generated ULID to lowercase instead.' },
   ],
   'unicode-character-inspector': [
@@ -1989,9 +2138,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'How are query parameters displayed?', a: 'Each parameter from the URL\'s search string is listed on its own line as a separate key and value, rather than left bundled together as one raw query string.' },
   ],
   'url-redirect-checker': [
-    { q: 'How many redirect hops will it follow?', a: 'Up to 20 redirects in a chain, following each Location header in turn until it reaches a final, non-redirect response or hits that limit.' },
-    { q: 'What does it show for each hop in the chain?', a: 'A color-coded status code badge for every URL in the sequence, so you can see at a glance which hops were 301, 302, or another redirect status before landing on the final destination.' },
-    { q: 'What happens if the URLs form a redirect loop?', a: 'It tracks every URL it has already visited in the chain, and stops with a loop warning instead of following the same redirect back and forth indefinitely.' },
+    { q: "What does this tool do?", a: "Check the final URL and redirect flag exposed by a browser request." },
+    { q: "What should I know before using it?", a: "Cross-origin servers must allow CORS. The browser hides intermediate redirect URLs and status codes; requests time out after 10 seconds." },
   ],
   'user-agent-parser': [
     { q: 'What information does it extract from a User-Agent string?', a: 'The browser name, operating system, and device type (Mobile, Tablet, TV, or Desktop), determined by matching the string against known browser and OS patterns.' },
@@ -1999,13 +2147,13 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Are there sample User-Agent strings I can try?', a: 'Yes, quick-load buttons fill in example strings for Chrome, Firefox, Safari, Edge, or a bot, so you can see how the parser handles each one without hunting for a real string first.' },
   ],
   'uuid-v1-generator': [
-    { q: 'What goes into the timestamp portion of a v1 UUID?', a: 'The number of 100-nanosecond intervals since October 15, 1582, the official UUID epoch, split across the time_low, time_mid, and time_hi_and_version fields so the UUIDs sort chronologically by creation time.' },
-    { q: 'Does it use my real MAC address for the node ID?', a: 'No, it generates a random 48-bit node ID instead of reading your actual network MAC address, which avoids the privacy concern that made real MAC-based v1 UUIDs controversial.' },
+    { q: "What timestamp is encoded?", a: "The current time is represented as 100-nanosecond intervals since October 15, 1582, split across UUID v1 time fields. This field layout means the strings do not sort globally by creation time." },
+    { q: "Does it use my hardware MAC address?", a: "No. It uses a random multicast node identifier and cryptographic randomness rather than reading your hardware address." },
     { q: 'Can I generate more than one at a time?', a: 'Yes, a number input lets you generate between 1 and 100 at once, with optional uppercase formatting and surrounding braces.' },
   ],
   'uuid-validator': [
-    { q: 'Which UUID versions can it identify?', a: 'It checks the version digit in the third group of the UUID and labels the result as v1, v4, or v7, or "unknown" if that digit does not match a recognized version.' },
-    { q: 'What exactly makes a UUID invalid here?', a: 'The input is checked against the full RFC 4122 pattern of 8-4-4-4-12 hex digit groups with a valid version digit (1 through 5) and a valid variant digit (8, 9, a, or b), so a mistyped character or wrong grouping is flagged as invalid.' },
+    { q: "Which UUID versions are recognized?", a: "Version digits 1 through 8 in the third group, plus the special all-zero Nil and all-ones Max UUIDs." },
+    { q: "What structure is checked?", a: "Canonical 8-4-4-4-12 hexadecimal groups. Versions 1 through 8 require the RFC variant, indicated by 8, 9, a or b at the start of the fourth group. Nil and Max are handled separately." },
     { q: 'Can I copy a UUID after validating it?', a: 'Yes, a Copy UUID button appears alongside the validation result and copies the exact text you entered to your clipboard.' },
   ],
   'wcag-contrast-auditor': [
@@ -2024,14 +2172,12 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'How does the conversion actually happen?', a: 'The file bytes are checked first, then the decoded image is drawn to a canvas. Browsers that produce real WebP use the native encoder; if the native encoder returns PNG, another format, or null, the tool uses a local WebP encoder instead.' },
   ],
   'webp-to-jpg': [
-    { q: 'Which image formats can I upload as the source?', a: 'JPEG, PNG, WebP, AVIF, or GIF, the uploader checks the file\'s MIME type against that list and rejects anything else with an error message.' },
-    { q: 'Can I adjust the output quality?', a: 'Yes, a 1 to 100 quality slider controls the JPEG compression level, letting you trade off file size against image quality before converting.' },
-    { q: 'What does the before/after comparison show?', a: 'Side-by-side preview panels display the original and converted images along with each one\'s file size and the percentage difference between them, like "38% smaller".' },
+    { q: "What does this tool do?", a: "Convert WEBP images to JPG and compare the measured output size." },
+    { q: "What should I know before using it?", a: "Inputs are limited to 10 MB and 16 megapixels. Output size is measured and can be larger than the input. JPEG export flattens transparency onto the chosen background and uses lossy compression." },
   ],
   'webp-to-png': [
-    { q: 'Does converting to PNG preserve transparency?', a: 'Yes, PNG is a lossless format so the quality slider is disabled and grayed out for PNG output, since there is no compression tradeoff to make, transparency and pixel data are preserved exactly.' },
-    { q: 'Which source formats does the uploader accept?', a: 'JPEG, PNG, WebP, AVIF, or GIF, checked against the file\'s actual MIME type, with an error message if you try to upload something else.' },
-    { q: 'Can I download the converted PNG afterward?', a: 'Yes, a Download PNG button appears once the conversion finishes, saving the result with your original filename and a .png extension.' },
+    { q: "What does this tool do?", a: "Convert WEBP images to PNG and compare the measured output size." },
+    { q: "What should I know before using it?", a: "Inputs are limited to 10 MB and 16 megapixels. Output size is measured and can be larger than the input." },
   ],
   'weight-converter': [
     { q: 'Which weight units does it convert between?', a: 'Kilograms, grams, milligrams, pounds, ounces, and stone, all six shown as simultaneous results rather than one pair at a time.' },
@@ -2055,8 +2201,9 @@ const OVERRIDES: Record<string, FAQ[]> = {
   ],
   'xml-formatter': [
     { q: 'How does it detect invalid XML?', a: 'It parses your input with the browser\'s built-in DOMParser and checks for a parsererror node, flagging the specific parsing failure instead of just failing silently.' },
-    { q: 'Can I switch between formatting and minifying?', a: 'Yes, Format and Minify mode tabs let you either pretty-print the XML with indentation or collapse the whitespace between tags into a single compact line.' },
+    { q: "What does Minify remove?", a: "Whitespace between child elements is removed where it is not mixed text. Mixed text, CDATA and xml:space=\"preserve\" are retained." },
     { q: 'What indentation options are available?', a: 'You can choose between 2-space and 4-space indentation, and attribute values and text content are properly escaped for characters like &, <, and " during formatting.' },
+    { q: "Does this validate a schema?", a: "No. It checks XML well-formedness. DTD declarations are rejected and XSD validation is not supported." },
   ],
   'xml-sitemap-generator': [
     { q: 'Do I need to type full URLs for every page?', a: 'No, you can set a base URL once and then add each page as a relative path like /about, the tool combines them into the full loc value automatically.' },
@@ -2064,14 +2211,15 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Does it support the image sitemap extension?', a: 'Yes, an "Include image sitemap extension" checkbox adds the image namespace declaration to the generated XML output.' },
   ],
   'sitemap-extractor': [
-    { q: 'Do I need to upload a file or can I paste the XML directly?', a: 'You paste the sitemap XML into a text box, there is also a Load Sample button that fills in a working example if you want to see the tool in action first.' },
-    { q: 'What counts as an error versus just a warning?', a: 'Missing the XML declaration, a missing urlset root element, and URLs without a proper http or https prefix are all flagged as issues, alongside a per-URL error if a loc tag is missing entirely.' },
-    { q: 'Does it handle sitemap index files too?', a: 'Yes, if it detects a sitemapindex tag it switches to extracting the individual sitemap file URLs listed inside instead of page URLs.' },
+    { q: "Can I paste XML or use a URL?", a: "Both. URL reads require CORS permission; paste the XML when a site blocks browser access." },
+    { q: "What does it parse?", a: "Namespace-aware urlset and sitemapindex entries. Malformed XML, DTD declarations and invalid locations are reported. An XML declaration is not required." },
+    { q: "Does it crawl child sitemaps?", a: "No. For a sitemap index it lists and exports child sitemap locations. Download URLs exports the locations present in the supplied document." },
   ],
   'xml-validator': [
     { q: 'How does it detect XML errors?', a: 'It parses your input with the browser\'s native DOMParser and checks the resulting document for a parsererror node, showing the browser\'s own detailed error message when one appears.' },
     { q: 'What does a successful validation look like?', a: 'A green checkmark and a "Valid XML" label appear once your input parses without a parsererror node, no extra error details are shown.' },
     { q: 'Do I need to close every tag exactly?', a: 'Yes, DOMParser enforces strict well-formedness, so unclosed tags, mismatched closing tags, and invalid character sequences will all trigger the error path here.' },
+    { q: "Does Valid XML mean it matches a schema?", a: "No. It means the browser parsed well-formed XML. DTD declarations are rejected, and XSD validation is not provided." },
   ],
   'punycode-encoder': [
     { q: 'What does the xn-- prefix mean?', a: 'xn-- is the ASCII Compatible Encoding (ACE) prefix that marks a domain label as Punycode. It tells DNS resolvers and browsers that everything after it is an encoded Unicode string rather than a plain ASCII name.' },

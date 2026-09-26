@@ -1,6 +1,8 @@
 'use client';
+import UtilityDesignLayout from './UtilityDesignLayout';
+import ToolExampleClearActions from './ToolExampleClearActions';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 interface Definition { definition: string; example?: string; synonyms: string[]; antonyms: string[]; }
 interface Meaning { partOfSpeech: string; definitions: Definition[]; synonyms: string[]; antonyms: string[]; }
@@ -10,6 +12,8 @@ interface Entry { word: string; phonetic?: string; phonetics: Phonetic[]; meanin
 const EXAMPLE = 'eloquent';
 
 export default function EnglishDictionaryClient() {
+  const request = useRef<AbortController|null>(null);
+  useEffect(() => () => request.current?.abort(), []);
   const [word, setWord] = useState('');
   const [entries, setEntries] = useState<Entry[] | null>(null);
   const [loading, setLoading] = useState(false);
@@ -17,12 +21,16 @@ export default function EnglishDictionaryClient() {
 
   const lookup = async (target?: string) => {
     const q = (target ?? word).trim();
-    if (!q) return;
+    request.current?.abort();
+    if (!q || q.length > 100) { setEntries(null); setError('Enter a word up to 100 characters.'); return; }
+    const controller = new AbortController(); request.current = controller;
+    const timeout = setTimeout(() => controller.abort(), 30000);
     setLoading(true);
     setError('');
     setEntries(null);
     try {
-      const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(q)}`);
+      const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(q)}`, { signal: controller.signal });
+      if(request.current !== controller) return;
       if (res.status === 404) {
         setError(`No definitions found for "${q}".`);
         return;
@@ -32,11 +40,14 @@ export default function EnglishDictionaryClient() {
         return;
       }
       const data = await res.json();
+      if(request.current !== controller) return;
+      if(!Array.isArray(data) || !data.every(e => Array.isArray(e.meanings) && Array.isArray(e.phonetics))) throw new Error('Invalid dictionary response');
       setEntries(data as Entry[]);
     } catch {
-      setError('Network error while looking up the word.');
+      if(request.current === controller) setError('Lookup unavailable or timed out. Try again.');
     } finally {
-      setLoading(false);
+      clearTimeout(timeout);
+      if(request.current === controller) setLoading(false);
     }
   };
 
@@ -51,17 +62,18 @@ export default function EnglishDictionaryClient() {
     new Audio(audioUrl).play().catch(() => {});
   };
 
-  return (
+  return (<UtilityDesignLayout>
     <div>
+      <ToolExampleClearActions onExample={() => { loadExample(); }} onClear={() => { request.current?.abort(); request.current=null; setWord(''); setEntries(null); setLoading(false); setError(''); }}/>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Word</span>
-        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">Load Example</button>
+
       </div>
       <div style={{ display: 'flex', gap: 8 }}>
-        <input
+        <input maxLength={100000} aria-label="Word"
           type="text"
           value={word}
-          onChange={e => setWord(e.target.value)}
+          onChange={e => { request.current?.abort(); request.current=null; setLoading(false); setEntries(null); setError(''); setWord(e.target.value); }}
           onKeyDown={e => { if (e.key === 'Enter') lookup(); }}
           placeholder="Type a word to look up..."
           className="tb-v2-input"
@@ -111,5 +123,6 @@ export default function EnglishDictionaryClient() {
         ))}
       </div>
     </div>
+  </UtilityDesignLayout>
   );
 }

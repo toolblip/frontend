@@ -1,13 +1,16 @@
 'use client';
+import UtilityDesignLayout from './UtilityDesignLayout';
+import ToolExampleClearActions from './ToolExampleClearActions';
 
 import { useMemo, useState } from 'react';
+import { dateOnly } from '@/lib/utility-design/core';
 
 interface ParsedTime {
   ms: number;
   label: string;
 }
 
-function parseTimeInput(raw: string): ParsedTime | null {
+export function parseTimeInput(raw: string, epochUnit: 'auto'|'seconds'|'milliseconds' = 'auto'): ParsedTime | null {
   const trimmed = raw.trim();
   if (!trimmed) return null;
 
@@ -17,28 +20,32 @@ function parseTimeInput(raw: string): ParsedTime | null {
     if (!isFinite(n)) return null;
     // Heuristic: 10-digit-ish numbers are seconds, 13-digit-ish are milliseconds.
     const digits = Math.abs(Math.trunc(n)).toString().length;
-    const ms = digits >= 13 ? n : n * 1000;
-    return { ms, label: `${trimmed} (${digits >= 13 ? 'ms' : 's'} epoch)` };
+    const milliseconds = epochUnit === 'milliseconds' || (epochUnit === 'auto' && digits >= 13);
+    const ms = milliseconds ? n : n * 1000;
+    if (!Number.isFinite(ms) || Math.abs(ms) > 8640000000000000) return null;
+    return { ms, label: `${trimmed} (${milliseconds ? 'ms' : 's'} epoch)` };
   }
 
   // Otherwise, try native Date parsing (ISO strings, RFC dates, etc.)
+  if (/^\d{4}-\d{2}-\d{2}(?:T|$)/.test(trimmed)) { try { dateOnly(trimmed.slice(0,10)); } catch { return null; } }
   const parsed = Date.parse(trimmed);
   if (isNaN(parsed)) return null;
   return { ms: parsed, label: new Date(parsed).toISOString() };
 }
 
 export default function TimestampDiffCalculatorClient() {
+  const [epochUnit,setEpochUnit]=useState<'auto'|'seconds'|'milliseconds'>('auto');
   const [a, setA] = useState('1700000000');
   const [b, setB] = useState('1700086400');
 
   const { error, parsedA, parsedB } = useMemo(() => {
     if (!a.trim() || !b.trim()) return { error: '', parsedA: null, parsedB: null };
-    const pa = parseTimeInput(a);
-    const pb = parseTimeInput(b);
+    const pa = parseTimeInput(a,epochUnit);
+    const pb = parseTimeInput(b,epochUnit);
     if (!pa) return { error: `Could not parse the first value: "${a}"`, parsedA: null, parsedB: null };
     if (!pb) return { error: `Could not parse the second value: "${b}"`, parsedA: null, parsedB: null };
     return { error: '', parsedA: pa, parsedB: pb };
-  }, [a, b]);
+  }, [a, b, epochUnit]);
 
   const diff = useMemo(() => {
     if (!parsedA || !parsedB) return null;
@@ -65,17 +72,20 @@ export default function TimestampDiffCalculatorClient() {
     setB('2024-06-15T14:30:00Z');
   };
 
-  return (
+  return (<UtilityDesignLayout>
     <div className="tb-v2-tool-card">
+      <label>Numeric timestamp unit<select aria-label="Numeric timestamp unit" value={epochUnit} onChange={e=>setEpochUnit(e.target.value as typeof epochUnit)}><option value="auto">Auto (13+ digits = milliseconds)</option><option value="seconds">Seconds</option><option value="milliseconds">Milliseconds</option></select></label>
+      <p>Include Z or an explicit UTC offset in date-time strings for reproducible results.</p>
+      <ToolExampleClearActions onExample={() => { loadExample(); }} onClear={() => { setA(''); setB(''); }}/>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Two Timestamps or Dates</span>
-        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">Load Example</button>
+
       </div>
       <div style={{ padding: 20 }}>
         <div className="tb-v2-grid-2">
           <div>
             <span className="tb-v2-tool-label">First value</span>
-            <input
+            <input maxLength={100000} aria-label="A"
               type="text"
               value={a}
               onChange={e => setA(e.target.value)}
@@ -87,7 +97,7 @@ export default function TimestampDiffCalculatorClient() {
           </div>
           <div>
             <span className="tb-v2-tool-label">Second value</span>
-            <input
+            <input maxLength={100000} aria-label="B"
               type="text"
               value={b}
               onChange={e => setB(e.target.value)}
@@ -135,5 +145,6 @@ export default function TimestampDiffCalculatorClient() {
         )}
       </div>
     </div>
+  </UtilityDesignLayout>
   );
 }

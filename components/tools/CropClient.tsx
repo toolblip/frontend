@@ -1,6 +1,9 @@
 'use client';
 
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
+
+import ToolExampleClearActions from './ToolExampleClearActions';
+import {readImage,exampleFile} from '@/lib/images-qa';
 
 interface Selection {
   startX: number;
@@ -19,16 +22,12 @@ export default function CropClient() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
 
-  const loadFile = (file: File | undefined) => {
-    if (!file || !file.type.startsWith('image/')) return;
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      setImage(event.target?.result as string);
-      setCroppedImage(null);
-      setSelection(null);
-    };
-    reader.readAsDataURL(file);
-  };
+  const outputMime=useRef('image/png');
+  const request=useRef(0),decoded=useRef<HTMLImageElement|null>(null);
+  const [error,setError]=useState('');
+  useEffect(()=>()=>{request.current++;},[]);useEffect(()=>()=>{if(image)URL.revokeObjectURL(image);},[image]);
+  const clear=()=>{request.current++;decoded.current=null;setImage(null);setSelection(null);setCroppedImage(null);setError('');if(fileInputRef.current)fileInputRef.current.value='';};
+  const loadFile=async(file:File|undefined)=>{if(!file)return;clear();const id=request.current;try{const {img,mime,bytes}=await readImage(file);if(id!==request.current)return;decoded.current=img;outputMime.current=mime==='image/jpeg'?'image/jpeg':'image/png';setImage(URL.createObjectURL(new Blob([bytes],{type:mime})));setSelection({startX:0,startY:0,endX:img.naturalWidth,endY:img.naturalHeight});}catch(e){if(id===request.current)setError((e as Error).message);}};
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     loadFile(e.target.files?.[0]);
@@ -40,22 +39,23 @@ export default function CropClient() {
     loadFile(e.dataTransfer.files?.[0]);
   };
 
-  const handleMouseDown = (e: React.MouseEvent) => {
+  const handleMouseDown = (e: React.PointerEvent) => {
     if (!imageRef.current) return;
     const rect = imageRef.current.getBoundingClientRect();
     const scaleX = imageRef.current.naturalWidth / rect.width;
     const scaleY = imageRef.current.naturalHeight / rect.height;
 
+    e.currentTarget.setPointerCapture(e.pointerId);
     setIsSelecting(true);
     setSelection({
-      startX: (e.clientX - rect.left) * scaleX,
-      startY: (e.clientY - rect.top) * scaleY,
-      endX: (e.clientX - rect.left) * scaleX,
-      endY: (e.clientY - rect.top) * scaleY,
+      startX: Math.max(0,Math.min(imageRef.current.naturalWidth,(e.clientX - rect.left) * scaleX)),
+      startY: Math.max(0,Math.min(imageRef.current.naturalHeight,(e.clientY - rect.top) * scaleY)),
+      endX: Math.max(0,Math.min(imageRef.current.naturalWidth,(e.clientX - rect.left) * scaleX)),
+      endY: Math.max(0,Math.min(imageRef.current.naturalHeight,(e.clientY - rect.top) * scaleY)),
     });
   };
 
-  const handleMouseMove = (e: React.MouseEvent) => {
+  const handleMouseMove = (e: React.PointerEvent) => {
     if (!isSelecting || !selection || !imageRef.current) return;
     const rect = imageRef.current.getBoundingClientRect();
     const scaleX = imageRef.current.naturalWidth / rect.width;
@@ -63,8 +63,8 @@ export default function CropClient() {
 
     setSelection({
       ...selection,
-      endX: (e.clientX - rect.left) * scaleX,
-      endY: (e.clientY - rect.top) * scaleY,
+      endX: Math.max(0,Math.min(imageRef.current.naturalWidth,(e.clientX - rect.left) * scaleX)),
+      endY: Math.max(0,Math.min(imageRef.current.naturalHeight,(e.clientY - rect.top) * scaleY)),
     });
   };
 
@@ -79,27 +79,30 @@ export default function CropClient() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const img = new Image();
-    img.onload = () => {
+    const img = decoded.current;
+    if(!img)return;
+    {
       const x = Math.min(selection.startX, selection.endX);
       const y = Math.min(selection.startY, selection.endY);
-      const width = Math.abs(selection.endX - selection.startX);
-      const height = Math.abs(selection.endY - selection.startY);
+      const width = Math.round(Math.abs(selection.endX - selection.startX));
+      const height = Math.round(Math.abs(selection.endY - selection.startY));
 
-      if (width <= 0 || height <= 0) return;
+      if (width <= 0 || height <= 0) {setCroppedImage(null);return;}
 
       canvas.width = width;
       canvas.height = height;
       ctx.drawImage(img, x, y, width, height, 0, 0, width, height);
-      setCroppedImage(canvas.toDataURL('image/png'));
+      setCroppedImage(canvas.toDataURL(outputMime.current,0.92));
     };
-    img.src = image;
+
   }, [image, selection]);
+
+  useEffect(()=>{applyCrop();},[applyCrop]);
 
   const handleDownload = () => {
     if (!croppedImage) return;
     const link = document.createElement('a');
-    link.download = 'cropped-image.png';
+    link.download = outputMime.current==='image/jpeg'?'cropped-image.jpg':'cropped-image.png';
     link.href = croppedImage;
     link.click();
   };
@@ -111,19 +114,20 @@ export default function CropClient() {
     const scaleY = rect.height / imageRef.current.naturalHeight;
 
     return {
-      left: Math.min(selection.startX, selection.endX) * scaleX,
-      top: Math.min(selection.startY, selection.endY) * scaleY,
-      width: Math.abs(selection.endX - selection.startX) * scaleX,
-      height: Math.abs(selection.endY - selection.startY) * scaleY,
+      left: `${Math.min(selection.startX, selection.endX) / imageRef.current.naturalWidth * 100}%`,
+      top: `${Math.min(selection.startY, selection.endY) / imageRef.current.naturalHeight * 100}%`,
+      width: `${Math.abs(selection.endX - selection.startX) / imageRef.current.naturalWidth * 100}%`,
+      height: `${Math.abs(selection.endY - selection.startY) / imageRef.current.naturalHeight * 100}%`,
     };
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="tb-v2-tool-card flex flex-col gap-4"><style jsx>{`input,textarea,select {max-width:100%;min-width:0} .tb-v2-tool-card {min-width:0;max-width:100%;overflow-wrap:anywhere} .tb-v2-tool-input-head {flex-wrap:wrap;gap:8px} .tb-v2-range-row {flex-wrap:wrap} .tb-v2-range {min-width:0;flex:1}`}</style>
       <div className="tb-v2-tool-input-head">
-        <span className="tb-v2-tool-label">Crop Image</span>
+        <span className="tb-v2-tool-label">Crop Image</span><ToolExampleClearActions onExample={()=>loadFile(exampleFile())} onClear={clear}/>
       </div>
 
+      {error&&<p role="alert">{error}</p>}
       <div
         className={`tb-v2-dropzone ${isDragging ? 'dragging' : ''}`}
         onClick={() => fileInputRef.current?.click()}
@@ -135,7 +139,7 @@ export default function CropClient() {
         <span className="tb-v2-dropzone-text">Click or drag an image here</span>
         <span className="tb-v2-dropzone-hint">Then drag on the preview to select a crop area</span>
         <input
-          ref={fileInputRef}
+          aria-label="Upload image" ref={fileInputRef}
           type="file"
           accept="image/*"
           onChange={handleImageUpload}
@@ -149,11 +153,11 @@ export default function CropClient() {
         <>
           <div className="relative inline-block">
             <div
-              className="relative cursor-crosshair select-none"
-              onMouseDown={handleMouseDown}
-              onMouseMove={handleMouseMove}
-              onMouseUp={handleMouseUp}
-              onMouseLeave={handleMouseUp}
+              className="relative cursor-crosshair select-none" style={{touchAction:"none"}}
+              onPointerDown={handleMouseDown}
+              onPointerMove={handleMouseMove}
+              onPointerUp={handleMouseUp}
+              onPointerCancel={handleMouseUp}
             >
               <img
                 ref={imageRef}

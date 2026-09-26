@@ -1,0 +1,33 @@
+{
+  "baseline": "c6aac53b",
+  "initialIntegration": "5b2ced65",
+  "status": "surgical-fixes-verified-locally; parent-browser-integration-pending",
+  "validation": {
+    "scopedTests": "127 passed across 10 files",
+    "testCommand": "npx vitest run lib/misc-review.test.ts components/tools/misc-review.test.ts lib/developer-general/format-script.test.ts lib/developer-general/typescript-browser.test.ts lib/developer-security/primitives.test.ts lib/developer-general/developer-general.test.ts lib/images-qa.test.ts lib/utility-design/core.test.ts lib/utility-design/exports.test.ts lib/seo-network/core.test.ts",
+    "typeScript": "npx tsc --noEmit --incremental false: passed",
+    "caseSyntax": "node --check passed for utility-design.mjs and regressions/misc-review.mjs",
+    "caseRegistration": "55 unique existing utility-design cases; supplemental functions do not register slugs",
+    "browser": "Not run. Supplemental browser regressions are authored only.",
+    "build": "Not run per task constraint.",
+    "server": "Not started."
+  },
+  "findings": [
+    {"id":1,"status":"fixed; component tests passed","detail":"All 101+ saved notes and legacy fields survive loading and persistence. Creation paths enforce 100 without truncation. Unreadable storage remains untouched until explicit Clear."},
+    {"id":2,"status":"fixed; generated-rule tests passed","detail":"Both www modes use REQUEST_SCHEME without HTTPS forcing; independent expected destinations cover HTTP and HTTPS."},
+    {"id":3,"status":"fixed; byte roundtrip tests passed","detail":"UTF-8 text decoders preserve leading U+FEFF, including 77u/QQ==."},
+    {"id":4,"status":"fixed; ASCII and multibyte limit tests passed","detail":"Decode budgets account for UTF-8 expansion and validate decoded text length; input controls accept expanded Base64/binary."},
+    {"id":5,"status":"acceptance corrected; actual speech BLOCKED","detail":"Lifecycle checks remain separate evidence. Both speech cases explicitly fail acceptance when real recognition/audible synthesis is unverified or unavailable. Parent needs a harness partial/blocked status extension plus real browser audio evidence. No harness edits or fabricated audio evidence."},
+    {"id":6,"status":"fixed; signature tests passed; browser decoder/export pending","detail":"Bounded ISO-BMFF ftyp AVIF/AVIS detection, including extended sizes and compatible brands. Generated 474-byte 2x2 red AVIF independently decoded with sharp. Crop/meme/batch retain PNG export; supplemental browser check supplied."},
+    {"id":7,"status":"fixed; held-source state tests passed","detail":"Separate source and export generations retain pending uploads across setting changes; Clear still cancels. Browser regression holds an actual native image load notification."},
+    {"id":8,"status":"fixed; known-date tests passed","detail":"DOM/DOW membership always applies. Wildcard-prefixed fields use AND semantics; restricted fields use OR. September 1 noon projects stepped DOM to September 3; stepped weekdays skip Monday."},
+    {"id":9,"status":"fixed; independent expected-string tests passed","detail":"POSIX double quotes preserve backslashes before ordinary characters; escaped quotes/dollars/backticks/newlines and empty arguments are covered."},
+    {"id":10,"status":"fixed; syntax/runtime/download tests passed; browser asset integration pending","detail":"Installed TypeScript printer preserves types/interfaces and JS semantics. Compiler loads as a browser asset only on demand, avoiding Node system-adapter imports and the shared initial bundle. Conservative TS compaction preserves tokens/literals and ASI. No dependency/lockfile changes."}
+  ],
+  "parentHandoff": {
+    "regressions": "scripts/qa/regressions/misc-review.mjs",
+    "usage": "Import named functions into the parent's existing browser context; do not add duplicate case-slug registrations. avifUploadExport accepts the current tool's export action; exercise crop, meme-maker and batch-image-resizer with empty meme captions.",
+    "fixture": "scripts/qa/regressions/fixtures/red-2x2.avif (generated locally, 2x2 opaque red)",
+    "required": "Parent merges after active integration workers finish and runs actual browser regressions, including on-demand compiler loading and AVIF decode/export. Speech remains blocked until actual evidence is collected and harness acceptance statuses are extended."
+  }
+}

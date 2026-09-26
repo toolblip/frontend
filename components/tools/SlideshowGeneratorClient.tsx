@@ -1,6 +1,8 @@
 'use client';
+import UtilityDesignLayout from './UtilityDesignLayout';
+import ToolExampleClearActions from './ToolExampleClearActions';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 interface Slide {
   id: number;
@@ -9,10 +11,8 @@ interface Slide {
   bgColor: string;
 }
 
-let nextId = 1;
-
-function newSlide(): Slide {
-  return { id: nextId++, title: `Slide ${nextId - 1}`, body: '', bgColor: '#111827' };
+function newSlide(id: number): Slide {
+  return { id, title: `Slide ${id}`, body: '', bgColor: '#111827' };
 }
 
 function escapeHtml(s: string): string {
@@ -23,7 +23,7 @@ function escapeHtml(s: string): string {
     .replace(/"/g, '&quot;');
 }
 
-function buildStandaloneHtml(slides: Slide[]): string {
+export function buildStandaloneHtml(slides: Slide[]): string {
   const slideDivs = slides
     .map((s, i) => `
     <section class="slide" data-index="${i}" style="background:${escapeHtml(s.bgColor)};${i === 0 ? '' : 'display:none;'}">
@@ -88,7 +88,8 @@ ${slideDivs}
 }
 
 export default function SlideshowGeneratorClient() {
-  const [slides, setSlides] = useState<Slide[]>([newSlide(), newSlide()]);
+  const nextId = useRef(3);
+  const [slides, setSlides] = useState<Slide[]>(() => [newSlide(1), newSlide(2)]);
   const [activeId, setActiveId] = useState<number>(slides[0].id);
   const [previewIndex, setPreviewIndex] = useState(0);
 
@@ -99,7 +100,8 @@ export default function SlideshowGeneratorClient() {
   };
 
   const addSlide = () => {
-    const s = newSlide();
+    if(slides.length>=100)return;
+    const s = newSlide(nextId.current++);
     setSlides(ss => [...ss, s]);
     setActiveId(s.id);
   };
@@ -133,13 +135,14 @@ export default function SlideshowGeneratorClient() {
     a.href = url;
     a.download = 'slideshow.html';
     a.click();
-    URL.revokeObjectURL(url);
+    setTimeout(() => URL.revokeObjectURL(url),1000);
   };
 
   const previewSlide = slides[Math.min(previewIndex, slides.length - 1)];
 
-  return (
+  return (<UtilityDesignLayout>
     <div className="tb-v2-tool-card">
+      <ToolExampleClearActions onExample={() => { setSlides([{id:1,title:'Welcome',body:'A short example presentation.',bgColor:'#111827'},{id:2,title:'Next steps',body:'Make a plan.',bgColor:'#7f1d1d'}]); setActiveId(1); setPreviewIndex(0); }} onClear={() => { setSlides([{id:1,title:'',body:'',bgColor:'#111827'}]); setActiveId(1); setPreviewIndex(0); }}/>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Slides ({slides.length})</span>
         <button type="button" onClick={addSlide} className="tb-v2-btn-sm">+ Add Slide</button>
@@ -151,14 +154,14 @@ export default function SlideshowGeneratorClient() {
             key={s.id}
             onClick={() => setActiveId(s.id)}
             style={{
-              display: 'flex', alignItems: 'center', gap: 8,
+              display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 8,
               padding: '8px 10px', borderRadius: 8, cursor: 'pointer',
               border: `1px solid ${s.id === active.id ? 'var(--red)' : 'var(--line)'}`,
               background: s.id === active.id ? 'var(--surface-2)' : 'transparent',
             }}
           >
             <span style={{ width: 10, height: 10, borderRadius: 3, background: s.bgColor, flexShrink: 0 }} />
-            <span style={{ fontSize: 13.5, flex: 1, fontWeight: s.id === active.id ? 600 : 400 }}>
+            <span style={{ fontSize: 13.5, flex: '1 1 120px', fontWeight: s.id === active.id ? 600 : 400 }}>
               {i + 1}. {s.title || 'Untitled slide'}
             </span>
             <button type="button" onClick={e => { e.stopPropagation(); moveSlide(s.id, -1); }} disabled={i === 0} className="tb-v2-btn-sm">↑</button>
@@ -181,7 +184,7 @@ export default function SlideshowGeneratorClient() {
       <div style={{ padding: 20, display: 'flex', flexDirection: 'column', gap: 12 }}>
         <div>
           <span className="tb-v2-tool-label">Title</span>
-          <input
+          <input maxLength={100000} aria-label="Active title"
             type="text"
             value={active.title}
             onChange={e => updateActive('title', e.target.value)}
@@ -190,7 +193,7 @@ export default function SlideshowGeneratorClient() {
         </div>
         <div>
           <span className="tb-v2-tool-label">Body Text</span>
-          <textarea
+          <textarea maxLength={100000} aria-label="Active body"
             value={active.body}
             onChange={e => updateActive('body', e.target.value)}
             className="tb-v2-input"
@@ -200,7 +203,7 @@ export default function SlideshowGeneratorClient() {
         </div>
         <div>
           <span className="tb-v2-tool-label">Background Color</span>
-          <input
+          <input aria-label="Active bg Color"
             type="color"
             value={active.bgColor}
             onChange={e => updateActive('bgColor', e.target.value)}
@@ -248,5 +251,6 @@ export default function SlideshowGeneratorClient() {
         </button>
       </div>
     </div>
+  </UtilityDesignLayout>
   );
 }

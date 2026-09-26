@@ -1,4 +1,6 @@
 'use client';
+import ToolExampleClearActions from './ToolExampleClearActions';
+import { parseJson } from '@/lib/developer-data/core';
 
 import { useMemo, useState } from 'react';
 
@@ -10,7 +12,7 @@ function isContainer(v: unknown): v is Record<string, unknown> | unknown[] {
 
 function childPath(parentPath: string, key: string, isArray: boolean): string {
   if (isArray) return `${parentPath}[${key}]`;
-  return /^[A-Za-z_$][A-Za-z0-9_$]*$/.test(key) ? `${parentPath}.${key}` : `${parentPath}["${key}"]`;
+  return /^[A-Za-z_$][A-Za-z0-9_$]*$/.test(key) ? `${parentPath}.${key}` : `${parentPath}[${JSON.stringify(key)}]`;
 }
 
 function entriesOf(value: Record<string, unknown> | unknown[]): [string, unknown][] {
@@ -68,7 +70,7 @@ interface SharedTreeProps {
   autoExpand: Set<string>;
   matchedPaths: Set<string>;
   onToggle: (path: string) => void;
-  onCopyPath: (path: string) => void;
+  onCopyPath: (path: string) => Promise<void>;
 }
 
 function TreeNode({ label, value, path, depth, shared }: {
@@ -83,10 +85,10 @@ function TreeNode({ label, value, path, depth, shared }: {
   const matched = matchedPaths.has(path);
   const [copied, setCopied] = useState(false);
 
-  const copy = (e: React.MouseEvent) => {
+  const [copyError, setCopyError] = useState(false);
+  const copy = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    onCopyPath(path);
-    setCopied(true);
+    try { await onCopyPath(path); setCopied(true); setCopyError(false); } catch { setCopied(false); setCopyError(true); }
     setTimeout(() => setCopied(false), 1200);
   };
 
@@ -109,7 +111,7 @@ function TreeNode({ label, value, path, depth, shared }: {
         <span style={{ color: 'var(--fg-2)' }}>{label}:</span>
         <span style={{ color: typeColor(value) }}>{displayValue(value)}</span>
         <button type="button" onClick={copy} className="tb-v2-btn-sm" style={{ marginLeft: 'auto', opacity: 0.7 }} title="Copy path">
-          {copied ? 'Copied' : 'Copy path'}
+          {copyError ? 'Copy failed' : copied ? 'Copied' : 'Copy path'}
         </button>
       </div>
     );
@@ -136,7 +138,7 @@ function TreeNode({ label, value, path, depth, shared }: {
           </span>
         </button>
         <button type="button" onClick={copy} className="tb-v2-btn-sm" style={{ opacity: 0.7 }} title="Copy path">
-          {copied ? 'Copied' : 'Copy path'}
+          {copyError ? 'Copy failed' : copied ? 'Copied' : 'Copy path'}
         </button>
       </div>
       {expanded && (
@@ -160,7 +162,7 @@ export default function JsonTreeViewClient() {
   const { value: parsed, error } = useMemo(() => {
     if (!input.trim()) return { value: undefined, error: '' };
     try {
-      return { value: JSON.parse(input) as unknown, error: '' };
+      return { value: parseJson(input) as unknown, error: '' };
     } catch (e) {
       return { value: undefined, error: (e as Error).message };
     }
@@ -191,15 +193,15 @@ export default function JsonTreeViewClient() {
   };
 
   const copyPath = (path: string) => {
-    navigator.clipboard.writeText(path).catch(() => {});
+    return navigator.clipboard.writeText(path);
   };
 
   const expandAll = () => setExpandedPaths(new Set(allContainerPaths));
   const collapseAll = () => setExpandedPaths(new Set());
 
-  const copyRootPath = () => {
-    navigator.clipboard.writeText('data').catch(() => {});
-    setCopiedRoot(true);
+  const [rootCopyError, setRootCopyError] = useState(false);
+  const copyRootPath = async () => {
+    try { await navigator.clipboard.writeText('data'); setCopiedRoot(true); setRootCopyError(false); } catch { setCopiedRoot(false); setRootCopyError(true); }
     setTimeout(() => setCopiedRoot(false), 1200);
   };
 
@@ -212,9 +214,10 @@ export default function JsonTreeViewClient() {
   };
 
   return (
-    <div>
-      <div className="tb-v2-tool-input-head">
+    <div style={{minWidth:0,maxWidth:"100%",overflowWrap:"anywhere"}}>
+      <div className="tb-v2-tool-input-head" style={{flexWrap:"wrap",gap:8}}>
         <span className="tb-v2-tool-label">JSON</span>
+        <ToolExampleClearActions onExample={() => setInput(SAMPLE)} onClear={() => { setInput('');setSearch('');setExpandedPaths(new Set(['data']));setCopiedRoot(false);setRootCopyError(false); }} />
       </div>
       <textarea
         value={input}
@@ -228,7 +231,7 @@ export default function JsonTreeViewClient() {
 
       {error && (
         <p className="tb-v2-error" role="alert" style={{ marginTop: 12 }}>
-          <strong>Syntax error:</strong> {error}
+          <strong>Input error:</strong> {error}
         </p>
       )}
 
@@ -236,7 +239,7 @@ export default function JsonTreeViewClient() {
         <>
           <div className="tb-v2-tool-output-head">
             <span className="tb-v2-tool-label">Tree</span>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 8, minWidth: 0 }}>
               <input
                 type="text"
                 value={search}
@@ -250,14 +253,14 @@ export default function JsonTreeViewClient() {
               <button type="button" onClick={collapseAll} className="tb-v2-btn tb-v2-btn-ghost tb-v2-btn-sm">Collapse all</button>
             </div>
           </div>
-          <div className="tb-v2-tool-output-body">
+          <div className="tb-v2-tool-output-body" style={{maxWidth:"100%",overflowX:"auto"}}>
             {search.trim() && matchedPaths.size === 0 && (
               <p className="tb-v2-empty">No keys or values match &quot;{search}&quot;.</p>
             )}
             <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
               <span style={{ fontFamily: 'var(--f-mono)', fontSize: 12.5, color: 'var(--fg-2)' }}>data (root)</span>
               <button type="button" onClick={copyRootPath} className="tb-v2-btn-sm" style={{ opacity: 0.7 }} title="Copy path">
-                {copiedRoot ? 'Copied' : 'Copy path'}
+                {rootCopyError ? 'Copy failed' : copiedRoot ? 'Copied' : 'Copy path'}
               </button>
             </div>
             <TreeNode label="data" value={parsed} path="data" depth={0} shared={shared} />

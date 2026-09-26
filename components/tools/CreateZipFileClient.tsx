@@ -1,6 +1,9 @@
 'use client';
+import { readBrowserFile } from '@/lib/utility-design/core';
+import UtilityDesignLayout from './UtilityDesignLayout';
+import ToolExampleClearActions from './ToolExampleClearActions';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 function makeCrcTable(): Uint32Array {
   const table = new Uint32Array(256);
@@ -36,7 +39,7 @@ function pushU32(arr: number[], v: number) {
   arr.push(v & 0xff, (v >>> 8) & 0xff, (v >>> 16) & 0xff, (v >>> 24) & 0xff);
 }
 
-function createZip(files: { name: string; data: Uint8Array }[]): Blob {
+export function createZip(files: { name: string; data: Uint8Array }[]): Blob {
   const { time, dosDate } = dosDateTime(new Date());
   const localChunks: number[] = [];
   const centralChunks: number[] = [];
@@ -51,7 +54,7 @@ function createZip(files: { name: string; data: Uint8Array }[]): Blob {
     const local: number[] = [];
     pushU32(local, 0x04034b50);
     pushU16(local, 20);
-    pushU16(local, 0);
+    pushU16(local, 0x0800);
     pushU16(local, 0);
     pushU16(local, time);
     pushU16(local, dosDate);
@@ -71,7 +74,7 @@ function createZip(files: { name: string; data: Uint8Array }[]): Blob {
     pushU32(central, 0x02014b50);
     pushU16(central, 20);
     pushU16(central, 20);
-    pushU16(central, 0);
+    pushU16(central, 0x0800);
     pushU16(central, 0);
     pushU16(central, time);
     pushU16(central, dosDate);
@@ -118,6 +121,8 @@ function formatBytes(bytes: number): string {
 }
 
 export default function CreateZipFileClient() {
+  const generation = useRef(0);
+  useEffect(() => () => { generation.current++; }, []);
   const [files, setFiles] = useState<File[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -126,8 +131,14 @@ export default function CreateZipFileClient() {
   const [zipSize, setZipSize] = useState(0);
   const fileRef = useRef<HTMLInputElement>(null);
 
+  const [error, setError] = useState('');
+  useEffect(() => () => { if(zipUrl) URL.revokeObjectURL(zipUrl); }, [zipUrl]);
   const addFiles = (list: File[]) => {
-    setFiles(prev => [...prev, ...list]);
+    generation.current++; setIsLoading(false); setError('');
+    const combined = [...files, ...list];
+    if(combined.length > 100 || combined.reduce((n,f)=>n+f.size,0) > 10*1024*1024) { setError('Maximum 100 files and 10 MiB total.'); return; }
+    if(new Set(combined.map(f=>f.name)).size !== combined.length) { setError('Duplicate filenames: rename before adding.'); return; }
+    setFiles(combined);
     setZipUrl('');
   };
 
@@ -143,6 +154,7 @@ export default function CreateZipFileClient() {
   };
 
   const removeFile = (index: number) => {
+    generation.current++; setIsLoading(false);
     setFiles(prev => prev.filter((_, i) => i !== index));
     setZipUrl('');
   };
@@ -150,31 +162,36 @@ export default function CreateZipFileClient() {
   const loadExample = () => {
     const a = new File(['Hello from Toolblip!'], 'hello.txt', { type: 'text/plain' });
     const b = new File(['This is a second example file.\nIt has two lines.'], 'notes.txt', { type: 'text/plain' });
-    setFiles([a, b]);
+    generation.current++; setIsLoading(false); setError(''); setFiles([a, b]);
     setZipUrl('');
   };
 
   const handleCreate = async () => {
     if (files.length === 0) return;
+    const id = ++generation.current; setError('');
     setIsLoading(true);
+    try {
     const entries = await Promise.all(files.map(async f => ({
       name: f.name,
-      data: new Uint8Array(await f.arrayBuffer()),
+      data: new Uint8Array(await readBrowserFile(f)),
     })));
+    if(id !== generation.current) return;
     const blob = createZip(entries);
     setZipUrl(URL.createObjectURL(blob));
     setZipName(files.length === 1 ? `${files[0].name.replace(/\.[^.]+$/, '')}.zip` : 'archive.zip');
     setZipSize(blob.size);
-    setIsLoading(false);
+    } catch { if(id === generation.current) setError('Could not create archive.'); }
+    finally { if(id === generation.current) setIsLoading(false); }
   };
 
-  return (
+  return (<UtilityDesignLayout>
     <div>
+      <ToolExampleClearActions onExample={() => { loadExample(); }} onClear={() => { generation.current++; setFiles([]); setZipUrl(''); setZipName(''); setZipSize(0); setIsLoading(false); setError(''); }}/>
+      {error && <p role="alert">{error}</p>}
+      <p>ZIP stores files without compression. Maximum 10 MiB total.</p>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Files</span>
-        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">
-          Load Example
-        </button>
+
       </div>
 
       <div
@@ -195,7 +212,7 @@ export default function CreateZipFileClient() {
         <p className="text-xs text-gray-500 mt-1">Select one or more files</p>
       </div>
 
-      <input ref={fileRef} type="file" multiple onChange={handleFileSelect} className="hidden" />
+      <input aria-label="Upload file" ref={fileRef} type="file" multiple onChange={handleFileSelect} className="hidden" />
 
       {files.length > 0 && (
         <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-4 flex flex-col gap-2 mt-4">
@@ -240,5 +257,6 @@ export default function CreateZipFileClient() {
         </div>
       )}
     </div>
+  </UtilityDesignLayout>
   );
 }

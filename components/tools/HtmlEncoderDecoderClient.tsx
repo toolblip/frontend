@@ -1,6 +1,8 @@
 "use client";
+import DeveloperSecurityFrame from './DeveloperSecurityFrame';
+import { decodeHtml } from '@/lib/developer-security/primitives';
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function HtmlEncoderDecoder() {
   const [input, setInput] = useState("");
@@ -16,21 +18,20 @@ export default function HtmlEncoderDecoder() {
       .replace(/'/g, "&#39;");
   };
 
-  const htmlDecode = (str: string) => {
-    const textarea = document.createElement("textarea");
-    textarea.innerHTML = str;
-    return textarea.value;
-  };
+  const htmlDecode = decodeHtml;
 
   const handleConvert = () => {
     setOutput(mode === "encode" ? htmlEncode(input) : htmlDecode(input));
   };
 
+  useEffect(() => { handleConvert(); }, [input, mode]);
+
   return (
+    <DeveloperSecurityFrame onExample={()=>{setMode('encode');setInput('<b>é & tea</b>');}} onClear={()=>{setInput('');setOutput('');}}>
     <div className="tb-v2-section">
       <h2 className="tb-v2-heading-sm">HTML Encoder / Decoder</h2>
       <p className="tb-v2-text">Encode or decode HTML entities in text.</p>
-      
+
       <div className="tb-v2-form-group">
         <div className="tb-v2-button-group">
           <button
@@ -50,7 +51,7 @@ export default function HtmlEncoderDecoder() {
 
       <div className="tb-v2-form-group">
         <label className="tb-v2-label">Input</label>
-        <textarea
+        <textarea aria-label="Input" maxLength={100000}
           className="tb-v2-textarea"
           value={input}
           onChange={(e) => setInput(e.target.value)}
@@ -66,7 +67,7 @@ export default function HtmlEncoderDecoder() {
       {output && (
         <div className="tb-v2-form-group">
           <label className="tb-v2-label">Output</label>
-          <textarea
+          <textarea aria-label="Output" maxLength={100000}
             className="tb-v2-textarea"
             value={output}
             readOnly
@@ -75,5 +76,6 @@ export default function HtmlEncoderDecoder() {
         </div>
       )}
     </div>
+    </DeveloperSecurityFrame>
   );
 }

@@ -2,6 +2,9 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 
+import ToolExampleClearActions from './ToolExampleClearActions';
+import {readImage,exampleFile,imageBounds} from '@/lib/images-qa';
+
 type Shape = 'circle' | 'square';
 
 const PREVIEW_BOX = 320;
@@ -74,24 +77,12 @@ export default function ProfilePhotoEditorClient() {
     if (imgRef.current) redraw();
   }, [redraw, imageUrl]);
 
-  const loadFile = (file: File | undefined) => {
-    if (!file) return;
-    if (!file.type.startsWith('image/')) {
-      setError('Please choose an image file.');
-      return;
-    }
-    setError('');
-    setFileName(file.name);
-    setZoom(1);
-    setPan({ x: 0, y: 0 });
-    const url = URL.createObjectURL(file);
-    const img = new Image();
-    img.onload = () => {
-      imgRef.current = img;
-      setImageUrl(url);
-    };
-    img.onerror = () => setError('Could not load this image.');
-    img.src = url;
+  const request=useRef(0);
+  useEffect(()=>()=>{request.current++;},[]);
+  useEffect(()=>()=>{if(imageUrl)URL.revokeObjectURL(imageUrl);},[imageUrl]);
+  const clear=()=>{request.current++;setImageUrl(null);imgRef.current=null;setError('');setFileName('');setZoom(1);setPan({x:0,y:0});setBrightness(100);setContrast(100);setSaturation(100);if(fileInputRef.current)fileInputRef.current.value='';};
+  const loadFile=async(file:File|undefined)=>{if(!file)return;clear();const id=request.current;
+    try{const {img,mime,bytes}=await readImage(file);if(id!==request.current)return;imgRef.current=img;setFileName(file.name);setImageUrl(URL.createObjectURL(new Blob([bytes],{type:mime})));}catch(e){if(id===request.current)setError((e as Error).message);}
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => loadFile(e.target.files?.[0]);
@@ -109,8 +100,9 @@ export default function ProfilePhotoEditorClient() {
   };
   const handlePointerMove = (e: React.PointerEvent<HTMLCanvasElement>) => {
     if (!isPanningRef.current) return;
-    const dx = e.clientX - panStartRef.current.x;
-    const dy = e.clientY - panStartRef.current.y;
+    const factor = PREVIEW_BOX / e.currentTarget.getBoundingClientRect().width;
+    const dx = (e.clientX - panStartRef.current.x) * factor;
+    const dy = (e.clientY - panStartRef.current.y) * factor;
     setPan({ x: panStartRef.current.panX + dx, y: panStartRef.current.panY + dy });
   };
   const handlePointerUp = () => {
@@ -128,23 +120,25 @@ export default function ProfilePhotoEditorClient() {
   const download = () => {
     const img = imgRef.current;
     if (!img) return;
+    try {imageBounds(outputSize,outputSize);} catch(e){setError((e as Error).message);return;}
+    const id=request.current;
     const canvas = document.createElement('canvas');
     renderToCanvas(canvas, outputSize, img, zoom, pan.x, pan.y, shape, brightness, contrast, saturation);
     canvas.toBlob((blob) => {
-      if (!blob) return;
+      if (!blob || id!==request.current) return;
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
       a.download = `${(fileName.replace(/\.[^.]+$/, '') || 'profile-photo')}-${outputSize}.png`;
       a.click();
-      URL.revokeObjectURL(url);
+      setTimeout(()=>URL.revokeObjectURL(url),1000);
     }, 'image/png');
   };
 
   return (
-    <div className="tb-v2-tool-card">
+    <div className="tb-v2-tool-card"><style jsx>{`input,textarea,select {max-width:100%;min-width:0} .tb-v2-tool-card {min-width:0;max-width:100%;overflow-wrap:anywhere} .tb-v2-tool-input-head {flex-wrap:wrap;gap:8px} .tb-v2-range-row {flex-wrap:wrap} .tb-v2-range {min-width:0;flex:1}`}</style>
       <div className="tb-v2-tool-input-head">
-        <span className="tb-v2-tool-label">Upload Photo</span>
+        <span className="tb-v2-tool-label">Upload Photo</span><ToolExampleClearActions onExample={()=>loadFile(exampleFile())} onClear={clear}/>
       </div>
       <div style={{ padding: 20 }}>
         {!imageUrl ? (
@@ -166,7 +160,7 @@ export default function ProfilePhotoEditorClient() {
                 ref={previewCanvasRef}
                 width={PREVIEW_BOX}
                 height={PREVIEW_BOX}
-                style={{ width: PREVIEW_BOX, height: PREVIEW_BOX, border: '1px solid var(--line)', borderRadius: 8, cursor: 'grab', touchAction: 'none', background: 'repeating-conic-gradient(#ccc 0% 25%, #fff 0% 50%) 50% / 16px 16px' }}
+                style={{ width: PREVIEW_BOX, maxWidth: '100%', height: 'auto', aspectRatio:'1', border: '1px solid var(--line)', borderRadius: 8, cursor: 'grab', touchAction: 'none', background: 'repeating-conic-gradient(#ccc 0% 25%, #fff 0% 50%) 50% / 16px 16px' }}
                 onPointerDown={handlePointerDown}
                 onPointerMove={handlePointerMove}
                 onPointerUp={handlePointerUp}
@@ -185,27 +179,27 @@ export default function ProfilePhotoEditorClient() {
 
             <div className="tb-v2-range-row">
               <span className="tb-v2-tool-label" style={{ minWidth: 90 }}>Zoom</span>
-              <input type="range" min={1} max={4} step={0.05} value={zoom} onChange={(e) => setZoom(Number(e.target.value))} className="tb-v2-range" />
+              <input type="range" min={1} max={4} step={0.05} aria-label="zoom" value={zoom} onChange={(e) => setZoom(Number(e.target.value))} className="tb-v2-range" />
               <span className="tb-v2-range-val">{zoom.toFixed(2)}x</span>
             </div>
             <div className="tb-v2-range-row">
               <span className="tb-v2-tool-label" style={{ minWidth: 90 }}>Brightness</span>
-              <input type="range" min={50} max={150} value={brightness} onChange={(e) => setBrightness(Number(e.target.value))} className="tb-v2-range" />
+              <input type="range" min={50} max={150} aria-label="brightness" value={brightness} onChange={(e) => setBrightness(Number(e.target.value))} className="tb-v2-range" />
               <span className="tb-v2-range-val">{brightness}%</span>
             </div>
             <div className="tb-v2-range-row">
               <span className="tb-v2-tool-label" style={{ minWidth: 90 }}>Contrast</span>
-              <input type="range" min={50} max={150} value={contrast} onChange={(e) => setContrast(Number(e.target.value))} className="tb-v2-range" />
+              <input type="range" min={50} max={150} aria-label="contrast" value={contrast} onChange={(e) => setContrast(Number(e.target.value))} className="tb-v2-range" />
               <span className="tb-v2-range-val">{contrast}%</span>
             </div>
             <div className="tb-v2-range-row">
               <span className="tb-v2-tool-label" style={{ minWidth: 90 }}>Saturation</span>
-              <input type="range" min={0} max={200} value={saturation} onChange={(e) => setSaturation(Number(e.target.value))} className="tb-v2-range" />
+              <input type="range" min={0} max={200} aria-label="saturation" value={saturation} onChange={(e) => setSaturation(Number(e.target.value))} className="tb-v2-range" />
               <span className="tb-v2-range-val">{saturation}%</span>
             </div>
             <div className="tb-v2-range-row">
               <span className="tb-v2-tool-label" style={{ minWidth: 90 }}>Output Size</span>
-              <input type="range" min={128} max={1024} step={64} value={outputSize} onChange={(e) => setOutputSize(Number(e.target.value))} className="tb-v2-range" />
+              <input type="range" min={128} max={1024} step={64} aria-label="outputSize" value={outputSize} onChange={(e) => setOutputSize(Number(e.target.value))} className="tb-v2-range" />
               <span className="tb-v2-range-val">{outputSize}px</span>
             </div>
 
@@ -218,7 +212,7 @@ export default function ProfilePhotoEditorClient() {
               </button>
               <button
                 type="button"
-                onClick={() => { setImageUrl(null); imgRef.current = null; setFileName(''); }}
+                onClick={clear}
                 className="tb-v2-btn"
               >
                 Choose New Photo
@@ -227,7 +221,7 @@ export default function ProfilePhotoEditorClient() {
           </div>
         )}
         {error && <div className="tb-v2-banner tb-v2-banner-err" style={{ marginTop: 12 }}>{error}</div>}
-        <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFileChange} style={{ display: 'none' }} />
+        <input aria-label="Upload image" ref={fileInputRef} type="file" accept="image/*" onChange={handleFileChange} style={{ display: 'none' }} />
       </div>
     </div>
   );

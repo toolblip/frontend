@@ -1,5 +1,7 @@
 import { withSerwist } from '@serwist/turbopack';
 
+import { baseCsp, basePermissions, browserPolicyHeaders } from './lib/browser-policy.mjs';
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // '127.0.0.1' covers plain localhost dev; the Tailscale hostname/wildcard
@@ -755,27 +757,15 @@ const nextConfig = {
           { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
           {
             key: 'Permissions-Policy',
-            value: 'camera=(), microphone=(), geolocation=(), interest-cohort=()',
+            value: basePermissions,
           },
           {
             key: 'Content-Security-Policy',
-            value: [
-              "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' blob:",
-              "style-src 'self' 'unsafe-inline'",
-              "img-src 'self' data: https: blob:",
-              "font-src 'self' data:",
-              "connect-src 'self' blob: https://toolblip-api-production.up.railway.app https://api.toolblip.com https://*.railway.app https://publish.twitter.com https://publish.x.com https://unavatar.io",
-              "worker-src 'self' blob:",
-              "frame-src 'none'",
-              "object-src 'none'",
-              "base-uri 'self'",
-              "form-action 'self'",
-              "upgrade-insecure-requests",
-            ].join('; '),
+            value: baseCsp,
           },
         ],
       },
+      ...browserPolicyHeaders,
     ];
   },
 };

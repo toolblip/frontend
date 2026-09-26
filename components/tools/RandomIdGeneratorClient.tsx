@@ -1,4 +1,6 @@
 'use client';
+import UtilityDesignLayout from './UtilityDesignLayout';
+import ToolExampleClearActions from './ToolExampleClearActions';
 
 import { useState } from 'react';
 import { randomFromAlphabet } from '@/lib/secureRandom';
@@ -22,8 +24,8 @@ export default function RandomIdGeneratorClient() {
   const [copied, setCopied] = useState(false);
 
   const generate = () => {
-    const n = Math.max(1, Math.min(100, count));
-    const len = Math.max(1, Math.min(64, length));
+    const n = Math.max(1, Math.min(100, Math.trunc(count)||1));
+    const len = Math.max(1, Math.min(64, Math.trunc(length)||1));
     const charset = CHARSETS[charsetKey];
     const cleanPrefix = prefix.trim().slice(0, MAX_PREFIX_LENGTH);
     setIds(Array.from({ length: n }, () => `${cleanPrefix}${randomFromAlphabet(charset, len)}`));
@@ -31,12 +33,12 @@ export default function RandomIdGeneratorClient() {
   };
 
   const copy = () => {
-    navigator.clipboard.writeText(ids.join('\n'));
-    setCopied(true);
+    navigator.clipboard.writeText(ids.join('\n')).then(() => setCopied(true), () => setCopied(false));
   };
 
-  return (
-    <div className="tb-v2-tool-card">
+  return (<UtilityDesignLayout>
+    <div onChangeCapture={() => { setIds([]); }} className="tb-v2-tool-card">
+      <ToolExampleClearActions onExample={() => { setPrefix('item_'); setLength(8); setCount(3); setIds([]); }} onClear={() => { setPrefix(''); setLength(8); setCount(5); setIds([]); setCopied(false); }}/>
       <div className="tb-v2-mode-tabs">
         {(Object.keys(CHARSETS) as CharsetKey[]).map((k) => (
           <button key={k} className={charsetKey === k ? 'tb-v2-mode-tab-active' : 'tb-v2-mode-tab'} onClick={() => setCharsetKey(k)}>
@@ -48,7 +50,7 @@ export default function RandomIdGeneratorClient() {
       <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginTop: 16 }}>
         <label className="tb-v2-tool-label">
           Length
-          <input
+          <input aria-label="Length"
             type="number"
             className="tb-v2-input"
             value={length}
@@ -59,7 +61,7 @@ export default function RandomIdGeneratorClient() {
         </label>
         <label className="tb-v2-tool-label">
           Prefix (optional, max {MAX_PREFIX_LENGTH} chars)
-          <input
+          <input aria-label="Prefix"
             className="tb-v2-input"
             value={prefix}
             maxLength={MAX_PREFIX_LENGTH}
@@ -69,7 +71,7 @@ export default function RandomIdGeneratorClient() {
         </label>
         <label className="tb-v2-tool-label">
           How many
-          <input
+          <input aria-label="Count"
             type="number"
             className="tb-v2-input"
             value={count}
@@ -96,5 +98,6 @@ export default function RandomIdGeneratorClient() {
         </div>
       )}
     </div>
+  </UtilityDesignLayout>
   );
 }

@@ -1,60 +1,12 @@
 'use client';
+import UtilityDesignLayout from './UtilityDesignLayout';
+import ToolExampleClearActions from './ToolExampleClearActions';
 
-import { useMemo, useState } from 'react';
-import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
+import { useMemo, useState, useRef, useEffect } from 'react';
+import { documentPdf as textToPdf } from '@/lib/utility-design/document';
+import { saveBlob } from '@/lib/utility-design/core';
 
-const PAGE_WIDTH = 612;
-const PAGE_HEIGHT = 792;
-const MARGIN = 56;
-const FONT_SIZE = 10.5;
-const LINE_HEIGHT = 14;
 
-function wrapLine(text: string, font: import('pdf-lib').PDFFont, size: number, maxWidth: number): string[] {
-  if (text === '') return [''];
-  const words = text.split(' ');
-  const lines: string[] = [];
-  let current = '';
-  for (const word of words) {
-    const candidate = current ? `${current} ${word}` : word;
-    if (font.widthOfTextAtSize(candidate, size) > maxWidth && current) {
-      lines.push(current);
-      current = word;
-    } else {
-      current = candidate;
-    }
-  }
-  if (current) lines.push(current);
-  return lines;
-}
-
-async function textToPdf(text: string): Promise<Uint8Array> {
-  const pdfDoc = await PDFDocument.create();
-  const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
-  const boldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
-  const maxWidth = PAGE_WIDTH - MARGIN * 2;
-
-  let page = pdfDoc.addPage([PAGE_WIDTH, PAGE_HEIGHT]);
-  let y = PAGE_HEIGHT - MARGIN;
-
-  const newPage = () => {
-    page = pdfDoc.addPage([PAGE_WIDTH, PAGE_HEIGHT]);
-    y = PAGE_HEIGHT - MARGIN;
-  };
-
-  const paragraphs = text.split('\n');
-  for (const paragraph of paragraphs) {
-    const isHeading = paragraph.length > 0 && paragraph.length < 70 && paragraph === paragraph.toUpperCase() && /[A-Z]/.test(paragraph);
-    const useFont = isHeading ? boldFont : font;
-    const lines = wrapLine(paragraph, useFont, FONT_SIZE, maxWidth);
-    for (const line of lines) {
-      if (y < MARGIN) newPage();
-      page.drawText(line, { x: MARGIN, y, size: FONT_SIZE, font: useFont, color: rgb(0.1, 0.1, 0.1) });
-      y -= LINE_HEIGHT;
-    }
-  }
-
-  return pdfDoc.save();
-}
 
 function formatDate(iso: string): string {
   if (!iso) return '[Delivery Date]';
@@ -74,6 +26,10 @@ function formatPrice(price: string): string {
 }
 
 export default function PurchaseAgreementGeneratorClient() {
+  const revision = useRef(0);
+  useEffect(()=>()=>{revision.current++;},[]);
+  const [exportError, setExportError] = useState('');
+  const [exporting, setExporting] = useState(false);
   const [buyerName, setBuyerName] = useState('John Buyer');
   const [sellerName, setSellerName] = useState('Acme Sales LLC');
   const [itemDescription, setItemDescription] = useState('2019 Ford F-150, VIN 1FTFW1E5XKFA00000, including all standard accessories.');
@@ -84,6 +40,9 @@ export default function PurchaseAgreementGeneratorClient() {
   const [copied, setCopied] = useState(false);
 
   const documentText = useMemo(() => {
+    if (!(buyerName || sellerName || itemDescription)) return '';
+
+    if (price && (!Number.isFinite(Number(price)) || Number(price) < 0)) return '';
     const buyer = buyerName.trim() || '[Buyer Name]';
     const seller = sellerName.trim() || '[Seller Name]';
     const item = itemDescription.trim() || '[Description of Item/Property]';
@@ -143,8 +102,7 @@ export default function PurchaseAgreementGeneratorClient() {
   }, [buyerName, sellerName, itemDescription, price, paymentTerms, deliveryDate, governingState]);
 
   const copyText = () => {
-    navigator.clipboard.writeText(documentText).catch(() => {});
-    setCopied(true);
+    navigator.clipboard.writeText(documentText).then(() => setCopied(true), () => setCopied(false));
     setTimeout(() => setCopied(false), 1500);
   };
 
@@ -155,61 +113,61 @@ export default function PurchaseAgreementGeneratorClient() {
     a.href = url;
     a.download = 'purchase-agreement.txt';
     a.click();
-    URL.revokeObjectURL(url);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
   };
 
   const downloadPdf = async () => {
-    const bytes = await textToPdf(documentText);
-    const blob = new Blob([bytes as BlobPart], { type: 'application/pdf' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'purchase-agreement.pdf';
-    a.click();
-    URL.revokeObjectURL(url);
+    const id = revision.current; setExporting(true); setExportError('');
+    try { const bytes = await textToPdf(documentText); if(id === revision.current) saveBlob(new Blob([bytes as BlobPart], {type:'application/pdf'}), 'document.pdf'); }
+    catch(e) { if(id === revision.current) setExportError((e as Error).message); }
+    finally { if(id === revision.current) setExporting(false); }
   };
 
-  return (
+  return (<UtilityDesignLayout>
     <div className="tb-v2-tool-card" style={{ padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: 16 }}>
+      <ToolExampleClearActions onExample={() => { revision.current++; setExporting(false); setExportError(''); setBuyerName('John Buyer'); setSellerName('Acme Sales LLC'); setItemDescription('2019 Ford F-150, VIN 1FTFW1E5XKFA00000, including all standard accessories.'); setPrice('15000'); setPaymentTerms('Full payment due at signing via cashier\'s check or wire transfer.'); setDeliveryDate(''); setGoverningState('California'); }} onClear={() => { revision.current++; setExportError(''); setExporting(false); setBuyerName(''); setSellerName(''); setItemDescription(''); setPrice(''); setPaymentTerms(''); setDeliveryDate(''); setGoverningState(''); }}/>
       <div className="tb-v2-grid-2">
-        <div>
+        <div onChangeCapture={() => { revision.current++; setExporting(false); setExportError(''); }}>
+      {exportError && <p role="alert">{exportError}</p>}
+      {exporting && <p role="status">Preparing PDF…</p>}
+      <p>Editable template draft. Verify all statements and applicable requirements before use; legal validity or compliance is not guaranteed.</p>
           <label className="tb-v2-tool-label">Buyer Name</label>
-          <input type="text" value={buyerName} onChange={e => setBuyerName(e.target.value)} className="tb-v2-input" />
+          <input maxLength={100000} aria-label="Buyer Name" type="text" value={buyerName} onChange={e => setBuyerName(e.target.value)} className="tb-v2-input" />
         </div>
         <div>
           <label className="tb-v2-tool-label">Seller Name</label>
-          <input type="text" value={sellerName} onChange={e => setSellerName(e.target.value)} className="tb-v2-input" />
+          <input maxLength={100000} aria-label="Seller Name" type="text" value={sellerName} onChange={e => setSellerName(e.target.value)} className="tb-v2-input" />
         </div>
         <div>
           <label className="tb-v2-tool-label">Purchase Price (USD)</label>
-          <input type="number" min={0} step="0.01" value={price} onChange={e => setPrice(e.target.value)} className="tb-v2-input" />
+          <input aria-label="Price" type="number" min={0} step="0.01" value={price} onChange={e => setPrice(e.target.value)} className="tb-v2-input" />
         </div>
         <div>
           <label className="tb-v2-tool-label">Delivery Date</label>
-          <input type="date" value={deliveryDate} onChange={e => setDeliveryDate(e.target.value)} className="tb-v2-input" />
+          <input aria-label="Delivery Date" type="date" value={deliveryDate} onChange={e => setDeliveryDate(e.target.value)} className="tb-v2-input" />
         </div>
         <div>
           <label className="tb-v2-tool-label">Governing State</label>
-          <input type="text" value={governingState} onChange={e => setGoverningState(e.target.value)} className="tb-v2-input" />
+          <input maxLength={100000} aria-label="Governing State" type="text" value={governingState} onChange={e => setGoverningState(e.target.value)} className="tb-v2-input" />
         </div>
       </div>
 
       <div>
         <label className="tb-v2-tool-label">Item / Property Description</label>
-        <textarea value={itemDescription} onChange={e => setItemDescription(e.target.value)} className="tb-v2-tool-textarea" />
+        <textarea maxLength={100000} aria-label="Item Description" value={itemDescription} onChange={e => setItemDescription(e.target.value)} className="tb-v2-tool-textarea" />
       </div>
 
       <div>
         <label className="tb-v2-tool-label">Payment Terms</label>
-        <textarea value={paymentTerms} onChange={e => setPaymentTerms(e.target.value)} className="tb-v2-tool-textarea" style={{ minHeight: 60 }} />
+        <textarea maxLength={100000} aria-label="Payment Terms" value={paymentTerms} onChange={e => setPaymentTerms(e.target.value)} className="tb-v2-tool-textarea" style={{ minHeight: 60 }} />
       </div>
 
       <div className="tb-v2-tool-output-head">
         <span className="tb-v2-tool-label">Preview</span>
         <div style={{ display: 'flex', gap: 8 }}>
-          <button onClick={copyText} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}>{copied ? 'Copied' : 'Copy'}</button>
-          <button onClick={downloadTxt} className="tb-v2-btn-sm">Download .txt</button>
-          <button onClick={downloadPdf} className="tb-v2-btn-sm">Download .pdf</button>
+          <button disabled={!documentText} onClick={copyText} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}>{copied ? 'Copied' : 'Copy'}</button>
+          <button disabled={!documentText} onClick={downloadTxt} className="tb-v2-btn-sm">Download .txt</button>
+          <button disabled={exporting || !documentText} onClick={downloadPdf} className="tb-v2-btn-sm">Download .pdf</button>
         </div>
       </div>
       <div className="tb-v2-tool-output-body">
@@ -220,5 +178,6 @@ export default function PurchaseAgreementGeneratorClient() {
         This is a generic template and does not constitute legal advice. Consult a qualified attorney before relying on this document for a real transaction.
       </p>
     </div>
+  </UtilityDesignLayout>
   );
 }

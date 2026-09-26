@@ -1,178 +1,68 @@
 'use client';
-
-import { useMemo, useRef, useState } from 'react';
-import { useSubscription } from '@/hooks/useSubscription';
-import { FileSizeError, UpgradeNotice } from '@/components/FileSizeGuard';
-
-function num(v: string): number | null {
-  const n = parseFloat(v);
-  return Number.isFinite(n) && n > 0 ? n : null;
-}
-
-function round(n: number): number {
-  return Math.round(n * 100) / 100;
-}
-
+import { useEffect, useRef, useState } from 'react';
+import ToolExampleClearActions from './ToolExampleClearActions';
+import { readImage, exampleFile, imageBounds, positive, canvasBlob, pngDpi, saveBlob } from '@/lib/images-qa';
 export default function ImageDpiResizerClient() {
-  const [file, setFile] = useState<File | null>(null);
-  const [preview, setPreview] = useState('');
-  const [sourceWidth, setSourceWidth] = useState(0);
-  const [sourceHeight, setSourceHeight] = useState(0);
-  const [currentDpi, setCurrentDpi] = useState('72');
-  const [targetDpi, setTargetDpi] = useState('300');
-  const [error, setError] = useState('');
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const { tier } = useSubscription();
-  const maxSizeMB = tier === 'free' ? 5 : tier === 'starter' ? 10 : tier === 'ultra' ? 100 : tier === 'max' ? 500 : 5;
-  const isOversized = file != null && file.size / (1024 * 1024) > maxSizeMB;
-
-  const fromDpi = num(currentDpi);
-  const toDpi = num(targetDpi);
-  const scale = fromDpi && toDpi ? toDpi / fromDpi : null;
-  const targetWidth = sourceWidth && scale ? Math.max(1, Math.round(sourceWidth * scale)) : 0;
-  const targetHeight = sourceHeight && scale ? Math.max(1, Math.round(sourceHeight * scale)) : 0;
-  const printInches = useMemo(() => {
-    if (!sourceWidth || !sourceHeight || !fromDpi) return null;
-    return {
-      w: round(sourceWidth / fromDpi),
-      h: round(sourceHeight / fromDpi),
-    };
-  }, [sourceWidth, sourceHeight, fromDpi]);
-
-  const loadFile = (next: File | undefined) => {
-    if (!next) return;
-    if (!next.type.startsWith('image/')) {
-      setError('Please choose an image file.');
-      return;
+    const [source, setSource] = useState<Awaited<ReturnType<typeof readImage>> | null>(null);
+    const [from, setFrom] = useState('72'), [to, setTo] = useState('300'), [error, setError] = useState(''), [exporting, setExporting] = useState(false), [loading, setLoading] = useState(false);
+    const busy = loading || exporting;
+    const sourceRequest = useRef(0), outputRequest = useRef(0), input = useRef<HTMLInputElement>(null);
+    useEffect(() => () => { sourceRequest.current++; outputRequest.current++; }, []);
+    const invalidateOutput = () => { outputRequest.current++; setExporting(false); setError(''); };
+    const clear = () => { sourceRequest.current++; invalidateOutput(); setSource(null); setLoading(false); if (input.current)
+        input.current.value = ''; };
+    const load = async (file?: File) => { if (!file)
+        return; clear(); const id = sourceRequest.current; setLoading(true); try {
+        const s = await readImage(file);
+        if (id === sourceRequest.current)
+            setSource(s);
     }
-    setError('');
-    setFile(next);
-    const url = URL.createObjectURL(next);
-    const img = new Image();
-    img.onload = () => {
-      setSourceWidth(img.naturalWidth);
-      setSourceHeight(img.naturalHeight);
-      if (preview) URL.revokeObjectURL(preview);
-      setPreview(url);
-    };
-    img.onerror = () => {
-      URL.revokeObjectURL(url);
-      setError('Could not load this image.');
-    };
-    img.src = url;
-  };
-
-  const download = () => {
-    const canvas = canvasRef.current;
-    if (!canvas || !preview || !targetWidth || !targetHeight || isOversized) return;
-    const img = new Image();
-    img.onload = () => {
-      canvas.width = targetWidth;
-      canvas.height = targetHeight;
-      const ctx = canvas.getContext('2d');
-      if (!ctx) return;
-      ctx.imageSmoothingEnabled = true;
-      ctx.imageSmoothingQuality = 'high';
-      ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
-      const a = document.createElement('a');
-      a.href = canvas.toDataURL('image/png');
-      a.download = `dpi-${toDpi}-${targetWidth}x${targetHeight}.png`;
-      a.click();
-    };
-    img.src = preview;
-  };
-
-  return (
-    <div className="tb-v2-tool-card">
-      <div className="tb-v2-tool-input-head">
-        <span className="tb-v2-tool-label">Image</span>
-      </div>
-      <div style={{ padding: 20, display: 'flex', flexDirection: 'column', gap: 16 }}>
-        {error && <div className="tb-v2-banner tb-v2-banner-err">{error}</div>}
-        <div>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(e) => loadFile(e.target.files?.[0])}
-            className="w-full text-sm text-gray-500 dark:text-gray-400 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-red-600 file:text-white file:text-sm file:font-medium hover:file:bg-red-700 cursor-pointer"
-          />
-          <UpgradeNotice tier={tier} />
-          <FileSizeError file={file} maxSizeMB={maxSizeMB} />
-        </div>
-
-        {preview && (
-          <img src={preview} alt="Selected" className="max-h-56 mx-auto rounded-lg" />
-        )}
-
-        <div className="tb-v2-grid-2">
-          <div style={{ paddingRight: 12 }}>
-            <span className="tb-v2-tool-label">Current DPI</span>
-            <input
-              type="number"
-              min={1}
-              className="tb-v2-input"
-              style={{ marginTop: 8, fontFamily: 'var(--f-mono)' }}
-              value={currentDpi}
-              onChange={(e) => setCurrentDpi(e.target.value)}
-            />
-          </div>
-          <div style={{ paddingLeft: 12 }}>
-            <span className="tb-v2-tool-label">Target DPI</span>
-            <input
-              type="number"
-              min={1}
-              className="tb-v2-input"
-              style={{ marginTop: 8, fontFamily: 'var(--f-mono)' }}
-              value={targetDpi}
-              onChange={(e) => setTargetDpi(e.target.value)}
-            />
-          </div>
-        </div>
-      </div>
-
-      <div className="tb-v2-tool-output-head">
-        <span className="tb-v2-tool-label">Print resize</span>
-      </div>
-      <div className="tb-v2-tool-output-body">
-        {!sourceWidth ? (
-          <p className="tb-v2-empty">Upload an image to calculate the new print resolution.</p>
-        ) : (
-          <>
-            <div className="tb-v2-stats-grid">
-              <div className="tb-v2-stat-pill">
-                <div style={{ fontSize: 11, color: 'var(--fg-2)' }}>Current pixels</div>
-                <div style={{ fontFamily: 'var(--f-mono)', fontWeight: 600 }}>{sourceWidth} × {sourceHeight}</div>
-              </div>
-              <div className="tb-v2-stat-pill">
-                <div style={{ fontSize: 11, color: 'var(--fg-2)' }}>New pixels</div>
-                <div style={{ fontFamily: 'var(--f-mono)', fontWeight: 600 }}>{targetWidth} × {targetHeight}</div>
-              </div>
-              <div className="tb-v2-stat-pill">
-                <div style={{ fontSize: 11, color: 'var(--fg-2)' }}>Print size</div>
-                <div style={{ fontFamily: 'var(--f-mono)', fontWeight: 600 }}>
-                  {printInches ? `${printInches.w} × ${printInches.h} in` : '—'}
-                </div>
-              </div>
-              <div className="tb-v2-stat-pill">
-                <div style={{ fontSize: 11, color: 'var(--fg-2)' }}>Scale</div>
-                <div style={{ fontFamily: 'var(--f-mono)', fontWeight: 600 }}>
-                  {scale ? `${round(scale * 100)}%` : '—'}
-                </div>
-              </div>
-            </div>
-            <button
-              type="button"
-              className="tb-v2-btn tb-v2-btn-primary"
-              style={{ marginTop: 16 }}
-              onClick={download}
-              disabled={!targetWidth || isOversized}
-            >
-              Download {targetWidth}×{targetHeight} PNG
-            </button>
-          </>
-        )}
-      </div>
-      <canvas ref={canvasRef} className="hidden" />
-    </div>
-  );
+    catch (e) {
+        if (id === sourceRequest.current)
+            setError((e as Error).message);
+    }
+    finally {
+        if (id === sourceRequest.current)
+            setLoading(false);
+    } };
+    const f = positive(from), t = positive(to);
+    let width = 0, height = 0, validation = '';
+    if (source) {
+        try {
+            if (!f || !t || f > 10000 || t > 10000)
+                throw Error('Enter DPI values from 1 to 10000.');
+            width = Math.round(source.img.naturalWidth * t / f);
+            height = Math.round(source.img.naturalHeight * t / f);
+            imageBounds(width, height);
+        }
+        catch (e) {
+            validation = (e as Error).message;
+        }
+    }
+    const download = async () => { if (!source || validation || !t)
+        return; const id = ++outputRequest.current; setExporting(true); setError(''); try {
+        const c = document.createElement('canvas');
+        c.width = width;
+        c.height = height;
+        c.getContext('2d')!.drawImage(source.img, 0, 0, width, height);
+        const blob = await canvasBlob(c);
+        const bytes = pngDpi(new Uint8Array(await blob.arrayBuffer()), t);
+        if (id === outputRequest.current)
+            saveBlob(new Blob([bytes], { type: 'image/png' }), `dpi-${t}-${width}x${height}.png`);
+    }
+    catch (e) {
+        if (id === outputRequest.current)
+            setError((e as Error).message);
+    }
+    finally {
+        if (id === outputRequest.current)
+            setExporting(false);
+    } };
+    return <div className="tb-v2-tool-card"><style jsx>{`input,textarea,select {max-width:100%;min-width:0} .tb-v2-tool-card {min-width:0;max-width:100%;overflow-wrap:anywhere} .tb-v2-tool-input-head {flex-wrap:wrap;gap:8px} .tb-v2-range-row {flex-wrap:wrap} .tb-v2-range {min-width:0;flex:1}`}</style><div className="tb-v2-tool-input-head"><span>Print resolution</span><ToolExampleClearActions onExample={() => { setFrom('100'); setTo('200'); load(exampleFile()); }} onClear={clear}/></div><div className="tb-v2-tool-output-body" style={{ display: 'grid', gap: 12 }}>
+ <input ref={input} aria-label="Upload image" type="file" accept="image/*" onChange={e => load(e.target.files?.[0])}/>
+ <p>Resamples pixels to preserve the print size you specify. The PNG download includes the target DPI metadata. Current DPI is your assumption; it isn’t read from the file. Upscaling cannot recover missing detail.</p>
+ <label>Current DPI<input className="tb-v2-input" type="number" value={from} onChange={e => { invalidateOutput(); setFrom(e.target.value); }}/></label><label>Target DPI<input className="tb-v2-input" type="number" value={to} onChange={e => { invalidateOutput(); setTo(e.target.value); }}/></label>
+ {(error || validation) && <p role="alert">{error || validation}</p>}{busy && <p role="status">Processing…</p>}
+ {source && !validation && <><p role="status">{width} × {height} pixels · {t} DPI</p><button className="tb-v2-btn tb-v2-btn-primary" disabled={busy} onClick={download}>Download PNG</button></>}
+ </div></div>;
 }

@@ -4,7 +4,7 @@ import { createElement, type ReactElement } from 'react';
 import * as jsxRuntime from 'react/jsx-runtime';
 import { renderToStaticMarkup } from 'react-dom/server';
 import ts from 'typescript';
-import { describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
 import { consolidatedAliases } from '@/e2e/content-aliases';
 
 // Execute the real dispatcher, isolating its hundreds of browser-only imports.
@@ -14,10 +14,16 @@ const compiled = ts.transpileModule(source, {
   compilerOptions: { module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX },
 }).outputText;
 const exports: { ToolUI?: (props: { tool: { slug: string } }) => ReactElement } = {};
+const pending: Promise<unknown>[] = [];
 runInNewContext(compiled, {
   exports,
   require: (id: string) => {
     if (id === 'react/jsx-runtime') return jsxRuntime;
+    if (id === 'next/dynamic') return {default: (loader: () => Promise<{ default: () => ReactElement }>) => {
+      let component: (() => ReactElement) | undefined;
+      pending.push(loader().then(module => { component = module.default; }));
+      return () => { if (!component) throw new Error('Tool loader not resolved'); return createElement(component); };
+    }};
     if (id.startsWith('@/components/tools/')) {
       return { default: () => createElement('div', { 'data-tool': id.split('/').at(-1) }) };
     }
@@ -40,6 +46,7 @@ const destinations = [
 ];
 
 describe('retained canonical tool dispatch', () => {
+  beforeAll(async () => { await Promise.all(pending); });
   it('covers every unique consolidation destination', () => {
     expect(destinations.map(([slug]) => slug).sort())
       .toEqual([...new Set(Object.values(consolidatedAliases))].sort());

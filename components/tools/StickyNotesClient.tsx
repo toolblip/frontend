@@ -1,4 +1,6 @@
 'use client';
+import UtilityDesignLayout from './UtilityDesignLayout';
+import ToolExampleClearActions from './ToolExampleClearActions';
 
 import { useState, useEffect } from 'react';
 
@@ -20,30 +22,32 @@ const colors = [
 ];
 
 export default function StickyNotesClient() {
+  const [ready,setReady]=useState(false);
+  const [storageError,setStorageError]=useState('');
   const [notes, setNotes] = useState<Note[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editContent, setEditContent] = useState('');
 
   // Load from localStorage on mount
   useEffect(() => {
-    const saved = localStorage.getItem('sticky-notes');
-    if (saved) {
-      try {
-        setNotes(JSON.parse(saved));
-      } catch (e) {
-        console.error('Failed to load notes');
-      }
-    }
+    try {
+      const saved=JSON.parse(localStorage.getItem('sticky-notes') || '[]');
+      if(!Array.isArray(saved) || !saved.every(n => n && typeof n.id === 'string' && typeof n.content === 'string' && typeof n.color === 'string')) throw new Error('Invalid notes');
+      // Keep every record and all legacy fields. The limit applies only to creation.
+      setNotes(saved);
+      setReady(true);
+    } catch { setStorageError('Saved notes could not be loaded. Stored data has been kept; Clear explicitly discards it.'); }
   }, []);
-
-  // Save to localStorage when notes change
   useEffect(() => {
-    localStorage.setItem('sticky-notes', JSON.stringify(notes));
-  }, [notes]);
+    if(!ready)return;
+    try { localStorage.setItem('sticky-notes',JSON.stringify(notes)); }
+    catch { setStorageError('Browser storage unavailable; notes remain in this tab only.'); }
+  },[notes,ready]);
 
   const addNote = () => {
+    if(!ready || notes.length>=100)return;
     const newNote: Note = {
-      id: Date.now().toString(),
+      id: crypto.randomUUID(),
       content: '',
       color: colors[Math.floor(Math.random() * colors.length)],
       createdAt: Date.now(),
@@ -83,17 +87,21 @@ export default function StickyNotesClient() {
   };
 
   const clearAll = () => {
+    setReady(true); setStorageError('');
     setNotes([]);
-    localStorage.removeItem('sticky-notes');
+    setEditingId(null); setEditContent('');
   };
 
-  return (
+  return (<UtilityDesignLayout>
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 p-6">
+      <ToolExampleClearActions onExample={() => { if (!ready) return; setNotes(n => n.length >= 100 ? n : [...n,{id:crypto.randomUUID(),content:'Example: review the project checklist.',color:colors[0],createdAt:Date.now(),position:{x:0,y:0}}]); }} onClear={() => { clearAll(); setEditingId(null); setEditContent(''); }}/>
+      {storageError && <p role="alert">{storageError}</p>}
       <div className="max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-6">
           <div className="tb-v2-mode-tabs">
             <button
               onClick={addNote}
+              disabled={!ready || notes.length >= 100}
               className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
             >
               Add Note
@@ -123,13 +131,13 @@ export default function StickyNotesClient() {
                 key={note.id}
                 className={`absolute w-64 p-4 rounded-lg shadow-lg ${note.color} cursor-move`}
                 style={{
-                  left: note.position.x,
-                  top: note.position.y,
+                  left: note.position?.x ?? 0,
+                  top: note.position?.y ?? 0,
                 }}
               >
                 {editingId === note.id ? (
                   <div className="h-full flex flex-col">
-                    <textarea
+                    <textarea maxLength={100000} aria-label="Edit Content"
                       value={editContent}
                       onChange={(e) => setEditContent(e.target.value)}
                       className="flex-1 w-full p-2 rounded border-none resize-none dark:bg-gray-700/50"
@@ -181,5 +189,6 @@ export default function StickyNotesClient() {
         )}
       </div>
     </div>
+  </UtilityDesignLayout>
   );
 }

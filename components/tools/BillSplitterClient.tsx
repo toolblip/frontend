@@ -1,4 +1,6 @@
 'use client';
+import { allocateCents } from '@/lib/utility-design/core';
+import UtilityDesignLayout from './UtilityDesignLayout';
 
 import { useState } from 'react';
 import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
@@ -16,7 +18,7 @@ interface Share {
 function parseFinite(value: string): number | null {
   if (!value.trim()) return null;
   const parsed = Number(value);
-  return Number.isFinite(parsed) ? parsed : null;
+  return Number.isFinite(parsed) && Math.abs(parsed) <= 1e12 ? parsed : null;
 }
 
 function formatCurrency(value: number): string {
@@ -88,6 +90,10 @@ export default function BillSplitterClient() {
             amount: roundUp ? Math.ceil(Number(exact.toFixed(2))) : exact,
           };
         });
+        if (!roundUp) {
+          const amounts = allocateCents(shares.map(share => share.exact));
+          shares.forEach((share,index) => { share.amount=amounts[index]; });
+        }
         return {
           subtotal: bases.reduce((sum, base) => sum + base, 0),
           tax: shares.reduce((sum, share) => sum + share.tax, 0),
@@ -146,12 +152,11 @@ export default function BillSplitterClient() {
       ...calculation.shares.map((share, index) => `Person ${index + 1}: ${formatCurrency(share.amount)}`),
       `Total: ${formatCurrency(calculation.total)}`,
     ];
-    navigator.clipboard.writeText(lines.join('\n')).catch(() => {});
-    setCopied(true);
+    navigator.clipboard.writeText(lines.join('\n')).then(() => setCopied(true), () => setCopied(false));
     setTimeout(() => setCopied(false), 1500);
   };
 
-  return (
+  return (<UtilityDesignLayout>
     <div>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Bill Splitter</span>
@@ -248,7 +253,7 @@ export default function BillSplitterClient() {
         </div>
 
         <label className="flex items-center gap-2 text-sm" style={{ marginTop: 16, color: 'var(--fg-1)' }}>
-          <input type="checkbox" checked={roundUp} onChange={(event) => setRoundUp(event.target.checked)} />
+          <input aria-label="Round Up" type="checkbox" checked={roundUp} onChange={(event) => setRoundUp(event.target.checked)} />
           Round each share up to the next whole dollar
         </label>
         <p className="text-xs" style={{ color: 'var(--fg-2)', marginTop: 6 }}>
@@ -290,5 +295,6 @@ export default function BillSplitterClient() {
         )}
       </div>
     </div>
+  </UtilityDesignLayout>
   );
 }

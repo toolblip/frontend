@@ -1,4 +1,7 @@
 'use client';
+import { copySecurityText } from '@/lib/developer-security/primitives';
+import DeveloperSecurityFrame, { useSecurityTask } from './DeveloperSecurityFrame';
+import { password as securePassword } from '@/lib/developer-security/primitives';
 
 import { useEffect, useState } from 'react';
 import { randomFromAlphabet } from '@/lib/secureRandom';
@@ -36,10 +39,8 @@ function buildPool(opts: Options): string {
 function generatePassword(opts: Options): string {
   const pool = buildPool(opts);
   if (!pool) return '';
-  // Rejection-sampled, not `% pool.length` - a plain modulo biases whichever
-  // pool characters fall below 2^32 % pool.length, which real password
-  // generators can't afford (see lib/secureRandom.ts).
-  return randomFromAlphabet(pool, opts.length);
+  const groups = [opts.upper ? UPPER : '', opts.lower ? LOWER : '', opts.digits ? DIGITS : '', opts.symbols ? SYMBOLS : ''].filter(Boolean).map(g => opts.excludeAmbiguous ? g.replace(AMBIGUOUS, '') : g);
+  return securePassword(opts.length, groups);
 }
 
 type Strength = { score: 0 | 1 | 2 | 3 | 4; label: string; cls: string };
@@ -55,6 +56,8 @@ function scoreStrength(pw: string, opts: Options): Strength {
 }
 
 export default function PasswordGeneratorClient() {
+  const [clipboardError,setClipboardError]=useState('');
+  const clipboardTask=useSecurityTask();
   const [opts, setOpts] = useState<Options>({
     length: 16,
     upper: true,
@@ -63,22 +66,24 @@ export default function PasswordGeneratorClient() {
     symbols: true,
     excludeAmbiguous: false,
   });
+  const [cleared,setCleared]=useState(false);
+  const [generationError,setGenerationError]=useState('');
   const [password, setPassword] = useState('');
   const [copied, setCopied] = useState(false);
 
   const regenerate = () => {
-    setPassword(generatePassword(opts));
+    try{setPassword(generatePassword(opts));setGenerationError('');}catch(e){setPassword('');setGenerationError((e as Error).message);}
   };
 
   useEffect(() => {
-    setPassword(generatePassword(opts));
+    try{setPassword(generatePassword(opts));setGenerationError('');}catch(e){setPassword('');setGenerationError((e as Error).message);}
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [opts]);
 
   const copy = () => {
     if (!password) return;
-    navigator.clipboard.writeText(password).catch(() => {});
-    setCopied(true);
+    const copyId=++clipboardTask.current;setClipboardError('');
+    copySecurityText(password).then(()=>{if(copyId!==clipboardTask.current)return;setCopied(true);}).catch(()=>{if(copyId===clipboardTask.current)setClipboardError('Clipboard access failed. Select and copy the output manually.');});
     setTimeout(() => setCopied(false), 1500);
   };
 
@@ -86,10 +91,13 @@ export default function PasswordGeneratorClient() {
   const noCharsets = !opts.upper && !opts.lower && !opts.digits && !opts.symbols;
 
   const toggle = (key: keyof Options) => {
+    setCleared(false);
     setOpts((o) => ({ ...o, [key]: !o[key] as never }));
   };
 
   return (
+    <DeveloperSecurityFrame onExample={()=>{clipboardTask.current++;setCleared(false);setOpts({length:16,upper:true,lower:true,digits:true,symbols:true,excludeAmbiguous:false});}} onClear={()=>{clipboardTask.current++;setClipboardError('');setCleared(true);setPassword('');setCopied(false);setGenerationError('');}}>
+    {clipboardError&&<p role="alert" className="tb-v2-error">{clipboardError}</p>}
     <div>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Password</span>
@@ -130,7 +138,7 @@ export default function PasswordGeneratorClient() {
       <div className="tb-v2-pw-controls">
         <div className="tb-v2-pw-length">
           <label htmlFor="pw-length" className="tb-v2-tool-label">Length: {opts.length}</label>
-          <input
+          <input aria-label="Opts.length"
             id="pw-length"
             type="range"
             min={8}
@@ -161,10 +169,12 @@ export default function PasswordGeneratorClient() {
           ))}
         </div>
 
-        {noCharsets && (
+        {generationError&&<p role="alert" className="tb-v2-error">{generationError}</p>}
+      {noCharsets && !cleared && (
           <p className="tb-v2-error" role="alert">Select at least one character set.</p>
         )}
       </div>
     </div>
+    </DeveloperSecurityFrame>
   );
 }

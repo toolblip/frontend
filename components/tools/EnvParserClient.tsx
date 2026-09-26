@@ -1,5 +1,7 @@
 'use client';
+import DeveloperGeneralFrame from './DeveloperGeneralFrame';
 
+import ToolExampleClearActions from './ToolExampleClearActions';
 import { useState, useMemo } from 'react';
 
 interface ParsedVar { line: number; key: string; value: string; }
@@ -44,12 +46,14 @@ function parseEnv(text: string): { vars: ParsedVar[]; issues: ParseIssue[] } {
       issues.push({ line: lineNo, message: `Invalid key name "${key}"`, raw: rawLine });
       return;
     }
+    const trimmedValue=rawValue.trim();
+    if ((trimmedValue.startsWith('"') || trimmedValue.startsWith("'")) && !new RegExp('^'+trimmedValue[0]+'.*'+trimmedValue[0]+'(?:\\s*#.*)?$').test(trimmedValue)) {issues.push({line:lineNo,message:'Unclosed quoted value (multiline values are unsupported)',raw:rawLine});return;}
     if (seen.has(key)) {
       issues.push({ line: lineNo, message: `Duplicate key "${key}" (later value wins)`, raw: rawLine });
     }
     seen.add(key);
 
-    vars.push({ line: lineNo, key, value: unquote(rawValue) });
+    vars.push({ line: lineNo, key, value: unquote(rawValue.replace(/(["'])\s+#.*$/, '$1')) });
   });
 
   return { vars, issues };
@@ -57,12 +61,12 @@ function parseEnv(text: string): { vars: ParsedVar[]; issues: ParseIssue[] } {
 
 const EXAMPLE = `# Database configuration
 export DATABASE_URL="postgres://user:pass@localhost:5432/app"
-API_KEY=sk_test_12345
+DEMO_VALUE=example-one
 DEBUG=true
 PORT=3000
 INVALID LINE WITHOUT EQUALS
 2FA_ENABLED=false
-API_KEY=sk_live_67890`;
+DEMO_VALUE=example-two`;
 
 export default function EnvParserClient() {
   const [input, setInput] = useState('');
@@ -74,7 +78,7 @@ export default function EnvParserClient() {
 
   const copyAsJson = () => {
     if (vars.length === 0) return;
-    const obj: Record<string, string> = {};
+    const obj: Record<string, string> = Object.create(null);
     vars.forEach(v => { obj[v.key] = v.value; });
     navigator.clipboard.writeText(JSON.stringify(obj, null, 2)).catch(() => {});
     setCopied(true);
@@ -82,12 +86,13 @@ export default function EnvParserClient() {
   };
 
   return (
-    <div>
+    <DeveloperGeneralFrame><div>
+      <ToolExampleClearActions onExample={() => {loadExample();}} onClear={() => {setInput('');setCopied(false);}} />
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">.env Content</span>
-        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">Load Example</button>
+
       </div>
-      <textarea
+      <textarea aria-label="Input" maxLength={100000}
         value={input}
         onChange={e => setInput(e.target.value)}
         placeholder="Paste your .env file content here..."
@@ -143,6 +148,6 @@ export default function EnvParserClient() {
           </div>
         </>
       )}
-    </div>
+    </div></DeveloperGeneralFrame>
   );
 }

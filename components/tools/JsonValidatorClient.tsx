@@ -1,11 +1,14 @@
 'use client';
+import { useDataClipboard } from './developer-data/useDataClipboard';
+import ToolExampleClearActions from './ToolExampleClearActions';
+import { bounded } from '@/lib/developer-data/core';
 
 import { useState } from 'react';
 
 function validate(input: string): { valid: boolean; error?: string; line?: number; col?: number } {
   if (!input.trim()) return { valid: true };
   try {
-    JSON.parse(input);
+    JSON.parse(bounded(input));
     return { valid: true };
   } catch (e) {
     const err = e as SyntaxError;
@@ -23,21 +26,17 @@ function validate(input: string): { valid: boolean; error?: string; line?: numbe
 
 export default function JsonValidatorClient() {
   const [input, setInput] = useState('');
-  const [copied, setCopied] = useState(false);
   
   const result = validate(input);
 
-  const copy = () => {
-    if (!input) return;
-    navigator.clipboard.writeText(input).catch(() => {});
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
-  };
+  const { copied, copy, reset: setCopied, copyError } = useDataClipboard(input);
 
   return (
-    <div>
-      <div className="tb-v2-tool-input-head">
+    <div style={{minWidth:0,maxWidth:"100%",overflowWrap:"anywhere"}}>
+      {copyError && <p role="alert" className="tb-v2-error">{copyError}</p>}
+      <div className="tb-v2-tool-input-head" style={{flexWrap:"wrap",gap:8}}>
         <span className="tb-v2-tool-label">JSON Input</span>
+        <ToolExampleClearActions onExample={() => setInput('{"name":"Ada","items":[1,true,null]}')} onClear={() => { setInput('');setCopied(false); }} />
         <button
           type="button"
           onClick={copy}
@@ -59,7 +58,7 @@ export default function JsonValidatorClient() {
       <div className="tb-v2-tool-output-head">
         <span className="tb-v2-tool-label">Validation Result</span>
       </div>
-      <div className="tb-v2-tool-output-body">
+      <div className="tb-v2-tool-output-body" style={{maxWidth:"100%",overflowX:"auto"}}>
         {!input.trim() ? (
           <p className="tb-v2-tool-pre text-gray-500">Enter JSON to validate</p>
         ) : result.valid ? (
@@ -75,7 +74,7 @@ export default function JsonValidatorClient() {
             </div>
           </div>
         ) : (
-          <div className="space-y-3">
+          <div role="alert" className="space-y-3">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-full bg-red-100 dark:bg-red-900 flex items-center justify-center">
                 <svg className="w-5 h-5 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">

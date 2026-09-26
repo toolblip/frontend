@@ -1,6 +1,9 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
+
+import ToolExampleClearActions from './ToolExampleClearActions';
+import {readImage,exampleFile} from '@/lib/images-qa';
 
 export default function CropCircleClient() {
   const [image, setImage] = useState<string | null>(null);
@@ -11,14 +14,11 @@ export default function CropCircleClient() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const loadFile = (file: File | undefined) => {
-    if (!file || !file.type.startsWith('image/')) return;
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      setImage(event.target?.result as string);
-    };
-    reader.readAsDataURL(file);
-  };
+  const request=useRef(0),decoded=useRef<HTMLImageElement|null>(null);
+  const [error,setError]=useState('');
+  useEffect(()=>()=>{request.current++;},[]);useEffect(()=>()=>{if(image)URL.revokeObjectURL(image);},[image]);
+  const clear=()=>{request.current++;setImage(null);decoded.current=null;setError('');if(fileInputRef.current)fileInputRef.current.value='';};
+  const loadFile=async(file:File|undefined)=>{if(!file)return;clear();const id=request.current;try{const {img,mime,bytes}=await readImage(file);if(id!==request.current)return;decoded.current=img;setImage(URL.createObjectURL(new Blob([bytes],{type:mime})));}catch(e){if(id===request.current)setError((e as Error).message);}};
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     loadFile(e.target.files?.[0]);
@@ -53,21 +53,17 @@ export default function CropCircleClient() {
     ctx.closePath();
     ctx.clip();
 
-    const img = new Image();
-    img.onload = () => {
-      ctx.drawImage(img, borderWidth, borderWidth, size, size);
-      const link = document.createElement('a');
-      link.download = 'circle-crop.png';
-      link.href = canvas.toDataURL('image/png');
-      link.click();
-    };
-    img.src = image;
+    const img = decoded.current;
+    if(!img)return;
+    const side=Math.min(img.naturalWidth,img.naturalHeight);
+    ctx.drawImage(img,(img.naturalWidth-side)/2,(img.naturalHeight-side)/2,side,side,borderWidth,borderWidth,size,size);
+    const link=document.createElement('a');link.download='circle-crop.png';link.href=canvas.toDataURL('image/png');link.click();
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="tb-v2-tool-card" style={{display:"grid",gap:12}}><style jsx>{`input,textarea,select {max-width:100%;min-width:0} .tb-v2-tool-card {min-width:0;max-width:100%;overflow-wrap:anywhere} .tb-v2-tool-input-head {flex-wrap:wrap;gap:8px} .tb-v2-range-row {flex-wrap:wrap} .tb-v2-range {min-width:0;flex:1}`}</style>
       <div className="tb-v2-tool-input-head">
-        <span className="tb-v2-tool-label">Crop Circle</span>
+        <span className="tb-v2-tool-label">Crop Circle</span><ToolExampleClearActions onExample={()=>loadFile(exampleFile())} onClear={clear}/>
       </div>
 
       <div
@@ -81,7 +77,7 @@ export default function CropCircleClient() {
         <span className="tb-v2-dropzone-text">Click or drag an image here</span>
         <span className="tb-v2-dropzone-hint">Create a perfect circular crop with an optional border</span>
         <input
-          ref={fileInputRef}
+          aria-label="Upload image" ref={fileInputRef}
           type="file"
           accept="image/*"
           onChange={handleImageUpload}
@@ -89,6 +85,7 @@ export default function CropCircleClient() {
         />
       </div>
 
+      {error&&<p role="alert">{error}</p>}
       {!image ? (
         <p className="tb-v2-empty">Upload an image above to start cropping.</p>
       ) : (
@@ -99,7 +96,7 @@ export default function CropCircleClient() {
               type="range"
               min="50"
               max="500"
-              value={size}
+              aria-label="Size" value={size}
               onChange={(e) => setSize(Number(e.target.value))}
               className="tb-v2-range"
             />
@@ -112,7 +109,7 @@ export default function CropCircleClient() {
               type="range"
               min="0"
               max="30"
-              value={borderWidth}
+              aria-label="Border Width" value={borderWidth}
               onChange={(e) => setBorderWidth(Number(e.target.value))}
               className="tb-v2-range"
             />
@@ -123,7 +120,7 @@ export default function CropCircleClient() {
             <label className="tb-v2-tool-label">Border Color</label>
             <input
               type="color"
-              value={borderColor}
+              aria-label="Border Color" value={borderColor}
               onChange={(e) => setBorderColor(e.target.value)}
               style={{ width: 40, height: 40, borderRadius: 6, border: '1px solid var(--line)' }}
             />
@@ -132,8 +129,8 @@ export default function CropCircleClient() {
           <div
             className="mx-auto rounded-full bg-gray-100 flex items-center justify-center overflow-hidden"
             style={{
-              width: size + borderWidth * 2,
-              height: size + borderWidth * 2,
+              width: size + borderWidth * 2, maxWidth: '100%', aspectRatio: '1',
+              height: 'auto',
               border: borderWidth > 0 ? `${borderWidth}px solid ${borderColor}` : 'none',
             }}
           >
@@ -141,7 +138,7 @@ export default function CropCircleClient() {
               src={image}
               alt="Preview"
               className="rounded-full"
-              style={{ width: size, height: size, objectFit: 'cover' }}
+              style={{ width: '100%', aspectRatio: '1', objectFit: 'cover' }}
             />
           </div>
 

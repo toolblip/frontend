@@ -1,6 +1,8 @@
 'use client';
+import UtilityDesignLayout from './UtilityDesignLayout';
+import ToolExampleClearActions from './ToolExampleClearActions';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 const HTML_ENTITIES: Record<string, string> = {
   '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
@@ -21,26 +23,23 @@ export default function HtmlEntityEncoderClient() {
     if (mode === 'encode') {
       setOutput([...input].map(c => HTML_ENTITIES[c] || c).join(''));
     } else {
-      let result = input;
-      for (const [entity, char] of Object.entries(DECODE_ENTITIES)) {
-        result = result.replaceAll(entity, char);
-      }
-      // Numeric entities
-      result = result.replace(/&#(\d+);/g, (_, d) => String.fromCodePoint(parseInt(d)));
-      result = result.replace(/&#x([a-fA-F0-9]+);/g, (_, h) => String.fromCodePoint(parseInt(h, 16)));
-      setOutput(result);
+      const ta = document.createElement('textarea');
+      ta.innerHTML = input;
+      setOutput(ta.value);
     }
   }, [input, mode]);
 
+  useEffect(() => { process(); }, [process]);
+
   const copy = () => {
     if (!output) return;
-    navigator.clipboard.writeText(output).catch(() => {});
-    setCopied(true);
+    navigator.clipboard.writeText(output).then(() => setCopied(true), () => setCopied(false));
     setTimeout(() => setCopied(false), 1500);
   };
 
-  return (
+  return (<UtilityDesignLayout>
     <div>
+      <ToolExampleClearActions onExample={() => { setMode('encode'); setInput('<p>Hello & goodbye</p>'); }} onClear={() => { setInput(''); setOutput(''); setCopied(false); }}/>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Input</span>
         <div style={{ display: 'flex', gap: 4 }}>
@@ -48,7 +47,7 @@ export default function HtmlEntityEncoderClient() {
           <button type="button" onClick={() => setMode('decode')} className={`tb-v2-mode-tab ${mode === 'decode' ? 'on' : ''}`}>Decode</button>
         </div>
       </div>
-      <textarea
+      <textarea maxLength={100000}
         value={input}
         onChange={(e) => setInput(e.target.value)}
         placeholder={mode === 'encode' ? 'Enter text to encode...' : 'Enter HTML entities to decode...'}
@@ -74,5 +73,6 @@ export default function HtmlEntityEncoderClient() {
         </pre>
       </div>
     </div>
+  </UtilityDesignLayout>
   );
 }

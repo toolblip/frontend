@@ -2,6 +2,9 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { PDFDocument, PDFName, PDFDict, PDFArray, PDFRawStream, PDFRef, PDFNumber, PDFString, PDFHexString, decodePDFRawStream } from 'pdf-lib';
+import { readPdfToolFile, loadPdfForTools } from '@/lib/pdf-qa/pdf';
+import { hasSupportedImageDecode } from '@/lib/pdf-qa/image-decode';
+import { rgbaPixels } from '@/lib/pdf-qa/pixels';
 import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 let crcTable: number[] | null = null;
@@ -110,52 +113,25 @@ function resolve(doc: PDFDocument, obj: unknown) {
   return obj instanceof PDFRef ? doc.context.lookup(obj) : obj;
 }
 
-async function rawToPng(rawBytes: Uint8Array, width: number, height: number, mode: 'gray' | 'rgb' | 'cmyk' | 'indexed', palette?: Uint8Array): Promise<Blob | null> {
+async function rawToPng(rawBytes: Uint8Array, width: number, height: number, mode: 'gray' | 'rgb' | 'cmyk' | 'indexed', palette?: Uint8Array, alpha?: Uint8Array): Promise<Blob | null> {
+  const pixels = rgbaPixels(rawBytes, width, height, mode, palette, alpha);
   const canvas = document.createElement('canvas');
-  canvas.width = width;
-  canvas.height = height;
+  canvas.width = width; canvas.height = height;
   const ctx = canvas.getContext('2d');
   if (!ctx) return null;
-  const imageData = ctx.createImageData(width, height);
-  const out = imageData.data;
-  const total = width * height;
-
-  if (mode === 'rgb') {
-    for (let i = 0, p = 0; i < total; i++, p += 3) {
-      out[i * 4] = rawBytes[p] || 0; out[i * 4 + 1] = rawBytes[p + 1] || 0; out[i * 4 + 2] = rawBytes[p + 2] || 0; out[i * 4 + 3] = 255;
-    }
-  } else if (mode === 'gray') {
-    for (let i = 0; i < total; i++) {
-      const v = rawBytes[i] || 0;
-      out[i * 4] = v; out[i * 4 + 1] = v; out[i * 4 + 2] = v; out[i * 4 + 3] = 255;
-    }
-  } else if (mode === 'cmyk') {
-    for (let i = 0, p = 0; i < total; i++, p += 4) {
-      const c = (rawBytes[p] || 0) / 255, m = (rawBytes[p + 1] || 0) / 255, y = (rawBytes[p + 2] || 0) / 255, k = (rawBytes[p + 3] || 0) / 255;
-      out[i * 4] = 255 * (1 - c) * (1 - k);
-      out[i * 4 + 1] = 255 * (1 - m) * (1 - k);
-      out[i * 4 + 2] = 255 * (1 - y) * (1 - k);
-      out[i * 4 + 3] = 255;
-    }
-  } else if (mode === 'indexed' && palette) {
-    for (let i = 0; i < total; i++) {
-      const idx = (rawBytes[i] || 0) * 3;
-      out[i * 4] = palette[idx] || 0; out[i * 4 + 1] = palette[idx + 1] || 0; out[i * 4 + 2] = palette[idx + 2] || 0; out[i * 4 + 3] = 255;
-    }
-  } else {
-    return null;
-  }
-
-  ctx.putImageData(imageData, 0, 0);
-  return new Promise(resolve => canvas.toBlob(blob => resolve(blob), 'image/png'));
+  const data = ctx.createImageData(width, height); data.data.set(pixels);
+  ctx.putImageData(data, 0, 0);
+  try { return await new Promise<Blob | null>(resolve => canvas.toBlob(resolve, 'image/png')); }
+  finally { canvas.width = 0; canvas.height = 0; }
 }
 
-async function extractImages(bytes: Uint8Array): Promise<{ images: ExtractedImage[]; skipped: number; pageCount: number }> {
-  const pdfDoc = await PDFDocument.load(bytes, { ignoreEncryption: true });
+async function extractImages(bytes: Uint8Array, active: () => boolean): Promise<{ images: ExtractedImage[]; skipped: number; pageCount: number }> {
+  const pdfDoc = await loadPdfForTools(bytes);
   const images: ExtractedImage[] = [];
   const seen = new Set<string>();
   let skipped = 0;
   let counter = 0;
+  let totalPixels = 0;
 
   const pages = pdfDoc.getPages();
   for (let pageIndex = 0; pageIndex < pages.length; pageIndex++) {
@@ -164,7 +140,10 @@ async function extractImages(bytes: Uint8Array): Promise<{ images: ExtractedImag
     const xObjects = resources.lookup(PDFName.of('XObject'));
     if (!(xObjects instanceof PDFDict)) continue;
 
-    for (const [, value] of xObjects.entries()) {
+    const queue = [...xObjects.entries()];
+    for (let cursor = 0; cursor < queue.length; cursor++) {
+      if (!active()) { images.forEach(image => URL.revokeObjectURL(image.previewUrl)); return { images: [], skipped, pageCount: pages.length }; }
+      const [, value] = queue[cursor];
       if (!(value instanceof PDFRef)) continue;
       if (seen.has(value.tag)) continue;
       seen.add(value.tag);
@@ -173,19 +152,35 @@ async function extractImages(bytes: Uint8Array): Promise<{ images: ExtractedImag
         const xObject = pdfDoc.context.lookup(value);
         if (!(xObject instanceof PDFRawStream)) continue;
         const subtype = resolve(pdfDoc, xObject.dict.lookup(PDFName.of('Subtype')));
+        if (subtype === PDFName.of('Form')) {
+          const resources = xObject.dict.lookup(PDFName.of('Resources'));
+          const nested = resources instanceof PDFDict ? resources.lookup(PDFName.of('XObject')) : null;
+          if (nested instanceof PDFDict) queue.push(...nested.entries());
+          continue;
+        }
         if (subtype !== PDFName.of('Image')) continue;
 
         const widthObj = resolve(pdfDoc, xObject.dict.lookup(PDFName.of('Width')));
         const heightObj = resolve(pdfDoc, xObject.dict.lookup(PDFName.of('Height')));
         const width = widthObj instanceof PDFNumber ? widthObj.asNumber() : 0;
         const height = heightObj instanceof PDFNumber ? heightObj.asNumber() : 0;
-        if (!width || !height) { skipped++; continue; }
+        totalPixels += width * height;
+        if (!Number.isInteger(width) || !Number.isInteger(height) || width <= 0 || height <= 0 || width * height > 16000000 || totalPixels > 32000000) { skipped++; continue; }
+        // Explicit identity Decode and Predictor 1 are harmless; other transforms stay skipped.
+        if (xObject.dict.has(PDFName.of('Mask')) || !hasSupportedImageDecode(xObject.dict)) { skipped++; continue; }
+        let alpha: Uint8Array | undefined;
+        const mask = xObject.dict.lookup(PDFName.of('SMask'));
+        if (mask) {
+          if (!(mask instanceof PDFRawStream) || mask.dict.lookup(PDFName.of('Width'))?.toString() !== String(width) || mask.dict.lookup(PDFName.of('Height'))?.toString() !== String(height) || mask.dict.lookup(PDFName.of('BitsPerComponent'))?.toString() !== '8' || mask.dict.lookup(PDFName.of('ColorSpace')) !== PDFName.of('DeviceGray') || mask.dict.has(PDFName.of('Matte')) || !hasSupportedImageDecode(mask.dict)) { skipped++; continue; }
+          alpha = decodePDFRawStream(mask).decode();
+        }
 
         const filter = resolve(pdfDoc, xObject.dict.lookup(PDFName.of('Filter')));
         const isSingleDct = filter === PDFName.of('DCTDecode');
 
         counter++;
         if (isSingleDct) {
+          if (alpha) { skipped++; continue; }
           const previewUrl = URL.createObjectURL(new Blob([xObject.contents as unknown as BlobPart], { type: 'image/jpeg' }));
           images.push({ name: `image-${counter}.jpg`, pageNumber: pageIndex + 1, width, height, previewUrl, data: xObject.contents, ext: 'jpg' });
           continue;
@@ -220,7 +215,7 @@ async function extractImages(bytes: Uint8Array): Promise<{ images: ExtractedImag
         }
 
         if (!mode) { skipped++; continue; }
-        const pngBlob = await rawToPng(decoded, width, height, mode, palette);
+        const pngBlob = await rawToPng(decoded, width, height, mode, palette, alpha);
         if (!pngBlob) { skipped++; continue; }
         const pngBytes = new Uint8Array(await pngBlob.arrayBuffer());
         const previewUrl = URL.createObjectURL(pngBlob);
@@ -287,6 +282,8 @@ export default function ExtractImgClient() {
     setSkipped(0);
     setFileName('');
     setLoaded(false);
+    setPdfBytes(null);
+    setPreview(null);
     if (!/\.pdf$/i.test(file.name)) {
       setError('Please choose a file with a .pdf extension.');
       setLoading(false);
@@ -294,9 +291,9 @@ export default function ExtractImgClient() {
     }
     setLoading(true);
     try {
-      const buffer = await file.arrayBuffer();
+      const buffer = await readPdfToolFile(file);
       const bytes = new Uint8Array(buffer);
-      const { images: found, skipped: skippedCount, pageCount: foundPageCount } = await extractImages(bytes);
+      const { images: found, skipped: skippedCount, pageCount: foundPageCount } = await extractImages(bytes, () => requestId === loadVersionRef.current);
       if (requestId !== loadVersionRef.current) {
         found.forEach(img => URL.revokeObjectURL(img.previewUrl));
         return;
@@ -412,7 +409,8 @@ export default function ExtractImgClient() {
   };
 
   return (
-    <div className="tb-v2-tool-card">
+    <div className="tb-v2-tool-card" style={{ minWidth: 0, maxWidth: "100%", overflowWrap: "anywhere" }}>
+      <p className="tb-v2-empty">PDF limits: 25 MB per file, 100 pages, 2000 points per page side.</p>
       <div className="tb-v2-tool-input-head" style={{ margin: '0 20px 12px' }}><span className="tb-v2-tool-label">PDF File</span><ToolExampleClearActions onExample={() => void loadExample()} onClear={clearAll} canClear={Boolean(images.length || loaded || error || fileName || loading)} exampleCount={1} exampleDisabled={loading} /></div>
       <div className="tb-v2-banner" style={{ margin: 20 }}>
         JPEG images embedded in the PDF are extracted directly. Other raster images (grayscale, RGB, CMYK, or
@@ -432,14 +430,14 @@ export default function ExtractImgClient() {
             <span style={{ fontSize: 28 }}>📄</span>
             <span className="tb-v2-dropzone-text">{loading ? 'Extracting...' : 'Click or drag a PDF file here'}</span>
             <span className="tb-v2-dropzone-hint">Processed entirely in your browser</span>
-            <input ref={fileInputRef} type="file" accept=".pdf" onChange={handleFileChange} style={{ display: 'none' }} />
+            <input ref={fileInputRef} aria-label="PDF file" type="file" accept=".pdf" onChange={handleFileChange} style={{ display: 'none' }} />
           </div>
         </div>
       )}
 
       {loading && <div className="tb-v2-banner" role="status" style={{ margin: '0 20px 20px' }}>Extracting images in your browser...</div>}
 
-      {error && <div className="tb-v2-banner-err" style={{ margin: '0 20px 20px' }}>{error}</div>}
+      {error && <div role="alert" className="tb-v2-banner-err" style={{ margin: '0 20px 20px' }}>{error}</div>}
 
       {loaded && (
         <div style={{ padding: '0 20px 20px' }}>

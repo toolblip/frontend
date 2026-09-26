@@ -1,71 +1,22 @@
 'use client';
+import { copySecurityText } from '@/lib/developer-security/primitives';
+import DeveloperSecurityFrame, { useSecurityTask } from './DeveloperSecurityFrame';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
-// UUIDv7 structure: unix_ts_ms (48 bits) | ver (4 bits) | rand_a (12 bits) | var (2 bits) | rand_b (62 bits)
-// Total: 128 bits
-
-function getRandomValues(bits: number): Uint8Array {
-  const bytes = Math.ceil(bits / 8);
-  const arr = new Uint8Array(bytes);
-  for (let i = 0; i < bytes; i++) {
-    arr[i] = Math.floor(Math.random() * 256);
-  }
-  return arr;
-}
-
-function hexFromBytes(bytes: Uint8Array, start: number, length: number): string {
-  let hex = '';
-  for (let i = 0; i < length; i++) {
-    const byte = bytes[start + Math.floor(i / 2)] ?? 0;
-    if (i % 2 === 0) {
-      hex += ((byte >> 4) & 0x0f).toString(16);
-    } else {
-      hex += (byte & 0x0f).toString(16);
-    }
-  }
-  return hex;
-}
-
-function generateUuidV7(): string {
-  const timestamp = Date.now();
-  
-  // 48 bits for timestamp (unix_ts_ms)
-  const tsHex = timestamp.toString(16).padStart(12, '0');
-  
-  // 80 bits of random data
-  const rand = getRandomValues(80);
-  
-  // 4 bits version (7) + 12 bits random (rand_a)
-  const verAndRandA = hexFromBytes(rand, 0, 4);
-  const version = '7';
-  const randA = verAndRandA[0] + verAndRandA.slice(1, 4); // 3 hex chars = 12 bits
-  
-  // 2 bits variant (10) + 62 bits random (rand_b) 
-  // Variant bits must be 10 for standard UUID
-  const varAndRandBPart = hexFromBytes(rand, 2, 4);
-  const variantBits = '10';
-  const randBPart1 = (parseInt(varAndRandBPart[0], 16) & 0x03 | 0x08).toString(16); // ensure variant
-  const randB = randBPart1 + varAndRandBPart.slice(1, 4) + hexFromBytes(rand, 5, 8);
-  
-  const uuid = (
-    tsHex.slice(0, 8) + '-' +
-    tsHex.slice(8, 12) + '-' +
-    version + randA + '-' +
-    variantBits + randB.slice(0, 3) + '-' +
-    randB.slice(3, 15)
-  );
-  
-  return uuid;
-}
+import { uuidV7 as generateUuidV7 } from '@/lib/developer-security/primitives';
 
 export default function RandomUuidV7Client() {
+  const [clipboardError,setClipboardError]=useState('');
+  const clipboardTask=useSecurityTask();
   const [uuids, setUuids] = useState<string[]>([]);
   const [count, setCount] = useState(1);
   const [uppercase, setUppercase] = useState(false);
   const [includeBraces, setIncludeBraces] = useState(false);
 
+  const [error,setError]=useState('');
   const generate = useCallback(() => {
+    try {setError('');
     const newUuids: string[] = [];
     for (let i = 0; i < count; i++) {
       let uuid = generateUuidV7();
@@ -74,19 +25,26 @@ export default function RandomUuidV7Client() {
       newUuids.push(uuid);
     }
     setUuids(newUuids);
+    }catch(e){setUuids([]);setError((e as Error).message);}
   }, [count, uppercase, includeBraces]);
+
+  useEffect(()=>{setUuids([]);},[count,uppercase,includeBraces]);
 
   const copyToClipboard = () => {
     const text = uuids.join('\n');
-    navigator.clipboard.writeText(text);
+    const copyId=++clipboardTask.current;setClipboardError('');
+    copySecurityText(text).then(()=>{}).catch(()=>{if(copyId===clipboardTask.current)setClipboardError('Clipboard access failed. Select and copy the output manually.');});
   };
 
   return (
+    <DeveloperSecurityFrame onExample={()=>{clipboardTask.current++;generate();}} onClear={()=>{clipboardTask.current++;setClipboardError('');setError('');setUuids([]);}}>
+    {clipboardError&&<p role="alert" className="tb-v2-error">{clipboardError}</p>}
+    {error&&<p role="alert" className="tb-v2-error">{error}</p>}
     <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
       <div className="flex flex-wrap gap-4 items-end">
         <div>
           <label className="tb-v2-tool-label" style={{marginBottom:8}}>Number of UUIDs</label>
-          <input
+          <input aria-label="Count"
             type="number"
             min={1}
             max={100}
@@ -97,7 +55,7 @@ export default function RandomUuidV7Client() {
         </div>
 
         <div className="flex items-center gap-2">
-          <input
+          <input aria-label="Uppercase"
             type="checkbox"
             id="uppercase"
             checked={uppercase}
@@ -108,7 +66,7 @@ export default function RandomUuidV7Client() {
         </div>
 
         <div className="flex items-center gap-2">
-          <input
+          <input aria-label="Include braces"
             type="checkbox"
             id="braces"
             checked={includeBraces}
@@ -137,9 +95,9 @@ export default function RandomUuidV7Client() {
               Copy All
             </button>
           </div>
-          
-          <div className="bg-gray-900 rounded-lg p-4 overflow-x-auto">
-            <pre className="text-green-400 text-sm font-mono whitespace-pre-wrap break-all">
+
+          <div className="tb-v2-tool-output-body">
+            <pre className="tb-v2-tool-pre">
               {uuids.map((uuid, i) => (
                 <div key={i} className="flex gap-4">
                   <span className="text-gray-500 select-none">{i + 1}.</span>
@@ -161,5 +119,6 @@ export default function RandomUuidV7Client() {
         </ul>
       </div>
     </div>
+    </DeveloperSecurityFrame>
   );
 }

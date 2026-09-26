@@ -1,6 +1,8 @@
 'use client';
+import UtilityDesignLayout from './UtilityDesignLayout';
+import ToolExampleClearActions from './ToolExampleClearActions';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function BmiCalculatorClient() {
   const [height, setHeight] = useState('');
@@ -13,7 +15,7 @@ export default function BmiCalculatorClient() {
     setError('');
     const h = parseFloat(height);
     const w = parseFloat(weight);
-    if (!h || !w || h <= 0 || w <= 0) {
+    if (!Number.isFinite(h) || !Number.isFinite(w) || h <= 0 || w <= 0 || h > 1000 || w > 10000) {
       setBmi(null);
       setError('Enter a valid height and weight, both greater than zero.');
       return;
@@ -28,6 +30,7 @@ export default function BmiCalculatorClient() {
     setBmi(Math.round(result * 10) / 10);
   };
 
+  useEffect(() => { if (!height && !weight) { setBmi(null); setError(''); } else calculateBmi(); }, [height, weight, unit]);
   const loadExample = () => {
     setUnit('metric');
     setHeight('175');
@@ -43,15 +46,14 @@ export default function BmiCalculatorClient() {
     return { label: 'Obese', color: '#e74c3c' };
   };
 
-  return (
+  return (<UtilityDesignLayout>
     <div>
+      <ToolExampleClearActions onExample={() => { loadExample(); }} onClear={() => { setHeight(''); setWeight(''); setBmi(null); setError(''); }}/>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">BMI Calculator</span>
         <div className="flex gap-2">
-          <button type="button" onClick={loadExample} className="tb-v2-btn-sm">
-            Load Example
-          </button>
-          <select
+
+          <select aria-label="Unit"
             value={unit}
             onChange={(e) => { setUnit(e.target.value as 'metric' | 'imperial'); setBmi(null); setError(''); }}
             className="tb-v2-select"
@@ -122,5 +124,6 @@ export default function BmiCalculatorClient() {
         </>
       )}
     </div>
+  </UtilityDesignLayout>
   );
 }

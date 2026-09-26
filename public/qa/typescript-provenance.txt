@@ -1,0 +1,4 @@
+TypeScript 5.5.4 browser compiler, copied without modification from the already installed node_modules/typescript/lib/typescript.js.
+Used by Code Beautifier to preserve TypeScript annotations and comments when formatting source.
+License: Apache-2.0; see typescript-LICENSE.txt and typescript-ThirdPartyNoticeText.txt.
+When changing the compiler version, update the versioned filename and script-formatter-browser.ts together.

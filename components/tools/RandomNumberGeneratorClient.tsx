@@ -1,8 +1,12 @@
 'use client';
+import UtilityDesignLayout from './UtilityDesignLayout';
+import ToolExampleClearActions from './ToolExampleClearActions';
 
 import { useState, useCallback } from 'react';
+import { randomIntegers } from '@/lib/utility-design/core';
 
 export default function RandomNumberGeneratorClient() {
+  const [error,setError]=useState('');
   const [min, setMin] = useState('1');
   const [max, setMax] = useState('100');
   const [count, setCount] = useState('1');
@@ -11,43 +15,23 @@ export default function RandomNumberGeneratorClient() {
   const [copied, setCopied] = useState(false);
 
   const generate = useCallback(() => {
-    const minNum = parseInt(min) || 0;
-    const maxNum = parseInt(max) || 100;
-    const cnt = Math.min(parseInt(count) || 1, 1000);
-    const nums: number[] = [];
-
-    if (unique) {
-      const range = maxNum - minNum + 1;
-      if (cnt > range) {
-        setNumbers(['Cannot generate more unique numbers than range allows']);
-        return;
-      }
-      const seen = new Set<number>();
-      while (seen.size < cnt) {
-        const n = Math.floor(Math.random() * (maxNum - minNum + 1)) + minNum;
-        if (!seen.has(n)) {
-          seen.add(n);
-          nums.push(n);
-        }
-      }
-    } else {
-      for (let i = 0; i < cnt; i++) {
-        nums.push(Math.floor(Math.random() * (maxNum - minNum + 1)) + minNum);
-      }
-    }
-
-    setNumbers(nums.map(String));
+    setError('');
+    try {
+      if (![min, max, count].every(v => v.trim())) throw new Error('Enter all three integer values.');
+      setNumbers(randomIntegers(Number(min), Number(max), Number(count), unique).map(String));
+    } catch (e) { setNumbers([]); setError(e instanceof Error ? e.message : 'Invalid range'); }
   }, [min, max, count, unique]);
 
   const copy = () => {
     const text = numbers.join(', ');
-    navigator.clipboard.writeText(text).catch(() => {});
-    setCopied(true);
+    navigator.clipboard.writeText(text).then(() => setCopied(true), () => setCopied(false));
     setTimeout(() => setCopied(false), 1500);
   };
 
-  return (
-    <div>
+  return (<UtilityDesignLayout>
+    <div onChangeCapture={() => { setNumbers([]); setError(''); }}>
+      <ToolExampleClearActions onExample={() => { setMin('1'); setMax('10'); setCount('5'); setUnique(true); setNumbers([]); setError(''); }} onClear={() => { setMin(''); setMax(''); setCount('1'); setUnique(false); setNumbers([]); setCopied(false); setError(''); }}/>
+      {error && <p role="alert">{error}</p>}
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Range &amp; Options</span>
       </div>
@@ -86,7 +70,7 @@ export default function RandomNumberGeneratorClient() {
         </div>
       </div>
       <label style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12, cursor: 'pointer' }}>
-        <input
+        <input aria-label="Unique"
           type="checkbox"
           checked={unique}
           onChange={(e) => setUnique(e.target.checked)}
@@ -114,5 +98,6 @@ export default function RandomNumberGeneratorClient() {
         </div>
       )}
     </div>
+  </UtilityDesignLayout>
   );
 }

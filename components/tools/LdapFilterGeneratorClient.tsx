@@ -1,5 +1,7 @@
 'use client';
+import DeveloperGeneralFrame from './DeveloperGeneralFrame';
 
+import ToolExampleClearActions from './ToolExampleClearActions';
 import { useMemo, useState } from 'react';
 
 type Operator = '=' | '~=' | '>=' | '<=' | 'present';
@@ -28,7 +30,7 @@ function newRow(): Row {
 function rowToFilter(row: Row): string {
   const attr = row.attribute.trim() || 'attr';
   if (row.operator === 'present') return `(${attr}=*)`;
-  return `(${attr}${row.operator}${row.value})`;
+  return `(${attr}${row.operator}${row.value.replace(/[\\()\0]/g, c => '\\' + c.charCodeAt(0).toString(16).padStart(2,'0'))})`;
 }
 
 function buildFilter(rows: Row[], combinator: Combinator, negate: boolean): string {
@@ -46,7 +48,7 @@ interface Validation {
 function validate(rows: Row[], filter: string): Validation {
   if (rows.length === 0) return { valid: false, message: 'Add at least one filter row.' };
   for (const row of rows) {
-    if (!row.attribute.trim()) return { valid: false, message: 'Every row needs a non-empty attribute name.' };
+    if (!/^(?:[a-zA-Z][a-zA-Z0-9-]*|[0-9]+(?:\.[0-9]+)+)$/.test(row.attribute.trim())) return { valid: false, message: 'Every row needs a non-empty attribute name.' };
     if (row.operator !== 'present' && !row.value.trim()) return { valid: false, message: `Attribute "${row.attribute}" needs a value (or switch its operator to "is present").` };
   }
   let depth = 0;
@@ -76,13 +78,14 @@ export default function LdapFilterGeneratorClient() {
   const addRow = () => setRows(cur => [...cur, newRow()]);
 
   const copyFilter = () => {
-    navigator.clipboard.writeText(filter).catch(() => {});
+    navigator.clipboard.writeText(validation.valid ? filter : '').catch(() => {});
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
   };
 
   return (
-    <div className="tb-v2-tool-card">
+    <DeveloperGeneralFrame><div className="tb-v2-tool-card">
+      <ToolExampleClearActions onExample={() => {setRows([{id:nextId++,attribute:'cn',operator:'=',value:'Ada'}]);setNegate(false);setCombinator('&');}} onClear={() => {setRows([]);setNegate(false);setCopied(false);}} />
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Combine rows with</span>
       </div>
@@ -103,7 +106,7 @@ export default function LdapFilterGeneratorClient() {
         {rows.length === 0 && <p className="tb-v2-empty">Add a row to build your filter.</p>}
         {rows.map(row => (
           <div key={row.id} className="tb-v2-grid-2" style={{ gridTemplateColumns: '1fr 1fr 1fr auto', gap: 8, alignItems: 'center' }}>
-            <input
+            <input aria-label="Row attribute" maxLength={8000}
               type="text"
               value={row.attribute}
               onChange={e => updateRow(row.id, { attribute: e.target.value })}
@@ -111,12 +114,12 @@ export default function LdapFilterGeneratorClient() {
               className="tb-v2-input"
               style={{ fontFamily: 'var(--f-mono)' }}
             />
-            <select value={row.operator} onChange={e => updateRow(row.id, { operator: e.target.value as Operator })} className="tb-v2-input">
+            <select aria-label="Row operator" value={row.operator} onChange={e => updateRow(row.id, { operator: e.target.value as Operator })} className="tb-v2-input">
               {(Object.keys(OPERATOR_LABELS) as Operator[]).map(op => (
                 <option key={op} value={op}>{OPERATOR_LABELS[op]}</option>
               ))}
             </select>
-            <input
+            <input aria-label="Row value" maxLength={8000}
               type="text"
               value={row.value}
               onChange={e => updateRow(row.id, { value: e.target.value })}
@@ -143,6 +146,6 @@ export default function LdapFilterGeneratorClient() {
       <p className={`tb-v2-banner ${validation.valid ? 'tb-v2-banner-ok' : 'tb-v2-banner-err'}`} style={{ marginTop: 12 }}>
         {validation.valid ? 'Valid: ' : 'Invalid: '}{validation.message}
       </p>
-    </div>
+    </div></DeveloperGeneralFrame>
   );
 }

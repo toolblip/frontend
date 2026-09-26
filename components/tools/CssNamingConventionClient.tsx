@@ -1,4 +1,6 @@
 'use client';
+import UtilityDesignLayout from './UtilityDesignLayout';
+import ToolExampleClearActions from './ToolExampleClearActions';
 
 import { useState, useMemo } from 'react';
 
@@ -7,6 +9,7 @@ const EXAMPLE = `primary_button\nUserProfileCard\nnav-item-active\nmain content 
 function tokenize(raw: string): string[] {
   return raw
     .trim()
+    .replace(/([A-Z]+)([A-Z][a-z])/g, '$1 $2')
     .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
     .split(/[\s_-]+/)
     .filter(Boolean)
@@ -78,13 +81,14 @@ export default function CssNamingConventionClient() {
     setTimeout(() => setCopiedKey(prev => (prev === key ? null : prev)), 1500);
   };
 
-  return (
+  return (<UtilityDesignLayout>
     <div className="flex flex-col gap-4">
+      <ToolExampleClearActions onExample={() => { loadExample(); }} onClear={() => { setInput(''); setCopiedKey(null); }}/>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Names (one per line)</span>
-        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">Load Example</button>
+
       </div>
-      <textarea
+      <textarea maxLength={100000} aria-label="Input"
         value={input}
         onChange={e => setInput(e.target.value)}
         placeholder="primary_button&#10;UserProfileCard"
@@ -128,5 +132,6 @@ export default function CssNamingConventionClient() {
         </div>
       )}
     </div>
+  </UtilityDesignLayout>
   );
 }

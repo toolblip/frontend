@@ -1,5 +1,7 @@
 'use client';
+import DeveloperGeneralFrame from './DeveloperGeneralFrame';
 
+import ToolExampleClearActions from './ToolExampleClearActions';
 import { useState } from 'react';
 
 export default function ApiDocGeneratorClient() {
@@ -14,24 +16,25 @@ export default function ApiDocGeneratorClient() {
     try {
       const data = JSON.parse(jsonInput);
       const endpoint = endpointName.trim() || 'unnamed-endpoint';
-      
+
       const isObject = typeof data === 'object' && data !== null && !Array.isArray(data);
       const isArray = Array.isArray(data);
 
       let docs = `# ${endpoint}\n\n`;
+      docs += `> Draft inferred from a sample response. Verify method, path, field meanings and optionality.\n\n`;
       docs += `**Method:** \`GET\`  \n`;
       docs += `**Endpoint:** \`/${endpoint.toLowerCase().replace(/\s+/g, '-')}\`\n\n`;
 
       docs += `## Description\n\n`;
-      docs += `This endpoint returns ${isArray ? 'an array of items' : 'an object'} containing the following fields:\n\n`;
+      docs += `This endpoint returns ${isArray ? 'an array of items' : data === null ? 'null' : typeof data === 'object' ? 'an object' : typeof data} containing the following fields:\n\n`;
 
       if (isObject) {
         docs += `## Response Fields\n\n`;
         docs += `| Field | Type | Description |\n`;
         docs += `|-------|------|-------------|\n`;
-        
+
         Object.entries(data).forEach(([key, value]) => {
-          const type = Array.isArray(value) ? 'array' : typeof value;
+          const type = value === null ? 'null' : Array.isArray(value) ? 'array' : typeof value;
           const description = getFieldDescription(key, type);
           docs += `| \`${key}\` | \`${type}\` | ${description} |\n`;
         });
@@ -41,9 +44,9 @@ export default function ApiDocGeneratorClient() {
           docs += `## Response Fields\n\n`;
           docs += `| Field | Type | Description |\n`;
           docs += `|-------|------|-------------|\n`;
-          
+
           Object.entries(firstItem).forEach(([key, value]) => {
-            const type = Array.isArray(value) ? 'array' : typeof value;
+            const type = value === null ? 'null' : Array.isArray(value) ? 'array' : typeof value;
             const description = getFieldDescription(key, type);
             docs += `| \`${key}\` | \`${type}\` | ${description} |\n`;
           });
@@ -75,8 +78,8 @@ export default function ApiDocGeneratorClient() {
       id: 'Unique identifier',
       name: 'Display name or title',
       email: 'Email address',
-      created_at: 'ISO timestamp of creation',
-      updated_at: 'ISO timestamp of last update',
+      created_at: 'Creation value (format unverified)',
+      updated_at: 'Update value (format unverified)',
       status: 'Current status of the resource',
       type: 'Categorization or classification',
       url: 'URL link reference',
@@ -105,18 +108,17 @@ export default function ApiDocGeneratorClient() {
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <DeveloperGeneralFrame><div className="flex flex-col gap-4">
+      <ToolExampleClearActions onExample={() => {loadExample();}} onClear={() => {setJsonInput('');setEndpointName('');setOutput('');setCopied(false);}} />
       <div>
         <div className="tb-v2-tool-input-head">
           <span className="tb-v2-tool-label">Endpoint Name (optional)</span>
-          <button type="button" onClick={loadExample} className="tb-v2-btn-sm">
-            Load Example
-          </button>
+
         </div>
-        <input
+        <input aria-label="Endpoint Name" maxLength={8000}
           type="text"
           value={endpointName}
-          onChange={(e) => setEndpointName(e.target.value)}
+          onChange={(e) => {setOutput('');setEndpointName(e.target.value);}}
           placeholder="e.g., Get User Profile"
           className="tb-v2-input"
         />
@@ -126,9 +128,9 @@ export default function ApiDocGeneratorClient() {
         <div className="tb-v2-tool-input-head">
           <span className="tb-v2-tool-label">JSON Sample Response</span>
         </div>
-        <textarea
+        <textarea aria-label="Json Input" maxLength={100000}
           value={jsonInput}
-          onChange={(e) => setJsonInput(e.target.value)}
+          onChange={(e) => {setOutput('');setJsonInput(e.target.value);}}
           placeholder='{"id": 1, "name": "John Doe", "email": "john@example.com"}'
           className="tb-v2-tool-textarea"
           style={{ minHeight: 150, fontFamily: 'var(--f-mono)' }}
@@ -156,6 +158,6 @@ export default function ApiDocGeneratorClient() {
           <pre className="tb-v2-tool-pre">{output}</pre>
         </div>
       )}
-    </div>
+    </div></DeveloperGeneralFrame>
   );
 }

@@ -1,9 +1,12 @@
 'use client';
+import { copySecurityText } from '@/lib/developer-security/primitives';
+import { useSecurityTask } from './DeveloperSecurityFrame';
+import DeveloperSecurityFrame from './DeveloperSecurityFrame';
 
 import { useMemo, useState } from 'react';
 
 const DEFAULT_HEADER = '{\n  "alg": "HS256",\n  "typ": "JWT"\n}';
-const DEFAULT_PAYLOAD = '{\n  "sub": "1234567890",\n  "name": "John Doe",\n  "iat": ' + Math.floor(Date.now() / 1000) + '\n}';
+const DEFAULT_PAYLOAD = '{"sub":"1234567890","name":"John Doe","iat":1516239022}';
 
 const HMAC_ALGS: Record<string, string> = {
   HS256: 'SHA-256',
@@ -22,7 +25,7 @@ function stringToBase64Url(s: string): string {
 }
 
 function parseJson(label: string, text: string): { value: Record<string, unknown> | null; error: string } {
-  if (!text.trim()) return { value: null, error: `${label} is empty` };
+  if (!text.trim()) return { value: null, error: '' };
   try {
     const parsed = JSON.parse(text);
     if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) {
@@ -41,12 +44,16 @@ type BuildState =
   | { status: 'error'; message: string };
 
 export default function TokenBuilderClient() {
+  const [clipboardError,setClipboardError]=useState('');
+  const clipboardTask=useSecurityTask();
   const [headerText, setHeaderText] = useState(DEFAULT_HEADER);
   const [payloadText, setPayloadText] = useState(DEFAULT_PAYLOAD);
   const [secret, setSecret] = useState('your-256-bit-secret');
   const [build, setBuild] = useState<BuildState>({ status: 'idle' });
   const [copied, setCopied] = useState(false);
 
+  const task=useSecurityTask();
+  const invalidate=()=>{task.current++;setBuild({status:'idle'});setCopied(false);};
   const header = useMemo(() => parseJson('Header', headerText), [headerText]);
   const payload = useMemo(() => parseJson('Payload', payloadText), [payloadText]);
 
@@ -56,21 +63,24 @@ export default function TokenBuilderClient() {
     return typeof a === 'string' ? a : null;
   }, [header.value]);
 
-  const canGenerate = !!header.value && !!payload.value && !!alg && alg in HMAC_ALGS;
+  const canGenerate = !!header.value && !!payload.value && !!alg && Object.hasOwn(HMAC_ALGS, alg);
 
   const generate = async () => {
+    const id=++task.current;
     if (!header.value || !payload.value) return;
     if (!alg) {
       setBuild({ status: 'error', message: 'Header must include an "alg" field.' });
       return;
     }
-    if (!(alg in HMAC_ALGS)) {
+    if (!(Object.hasOwn(HMAC_ALGS, alg))) {
       setBuild({
         status: 'error',
-        message: `"${alg}" isn't supported for client-side signing — only HS256, HS384, and HS512 (shared-secret HMAC) can be generated in the browser. Asymmetric algorithms (RS256, ES256, etc.) need a private key held server-side.`,
+        message: `"${alg}" isn't supported for client-side signing — only HS256, HS384, and HS512 (shared-secret HMAC) can be generated in the browser. This tool does not implement asymmetric signing.`,
       });
       return;
     }
+    if(!secret){setBuild({status:'error',message:'Enter a nonempty secret.'});return;}
+    if(header.value.crit || header.value.b64 === false){setBuild({status:'error',message:'Critical extensions and unencoded payloads are not supported.'});return;}
     setBuild({ status: 'building' });
     try {
       const headerPart = stringToBase64Url(JSON.stringify(header.value));
@@ -85,29 +95,33 @@ export default function TokenBuilderClient() {
       );
       const sigBuf = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(signingInput));
       const signature = bytesToBase64Url(new Uint8Array(sigBuf));
+      if(id!==task.current)return;
       setBuild({ status: 'done', token: `${signingInput}.${signature}` });
     } catch (e) {
+      if(id!==task.current)return;
       setBuild({ status: 'error', message: (e as Error).message });
     }
   };
 
   const copy = () => {
     if (build.status !== 'done') return;
-    navigator.clipboard.writeText(build.token).catch(() => {});
-    setCopied(true);
+    const copyId=++clipboardTask.current;setClipboardError('');
+    copySecurityText(build.token).then(()=>{if(copyId!==clipboardTask.current)return;setCopied(true);}).catch(()=>{if(copyId===clipboardTask.current)setClipboardError('Clipboard access failed. Select and copy the output manually.');});
     setTimeout(() => setCopied(false), 1500);
   };
 
   return (
+    <DeveloperSecurityFrame onExample={()=>{clipboardTask.current++;invalidate();setHeaderText(DEFAULT_HEADER);setPayloadText(DEFAULT_PAYLOAD);setSecret('your-256-bit-secret');}} onClear={()=>{clipboardTask.current++;setClipboardError('');invalidate();setHeaderText('');setPayloadText('');setSecret('');setCopied(false);}}>
+    {clipboardError&&<p role="alert" className="tb-v2-error">{clipboardError}</p>}
     <div>
       <div className="tb-v2-grid-2">
         <div>
           <div className="tb-v2-tool-input-head">
             <span className="tb-v2-tool-label">Header</span>
           </div>
-          <textarea
+          <textarea maxLength={100000}
             value={headerText}
-            onChange={(e) => setHeaderText(e.target.value)}
+            onChange={(e) => {invalidate();setHeaderText(e.target.value);}}
             className="tb-v2-tool-textarea"
             style={{ fontFamily: 'var(--f-mono)', minHeight: 140 }}
             aria-label="JWT header JSON"
@@ -119,9 +133,9 @@ export default function TokenBuilderClient() {
           <div className="tb-v2-tool-input-head">
             <span className="tb-v2-tool-label">Payload</span>
           </div>
-          <textarea
+          <textarea maxLength={100000}
             value={payloadText}
-            onChange={(e) => setPayloadText(e.target.value)}
+            onChange={(e) => {invalidate();setPayloadText(e.target.value);}}
             className="tb-v2-tool-textarea"
             style={{ fontFamily: 'var(--f-mono)', minHeight: 140 }}
             aria-label="JWT payload JSON"
@@ -132,12 +146,12 @@ export default function TokenBuilderClient() {
       </div>
 
       <div className="tb-v2-tool-input-head" style={{ marginTop: 16 }}>
-        <span className="tb-v2-tool-label">Secret ({alg && alg in HMAC_ALGS ? alg : 'HMAC'})</span>
+        <span className="tb-v2-tool-label">Secret ({alg && Object.hasOwn(HMAC_ALGS, alg) ? alg : 'HMAC'})</span>
       </div>
-      <input
+      <input maxLength={100000}
         type="text"
         value={secret}
-        onChange={(e) => setSecret(e.target.value)}
+        onChange={(e) => {invalidate();setSecret(e.target.value);}}
         placeholder="Secret used to sign the token…"
         className="tb-v2-input"
         style={{ fontFamily: 'var(--f-mono)' }}
@@ -154,7 +168,7 @@ export default function TokenBuilderClient() {
         {build.status === 'building' ? 'Generating…' : 'Generate token'}
       </button>
 
-      {!canGenerate && alg && !(alg in HMAC_ALGS) && (
+      {!canGenerate && alg && !(Object.hasOwn(HMAC_ALGS, alg)) && (
         <p className="tb-v2-hash-stats" style={{ marginTop: 8 }}>
           Only HS256 / HS384 / HS512 can be signed client-side. Change &quot;alg&quot; in the header to one of these to generate a token.
         </p>
@@ -182,5 +196,6 @@ export default function TokenBuilderClient() {
         </>
       )}
     </div>
+    </DeveloperSecurityFrame>
   );
 }

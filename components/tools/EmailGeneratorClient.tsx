@@ -1,10 +1,13 @@
 'use client';
+import DeveloperGeneralFrame from './DeveloperGeneralFrame';
 
+import ToolExampleClearActions from './ToolExampleClearActions';
 import { useState, useCallback } from 'react';
 
 type EmailType = 'random' | 'firstname-lastname' | 'firstname.lastname' | 'firstname_lastname' | 'firstname123' | 'custom';
 
 const domains = [
+  'example.com',
   'gmail.com',
   'yahoo.com',
   'hotmail.com',
@@ -46,23 +49,26 @@ function capitalize(str: string): string {
 export default function EmailGeneratorClient() {
   const [emailType, setEmailType] = useState<EmailType>('random');
   const [customPattern, setCustomPattern] = useState('first.last');
-  const [domain, setDomain] = useState('gmail.com');
+  const [domain, setDomain] = useState('example.com');
   const [customDomain, setCustomDomain] = useState('');
   const [count, setCount] = useState(5);
   const [generatedEmails, setGeneratedEmails] = useState<string[]>([]);
+  const [error,setError]=useState('');
   const [copied, setCopied] = useState(false);
 
   const generateEmails = useCallback(() => {
+    setError('');setGeneratedEmails([]);
     const emails: string[] = [];
     const selectedDomain = domain === 'custom' ? customDomain : domain;
-    
-    for (let i = 0; i < count; i++) {
+
+    if (!/^(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,}$/i.test(selectedDomain)) {setError('Enter a valid domain');return;}
+    for (let i = 0; i < Math.min(100,Math.max(1,count)); i++) {
       const firstName = firstNames[Math.floor(Math.random() * firstNames.length)].toLowerCase();
       const lastName = lastNames[Math.floor(Math.random() * lastNames.length)].toLowerCase();
       const randomNum = Math.floor(Math.random() * 1000);
-      
+
       let localPart: string;
-      
+
       switch (emailType) {
         case 'random':
           localPart = randomString(8) + randomNum;
@@ -85,15 +91,16 @@ export default function EmailGeneratorClient() {
             .replace(/lastname/gi, lastName)
             .replace(/first/gi, firstName.charAt(0))
             .replace(/last/gi, lastName.charAt(0))
-            .replace(/[0-9]+/g, (match) => randomString(parseInt(match)));
+            .replace(/[0-9]+/g, (match) => randomString(Math.min(32,Math.max(1,Number(match)))));
           break;
         default:
           localPart = randomString(10);
       }
-      
+
+      if (!/^[a-z0-9.!#$%&'*+/=?^_`{|}~-]{1,64}$/i.test(localPart) || localPart.startsWith('.') || localPart.endsWith('.') || localPart.includes('..')) {setError('Pattern must produce a valid local part of 1–64 characters');return;}
       emails.push(`${localPart}@${selectedDomain}`);
     }
-    
+
     setGeneratedEmails(emails);
   }, [emailType, domain, customDomain, customPattern, count]);
 
@@ -106,7 +113,7 @@ export default function EmailGeneratorClient() {
 
   const loadExample = () => {
     setEmailType('firstname.lastname');
-    setDomain('gmail.com');
+    setDomain('example.com');
     setCustomDomain('');
     setCount(5);
   };
@@ -120,14 +127,16 @@ export default function EmailGeneratorClient() {
   ];
 
   return (
-    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
+    <DeveloperGeneralFrame><div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
+      <ToolExampleClearActions onExample={() => {loadExample();}} onClear={() => {setError('');setGeneratedEmails([]);setCustomDomain('');setCustomPattern('');setCopied(false);}} />
+      {error && <p role="alert" className="tb-v2-error">{error}</p>}<p>Generates sample addresses, not mailboxes. Use reserved example domains for tests.</p>
       <div className="flex justify-end">
-        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">Load Example</button>
+
       </div>
       <div className="tb-v2-grid-2">
         <div>
           <label className="tb-v2-tool-label" style={{marginBottom:8}}>Email Format</label>
-          <select
+          <select aria-label="Email Type"
             value={emailType}
             onChange={(e) => setEmailType(e.target.value as EmailType)}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -142,7 +151,7 @@ export default function EmailGeneratorClient() {
         {emailType === 'custom' && (
           <div>
             <label className="tb-v2-tool-label" style={{marginBottom:8}}>Custom Pattern</label>
-            <input
+            <input aria-label="Custom Pattern" maxLength={8000}
               type="text"
               value={customPattern}
               onChange={(e) => setCustomPattern(e.target.value)}
@@ -157,7 +166,7 @@ export default function EmailGeneratorClient() {
 
         <div>
           <label className="tb-v2-tool-label" style={{marginBottom:8}}>Domain</label>
-          <select
+          <select aria-label="Domain"
             value={domain}
             onChange={(e) => setDomain(e.target.value)}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -172,7 +181,7 @@ export default function EmailGeneratorClient() {
         {domain === 'custom' && (
           <div>
             <label className="tb-v2-tool-label" style={{marginBottom:8}}>Custom Domain</label>
-            <input
+            <input aria-label="Custom Domain" maxLength={8000}
               type="text"
               value={customDomain}
               onChange={(e) => setCustomDomain(e.target.value)}
@@ -184,7 +193,7 @@ export default function EmailGeneratorClient() {
 
         <div>
           <label className="tb-v2-tool-label" style={{marginBottom:8}}>Number of Emails</label>
-          <input
+          <input aria-label="Count"
             type="number"
             min={1}
             max={50}
@@ -228,6 +237,6 @@ export default function EmailGeneratorClient() {
           </div>
         </div>
       )}
-    </div>
+    </div></DeveloperGeneralFrame>
   );
 }

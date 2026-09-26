@@ -1,5 +1,7 @@
 'use client';
+import DeveloperGeneralFrame from './DeveloperGeneralFrame';
 
+import ToolExampleClearActions from './ToolExampleClearActions';
 import { useState } from 'react';
 
 interface Endpoint {
@@ -57,7 +59,7 @@ export default function ApiEndpointDocumenterClient() {
   const updateEndpoint = (index: number, field: keyof Endpoint, value: string) => {
     const updated = [...endpoints];
     updated[index] = { ...updated[index], [field]: value };
-    setEndpoints(updated);
+    setOutput('');setEndpoints(updated);
   };
 
   const addEndpoint = () => {
@@ -65,7 +67,7 @@ export default function ApiEndpointDocumenterClient() {
   };
 
   const removeEndpoint = (index: number) => {
-    setEndpoints(endpoints.filter((_, i) => i !== index));
+    setOutput('');setEndpoints(endpoints.filter((_, i) => i !== index));
   };
 
   const handleGenerate = () => {
@@ -88,12 +90,13 @@ export default function ApiEndpointDocumenterClient() {
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <DeveloperGeneralFrame><div className="flex flex-col gap-4">
+      <ToolExampleClearActions onExample={() => {loadExample();}} onClear={() => {setEndpoints([]);setOutput('');setCopied(false);}} />
       <div className="space-y-3">
         {endpoints.map((endpoint, index) => (
           <div key={index} className="tb-v2-tool-output-body space-y-3">
             <div className="flex gap-2 items-center">
-              <select
+              <select aria-label="Endpoint method"
                 value={endpoint.method}
                 onChange={(e) => updateEndpoint(index, 'method', e.target.value)}
                 className={`tb-v2-input w-auto ${methodColors[endpoint.method].split(' ')[1]}`}
@@ -104,7 +107,7 @@ export default function ApiEndpointDocumenterClient() {
                 <option value="PATCH">PATCH</option>
                 <option value="DELETE">DELETE</option>
               </select>
-              <input
+              <input aria-label="Endpoint path" maxLength={8000}
                 type="text"
                 value={endpoint.path}
                 onChange={(e) => updateEndpoint(index, 'path', e.target.value)}
@@ -119,21 +122,21 @@ export default function ApiEndpointDocumenterClient() {
                 ✕
               </button>
             </div>
-            <input
+            <input aria-label="Endpoint description" maxLength={8000}
               type="text"
               value={endpoint.description}
               onChange={(e) => updateEndpoint(index, 'description', e.target.value)}
               placeholder="Endpoint description"
               className="tb-v2-input w-full"
             />
-            <textarea
+            <textarea aria-label="Endpoint request Body" maxLength={100000}
               value={endpoint.requestBody || ''}
               onChange={(e) => updateEndpoint(index, 'requestBody', e.target.value)}
               placeholder='Request body (JSON, optional)'
               className="tb-v2-tool-textarea"
               style={{ fontFamily: 'var(--f-mono)', height: '80px' }}
             />
-            <textarea
+            <textarea aria-label="Endpoint response Example" maxLength={100000}
               value={endpoint.responseExample || ''}
               onChange={(e) => updateEndpoint(index, 'responseExample', e.target.value)}
               placeholder='Response example (JSON, optional)'
@@ -148,9 +151,7 @@ export default function ApiEndpointDocumenterClient() {
         <button type="button" onClick={addEndpoint} className="tb-v2-btn-sm">
           + Add Endpoint
         </button>
-        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">
-          Load Example
-        </button>
+
         <button type="button" onClick={handleGenerate} className="tb-v2-btn tb-v2-btn-primary">
           Generate Markdown
         </button>
@@ -179,6 +180,6 @@ export default function ApiEndpointDocumenterClient() {
           </div>
         </>
       )}
-    </div>
+    </div></DeveloperGeneralFrame>
   );
 }

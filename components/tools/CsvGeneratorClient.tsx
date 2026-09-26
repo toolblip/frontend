@@ -2,17 +2,9 @@
 
 import { useState, useCallback, useMemo } from 'react';
 
-function escapeCsvCell(value: string): string {
-  return /[",\n]/.test(value) ? `"${value.replace(/"/g, '""')}"` : value;
-}
-
-function buildCsv(columns: string[], rows: string[][]): string {
-  const lines = [columns.map(escapeCsvCell).join(',')];
-  for (const row of rows) {
-    lines.push(columns.map((_, i) => escapeCsvCell(row[i] ?? '')).join(','));
-  }
-  return lines.join('\n');
-}
+import { useDataClipboard } from './developer-data/useDataClipboard';
+import ToolExampleClearActions from './ToolExampleClearActions';
+import { buildCsv } from '@/lib/developer-data/core';
 
 const EXAMPLE_COLUMNS = ['Name', 'Email', 'Role'];
 const EXAMPLE_ROWS = [
@@ -23,9 +15,8 @@ const EXAMPLE_ROWS = [
 export default function CsvGeneratorClient() {
   const [columns, setColumns] = useState<string[]>(EXAMPLE_COLUMNS);
   const [rows, setRows] = useState<string[][]>(EXAMPLE_ROWS);
-  const [copied, setCopied] = useState(false);
 
-  const csv = useMemo(() => buildCsv(columns, rows), [columns, rows]);
+  const csv = useMemo(() => columns.every(c => !c) && rows.length === 0 ? '' : buildCsv(columns, rows), [columns, rows]);
 
   const renameColumn = useCallback((index: number, name: string) => {
     setColumns(prev => prev.map((c, i) => (i === index ? name : c)));
@@ -58,11 +49,7 @@ export default function CsvGeneratorClient() {
     setRows(EXAMPLE_ROWS);
   };
 
-  const copy = () => {
-    navigator.clipboard.writeText(csv).catch(() => {});
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
-  };
+  const { copied, copy, reset: setCopied, copyError } = useDataClipboard(csv);
 
   const download = () => {
     const blob = new Blob([csv], { type: 'text/csv' });
@@ -71,17 +58,18 @@ export default function CsvGeneratorClient() {
     link.href = url;
     link.download = 'generated.csv';
     link.click();
-    URL.revokeObjectURL(url);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
   };
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="tb-v2-tool-input-head">
+    <div className="flex flex-col gap-4" style={{minWidth:0,maxWidth:"100%"}}>
+      {copyError && <p role="alert" className="tb-v2-error">{copyError}</p>}
+      <div className="tb-v2-tool-input-head" style={{flexWrap:"wrap",gap:12}}>
         <span className="tb-v2-tool-label">CSV Table Builder</span>
-        <div className="flex gap-2">
-          <button type="button" onClick={loadExample} className="tb-v2-btn-sm">Load Example</button>
-          <button type="button" onClick={addColumn} className="tb-v2-btn-sm">+ Column</button>
-          <button type="button" onClick={addRow} className="tb-v2-btn-sm">+ Row</button>
+        <div className="flex flex-wrap gap-2">
+          <ToolExampleClearActions onExample={loadExample} onClear={() => {setColumns(['']);setRows([]);setCopied(false);}}/>
+          <button type="button" disabled={columns.length >= 30} onClick={addColumn} className="tb-v2-btn-sm">+ Column</button>
+          <button type="button" disabled={rows.length >= 500} onClick={addRow} className="tb-v2-btn-sm">+ Row</button>
         </div>
       </div>
 
@@ -94,7 +82,7 @@ export default function CsvGeneratorClient() {
                   <div className="flex items-center gap-1">
                     <input
                       type="text"
-                      value={col}
+                      aria-label={`Column ${i + 1}`} maxLength={1000} value={col}
                       onChange={e => renameColumn(i, e.target.value)}
                       className="tb-v2-input"
                       style={{ fontWeight: 600 }}
@@ -121,7 +109,7 @@ export default function CsvGeneratorClient() {
                   <td key={ci} style={{ padding: 4 }}>
                     <input
                       type="text"
-                      value={row[ci] ?? ''}
+                      aria-label={`Row ${ri + 1} column ${ci + 1}`} maxLength={1000} value={row[ci] ?? ''}
                       onChange={e => updateCell(ri, ci, e.target.value)}
                       className="tb-v2-input"
                     />
@@ -147,15 +135,15 @@ export default function CsvGeneratorClient() {
 
       <div className="tb-v2-tool-output-head">
         <span className="tb-v2-tool-label">CSV Output</span>
-        <div className="flex gap-2">
-          <button type="button" onClick={download} className="tb-v2-btn-sm">Download</button>
-          <button type="button" onClick={copy} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}>
+        <div className="flex flex-wrap gap-2">
+          <button type="button" disabled={!csv} onClick={download} className="tb-v2-btn-sm">Download</button>
+          <button type="button" disabled={!csv} onClick={copy} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}>
             {copied ? 'Copied' : 'Copy'}
           </button>
         </div>
       </div>
       <div className="tb-v2-tool-output-body">
-        <pre style={{ margin: 0, whiteSpace: 'pre-wrap', fontFamily: 'var(--f-mono)', fontSize: 13 }}>{csv}</pre>
+        <pre style={{ margin: 0, whiteSpace: 'pre-wrap', overflowWrap: 'anywhere', fontFamily: 'var(--f-mono)', fontSize: 13 }}>{csv}</pre>
       </div>
     </div>
   );

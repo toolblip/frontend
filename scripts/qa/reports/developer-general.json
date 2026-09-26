@@ -1,0 +1,3154 @@
+{
+  "group": "developer-general",
+  "assignedCount": 61,
+  "inspectedCount": 61,
+  "browserCaseCount": 61,
+  "historicalApprovalImpact": "Full inventory relationships checked; no assigned shared component serves a historically approved route.",
+  "status": "browser_integration_partial",
+  "validation": {
+    "scopedTests": {
+      "command": "node_modules/.bin/vitest run lib/developer-general/developer-general.test.ts lib/developer-general/format-script.test.ts",
+      "result": "61 tests passed (58 existing + 3 source-preserving formatter regressions)"
+    },
+    "typescript": {
+      "command": "node_modules/.bin/tsc --noEmit --pretty false",
+      "latestResult": "Passed, exit 0 after the public compiler loader fix",
+      "latestLog": "/private/tmp/developer-general-tsc-delivery.log",
+      "earlierResult": "Passed with exit 0 after owned formatter changes, before concurrent PDF conflict.",
+      "earlierLog": "/private/tmp/developer-general-tsc-final.log"
+    },
+    "caseCoverage": {
+      "result": "61 unique fixtures exactly match the 61 assigned routes. The two additional historically approved inventory routes remain outside this assignment."
+    },
+    "browser": "Both engines attempted every assigned route. Final run totals below are exact; not a blanket pass of every supported mode. Earlier server/HMR/merge-conflict failures are retained in prior run artifacts.",
+    "build": "Not run per worker contract",
+    "devServer": "Not started per worker contract",
+    "publicEndpointDirect": {
+      "http": "HTTP 200, https://httpbin.org/get echoes exact requested URL",
+      "graphql": "HTTP 200, country BD returns Bangladesh and Dhaka",
+      "qualification": "Real network responses outside page CSP; not browser fixture passes",
+      "websocket": "Real public wss://echo.websocket.org round trip returned exact synthetic toolblip-qa-public-echo message. This is endpoint availability evidence, not a browser-CSP pass."
+    },
+    "esbuildAsset": {
+      "installedVersion": "0.28.2",
+      "installedPath": "node_modules/esbuild-wasm/esbuild.wasm",
+      "sha256": "b1831a5c0f6cf688034fb94d0419812f165ea316a3380d3fc00a151e562d2eaf",
+      "observedBundledPath": "/_next/static/media/esbuild.e9e808d1.wasm",
+      "focusedProbe": "Chrome minified function add and produced function add(n,d){return n+d}; wider fixtures interrupted by reloads or cold initialization timeout. No public copy required by observed successful load.",
+      "bundledSha256": "b1831a5c0f6cf688034fb94d0419812f165ea316a3380d3fc00a151e562d2eaf",
+      "verifiedByteIdentical": true,
+      "finalBrowserResult": "js-minifier passed in both full final runs, including executable output = 5, malformed syntax, Clear and populated 320px containment."
+    },
+    "integrationOwnedFiles": [
+      "components/tools/CodeBeautifierClient.tsx",
+      "lib/developer-general/format-script.ts",
+      "lib/developer-general/format-script.test.ts",
+      "scripts/qa/cases/developer-general.mjs",
+      "scripts/qa/reports/developer-general.json",
+      "lib/developer-general/script-formatter-browser.ts",
+      "public/qa/typescript-5.5.4.js",
+      "public/qa/typescript-LICENSE.txt",
+      "public/qa/typescript-ThirdPartyNoticeText.txt",
+      "public/qa/typescript-provenance.txt"
+    ],
+    "noActions": "No build, server start, package/lock, ToolUI, central metadata, shared runner edit, commit or delegation performed.",
+    "interruptedRuns": [
+      {
+        "name": "auto-general-chrome-2",
+        "path": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-2",
+        "finishedTools": 16,
+        "overallPassed": 0,
+        "functionalPassed": 0,
+        "reason": "Stopped own run during shared server changes/restart; no aggregate produced by interrupted process; raw tool reports preserved."
+      },
+      {
+        "name": "auto-general-chrome-3",
+        "path": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-3",
+        "finishedTools": 28,
+        "overallPassed": 10,
+        "functionalPassed": 10,
+        "reason": "Stopped own run during shared server changes/restart; no aggregate produced by interrupted process; raw tool reports preserved."
+      },
+      {
+        "name": "auto-general-webkit-2",
+        "path": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-2",
+        "finishedTools": 17,
+        "overallPassed": 9,
+        "functionalPassed": 11,
+        "reason": "Stopped own run during shared server changes/restart; no aggregate produced by interrupted process; raw tool reports preserved."
+      }
+    ],
+    "browserRuns": [
+      {
+        "name": "auto-general-chrome-5",
+        "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-5/aggregate.json",
+        "summary": {
+          "total": 61,
+          "passed": 37,
+          "failed": 24,
+          "needsFixture": 0,
+          "smokeOnly": 22,
+          "exitCode": 3
+        },
+        "fatal": {
+          "name": "Error",
+          "message": "Browser server close timeout after 5000ms",
+          "stack": "Error: Browser server close timeout after 5000ms\n    at Timeout.<anonymous> (file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/core.mjs:85:37)\n    at listOnTimeout (node:internal/timers:685:17)\n    at process.processTimers (node:internal/timers:618:7)"
+        },
+        "environmentObservations": {
+          "count": 0,
+          "affectedTools": [],
+          "status": "not-observed",
+          "observations": []
+        },
+        "stripDevUpgradeCSP": false,
+        "fixtureRevision": "7d78ed37f634c411afc2744f3e9ea7ce4522d8851ecf6236652ab595c28b2060"
+      },
+      {
+        "name": "auto-general-webkit-3",
+        "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-3/aggregate.json",
+        "summary": {
+          "total": 61,
+          "passed": 32,
+          "failed": 29,
+          "needsFixture": 0,
+          "smokeOnly": 24,
+          "exitCode": 3
+        },
+        "fatal": null,
+        "environmentObservations": {
+          "count": 0,
+          "affectedTools": [],
+          "status": "not-observed",
+          "observations": []
+        },
+        "stripDevUpgradeCSP": true,
+        "fixtureRevision": "7d78ed37f634c411afc2744f3e9ea7ce4522d8851ecf6236652ab595c28b2060"
+      },
+      {
+        "name": "auto-general-chrome-6",
+        "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-6/aggregate.json",
+        "summary": {
+          "total": 24,
+          "passed": 19,
+          "failed": 5,
+          "needsFixture": 0,
+          "smokeOnly": 0,
+          "exitCode": 1
+        },
+        "fatal": {
+          "name": "Error",
+          "message": "Browser server close timeout after 5000ms",
+          "stack": "Error: Browser server close timeout after 5000ms\n    at Timeout.<anonymous> (file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/core.mjs:85:37)\n    at listOnTimeout (node:internal/timers:685:17)\n    at process.processTimers (node:internal/timers:618:7)"
+        },
+        "environmentObservations": {
+          "count": 0,
+          "affectedTools": [],
+          "status": "not-observed",
+          "observations": []
+        },
+        "stripDevUpgradeCSP": false,
+        "fixtureRevision": "ccf68f78a072b2537f941b282bea793378c7cfb5d95b89af9b07fc7d375678df"
+      },
+      {
+        "name": "auto-general-webkit-4",
+        "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-4/aggregate.json",
+        "summary": {
+          "total": 29,
+          "passed": 24,
+          "failed": 5,
+          "needsFixture": 0,
+          "smokeOnly": 1,
+          "exitCode": 3
+        },
+        "fatal": null,
+        "environmentObservations": {
+          "count": 0,
+          "affectedTools": [],
+          "status": "not-observed",
+          "observations": []
+        },
+        "stripDevUpgradeCSP": true,
+        "fixtureRevision": "ccf68f78a072b2537f941b282bea793378c7cfb5d95b89af9b07fc7d375678df"
+      },
+      {
+        "name": "auto-general-chrome-final",
+        "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/aggregate.json",
+        "summary": {
+          "total": 61,
+          "passed": 58,
+          "failed": 3,
+          "needsFixture": 0,
+          "smokeOnly": 0,
+          "exitCode": 1
+        },
+        "fatal": {
+          "name": "Error",
+          "message": "Browser server close timeout after 5000ms",
+          "stack": "Error: Browser server close timeout after 5000ms\n    at Timeout.<anonymous> (file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/core.mjs:85:37)\n    at listOnTimeout (node:internal/timers:685:17)\n    at process.processTimers (node:internal/timers:618:7)"
+        },
+        "environmentObservations": {
+          "count": 0,
+          "affectedTools": [],
+          "status": "not-observed",
+          "observations": []
+        },
+        "stripDevUpgradeCSP": false,
+        "fixtureRevision": "005f377df2b37fbf4a4aa29b7edf4948c3e708229dcd5b57f86659d2688ec8cf"
+      },
+      {
+        "name": "auto-general-webkit-final",
+        "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/aggregate.json",
+        "summary": {
+          "total": 61,
+          "passed": 58,
+          "failed": 3,
+          "needsFixture": 0,
+          "smokeOnly": 0,
+          "exitCode": 1
+        },
+        "fatal": null,
+        "environmentObservations": {
+          "count": 0,
+          "affectedTools": [],
+          "status": "not-observed",
+          "observations": []
+        },
+        "stripDevUpgradeCSP": true,
+        "fixtureRevision": "005f377df2b37fbf4a4aa29b7edf4948c3e708229dcd5b57f86659d2688ec8cf"
+      },
+      {
+        "name": "auto-general-asset-chrome",
+        "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-asset-chrome/aggregate.json",
+        "summary": {
+          "total": 1,
+          "passed": 1,
+          "failed": 0,
+          "needsFixture": 0,
+          "smokeOnly": 0,
+          "exitCode": 0
+        },
+        "fatal": null,
+        "environmentObservations": {
+          "count": 0,
+          "affectedTools": [],
+          "status": "not-observed",
+          "observations": []
+        },
+        "stripDevUpgradeCSP": false,
+        "fixtureRevision": "005f377df2b37fbf4a4aa29b7edf4948c3e708229dcd5b57f86659d2688ec8cf"
+      },
+      {
+        "name": "auto-general-asset-webkit",
+        "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-asset-webkit/aggregate.json",
+        "summary": {
+          "total": 2,
+          "passed": 2,
+          "failed": 0,
+          "needsFixture": 0,
+          "smokeOnly": 0,
+          "exitCode": 0
+        },
+        "fatal": null,
+        "environmentObservations": {
+          "count": 0,
+          "affectedTools": [],
+          "status": "not-observed",
+          "observations": []
+        },
+        "stripDevUpgradeCSP": true,
+        "fixtureRevision": "005f377df2b37fbf4a4aa29b7edf4948c3e708229dcd5b57f86659d2688ec8cf"
+      }
+    ],
+    "deliverySnapshot": {
+      "chrome": {
+        "total": 61,
+        "passed": 59,
+        "failed": [
+          "graphql-playground",
+          "websocket-tester"
+        ],
+        "qualification": "Latest per-route results: full 61-route run plus explicitly recorded targeted asset reruns; not one entirely green full run."
+      },
+      "webkit": {
+        "total": 61,
+        "passed": 59,
+        "failed": [
+          "graphql-playground",
+          "websocket-tester"
+        ],
+        "qualification": "Latest per-route results: full 61-route run plus explicitly recorded targeted asset reruns; not one entirely green full run."
+      }
+    },
+    "finalBrowser": {
+      "chrome": {
+        "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/aggregate.json",
+        "total": 61,
+        "passed": 58,
+        "failed": 3,
+        "needsFixture": 0,
+        "smokeOnly": 0,
+        "exitCode": 1,
+        "functionalPassed": 58,
+        "failedRoutes": [
+          "code-beautifier",
+          "graphql-playground",
+          "websocket-tester"
+        ]
+      },
+      "webkit": {
+        "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/aggregate.json",
+        "total": 61,
+        "passed": 58,
+        "failed": 3,
+        "needsFixture": 0,
+        "smokeOnly": 0,
+        "exitCode": 1,
+        "functionalPassed": 59,
+        "failedRoutes": [
+          "graphql-playground",
+          "http-headers-inspector",
+          "websocket-tester"
+        ]
+      }
+    },
+    "integrationFixes": [
+      "Code Beautifier preserves TypeScript source and applies JS/TS indentation using existing installed compiler; no dependency edits.",
+      "Expanded formatter browser checks across all six languages, malformed JSON and Clear.",
+      "CORS fixture checks actual header/value spans and framework credential settings instead of assumed DOM whitespace.",
+      "WASM and HTTP assertions wait for real completion within component time bounds; no mocked responses.",
+      "Fixtures check populated result/error containment at 320px before Clear as well as empty-state containment after Clear.",
+      "GraphQL/WebSocket invalid-input and Clear checks run before public network requests so CSP failure does not hide local validation evidence."
+    ],
+    "publicCompilerAsset": {
+      "path": "public/qa/typescript-5.5.4.js",
+      "installedSource": "node_modules/typescript/lib/typescript.js",
+      "version": "5.5.4",
+      "sha256": "f7ff3e27aafe5dcc82d0307575e9a7dc5b053b141da123bec81c858537765b56",
+      "byteIdentical": true,
+      "license": "public/qa/typescript-LICENSE.txt",
+      "notices": "public/qa/typescript-ThirdPartyNoticeText.txt",
+      "reason": "Chrome formatter repeatedly lost input while the dynamic compiler chunk was aborted by development reloads. Static browser compiler removes dynamic Node-loader bundling and its critical-dependency warning."
+    },
+    "typecheckLog": "/private/tmp/developer-general-tsc-delivery.log",
+    "notes": [
+      "WebKit strips upgrade-insecure-requests on local HTTP documents only; this is not unchanged production CSP validation.",
+      "Browser-close timeouts, hot reload navigation resets, temporary shared PDF conflict, and runtime exceptions remain failures in original artifacts.",
+      "Public HTTP/GraphQL/WebSocket endpoints were exercised over the real network without mocked success.",
+      "No claim of complete support for intermediate redirect chains, comprehensive HTML/regex/security parsing, diagram rendering/control-flow inference, actual DPR emulation, or runtime API execution by code-generator routes. Existing limitations remain listed per route."
+    ]
+  },
+  "fixedFiles": [
+    "components/tools/AlgorithmVisualizerClient.tsx",
+    "components/tools/ApiAuthHeaderGeneratorClient.tsx",
+    "components/tools/ApiDocGeneratorClient.tsx",
+    "components/tools/ApiEndpointDebuggerClient.tsx",
+    "components/tools/ApiEndpointDocumenterClient.tsx",
+    "components/tools/ApiSpecGeneratorClient.tsx",
+    "components/tools/BashCommandGeneratorClient.tsx",
+    "components/tools/CodeBeautifierClient.tsx",
+    "components/tools/CodeToDiagramGeneratorClient.tsx",
+    "components/tools/CorsHeaderGeneratorClient.tsx",
+    "components/tools/CronGeneratorClient.tsx",
+    "components/tools/CronGeneratorCompleteClient.tsx",
+    "components/tools/CronHumanReadableClient.tsx",
+    "components/tools/CronParserClient.tsx",
+    "components/tools/CronScheduleExplainerClient.tsx",
+    "components/tools/CronScheduleGeneratorClient.tsx",
+    "components/tools/CronScheduleValidatorClient.tsx",
+    "components/tools/CronValidatorClient.tsx",
+    "components/tools/CssClassGeneratorClient.tsx",
+    "components/tools/CssMinifierClient.tsx",
+    "components/tools/CssToScssConverterClient.tsx",
+    "components/tools/CssToStyledComponentsClient.tsx",
+    "components/tools/CssToTailwindClient.tsx",
+    "components/tools/CssValidatorClient.tsx",
+    "components/tools/CurlCommandBuilderClient.tsx",
+    "components/tools/CurlGenExpressClient.tsx",
+    "components/tools/CurlToJavascriptClient.tsx",
+    "components/tools/CurlToPythonClient.tsx",
+    "components/tools/DeveloperGeneralCurlConverter.tsx",
+    "components/tools/DeveloperGeneralFrame.tsx",
+    "components/tools/DeveloperGeneralHttpInspector.tsx",
+    "components/tools/DockerCommandGeneratorClient.tsx",
+    "components/tools/EmailGeneratorClient.tsx",
+    "components/tools/EnvParserClient.tsx",
+    "components/tools/FakeDataGeneratorClient.tsx",
+    "components/tools/GraphqlPlaygroundClient.tsx",
+    "components/tools/HomoglyphDetectorClient.tsx",
+    "components/tools/HtmlLivePreviewClient.tsx",
+    "components/tools/HtmlMinifierClient.tsx",
+    "components/tools/HtmlTableGeneratorClient.tsx",
+    "components/tools/HtmlValidatorClient.tsx",
+    "components/tools/HttpHeadersInspectorClient.tsx",
+    "components/tools/HttpStatusCheckerClient.tsx",
+    "components/tools/JsMinifierClient.tsx",
+    "components/tools/LdapFilterGeneratorClient.tsx",
+    "components/tools/MIMETypesReferenceClient.tsx",
+    "components/tools/RandomStringClient.tsx",
+    "components/tools/RegexDescriptionGeneratorClient.tsx",
+    "components/tools/RegexExplainerClient.tsx",
+    "components/tools/RegexPatternBuilderClient.tsx",
+    "components/tools/RegexPatternGeneratorClient.tsx",
+    "components/tools/RegexTesterClient.tsx",
+    "components/tools/RegexVisualizerClient.tsx",
+    "components/tools/ScreenDensitySimulatorClient.tsx",
+    "components/tools/ScreenResolutionTesterClient.tsx",
+    "components/tools/SemverCheckerClient.tsx",
+    "components/tools/ShellCommandReferenceClient.tsx",
+    "components/tools/UrlParamsClient.tsx",
+    "components/tools/UrlParserClient.tsx",
+    "components/tools/UrlRedirectCheckerClient.tsx",
+    "components/tools/UserAgentParserClient.tsx",
+    "components/tools/WebSocketTesterClient.tsx",
+    "lib/developer-general/code.ts",
+    "lib/developer-general/cors.ts",
+    "lib/developer-general/cron.ts",
+    "lib/developer-general/curl.ts",
+    "lib/developer-general/data.ts",
+    "lib/developer-general/developer-general.test.ts",
+    "lib/developer-general/esbuild-browser.ts",
+    "lib/developer-general/network.ts",
+    "lib/developer-general/regex.ts",
+    "lib/developer-general/semver.ts",
+    "lib/developer-general/use-safe-regex.ts",
+    "scripts/qa/cases/developer-general.mjs",
+    "scripts/qa/reports/developer-general.json",
+    "lib/developer-general/format-script.ts",
+    "lib/developer-general/format-script.test.ts",
+    "lib/developer-general/script-formatter-browser.ts",
+    "public/qa/typescript-5.5.4.js",
+    "public/qa/typescript-LICENSE.txt",
+    "public/qa/typescript-ThirdPartyNoticeText.txt",
+    "public/qa/typescript-provenance.txt"
+  ],
+  "duplicateRedirectProposals": [
+    {
+      "from": "regex-pattern-tester",
+      "to": "regex-tester",
+      "permanent": true,
+      "evidence": "Already shares identical RegexTesterClient implementation"
+    },
+    {
+      "from": "regex-match-tester",
+      "to": "regex-tester",
+      "permanent": true,
+      "evidence": "Already shares identical RegexTesterClient implementation"
+    },
+    {
+      "from": "cron-human-readable",
+      "to": "cron-parser",
+      "permanent": true,
+      "evidence": "Original five freeform/preset/next-run implementations were duplicated with heading/export-name differences; corrected implementation is now shared."
+    },
+    {
+      "from": "cron-schedule-generator",
+      "to": "cron-parser",
+      "permanent": true,
+      "evidence": "Original five freeform/preset/next-run implementations were duplicated with heading/export-name differences; corrected implementation is now shared."
+    },
+    {
+      "from": "cron-schedule-validator",
+      "to": "cron-parser",
+      "permanent": true,
+      "evidence": "Original five freeform/preset/next-run implementations were duplicated with heading/export-name differences; corrected implementation is now shared."
+    },
+    {
+      "from": "cron-generator-dg",
+      "to": "cron-parser",
+      "permanent": true,
+      "evidence": "Original five freeform/preset/next-run implementations were duplicated with heading/export-name differences; corrected implementation is now shared."
+    },
+    {
+      "from": "cron-schedule-explainer",
+      "to": "cron-parser",
+      "permanent": true,
+      "evidence": "Original five freeform/preset/next-run implementations were duplicated with heading/export-name differences; corrected implementation is now shared."
+    }
+  ],
+  "centralMetadataChanges": [
+    {
+      "slugs": [
+        "url-redirect-checker"
+      ],
+      "change": "Describe final redirect destination/flag; remove promises of full intermediate chain."
+    },
+    {
+      "slugs": [
+        "screen-density-simulator"
+      ],
+      "change": "Describe physical-pixel calculation/CSS viewport preview, not true devicePixelRatio emulation."
+    },
+    {
+      "slugs": [
+        "api-endpoint-debugger"
+      ],
+      "change": "Name/describe as request-code generator; no live request execution."
+    },
+    {
+      "slugs": [
+        "html-validator",
+        "css-validator"
+      ],
+      "change": "Limit validation claims to basic HTML lint / CSS syntax."
+    },
+    {
+      "slugs": [
+        "css-to-scss"
+      ],
+      "change": "Describe CSS-compatible SCSS output, preserving runtime variables."
+    },
+    {
+      "slugs": [
+        "code-to-diagram-generator"
+      ],
+      "change": "Describe Mermaid-source generation from lines/simple declarations, not AI code analysis or rendered diagrams."
+    },
+    {
+      "slugs": [
+        "code-beautifier"
+      ],
+      "change": "Disclose TypeScript transpilation and conservative Python/HTML formatting."
+    }
+  ],
+  "routes": [
+    {
+      "slug": "css-class-generator",
+      "componentPath": "components/tools/CssClassGeneratorClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_scenario_passed",
+      "findingsAndFixes": [
+        "Unique indexed class names; invalid prefixes/declaration delimiters cannot produce copied markup.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "passed_both_engines",
+      "limitsOrBlockers": [],
+      "browserValidation": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/tools/css-class-generator.json",
+          "functionalEvidence": [
+            "Class generator emits declaration under matching unique selector",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/tools/css-class-generator.json",
+          "functionalEvidence": [
+            "Class generator emits declaration under matching unique selector",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        }
+      }
+    },
+    {
+      "slug": "url-parameter-extractor",
+      "componentPath": "components/tools/UrlParamsClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_scenario_passed",
+      "findingsAndFixes": [
+        "Preserve raw percent/plus encodings and duplicate order; catch malformed fragments; safe parameter dictionary.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "passed_both_engines",
+      "limitsOrBlockers": [],
+      "browserValidation": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/tools/url-parameter-extractor.json",
+          "functionalEvidence": [
+            "Duplicate query values preserve order and decode plus correctly",
+            "Raw mode preserves original encodings",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/tools/url-parameter-extractor.json",
+          "functionalEvidence": [
+            "Duplicate query values preserve order and decode plus correctly",
+            "Raw mode preserves original encodings",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        }
+      }
+    },
+    {
+      "slug": "cron-parser",
+      "componentPath": "components/tools/CronParserClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_scenario_passed",
+      "findingsAndFixes": [
+        "Strict bounded field parser, named months/weekdays, Sunday 7, steps/ranges, accurate restricted schedules and calendar runs.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "passed_both_engines",
+      "limitsOrBlockers": [],
+      "browserValidation": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/tools/cron-parser.json",
+          "functionalEvidence": [
+            "All projected runs are weekdays at 09:00",
+            "Malformed numeric token rejected",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/tools/cron-parser.json",
+          "functionalEvidence": [
+            "All projected runs are weekdays at 09:00",
+            "Malformed numeric token rejected",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        }
+      }
+    },
+    {
+      "slug": "cors-header-generator",
+      "componentPath": "components/tools/CorsHeaderGeneratorClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_scenario_passed_with_disclosed_limits",
+      "findingsAndFixes": [
+        "Reject wildcard credentials and malformed origins/headers; one allow-origin; allowlist-aware frameworks; valid Python booleans.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "passed_both_engines",
+      "limitsOrBlockers": [
+        "Raw/Nginx/Apache snippets use first origin. Dynamic framework snippets use allowlists. Existing Vary values must be merged when integrating."
+      ],
+      "browserValidation": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/tools/cors-header-generator.json",
+          "functionalEvidence": [
+            "Credentialed CORS emits Python True and one exact origin header",
+            "Public wildcard mode disables credentials in generated framework code",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/tools/cors-header-generator.json",
+          "functionalEvidence": [
+            "Credentialed CORS emits Python True and one exact origin header",
+            "Public wildcard mode disables credentials in generated framework code",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        }
+      }
+    },
+    {
+      "slug": "screen-resolution-tester",
+      "componentPath": "components/tools/ScreenResolutionTesterClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_scenario_passed_with_disclosed_limits",
+      "findingsAndFixes": [
+        "Bounded dimensions, explicit scaled-preview claim, real window.open button, Examples/Clear and responsive containment.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "passed_both_engines",
+      "limitsOrBlockers": [
+        "Window geometry is a browser request and is not guaranteed; Clear resets dimensions to 1×1."
+      ],
+      "browserValidation": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/tools/screen-resolution-tester.json",
+          "functionalEvidence": [
+            "1920×1080 gives 2.07 megapixels and 1.778 ratio",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/tools/screen-resolution-tester.json",
+          "functionalEvidence": [
+            "1920×1080 gives 2.07 megapixels and 1.778 ratio",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        }
+      }
+    },
+    {
+      "slug": "regex-tester",
+      "componentPath": "components/tools/RegexTesterClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_scenario_passed",
+      "findingsAndFixes": [
+        "Worker-isolated matching with 500 ms cancellation, global semantics, zero-width Unicode advancement, capture offsets and token hints.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "passed_both_engines",
+      "limitsOrBlockers": [],
+      "browserValidation": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/tools/regex-tester.json",
+          "functionalEvidence": [
+            "Exact regex match offsets 1 and 5",
+            "Non-global flag returns first match",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/tools/regex-tester.json",
+          "functionalEvidence": [
+            "Exact regex match offsets 1 and 5",
+            "Non-global flag returns first match",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        }
+      }
+    },
+    {
+      "slug": "cron-generator",
+      "componentPath": "components/tools/CronGeneratorClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_scenario_passed",
+      "findingsAndFixes": [
+        "Reuse tested cron engine while preserving field-selection builder and presets.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "passed_both_engines",
+      "limitsOrBlockers": [],
+      "browserValidation": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/tools/cron-generator.json",
+          "functionalEvidence": [
+            "Field builder schedules 12:15",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/tools/cron-generator.json",
+          "functionalEvidence": [
+            "Field builder schedules 12:15",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        }
+      }
+    },
+    {
+      "slug": "js-minifier",
+      "componentPath": "components/tools/JsMinifierClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_scenario_passed_with_disclosed_limits",
+      "findingsAndFixes": [
+        "Replace corrupting handwritten scanner with existing esbuild-wasm parser; preserve program semantics; syntax errors and stale-result invalidation.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "passed_both_engines",
+      "limitsOrBlockers": [
+        "Installed esbuild 0.28.2 WASM emits as /_next/static/media/esbuild.e9e808d1.wasm; SHA-256 matches installed asset. Initial cold initialization required a 20-second assertion window."
+      ],
+      "browserValidation": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/tools/js-minifier.json",
+          "functionalEvidence": [
+            "Minified JavaScript executes with result 5",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/tools/js-minifier.json",
+          "functionalEvidence": [
+            "Minified JavaScript executes with result 5",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        }
+      }
+    },
+    {
+      "slug": "fake-data-generator",
+      "componentPath": "components/tools/FakeDataGeneratorClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_scenario_passed",
+      "findingsAndFixes": [
+        "Bound record count, reserved sample domains and properly quoted CSV; reset generated data.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "passed_both_engines",
+      "limitsOrBlockers": [],
+      "browserValidation": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/tools/fake-data-generator.json",
+          "functionalEvidence": [
+            "Exactly three sample emails use reserved domains",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/tools/fake-data-generator.json",
+          "functionalEvidence": [
+            "Exactly three sample emails use reserved domains",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        }
+      }
+    },
+    {
+      "slug": "random-string-generator",
+      "componentPath": "components/tools/RandomStringClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_scenario_passed",
+      "findingsAndFixes": [
+        "Bound lengths/counts; unbiased rejection sampling; real crypto.randomUUID; remove pending preset timer.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "passed_both_engines",
+      "limitsOrBlockers": [],
+      "browserValidation": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/tools/random-string-generator.json",
+          "functionalEvidence": [
+            "Three random strings have exactly eight digits",
+            "UUID uses RFC v4 version and variant bits",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/tools/random-string-generator.json",
+          "functionalEvidence": [
+            "Three random strings have exactly eight digits",
+            "UUID uses RFC v4 version and variant bits",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        }
+      }
+    },
+    {
+      "slug": "url-parser",
+      "componentPath": "components/tools/UrlParserClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_scenario_passed",
+      "findingsAndFixes": [
+        "Live parsing, explicit invalid URLs, duplicate query preservation, safe dictionary and stale-output clearing.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "passed_both_engines",
+      "limitsOrBlockers": [],
+      "browserValidation": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/tools/url-parser.json",
+          "functionalEvidence": [
+            "Port, path, query and fragment parsed from known URL",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/tools/url-parser.json",
+          "functionalEvidence": [
+            "Port, path, query and fragment parsed from known URL",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        }
+      }
+    },
+    {
+      "slug": "css-validator",
+      "componentPath": "components/tools/CssValidatorClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_scenario_passed",
+      "findingsAndFixes": [
+        "PostCSS syntax parsing replaces false hex/brace heuristics; explicitly limit claims to syntax.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "passed_both_engines",
+      "limitsOrBlockers": [],
+      "browserValidation": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/tools/css-validator.json",
+          "functionalEvidence": [
+            "Valid short hex/string brace accepted; missing colon rejected",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/tools/css-validator.json",
+          "functionalEvidence": [
+            "Valid short hex/string brace accepted; missing colon rejected",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        }
+      }
+    },
+    {
+      "slug": "html-validator",
+      "componentPath": "components/tools/HtmlValidatorClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_scenario_passed_with_disclosed_limits",
+      "findingsAndFixes": [
+        "Ignore comment/raw-text pseudo-tags, quoted attribute > characters, identify unexpected closing tags, bound scans and disclose lint scope.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "passed_both_engines",
+      "limitsOrBlockers": [
+        "Basic tag-balance lint, not full WHATWG conformance. Optional closing tags and embedded syntax can require manual review; UI discloses limitation."
+      ],
+      "browserValidation": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/tools/html-validator.json",
+          "functionalEvidence": [
+            "Balanced fragment accepted and mismatched closing tag detected",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/tools/html-validator.json",
+          "functionalEvidence": [
+            "Balanced fragment accepted and mismatched closing tag detected",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        }
+      }
+    },
+    {
+      "slug": "email-generator",
+      "componentPath": "components/tools/EmailGeneratorClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_scenario_passed",
+      "findingsAndFixes": [
+        "Validate domains and local parts, bound digit-pattern expansion/counts, reserved default domain, visible errors and reset.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "passed_both_engines",
+      "limitsOrBlockers": [],
+      "browserValidation": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/tools/email-generator.json",
+          "functionalEvidence": [
+            "Three first.last addresses match selected reserved domain",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/tools/email-generator.json",
+          "functionalEvidence": [
+            "Three first.last addresses match selected reserved domain",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        }
+      }
+    },
+    {
+      "slug": "semver-checker",
+      "componentPath": "components/tools/SemverCheckerClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_scenario_passed",
+      "findingsAndFixes": [
+        "Correct release/prerelease precedence, numeric identifier ordering, leading-zero rejection and build-metadata equality; live comparison.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "passed_both_engines",
+      "limitsOrBlockers": [],
+      "browserValidation": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/tools/semver-checker.json",
+          "functionalEvidence": [
+            "Numeric prerelease order and release precedence",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/tools/semver-checker.json",
+          "functionalEvidence": [
+            "Numeric prerelease order and release precedence",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        }
+      }
+    },
+    {
+      "slug": "html-table-generator",
+      "componentPath": "components/tools/HtmlTableGeneratorClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_scenario_passed",
+      "findingsAndFixes": [
+        "Real quoted CSV parsing, headerless cells, escaped markup, functioning stripe style, live output and malformed CSV error.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "passed_both_engines",
+      "limitsOrBlockers": [],
+      "browserValidation": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/tools/html-table-generator.json",
+          "functionalEvidence": [
+            "Quoted CSV comma stays in one table cell",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/tools/html-table-generator.json",
+          "functionalEvidence": [
+            "Quoted CSV comma stays in one table cell",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        }
+      }
+    },
+    {
+      "slug": "homoglyph-detector",
+      "componentPath": "components/tools/HomoglyphDetectorClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_scenario_passed_with_disclosed_limits",
+      "findingsAndFixes": [
+        "Detect reverse Greek/Cyrillic lookalikes instead of flagging plain ASCII; digit category corrected; disclose limited confusables table.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "passed_both_engines",
+      "limitsOrBlockers": [
+        "Uses a limited confusables table; not a comprehensive Unicode security assessment."
+      ],
+      "browserValidation": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/tools/homoglyph-detector.json",
+          "functionalEvidence": [
+            "Cyrillic a is identified in mixed-script hostname",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/tools/homoglyph-detector.json",
+          "functionalEvidence": [
+            "Cyrillic a is identified in mixed-script hostname",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        }
+      }
+    },
+    {
+      "slug": "shell-command-reference",
+      "componentPath": "components/tools/ShellCommandReferenceClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_scenario_passed",
+      "findingsAndFixes": [
+        "Preserve reference/search/category workflow; Example searches pwd, Clear restores reference inventory.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "passed_both_engines",
+      "limitsOrBlockers": [],
+      "browserValidation": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/tools/shell-command-reference.json",
+          "functionalEvidence": [
+            "pwd reference describes current directory",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/tools/shell-command-reference.json",
+          "functionalEvidence": [
+            "pwd reference describes current directory",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        }
+      }
+    },
+    {
+      "slug": "user-agent-parser",
+      "componentPath": "components/tools/UserAgentParserClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_scenario_passed",
+      "findingsAndFixes": [
+        "Prioritize Edge/Opera/Samsung before Chrome; Safari Version token; iPad/tablet, macOS, Android and Chrome OS.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "passed_both_engines",
+      "limitsOrBlockers": [],
+      "browserValidation": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/tools/user-agent-parser.json",
+          "functionalEvidence": [
+            "Edge token takes precedence over Chrome/Safari",
+            "iPad is a tablet and Safari uses Version token",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/tools/user-agent-parser.json",
+          "functionalEvidence": [
+            "Edge token takes precedence over Chrome/Safari",
+            "iPad is a tablet and Safari uses Version token",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        }
+      }
+    },
+    {
+      "slug": "graphql-playground",
+      "componentPath": "components/tools/GraphqlPlaygroundClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_integration_failed",
+      "findingsAndFixes": [
+        "Validate URL and variables object, 10-second abort, 1 MB streamed response bound, cancel/clear/edit invalidation and read-only country example.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "browser_failures_recorded",
+      "limitsOrBlockers": [
+        "Positive fixture depends on public read-only countries.trevorblades.com endpoint and its CORS availability."
+      ],
+      "browserValidation": {
+        "chrome": {
+          "status": "failed",
+          "functional": "failed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/tools/graphql-playground.json",
+          "functionalEvidence": [
+            "Invalid variables rejected and Clear resets the endpoint"
+          ],
+          "failure": "expect(locator).toContainText(expected) failed\n\nLocator: locator('.tb-v2-tool-card').first().locator('pre').first()\nExpected substring: \"Bangladesh\"\nTimeout: 15000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"to.have.text\" with timeout 15000ms\n  - waiting for locator('.tb-v2-tool-card').first().locator('pre').first()\n",
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": [
+            "Connecting to 'https://countries.trevorblades.com/' violates the following Content Security Policy directive: \"connect-src 'self' blob: https://toolblip-api-production.up.railway.app https://api.toolblip.com https://*.railway.app https://publish.twitter.com https://publish.x.com https://unavatar.io\". The action has been blocked.",
+            "Fetch API cannot load https://countries.trevorblades.com/. Refused to connect because it violates the document's Content Security Policy."
+          ]
+        },
+        "webkit": {
+          "status": "failed",
+          "functional": "failed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/tools/graphql-playground.json",
+          "functionalEvidence": [
+            "Invalid variables rejected and Clear resets the endpoint"
+          ],
+          "failure": "expect(locator).toContainText(expected) failed\n\nLocator: locator('.tb-v2-tool-card').first().locator('pre').first()\nExpected substring: \"Bangladesh\"\nTimeout: 15000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"to.have.text\" with timeout 15000ms\n  - waiting for locator('.tb-v2-tool-card').first().locator('pre').first()\n",
+          "blockingPageErrors": [
+            "/api.toolblip.com/api/plans due to access control checks."
+          ],
+          "blockingConsoleErrors": [
+            "Refused to connect to https://countries.trevorblades.com/ because it does not appear in the connect-src directive of the Content Security Policy.",
+            "Origin http://localhost:3190 is not allowed by Access-Control-Allow-Origin. Status code: 502",
+            "Failed to load resource: Origin http://localhost:3190 is not allowed by Access-Control-Allow-Origin. Status code: 502",
+            "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+            "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+            "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+            "Failed to load resource: the server responded with a status of 502 (Bad Gateway)"
+          ]
+        }
+      }
+    },
+    {
+      "slug": "websocket-tester",
+      "componentPath": "components/tools/WebSocketTesterClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_integration_failed",
+      "findingsAndFixes": [
+        "10-second connection bound, old-socket event guards, bounded logs/messages, send failures, disconnect cleanup and Clear cancellation.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "browser_failures_recorded",
+      "limitsOrBlockers": [
+        "Positive fixture depends on public echo.websocket.org availability; parent must verify the real echo round trip."
+      ],
+      "browserValidation": {
+        "chrome": {
+          "status": "failed",
+          "functional": "failed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/tools/websocket-tester.json",
+          "functionalEvidence": [
+            "Non-WebSocket URL rejected and Clear resets URL"
+          ],
+          "failure": "expect(locator).toBeEnabled() failed\n\nLocator:  locator('.tb-v2-tool-card').first().getByRole('button', { name: 'Send', exact: true })\nExpected: enabled\nReceived: disabled\nTimeout:  15000ms\n\nCall log:\n  - Expect \"to.be.enabled\" with timeout 15000ms\n  - waiting for locator('.tb-v2-tool-card').first().getByRole('button', { name: 'Send', exact: true })\n    19 × locator resolved to <button disabled type=\"button\" class=\"tb-v2-btn tb-v2-btn-primary\">Send</button>\n       - unexpected value \"disabled\"\n",
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": [
+            "Connecting to 'wss://echo.websocket.org/' violates the following Content Security Policy directive: \"connect-src 'self' blob: https://toolblip-api-production.up.railway.app https://api.toolblip.com https://*.railway.app https://publish.twitter.com https://publish.x.com https://unavatar.io\". The action has been blocked.",
+            "Failed to load resource: the server responded with a status of 502 (Bad Gateway)"
+          ]
+        },
+        "webkit": {
+          "status": "failed",
+          "functional": "failed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/tools/websocket-tester.json",
+          "functionalEvidence": [
+            "Non-WebSocket URL rejected and Clear resets URL"
+          ],
+          "failure": "expect(locator).toBeEnabled() failed\n\nLocator:  locator('.tb-v2-tool-card').first().getByRole('button', { name: 'Send', exact: true })\nExpected: enabled\nReceived: disabled\nTimeout:  15000ms\n\nCall log:\n  - Expect \"to.be.enabled\" with timeout 15000ms\n  - waiting for locator('.tb-v2-tool-card').first().getByRole('button', { name: 'Send', exact: true })\n    19 × locator resolved to <button disabled type=\"button\" class=\"tb-v2-btn tb-v2-btn-primary\">Send</button>\n       - unexpected value \"disabled\"\n",
+          "blockingPageErrors": [
+            "TypeError: Load failed",
+            "TypeError: Load failed",
+            "/localhost:3190/__nextjs_original-stack-frames due to access control checks."
+          ],
+          "blockingConsoleErrors": [
+            "Refused to connect to wss://echo.websocket.org/ because it does not appear in the connect-src directive of the Content Security Policy."
+          ]
+        }
+      }
+    },
+    {
+      "slug": "ldap-filter-generator",
+      "componentPath": "components/tools/LdapFilterGeneratorClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_scenario_passed",
+      "findingsAndFixes": [
+        "Escape parentheses/backslash/NUL, validate attribute identifiers, preserve intentional wildcard searches, refuse invalid copy.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "passed_both_engines",
+      "limitsOrBlockers": [],
+      "browserValidation": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/tools/ldap-filter-generator.json",
+          "functionalEvidence": [
+            "LDAP parentheses escaped as RFC filter octets",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/tools/ldap-filter-generator.json",
+          "functionalEvidence": [
+            "LDAP parentheses escaped as RFC filter octets",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        }
+      }
+    },
+    {
+      "slug": "regex-pattern-generator",
+      "componentPath": "components/tools/RegexPatternGeneratorClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_scenario_passed",
+      "findingsAndFixes": [
+        "Reuse cancellable regex worker, correct nonempty preset, useful valid example and reset selected output.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "passed_both_engines",
+      "limitsOrBlockers": [],
+      "browserValidation": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/tools/regex-pattern-generator.json",
+          "functionalEvidence": [
+            "Generated IPv4 regex enforces octet limit",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/tools/regex-pattern-generator.json",
+          "functionalEvidence": [
+            "Generated IPv4 regex enforces octet limit",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        }
+      }
+    },
+    {
+      "slug": "css-to-scss",
+      "componentPath": "components/tools/CssToScssConverterClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_scenario_passed_with_disclosed_limits",
+      "findingsAndFixes": [
+        "Preserve valid CSS-as-SCSS instead of incorrectly moving runtime variables into incompatible Sass scopes.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "passed_both_engines",
+      "limitsOrBlockers": [
+        "Valid CSS is emitted unchanged as valid SCSS. Runtime custom properties are intentionally not rewritten into Sass variables."
+      ],
+      "browserValidation": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/tools/css-to-scss.json",
+          "functionalEvidence": [
+            "Valid SCSS preserves runtime custom-property scope and fallback",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/tools/css-to-scss.json",
+          "functionalEvidence": [
+            "Valid SCSS preserves runtime custom-property scope and fallback",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        }
+      }
+    },
+    {
+      "slug": "env-parser",
+      "componentPath": "components/tools/EnvParserClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_scenario_passed_with_disclosed_limits",
+      "findingsAndFixes": [
+        "Reject unclosed quoted values, retain export/duplicate diagnostics, safe output dictionary, Examples/Clear.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "passed_both_engines",
+      "limitsOrBlockers": [
+        "Multiline quoted environment values are explicitly unsupported."
+      ],
+      "browserValidation": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/tools/env-parser.json",
+          "functionalEvidence": [
+            "Environment parser extracts quoted value and numeric string",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/tools/env-parser.json",
+          "functionalEvidence": [
+            "Environment parser extracts quoted value and numeric string",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        }
+      }
+    },
+    {
+      "slug": "mime-types-reference",
+      "componentPath": "components/tools/MIMETypesReferenceClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_scenario_passed",
+      "findingsAndFixes": [
+        "Preserve full reference and filtering; useful JSON example and reset filters.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "passed_both_engines",
+      "limitsOrBlockers": [],
+      "browserValidation": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/tools/mime-types-reference.json",
+          "functionalEvidence": [
+            "JSON extension maps to application/json in same row",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/tools/mime-types-reference.json",
+          "functionalEvidence": [
+            "JSON extension maps to application/json in same row",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        }
+      }
+    },
+    {
+      "slug": "docker-command-generator",
+      "componentPath": "components/tools/DockerCommandGeneratorClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_scenario_passed",
+      "findingsAndFixes": [
+        "Quote user-controlled shell arguments; preserve all command variants and presets; bound labelled fields.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "passed_both_engines",
+      "limitsOrBlockers": [],
+      "browserValidation": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/tools/docker-command-generator.json",
+          "functionalEvidence": [
+            "Docker command quotes whitespace and preserves image/environment",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/tools/docker-command-generator.json",
+          "functionalEvidence": [
+            "Docker command quotes whitespace and preserves image/environment",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        }
+      }
+    },
+    {
+      "slug": "html-live-preview",
+      "componentPath": "components/tools/HtmlLivePreviewClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_scenario_passed",
+      "findingsAndFixes": [
+        "Live sandboxed preview with restrictive document CSP, bounded input and reset.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "passed_both_engines",
+      "limitsOrBlockers": [],
+      "browserValidation": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/tools/html-live-preview.json",
+          "functionalEvidence": [
+            "Preview renders markup in a restricted iframe",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/tools/html-live-preview.json",
+          "functionalEvidence": [
+            "Preview renders markup in a restricted iframe",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        }
+      }
+    },
+    {
+      "slug": "code-beautifier",
+      "componentPath": "components/tools/CodeBeautifierClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_scenario_passed_with_disclosed_limits",
+      "findingsAndFixes": [
+        "Parser-backed JavaScript, JSON and CSS; Python indentation preservation; conservative HTML blocks; replace unsafe minify path and invalidate pending output.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear.",
+        "Browser integration: replace transpilation-based beautify with installed TypeScript 5.5.4 parser/printer/formatter; preserve types/comments, apply indentation, validate syntax. Explicit Minify to JavaScript action retains esbuild conversion."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "passed_both_engines",
+      "limitsOrBlockers": [
+        "TypeScript formatting now retains interfaces, annotations and comments. Minify to JavaScript explicitly removes types. Python only reindents existing blocks; HTML formatting is conservative. Browser compiler loads from byte-identical, versioned public TypeScript 5.5.4 asset, avoiding webpack Node-loader bundling."
+      ],
+      "browserValidation": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-asset-chrome/tools/code-beautifier.json",
+          "functionalEvidence": [
+            "json formatting preserves independent expected semantics",
+            "javascript formatting preserves independent expected semantics",
+            "typescript formatting preserves independent expected semantics",
+            "css formatting preserves independent expected semantics",
+            "html formatting preserves independent expected semantics",
+            "python formatting preserves independent expected semantics",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-asset-webkit/tools/code-beautifier.json",
+          "functionalEvidence": [
+            "json formatting preserves independent expected semantics",
+            "javascript formatting preserves independent expected semantics",
+            "typescript formatting preserves independent expected semantics",
+            "css formatting preserves independent expected semantics",
+            "html formatting preserves independent expected semantics",
+            "python formatting preserves independent expected semantics",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        }
+      }
+    },
+    {
+      "slug": "css-to-tailwind",
+      "componentPath": "components/tools/CssToTailwindClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_scenario_passed_with_disclosed_limits",
+      "findingsAndFixes": [
+        "Parse declarations with PostCSS, reject nested/multiple rules, preserve arbitrary values with spaces and negative values, visible errors.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "passed_both_engines",
+      "limitsOrBlockers": [
+        "One rule/declaration block at a time; theme-dependent utility mappings assume standard Tailwind defaults."
+      ],
+      "browserValidation": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/tools/css-to-tailwind.json",
+          "functionalEvidence": [
+            "Known CSS maps to equivalent utility classes",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/tools/css-to-tailwind.json",
+          "functionalEvidence": [
+            "Known CSS maps to equivalent utility classes",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        }
+      }
+    },
+    {
+      "slug": "css-to-styled-components",
+      "componentPath": "components/tools/CssToStyledComponentsClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_scenario_passed_with_disclosed_limits",
+      "findingsAndFixes": [
+        "Parse CSS; emit imported styled factory with valid names and escaped templates; reject unsupported complex/duplicate selectors.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "passed_both_engines",
+      "limitsOrBlockers": [
+        "Complex selectors/at-rules and duplicate derived component names are rejected explicitly rather than silently corrupted."
+      ],
+      "browserValidation": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/tools/css-to-styled-components.json",
+          "functionalEvidence": [
+            "Generated named component retains declaration and import",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/tools/css-to-styled-components.json",
+          "functionalEvidence": [
+            "Generated named component retains declaration and import",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        }
+      }
+    },
+    {
+      "slug": "url-redirect-checker",
+      "componentPath": "components/tools/UrlRedirectCheckerClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_scenario_passed_with_disclosed_limits",
+      "findingsAndFixes": [
+        "Real CORS fetch reports final URL and redirected flag; remove fabricated intermediate chain; timeout/cancel/history.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "passed_both_engines",
+      "limitsOrBlockers": [
+        "Browsers hide intermediate redirect hops; full-chain verification remains unavailable without a coordinator-owned server endpoint. Fixture verifies actual final HTTP response, not a fabricated redirect chain."
+      ],
+      "browserValidation": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/tools/url-redirect-checker.json",
+          "functionalEvidence": [
+            "Actual health response has HTTP 200 and JSON content type",
+            "Real public read-only HTTP endpoint returns JSON response headers",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/tools/url-redirect-checker.json",
+          "functionalEvidence": [
+            "Actual health response has HTTP 200 and JSON content type",
+            "Real public read-only HTTP endpoint returns JSON response headers",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        }
+      }
+    },
+    {
+      "slug": "api-spec-generator",
+      "componentPath": "components/tools/ApiSpecGeneratorClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_scenario_passed",
+      "findingsAndFixes": [
+        "Emit parsed/serialized valid YAML, merge methods under a path, preserve schema types and validate input shapes.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "passed_both_engines",
+      "limitsOrBlockers": [],
+      "browserValidation": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/tools/api-spec-generator.json",
+          "functionalEvidence": [
+            "OpenAPI YAML parses with two operations and integer schema",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/tools/api-spec-generator.json",
+          "functionalEvidence": [
+            "OpenAPI YAML parses with two operations and integer schema",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        }
+      }
+    },
+    {
+      "slug": "regex-description-generator",
+      "componentPath": "components/tools/RegexDescriptionGeneratorClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_scenario_passed",
+      "findingsAndFixes": [
+        "Reuse richer token explainer and cancellable test matching instead of duplicate explanation logic.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "passed_both_engines",
+      "limitsOrBlockers": [],
+      "browserValidation": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/tools/regex-description-generator.json",
+          "functionalEvidence": [
+            "Digit token explanation accompanies actual match",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/tools/regex-description-generator.json",
+          "functionalEvidence": [
+            "Digit token explanation accompanies actual match",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        }
+      }
+    },
+    {
+      "slug": "regex-match-visualizer",
+      "componentPath": "components/tools/RegexVisualizerClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_scenario_passed",
+      "findingsAndFixes": [
+        "Reuse matcher with captures, highlighted spans, flags and token hints; eliminate infinite empty-match loop/render-time state update.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "passed_both_engines",
+      "limitsOrBlockers": [],
+      "browserValidation": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/tools/regex-match-visualizer.json",
+          "functionalEvidence": [
+            "Exact regex match offsets 1 and 5",
+            "Non-global flag returns first match",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/tools/regex-match-visualizer.json",
+          "functionalEvidence": [
+            "Exact regex match offsets 1 and 5",
+            "Non-global flag returns first match",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        }
+      }
+    },
+    {
+      "slug": "cron-human-readable",
+      "componentPath": "components/tools/CronHumanReadableClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_scenario_passed",
+      "findingsAndFixes": [
+        "Reuse corrected canonical parser rather than misleading duplicated schedule descriptions.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "passed_both_engines",
+      "limitsOrBlockers": [],
+      "browserValidation": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/tools/cron-human-readable.json",
+          "functionalEvidence": [
+            "All projected runs are weekdays at 09:00",
+            "Malformed numeric token rejected",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/tools/cron-human-readable.json",
+          "functionalEvidence": [
+            "All projected runs are weekdays at 09:00",
+            "Malformed numeric token rejected",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        }
+      }
+    },
+    {
+      "slug": "curl-gen",
+      "componentPath": "components/tools/CurlGenExpressClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_scenario_passed",
+      "findingsAndFixes": [
+        "Validate raw HTTP request line, Host and headers; preserve method/path/body and POSIX shell quoting.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "passed_both_engines",
+      "limitsOrBlockers": [],
+      "browserValidation": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/tools/curl-gen.json",
+          "functionalEvidence": [
+            "Raw HTTP request preserves path, method and body",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/tools/curl-gen.json",
+          "functionalEvidence": [
+            "Raw HTTP request preserves path, method and body",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        }
+      }
+    },
+    {
+      "slug": "regex-pattern-tester",
+      "componentPath": "components/tools/RegexTesterClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_scenario_passed",
+      "findingsAndFixes": [
+        "Same owned RegexTesterClient as regex-tester; regression coverage shared.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "passed_both_engines",
+      "limitsOrBlockers": [],
+      "browserValidation": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/tools/regex-pattern-tester.json",
+          "functionalEvidence": [
+            "Exact regex match offsets 1 and 5",
+            "Non-global flag returns first match",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/tools/regex-pattern-tester.json",
+          "functionalEvidence": [
+            "Exact regex match offsets 1 and 5",
+            "Non-global flag returns first match",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        }
+      }
+    },
+    {
+      "slug": "cron-schedule-generator",
+      "componentPath": "components/tools/CronScheduleGeneratorClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_scenario_passed",
+      "findingsAndFixes": [
+        "Replace exact duplicated freeform schedule implementation with corrected canonical parser; preserve presets and next runs.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "passed_both_engines",
+      "limitsOrBlockers": [],
+      "browserValidation": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/tools/cron-schedule-generator.json",
+          "functionalEvidence": [
+            "All projected runs are weekdays at 09:00",
+            "Malformed numeric token rejected",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/tools/cron-schedule-generator.json",
+          "functionalEvidence": [
+            "All projected runs are weekdays at 09:00",
+            "Malformed numeric token rejected",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        }
+      }
+    },
+    {
+      "slug": "regex-explainer",
+      "componentPath": "components/tools/RegexExplainerClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_scenario_passed_with_disclosed_limits",
+      "findingsAndFixes": [
+        "Retain token reference with bounded input and worker-isolated live matching; no main-thread catastrophic backtracking.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "passed_both_engines",
+      "limitsOrBlockers": [
+        "Token hints are not a complete semantic parse of every nested regex construct."
+      ],
+      "browserValidation": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/tools/regex-explainer.json",
+          "functionalEvidence": [
+            "Digit token explanation accompanies actual match",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/tools/regex-explainer.json",
+          "functionalEvidence": [
+            "Digit token explanation accompanies actual match",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        }
+      }
+    },
+    {
+      "slug": "cron-schedule-validator",
+      "componentPath": "components/tools/CronScheduleValidatorClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_scenario_passed",
+      "findingsAndFixes": [
+        "Reuse corrected canonical parser for syntax, descriptions and next runs.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "passed_both_engines",
+      "limitsOrBlockers": [],
+      "browserValidation": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/tools/cron-schedule-validator.json",
+          "functionalEvidence": [
+            "All projected runs are weekdays at 09:00",
+            "Malformed numeric token rejected",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/tools/cron-schedule-validator.json",
+          "functionalEvidence": [
+            "All projected runs are weekdays at 09:00",
+            "Malformed numeric token rejected",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        }
+      }
+    },
+    {
+      "slug": "api-auth-header-generator",
+      "componentPath": "components/tools/ApiAuthHeaderGeneratorClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_scenario_passed",
+      "findingsAndFixes": [
+        "Correct API-key header name/value; UTF-8 Basic credentials; prevent line-break/username-colon errors; quote cURL header.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "passed_both_engines",
+      "limitsOrBlockers": [],
+      "browserValidation": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/tools/api-auth-header-generator.json",
+          "functionalEvidence": [
+            "RFC Basic example and custom API-key header match exact outputs",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/tools/api-auth-header-generator.json",
+          "functionalEvidence": [
+            "RFC Basic example and custom API-key header match exact outputs",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        }
+      }
+    },
+    {
+      "slug": "cron-validator",
+      "componentPath": "components/tools/CronValidatorClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_scenario_passed",
+      "findingsAndFixes": [
+        "Reuse corrected parser and retain original up-to-10-run view.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "passed_both_engines",
+      "limitsOrBlockers": [],
+      "browserValidation": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/tools/cron-validator.json",
+          "functionalEvidence": [
+            "All projected runs are weekdays at 09:00",
+            "Malformed numeric token rejected",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/tools/cron-validator.json",
+          "functionalEvidence": [
+            "All projected runs are weekdays at 09:00",
+            "Malformed numeric token rejected",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        }
+      }
+    },
+    {
+      "slug": "css-minifier",
+      "componentPath": "components/tools/CssMinifierClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_scenario_passed",
+      "findingsAndFixes": [
+        "PostCSS removes comment/formatting trivia without corrupting descendant selectors, calc spacing or string literals.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "passed_both_engines",
+      "limitsOrBlockers": [],
+      "browserValidation": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/tools/css-minifier.json",
+          "functionalEvidence": [
+            "Descendant selector, calc spaces and string literal preserved",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/tools/css-minifier.json",
+          "functionalEvidence": [
+            "Descendant selector, calc spaces and string literal preserved",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        }
+      }
+    },
+    {
+      "slug": "html-minifier",
+      "componentPath": "components/tools/HtmlMinifierClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_scenario_passed",
+      "findingsAndFixes": [
+        "Conservative comment removal preserves closing script tags, raw elements, attribute content and significant inline whitespace.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "passed_both_engines",
+      "limitsOrBlockers": [],
+      "browserValidation": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/tools/html-minifier.json",
+          "functionalEvidence": [
+            "Closing script tag and inline word separator preserved",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/tools/html-minifier.json",
+          "functionalEvidence": [
+            "Closing script tag and inline word separator preserved",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        }
+      }
+    },
+    {
+      "slug": "code-to-diagram-generator",
+      "componentPath": "components/tools/CodeToDiagramGeneratorClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_scenario_passed_with_disclosed_limits",
+      "findingsAndFixes": [
+        "Fix sequence parsing/directions and quoted Mermaid labels; explicitly describe generated source and limited structural inference.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "passed_both_engines",
+      "limitsOrBlockers": [
+        "Outputs Mermaid source only. It does not infer control-flow semantics or render diagrams."
+      ],
+      "browserValidation": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/tools/code-to-diagram-generator.json",
+          "functionalEvidence": [
+            "Mermaid source connects the two input steps",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/tools/code-to-diagram-generator.json",
+          "functionalEvidence": [
+            "Mermaid source connects the two input steps",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        }
+      }
+    },
+    {
+      "slug": "algorithm-visualizer",
+      "componentPath": "components/tools/AlgorithmVisualizerClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_scenario_passed",
+      "findingsAndFixes": [
+        "Retain three sort algorithms; bounded numeric input, errors, negative-value bars and timer-safe Example/Clear.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "passed_both_engines",
+      "limitsOrBlockers": [],
+      "browserValidation": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/tools/algorithm-visualizer.json",
+          "functionalEvidence": [
+            "Bubble Sort sorts [3,1,2] to [1,2,3]",
+            "Selection Sort sorts [3,1,2] to [1,2,3]",
+            "Insertion Sort sorts [3,1,2] to [1,2,3]",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/tools/algorithm-visualizer.json",
+          "functionalEvidence": [
+            "Bubble Sort sorts [3,1,2] to [1,2,3]",
+            "Selection Sort sorts [3,1,2] to [1,2,3]",
+            "Insertion Sort sorts [3,1,2] to [1,2,3]",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        }
+      }
+    },
+    {
+      "slug": "http-headers-inspector",
+      "componentPath": "components/tools/HttpHeadersInspectorClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_scenario_passed",
+      "findingsAndFixes": [
+        "Real CORS-visible headers/status, abort/timeout, history and explicit measured header latency; remove opaque fake inspection.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "passed_both_engines",
+      "limitsOrBlockers": [],
+      "browserValidation": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/tools/http-headers-inspector.json",
+          "functionalEvidence": [
+            "Actual health response has HTTP 200 and JSON content type",
+            "Real public read-only HTTP endpoint returns JSON response headers",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-asset-webkit/tools/http-headers-inspector.json",
+          "functionalEvidence": [
+            "Actual health response has HTTP 200 and JSON content type",
+            "Real public read-only HTTP endpoint returns JSON response headers",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        }
+      }
+    },
+    {
+      "slug": "api-doc-generator",
+      "componentPath": "components/tools/ApiDocGeneratorClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_scenario_passed",
+      "findingsAndFixes": [
+        "Correct null types; preserve JSON example; explicitly label inferred endpoint/method/field semantics as draft.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "passed_both_engines",
+      "limitsOrBlockers": [],
+      "browserValidation": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/tools/api-doc-generator.json",
+          "functionalEvidence": [
+            "Response documentation preserves null, boolean and example JSON",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/tools/api-doc-generator.json",
+          "functionalEvidence": [
+            "Response documentation preserves null, boolean and example JSON",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        }
+      }
+    },
+    {
+      "slug": "api-endpoint-debugger",
+      "componentPath": "components/tools/ApiEndpointDebuggerClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_scenario_passed_with_disclosed_limits",
+      "findingsAndFixes": [
+        "Preserve cURL/fetch/Axios code modes; safely quote URLs/headers/raw bodies; correct Axios config call; disclose no network execution.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "passed_both_engines",
+      "limitsOrBlockers": [
+        "This route generates request code; it does not execute requests. Central naming should make that explicit."
+      ],
+      "browserValidation": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/tools/api-endpoint-debugger.json",
+          "functionalEvidence": [
+            "Generated request code calls selected URL and method",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/tools/api-endpoint-debugger.json",
+          "functionalEvidence": [
+            "Generated request code calls selected URL and method",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        }
+      }
+    },
+    {
+      "slug": "screen-density-simulator",
+      "componentPath": "components/tools/ScreenDensitySimulatorClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_scenario_passed_with_disclosed_limits",
+      "findingsAndFixes": [
+        "Correct physical-pixel multiplication; keep CSS viewport unchanged by DPR; disclose browser DPR is not emulated; sandbox embedded page.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "passed_both_engines",
+      "limitsOrBlockers": [
+        "CSS cannot set browser devicePixelRatio; this is a physical-pixel calculator and CSS viewport preview."
+      ],
+      "browserValidation": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/tools/screen-density-simulator.json",
+          "functionalEvidence": [
+            "Physical dimensions = CSS dimensions × selected DPR",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/tools/screen-density-simulator.json",
+          "functionalEvidence": [
+            "Physical dimensions = CSS dimensions × selected DPR",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        }
+      }
+    },
+    {
+      "slug": "cron-generator-dg",
+      "componentPath": "components/tools/CronGeneratorCompleteClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_scenario_passed",
+      "findingsAndFixes": [
+        "Replace exact duplicated freeform schedule implementation with corrected canonical parser.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "passed_both_engines",
+      "limitsOrBlockers": [],
+      "browserValidation": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/tools/cron-generator-dg.json",
+          "functionalEvidence": [
+            "All projected runs are weekdays at 09:00",
+            "Malformed numeric token rejected",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/tools/cron-generator-dg.json",
+          "functionalEvidence": [
+            "All projected runs are weekdays at 09:00",
+            "Malformed numeric token rejected",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        }
+      }
+    },
+    {
+      "slug": "regex-pattern-builder",
+      "componentPath": "components/tools/RegexPatternBuilderClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_scenario_passed",
+      "findingsAndFixes": [
+        "Retain token rows, anchors, presets and quantifiers; shared worker isolation and Clear.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "passed_both_engines",
+      "limitsOrBlockers": [],
+      "browserValidation": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/tools/regex-pattern-builder.json",
+          "functionalEvidence": [
+            "Constructed regex accepts email example and rejects malformed input",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/tools/regex-pattern-builder.json",
+          "functionalEvidence": [
+            "Constructed regex accepts email example and rejects malformed input",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        }
+      }
+    },
+    {
+      "slug": "cron-schedule-explainer",
+      "componentPath": "components/tools/CronScheduleExplainerClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_scenario_passed",
+      "findingsAndFixes": [
+        "Replace exact duplicated freeform schedule implementation with corrected canonical parser.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "passed_both_engines",
+      "limitsOrBlockers": [],
+      "browserValidation": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/tools/cron-schedule-explainer.json",
+          "functionalEvidence": [
+            "All projected runs are weekdays at 09:00",
+            "Malformed numeric token rejected",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/tools/cron-schedule-explainer.json",
+          "functionalEvidence": [
+            "All projected runs are weekdays at 09:00",
+            "Malformed numeric token rejected",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        }
+      }
+    },
+    {
+      "slug": "curl-to-python",
+      "componentPath": "components/tools/CurlToPythonClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_scenario_passed",
+      "findingsAndFixes": [
+        "Bounded POSIX tokenizer, reject unsupported options/files, infer POST for data, valid requests.request and quoted JSON body.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "passed_both_engines",
+      "limitsOrBlockers": [],
+      "browserValidation": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/tools/curl-to-python.json",
+          "functionalEvidence": [
+            "Python body is a quoted string, not invalid Python JSON booleans",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/tools/curl-to-python.json",
+          "functionalEvidence": [
+            "Python body is a quoted string, not invalid Python JSON booleans",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        }
+      }
+    },
+    {
+      "slug": "curl-to-javascript",
+      "componentPath": "components/tools/CurlToJavascriptClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_scenario_passed",
+      "findingsAndFixes": [
+        "Reuse same cURL parser; exact URL, method, escaped headers/body, readable text response and unsupported-option errors.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "passed_both_engines",
+      "limitsOrBlockers": [],
+      "browserValidation": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/tools/curl-to-javascript.json",
+          "functionalEvidence": [
+            "Generated JavaScript passes correct method, URL and exact body to fetch",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/tools/curl-to-javascript.json",
+          "functionalEvidence": [
+            "Generated JavaScript passes correct method, URL and exact body to fetch",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        }
+      }
+    },
+    {
+      "slug": "http-status-checker",
+      "componentPath": "components/tools/HttpStatusCheckerClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_scenario_passed",
+      "findingsAndFixes": [
+        "Real HTTP status and exposed headers via CORS; timeout/cancel/current-result history; no no-cors status-0 success.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "passed_both_engines",
+      "limitsOrBlockers": [],
+      "browserValidation": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/tools/http-status-checker.json",
+          "functionalEvidence": [
+            "Actual health response has HTTP 200 and JSON content type",
+            "Real public read-only HTTP endpoint returns JSON response headers",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/tools/http-status-checker.json",
+          "functionalEvidence": [
+            "Actual health response has HTTP 200 and JSON content type",
+            "Real public read-only HTTP endpoint returns JSON response headers",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        }
+      }
+    },
+    {
+      "slug": "shell-command-generator",
+      "componentPath": "components/tools/BashCommandGeneratorClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_scenario_passed",
+      "findingsAndFixes": [
+        "Quote shell arguments; reject invalid numeric PID/count instead of generating dangerous silent defaults.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "passed_both_engines",
+      "limitsOrBlockers": [],
+      "browserValidation": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/tools/shell-command-generator.json",
+          "functionalEvidence": [
+            "Selected command produces exact git status",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/tools/shell-command-generator.json",
+          "functionalEvidence": [
+            "Selected command produces exact git status",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        }
+      }
+    },
+    {
+      "slug": "api-endpoint-documenter",
+      "componentPath": "components/tools/ApiEndpointDocumenterClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_scenario_passed",
+      "findingsAndFixes": [
+        "Preserve multiple endpoint/body/response Markdown workflow; reset/invalidate stale generated output and label controls.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "passed_both_engines",
+      "limitsOrBlockers": [],
+      "browserValidation": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/tools/api-endpoint-documenter.json",
+          "functionalEvidence": [
+            "Both endpoints and supplied request example retained",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/tools/api-endpoint-documenter.json",
+          "functionalEvidence": [
+            "Both endpoints and supplied request example retained",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        }
+      }
+    },
+    {
+      "slug": "curl-command-builder",
+      "componentPath": "components/tools/CurlCommandBuilderClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_scenario_passed",
+      "findingsAndFixes": [
+        "Preserve HTTP methods/auth/options/multiline; validate URLs/header syntax and retain POSIX shell escaping.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "passed_both_engines",
+      "limitsOrBlockers": [],
+      "browserValidation": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/tools/curl-command-builder.json",
+          "functionalEvidence": [
+            "cURL contains selected method, header, URL and body",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/tools/curl-command-builder.json",
+          "functionalEvidence": [
+            "cURL contains selected method, header, URL and body",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        }
+      }
+    },
+    {
+      "slug": "regex-match-tester",
+      "componentPath": "components/tools/RegexTesterClient.tsx",
+      "historicallyApproved": false,
+      "status": "browser_scenario_passed",
+      "findingsAndFixes": [
+        "Same owned RegexTesterClient as regex-tester; regression coverage shared.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "passed_both_engines",
+      "limitsOrBlockers": [],
+      "browserValidation": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-chrome-final/tools/regex-match-tester.json",
+          "functionalEvidence": [
+            "Exact regex match offsets 1 and 5",
+            "Non-global flag returns first match",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "report": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-general-webkit-final/tools/regex-match-tester.json",
+          "functionalEvidence": [
+            "Exact regex match offsets 1 and 5",
+            "Non-global flag returns first match",
+            "Populated result or error state fits a 320px viewport before Clear",
+            "Tool contents fit a 320px viewport"
+          ],
+          "failure": null,
+          "blockingPageErrors": [],
+          "blockingConsoleErrors": []
+        }
+      }
+    }
+  ],
+  "integrationIssues": [
+    {
+      "owner": "shared runner / integration coordinator",
+      "issue": "Chrome initial runs repeatedly exceed 15-second hydration wait after HTTP 200; focused browser probe with 90-second hydration allowance eventually minifies successfully. Do not count not-run fixtures as component passes."
+    },
+    {
+      "owner": "shared CSP configuration",
+      "issue": "connect-src excludes https://httpbin.org, https://countries.trevorblades.com and wss://echo.websocket.org, blocking public HTTP, GraphQL and WebSocket tools. No CSP edits in owned scope.",
+      "resolution": "HTTP route exceptions now pass in Chrome and WebKit. GraphQL and WebSocket remain blocked by shared policy."
+    },
+    {
+      "owner": "inventory / assignment coordinator",
+      "issue": "Current developer-general inventory contains 63 rows, versus 61 assigned fixture routes. Historically approved url-slug-generator and slug-generator have no fixtures in this group; untouched."
+    },
+    {
+      "owner": "shared development server coordinator",
+      "issue": "Concurrent config edits/restarts invalidate browser fixtures: HMR navigation destroys execution contexts and resets tool input; static assets disappeared during checks. Fresh stable-server rerun required. next.config current changes add HTTP/iframe exceptions but still omit GraphQL and WebSocket.",
+      "resolution": "Earlier interruptions retained; final full runs completed and focused public-asset reruns passed. No server started by this worker."
+    },
+    {
+      "owner": "PDF integration coordinator",
+      "issue": "Fresh Chrome-5/WebKit-3 documents return HTTP 500: ExtractImgClient.tsx 174/179/181 merge conflict markers from f6419695. Out of assigned scope; no changes made. This prevents all routes from reaching functional QA.",
+      "resolution": "Conflict resolved by owning workstream during run; early affected routes need retry."
+    },
+    {
+      "owner": "shared browser policy coordinator",
+      "issue": "GraphQL and WebSocket documents still use restrictive shared connect-src. Add appropriate route-scoped policy in lib/browser-policy.mjs if these public browser clients are intended to work; preserve CORS and do not relabel as unsupported.",
+      "routes": [
+        "graphql-playground",
+        "websocket-tester"
+      ]
+    },
+    {
+      "owner": "shared QA runner owner (PDF integration)",
+      "issue": "Chrome full runs finish route checks but sometimes report Browser server close timeout after 5000ms. Original fatal errors retained; no shared runner edits."
+    }
+  ],
+  "generatedAt": "2026-09-26T07:13:43.623Z"
+}

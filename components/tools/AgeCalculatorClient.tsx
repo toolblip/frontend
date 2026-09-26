@@ -1,6 +1,9 @@
 'use client';
+import UtilityDesignLayout from './UtilityDesignLayout';
+import ToolExampleClearActions from './ToolExampleClearActions';
 
 import { useState, useEffect, useMemo } from 'react';
+import { ageBetween } from '@/lib/utility-design/core';
 
 interface AgeResult {
   years: number;
@@ -13,41 +16,9 @@ interface AgeResult {
   daysUntilBirthday: number;
 }
 
-function calculateAge(birthDate: Date, targetDate: Date): AgeResult {
-  let years = targetDate.getFullYear() - birthDate.getFullYear();
-  let months = targetDate.getMonth() - birthDate.getMonth();
-  let days = targetDate.getDate() - birthDate.getDate();
-
-  if (days < 0) {
-    months--;
-    const prevMonth = new Date(targetDate.getFullYear(), targetDate.getMonth(), 0);
-    days += prevMonth.getDate();
-  }
-
-  if (months < 0) {
-    years--;
-    months += 12;
-  }
-
-  const totalDays = Math.floor((targetDate.getTime() - birthDate.getTime()) / (1000 * 60 * 60 * 24));
-  const totalWeeks = Math.floor(totalDays / 7);
-  const totalHours = totalDays * 24;
-
-  // Next birthday
-  const nextBirthdayYear = targetDate.getFullYear();
-  let nextBirthday = new Date(nextBirthdayYear, birthDate.getMonth(), birthDate.getDate());
-  if (nextBirthday <= targetDate) {
-    nextBirthday = new Date(nextBirthdayYear + 1, birthDate.getMonth(), birthDate.getDate());
-  }
-  const daysUntilBirthday = Math.floor((nextBirthday.getTime() - targetDate.getTime()) / (1000 * 60 * 60 * 24));
-
-  const nextBirthdayStr = nextBirthday.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-
-  return { years, months, days, totalDays, totalWeeks, totalHours, nextBirthday: nextBirthdayStr, daysUntilBirthday };
-}
-
 export default function AgeCalculatorClient() {
   const [birthDate, setBirthDate] = useState('');
+  const [targetDate, setTargetDate] = useState(() => new Date().toLocaleDateString('en-CA'));
   const [result, setResult] = useState<AgeResult | null>(null);
   const [error, setError] = useState('');
   const [copied, setCopied] = useState(false);
@@ -59,24 +30,9 @@ export default function AgeCalculatorClient() {
       return;
     }
 
-    const birth = new Date(birthDate);
-    const today = new Date();
-
-    if (isNaN(birth.getTime())) {
-      setError('Please enter a valid date');
-      setResult(null);
-      return;
-    }
-
-    if (birth > today) {
-      setError('Birth date cannot be in the future');
-      setResult(null);
-      return;
-    }
-
-    setError('');
-    setResult(calculateAge(birth, today));
-  }, [birthDate]);
+    try { setResult(ageBetween(birthDate, targetDate)); setError(''); }
+    catch (e) { setResult(null); setError((e as Error).message); }
+  }, [birthDate, targetDate]);
 
   const copy = () => {
     if (!result) return;
@@ -85,13 +41,13 @@ Total days: ${result.totalDays.toLocaleString()}
 Total weeks: ${result.totalWeeks.toLocaleString()}
 Total hours: ${result.totalHours.toLocaleString()}
 Next birthday: ${result.nextBirthday} (${result.daysUntilBirthday} days away)`;
-    navigator.clipboard.writeText(text);
-    setCopied(true);
+    navigator.clipboard.writeText(text).then(() => setCopied(true), () => setCopied(false));
     setTimeout(() => setCopied(false), 1500);
   };
 
-  return (
+  return (<UtilityDesignLayout>
     <div>
+      <ToolExampleClearActions onExample={() => { setBirthDate('2000-02-29'); setTargetDate('2024-03-01'); }} onClear={() => { setBirthDate(''); setResult(null); setError(''); setCopied(false); }}/>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Birth Date</span>
       </div>
@@ -105,6 +61,8 @@ Next birthday: ${result.nextBirthday} (${result.daysUntilBirthday} days away)`;
         aria-label="Birth date input"
       />
 
+      <label>As of date<input aria-label="As of date" type="date" value={targetDate} onChange={e => setTargetDate(e.target.value)} className="tb-v2-input" /></label>
+      <p>Calendar age; month ends and leap-day birthdays use the last day of the month.</p>
       {error && (
         <div className="p-4 bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-xl">
           <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
@@ -176,5 +134,6 @@ Next birthday: ${result.nextBirthday} (${result.daysUntilBirthday} days away)`;
         </div>
       )}
     </div>
+  </UtilityDesignLayout>
   );
 }

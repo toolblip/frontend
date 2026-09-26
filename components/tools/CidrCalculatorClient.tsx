@@ -1,12 +1,14 @@
 "use client";
+import { downloadText } from '@/lib/seo-network/request';
+import { SeoOwnedBoundary } from './SeoNetworkShared';
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ToolExampleClearActions from "@/components/tools/ToolExampleClearActions";
 import { calculateCidr } from "@/lib/network-tools";
 
 const EXAMPLE = "192.168.1.0/24";
 
-export default function CidrCalculatorClient() {
+function CidrCalculatorForm() {
   const [cidr, setCidr] = useState(EXAMPLE);
   const [result, setResult] = useState<ReturnType<typeof calculateCidr>>(null);
   const [error, setError] = useState("");
@@ -29,24 +31,25 @@ export default function CidrCalculatorClient() {
     setError("");
     setCopied(false);
   };
-  const copy = () => {
+  const copy = async () => {
     if (!result) return;
-    navigator.clipboard
+    await navigator.clipboard
       .writeText(
         Object.entries(result)
           .map(([key, value]) => `${key}: ${value}`)
           .join("\n"),
       )
-      .catch(() => {});
-    setCopied(true);
+      .then(() => setCopied(true)).catch(() => setError("Clipboard unavailable. Select the result to copy."));
     window.setTimeout(() => setCopied(false), 1500);
   };
+  useEffect(() => { if (cidr) calculate(); else { setResult(null); setError(""); } }, [cidr]);
+
   const rows = result
     ? [
         ["Network Address", result.network],
         ["Subnet Mask", result.subnetMask],
         ["Wildcard Mask", result.wildcard],
-        ["Broadcast Address", result.broadcast],
+        [result.prefix >= 31 ? "Last Address (no broadcast on /31 or /32)" : "Broadcast Address", result.broadcast],
         ["First Host", result.firstHost],
         ["Last Host", result.lastHost],
         ["Total Addresses", result.totalAddresses.toLocaleString()],
@@ -66,13 +69,14 @@ export default function CidrCalculatorClient() {
       </div>
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap", padding: 20 }}>
         <input
+          maxLength={32}
           type="text"
           value={cidr}
           onChange={(event) => setCidr(event.target.value)}
           onKeyDown={(event) => event.key === "Enter" && calculate()}
           placeholder={EXAMPLE}
           className="tb-v2-input"
-          style={{ flex: "1 1 220px", fontFamily: "var(--f-mono)" }}
+          style={{ flex: "1 1 180px", minWidth: 0, fontFamily: "var(--f-mono)" }}
           aria-label="CIDR input"
         />
         <button
@@ -91,7 +95,7 @@ export default function CidrCalculatorClient() {
       {result && (
         <>
           <div className="tb-v2-tool-output-head">
-            <span className="tb-v2-tool-label">Results</span>
+            <span className="tb-v2-tool-label">Results</span><button className="tb-v2-btn-sm" onClick={() => downloadText(rows.map(([label, value]) => `${label}: ${value}`).join("\n"), "network-result.txt")}>Download</button>
             <button
               type="button"
               onClick={copy}
@@ -107,6 +111,7 @@ export default function CidrCalculatorClient() {
                 style={{
                   display: "flex",
                   justifyContent: "space-between",
+                  flexWrap: "wrap",
                   gap: 16,
                   padding: "10px 0",
                   borderBottom: "1px solid var(--tb-border)",
@@ -126,3 +131,5 @@ export default function CidrCalculatorClient() {
     </div>
   );
 }
+
+export default function CidrCalculatorClient() { return <SeoOwnedBoundary><CidrCalculatorForm /></SeoOwnedBoundary>; }

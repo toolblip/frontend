@@ -1,102 +1,33 @@
 'use client';
-
-import { useEffect, useState } from 'react';
-
+import { useEffect, useRef, useState } from 'react';
+import ToolExampleClearActions from './ToolExampleClearActions';
+import UtilityDesignLayout from './UtilityDesignLayout';
 export default function SassToCssClient() {
-  const [input, setInput] = useState('$primary: #333;\nbody { color: $primary; }');
-  const [output, setOutput] = useState('');
-  const [error, setError] = useState('');
-  const [copied, setCopied] = useState(false);
-
-  const looksIndentedSass = (value: string) => {
-    const trimmed = value.trim();
-    return trimmed.length > 0 && !/[{};]/.test(trimmed) && /\n\s+\S/.test(trimmed);
-  };
-
-  const convert = async (sass: string) => {
-    if (!sass.trim()) {
-      setOutput('');
-      setError('');
-      return;
-    }
-
-    setError('');
-
+  const [input,setInput]=useState(''),[output,setOutput]=useState(''),[error,setError]=useState(''),[loading,setLoading]=useState(false);
+  const [syntax,setSyntax]=useState<'scss'|'indented'>('scss');
+  const worker=useRef<Worker|null>(null),generation=useRef(0);
+  const cancel=()=>{generation.current++;worker.current?.terminate();worker.current=null;setLoading(false);};
+  const clear=()=>{cancel();setInput('');setOutput('');setError('');};
+  useEffect(()=>()=>{worker.current?.terminate();},[]);
+  const compile=()=>{
+    cancel();setOutput('');setError('');if(!input.trim())return;
+    if(input.length>10000){setError('Limit Sass to 10000 characters.');return;}
+    const id=generation.current;setLoading(true);
     try {
-      const { compileString } = await import('sass');
-      const syntax = looksIndentedSass(sass) ? 'indented' : 'scss';
-      const result = compileString(sass, { syntax });
-      setOutput(result.css);
-    } catch (e) {
-      const primaryError = e as Error;
-
-      try {
-        if (!looksIndentedSass(sass)) {
-          throw primaryError;
-        }
-
-        const { compileString } = await import('sass');
-        const result = compileString(sass, { syntax: 'indented' });
-        setOutput(result.css);
-        setError('');
-        return;
-      } catch {
-        setError(primaryError.message || 'Conversion error: Invalid SCSS/SASS syntax');
-        setOutput('');
-      }
-    }
+      const w=new Worker(new URL('../../lib/utility-design/sass.worker.ts',import.meta.url));worker.current=w;
+      const timer=setTimeout(()=>{if(id===generation.current){w.terminate();setLoading(false);setError('Compilation exceeded 8 seconds. Simplify loops and retry.');}},8000);
+      w.onmessage=e=>{clearTimeout(timer);w.terminate();if(id!==generation.current)return;setLoading(false);setOutput(e.data.output||'');setError(e.data.error||'');};
+      w.onerror=()=>{clearTimeout(timer);w.terminate();if(id===generation.current){setLoading(false);setError('Sass compiler could not load in this browser.');}};
+      w.postMessage({input,syntax});
+    } catch(e){setLoading(false);setError((e as Error).message);}
   };
-
-  useEffect(() => {
-    void convert(input);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const copy = () => {
-    if (!output) return;
-    navigator.clipboard.writeText(output).catch(() => {});
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
-  };
-
-  return (
-    <div>
-      <div className="tb-v2-tool-input-head">
-        <span className="tb-v2-tool-label">SCSS / SASS Input</span>
-      </div>
-      <textarea
-        value={input}
-        onChange={(e) => {
-          setInput(e.target.value);
-          void convert(e.target.value);
-        }}
-        placeholder="Paste your SCSS or SASS here..."
-        className="tb-v2-tool-textarea"
-        style={{ fontFamily: 'var(--f-mono)' }}
-        aria-label="SASS/SCSS input"
-      />
-
-      <div className="tb-v2-tool-output-head">
-        <span className="tb-v2-tool-label">CSS Output</span>
-      </div>
-      <div className="tb-v2-tool-output-body" style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-        {error ? (
-          <div style={{ color: '#ef4444', fontSize: '0.875rem' }}>{error}</div>
-        ) : (
-          <pre className="tb-v2-hash-val" style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
-            {output || '-'}
-          </pre>
-        )}
-        {output && (
-          <button
-            type="button"
-            onClick={copy}
-            className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}
-          >
-            {copied ? 'Copied' : 'Copy'}
-          </button>
-        )}
-      </div>
-    </div>
-  );
+  return <UtilityDesignLayout><div>
+    <ToolExampleClearActions onExample={()=>{clear();setSyntax('scss');setInput('$color: red;\n.card { color: $color; }');}} onClear={clear}/>
+    <label>Syntax<select aria-label="Syntax" className="tb-v2-input" value={syntax} onChange={e=>{cancel();setOutput('');setError('');setSyntax(e.target.value as typeof syntax);}}><option value="scss">SCSS</option><option value="indented">Indented Sass</option></select></label>
+    <textarea aria-label="SASS/SCSS input" maxLength={10000} className="tb-v2-tool-textarea" value={input} onChange={e=>{cancel();setOutput('');setError('');setInput(e.target.value);}}/>
+    <button className="tb-v2-btn tb-v2-btn-primary" disabled={loading||!input.trim()} onClick={compile}>Compile</button>
+    {loading&&<p role="status">Compiling…</p>}{error&&<p role="alert">{error}</p>}
+    <pre className="tb-v2-tool-output-body">{output||'-'}</pre>
+    {output&&<button className="tb-v2-copy-btn" onClick={()=>navigator.clipboard.writeText(output).catch(()=>setError('Clipboard unavailable. Select the output to copy.'))}>Copy</button>}
+  </div></UtilityDesignLayout>;
 }

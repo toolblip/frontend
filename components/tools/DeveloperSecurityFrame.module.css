@@ -1,0 +1,11 @@
+.frame { min-width: 0; max-width: 100%; overflow-wrap: anywhere; }
+.frame :global(pre) { white-space: pre-wrap; overflow-wrap: anywhere; word-break: break-word; max-width: 100%; }
+.frame :global(input), .frame :global(textarea), .frame :global(select) { min-width: 0; max-width: 100%; }
+.frame :global(.tb-v2-grid-2), .frame :global(.tb-v2-stats-grid) { min-width: 0; }
+.frame :global(.tb-v2-tool-input-head), .frame :global(.tb-v2-tool-output-head), .frame :global(.tb-v2-mode-tabs) { flex-wrap: wrap; gap: 8px; }
+.frame :global(table) { table-layout: fixed; overflow-wrap: anywhere; }
+@media (max-width: 480px) { .frame :global(.tb-v2-grid-2) { grid-template-columns: minmax(0,1fr); } }
+
+.frame :global(code) { min-width: 0; overflow-wrap: anywhere; white-space: pre-wrap; }
+.frame :global(.tb-v2-hash-row), .frame :global(.tb-v2-pw-output) { min-width: 0; flex-wrap: wrap; }
+.frame :global(.tb-v2-tool-output-body) { min-width: 0; max-width: 100%; }

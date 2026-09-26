@@ -1,5 +1,7 @@
 'use client';
+import DeveloperGeneralFrame from './DeveloperGeneralFrame';
 
+import ToolExampleClearActions from './ToolExampleClearActions';
 import { useState } from 'react';
 
 interface ClassOption {
@@ -40,27 +42,32 @@ export default function CssClassGeneratorClient() {
   };
 
   const generateCSS = () => {
+    if(!/^[a-zA-Z_][\w-]*$/.test(prefix)||classes.some(c=>/[{};]/.test(c.value)))return '';
     return classes
-      .map(c => `.${prefix}-${c.property.replace(/[A-Z]/g, m => '-' + m.toLowerCase())} {\n  ${c.property}: ${c.value};\n}`)
+      .map((c,index) => `.${prefix}-${index + 1}-${c.property.replace(/[A-Z]/g, m => '-' + m.toLowerCase())} {\n  ${c.property}: ${c.value};\n}`)
       .join('\n');
   };
 
   const generateOutput = () => {
+    if(!/^[a-zA-Z_][\w-]*$/.test(prefix)||classes.some(c=>/[{};]/.test(c.value)))return '';
     return classes
-      .map(c => {
+      .map((c,index) => {
         const className = c.property.replace(/[A-Z]/g, m => '-' + m.toLowerCase());
-        return `<div class="${prefix}-${className}">Content</div>`;
+        return `<div class="${prefix}-${index + 1}-${className}">Content</div>`;
       })
       .join('\n');
   };
 
   return (
-    <div className="flex flex-col h-full">
+    <DeveloperGeneralFrame><div className="flex flex-col h-full">
+      <ToolExampleClearActions onExample={() => {setPrefix('util');setClasses([{property:'display',value:'flex'}]);}} onClear={() => {setPrefix('');setClasses([]);}} />
+      {prefix && !generateCSS() && <p role="alert" className="tb-v2-error">Invalid prefix or CSS value.</p>}
+      <p>Prefix must start with a letter or underscore. Values must not contain braces or semicolons.</p>
       <div className="mb-4">
         <label className="tb-v2-tool-label" style={{marginBottom:8}}>
           Class Prefix
         </label>
-        <input
+        <input aria-label="Prefix" maxLength={8000}
           type="text"
           value={prefix}
           onChange={(e) => setPrefix(e.target.value)}
@@ -71,7 +78,7 @@ export default function CssClassGeneratorClient() {
       <div className="mb-4 space-y-2">
         {classes.map((cls, index) => (
           <div key={index} className="flex gap-2 items-center">
-            <select
+            <select aria-label="CSS property"
               value={cls.property}
               onChange={(e) => updateClass(index, 'property', e.target.value)}
               className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
@@ -80,7 +87,7 @@ export default function CssClassGeneratorClient() {
                 <option key={p} value={p}>{p}</option>
               ))}
             </select>
-            <input
+            <input aria-label="CSS value" maxLength={8000}
               type="text"
               value={cls.value}
               onChange={(e) => updateClass(index, 'value', e.target.value)}
@@ -125,6 +132,6 @@ export default function CssClassGeneratorClient() {
           </pre>
         </div>
       </div>
-    </div>
+    </div></DeveloperGeneralFrame>
   );
 }

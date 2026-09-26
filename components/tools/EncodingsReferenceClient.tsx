@@ -1,4 +1,5 @@
 'use client';
+import DeveloperSecurityFrame from './DeveloperSecurityFrame';
 
 import { useState, useMemo } from 'react';
 
@@ -90,6 +91,7 @@ export default function EncodingsReferenceClient() {
   }, [search]);
 
   return (
+    <DeveloperSecurityFrame onExample={()=>{setCategory('entities');setSearch('amp');}} onClear={()=>{setSearch('');}}>
     <div>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Category</span>
@@ -101,7 +103,7 @@ export default function EncodingsReferenceClient() {
           </button>
         ))}
       </div>
-      <input
+      <input aria-label="Search" maxLength={100000}
         type="text"
         value={search}
         onChange={e => setSearch(e.target.value)}
@@ -183,5 +185,6 @@ export default function EncodingsReferenceClient() {
         )}
       </div>
     </div>
+    </DeveloperSecurityFrame>
   );
 }

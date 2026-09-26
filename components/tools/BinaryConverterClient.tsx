@@ -1,36 +1,24 @@
 'use client';
+import { copySecurityText, MAX_TEXT, MAX_BINARY_INPUT } from '@/lib/developer-security/primitives';
+import DeveloperSecurityFrame, { useSecurityTask } from './DeveloperSecurityFrame';
+import { textToBinary, binaryToText } from '@/lib/developer-security/primitives';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function BinaryConverterClient() {
+  const [clipboardError,setClipboardError]=useState('');
+  const clipboardTask=useSecurityTask();
   const [mode, setMode] = useState<'textToBinary' | 'binaryToText'>('textToBinary');
   const [input, setInput] = useState('');
   const [result, setResult] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
-  const textToBinary = (text: string): string => {
-    return text.split('').map(char => {
-      const bin = char.charCodeAt(0).toString(2);
-      return bin.padStart(8, '0');
-    }).join(' ');
-  };
-
-  const binaryToText = (binary: string): string => {
-    const cleanedBinary = binary.replace(/\s+/g, '');
-    if (!/^[01]+$/.test(cleanedBinary)) {
-      throw new Error('Invalid binary string');
-    }
-
-    const bytes = cleanedBinary.match(/.{1,8}/g) || [];
-    return bytes.map(byte => String.fromCharCode(parseInt(byte, 2))).join('');
-  };
-
   const handleConvert = () => {
     setError(null);
     setResult('');
 
-    if (!input.trim()) return;
+    if (!input) return;
 
     try {
       if (mode === 'textToBinary') {
@@ -42,6 +30,8 @@ export default function BinaryConverterClient() {
       setError(err instanceof Error ? err.message : 'Conversion failed');
     }
   };
+
+  useEffect(() => { handleConvert(); }, [input, mode]);
 
   const handleSwap = () => {
     setMode(mode === 'textToBinary' ? 'binaryToText' : 'textToBinary');
@@ -65,19 +55,19 @@ export default function BinaryConverterClient() {
 
   const copyResult = () => {
     if (!result) return;
-    navigator.clipboard.writeText(result).catch(() => {});
-    setCopied(true);
+    const copyId=++clipboardTask.current;setClipboardError('');
+    copySecurityText(result).then(()=>{if(copyId!==clipboardTask.current)return;setCopied(true);}).catch(()=>{if(copyId===clipboardTask.current)setClipboardError('Clipboard access failed. Select and copy the output manually.');});
     setTimeout(() => setCopied(false), 1500);
   };
 
   return (
+    <DeveloperSecurityFrame onExample={()=>{clipboardTask.current++;setMode('textToBinary');setInput('é');setError(null);}} onClear={()=>{clipboardTask.current++;setClipboardError('');handleClear();setCopied(false);}}>
+    {clipboardError&&<p role="alert" className="tb-v2-error">{clipboardError}</p>}
     <div className="flex flex-col gap-4">
       <div>
         <div className="tb-v2-tool-input-head">
           <span className="tb-v2-tool-label">Conversion Mode</span>
-          <button type="button" onClick={loadExample} className="tb-v2-btn-sm">
-            Load Example
-          </button>
+
         </div>
         <div className="grid grid-cols-2 gap-2" style={{ marginTop: 8 }}>
           <button
@@ -102,11 +92,9 @@ export default function BinaryConverterClient() {
           <span className="tb-v2-tool-label">
             {mode === 'textToBinary' ? 'Text Input' : 'Binary Input'}
           </span>
-          <button type="button" onClick={handleClear} className="tb-v2-btn-sm">
-            Clear
-          </button>
+
         </div>
-        <textarea
+        <textarea aria-label="Input" maxLength={mode === 'textToBinary' ? MAX_TEXT : MAX_BINARY_INPUT}
           value={input}
           onChange={(e) => { setInput(e.target.value); setResult(''); setError(null); }}
           placeholder={mode === 'textToBinary' ? 'Enter text to convert...' : 'Enter binary (e.g., 01001000 01100101 01101100 01101100 01101111)...'}
@@ -128,7 +116,7 @@ export default function BinaryConverterClient() {
       </div>
 
       {error && (
-        <div className="p-3 bg-red-50 dark:bg-red-950/30 text-red-700 dark:text-red-300 rounded-lg text-sm">
+        <div role="alert" className="p-3 bg-red-50 dark:bg-red-950/30 text-red-700 dark:text-red-300 rounded-lg text-sm">
           {error}
         </div>
       )}
@@ -174,5 +162,6 @@ export default function BinaryConverterClient() {
         </div>
       </div>
     </div>
+    </DeveloperSecurityFrame>
   );
 }

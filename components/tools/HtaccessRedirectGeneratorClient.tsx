@@ -1,6 +1,8 @@
 'use client';
+import { downloadText } from '@/lib/seo-network/request';
+import { SeoOwnedBoundary } from './SeoNetworkShared';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 type RedirectType = '301' | '302' | '307' | '308';
@@ -50,7 +52,7 @@ function normalizeDestination(value: string): string {
   return trimmed.startsWith('/') ? trimmed : `/${trimmed}`;
 }
 
-export default function HtaccessRedirectGeneratorClient() {
+function HtaccessRedirectGeneratorForm() {
   const [baseDomain, setBaseDomain] = useState('');
   const [forceHttps, setForceHttps] = useState(false);
   const [wwwMode, setWwwMode] = useState<WwwMode>('none');
@@ -59,6 +61,7 @@ export default function HtaccessRedirectGeneratorClient() {
   const [error, setError] = useState('');
 
   const addRule = () => {
+    if (rules.length >= 500) { setError('Limit: 500 redirects.'); return; }
     setRules((current) => [
       ...current,
       { id: Date.now(), type: '301', from: '', to: '' },
@@ -76,7 +79,11 @@ export default function HtaccessRedirectGeneratorClient() {
   };
 
   const generate = () => {
+    if ((forceHttps || wwwMode !== 'none') && !baseDomain.trim()) { setError('Enter a base domain for protocol or www redirects.'); setGenerated(''); return; }
+    if (rules.some(rule => rule.from.includes('?') || /\$\d/.test(rule.to))) { setError('Source rules match paths only. Encode literal dollar signs in destinations.'); setGenerated(''); return; }
     const domain = normalizeDomain(baseDomain);
+    if (!/^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,}$/i.test(domain)) { setError('Enter a valid base domain.'); setGenerated(''); return; }
+    if (rules.some(rule => !rule.from.trim() || !rule.to.trim() || /[\s\"#\\]/.test(rule.from + rule.to) || (!rule.to.startsWith('/') && !/^https?:\/\//i.test(rule.to)) || rule.to.startsWith('//'))) { setError('Complete every redirect. Use a source path and a path or HTTP(S) destination, encoding spaces, quotes, # and backslashes.'); setGenerated(''); return; }
     const escapedDomain = escapeRewritePattern(domain);
     const lines = [
       '# Apache .htaccess Redirect Rules',
@@ -91,7 +98,7 @@ export default function HtaccessRedirectGeneratorClient() {
         lines.push(
           '    # Force HTTPS',
           '    RewriteCond %{HTTPS} !=on',
-          '    RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]',
+          `    RewriteRule ^ https://${domain}%{REQUEST_URI} [L,R=301]`,
           '',
         );
       }
@@ -100,7 +107,7 @@ export default function HtaccessRedirectGeneratorClient() {
         lines.push(
           '    # Add www',
           `    RewriteCond %{HTTP_HOST} ^${escapedDomain}$ [NC]`,
-          `    RewriteRule ^ ${forceHttps ? `https://www.${domain}%{REQUEST_URI}` : `//www.${domain}%{REQUEST_URI}`} [L,R=301]`,
+          `    RewriteRule ^ ${forceHttps ? `https://www.${domain}%{REQUEST_URI}` : `%{REQUEST_SCHEME}://www.${domain}%{REQUEST_URI}`} [L,R=301]`,
           '',
         );
       }
@@ -109,7 +116,7 @@ export default function HtaccessRedirectGeneratorClient() {
         lines.push(
           '    # Remove www',
           `    RewriteCond %{HTTP_HOST} ^www\\.${escapedDomain}$ [NC]`,
-          `    RewriteRule ^ ${forceHttps ? `https://${domain}%{REQUEST_URI}` : `//${domain}%{REQUEST_URI}`} [L,R=301]`,
+          `    RewriteRule ^ ${forceHttps ? `https://${domain}%{REQUEST_URI}` : `%{REQUEST_SCHEME}://${domain}%{REQUEST_URI}`} [L,R=301]`,
           '',
         );
       }
@@ -139,7 +146,7 @@ export default function HtaccessRedirectGeneratorClient() {
   };
 
   const copy = (text: string) => {
-    navigator.clipboard.writeText(text).catch(() => {});
+    navigator.clipboard.writeText(text).catch(() => setError('Clipboard unavailable. Select the result to copy.'));
   };
 
   const loadExample = () => {
@@ -160,6 +167,11 @@ export default function HtaccessRedirectGeneratorClient() {
     setError('');
   };
 
+  useEffect(() => {
+    if (baseDomain || forceHttps || wwwMode !== 'none' || rules.length) generate();
+    else { setGenerated(''); setError(''); }
+  }, [baseDomain, forceHttps, wwwMode, rules]);
+
   return (
     <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
       <div>
@@ -173,6 +185,7 @@ export default function HtaccessRedirectGeneratorClient() {
           />
         </div>
         <input
+          maxLength={2048}
           id="htaccess-base-domain"
           type="text"
           value={baseDomain}
@@ -185,6 +198,7 @@ export default function HtaccessRedirectGeneratorClient() {
       <div className="flex flex-wrap gap-3 items-center">
         <label className="flex items-center gap-2 text-sm">
           <input
+          maxLength={2048}
             type="checkbox"
             checked={forceHttps}
             onChange={(e) => setForceHttps(e.target.checked)}
@@ -221,6 +235,7 @@ export default function HtaccessRedirectGeneratorClient() {
               <option value="308">308</option>
             </select>
             <input
+          maxLength={2048}
               type="text"
               value={rule.from}
               onChange={(e) => updateRule(rule.id, 'from', e.target.value)}
@@ -230,6 +245,7 @@ export default function HtaccessRedirectGeneratorClient() {
             />
             <span aria-hidden="true">-&gt;</span>
             <input
+          maxLength={2048}
               type="text"
               value={rule.to}
               onChange={(e) => updateRule(rule.id, 'to', e.target.value)}
@@ -271,7 +287,7 @@ export default function HtaccessRedirectGeneratorClient() {
       {generated && (
         <div>
           <div className="flex justify-between items-center mb-1">
-            <label className="text-sm font-medium" htmlFor="htaccess-output">Output</label>
+            <label className="text-sm font-medium" htmlFor="htaccess-output">Output</label><button className="tb-v2-btn-sm" onClick={() => downloadText(generated, ".htaccess")}>Download</button>
             <button
               type="button"
               onClick={() => copy(generated)}
@@ -281,6 +297,7 @@ export default function HtaccessRedirectGeneratorClient() {
             </button>
           </div>
           <textarea
+          maxLength={200000}
             id="htaccess-output"
             readOnly
             value={generated}
@@ -292,3 +309,5 @@ export default function HtaccessRedirectGeneratorClient() {
     </div>
   );
 }
+
+export default function HtaccessRedirectGeneratorClient() { return <SeoOwnedBoundary><HtaccessRedirectGeneratorForm /></SeoOwnedBoundary>; }

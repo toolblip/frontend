@@ -1,7 +1,9 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
+import { PDFDocument, StandardFonts, rgb, degrees } from 'pdf-lib';
+import { readPdfToolFile, loadPdfForTools } from '@/lib/pdf-qa/pdf';
+import { visiblePageGeometry, drawInVisiblePage, visibleTextGeometry } from '@/lib/pdf-qa/geometry';
 import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 type AnchorX = 'left' | 'center' | 'right';
@@ -35,6 +37,9 @@ interface ImageOverlay {
 }
 
 interface TextEditOverlay {
+  baselineX: number;
+  baselineY: number;
+  angle: number;
   id: number;
   kind: 'text-edit';
   sourceId: string;
@@ -59,6 +64,9 @@ interface EraseOverlay {
 }
 
 interface PdfTextItem {
+  baselineX: number;
+  baselineY: number;
+  angle: number;
   id: string;
   page: number;
   text: string;
@@ -128,6 +136,10 @@ export default function EditClient() {
   const previewViewportRef = useRef<HTMLDivElement>(null);
   const loadVersionRef = useRef(0);
 
+  const imageUrlsRef = useRef<string[]>([]);
+  useEffect(() => { imageUrlsRef.current = [...overlays.flatMap(ov => ov.kind === 'image' ? [ov.previewUrl] : []), ...(pendingImage ? [pendingImage.previewUrl] : [])]; }, [overlays, pendingImage]);
+  useEffect(() => () => { ++loadVersionRef.current; imageUrlsRef.current.forEach(url => URL.revokeObjectURL(url)); }, []);
+
   const resetDocument = () => {
     overlays.forEach(ov => { if (ov.kind === 'image') URL.revokeObjectURL(ov.previewUrl); });
     if (pendingImage) URL.revokeObjectURL(pendingImage.previewUrl);
@@ -138,6 +150,7 @@ export default function EditClient() {
   const clearAll = () => {
     loadVersionRef.current += 1;
     resetDocument();
+    setIsLoadingExample(false);
     setDraftText('New text'); setDraftFontSize(24); setDraftColor('#111111'); setImageWidthPt(150);
     if (fileInputRef.current) fileInputRef.current.value = '';
     if (imageInputRef.current) imageInputRef.current.value = '';
@@ -147,8 +160,8 @@ export default function EditClient() {
     resetDocument();
     setError('');
     try {
-      const doc = await PDFDocument.load(bytes);
-      const sizes = doc.getPages().map(p => p.getSize());
+      const doc = await loadPdfForTools(bytes);
+      const sizes = doc.getPages().map(p => visiblePageGeometry(p));
       if (sizes.length === 0) throw new Error('The PDF has no pages.');
       if (requestId !== loadVersionRef.current) return;
       setFileBytes(bytes);
@@ -173,13 +186,14 @@ export default function EditClient() {
       setError('Please choose a PDF file.');
       return;
     }
+    setIsLoadingExample(true);
     try {
-      const buffer = await file.arrayBuffer();
+      const buffer = await readPdfToolFile(file);
       if (requestId !== loadVersionRef.current) return;
       await loadPdf(new Uint8Array(buffer), file.name, requestId);
     } catch {
       if (requestId === loadVersionRef.current) setError('Could not read the selected PDF file.');
-    }
+    } finally { if (requestId === loadVersionRef.current) setIsLoadingExample(false); }
   };
 
   const handleDrop = (e: React.DragEvent) => {
@@ -210,6 +224,7 @@ export default function EditClient() {
 
   const addTextOverlay = (x: number, y: number) => {
     if (!draftText.trim() || !fileBytes) return;
+    ++loadVersionRef.current;
     setOverlays(o => [...o, {
       id: nextOverlayId++, kind: 'text', page: currentPage, text: draftText,
       fontSize: draftFontSize, color: draftColor, anchorX: 'left', anchorY: 'top', offsetX: x, offsetY: y,
@@ -220,12 +235,14 @@ export default function EditClient() {
 
   const saveSelectedText = () => {
     if (!selectedText || !draftText.trim() || !fileBytes) return;
+    ++loadVersionRef.current;
     setOverlays(current => [
       ...current.filter(ov => ov.kind !== 'text-edit' || ov.sourceId !== selectedText.id),
       {
         id: nextOverlayId++, kind: 'text-edit', sourceId: selectedText.id, page: currentPage,
         text: draftText.trim(), fontSize: draftFontSize, color: draftColor,
         x: selectedText.x, y: selectedText.y, width: selectedText.width, height: selectedText.height,
+        baselineX: selectedText.baselineX, baselineY: selectedText.baselineY, angle: selectedText.angle,
       },
     ]);
     setSelectedText(null);
@@ -235,6 +252,7 @@ export default function EditClient() {
 
   const removeSelectedText = () => {
     if (!selectedText || !fileBytes) return;
+    ++loadVersionRef.current;
     setOverlays(current => [
       ...current.filter(ov => ov.kind !== 'text-edit' || ov.sourceId !== selectedText.id),
       { id: nextOverlayId++, kind: 'erase', page: currentPage, x: selectedText.x, y: selectedText.y, width: selectedText.width, height: selectedText.height },
@@ -249,14 +267,22 @@ export default function EditClient() {
     const requestId = loadVersionRef.current;
     const format = file.type === 'image/png' ? 'png' : (file.type === 'image/jpeg' ? 'jpg' : null);
     if (!format) { setError('Image overlays must be a PNG or JPG file.'); return; }
-    const buffer = await file.arrayBuffer();
-    if (requestId !== loadVersionRef.current || !fileBytes) return;
-    const bytes = new Uint8Array(buffer);
-    const previewUrl = URL.createObjectURL(file);
-    if (pendingImage) URL.revokeObjectURL(pendingImage.previewUrl);
-    setPendingImage({ bytes, format, previewUrl });
-    setActiveTool('image');
-    setStatus('idle');
+    try {
+      const buffer = await readPdfToolFile(file);
+      const bytes = new Uint8Array(buffer);
+      const probe = await PDFDocument.create();
+      const image = format === 'png' ? await probe.embedPng(bytes) : await probe.embedJpg(bytes);
+      if (image.width * image.height > 16000000) throw new Error('Image exceeds 16 million pixels.');
+      if (requestId !== loadVersionRef.current) return;
+      const previewUrl = URL.createObjectURL(file);
+      if (pendingImage) URL.revokeObjectURL(pendingImage.previewUrl);
+      setPendingImage({ bytes, format, previewUrl });
+      setActiveTool('image');
+      setError('');
+      setStatus('idle');
+    } catch {
+      if (requestId === loadVersionRef.current) setError('Choose a valid PNG or JPG of at most 25 MB and 16 million pixels.');
+    }
   };
 
   const pageCoordinates = (element: HTMLDivElement, clientX: number, clientY: number) => {
@@ -285,7 +311,8 @@ export default function EditClient() {
     }
 
     if (pendingImage) {
-      setOverlays(o => [...o, {
+      ++loadVersionRef.current;
+    setOverlays(o => [...o, {
         id: nextOverlayId++, kind: 'image', page: currentPage, bytes: pendingImage.bytes, format: pendingImage.format,
         previewUrl: pendingImage.previewUrl, widthPt: imageWidthPt, anchorX: 'left', anchorY: 'top', offsetX: x, offsetY: y,
       }]);
@@ -319,6 +346,7 @@ export default function EditClient() {
     const y = Math.min(eraseStart.y, end.y);
     const width = Math.max(4, Math.abs(end.x - eraseStart.x));
     const height = Math.max(4, Math.abs(end.y - eraseStart.y));
+    ++loadVersionRef.current;
     setOverlays(current => [...current, { id: nextOverlayId++, kind: 'erase', page: currentPage, x, y, width, height }]);
     setEraseStart(null);
     setEraseDraft(null);
@@ -331,47 +359,50 @@ export default function EditClient() {
     setEraseDraft(null);
   };
 
-  const removeOverlay = (id: number) => { setOverlays(o => { const removed = o.find(x => x.id === id); if (removed?.kind === 'image') URL.revokeObjectURL(removed.previewUrl); return o.filter(x => x.id !== id); }); setStatus('idle'); };
+  const removeOverlay = (id: number) => { ++loadVersionRef.current; setOverlays(o => { const removed = o.find(x => x.id === id); if (removed?.kind === 'image') URL.revokeObjectURL(removed.previewUrl); return o.filter(x => x.id !== id); }); setStatus('idle'); };
 
   const applyAndDownload = async () => {
     if (!fileBytes) return;
     setStatus('processing');
     setError('');
+    const exportVersion = loadVersionRef.current;
     try {
-      const doc = await PDFDocument.load(fileBytes);
+      const doc = await loadPdfForTools(fileBytes);
       const font = await doc.embedFont(StandardFonts.Helvetica);
       const pages = doc.getPages();
 
       for (const ov of overlays) {
         const page = pages[ov.page - 1];
         if (!page) continue;
-        const { width, height } = page.getSize();
+        await drawInVisiblePage(page, async ({ width, height }) => {
 
-        if (ov.kind === 'erase' || ov.kind === 'text-edit') {
-          page.drawRectangle({ x: ov.x - 1, y: height - ov.y - ov.height - 1, width: ov.width + 2, height: ov.height + 2, color: rgb(1, 1, 1) });
-          if (ov.kind === 'text-edit') {
+          if (ov.kind === 'erase' || ov.kind === 'text-edit') {
+            page.drawRectangle({ x: ov.x - 1, y: height - ov.y - ov.height - 1, width: ov.width + 2, height: ov.height + 2, color: rgb(1, 1, 1) });
+            if (ov.kind === 'text-edit') {
+              const [r, g, b] = hexToRgb01(ov.color);
+              page.drawText(ov.text, { x: ov.baselineX, y: height - ov.baselineY, rotate: degrees(-ov.angle), size: ov.fontSize, font, color: rgb(r, g, b) });
+            }
+          } else if (ov.kind === 'text') {
+            const textWidth = font.widthOfTextAtSize(ov.text, ov.fontSize);
+            const x = ov.anchorX === 'left' ? ov.offsetX : ov.anchorX === 'right' ? width - ov.offsetX - textWidth : (width - textWidth) / 2 + ov.offsetX;
+            const y = ov.anchorY === 'top' ? height - ov.offsetY - ov.fontSize : ov.anchorY === 'bottom' ? ov.offsetY : (height - ov.fontSize) / 2 - ov.offsetY;
             const [r, g, b] = hexToRgb01(ov.color);
-            page.drawText(ov.text, { x: ov.x, y: height - ov.y - ov.fontSize, size: ov.fontSize, font, color: rgb(r, g, b) });
+            page.drawText(ov.text, { x, y, size: ov.fontSize, font, color: rgb(r, g, b) });
+          } else {
+            const img = ov.format === 'png' ? await doc.embedPng(ov.bytes) : await doc.embedJpg(ov.bytes);
+            const scale = ov.widthPt / img.width;
+            const drawWidth = ov.widthPt;
+            const drawHeight = img.height * scale;
+            const x = ov.anchorX === 'left' ? ov.offsetX : ov.anchorX === 'right' ? width - ov.offsetX - drawWidth : (width - drawWidth) / 2 + ov.offsetX;
+            const y = ov.anchorY === 'top' ? height - ov.offsetY - drawHeight : ov.anchorY === 'bottom' ? ov.offsetY : (height - drawHeight) / 2 - ov.offsetY;
+            page.drawImage(img, { x, y, width: drawWidth, height: drawHeight });
           }
-        } else if (ov.kind === 'text') {
-          const textWidth = font.widthOfTextAtSize(ov.text, ov.fontSize);
-          const x = ov.anchorX === 'left' ? ov.offsetX : ov.anchorX === 'right' ? width - ov.offsetX - textWidth : (width - textWidth) / 2 + ov.offsetX;
-          const y = ov.anchorY === 'top' ? height - ov.offsetY - ov.fontSize : ov.anchorY === 'bottom' ? ov.offsetY : (height - ov.fontSize) / 2 - ov.offsetY;
-          const [r, g, b] = hexToRgb01(ov.color);
-          page.drawText(ov.text, { x, y, size: ov.fontSize, font, color: rgb(r, g, b) });
-        } else {
-          const img = ov.format === 'png' ? await doc.embedPng(ov.bytes) : await doc.embedJpg(ov.bytes);
-          const scale = ov.widthPt / img.width;
-          const drawWidth = ov.widthPt;
-          const drawHeight = img.height * scale;
-          const x = ov.anchorX === 'left' ? ov.offsetX : ov.anchorX === 'right' ? width - ov.offsetX - drawWidth : (width - drawWidth) / 2 + ov.offsetX;
-          const y = ov.anchorY === 'top' ? height - ov.offsetY - drawHeight : ov.anchorY === 'bottom' ? ov.offsetY : (height - drawHeight) / 2 - ov.offsetY;
-          page.drawImage(img, { x, y, width: drawWidth, height: drawHeight });
-        }
+        });
       }
 
       const outBytes = await doc.save();
       const blob = new Blob([outBytes as BlobPart], { type: 'application/pdf' });
+      if (exportVersion !== loadVersionRef.current) return;
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -380,6 +411,7 @@ export default function EditClient() {
       URL.revokeObjectURL(url);
       setStatus('done');
     } catch {
+      if (exportVersion !== loadVersionRef.current) return;
       setError('Something went wrong applying your edits. Try a different image or reload the PDF.');
       setStatus('idle');
     }
@@ -396,7 +428,6 @@ export default function EditClient() {
       setTextItems([]);
       return;
     }
-    const requestId = loadVersionRef.current;
     let active = true;
     setPreviewLoading(true);
     setPreviewFailed(false);
@@ -414,16 +445,10 @@ export default function EditClient() {
           const items: PdfTextItem[] = textContent.items.flatMap((item, index) => {
             if (!('str' in item) || !item.str.trim()) return [];
             const transform = pdfjs.Util.transform(textViewport.transform, item.transform);
-            const fontSize = Math.max(6, Math.hypot(transform[2], transform[3]));
+            const style = textContent.styles[item.fontName];
             return [{
-              id: `${currentPage}-${index}`,
-              page: currentPage,
-              text: item.str,
-              x: Math.max(0, transform[4]),
-              y: Math.max(0, transform[5] - fontSize),
-              width: Math.max(4, item.width),
-              height: fontSize,
-              fontSize,
+              id: `${currentPage}-${index}`, page: currentPage, text: item.str,
+              ...visibleTextGeometry(transform, item.width * pdfPage.userUnit, style?.ascent ?? 1, style?.descent ?? 0),
             }];
           });
           const canvas = window.document.createElement('canvas');
@@ -432,7 +457,7 @@ export default function EditClient() {
           const context = canvas.getContext('2d');
           if (!context) throw new Error('Canvas unavailable.');
           await pdfPage.render({ canvas, canvasContext: context, viewport }).promise;
-          if (active && requestId === loadVersionRef.current) {
+          if (active) {
             setPreview(canvas.toDataURL('image/png'));
             setTextItems(items);
           }
@@ -442,9 +467,9 @@ export default function EditClient() {
           throw renderError;
         }
       } catch {
-        if (active && requestId === loadVersionRef.current) setPreviewFailed(true);
+        if (active) setPreviewFailed(true);
       } finally {
-        if (active && requestId === loadVersionRef.current) setPreviewLoading(false);
+        if (active) setPreviewLoading(false);
       }
     })();
     return () => { active = false; };
@@ -474,7 +499,8 @@ export default function EditClient() {
   };
 
   return (
-    <div className="tb-v2-tool-card">
+    <div className="tb-v2-tool-card" style={{ minWidth: 0, maxWidth: "100%", overflowWrap: "anywhere" }}>
+      <p className="tb-v2-empty">PDF limits: 25 MB per file, 100 pages, 2000 points per page side.</p>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">PDF File</span>
         <ToolExampleClearActions onExample={loadExample} onClear={clearAll} canClear={Boolean(fileBytes || overlays.length || error || isLoadingExample)} exampleCount={1} exampleDisabled={isLoadingExample} />
@@ -491,11 +517,11 @@ export default function EditClient() {
             <span style={{ fontSize: 28 }}>📄</span>
             <span className="tb-v2-dropzone-text">Click or drag a PDF here</span>
           <span className="tb-v2-dropzone-hint">Select existing text, add content, or remove page areas directly in your browser</span>
-            <input ref={fileInputRef} type="file" accept="application/pdf" onChange={(e) => handleFile(e.target.files?.[0])} style={{ display: 'none' }} />
+            <input ref={fileInputRef} aria-label="PDF file" type="file" accept="application/pdf" onChange={(e) => handleFile(e.target.files?.[0])} style={{ display: 'none' }} />
           </div>
         )}
-        {isLoadingExample && <div className="tb-v2-banner" role="status" style={{ marginTop: 12 }}>Loading sample PDF...</div>}
-        {error && <div className="tb-v2-banner tb-v2-banner-err" style={{ marginTop: 12 }}>{error}</div>}
+        {isLoadingExample && <div className="tb-v2-banner" role="status" style={{ marginTop: 12 }}>Loading PDF...</div>}
+        {error && <div role="alert" className="tb-v2-banner tb-v2-banner-err" style={{ marginTop: 12 }}>{error}</div>}
       </div>
 
       {fileBytes && (
@@ -548,17 +574,19 @@ export default function EditClient() {
                     />
                   ))}
                   {pageOverlays.map(ov => {
-                    if (ov.kind === 'erase') {
-                      return <div key={ov.id} className="tb-pdf-edit-erase-overlay" style={{ left: `${(ov.x / pageSize.width) * 100}%`, top: `${(ov.y / pageSize.height) * 100}%`, width: `${(ov.width / pageSize.width) * 100}%`, height: `${(ov.height / pageSize.height) * 100}%` }} />;
-                    }
-                    if (ov.kind === 'text-edit') {
-                      return <div key={ov.id} className="tb-pdf-edit-overlay-text tb-pdf-edit-replacement-text" title={ov.text} style={{ left: `${(ov.x / pageSize.width) * 100}%`, top: `${(ov.y / pageSize.height) * 100}%`, width: `${(ov.width / pageSize.width) * 100}%`, minHeight: `${(ov.height / pageSize.height) * 100}%`, color: ov.color, fontSize: `${Math.max(8, ov.fontSize * pageScale * zoom)}px` }}>{ov.text}</div>;
+                    if (ov.kind === 'erase' || ov.kind === 'text-edit') {
+                      return <svg key={ov.id} aria-hidden="true" viewBox={`0 0 ${pageSize.width} ${pageSize.height}`} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', zIndex: 3, pointerEvents: 'none' }}>
+                        <rect x={ov.x - 1} y={ov.y - 1} width={ov.width + 2} height={ov.height + 2} fill="white" />
+                        {ov.kind === 'text-edit' && <text x={ov.baselineX} y={ov.baselineY} transform={`rotate(${ov.angle} ${ov.baselineX} ${ov.baselineY})`} fontSize={ov.fontSize} fontFamily="Arial, Helvetica, sans-serif" fontWeight={400} xmlSpace="preserve" fill={ov.color}>{ov.text}</text>}
+                      </svg>;
                     }
                     const { xPct, yPct } = markerPercent(ov.anchorX, ov.anchorY, ov.offsetX, ov.offsetY, pageSize.width, pageSize.height);
                     return ov.kind === 'text' ? (
-                      <div key={ov.id} title={ov.text} className="tb-pdf-edit-overlay-text" style={{ left: `${xPct}%`, top: `${yPct}%`, color: ov.color, fontSize: `${Math.max(8, ov.fontSize * pageScale * zoom)}px` }}>{ov.text}</div>
+                      <svg key={ov.id} aria-hidden="true" viewBox={`0 0 ${pageSize.width} ${pageSize.height}`} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', zIndex: 1, pointerEvents: 'none' }}>
+                        <text x={xPct / 100 * pageSize.width} y={yPct / 100 * pageSize.height + (ov.anchorY === 'top' ? ov.fontSize : ov.anchorY === 'middle' ? ov.fontSize / 2 : 0)} textAnchor={ov.anchorX === 'left' ? 'start' : ov.anchorX === 'right' ? 'end' : 'middle'} fontSize={ov.fontSize} fontFamily="Arial, Helvetica, sans-serif" fontWeight={400} xmlSpace="preserve" fill={ov.color}>{ov.text}</text>
+                      </svg>
                     ) : (
-                      <img key={ov.id} src={ov.previewUrl} alt="Image overlay preview" title="Image overlay" className="tb-pdf-edit-overlay-image" style={{ left: `${xPct}%`, top: `${yPct}%`, width: `${Math.min(45, Math.max(8, (ov.widthPt / pageSize.width) * 100))}%` }} />
+                      <img key={ov.id} src={ov.previewUrl} alt="Image overlay preview" title="Image overlay" className="tb-pdf-edit-overlay-image" style={{ left: `${xPct}%`, top: `${yPct}%`, width: `${(ov.widthPt / pageSize.width) * 100}%`, height: 'auto', border: 0, borderRadius: 0, boxShadow: 'none' }} />
                     );
                   })}
                   {eraseDraft && <div className="tb-pdf-edit-erase-overlay draft" style={{ left: `${(eraseDraft.x / pageSize.width) * 100}%`, top: `${(eraseDraft.y / pageSize.height) * 100}%`, width: `${(eraseDraft.width / pageSize.width) * 100}%`, height: `${(eraseDraft.height / pageSize.height) * 100}%` }} />}
@@ -570,7 +598,7 @@ export default function EditClient() {
                 </div>
               </div>
               {previewFailed && <p className="tb-v2-empty" role="alert">The visual preview could not be rendered.</p>}
-              <p className="tb-pdf-edit-preview-hint">Added text and images appear directly on the page.</p>
+              <p className="tb-pdf-edit-preview-hint">Edits add overlays. Covered or replaced content remains in the PDF and can be recovered; this is not secure redaction.</p>
             </div>
 
             <div className="tb-pdf-edit-toolbar" aria-label="PDF editing tools">
@@ -598,7 +626,7 @@ export default function EditClient() {
               >
                 <span aria-hidden="true">⌫</span> Remove
               </button>
-              <input ref={imageInputRef} type="file" accept="image/png,image/jpeg" onChange={e => handleImageFile(e.target.files?.[0])} style={{ display: 'none' }} />
+              <input ref={imageInputRef} aria-label="Image file" type="file" accept="image/png,image/jpeg" onChange={e => handleImageFile(e.target.files?.[0])} style={{ display: 'none' }} />
               {selectedText && (
                 <div className="tb-pdf-edit-context-tools">
                   <input aria-label="Selected PDF text" type="text" value={draftText} onChange={e => setDraftText(e.target.value)} className="tb-v2-input" />
@@ -610,18 +638,18 @@ export default function EditClient() {
               {!selectedText && activeTool === 'text' && (
                 <div className="tb-pdf-edit-context-tools">
                   <input aria-label="Text to add" type="text" value={draftText} onChange={e => setDraftText(e.target.value)} className="tb-v2-input" placeholder="Type text" />
-                  <label>Size <input aria-label="Text size" type="number" min={6} max={200} value={draftFontSize} onChange={e => setDraftFontSize(Number(e.target.value) || 24)} className="tb-v2-input" /></label>
+                  <label>Size <input aria-label="Text size" type="number" min={6} max={200} value={draftFontSize} onChange={e => setDraftFontSize(Math.max(6, Math.min(200, Number(e.target.value) || 24)))} className="tb-v2-input" /></label>
                   <label className="tb-pdf-edit-color-label">Color <input aria-label="Text color" type="color" value={draftColor} onChange={e => setDraftColor(e.target.value)} /></label>
                 </div>
               )}
               {activeTool === 'image' && pendingImage && (
                 <div className="tb-pdf-edit-context-tools">
                   <span className="tb-pdf-edit-tool-hint">Click the page to place image</span>
-                  <label>Width <input aria-label="Image width" type="number" min={10} max={600} value={imageWidthPt} onChange={e => setImageWidthPt(Number(e.target.value) || 150)} className="tb-v2-input" /></label>
+                  <label>Width <input aria-label="Image width" type="number" min={10} max={600} value={imageWidthPt} onChange={e => setImageWidthPt(Math.max(10, Math.min(600, Number(e.target.value) || 150)))} className="tb-v2-input" /></label>
                 </div>
               )}
               {activeTool === 'text' && <span className="tb-pdf-edit-tool-hint">Click the page to place text</span>}
-              {activeTool === 'erase' && <span className="tb-pdf-edit-tool-hint">Drag over text or an image to remove it</span>}
+              {activeTool === 'erase' && <span className="tb-pdf-edit-tool-hint">Drag over text or an image to cover it in white</span>}
               {!activeTool && !selectedText && <span className="tb-pdf-edit-tool-hint">Click text on the page to edit it</span>}
             </div>
 
@@ -631,7 +659,7 @@ export default function EditClient() {
                 {overlays.map(ov => (
                   <div key={ov.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '6px 0', fontSize: 13 }}>
                     <span style={{ flex: 1 }}>
-                      Page {ov.page} &middot; {ov.kind === 'text' ? `Added text: "${ov.text}"` : ov.kind === 'image' ? 'Added image' : ov.kind === 'text-edit' ? `Changed text to: "${ov.text}"` : 'Removed page content'}
+                      Page {ov.page} &middot; {ov.kind === 'text' ? `Added text: "${ov.text}"` : ov.kind === 'image' ? 'Added image' : ov.kind === 'text-edit' ? `Changed text to: "${ov.text}"` : 'Covered page content'}
                     </span>
                     <button type="button" onClick={() => removeOverlay(ov.id)} className="tb-v2-btn-sm">Remove</button>
                   </div>

@@ -1,6 +1,9 @@
 'use client';
+import { readBrowserFile, assertXlsx } from '@/lib/utility-design/core';
+import UtilityDesignLayout from './UtilityDesignLayout';
+import ToolExampleClearActions from './ToolExampleClearActions';
 
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import * as XLSX from 'xlsx';
 
 function chunk<T>(items: T[], size: number): T[][] {
@@ -14,6 +17,8 @@ function sleep(ms: number): Promise<void> {
 }
 
 export default function SplitExcelFileClient() {
+  const generation = useRef(0);
+  useEffect(() => () => { generation.current++; }, []);
   const [fileName, setFileName] = useState('');
   const [sheetNames, setSheetNames] = useState<string[]>([]);
   const [selectedSheet, setSelectedSheet] = useState('');
@@ -29,11 +34,15 @@ export default function SplitExcelFileClient() {
   const loadRowsForSheet = (wb: XLSX.WorkBook, sheetName: string) => {
     const sheet = wb.Sheets[sheetName];
     const aoa = XLSX.utils.sheet_to_json<unknown[]>(sheet, { header: 1 });
+    if (aoa.length > 100001) throw new Error('Maximum 100000 data rows per sheet.');
     setRows(aoa);
   };
 
   const loadFile = async (file: File | undefined) => {
     if (!file) return;
+    const id = ++generation.current; setLoading(false); setFileName(''); setSelectedSheet('');
+    setDownloading(false);
+    if (file.size > 10 * 1024 * 1024) { setError('Maximum file size is 10 MiB.'); setRows([]); setSheetNames([]); return; }
     setError('');
     setSheetNames([]);
     setRows([]);
@@ -44,8 +53,10 @@ export default function SplitExcelFileClient() {
     }
     setLoading(true);
     try {
-      const buffer = await file.arrayBuffer();
-      const wb = XLSX.read(buffer, { type: 'array' });
+      const buffer = await readBrowserFile(file);
+      if (id !== generation.current) return;
+      assertXlsx(buffer);
+      const wb = XLSX.read(buffer, { type: 'array', sheetRows: 100002 });
       if (wb.SheetNames.length === 0) throw new Error('No worksheets found in this file.');
       workbookRef.current = wb;
       setFileName(file.name);
@@ -53,9 +64,9 @@ export default function SplitExcelFileClient() {
       setSelectedSheet(wb.SheetNames[0]);
       loadRowsForSheet(wb, wb.SheetNames[0]);
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Could not parse this .xlsx file.');
+      if (id === generation.current) setError(e instanceof Error ? e.message : 'Could not parse this .xlsx file.');
     } finally {
-      setLoading(false);
+      if (id === generation.current) setLoading(false);
     }
   };
 
@@ -77,9 +88,11 @@ export default function SplitExcelFileClient() {
 
   const downloadAll = async () => {
     if (header === null || chunks.length === 0) return;
+    const id = generation.current;
     setDownloading(true);
     const base = fileName.replace(/\.xlsx$/i, '') || 'split';
     for (let i = 0; i < chunks.length; i++) {
+      if (id !== generation.current) break;
       const aoa = [header, ...chunks[i]];
       const ws = XLSX.utils.aoa_to_sheet(aoa);
       const wb = XLSX.utils.book_new();
@@ -93,14 +106,15 @@ export default function SplitExcelFileClient() {
       document.body.appendChild(a);
       a.click();
       a.remove();
-      URL.revokeObjectURL(url);
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
       await sleep(250);
     }
     setDownloading(false);
   };
 
-  return (
+  return (<UtilityDesignLayout>
     <div className="tb-v2-tool-card">
+      <ToolExampleClearActions onExample={() => { const wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['Name','Count'],['Ada',2],['Lin',3]]),'People'); void loadFile(new File([XLSX.write(wb,{type:'array',bookType:'xlsx'})], 'example.xlsx')); }} onClear={() => { generation.current++; setFileName(''); setSheetNames([]); setRows([]); setSelectedSheet(''); workbookRef.current=null; setError(''); setLoading(false); setDownloading(false); if(fileInputRef.current) fileInputRef.current.value=''; }}/>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Upload Excel File</span>
       </div>
@@ -114,8 +128,8 @@ export default function SplitExcelFileClient() {
         >
           <span style={{ fontSize: 28 }}>📊</span>
           <span className="tb-v2-dropzone-text">{loading ? 'Parsing...' : 'Click or drag an .xlsx file here'}</span>
-          <span className="tb-v2-dropzone-hint">Parsed entirely in your browser</span>
-          <input ref={fileInputRef} type="file" accept=".xlsx" onChange={handleFileChange} style={{ display: 'none' }} />
+          <span className="tb-v2-dropzone-hint">Values-only export: formulas use cached results; formatting, charts, and macros are not preserved.</span>
+          <input ref={fileInputRef} aria-label="Upload file" type="file" accept=".xlsx" onChange={handleFileChange} style={{ display: 'none' }} />
         </div>
       </div>
 
@@ -145,7 +159,7 @@ export default function SplitExcelFileClient() {
           <div className="tb-v2-grid-2">
             <div>
               <span className="tb-v2-tool-label">Rows per output file</span>
-              <input
+              <input aria-label="Rows Per File"
                 type="number"
                 min={1}
                 value={rowsPerFile}
@@ -177,5 +191,6 @@ export default function SplitExcelFileClient() {
         <p className="tb-v2-empty" style={{ margin: '0 20px 20px' }}>Upload an .xlsx file to split it into smaller files.</p>
       )}
     </div>
+  </UtilityDesignLayout>
   );
 }

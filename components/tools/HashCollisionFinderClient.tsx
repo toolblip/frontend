@@ -1,10 +1,12 @@
 'use client';
+import { useSecurityTask } from './DeveloperSecurityFrame';
+import DeveloperSecurityFrame from './DeveloperSecurityFrame';
 
 import { useRef, useState } from 'react';
 
 type Algo = 'SHA-1' | 'SHA-256';
 
-const SAFETY_LIMIT = 2_000_000;
+const SAFETY_LIMIT = 100_000;
 const BATCH_SIZE = 150;
 const RANDOM_STR_LEN = 10;
 const CHARS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -52,71 +54,38 @@ export default function HashCollisionFinderClient() {
   const [result, setResult] = useState<CollisionResult | null>(null);
   const [capped, setCapped] = useState(false);
 
-  const cancelRef = useRef(false);
-  const attemptsRef = useRef(0);
-  const seenRef = useRef<Map<string, { str: string; hash: string }>>(new Map());
-
-  const runBatch = async (algo: Algo, len: number) => {
-    if (cancelRef.current) return;
-
-    for (let i = 0; i < BATCH_SIZE; i++) {
-      if (attemptsRef.current >= SAFETY_LIMIT) break;
-
-      const str = randomString(RANDOM_STR_LEN);
-      const hash = await hashHex(algo, str);
-      attemptsRef.current++;
-
-      const prefix = hash.slice(0, len);
-      const existing = seenRef.current.get(prefix);
-
-      if (existing && existing.str !== str) {
-        setAttempts(attemptsRef.current);
-        setResult({ strA: existing.str, strB: str, hashA: existing.hash, hashB: hash, prefix });
-        setRunning(false);
-        cancelRef.current = true;
-        return;
+  const task=useSecurityTask();
+  const [error,setError]=useState('');
+  const stopSearch=()=>{task.current++;setRunning(false);};
+  const resetSearch=()=>{stopSearch();setAttempts(0);setResult(null);setCapped(false);setError('');};
+  const startSearch=async()=>{
+    resetSearch();const id=task.current;setRunning(true);
+    const seen=new Map<string,{str:string;hash:string}>();
+    try{
+      for(let n=1;n<=SAFETY_LIMIT;n++){
+        if(id!==task.current)return;
+        const str=randomString(RANDOM_STR_LEN),hash=await hashHex(algorithm,str);
+        if(id!==task.current)return;
+        const prefix=hash.slice(0,prefixLen),previous=seen.get(prefix);
+        if(previous && previous.str!==str){setAttempts(n);setResult({strA:previous.str,strB:str,hashA:previous.hash,hashB:hash,prefix});return;}
+        seen.set(prefix,{str,hash});
+        if(n%BATCH_SIZE===0){setAttempts(n);await new Promise<void>(resolve=>requestAnimationFrame(()=>resolve()));}
       }
-      if (!existing) seenRef.current.set(prefix, { str, hash });
-    }
-
-    setAttempts(attemptsRef.current);
-
-    if (cancelRef.current) return;
-
-    if (attemptsRef.current >= SAFETY_LIMIT) {
       setCapped(true);
-      setRunning(false);
-      return;
-    }
-
-    requestAnimationFrame(() => { runBatch(algo, len); });
-  };
-
-  const startSearch = () => {
-    cancelRef.current = false;
-    attemptsRef.current = 0;
-    seenRef.current = new Map();
-    setAttempts(0);
-    setResult(null);
-    setCapped(false);
-    setRunning(true);
-    requestAnimationFrame(() => { runBatch(algorithm, prefixLen); });
-  };
-
-  const stopSearch = () => {
-    cancelRef.current = true;
-    setRunning(false);
+    }catch(e){if(id===task.current)setError((e as Error).message);}
+    finally{if(id===task.current)setRunning(false);}
   };
 
   const bits = prefixLen * 4;
 
   return (
+    <DeveloperSecurityFrame onExample={()=>{resetSearch();setPrefixLen(2);setAlgorithm('SHA-256');}} onClear={()=>{resetSearch();}}>
     <div>
+      {error&&<p role="alert" className="tb-v2-error">{error}</p>}
       <div className="tb-v2-banner tb-v2-banner-info" style={{ marginBottom: 14, lineHeight: 1.5 }}>
-        This finds real collisions in a <strong>truncated hash prefix</strong> — a birthday-paradox
-        demonstration. Finding a full-length hash collision is computationally infeasible and would
-        take longer than the age of the universe for these algorithms; that&apos;s what makes them
-        cryptographically secure. Nothing here breaks MD5, SHA-1, or SHA-256.
+        This birthday-paradox demonstration finds matching <strong>truncated hash prefixes</strong>.
+        It does not search for full-length collisions or break SHA-256. SHA-1 and MD5 have known
+        collision weaknesses and should not be used where collision resistance is required.
       </div>
 
       <div className="tb-v2-tool-input-head">
@@ -128,9 +97,9 @@ export default function HashCollisionFinderClient() {
           <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">
             Algorithm
           </label>
-          <select
+          <select aria-label="Algorithm"
             value={algorithm}
-            onChange={e => setAlgorithm(e.target.value as Algo)}
+            onChange={e => {resetSearch();setAlgorithm(e.target.value as Algo);}}
             disabled={running}
             className="tb-v2-input"
           >
@@ -142,9 +111,9 @@ export default function HashCollisionFinderClient() {
           <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">
             Prefix length: {prefixLen} hex chars ({bits} bits)
           </label>
-          <select
+          <select aria-label="Prefix length"
             value={prefixLen}
-            onChange={e => setPrefixLen(Number(e.target.value))}
+            onChange={e => {resetSearch();setPrefixLen(Number(e.target.value));}}
             disabled={running}
             className="tb-v2-input"
           >
@@ -227,12 +196,13 @@ export default function HashCollisionFinderClient() {
 
           <p className="text-xs text-gray-500 dark:text-gray-400" style={{ marginTop: 4 }}>
             Two different inputs above share the same first {prefixLen} hex characters
-            (highlighted) of their real {algorithm} hash — but their full hashes are different.
+            (highlighted) of their real {algorithm} hash. {result.hashA === result.hashB ? 'The full digests also match.' : 'Their full digests differ.'}
             That is the whole trick: it only gets easy because we only compare a truncated slice,
             not the full {algorithm === 'SHA-1' ? '160-bit' : '256-bit'} digest.
           </p>
         </div>
       )}
     </div>
+    </DeveloperSecurityFrame>
   );
 }

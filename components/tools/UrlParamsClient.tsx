@@ -1,5 +1,7 @@
 'use client';
+import DeveloperGeneralFrame from './DeveloperGeneralFrame';
 
+import ToolExampleClearActions from './ToolExampleClearActions';
 import { useMemo, useState } from 'react';
 
 interface Parsed {
@@ -29,21 +31,16 @@ function parseUrl(input: string, decode: boolean): Parsed {
   }
 
   const params: { key: string; value: string }[] = [];
-  // Walk the search string manually so we preserve duplicates and order.
-  url.searchParams.forEach((value, key) => {
-    if (decode) {
-      params.push({ key, value });
-    } else {
-      // Re-emit raw representation
-      params.push({ key: encodeURIComponent(key), value: encodeURIComponent(value) });
-    }
-  });
+  if (decode) url.searchParams.forEach((value,key)=>params.push({key,value}));
+  else for (const pair of url.search.slice(1).split('&').filter(Boolean)) {const i=pair.indexOf('=');params.push({key:i<0?pair:pair.slice(0,i),value:i<0?'':pair.slice(i+1)});}
+  let hash=url.hash.slice(1);
+  try {if(decode)hash=decodeURIComponent(hash);}catch{return {...empty,error:'Malformed percent encoding in fragment.'};}
 
   return {
     scheme: url.protocol.replace(/:$/, ''),
     host: url.host,
     pathname: url.pathname,
-    hash: url.hash ? (decode ? decodeURIComponent(url.hash.slice(1)) : url.hash.slice(1)) : '',
+    hash,
     params,
     error: null,
   };
@@ -65,7 +62,7 @@ export default function UrlParamsClient() {
 
   const json = useMemo(() => {
     if (parsed.error || parsed.params.length === 0) return '';
-    const obj: Record<string, string | string[]> = {};
+    const obj: Record<string, string | string[]> = Object.create(null);
     for (const { key, value } of parsed.params) {
       const cur = obj[key];
       if (cur === undefined) obj[key] = value;
@@ -76,7 +73,8 @@ export default function UrlParamsClient() {
   }, [parsed]);
 
   return (
-    <div>
+    <DeveloperGeneralFrame><div>
+      <ToolExampleClearActions onExample={() => {setInput(SAMPLE);setDecode(true);}} onClear={() => {setInput('');setCopied(null);}} />
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">URL</span>
         <div className="tb-v2-mode-tabs" role="group" aria-label="Decoding">
@@ -98,7 +96,7 @@ export default function UrlParamsClient() {
           </button>
         </div>
       </div>
-      <textarea
+      <textarea maxLength={100000}
         value={input}
         onChange={(e) => setInput(e.target.value)}
         placeholder={SAMPLE}
@@ -157,6 +155,6 @@ export default function UrlParamsClient() {
           </div>
         </>
       )}
-    </div>
+    </div></DeveloperGeneralFrame>
   );
 }

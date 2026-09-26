@@ -1,6 +1,8 @@
 'use client';
+import UtilityDesignLayout from './UtilityDesignLayout';
+import ToolExampleClearActions from './ToolExampleClearActions';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function HtmlEncoderClient() {
   const [input, setInput] = useState('');
@@ -20,10 +22,13 @@ export default function HtmlEncoderClient() {
     } catch { setOutput('Error processing input'); }
   };
 
+  useEffect(() => { convert(); }, [input, mode]);
+
   const copy = () => { navigator.clipboard.writeText(output); setCopied(true); setTimeout(() => setCopied(false), 1500); };
 
-  return (
+  return (<UtilityDesignLayout>
     <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
+      <ToolExampleClearActions onExample={() => { setMode('encode'); setInput('<p>Hello & goodbye</p>'); }} onClear={() => { setInput(''); setOutput(''); setCopied(false); }}/>
       <div className="tb-v2-mode-tabs">
         {(['encode', 'decode'] as const).map(m => (
           <button key={m} onClick={() => setMode(m)} className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${mode === m ? 'bg-red-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'}`}>
@@ -31,7 +36,7 @@ export default function HtmlEncoderClient() {
           </button>
         ))}
       </div>
-      <textarea value={input} onChange={e => setInput(e.target.value)} placeholder={mode === 'encode' ? 'Enter HTML to encode...' : 'Enter encoded HTML to decode...'} rows={6} className="w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-3 text-sm font-mono focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none resize-y" />
+      <textarea maxLength={100000} aria-label="Input" value={input} onChange={e => setInput(e.target.value)} placeholder={mode === 'encode' ? 'Enter HTML to encode...' : 'Enter encoded HTML to decode...'} rows={6} className="w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-3 text-sm font-mono focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none resize-y" />
       <button onClick={convert} className="w-full bg-red-600 hover:bg-red-500 text-white font-medium py-2.5 rounded-lg transition-colors text-sm">
         {mode === 'encode' ? 'Encode' : 'Decode'}
       </button>
@@ -44,5 +49,6 @@ export default function HtmlEncoderClient() {
         </div>
       )}
     </div>
+  </UtilityDesignLayout>
   );
 }

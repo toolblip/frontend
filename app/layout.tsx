@@ -6,6 +6,7 @@ import CookieBanner from "@/components/CookieBanner";
 import Analytics from "@/components/Analytics";
 import ThemeProvider from "@/components/ThemeProvider";
 import TopLoader from "@/components/TopLoader";
+import BrowserPolicyBoundary from "@/components/BrowserPolicyBoundary";
 import Shell from "@/components/v2/Shell";
 import { AuthProvider } from "./providers/auth-provider";
 import PwaProvider from "./providers/pwa-provider";
@@ -129,7 +130,9 @@ export default function RootLayout({
               <Suspense fallback={null}>
                 <TopLoader />
               </Suspense>
-              <Shell>{children}</Shell>
+              <BrowserPolicyBoundary>
+                <Shell>{children}</Shell>
+              </BrowserPolicyBoundary>
               <Analytics measurementId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
               <CookieBanner />
             </AuthProvider>

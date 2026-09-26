@@ -1,4 +1,6 @@
 'use client';
+import ToolExampleClearActions from './ToolExampleClearActions';
+import { positive, readImage } from '@/lib/images-qa';
 
 import { useState, useRef } from 'react';
 
@@ -16,7 +18,7 @@ export default function ImageScaleCalculatorClient() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const num = (v: string) => {
-    const n = parseFloat(v);
+    const n = (positive(v) ?? 0);
     return isNaN(n) || n <= 0 ? null : n;
   };
 
@@ -25,6 +27,7 @@ export default function ImageScaleCalculatorClient() {
     const h = num(oh);
     const s = num(scaleVal);
     setScalePercent(scaleVal);
+    if (o === null || h === null || s === null) {setTargetWidth('');setTargetHeight('');}
     if (o !== null && h !== null && s !== null) {
       setTargetWidth(String(round(o * (s / 100))));
       setTargetHeight(String(round(h * (s / 100))));
@@ -69,25 +72,12 @@ export default function ImageScaleCalculatorClient() {
     recomputeFromScale(scalePercent, origWidth, v);
   };
 
-  const loadFile = (file: File | undefined) => {
-    if (!file) return;
-    if (!file.type.startsWith('image/')) {
-      setError('Please choose an image file.');
-      return;
-    }
-    setError('');
-    const url = URL.createObjectURL(file);
-    const img = new Image();
-    img.onload = () => {
-      const ow = String(img.naturalWidth);
-      const oh = String(img.naturalHeight);
-      setOrigWidth(ow);
-      setOrigHeight(oh);
-      recomputeFromScale(scalePercent, ow, oh);
-      URL.revokeObjectURL(url);
-    };
-    img.onerror = () => setError('Could not load this image.');
-    img.src = url;
+  const request = useRef(0);
+  const loadFile = async (file: File | undefined) => {
+    if(!file) return; const id=++request.current;setError('');
+    try { const {img}=await readImage(file);if(id!==request.current)return;
+      const w=String(img.naturalWidth),h=String(img.naturalHeight);setOrigWidth(w);setOrigHeight(h);recomputeFromScale(scalePercent,w,h);
+    } catch(e) {if(id===request.current)setError(e instanceof Error?e.message:'Could not load image.');}
   };
 
   const o = num(origWidth);
@@ -97,8 +87,8 @@ export default function ImageScaleCalculatorClient() {
   const valid = o !== null && h !== null && tw !== null && th !== null;
 
   return (
-    <div className="tb-v2-tool-card">
-      <div className="tb-v2-tool-input-head">
+    <div className="tb-v2-tool-card"><style jsx>{`input,textarea,select {max-width:100%;min-width:0} .tb-v2-tool-card {min-width:0;max-width:100%;overflow-wrap:anywhere} .tb-v2-tool-input-head {flex-wrap:wrap;gap:8px} .tb-v2-range-row {flex-wrap:wrap} .tb-v2-range {min-width:0;flex:1}`}</style>
+      <div className="tb-v2-tool-input-head" style={{flexWrap:"wrap"}}><ToolExampleClearActions onExample={() => {setOrigWidth('1920');setOrigHeight('1080');setScalePercent('50');setTargetWidth('960');setTargetHeight('540');setError('');request.current++;}} onClear={() => {setOrigWidth('');setOrigHeight('');setScalePercent('');setTargetWidth('');setTargetHeight('');setError('');request.current++;}} />
         <span className="tb-v2-tool-label">Original Dimensions</span>
         <button type="button" onClick={() => fileInputRef.current?.click()} className="tb-v2-btn-sm">
           Auto-fill from Image
@@ -118,7 +108,7 @@ export default function ImageScaleCalculatorClient() {
           <div style={{ paddingRight: 12 }}>
             <span className="tb-v2-tool-label">Original Width (px)</span>
             <input
-              type="number"
+              aria-label="Original Width (px)" type="number"
               min={1}
               className="tb-v2-input"
               style={{ marginTop: 8, fontFamily: 'var(--f-mono)' }}
@@ -129,7 +119,7 @@ export default function ImageScaleCalculatorClient() {
           <div style={{ paddingLeft: 12 }}>
             <span className="tb-v2-tool-label">Original Height (px)</span>
             <input
-              type="number"
+              aria-label="Original Height (px)" type="number"
               min={1}
               className="tb-v2-input"
               style={{ marginTop: 8, fontFamily: 'var(--f-mono)' }}
@@ -142,7 +132,7 @@ export default function ImageScaleCalculatorClient() {
         <div>
           <span className="tb-v2-tool-label">Scale (%)</span>
           <input
-            type="number"
+            aria-label="Scale (%)" type="number"
             min={0}
             step="1"
             className="tb-v2-input"
@@ -156,7 +146,7 @@ export default function ImageScaleCalculatorClient() {
           <div style={{ paddingRight: 12 }}>
             <span className="tb-v2-tool-label">Target Width (px)</span>
             <input
-              type="number"
+              aria-label="Target Width (px)" type="number"
               min={0}
               className="tb-v2-input"
               style={{ marginTop: 8, fontFamily: 'var(--f-mono)' }}
@@ -167,7 +157,7 @@ export default function ImageScaleCalculatorClient() {
           <div style={{ paddingLeft: 12 }}>
             <span className="tb-v2-tool-label">Target Height (px)</span>
             <input
-              type="number"
+              aria-label="Target Height (px)" type="number"
               min={0}
               className="tb-v2-input"
               style={{ marginTop: 8, fontFamily: 'var(--f-mono)' }}
