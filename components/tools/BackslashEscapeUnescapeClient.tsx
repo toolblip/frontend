@@ -1,9 +1,11 @@
 'use client';
+import { copySecurityText } from '@/lib/developer-security/primitives';
+import DeveloperSecurityFrame, { useSecurityTask } from './DeveloperSecurityFrame';
+import { escapeString, unescapeString, type EscapeContext } from '@/lib/developer-security/escaping';
 
 import { useState, useMemo } from 'react';
 
 type EscapeMode = 'escape' | 'unescape';
-type EscapeContext = 'json' | 'javascript' | 'regex' | 'html' | 'general';
 
 const EXAMPLES: Record<EscapeContext, string> = {
   json: '{"name": "John", "message": "Hello\\nWorld"}',
@@ -14,54 +16,27 @@ const EXAMPLES: Record<EscapeContext, string> = {
 };
 
 export default function BackslashEscapeUnescapeClient() {
+  const [clipboardError,setClipboardError]=useState('');
+  const clipboardTask=useSecurityTask();
   const [input, setInput] = useState('');
   const [mode, setMode] = useState<EscapeMode>('escape');
   const [context, setContext] = useState<EscapeContext>('json');
   const [copied, setCopied] = useState(false);
   const [showExamples, setShowExamples] = useState(false);
 
-  const escapeString = (str: string, ctx: EscapeContext): string => {
-    switch (ctx) {
-      case 'json':
-        return str.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\n/g, '\\n').replace(/\r/g, '\\r').replace(/\t/g, '\\t');
-      case 'javascript':
-        return str.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '\\"').replace(/\n/g, '\\n').replace(/\r/g, '\\r').replace(/\t/g, '\\t').replace(/</g, '\\x3C').replace(/>/g, '\\x3E');
-      case 'regex':
-        return str.replace(/\\/g, '\\\\').replace(/[.*+?^${}()|[\]]/g, '\\$&').replace(/\n/g, '\\n').replace(/\t/g, '\\t');
-      case 'html':
-        return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-      default:
-        return str.replace(/\\/g, '\\\\').replace(/\n/g, '\\n').replace(/\t/g, '\\t');
-    }
-  };
-
-  const unescapeString = (str: string, ctx: EscapeContext): string => {
-    switch (ctx) {
-      case 'json':
-        return str.replace(/\\\\/g, '\\').replace(/\\"/g, '"').replace(/\\n/g, '\n').replace(/\\r/g, '\r').replace(/\\t/g, '\t');
-      case 'javascript':
-        return str.replace(/\\\\/g, '\\').replace(/\\'/g, "'").replace(/\\"/g, '"').replace(/\\n/g, '\n').replace(/\\r/g, '\r').replace(/\\t/g, '\t').replace(/\\x3C/g, '<').replace(/\\x3E/g, '>');
-      case 'regex':
-        return str.replace(/\\\\/g, '\\').replace(/\\([.*+?^${}()|[\]])/g, '$1').replace(/\\n/g, '\n').replace(/\\t/g, '\t');
-      case 'html':
-        return str.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'");
-      default:
-        return str.replace(/\\\\/g, '\\').replace(/\\n/g, '\n').replace(/\\t/g, '\t');
-    }
-  };
-
-  const output = useMemo(() => {
-    if (!input.trim()) return '';
+  const conversion = useMemo(() => {
+    if (!input) return {value:'',error:''};
     try {
-      return mode === 'escape' ? escapeString(input, context) : unescapeString(input, context);
+      return {value:mode === 'escape' ? escapeString(input, context) : unescapeString(input, context),error:''};
     } catch {
-      return 'Error processing string';
+      return {value:'',error:'Invalid escape sequence'};
     }
   }, [input, mode, context]);
+  const output=conversion.value;
 
   const copy = () => {
-    navigator.clipboard.writeText(output);
-    setCopied(true);
+    const copyId=++clipboardTask.current;setClipboardError('');
+    copySecurityText(output).then(()=>{if(copyId!==clipboardTask.current)return;setCopied(true);}).catch(()=>{if(copyId===clipboardTask.current)setClipboardError('Clipboard access failed. Select and copy the output manually.');});
     setTimeout(() => setCopied(false), 1500);
   };
 
@@ -76,6 +51,8 @@ export default function BackslashEscapeUnescapeClient() {
   };
 
   return (
+    <DeveloperSecurityFrame onExample={()=>{clipboardTask.current++;setMode('escape');setInput(EXAMPLES[context]);}} onClear={()=>{clipboardTask.current++;setClipboardError('');setInput('');setCopied(false);setShowExamples(false);}}>
+    {clipboardError&&<p role="alert" className="tb-v2-error">{clipboardError}</p>}
     <div>
       {/* Mode tabs */}
       <div className="tb-v2-mode-tabs" role="tablist">
@@ -100,11 +77,7 @@ export default function BackslashEscapeUnescapeClient() {
             <button
               key={ctx}
               onClick={() => setContext(ctx)}
-              className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${
-                context === ctx
-                  ? 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 border border-indigo-300 dark:border-indigo-700'
-                  : 'bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700'
-              }`}
+              className={`tb-v2-mode-tab ${context === ctx ? 'on' : ''}`}
             >
               {ctx.charAt(0).toUpperCase() + ctx.slice(1)}
             </button>
@@ -121,7 +94,7 @@ export default function BackslashEscapeUnescapeClient() {
             onClick={() => setShowExamples(!showExamples)}
             className="tb-v2-btn tb-v2-btn-ghost tb-v2-btn-sm"
           >
-            📋 Examples
+            More examples
           </button>
         </div>
 
@@ -137,7 +110,7 @@ export default function BackslashEscapeUnescapeClient() {
           </div>
         )}
 
-        <textarea
+        <textarea aria-label="Input" maxLength={100000}
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder={mode === 'escape' ? 'Enter text to escape...' : 'Enter escaped text to unescape...'}
@@ -148,6 +121,7 @@ export default function BackslashEscapeUnescapeClient() {
       </div>
 
       {/* Output */}
+      {conversion.error&&<p role="alert" className="tb-v2-error">{conversion.error}</p>}
       {output && (
         <>
           <div className="tb-v2-tool-output-head">
@@ -174,5 +148,6 @@ export default function BackslashEscapeUnescapeClient() {
         </div>
       )}
     </div>
+    </DeveloperSecurityFrame>
   );
 }

@@ -1,4 +1,6 @@
 'use client';
+import DeveloperSecurityFrame from './DeveloperSecurityFrame';
+import { normalizeUuid } from '@/lib/developer-security/primitives';
 
 import { useMemo, useState } from 'react';
 
@@ -11,9 +13,7 @@ interface UuidInfo {
   timestampError: string | null;
 }
 
-function cleanHex(input: string): string {
-  return input.trim().replace(/^[{[]/, '').replace(/[}\]]$/, '').replace(/-/g, '').replace(/^urn:uuid:/i, '');
-}
+function cleanHex(input: string): string { try { return normalizeUuid(input); } catch { return ''; } }
 
 function insertDashes(hex32: string): string {
   return `${hex32.slice(0, 8)}-${hex32.slice(8, 12)}-${hex32.slice(12, 16)}-${hex32.slice(16, 20)}-${hex32.slice(20, 32)}`;
@@ -117,11 +117,12 @@ export default function UUIDCompareClient() {
   ];
 
   return (
+    <DeveloperSecurityFrame onExample={()=>{setA('550E8400-E29B-41D4-A716-446655440000');setB('550e8400-e29b-41d4-a716-446655440000');}} onClear={()=>{setA('');setB('');}}>
     <div>
       <div className="tb-v2-grid-2">
         <div>
           <span className="tb-v2-tool-label">UUID A</span>
-          <input
+          <input aria-label="UUID A" maxLength={100000}
             type="text"
             value={a}
             onChange={(e) => setA(e.target.value)}
@@ -133,7 +134,7 @@ export default function UUIDCompareClient() {
         </div>
         <div>
           <span className="tb-v2-tool-label">UUID B</span>
-          <input
+          <input aria-label="UUID B" maxLength={100000}
             type="text"
             value={b}
             onChange={(e) => setB(e.target.value)}
@@ -193,5 +194,6 @@ export default function UUIDCompareClient() {
         </>
       )}
     </div>
+    </DeveloperSecurityFrame>
   );
 }

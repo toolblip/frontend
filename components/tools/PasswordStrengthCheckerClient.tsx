@@ -1,9 +1,12 @@
 'use client';
+import { copySecurityText } from '@/lib/developer-security/primitives';
+import DeveloperSecurityFrame, { useSecurityTask } from './DeveloperSecurityFrame';
 
 import { useState, useMemo } from 'react';
 
 function checkStrength(password: string) {
   const feedback: string[] = [];
+  if(!password)return {score:0,entropy:0,feedback,crackTime:'Not predictable',poolSize:0};
   let score = 0;
 
   // Length checks
@@ -30,7 +33,9 @@ function checkStrength(password: string) {
   if (/^[a-zA-Z]+$/.test(password)) feedback.push('Mix letters with numbers and symbols');
   if (/^[0-9]+$/.test(password)) feedback.push('Avoid using only numbers');
 
-  // Entropy calculation
+  if(/^(password|123456|qwerty|letmein|admin)/i.test(password)||/(.)\1{2,}/.test(password)||/^(.{1,6})\1+$/.test(password)){score=Math.min(score,2);feedback.push('Avoid common words, sequences and repeated patterns.');}
+
+  // Theoretical search space; not measured entropy of a human choice.
   const poolSize = (/[a-z]/.test(password) ? 26 : 0) +
     (/[A-Z]/.test(password) ? 26 : 0) +
     (/\d/.test(password) ? 10 : 0) +
@@ -38,26 +43,12 @@ function checkStrength(password: string) {
     (/[^a-zA-Z0-9!@#$%^&*()_+\-=\[\]{}|;:,.<>?]/.test(password) ? 100 : 0);
   const entropy = password.length * Math.log2(poolSize || 1);
 
-  // Crack time estimation (assuming 10 billion guesses/sec)
-  const guessesPerSec = 10_000_000_000;
-  const totalGuesses = Math.pow(2, entropy);
-  const seconds = totalGuesses / guessesPerSec;
-
-  let crackTime = '';
-  if (seconds < 1) crackTime = 'Instantly';
-  else if (seconds < 60) crackTime = `${Math.round(seconds)} seconds`;
-  else if (seconds < 3600) crackTime = `${Math.round(seconds / 60)} minutes`;
-  else if (seconds < 86400) crackTime = `${Math.round(seconds / 3600)} hours`;
-  else if (seconds < 31536000) crackTime = `${Math.round(seconds / 86400)} days`;
-  else if (seconds < 31536000 * 1000) crackTime = `${Math.round(seconds / 31536000)} years`;
-  else if (seconds < 31536000 * 1000000) crackTime = `${Math.round(seconds / 31536000 / 1000)}k years`;
-  else if (seconds < 31536000 * 1e9) crackTime = `${Math.round(seconds / 31536000 / 1e6)}M years`;
-  else crackTime = `${(seconds / 31536000 / 1e9).toExponential(1)} billion years`;
-
-  return { score: Math.min(score, 9), entropy, feedback, crackTime, poolSize };
+  return { score: Math.min(score, 9), entropy, feedback, crackTime: 'Not predictable', poolSize };
 }
 
 export default function PasswordStrengthCheckerClient() {
+  const [clipboardError,setClipboardError]=useState('');
+  const clipboardTask=useSecurityTask();
   const [password, setPassword] = useState('');
   const [show, setShow] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -75,13 +66,16 @@ export default function PasswordStrengthCheckerClient() {
   const strength = getStrength();
 
   const copy = () => {
-    navigator.clipboard.writeText(password);
-    setCopied(true);
+    const copyId=++clipboardTask.current;setClipboardError('');
+    copySecurityText(password).then(()=>{if(copyId!==clipboardTask.current)return;setCopied(true);}).catch(()=>{if(copyId===clipboardTask.current)setClipboardError('Clipboard access failed. Select and copy the output manually.');});
     setTimeout(() => setCopied(false), 1500);
   };
 
   return (
+    <DeveloperSecurityFrame onExample={()=>{clipboardTask.current++;setPassword('correct horse battery staple');}} onClear={()=>{clipboardTask.current++;setClipboardError('');setPassword('');setCopied(false);setShow(false);}}>
+    {clipboardError&&<p role="alert" className="tb-v2-error">{clipboardError}</p>}
     <div>
+      <p className="tb-v2-hash-stats">Composition heuristic only. The random-model search space assumes independent random characters; it does not measure the entropy or crack time of your password.</p>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Password</span>
         <div className="flex gap-2">
@@ -96,7 +90,7 @@ export default function PasswordStrengthCheckerClient() {
         </div>
       </div>
 
-      <input
+      <input aria-label="Password" maxLength={100000}
         type={show ? 'text' : 'password'}
         value={password}
         onChange={e => setPassword(e.target.value)}
@@ -131,7 +125,7 @@ export default function PasswordStrengthCheckerClient() {
             </div>
             <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg text-center">
               <div className="text-lg font-bold">{entropy.toFixed(0)}</div>
-              <div className="text-xs text-gray-500">Bits of Entropy</div>
+              <div className="text-xs text-gray-500">Random-model bits (upper bound)</div>
             </div>
             <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg text-center">
               <div className="text-lg font-bold">{poolSize}</div>
@@ -139,7 +133,7 @@ export default function PasswordStrengthCheckerClient() {
             </div>
             <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg text-center">
               <div className="text-lg font-bold text-xs leading-tight">{crackTime}</div>
-              <div className="text-xs text-gray-500">Crack Time</div>
+              <div className="text-xs text-gray-500">Crack time</div>
             </div>
           </div>
 
@@ -176,12 +170,13 @@ export default function PasswordStrengthCheckerClient() {
           </ul>
         ) : password ? (
           <div className="flex items-center gap-2 text-green-600 dark:text-green-400 font-medium">
-            <span>✅</span> Excellent! Your password meets all recommendations.
+            <span>✅</span> No simple composition issues found. This does not check breaches or predict resistance to guessing.
           </div>
         ) : (
           <div className="text-gray-500 text-sm">Enter a password to see suggestions</div>
         )}
       </div>
     </div>
+    </DeveloperSecurityFrame>
   );
 }

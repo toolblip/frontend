@@ -1,0 +1,937 @@
+{
+  "group": "developer-security",
+  "branch": "fix/auto-qa-developer-security",
+  "status": "implementation_complete_pending_parent_browser_and_central_copy",
+  "assignedRouteCount": 44,
+  "browserCaseCount": 44,
+  "inspectedComponentCount": 36,
+  "sharedComponents": {
+    "inventoryReviewed": true,
+    "additionalHistoricallyApprovedRoutes": []
+  },
+  "fixedFiles": [
+    "components/tools/BackslashEscapeUnescapeClient.tsx",
+    "components/tools/Base64EncoderDecoderClient.tsx",
+    "components/tools/BcryptHashGeneratorClient.tsx",
+    "components/tools/BinaryConverterClient.tsx",
+    "components/tools/CreditCardValidatorClient.tsx",
+    "components/tools/DataUriGeneratorClient.tsx",
+    "components/tools/DeveloperSecurityFrame.module.css",
+    "components/tools/DeveloperSecurityFrame.tsx",
+    "components/tools/EmailValidatorClient.tsx",
+    "components/tools/EncodingsReferenceClient.tsx",
+    "components/tools/HashCollisionFinderClient.tsx",
+    "components/tools/HashDiffCheckerClient.tsx",
+    "components/tools/HashFromTextClient.tsx",
+    "components/tools/HashGeneratorClient.tsx",
+    "components/tools/HashIdentifierClient.tsx",
+    "components/tools/HmacGeneratorClient.tsx",
+    "components/tools/HtmlAttributeEncoderClient.tsx",
+    "components/tools/HtmlEncoderDecoderClient.tsx",
+    "components/tools/JwtDecoderClient.tsx",
+    "components/tools/JwtTokenInspectorClient.tsx",
+    "components/tools/JwtTokenTesterClient.tsx",
+    "components/tools/PasswordGeneratorClient.tsx",
+    "components/tools/PasswordStrengthCheckerClient.tsx",
+    "components/tools/PunycodeEncoderClient.tsx",
+    "components/tools/RandomUuidV7Client.tsx",
+    "components/tools/RegexEscapeClient.tsx",
+    "components/tools/SSHKeyGeneratorClient.tsx",
+    "components/tools/SecureRandomGeneratorClient.tsx",
+    "components/tools/Sha256HashClient.tsx",
+    "components/tools/TokenBuilderClient.tsx",
+    "components/tools/UUIDComparatorClient.tsx",
+    "components/tools/UUIDCompareClient.tsx",
+    "components/tools/UUIDNormalizerClient.tsx",
+    "components/tools/UlidGeneratorClient.tsx",
+    "components/tools/UrlEncodeClient.tsx",
+    "components/tools/UuidGeneratorClient.tsx",
+    "components/tools/UuidV1GeneratorClient.tsx",
+    "components/tools/UuidValidatorClient.tsx",
+    "lib/developer-security/escaping.test.ts",
+    "lib/developer-security/escaping.ts",
+    "lib/developer-security/md5.ts",
+    "lib/developer-security/primitives.test.ts",
+    "lib/developer-security/primitives.ts",
+    "lib/developer-security/ssh.test.ts",
+    "lib/developer-security/ssh.ts",
+    "scripts/qa/cases/developer-security.mjs",
+    "scripts/qa/reports/developer-security.json"
+  ],
+  "verification": {
+    "scopedTests": {
+      "command": "./node_modules/.bin/vitest run lib/developer-security lib/punycode.test.ts",
+      "exitCode": 0,
+      "filesPassed": 4,
+      "testsPassed": 45,
+      "testsFailed": 0,
+      "warning": "Node DEP0205 module.register deprecation only"
+    },
+    "typescript": {
+      "command": "./node_modules/.bin/tsc --noEmit --pretty false",
+      "exitCode": 0
+    },
+    "caseInterface": {
+      "command": "node --check scripts/qa/cases/developer-security.mjs; import module and compare unique slug set to assignment",
+      "exitCode": 0,
+      "coverage": "44/44"
+    },
+    "diffCheck": {
+      "command": "git diff --check",
+      "exitCode": 0
+    },
+    "browser": {
+      "status": "not_run_worker_contract",
+      "owner": "parent",
+      "caseFile": "scripts/qa/cases/developer-security.mjs"
+    },
+    "build": {
+      "status": "not_run_worker_contract"
+    },
+    "devServerStarted": false,
+    "commitHook": {
+      "status": "warning_commit_succeeded",
+      "tool": "Gitleaks pre-commit hook",
+      "finding": "The hook flagged the public JWT example in JwtDecoderClient.tsx. It encodes John Doe example claims signed with the documented public demo secret your-256-bit-secret; it is not a live account credential.",
+      "coverage": "The per-file loop stopped at that fixture, but the hook returned success and allowed the commit. A complete clean secret scan is not claimed.",
+      "action": "Recorded false positive; did not disable or modify hooks or scanners."
+    }
+  },
+  "independentEvidence": {
+    "hashes": "Node crypto MD5/SHA plus RFC MD5 abc constant, empty/ASCII/Unicode/multiblock cases",
+    "bcrypt": "Apache htpasswd independent password vector; real bcrypt output/verification in parent browser case",
+    "ssh": "Node createPrivateKey/createPublicKey JWK compared with OpenSSH wire fields for RSA, all three EC curves, Ed25519",
+    "uuid": "Epoch timestamp, fixed 48-bit v7 timestamp, version/variant/multicast assertions",
+    "baselineReproductions": [
+      {
+        "baseline": "RandomUuidV7Client",
+        "uuid": "01a0dc5d-ad4d-71aab-109b0-d10416ad5",
+        "validShape": false
+      },
+      {
+        "baseline": "UuidV1GeneratorClient",
+        "uuid": "1ec6c770-c770-1ec6-85a9-4f9029f039a5",
+        "validShape": true,
+        "embeddedUnixMs": 94256471828630,
+        "actualUnixMs": 1790403521895
+      },
+      {
+        "baseline": "BinaryConverterClient",
+        "input": "é",
+        "actual": "11101001",
+        "expected": "11000011 10101001"
+      },
+      {
+        "baseline": "UuidValidatorClient",
+        "actual": "unknown",
+        "expected": "v4"
+      }
+    ]
+  },
+  "routes": [
+    {
+      "slug": "hash-from-text",
+      "component": "HashFromTextClient",
+      "status": "implemented_scoped_checks_passed_browser_pending",
+      "findings": [
+        "Replaced unsupported Web Crypto MD5 call with tested RFC 1321 MD5; retained SHA choices, added empty-input hashes, live updates and cancellation.",
+        "Consistent v2 Examples/Clear actions, accessible fields, input bounds and responsive output wrapping."
+      ],
+      "fixedFiles": [
+        "components/tools/HashFromTextClient.tsx"
+      ],
+      "browserCase": "hash-from-text",
+      "browserStatus": "pending_parent",
+      "implementationBlockers": []
+    },
+    {
+      "slug": "url-encode",
+      "component": "UrlEncodeClient",
+      "status": "implemented_scoped_checks_passed_browser_pending",
+      "findings": [
+        "Retained URI-component semantics; Unicode vector and malformed percent/UTF-8 errors are separate from output.",
+        "Consistent v2 Examples/Clear actions, accessible fields, input bounds and responsive output wrapping."
+      ],
+      "fixedFiles": [
+        "components/tools/UrlEncodeClient.tsx"
+      ],
+      "browserCase": "url-encode",
+      "browserStatus": "pending_parent",
+      "implementationBlockers": []
+    },
+    {
+      "slug": "uuid-generator",
+      "component": "UuidGeneratorClient",
+      "status": "implemented_scoped_checks_passed_browser_pending",
+      "findings": [
+        "Retained secure UUID v4 generation and history; added visible failures, Examples/Clear and accurate clipboard feedback.",
+        "Consistent v2 Examples/Clear actions, accessible fields, input bounds and responsive output wrapping."
+      ],
+      "fixedFiles": [
+        "components/tools/UuidGeneratorClient.tsx"
+      ],
+      "browserCase": "uuid-generator",
+      "browserStatus": "pending_parent",
+      "implementationBlockers": []
+    },
+    {
+      "slug": "sha-256-hash",
+      "component": "Sha256HashClient",
+      "status": "implemented_scoped_checks_passed_browser_pending",
+      "findings": [
+        "Uses tested SHA-256 surface; handles empty text, errors and cancellation while preserving uppercase/copy.",
+        "Consistent v2 Examples/Clear actions, accessible fields, input bounds and responsive output wrapping."
+      ],
+      "fixedFiles": [
+        "components/tools/Sha256HashClient.tsx"
+      ],
+      "browserCase": "sha-256-hash",
+      "browserStatus": "pending_parent",
+      "implementationBlockers": []
+    },
+    {
+      "slug": "jwt-decoder",
+      "component": "JwtDecoderClient",
+      "status": "implemented_scoped_checks_passed_browser_pending",
+      "findings": [
+        "Strict canonical Base64URL and fatal UTF-8 parsing; require JSON objects and finite NumericDate claims; expiry boundary uses <=; real example token; signature remains explicitly unverified.",
+        "Consistent v2 Examples/Clear actions, accessible fields, input bounds and responsive output wrapping."
+      ],
+      "fixedFiles": [
+        "components/tools/JwtDecoderClient.tsx"
+      ],
+      "browserCase": "jwt-decoder",
+      "browserStatus": "pending_parent",
+      "implementationBlockers": []
+    },
+    {
+      "slug": "password-generator",
+      "component": "PasswordGeneratorClient",
+      "status": "implemented_scoped_checks_passed_browser_pending",
+      "findings": [
+        "CSPRNG rejection sampling plus guaranteed selected categories and secure shuffle; ambiguous-character exclusion, generation errors, Examples/Clear.",
+        "Consistent v2 Examples/Clear actions, accessible fields, input bounds and responsive output wrapping."
+      ],
+      "fixedFiles": [
+        "components/tools/PasswordGeneratorClient.tsx"
+      ],
+      "browserCase": "password-generator",
+      "browserStatus": "pending_parent",
+      "implementationBlockers": []
+    },
+    {
+      "slug": "password-strength-checker",
+      "component": "PasswordStrengthCheckerClient",
+      "status": "implemented_scoped_checks_passed_browser_pending",
+      "findings": [
+        "Common/repeated patterns penalized; composition labeled heuristic and random-model bits an upper bound; unsupported crack-time predictions removed.",
+        "Consistent v2 Examples/Clear actions, accessible fields, input bounds and responsive output wrapping."
+      ],
+      "fixedFiles": [
+        "components/tools/PasswordStrengthCheckerClient.tsx"
+      ],
+      "browserCase": "password-strength-checker",
+      "browserStatus": "pending_parent",
+      "implementationBlockers": []
+    },
+    {
+      "slug": "hash-identifier",
+      "component": "HashIdentifierClient",
+      "status": "implemented_scoped_checks_passed_browser_pending",
+      "findings": [
+        "Hex and structured-format validation; digest algorithms are candidates, not definitive identification; removed false hash entropy metric.",
+        "Consistent v2 Examples/Clear actions, accessible fields, input bounds and responsive output wrapping."
+      ],
+      "fixedFiles": [
+        "components/tools/HashIdentifierClient.tsx"
+      ],
+      "browserCase": "hash-identifier",
+      "browserStatus": "pending_parent",
+      "implementationBlockers": []
+    },
+    {
+      "slug": "email-validator",
+      "component": "EmailValidatorClient",
+      "status": "implemented_scoped_checks_passed_browser_pending",
+      "findings": [
+        "Rejects leading/trailing/consecutive local-part dots and excessive lengths; clear syntax-only/ASCII scope, no MX or deliverability claims.",
+        "Consistent v2 Examples/Clear actions, accessible fields, input bounds and responsive output wrapping."
+      ],
+      "fixedFiles": [
+        "components/tools/EmailValidatorClient.tsx"
+      ],
+      "browserCase": "email-validator",
+      "browserStatus": "pending_parent",
+      "implementationBlockers": []
+    },
+    {
+      "slug": "credit-card-validator",
+      "component": "CreditCardValidatorClient",
+      "status": "implemented_scoped_checks_passed_browser_pending",
+      "findings": [
+        "Rejects letters and all-zero strings instead of stripping them into valid numbers; independent Luhn vector, Visa 19-digit and JCB range corrections; checksum-only scope.",
+        "Consistent v2 Examples/Clear actions, accessible fields, input bounds and responsive output wrapping."
+      ],
+      "fixedFiles": [
+        "components/tools/CreditCardValidatorClient.tsx"
+      ],
+      "browserCase": "credit-card-validator",
+      "browserStatus": "pending_parent",
+      "implementationBlockers": []
+    },
+    {
+      "slug": "random-uuid-v7",
+      "component": "RandomUuidV7Client",
+      "status": "implemented_scoped_checks_passed_browser_pending",
+      "findings": [
+        "Replaced malformed field assembly and Math.random with correct 48-bit timestamp, v7/version/variant masks and CSPRNG; retained batches, case and braces.",
+        "Consistent v2 Examples/Clear actions, accessible fields, input bounds and responsive output wrapping."
+      ],
+      "fixedFiles": [
+        "components/tools/RandomUuidV7Client.tsx"
+      ],
+      "browserCase": "random-uuid-v7",
+      "browserStatus": "pending_parent",
+      "implementationBlockers": []
+    },
+    {
+      "slug": "hash-collision-finder",
+      "component": "HashCollisionFinderClient",
+      "status": "implemented_scoped_checks_passed_browser_pending",
+      "findings": [
+        "Real truncated SHA-1/SHA-256 prefix search, bounded at 100,000 attempts; cancel-safe per-run map; errors and honest distinction from full collisions.",
+        "Consistent v2 Examples/Clear actions, accessible fields, input bounds and responsive output wrapping."
+      ],
+      "fixedFiles": [
+        "components/tools/HashCollisionFinderClient.tsx"
+      ],
+      "browserCase": "hash-collision-finder",
+      "browserStatus": "pending_parent",
+      "implementationBlockers": []
+    },
+    {
+      "slug": "url-encoder",
+      "component": "UrlEncodeClient",
+      "status": "implemented_scoped_checks_passed_browser_pending",
+      "findings": [
+        "Retained URI-component semantics; Unicode vector and malformed percent/UTF-8 errors are separate from output.",
+        "Consistent v2 Examples/Clear actions, accessible fields, input bounds and responsive output wrapping."
+      ],
+      "fixedFiles": [
+        "components/tools/UrlEncodeClient.tsx"
+      ],
+      "browserCase": "url-encoder",
+      "browserStatus": "pending_parent",
+      "implementationBlockers": []
+    },
+    {
+      "slug": "encodings-reference",
+      "component": "EncodingsReferenceClient",
+      "status": "implemented_scoped_checks_passed_browser_pending",
+      "findings": [
+        "Retained ASCII/entities/URL/Base64 reference tables; Examples selects ampersand entity; Clear resets search; accessible filtering.",
+        "Consistent v2 Examples/Clear actions, accessible fields, input bounds and responsive output wrapping."
+      ],
+      "fixedFiles": [
+        "components/tools/EncodingsReferenceClient.tsx"
+      ],
+      "browserCase": "encodings-reference",
+      "browserStatus": "pending_parent",
+      "implementationBlockers": []
+    },
+    {
+      "slug": "md5-hash-generator",
+      "component": "HashGeneratorClient",
+      "status": "implemented_scoped_checks_passed_browser_pending",
+      "findings": [
+        "Route-appropriate initial MD5/SHA-1/SHA-256 mode; real UTF-8 MD5/SHA digests, live updates, empty-input vectors, uppercase derived from current digest.",
+        "Consistent v2 Examples/Clear actions, accessible fields, input bounds and responsive output wrapping."
+      ],
+      "fixedFiles": [
+        "components/tools/HashGeneratorClient.tsx"
+      ],
+      "browserCase": "md5-hash-generator",
+      "browserStatus": "pending_parent",
+      "implementationBlockers": []
+    },
+    {
+      "slug": "sha1-hash-generator",
+      "component": "HashGeneratorClient",
+      "status": "implemented_scoped_checks_passed_browser_pending",
+      "findings": [
+        "Route-appropriate initial MD5/SHA-1/SHA-256 mode; real UTF-8 MD5/SHA digests, live updates, empty-input vectors, uppercase derived from current digest.",
+        "Consistent v2 Examples/Clear actions, accessible fields, input bounds and responsive output wrapping."
+      ],
+      "fixedFiles": [
+        "components/tools/HashGeneratorClient.tsx"
+      ],
+      "browserCase": "sha1-hash-generator",
+      "browserStatus": "pending_parent",
+      "implementationBlockers": []
+    },
+    {
+      "slug": "sha256-hash-generator",
+      "component": "HashGeneratorClient",
+      "status": "implemented_scoped_checks_passed_browser_pending",
+      "findings": [
+        "Route-appropriate initial MD5/SHA-1/SHA-256 mode; real UTF-8 MD5/SHA digests, live updates, empty-input vectors, uppercase derived from current digest.",
+        "Consistent v2 Examples/Clear actions, accessible fields, input bounds and responsive output wrapping."
+      ],
+      "fixedFiles": [
+        "components/tools/HashGeneratorClient.tsx"
+      ],
+      "browserCase": "sha256-hash-generator",
+      "browserStatus": "pending_parent",
+      "implementationBlockers": []
+    },
+    {
+      "slug": "bcrypt-hash-generator",
+      "component": "BcryptHashGeneratorClient",
+      "status": "implemented_scoped_checks_passed_browser_pending",
+      "findings": [
+        "Real bcrypt async hash/compare; rejects UTF-8 passwords exceeding 72 bytes; stale hash/verification invalidated on edits and Clear; visible errors.",
+        "Consistent v2 Examples/Clear actions, accessible fields, input bounds and responsive output wrapping."
+      ],
+      "fixedFiles": [
+        "components/tools/BcryptHashGeneratorClient.tsx"
+      ],
+      "browserCase": "bcrypt-hash-generator",
+      "browserStatus": "pending_parent",
+      "implementationBlockers": []
+    },
+    {
+      "slug": "hash-diff-checker",
+      "component": "HashDiffCheckerClient",
+      "status": "implemented_scoped_checks_passed_browser_pending",
+      "findings": [
+        "Retained text/hash modes, independent SHA known answer, live errors and stale reset; direct hashes require even-length hexadecimal input.",
+        "Consistent v2 Examples/Clear actions, accessible fields, input bounds and responsive output wrapping."
+      ],
+      "fixedFiles": [
+        "components/tools/HashDiffCheckerClient.tsx"
+      ],
+      "browserCase": "hash-diff-checker",
+      "browserStatus": "pending_parent",
+      "implementationBlockers": []
+    },
+    {
+      "slug": "uuid-v1-generator",
+      "component": "UuidV1GeneratorClient",
+      "status": "implemented_scoped_checks_passed_browser_pending",
+      "findings": [
+        "BigInt Gregorian timestamp arithmetic replaces broken 32-bit shifts; CSPRNG clock sequence/random node and multicast node bit; batch/format options retained.",
+        "Consistent v2 Examples/Clear actions, accessible fields, input bounds and responsive output wrapping."
+      ],
+      "fixedFiles": [
+        "components/tools/UuidV1GeneratorClient.tsx"
+      ],
+      "browserCase": "uuid-v1-generator",
+      "browserStatus": "pending_parent",
+      "implementationBlockers": []
+    },
+    {
+      "slug": "data-uri-generator",
+      "component": "DataUriGeneratorClient",
+      "status": "implemented_scoped_checks_passed_browser_pending",
+      "findings": [
+        "UTF-8 text encoding and exact arbitrary file bytes; bounded 2 MiB file reads with error/loading and stale-read cancellation; file input resets on Clear.",
+        "Consistent v2 Examples/Clear actions, accessible fields, input bounds and responsive output wrapping."
+      ],
+      "fixedFiles": [
+        "components/tools/DataUriGeneratorClient.tsx"
+      ],
+      "browserCase": "data-uri-generator",
+      "browserStatus": "pending_parent",
+      "implementationBlockers": []
+    },
+    {
+      "slug": "ssh-key-generator",
+      "component": "SSHKeyGeneratorClient",
+      "status": "implemented_scoped_checks_passed_browser_pending",
+      "findings": [
+        "Retained real RSA/ECDSA/Ed25519 Web Crypto and OpenSSH public blobs; tested PKCS8/public-key correspondence; stale generation invalidated; honest PKCS8 compatibility notes; safe comments/download cleanup.",
+        "Consistent v2 Examples/Clear actions, accessible fields, input bounds and responsive output wrapping."
+      ],
+      "fixedFiles": [
+        "components/tools/SSHKeyGeneratorClient.tsx"
+      ],
+      "browserCase": "ssh-key-generator",
+      "browserStatus": "pending_parent",
+      "implementationBlockers": []
+    },
+    {
+      "slug": "jwt-tester",
+      "component": "JwtTokenTesterClient",
+      "status": "implemented_scoped_checks_passed_browser_pending",
+      "findings": [
+        "Strict JWT decoding, own-property HMAC allowlist, unsupported critical-extension handling and actual HS256/384/512 signature comparison; preserves expiry separately from signature.",
+        "Consistent v2 Examples/Clear actions, accessible fields, input bounds and responsive output wrapping."
+      ],
+      "fixedFiles": [
+        "components/tools/JwtTokenTesterClient.tsx"
+      ],
+      "browserCase": "jwt-tester",
+      "browserStatus": "pending_parent",
+      "implementationBlockers": []
+    },
+    {
+      "slug": "jwt-token-tester",
+      "component": "JwtTokenTesterClient",
+      "status": "implemented_scoped_checks_passed_browser_pending",
+      "findings": [
+        "Strict JWT decoding, own-property HMAC allowlist, unsupported critical-extension handling and actual HS256/384/512 signature comparison; preserves expiry separately from signature.",
+        "Consistent v2 Examples/Clear actions, accessible fields, input bounds and responsive output wrapping."
+      ],
+      "fixedFiles": [
+        "components/tools/JwtTokenTesterClient.tsx"
+      ],
+      "browserCase": "jwt-token-tester",
+      "browserStatus": "pending_parent",
+      "implementationBlockers": []
+    },
+    {
+      "slug": "uuid-validator",
+      "component": "UuidValidatorClient",
+      "status": "implemented_scoped_checks_passed_browser_pending",
+      "findings": [
+        "Correct third-group version nibble; supports RFC versions 1–8 plus Nil/Max, validates RFC variant and canonical group lengths.",
+        "Consistent v2 Examples/Clear actions, accessible fields, input bounds and responsive output wrapping."
+      ],
+      "fixedFiles": [
+        "components/tools/UuidValidatorClient.tsx"
+      ],
+      "browserCase": "uuid-validator",
+      "browserStatus": "pending_parent",
+      "implementationBlockers": []
+    },
+    {
+      "slug": "jwt-inspector",
+      "component": "JwtDecoderClient",
+      "status": "implemented_scoped_checks_passed_browser_pending",
+      "findings": [
+        "Strict canonical Base64URL and fatal UTF-8 parsing; require JSON objects and finite NumericDate claims; expiry boundary uses <=; real example token; signature remains explicitly unverified.",
+        "Consistent v2 Examples/Clear actions, accessible fields, input bounds and responsive output wrapping."
+      ],
+      "fixedFiles": [
+        "components/tools/JwtDecoderClient.tsx"
+      ],
+      "browserCase": "jwt-inspector",
+      "browserStatus": "pending_parent",
+      "implementationBlockers": []
+    },
+    {
+      "slug": "jwt-token-decoder",
+      "component": "JwtDecoderClient",
+      "status": "implemented_scoped_checks_passed_browser_pending",
+      "findings": [
+        "Strict canonical Base64URL and fatal UTF-8 parsing; require JSON objects and finite NumericDate claims; expiry boundary uses <=; real example token; signature remains explicitly unverified.",
+        "Consistent v2 Examples/Clear actions, accessible fields, input bounds and responsive output wrapping."
+      ],
+      "fixedFiles": [
+        "components/tools/JwtDecoderClient.tsx"
+      ],
+      "browserCase": "jwt-token-decoder",
+      "browserStatus": "pending_parent",
+      "implementationBlockers": []
+    },
+    {
+      "slug": "uuid-normalizer",
+      "component": "UUIDNormalizerClient",
+      "status": "implemented_scoped_checks_passed_browser_pending",
+      "findings": [
+        "Strict accepted UUID spellings and matching braces/URN form; retains case/variant inspection and rejects arbitrary misplaced separators.",
+        "Consistent v2 Examples/Clear actions, accessible fields, input bounds and responsive output wrapping."
+      ],
+      "fixedFiles": [
+        "components/tools/UUIDNormalizerClient.tsx"
+      ],
+      "browserCase": "uuid-normalizer",
+      "browserStatus": "pending_parent",
+      "implementationBlockers": []
+    },
+    {
+      "slug": "random-password-generator",
+      "component": "PasswordGeneratorClient",
+      "status": "implemented_scoped_checks_passed_browser_pending",
+      "findings": [
+        "CSPRNG rejection sampling plus guaranteed selected categories and secure shuffle; ambiguous-character exclusion, generation errors, Examples/Clear.",
+        "Consistent v2 Examples/Clear actions, accessible fields, input bounds and responsive output wrapping."
+      ],
+      "fixedFiles": [
+        "components/tools/PasswordGeneratorClient.tsx"
+      ],
+      "browserCase": "random-password-generator",
+      "browserStatus": "pending_parent",
+      "implementationBlockers": []
+    },
+    {
+      "slug": "base64-encoder-decoder",
+      "component": "Base64EncoderDecoderClient",
+      "status": "implemented_scoped_checks_passed_browser_pending",
+      "findings": [
+        "Fatal UTF-8 decoding, canonical Base64 padding-bit checks with padded/unpadded support; preserves whitespace when encoding; live updates and retained context controls.",
+        "Consistent v2 Examples/Clear actions, accessible fields, input bounds and responsive output wrapping."
+      ],
+      "fixedFiles": [
+        "components/tools/Base64EncoderDecoderClient.tsx"
+      ],
+      "browserCase": "base64-encoder-decoder",
+      "browserStatus": "pending_parent",
+      "implementationBlockers": []
+    },
+    {
+      "slug": "html-encoder-decoder",
+      "component": "HtmlEncoderDecoderClient",
+      "status": "implemented_scoped_checks_passed_browser_pending",
+      "findings": [
+        "Live entity conversion; decodes entities once without treating input markup as a document; accessible input/output, Examples/Clear.",
+        "Consistent v2 Examples/Clear actions, accessible fields, input bounds and responsive output wrapping."
+      ],
+      "fixedFiles": [
+        "components/tools/HtmlEncoderDecoderClient.tsx"
+      ],
+      "browserCase": "html-encoder-decoder",
+      "browserStatus": "pending_parent",
+      "implementationBlockers": []
+    },
+    {
+      "slug": "binary-converter",
+      "component": "BinaryConverterClient",
+      "status": "implemented_scoped_checks_passed_browser_pending",
+      "findings": [
+        "UTF-8 byte encoding replaces UTF-16 code-unit splitting; rejects partial bytes/nonbinary/invalid UTF-8; live conversion and errors.",
+        "Consistent v2 Examples/Clear actions, accessible fields, input bounds and responsive output wrapping."
+      ],
+      "fixedFiles": [
+        "components/tools/BinaryConverterClient.tsx"
+      ],
+      "browserCase": "binary-converter",
+      "browserStatus": "pending_parent",
+      "implementationBlockers": []
+    },
+    {
+      "slug": "backslash-escape-unescape",
+      "component": "BackslashEscapeUnescapeClient",
+      "status": "implemented_scoped_checks_passed_browser_pending",
+      "findings": [
+        "JSON stringify/parse for all controls; one-pass JS/general/regex unescape avoids double decoding; validated Unicode/hex escapes; all five contexts retained.",
+        "Consistent v2 Examples/Clear actions, accessible fields, input bounds and responsive output wrapping."
+      ],
+      "fixedFiles": [
+        "components/tools/BackslashEscapeUnescapeClient.tsx"
+      ],
+      "browserCase": "backslash-escape-unescape",
+      "browserStatus": "pending_parent",
+      "implementationBlockers": []
+    },
+    {
+      "slug": "punycode-encoder",
+      "component": "PunycodeEncoderClient",
+      "status": "implemented_scoped_checks_passed_browser_pending",
+      "findings": [
+        "Retained bidirectional IDN/email/URL conversion and emoji controls; added consistent actions, input bounds, accessible panes and clipboard-read cancellation.",
+        "Consistent v2 Examples/Clear actions, accessible fields, input bounds and responsive output wrapping."
+      ],
+      "fixedFiles": [
+        "components/tools/PunycodeEncoderClient.tsx"
+      ],
+      "browserCase": "punycode-encoder",
+      "browserStatus": "pending_parent",
+      "implementationBlockers": []
+    },
+    {
+      "slug": "ulid-generator",
+      "component": "UlidGeneratorClient",
+      "status": "implemented_scoped_checks_passed_browser_pending",
+      "findings": [
+        "Replaced Math.random with CSPRNG Crockford encoding; retained batches/case; removed unsupported same-millisecond monotonicity claim.",
+        "Consistent v2 Examples/Clear actions, accessible fields, input bounds and responsive output wrapping."
+      ],
+      "fixedFiles": [
+        "components/tools/UlidGeneratorClient.tsx"
+      ],
+      "browserCase": "ulid-generator",
+      "browserStatus": "pending_parent",
+      "implementationBlockers": []
+    },
+    {
+      "slug": "hmac-generator",
+      "component": "HmacGeneratorClient",
+      "status": "implemented_scoped_checks_passed_browser_pending",
+      "findings": [
+        "Real Web Crypto HMAC across SHA-1/256/384/512, UTF-8 and empty messages; hex/Base64 output; cancel-safe live computation and visible errors.",
+        "Consistent v2 Examples/Clear actions, accessible fields, input bounds and responsive output wrapping."
+      ],
+      "fixedFiles": [
+        "components/tools/HmacGeneratorClient.tsx"
+      ],
+      "browserCase": "hmac-generator",
+      "browserStatus": "pending_parent",
+      "implementationBlockers": []
+    },
+    {
+      "slug": "secure-random-generator",
+      "component": "SecureRandomGeneratorClient",
+      "status": "implemented_scoped_checks_passed_browser_pending",
+      "findings": [
+        "Retained real CSPRNG string/integer/UUID/bytes modes; rejects fractional/unsafe/inverted ranges and out-of-bounds counts; stale outputs cleared on settings changes.",
+        "Consistent v2 Examples/Clear actions, accessible fields, input bounds and responsive output wrapping."
+      ],
+      "fixedFiles": [
+        "components/tools/SecureRandomGeneratorClient.tsx"
+      ],
+      "browserCase": "secure-random-generator",
+      "browserStatus": "pending_parent",
+      "implementationBlockers": []
+    },
+    {
+      "slug": "json-escape-unescape",
+      "component": "BackslashEscapeUnescapeClient",
+      "status": "implemented_scoped_checks_passed_browser_pending",
+      "findings": [
+        "JSON stringify/parse for all controls; one-pass JS/general/regex unescape avoids double decoding; validated Unicode/hex escapes; all five contexts retained.",
+        "Consistent v2 Examples/Clear actions, accessible fields, input bounds and responsive output wrapping."
+      ],
+      "fixedFiles": [
+        "components/tools/BackslashEscapeUnescapeClient.tsx"
+      ],
+      "browserCase": "json-escape-unescape",
+      "browserStatus": "pending_parent",
+      "implementationBlockers": []
+    },
+    {
+      "slug": "uuid-comparator",
+      "component": "UUIDComparatorClient",
+      "status": "implemented_scoped_checks_passed_browser_pending",
+      "findings": [
+        "Strict UUID spelling while preserving equality, variants and embedded v1/v7 timestamp comparison; labels and Examples/Clear.",
+        "Consistent v2 Examples/Clear actions, accessible fields, input bounds and responsive output wrapping."
+      ],
+      "fixedFiles": [
+        "components/tools/UUIDComparatorClient.tsx"
+      ],
+      "browserCase": "uuid-comparator",
+      "browserStatus": "pending_parent",
+      "implementationBlockers": []
+    },
+    {
+      "slug": "token-builder",
+      "component": "TokenBuilderClient",
+      "status": "implemented_scoped_checks_passed_browser_pending",
+      "findings": [
+        "Real HMAC signing; strict object JSON, own-property algorithm allowlist, critical-extension and empty-secret validation; stale signed token invalidated on edits/Clear.",
+        "Consistent v2 Examples/Clear actions, accessible fields, input bounds and responsive output wrapping."
+      ],
+      "fixedFiles": [
+        "components/tools/TokenBuilderClient.tsx"
+      ],
+      "browserCase": "token-builder",
+      "browserStatus": "pending_parent",
+      "implementationBlockers": []
+    },
+    {
+      "slug": "uuid-compare",
+      "component": "UUIDCompareClient",
+      "status": "implemented_scoped_checks_passed_browser_pending",
+      "findings": [
+        "Retained field-by-field, lexical and chronological comparison; strict input spelling, accessible inputs and reset actions.",
+        "Consistent v2 Examples/Clear actions, accessible fields, input bounds and responsive output wrapping."
+      ],
+      "fixedFiles": [
+        "components/tools/UUIDCompareClient.tsx"
+      ],
+      "browserCase": "uuid-compare",
+      "browserStatus": "pending_parent",
+      "implementationBlockers": []
+    },
+    {
+      "slug": "html-attribute-encoder",
+      "component": "HtmlAttributeEncoderClient",
+      "status": "implemented_scoped_checks_passed_browser_pending",
+      "findings": [
+        "Live quoted-attribute entity encoding; single-pass entity decoding avoids double decode; scope explicitly excludes sanitization.",
+        "Consistent v2 Examples/Clear actions, accessible fields, input bounds and responsive output wrapping."
+      ],
+      "fixedFiles": [
+        "components/tools/HtmlAttributeEncoderClient.tsx"
+      ],
+      "browserCase": "html-attribute-encoder",
+      "browserStatus": "pending_parent",
+      "implementationBlockers": []
+    },
+    {
+      "slug": "regex-escape",
+      "component": "RegexEscapeClient",
+      "status": "implemented_scoped_checks_passed_browser_pending",
+      "findings": [
+        "Retained literal escaping and inverse operation; independent RegExp assertion, bounded labeled input and Examples/Clear.",
+        "Consistent v2 Examples/Clear actions, accessible fields, input bounds and responsive output wrapping."
+      ],
+      "fixedFiles": [
+        "components/tools/RegexEscapeClient.tsx"
+      ],
+      "browserCase": "regex-escape",
+      "browserStatus": "pending_parent",
+      "implementationBlockers": []
+    },
+    {
+      "slug": "jwt-token-inspector",
+      "component": "JwtTokenInspectorClient",
+      "status": "implemented_scoped_checks_passed_browser_pending",
+      "findings": [
+        "Retained detailed claims/signature inspection with strict parsing and seconds-only NumericDates; no signature trust implied.",
+        "Consistent v2 Examples/Clear actions, accessible fields, input bounds and responsive output wrapping."
+      ],
+      "fixedFiles": [
+        "components/tools/JwtTokenInspectorClient.tsx"
+      ],
+      "browserCase": "jwt-token-inspector",
+      "browserStatus": "pending_parent",
+      "implementationBlockers": []
+    }
+  ],
+  "duplicateProposals": [
+    {
+      "from": "url-encoder",
+      "to": "url-encode",
+      "permanent": true,
+      "evidence": "Same assigned component and feature set; no separate capability removed. Coordinator applies routing."
+    },
+    {
+      "from": "jwt-inspector",
+      "to": "jwt-decoder",
+      "permanent": true,
+      "evidence": "Same assigned component and feature set; no separate capability removed. Coordinator applies routing."
+    },
+    {
+      "from": "jwt-token-decoder",
+      "to": "jwt-decoder",
+      "permanent": true,
+      "evidence": "Same assigned component and feature set; no separate capability removed. Coordinator applies routing."
+    },
+    {
+      "from": "jwt-token-tester",
+      "to": "jwt-tester",
+      "permanent": true,
+      "evidence": "Same assigned component and feature set; no separate capability removed. Coordinator applies routing."
+    },
+    {
+      "from": "random-password-generator",
+      "to": "password-generator",
+      "permanent": true,
+      "evidence": "Same assigned component and feature set; no separate capability removed. Coordinator applies routing."
+    },
+    {
+      "from": "json-escape-unescape",
+      "to": "backslash-escape-unescape",
+      "permanent": true,
+      "evidence": "Same assigned component and feature set; no separate capability removed. Coordinator applies routing."
+    }
+  ],
+  "centralMetadataChanges": [
+    {
+      "slugs": [
+        "email-validator"
+      ],
+      "files": [
+        "data/tools.ts",
+        "data/tool-content.ts"
+      ],
+      "change": "Replace MX/deliverability claims with: Validate unquoted ASCII email address syntax locally. This tool does not check DNS, MX records, mailbox existence, or deliverability."
+    },
+    {
+      "slugs": [
+        "hash-collision-finder"
+      ],
+      "files": [
+        "data/tools.ts",
+        "data/tool-content.ts"
+      ],
+      "change": "Replace full-collision/MD5 attack claims with: Demonstrate the birthday paradox by finding matching truncated SHA-1 or SHA-256 prefixes. This does not find full-length collisions or break these algorithms."
+    },
+    {
+      "slugs": [
+        "password-strength-checker"
+      ],
+      "files": [
+        "data/tools.ts",
+        "data/tool-content.ts",
+        "lib/faq.ts"
+      ],
+      "change": "Describe composition heuristics and obvious-pattern checks, not measured entropy or crack-time prediction. Random-model bits are a theoretical upper bound for independently sampled characters. No breach lookup."
+    },
+    {
+      "slugs": [
+        "uuid-v1-generator"
+      ],
+      "files": [
+        "data/tools.ts",
+        "data/tool-content.ts",
+        "lib/faq.ts"
+      ],
+      "change": "Describe current-time UUID v1 with random multicast node and cryptographic randomness. Remove lexicographically/chronologically sortable UUID-string claims: v1 field layout does not sort globally by time."
+    },
+    {
+      "slugs": [
+        "uuid-validator"
+      ],
+      "files": [
+        "lib/faq.ts"
+      ],
+      "change": "Update supported version digits to 1–8 plus special Nil and Max UUIDs; version comes from third group and RFC variant is required for versions 1–8."
+    },
+    {
+      "slugs": [
+        "encodings-reference"
+      ],
+      "files": [
+        "data/tool-content.ts"
+      ],
+      "change": "Limit advertised tables to printable ASCII 32–126, common HTML entities, URI-component escaping and Base64 alphabet. No UTF-8 cross-reference table is implemented."
+    },
+    {
+      "slugs": [
+        "ssh-key-generator"
+      ],
+      "files": [
+        "data/tool-content.ts"
+      ],
+      "change": "Clarify OpenSSH public-key line plus unencrypted PKCS8 PEM private key. Do not promise all SSH clients accept PKCS8, particularly Ed25519; conversion may be necessary."
+    },
+    {
+      "slugs": [
+        "ulid-generator"
+      ],
+      "files": [
+        "data/tool-content.ts",
+        "lib/faq.ts"
+      ],
+      "change": "Verify surrounding copy states CSPRNG randomness and timestamp ordering; do not claim monotonic increments within a millisecond."
+    }
+  ],
+  "remainingBlockers": [
+    {
+      "owner": "parent",
+      "kind": "integrated_browser",
+      "detail": "Run all 44 cases in the integrated app and inspect 320px layout. No browser pass is claimed."
+    },
+    {
+      "owner": "coordinator",
+      "kind": "protected_central_copy",
+      "detail": "Apply the listed central descriptions/FAQ corrections before catalog acceptance; worker did not edit protected files."
+    }
+  ],
+  "limitations": [
+    "Web Crypto requires a supported secure browser context; unsupported algorithms show errors rather than simulated output.",
+    "SSH private format is PKCS8, not an OpenSSH private container.",
+    "Data URI file mode deliberately accepts arbitrary bytes and preserves the browser-provided MIME hint; it does not claim to validate the internal file format.",
+    "Encodings Reference Clear resets the filter; reference table content intentionally remains.",
+    "Bcrypt in-flight work cannot be interrupted inside bcryptjs; revision guards prevent stale results from returning after Clear."
+  ],
+  "sources": [
+    "https://www.rfc-editor.org/rfc/rfc9562.html",
+    "https://www.rfc-editor.org/rfc/rfc7519.html",
+    "https://www.rfc-editor.org/rfc/rfc4231.html"
+  ],
+  "integration": "Commit contains only assigned components, new developer-security helpers/frame/tests and the group case/report files. Dependency symlink remains untracked. No push, merge, build or dev server."
+}

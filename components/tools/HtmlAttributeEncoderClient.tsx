@@ -1,6 +1,8 @@
 "use client";
+import DeveloperSecurityFrame from './DeveloperSecurityFrame';
+import { decodeHtml } from '@/lib/developer-security/primitives';
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function HtmlAttributeEncoder() {
   const [input, setInput] = useState("");
@@ -16,24 +18,20 @@ export default function HtmlAttributeEncoder() {
       .replace(/>/g, "&gt;");
   };
 
-  const htmlAttributeDecode = (str: string) => {
-    return str
-      .replace(/&amp;/g, "&")
-      .replace(/&quot;/g, '"')
-      .replace(/&apos;/g, "'")
-      .replace(/&lt;/g, "<")
-      .replace(/&gt;/g, ">");
-  };
+  const htmlAttributeDecode = decodeHtml;
 
   const handleConvert = () => {
     setOutput(mode === "encode" ? htmlAttributeEncode(input) : htmlAttributeDecode(input));
   };
 
+  useEffect(() => { handleConvert(); }, [input, mode]);
+
   return (
+    <DeveloperSecurityFrame onExample={()=>{setMode('encode');setInput('a="é & tea"');}} onClear={()=>{setInput('');setOutput('');}}>
     <div className="tb-v2-section">
       <h2 className="tb-v2-heading-sm">HTML Attribute Encoder</h2>
-      <p className="tb-v2-text">Safely encode or decode strings for use in HTML attributes.</p>
-      
+      <p className="tb-v2-text">Encode text for quoted HTML attribute values. Decoding does not sanitize HTML or URLs.</p>
+
       <div className="tb-v2-form-group">
         <div className="tb-v2-button-group">
           <button
@@ -53,7 +51,7 @@ export default function HtmlAttributeEncoder() {
 
       <div className="tb-v2-form-group">
         <label className="tb-v2-label">Input</label>
-        <textarea
+        <textarea aria-label="Input" maxLength={100000}
           className="tb-v2-textarea"
           value={input}
           onChange={(e) => setInput(e.target.value)}
@@ -69,7 +67,7 @@ export default function HtmlAttributeEncoder() {
       {output && (
         <div className="tb-v2-form-group">
           <label className="tb-v2-label">Output</label>
-          <textarea
+          <textarea aria-label="Output" maxLength={100000}
             className="tb-v2-textarea"
             value={output}
             readOnly
@@ -78,5 +76,6 @@ export default function HtmlAttributeEncoder() {
         </div>
       )}
     </div>
+    </DeveloperSecurityFrame>
   );
 }

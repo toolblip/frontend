@@ -1,4 +1,6 @@
 'use client';
+import { copySecurityText } from '@/lib/developer-security/primitives';
+import DeveloperSecurityFrame, { useSecurityTask } from './DeveloperSecurityFrame';
 
 import { useMemo, useState } from 'react';
 
@@ -14,6 +16,8 @@ function unescapeText(text: string): string {
 }
 
 export default function RegexEscapeClient() {
+  const [clipboardError,setClipboardError]=useState('');
+  const clipboardTask=useSecurityTask();
   const [input, setInput] = useState('Price: $12.99 (was $15.00) [50% off]?');
   const [mode, setMode] = useState<'escape' | 'unescape'>('escape');
   const [copied, setCopied] = useState(false);
@@ -21,12 +25,14 @@ export default function RegexEscapeClient() {
   const output = useMemo(() => (mode === 'escape' ? escapeText(input) : unescapeText(input)), [input, mode]);
 
   const copyOutput = () => {
-    navigator.clipboard.writeText(output).catch(() => {});
-    setCopied(true);
+    const copyId=++clipboardTask.current;setClipboardError('');
+    copySecurityText(output).then(()=>{if(copyId!==clipboardTask.current)return;setCopied(true);}).catch(()=>{if(copyId===clipboardTask.current)setClipboardError('Clipboard access failed. Select and copy the output manually.');});
     setTimeout(() => setCopied(false), 1500);
   };
 
   return (
+    <DeveloperSecurityFrame onExample={()=>{clipboardTask.current++;setMode('escape');setInput('Price: $12.99 (sale)?');}} onClear={()=>{clipboardTask.current++;setClipboardError('');setInput('');setCopied(false);}}>
+    {clipboardError&&<p role="alert" className="tb-v2-error">{clipboardError}</p>}
     <div className="tb-v2-tool-card">
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Mode</span>
@@ -43,7 +49,7 @@ export default function RegexEscapeClient() {
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">{mode === 'escape' ? 'Plain text' : 'Escaped pattern'}</span>
       </div>
-      <textarea
+      <textarea aria-label="Input" maxLength={100000}
         value={input}
         onChange={e => setInput(e.target.value)}
         placeholder={mode === 'escape' ? 'Enter text to escape for use inside a regex...' : 'Enter escaped text to decode...'}
@@ -65,5 +71,6 @@ export default function RegexEscapeClient() {
         )}
       </div>
     </div>
+    </DeveloperSecurityFrame>
   );
 }

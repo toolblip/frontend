@@ -1,4 +1,5 @@
 'use client';
+import DeveloperSecurityFrame from './DeveloperSecurityFrame';
 
 import { useState } from 'react';
 
@@ -6,7 +7,6 @@ interface HashInfo {
   type: string;
   length: number;
   description: string;
-  entropy: 'low' | 'medium' | 'high';
 }
 
 export default function HashIdentifierClient() {
@@ -15,7 +15,7 @@ export default function HashIdentifierClient() {
 
   const identify = (hash: string) => {
     const cleanHash = hash.trim();
-    
+
     if (!cleanHash) {
       setResult(null);
       return;
@@ -24,73 +24,31 @@ export default function HashIdentifierClient() {
     const info: HashInfo = {
       type: 'Unknown',
       length: cleanHash.length,
-      description: '',
-      entropy: 'low'
+      description: ''
     };
 
-    // Check length
-    if (cleanHash.length === 32) {
-      info.type = 'MD5';
-      info.description = '128-bit cryptographic hash. Considered weak for security purposes.';
-    } else if (cleanHash.length === 40) {
-      if (/^[a-f0-9]{40}$/i.test(cleanHash)) {
-        info.type = 'SHA-1';
-        info.description = '160-bit cryptographic hash. Deprecated for security use.';
-      }
-    } else if (cleanHash.length === 56) {
-      info.type = 'SHA-224 / SHA-512/224';
-      info.description = 'Part of SHA-2 family with 224-bit output.';
-    } else if (cleanHash.length === 64) {
-      if (/^[a-f0-9]{64}$/i.test(cleanHash)) {
-        info.type = 'SHA-256';
-        info.description = '256-bit cryptographic hash from SHA-2 family. Widely used.';
-      }
-    } else if (cleanHash.length === 96) {
-      info.type = 'SHA-384';
-      info.description = '384-bit hash from SHA-2 family.';
-    } else if (cleanHash.length === 128) {
-      info.type = 'SHA-512';
-      info.description = '512-bit hash from SHA-2 family. High security.';
-    }
-
-    // Check format patterns
-    if (/^\$2[aby]?\$\d{2}\$.{53}$/.test(cleanHash)) {
-      info.type = 'Bcrypt';
-      info.description = 'Adaptive hash function designed for password hashing.';
-    } else if (/^\$pbkdf2/i.test(cleanHash)) {
-      info.type = 'PBKDF2';
-      info.description = 'Password-Based Key Derivation Function 2.';
-    } else if (/^\$argon2(i|d|id)$/.test(cleanHash)) {
-      info.type = 'Argon2';
-      info.description = 'Winner of Password Hashing Competition. Modern and secure.';
-    } else if (/^[a-f0-9]{16}$|^\$s\$[a-f0-9]{16}$/.test(cleanHash)) {
-      info.type = 'Drupal 7.x';
-      info.description = 'Drupal 7 password hash format.';
-    } else if (/^{sha1}/i.test(cleanHash)) {
-      info.type = 'SHA-1 (Base64 encoded)';
-      info.description = 'SHA-1 with Base64 representation.';
-    } else if (/^{md5}/i.test(cleanHash)) {
-      info.type = 'MD5 (Apache variant)';
-      info.description = 'MD5 hash with {type} prefix, used in Apache.',
-      info.length = cleanHash.replace(/[{}]/g, '').length;
-    }
-
-    // Calculate entropy approximation
-    const uniqueChars = new Set(cleanHash.toLowerCase()).size;
-    const ratio = uniqueChars / cleanHash.length;
-    if (ratio > 0.7) info.entropy = 'high';
-    else if (ratio > 0.4) info.entropy = 'medium';
+    const lengths:Record<number,string>={32:'MD5 / MD4 / NTLM or another 128-bit digest',40:'SHA-1 or another 160-bit digest',56:'SHA-224 / SHA-512/224',64:'SHA-256 / SHA3-256 or another 256-bit digest',96:'SHA-384 / SHA3-384',128:'SHA-512 / SHA3-512'};
+    if(/^[a-f0-9]+$/i.test(cleanHash) && lengths[cleanHash.length]) {
+      info.type=lengths[cleanHash.length];info.description='Possible formats based on hexadecimal length. The algorithm cannot be proven from a digest alone.';
+    } else if(/^\$2[aby]\$(?:0[4-9]|[12][0-9]|3[01])\$[./A-Za-z0-9]{53}$/.test(cleanHash)) {
+      info.type='Bcrypt';info.description='Recognized bcrypt format; this does not verify a password.';
+    } else if(/^\$argon2(?:id|i|d)\$v=\d+\$m=\d+,t=\d+,p=\d+\$[A-Za-z0-9+/]+\$[A-Za-z0-9+/]+$/.test(cleanHash)) {
+      info.type='Argon2';info.description='Recognized Argon2 PHC-style format.';
+    } else if(/^\$pbkdf2[-$]/i.test(cleanHash)) {
+      info.type='Possible PBKDF2';info.description='Prefix-based candidate; PBKDF2 storage formats vary.';
+    } else { info.description='No recognized format. Check the input; arbitrary text is not necessarily a hash.'; }
 
     setResult(info);
   };
 
   return (
+    <DeveloperSecurityFrame onExample={()=>{setInput('900150983cd24fb0d6963f7d28e17f72');identify('900150983cd24fb0d6963f7d28e17f72');}} onClear={()=>{setInput('');setResult(null);}}>
     <div className="flex flex-col h-full">
       <div className="mb-4">
         <label className="tb-v2-tool-label" style={{marginBottom:8}}>
           Hash Input
         </label>
-        <input
+        <input aria-label="Input" maxLength={100000}
           type="text"
           value={input}
           onChange={(e) => {
@@ -107,7 +65,7 @@ export default function HashIdentifierClient() {
           <div className="p-4 bg-gray-50 rounded-md">
             <div className="tb-v2-grid-2">
               <div>
-                <span className="text-sm text-gray-600">Identified Type:</span>
+                <span className="text-sm text-gray-600">Possible Type:</span>
                 <p className="font-semibold text-lg">{result.type}</p>
               </div>
               <div>
@@ -122,25 +80,9 @@ export default function HashIdentifierClient() {
             <p className="text-sm text-gray-600">{result.description}</p>
           </div>
 
-          <div>
-            <h3 className="tb-v2-tool-label" style={{marginBottom:8}}>Character Entropy</h3>
-            <div className="flex items-center gap-2">
-              <div className={`w-4 h-4 rounded-full ${
-                result.entropy === 'high' ? 'bg-green-500' :
-                result.entropy === 'medium' ? 'bg-yellow-500' : 'bg-red-500'
-              }`}></div>
-              <span className="text-sm capitalize">{result.entropy} entropy</span>
-              <span className="text-sm text-gray-500">
-                ({result.entropy === 'high' ? 'Good character distribution' :
-                  result.entropy === 'medium' ? 'Moderate character distribution' :
-                  'Low character distribution - possible pattern'})
-              </span>
-            </div>
-          </div>
-
           <div className="p-3 bg-blue-50 border border-blue-200 rounded-md">
             <p className="text-sm text-blue-800">
-              <strong>Note:</strong> This tool provides educated guesses based on hash characteristics. 
+              <strong>Note:</strong> This tool provides educated guesses based on hash characteristics.
               For definitive identification, consult cryptographic documentation or use specialized tools.
             </p>
           </div>
@@ -153,5 +95,6 @@ export default function HashIdentifierClient() {
         </div>
       )}
     </div>
+    </DeveloperSecurityFrame>
   );
 }

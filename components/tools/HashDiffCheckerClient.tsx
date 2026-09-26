@@ -1,4 +1,6 @@
 'use client';
+import { copySecurityText } from '@/lib/developer-security/primitives';
+import DeveloperSecurityFrame, { useSecurityTask } from './DeveloperSecurityFrame';
 
 import { useState, useEffect, useMemo, useCallback } from 'react';
 
@@ -51,6 +53,9 @@ function CopyButton({ label, value, onCopy, copied }: { label: string; value: st
 }
 
 export default function HashDiffCheckerClient() {
+  const [clipboardError,setClipboardError]=useState('');
+  const clipboardTask=useSecurityTask();
+  const [error,setError]=useState('');
   const [mode, setMode] = useState<Mode>('text');
   const [algo, setAlgo] = useState<Algo>('SHA-256');
   const [ignoreCase, setIgnoreCase] = useState(true);
@@ -68,20 +73,20 @@ export default function HashDiffCheckerClient() {
   // Live-compute hashes for "Compare text" mode using the real Web Crypto API.
   useEffect(() => {
     if (mode !== 'text') return;
-    let cancelled = false;
+    let cancelled = false;setError('');setComputedA('');setComputedB('');
     if (!textA) {
       setComputedA('');
     } else {
       computeHash(algo, textA).then((h) => {
         if (!cancelled) setComputedA(h);
-      });
+      }).catch(e=>{if(!cancelled)setError(e.message);});
     }
     if (!textB) {
       setComputedB('');
     } else {
       computeHash(algo, textB).then((h) => {
         if (!cancelled) setComputedB(h);
-      });
+      }).catch(e=>{if(!cancelled)setError(e.message);});
     }
     return () => {
       cancelled = true;
@@ -90,14 +95,15 @@ export default function HashDiffCheckerClient() {
 
   const hashA = mode === 'text' ? computedA : hashInputA.trim();
   const hashB = mode === 'text' ? computedB : hashInputB.trim();
-  const bothPresent = hashA.length > 0 && hashB.length > 0;
+  const invalidHash=mode==='hash' && [hashA,hashB].some(h=>h && (!/^[a-f0-9]+$/i.test(h)||h.length%2!==0));
+  const bothPresent = !invalidHash && hashA.length > 0 && hashB.length > 0;
 
   const diff = useMemo(() => diffHashes(hashA, hashB, ignoreCase), [hashA, hashB, ignoreCase]);
 
   const copy = useCallback((field: string, value: string) => {
     if (!value) return;
-    navigator.clipboard.writeText(value).catch(() => {});
-    setCopiedField(field);
+    const copyId=++clipboardTask.current;setClipboardError('');
+    copySecurityText(value).then(()=>{if(copyId!==clipboardTask.current)return;setCopiedField(field);}).catch(()=>{if(copyId===clipboardTask.current)setClipboardError('Clipboard access failed. Select and copy the output manually.');});
     setTimeout(() => setCopiedField(''), 1500);
   }, []);
 
@@ -140,7 +146,10 @@ export default function HashDiffCheckerClient() {
   };
 
   return (
+    <DeveloperSecurityFrame onExample={()=>{clipboardTask.current++;loadExample();}} onClear={()=>{clipboardTask.current++;setClipboardError('');setTextA('');setTextB('');setHashInputA('');setHashInputB('');setComputedA('');setComputedB('');setCopiedField('');setError('');}}>
+    {clipboardError&&<p role="alert" className="tb-v2-error">{clipboardError}</p>}
     <div className="flex flex-col gap-4">
+      {(error||invalidHash)&&<p role="alert" className="tb-v2-error">{error||'Use even-length hexadecimal hashes.'}</p>}
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Hash Diff Checker</span>
         <div className="flex items-center gap-2">
@@ -162,9 +171,7 @@ export default function HashDiffCheckerClient() {
               Compare hashes directly
             </button>
           </div>
-          <button type="button" onClick={loadExample} className="tb-v2-btn-sm">
-            Load Example
-          </button>
+
         </div>
       </div>
 
@@ -192,7 +199,7 @@ export default function HashDiffCheckerClient() {
             <div className="tb-v2-tool-input-head">
               <span className="tb-v2-tool-label">Text A</span>
             </div>
-            <textarea
+            <textarea maxLength={100000}
               value={textA}
               onChange={(e) => setTextA(e.target.value)}
               placeholder="Enter first text/data..."
@@ -212,7 +219,7 @@ export default function HashDiffCheckerClient() {
             <div className="tb-v2-tool-input-head">
               <span className="tb-v2-tool-label">Text B</span>
             </div>
-            <textarea
+            <textarea maxLength={100000}
               value={textB}
               onChange={(e) => setTextB(e.target.value)}
               placeholder="Enter second text/data..."
@@ -233,7 +240,7 @@ export default function HashDiffCheckerClient() {
         <div className="grid gap-4 md:grid-cols-2">
           <div className="flex flex-col gap-1">
             <span className="tb-v2-tool-label">Hash A</span>
-            <input
+            <input maxLength={100000}
               type="text"
               value={hashInputA}
               onChange={(e) => setHashInputA(e.target.value)}
@@ -246,7 +253,7 @@ export default function HashDiffCheckerClient() {
           </div>
           <div className="flex flex-col gap-1">
             <span className="tb-v2-tool-label">Hash B</span>
-            <input
+            <input maxLength={100000}
               type="text"
               value={hashInputB}
               onChange={(e) => setHashInputB(e.target.value)}
@@ -261,7 +268,7 @@ export default function HashDiffCheckerClient() {
       )}
 
       <label className="flex items-center gap-2" style={{ fontSize: 13, color: 'var(--fg-2)' }}>
-        <input type="checkbox" checked={ignoreCase} onChange={(e) => setIgnoreCase(e.target.checked)} />
+        <input aria-label="Ignore case" type="checkbox" checked={ignoreCase} onChange={(e) => setIgnoreCase(e.target.checked)} />
         Ignore case when comparing
       </label>
 
@@ -308,5 +315,6 @@ export default function HashDiffCheckerClient() {
         </div>
       )}
     </div>
+    </DeveloperSecurityFrame>
   );
 }

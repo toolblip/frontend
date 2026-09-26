@@ -1,6 +1,9 @@
 'use client';
+import { copySecurityText } from '@/lib/developer-security/primitives';
+import DeveloperSecurityFrame, { useSecurityTask } from './DeveloperSecurityFrame';
+import { encodeBase64 as base64Encode, decodeBase64 as base64Decode } from '@/lib/developer-security/primitives';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import ToolContextControls from '@/components/tools/ToolContextControls';
 import { useToolContext } from '@/components/tools/useToolContext';
 
@@ -15,19 +18,9 @@ const EXAMPLES = [
   { label: 'Email', data: 'user@example.com' },
 ];
 
-function base64Encode(str: string): string {
-  return btoa(unescape(encodeURIComponent(str)));
-}
-
-function base64Decode(str: string): string {
-  try {
-    return decodeURIComponent(escape(atob(str)));
-  } catch {
-    throw new Error('Invalid Base64 string');
-  }
-}
-
 export default function Base64EncoderDecoderClient() {
+  const [clipboardError,setClipboardError]=useState('');
+  const clipboardTask=useSecurityTask();
   const [input, setInput] = useState('');
   const [mode, setMode] = useState<Mode>('encode');
   const [output, setOutput] = useState('');
@@ -40,7 +33,7 @@ export default function Base64EncoderDecoderClient() {
   const process = useCallback(() => {
     setError('');
     setOutput('');
-    if (!input.trim()) return;
+    if (!input) return;
     try {
       setOutput(mode === 'encode' ? base64Encode(input) : base64Decode(input));
     } catch (e) {
@@ -49,9 +42,11 @@ export default function Base64EncoderDecoderClient() {
     }
   }, [input, mode]);
 
+  useEffect(() => { process(); }, [process]);
+
   const copy = useCallback((text: string) => {
-    navigator.clipboard.writeText(text).catch(() => {});
-    setCopied(true);
+    const copyId=++clipboardTask.current;setClipboardError('');
+    copySecurityText(text).then(()=>{if(copyId!==clipboardTask.current)return;setCopied(true);}).catch(()=>{if(copyId===clipboardTask.current)setClipboardError('Clipboard access failed. Select and copy the output manually.');});
     setTimeout(() => setCopied(false), 1500);
   }, []);
 
@@ -70,6 +65,8 @@ export default function Base64EncoderDecoderClient() {
   };
 
   return (
+    <DeveloperSecurityFrame onExample={()=>{clipboardTask.current++;setMode('encode');loadExample('é😀');}} onClear={()=>{clipboardTask.current++;setClipboardError('');setInput('');setOutput('');setError('');setCopied(false);setShowExamples(false);}}>
+    {clipboardError&&<p role="alert" className="tb-v2-error">{clipboardError}</p>}
     <div>
       <ToolContextControls
         isPaid={toolContext.isPaid}
@@ -87,7 +84,7 @@ export default function Base64EncoderDecoderClient() {
             onClick={() => setShowExamples(!showExamples)}
             className="tb-v2-btn tb-v2-btn-ghost tb-v2-btn-sm"
           >
-            📋 Examples
+            More examples
           </button>
           <div className="tb-v2-mode-tabs" role="tablist">
             {(['encode', 'decode'] as const).map((m) => (
@@ -123,7 +120,7 @@ export default function Base64EncoderDecoderClient() {
         </div>
       )}
 
-      <textarea
+      <textarea aria-label="Input" maxLength={100000}
         value={input}
         onChange={(e) => setInput(e.target.value)}
         placeholder={mode === 'encode' ? 'Enter text to Base64 encode...' : 'Enter Base64 string to decode...'}
@@ -139,7 +136,7 @@ export default function Base64EncoderDecoderClient() {
       </button>
 
       {error && (
-        <div className="p-4 bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-xl">
+        <div role="alert" className="p-4 bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-xl">
           <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
         </div>
       )}
@@ -176,5 +173,6 @@ export default function Base64EncoderDecoderClient() {
         </div>
       )}
     </div>
+    </DeveloperSecurityFrame>
   );
 }

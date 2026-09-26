@@ -1,21 +1,13 @@
 'use client';
+import { copySecurityText } from '@/lib/developer-security/primitives';
+import DeveloperSecurityFrame, { useSecurityTask } from './DeveloperSecurityFrame';
+import { validateEmail } from '@/lib/developer-security/primitives';
 
 import { useState } from 'react';
 
-function validateEmail(email: string): { valid: boolean; reason?: string } {
-  if (!email.trim()) return { valid: false };
-  const parts = email.split('@');
-  if (parts.length !== 2) return { valid: false, reason: 'Missing @ symbol' };
-  const [local, domain] = parts;
-  if (!local || !domain) return { valid: false, reason: 'Missing local or domain part' };
-  if (local.length > 64) return { valid: false, reason: 'Local part too long (max 64)' };
-  if (domain.length > 253) return { valid: false, reason: 'Domain too long (max 253)' };
-  if (!/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+$/.test(local)) return { valid: false, reason: 'Invalid characters in local part' };
-  if (!/^[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test(domain)) return { valid: false, reason: 'Invalid domain format' };
-  return { valid: true };
-}
-
 export default function EmailValidatorClient() {
+  const [clipboardError,setClipboardError]=useState('');
+  const clipboardTask=useSecurityTask();
   const [email, setEmail] = useState('');
   const [copied, setCopied] = useState(false);
 
@@ -23,16 +15,19 @@ export default function EmailValidatorClient() {
 
   const copy = () => {
     if (!email) return;
-    navigator.clipboard.writeText(email).catch(() => {});
-    setCopied(true);
+    const copyId=++clipboardTask.current;setClipboardError('');
+    copySecurityText(email).then(()=>{if(copyId!==clipboardTask.current)return;setCopied(true);}).catch(()=>{if(copyId===clipboardTask.current)setClipboardError('Clipboard access failed. Select and copy the output manually.');});
     setTimeout(() => setCopied(false), 1500);
   };
 
   return (
+    <DeveloperSecurityFrame onExample={()=>{clipboardTask.current++;setEmail('a+b@example.com');}} onClear={()=>{clipboardTask.current++;setClipboardError('');setEmail('');setCopied(false);}}>
+    {clipboardError&&<p role="alert" className="tb-v2-error">{clipboardError}</p>}
     <div>
+      <p className="tb-v2-hash-stats">Checks unquoted ASCII address syntax only. This does not check DNS, mailbox existence, or deliverability. Use Punycode for international domain names.</p>
       <div className="tb-v2-tool-input-head"><span className="tb-v2-tool-label">Email Address</span></div>
       <div style={{ position: 'relative' }}>
-        <input
+        <input aria-label="Email" maxLength={100000}
           type="email"
           value={email}
           onChange={e => setEmail(e.target.value)}
@@ -77,5 +72,6 @@ export default function EmailValidatorClient() {
         )}
       </div>
     </div>
+    </DeveloperSecurityFrame>
   );
 }

@@ -1,4 +1,6 @@
 'use client';
+import { copySecurityText } from '@/lib/developer-security/primitives';
+import DeveloperSecurityFrame, { useSecurityTask } from './DeveloperSecurityFrame';
 
 import { useState } from 'react';
 import { randomFromAlphabet, randomHexBytes, randomInt, randomUuid, supportsRandomUuid } from '@/lib/secureRandom';
@@ -8,6 +10,8 @@ type Kind = 'string' | 'number' | 'uuid' | 'bytes';
 const ALPHANUMERIC = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
 export default function SecureRandomGeneratorClient() {
+  const [clipboardError,setClipboardError]=useState('');
+  const clipboardTask=useSecurityTask();
   const [kind, setKind] = useState<Kind>('string');
   const [length, setLength] = useState(16);
   const [min, setMin] = useState(1);
@@ -18,12 +22,14 @@ export default function SecureRandomGeneratorClient() {
   const [copied, setCopied] = useState(false);
 
   const generate = () => {
-    setError('');
+    setError('');setResults([]);
+    try {
+    if(!Number.isInteger(count)||count<1||count>50||!Number.isInteger(length)||length<1||length>256)throw new Error('Use integer counts and lengths within the displayed limits.');
     const n = Math.max(1, Math.min(50, count));
 
     if (kind === 'number') {
-      const lo = Math.min(min, max);
-      const hi = Math.max(min, max);
+      if(!Number.isSafeInteger(min)||!Number.isSafeInteger(max)||min>max)throw new Error('Use safe integers with minimum no greater than maximum.');
+      const lo=min,hi=max;
       if (hi - lo + 1 > 0x100000000) {
         setError('Range is too large (max 2^32 values at once).');
         setResults([]);
@@ -48,21 +54,24 @@ export default function SecureRandomGeneratorClient() {
     }
     setResults(out);
     setCopied(false);
+    }catch(e){setError((e as Error).message);setResults([]);}
   };
 
   const copy = () => {
-    navigator.clipboard.writeText(results.join('\n'));
-    setCopied(true);
+    const copyId=++clipboardTask.current;setClipboardError('');
+    copySecurityText(results.join('\n')).then(()=>{if(copyId!==clipboardTask.current)return;setCopied(true);}).catch(()=>{if(copyId===clipboardTask.current)setClipboardError('Clipboard access failed. Select and copy the output manually.');});
   };
 
   return (
+    <DeveloperSecurityFrame onExample={()=>{clipboardTask.current++;generate();}} onClear={()=>{clipboardTask.current++;setClipboardError('');setResults([]);setError('');setCopied(false);}}>
+    {clipboardError&&<p role="alert" className="tb-v2-error">{clipboardError}</p>}
     <div className="tb-v2-tool-card">
       <div className="tb-v2-mode-tabs">
         {(['string', 'number', 'uuid', 'bytes'] as const).map((k) => (
           <button
             key={k}
             className={kind === k ? 'tb-v2-mode-tab-active' : 'tb-v2-mode-tab'}
-            onClick={() => setKind(k)}
+            onClick={() => {setKind(k);setResults([]);setError('');}}
           >
             {k === 'string' ? 'String' : k === 'number' ? 'Number' : k === 'uuid' ? 'UUID' : 'Bytes (hex)'}
           </button>
@@ -73,13 +82,13 @@ export default function SecureRandomGeneratorClient() {
         {(kind === 'string' || kind === 'bytes') && (
           <label className="tb-v2-tool-label">
             Length
-            <input
+            <input aria-label="Length"
               type="number"
               className="tb-v2-input"
               value={length}
               min={1}
               max={256}
-              onChange={(e) => setLength(Math.max(1, Math.min(256, Number(e.target.value) || 1)))}
+              onChange={(e) => {setResults([]);setError('');setLength(Math.max(1, Math.min(256, Number(e.target.value) || 1)));}}
             />
           </label>
         )}
@@ -87,23 +96,23 @@ export default function SecureRandomGeneratorClient() {
           <>
             <label className="tb-v2-tool-label">
               Min
-              <input type="number" className="tb-v2-input" value={min} onChange={(e) => setMin(Number(e.target.value) || 0)} />
+              <input aria-label="Minimum" type="number" className="tb-v2-input" value={min} onChange={(e) => {setResults([]);setError('');setMin(Number(e.target.value) || 0);}} />
             </label>
             <label className="tb-v2-tool-label">
               Max
-              <input type="number" className="tb-v2-input" value={max} onChange={(e) => setMax(Number(e.target.value) || 0)} />
+              <input aria-label="Maximum" type="number" className="tb-v2-input" value={max} onChange={(e) => {setResults([]);setError('');setMax(Number(e.target.value) || 0);}} />
             </label>
           </>
         )}
         <label className="tb-v2-tool-label">
           How many
-          <input
+          <input aria-label="Count"
             type="number"
             className="tb-v2-input"
             value={count}
             min={1}
             max={50}
-            onChange={(e) => setCount(Math.max(1, Math.min(50, Number(e.target.value) || 1)))}
+            onChange={(e) => {setResults([]);setError('');setCount(Math.max(1, Math.min(50, Number(e.target.value) || 1)));}}
           />
         </label>
       </div>
@@ -113,7 +122,7 @@ export default function SecureRandomGeneratorClient() {
       </button>
 
       {error && (
-        <div className="tb-v2-tool-output-body" style={{ marginTop: 16, background: 'var(--red-tint)', color: 'var(--red)' }}>
+        <div role="alert" className="tb-v2-tool-output-body" style={{ marginTop: 16, background: 'var(--red-tint)', color: 'var(--red)' }}>
           {error}
         </div>
       )}
@@ -134,5 +143,6 @@ export default function SecureRandomGeneratorClient() {
         </div>
       )}
     </div>
+    </DeveloperSecurityFrame>
   );
 }

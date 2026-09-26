@@ -1,56 +1,23 @@
 'use client';
+import { copySecurityText } from '@/lib/developer-security/primitives';
+import DeveloperSecurityFrame, { useSecurityTask } from './DeveloperSecurityFrame';
 
 import { useState, useCallback, useEffect } from 'react';
 
-// UUID v1 structure: time_low (32 bits) | time_mid (16 bits) | time_hi_and_version (16 bits) | clock_seq (16 bits) | node (48 bits)
-// Total: 128 bits
-// UUIDv1 contains timestamp and MAC address (or random node ID)
-
-function getRandomValues(bytes: number): Uint8Array {
-  const arr = new Uint8Array(bytes);
-  for (let i = 0; i < bytes; i++) {
-    arr[i] = Math.floor(Math.random() * 256);
-  }
-  return arr;
-}
-
-function generateUuidV1(): string {
-  // Get current timestamp in 100-nanosecond intervals since UUID epoch (Oct 15, 1582)
-  const uuidEpoch = Date.UTC(1582, 9, 15, 0, 0, 0, 0);
-  const now = Date.now();
-  const timestamp = (now - uuidEpoch) * 10000; // Convert to 100-nanosecond intervals
-
-  // Generate random node ID (48 bits) - using random for privacy (not MAC address)
-  const nodeId = getRandomValues(6);
-  
-  // Generate random clock sequence (14 bits)
-  const clockSeq = getRandomValues(2);
-  const clockSeqHiAndReserved = (clockSeq[0] & 0x3f) | 0x80; // Variant bits
-  const clockSeqLow = clockSeq[1];
-
-  // Convert timestamp to parts
-  const timeLow = (timestamp & 0xffffffff) >>> 0;
-  const timeMid = (timestamp >> 32) & 0xffff;
-  const timeHiAndVersion = ((timestamp >> 48) & 0x0fff) | 0x1000; // Version 1
-
-  // Format as hex strings
-  const timeLowHex = timeLow.toString(16).padStart(8, '0');
-  const timeMidHex = timeMid.toString(16).padStart(4, '0');
-  const timeHiAndVersionHex = timeHiAndVersion.toString(16).padStart(4, '0');
-  const clockSeqHex = (clockSeqHiAndReserved << 8 | clockSeqLow).toString(16).padStart(4, '0');
-  const nodeHex = Array.from(nodeId).map(b => b.toString(16).padStart(2, '0')).join('');
-
-  return `${timeLowHex}-${timeMidHex}-${timeHiAndVersionHex}-${clockSeqHex}-${nodeHex}`;
-}
+import { uuidV1 as generateUuidV1 } from '@/lib/developer-security/primitives';
 
 export default function UuidV1GeneratorClient() {
+  const [clipboardError,setClipboardError]=useState('');
+  const clipboardTask=useSecurityTask();
   const [uuids, setUuids] = useState<string[]>([]);
   const [count, setCount] = useState(1);
   const [uppercase, setUppercase] = useState(false);
   const [includeBraces, setIncludeBraces] = useState(false);
   const [copied, setCopied] = useState<number | null>(null);
 
+  const [error,setError]=useState('');
   const generate = useCallback(() => {
+    try {setError('');
     const newUuids: string[] = [];
     for (let i = 0; i < count; i++) {
       let uuid = generateUuidV1();
@@ -59,39 +26,32 @@ export default function UuidV1GeneratorClient() {
       newUuids.push(uuid);
     }
     setUuids(newUuids);
+    }catch(e){setUuids([]);setError((e as Error).message);}
   }, [count, uppercase, includeBraces]);
 
-  // Generate initial UUIDs on client mount only to avoid hydration mismatch
-  useEffect(() => {
-    const newUuids: string[] = [];
-    for (let i = 0; i < count; i++) {
-      let uuid = generateUuidV1();
-      if (uppercase) uuid = uuid.toUpperCase();
-      if (includeBraces) uuid = `{${uuid}}`;
-      newUuids.push(uuid);
-    }
-    setUuids(newUuids);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  useEffect(()=>{generate();},[generate]);
 
   const copyToClipboard = (uuid: string, index: number) => {
-    navigator.clipboard.writeText(uuid).catch(() => {});
-    setCopied(index);
+    const copyId=++clipboardTask.current;setClipboardError('');
+    copySecurityText(uuid).then(()=>{if(copyId!==clipboardTask.current)return;setCopied(index);}).catch(()=>{if(copyId===clipboardTask.current)setClipboardError('Clipboard access failed. Select and copy the output manually.');});
     setTimeout(() => setCopied(null), 1500);
   };
 
   const copyAll = () => {
-    navigator.clipboard.writeText(uuids.join('\n')).catch(() => {});
-    setCopied(-1);
+    const copyId=++clipboardTask.current;setClipboardError('');
+    copySecurityText(uuids.join('\n')).then(()=>{if(copyId!==clipboardTask.current)return;setCopied(-1);}).catch(()=>{if(copyId===clipboardTask.current)setClipboardError('Clipboard access failed. Select and copy the output manually.');});
     setTimeout(() => setCopied(null), 1500);
   };
 
   return (
+    <DeveloperSecurityFrame onExample={()=>{clipboardTask.current++;generate();}} onClear={()=>{clipboardTask.current++;setClipboardError('');setError('');setUuids([]);setCopied(null);}}>
+    {clipboardError&&<p role="alert" className="tb-v2-error">{clipboardError}</p>}
+    {error&&<p role="alert" className="tb-v2-error">{error}</p>}
     <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
       <div className="flex flex-wrap gap-4 items-end">
         <div>
           <label className="tb-v2-tool-label" style={{marginBottom:8}}>Number of UUIDs</label>
-          <input
+          <input aria-label="Count"
             type="number"
             min={1}
             max={100}
@@ -102,7 +62,7 @@ export default function UuidV1GeneratorClient() {
         </div>
 
         <div className="flex items-center gap-2">
-          <input
+          <input aria-label="Uppercase"
             type="checkbox"
             id="uppercase"
             checked={uppercase}
@@ -113,7 +73,7 @@ export default function UuidV1GeneratorClient() {
         </div>
 
         <div className="flex items-center gap-2">
-          <input
+          <input aria-label="Include braces"
             type="checkbox"
             id="braces"
             checked={includeBraces}
@@ -142,9 +102,9 @@ export default function UuidV1GeneratorClient() {
               {copied === -1 ? 'Copied!' : 'Copy All'}
             </button>
           </div>
-          
-          <div className="bg-gray-900 rounded-lg p-4 overflow-x-auto">
-            <pre className="text-green-400 text-sm font-mono whitespace-pre-wrap break-all">
+
+          <div className="tb-v2-tool-output-body">
+            <pre className="tb-v2-tool-pre">
               {uuids.map((uuid, i) => (
                 <div key={i} className="flex gap-4 items-center group">
                   <span className="text-gray-500 select-none w-6">{i + 1}.</span>
@@ -172,5 +132,6 @@ export default function UuidV1GeneratorClient() {
         </ul>
       </div>
     </div>
+    </DeveloperSecurityFrame>
   );
 }

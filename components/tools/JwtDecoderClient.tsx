@@ -1,8 +1,11 @@
 'use client';
+import { copySecurityText } from '@/lib/developer-security/primitives';
+import DeveloperSecurityFrame, { useSecurityTask } from './DeveloperSecurityFrame';
+import { decodeJwt as parseJwt } from '@/lib/developer-security/primitives';
 
 import { useMemo, useState, useEffect } from 'react';
 
-const SAMPLE = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0Ijo3NTE2MjM5MDIyLCJleHAiOjkwMDAwMDAwMDB9.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
+const SAMPLE = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
 
 interface Decoded {
   header: unknown;
@@ -26,35 +29,21 @@ function base64UrlDecode(s: string): string {
 }
 
 function decodeJwt(token: string): { result: Decoded | null; error: string } {
-  const t = token.trim();
-  if (!t) return { result: null, error: '' };
-  const parts = t.split('.');
-  if (parts.length !== 3) {
-    return { result: null, error: 'A JWT has three dot-separated parts: header.payload.signature' };
-  }
-  try {
-    const rawHeader = base64UrlDecode(parts[0]);
-    const rawPayload = base64UrlDecode(parts[1]);
-    const header = JSON.parse(rawHeader);
-    const payload = JSON.parse(rawPayload);
-    return {
-      result: { header, payload, signature: parts[2], rawHeader, rawPayload },
-      error: '',
-    };
-  } catch (e) {
-    return { result: null, error: `Could not decode: ${(e as Error).message}` };
-  }
+  if (!token.trim()) return {result:null,error:''};
+  try { return {result:parseJwt(token),error:''}; } catch(e) { return {result:null,error:(e as Error).message}; }
 }
 
 function fmtTime(t: unknown): string | null {
   if (typeof t !== 'number') return null;
-  const ms = t > 1e12 ? t : t * 1000;
+  const ms = t * 1000;
   const d = new Date(ms);
   if (isNaN(d.getTime())) return null;
   return d.toISOString().replace('T', ' ').replace(/\.\d+Z$/, ' UTC');
 }
 
 export default function JwtDecoderClient() {
+  const [clipboardError,setClipboardError]=useState('');
+  const clipboardTask=useSecurityTask();
   const [token, setToken] = useState(SAMPLE);
   const [copied, setCopied] = useState<string | null>(null);
   const [decoded, setDecoded] = useState<{ result: Decoded | null; error: string }>({ result: null, error: '' });
@@ -72,7 +61,7 @@ export default function JwtDecoderClient() {
     const exp = typeof p.exp === 'number' ? p.exp : null;
     const nbf = typeof p.nbf === 'number' ? p.nbf : null;
     let status: 'valid' | 'expired' | 'not-yet' | 'unknown' = 'unknown';
-    if (exp !== null && exp < now) status = 'expired';
+    if (exp !== null && exp <= now) status = 'expired';
     else if (nbf !== null && nbf > now) status = 'not-yet';
     else if (exp !== null) status = 'valid';
     return {
@@ -88,12 +77,14 @@ export default function JwtDecoderClient() {
 
   const copy = (id: string, val: string) => {
     if (!val) return;
-    navigator.clipboard.writeText(val).catch(() => {});
-    setCopied(id);
+    const copyId=++clipboardTask.current;setClipboardError('');
+    copySecurityText(val).then(()=>{if(copyId!==clipboardTask.current)return;setCopied(id);}).catch(()=>{if(copyId===clipboardTask.current)setClipboardError('Clipboard access failed. Select and copy the output manually.');});
     setTimeout(() => setCopied(null), 1500);
   };
 
   return (
+    <DeveloperSecurityFrame onExample={()=>{clipboardTask.current++;setToken(SAMPLE);}} onClear={()=>{clipboardTask.current++;setClipboardError('');setToken(''); setDecoded({result:null,error:''}); setCopied(null);}}>
+    {clipboardError&&<p role="alert" className="tb-v2-error">{clipboardError}</p>}
     <div>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">JWT</span>
@@ -106,7 +97,7 @@ export default function JwtDecoderClient() {
           </span>
         )}
       </div>
-      <textarea
+      <textarea maxLength={100000}
         value={token}
         onChange={(e) => setToken(e.target.value)}
         placeholder="Paste a JWT (header.payload.signature)…"
@@ -188,5 +179,6 @@ export default function JwtDecoderClient() {
         </>
       )}
     </div>
+    </DeveloperSecurityFrame>
   );
 }

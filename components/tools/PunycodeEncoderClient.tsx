@@ -1,4 +1,7 @@
 'use client';
+import { copySecurityText } from '@/lib/developer-security/primitives';
+import { useSecurityTask } from './DeveloperSecurityFrame';
+import DeveloperSecurityFrame from './DeveloperSecurityFrame';
 
 import { useCallback, useRef, useState } from 'react';
 import { analyse, convertLine, extractDomain } from '@/lib/punycode';
@@ -50,6 +53,8 @@ function collectWarnings(unicodeText: string): string[] {
 }
 
 export default function PunycodeEncoderClient() {
+  const [clipboardError,setClipboardError]=useState('');
+  const clipboardTask=useSecurityTask();
   const [left, setLeft] = useState('');
   const [right, setRight] = useState('');
   // Errors from converting the RIGHT pane's input, rendered under the LEFT pane (the destination).
@@ -66,6 +71,7 @@ export default function PunycodeEncoderClient() {
 
   // Editing the left (Unicode) pane: derive the right (Punycode) pane from it.
   const applyLeft = useCallback((text: string) => {
+    if(text.length>100000){setLeft(text.slice(0,100000));setRight('');setRightErrors(['Input exceeds 100,000 characters.']);return;}
     setLeft(text);
     const { text: converted, errors } = convertLines(text, 'toASCII');
     setRight(converted);
@@ -76,6 +82,7 @@ export default function PunycodeEncoderClient() {
 
   // Editing the right (Punycode) pane: derive the left (Unicode) pane from it.
   const applyRight = useCallback((text: string) => {
+    if(text.length>100000){setRight(text.slice(0,100000));setLeft('');setLeftErrors(['Input exceeds 100,000 characters.']);return;}
     setRight(text);
     const { text: converted, errors } = convertLines(text, 'toUnicode');
     setLeft(converted);
@@ -84,9 +91,12 @@ export default function PunycodeEncoderClient() {
     setWarnings(collectWarnings(converted));
   }, []);
 
+  const pasteTask=useSecurityTask();
   const pasteLeft = useCallback(async () => {
     try {
+      const id=++pasteTask.current;
       const text = await navigator.clipboard.readText();
+      if(id!==pasteTask.current)return;
       applyLeft(text);
     } catch {
       // clipboard read denied/unsupported — do nothing
@@ -95,7 +105,9 @@ export default function PunycodeEncoderClient() {
 
   const pasteRight = useCallback(async () => {
     try {
+      const id=++pasteTask.current;
       const text = await navigator.clipboard.readText();
+      if(id!==pasteTask.current)return;
       applyRight(text);
     } catch {
       // clipboard read denied/unsupported — do nothing
@@ -103,14 +115,14 @@ export default function PunycodeEncoderClient() {
   }, [applyRight]);
 
   const copyLeft = useCallback(() => {
-    navigator.clipboard.writeText(left).catch(() => {});
-    setCopiedLeft(true);
+    const copyId=++clipboardTask.current;setClipboardError('');
+    copySecurityText(left).then(()=>{if(copyId!==clipboardTask.current)return;setCopiedLeft(true);}).catch(()=>{if(copyId===clipboardTask.current)setClipboardError('Clipboard access failed. Select and copy the output manually.');});
     setTimeout(() => setCopiedLeft(false), 1500);
   }, [left]);
 
   const copyRight = useCallback(() => {
-    navigator.clipboard.writeText(right).catch(() => {});
-    setCopiedRight(true);
+    const copyId=++clipboardTask.current;setClipboardError('');
+    copySecurityText(right).then(()=>{if(copyId!==clipboardTask.current)return;setCopiedRight(true);}).catch(()=>{if(copyId===clipboardTask.current)setClipboardError('Clipboard access failed. Select and copy the output manually.');});
     setTimeout(() => setCopiedRight(false), 1500);
   }, [right]);
 
@@ -158,6 +170,8 @@ export default function PunycodeEncoderClient() {
   };
 
   return (
+    <DeveloperSecurityFrame onExample={()=>{clipboardTask.current++;loadExampleLeft('schön.de');}} onClear={()=>{clipboardTask.current++;setClipboardError('');pasteTask.current++;clearAll();setCopiedLeft(false);setCopiedRight(false);setShowEmojiPicker(false);setShowExamplesLeft(false);setShowExamplesRight(false);}}>
+    {clipboardError&&<p role="alert" className="tb-v2-error">{clipboardError}</p>}
     <div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 divide-y divide-[var(--line)] md:divide-y-0 md:divide-x">
         <div>
@@ -172,11 +186,9 @@ export default function PunycodeEncoderClient() {
                 onClick={() => setShowExamplesLeft(!showExamplesLeft)}
                 className="tb-v2-btn tb-v2-btn-ghost tb-v2-btn-sm"
               >
-                Example
+                More examples
               </button>
-              <button type="button" onClick={clearAll} className="tb-v2-btn tb-v2-btn-ghost tb-v2-btn-sm">
-                Clear
-              </button>
+
               <button type="button" onClick={copyLeft} className="tb-v2-copy-btn">
                 {copiedLeft ? 'Copied!' : 'Copy'}
               </button>
@@ -226,7 +238,7 @@ export default function PunycodeEncoderClient() {
             </div>
           )}
 
-          <textarea
+          <textarea aria-label="Unicode / IDN" maxLength={100000}
             ref={leftTextareaRef}
             className="tb-v2-tool-textarea tb-idn-text"
             placeholder="Enter Unicode/IDN domains, one per line..."
@@ -236,7 +248,7 @@ export default function PunycodeEncoderClient() {
           />
 
           {leftErrors.map((err, i) => (
-            <p key={i} className="tb-v2-error">
+            <p key={i} role="alert" className="tb-v2-error">
               {err}
             </p>
           ))}
@@ -264,11 +276,9 @@ export default function PunycodeEncoderClient() {
                 onClick={() => setShowExamplesRight(!showExamplesRight)}
                 className="tb-v2-btn tb-v2-btn-ghost tb-v2-btn-sm"
               >
-                Example
+                More examples
               </button>
-              <button type="button" onClick={clearAll} className="tb-v2-btn tb-v2-btn-ghost tb-v2-btn-sm">
-                Clear
-              </button>
+
               <button type="button" onClick={copyRight} className="tb-v2-copy-btn">
                 {copiedRight ? 'Copied!' : 'Copy'}
               </button>
@@ -293,7 +303,7 @@ export default function PunycodeEncoderClient() {
             </div>
           )}
 
-          <textarea
+          <textarea aria-label="Punycode / ASCII" maxLength={100000}
             className="tb-v2-tool-textarea tb-idn-text"
             placeholder="Enter Punycode/ASCII domains, one per line..."
             value={right}
@@ -312,7 +322,7 @@ export default function PunycodeEncoderClient() {
           </div>
 
           {rightErrors.map((err, i) => (
-            <p key={i} className="tb-v2-error">
+            <p key={i} role="alert" className="tb-v2-error">
               {err}
             </p>
           ))}
@@ -326,5 +336,6 @@ export default function PunycodeEncoderClient() {
         />
       )}
     </div>
+    </DeveloperSecurityFrame>
   );
 }
