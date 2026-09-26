@@ -1,164 +1,60 @@
 'use client';
-
-import { useState, useRef } from 'react';
-
-interface FaviconResult {
-  url: string;
-  faviconUrl: string | null;
-  error: string | null;
-  loading: boolean;
-}
-
-function extractDomain(url: string): string {
-  try {
-    return new URL(url.includes('://') ? url : `https://${url}`).hostname;
-  } catch {
-    return url;
-  }
-}
-
-function buildFaviconUrl(domain: string): string {
-  return `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
-}
-
+import { useEffect, useRef, useState } from 'react';
+import { normalizeHostname } from '@/lib/network-tools';
+import { httpUrl } from '@/lib/seo-network/core';
+import { boundedFetch, downloadBlob, pooled } from '@/lib/seo-network/request';
+import { SeoField, SeoFrame, SeoOutput, useSeoRequest } from './SeoNetworkShared';
+type Result = { host: string; blob?: Blob; url?: string; error?: string };
 export default function BatchFaviconDownloaderClient() {
-  const [input, setInput] = useState('');
-  const [results, setResults] = useState<FaviconResult[]>([]);
-  const [downloading, setDownloading] = useState(false);
-  const [copied, setCopied] = useState(false);
-  const fileRef = useRef<HTMLInputElement>(null);
-
-  const fetchFavicons = async () => {
-    const urls = input.split('\n').map((u) => u.trim()).filter(Boolean);
-    if (!urls.length) return;
-
-    const initial: FaviconResult[] = urls.map((url) => ({
-      url,
-      faviconUrl: null,
-      error: null,
-      loading: true,
-    }));
-    setResults(initial);
-    setDownloading(true);
-
-    const updated = await Promise.all(
-      urls.map(async (url) => {
-        const domain = extractDomain(url);
-        const faviconUrl = buildFaviconUrl(domain);
-        return { url, faviconUrl, error: null as string | null, loading: false };
-      })
-    );
-
-    setResults(updated);
-    setDownloading(false);
+  const [input, setInput] = useState(''), [results, setResults] = useState<Result[]>([]);
+  const urls = useRef<string[]>([]), file = useRef<HTMLInputElement>(null), reader = useRef<FileReader | null>(null);
+  const request = useSeoRequest();
+  const cleanup = () => { urls.current.forEach(url => URL.revokeObjectURL(url)); urls.current = []; };
+  useEffect(() => () => { cleanup(); reader.current?.abort(); }, []);
+  const update = (text: string) => { const previous = reader.current; reader.current = null; previous?.abort(); request.cancel(); cleanup(); setResults([]); setInput(text); };
+  const clear = () => { update(''); if (file.current) file.current.value = ''; };
+  const fetchIcons = () => {
+    cleanup(); setResults([]);
+    request.run(async signal => {
+      const lines = input.split(/\r?\n/).map(x => x.trim()).filter(Boolean);
+      if (!lines.length || lines.length > 20) throw new Error('Enter 1–20 domains or HTTP(S) URLs.');
+      const hosts = [...new Set(lines.map(line => {
+        const host = normalizeHostname(line.includes('://') ? httpUrl(line).hostname : line);
+        if (!host || !/^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,}$/i.test(host)) throw new Error(`Invalid public domain: ${line}`);
+        return host;
+      }))];
+      return pooled(hosts, signal, async host => {
+        try {
+          const response = await boundedFetch(`/api/favicon?domain=${encodeURIComponent(host)}&sz=128`, signal, { limit: 1000000 });
+          const b = response.bytes;
+          const png = b.length >= 24 && [137,80,78,71,13,10,26,10].every((n, i) => b[i] === n);
+          const ico = b.length >= 22 && b[0] === 0 && b[1] === 0 && b[2] === 1 && b[3] === 0;
+          if (!png && !ico) throw new Error('Provider did not return a supported PNG or ICO image.');
+          if (png) { const header = new DataView(b.buffer, b.byteOffset, b.byteLength); if (header.getUint32(16) > 1024 || header.getUint32(20) > 1024) throw new Error('Unexpected favicon dimensions.'); }
+          const blob = new Blob([b], { type: png ? 'image/png' : 'image/x-icon' });
+          // Decoding validates more than a content-type or file signature. Bitmap is never retained.
+          const bitmap = await createImageBitmap(blob);
+          const valid = bitmap.width > 0 && bitmap.height > 0 && bitmap.width <= 1024 && bitmap.height <= 1024;
+          bitmap.close();
+          if (!valid) throw new Error('Unexpected favicon dimensions.');
+          return { host, blob } as Result;
+        } catch (e) { return { host, error: (e as Error).message } as Result; }
+      });
+    }, values => setResults(values.map(value => { if (!value.blob) return value; const url = URL.createObjectURL(value.blob); urls.current.push(url); return { ...value, url }; })));
   };
-
-  const downloadAll = () => {
-    results.forEach((r) => {
-      if (r.faviconUrl) {
-        const a = document.createElement('a');
-        a.href = r.faviconUrl;
-        a.download = `favicon-${extractDomain(r.url)}.png`;
-        a.click();
-      }
-    });
-  };
-
-  const copyAll = () => {
-    const text = results
-      .filter((r) => r.faviconUrl)
-      .map((r) => `${r.url}\t${r.faviconUrl}`)
-      .join('\n');
-    navigator.clipboard.writeText(text).catch(() => {});
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
-  };
-
-  const loadFromFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => setInput(reader.result as string);
-    reader.readAsText(file);
-  };
-
-  return (
-    <div>
-      <div className="tb-v2-tool-input-head">
-        <span className="tb-v2-tool-label">URLs (one per line)</span>
-      </div>
-      <textarea
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        placeholder="https://example.com&#10;https://google.com&#10;https://github.com"
-        className="tb-v2-tool-textarea"
-        style={{ minHeight: '120px' }}
-        aria-label="URLs input"
-      />
-
-      <div style={{ margin: '0.75rem 0', display: 'flex', gap: '0.5rem' }}>
-        <input
-          ref={fileRef}
-          type="file"
-          accept=".txt"
-          onChange={loadFromFile}
-          className="tb-v2-file-input"
-          aria-label="Load URLs from file"
-        />
-      </div>
-
-      <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.75rem' }}>
-        <button
-          type="button"
-          onClick={fetchFavicons}
-          disabled={!input.trim() || downloading}
-          className="tb-v2-btn"
-          style={{ flex: 1 }}
-        >
-          {downloading ? 'Fetching...' : 'Fetch Favicons'}
-        </button>
-        {results.length > 0 && (
-          <>
-            <button type="button" onClick={downloadAll} className="tb-v2-btn" disabled={results.every((r) => !r.faviconUrl)}>
-              Download All
-            </button>
-            <button type="button" onClick={copyAll} className="tb-v2-copy-btn">
-              {copied ? 'Copied' : 'Copy URLs'}
-            </button>
-          </>
-        )}
-      </div>
-
-      {results.length > 0 && (
-        <>
-          <div className="tb-v2-tool-output-head">
-            <span className="tb-v2-tool-label">Results ({results.length})</span>
-          </div>
-          <div className="tb-v2-tool-output-body">
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '1rem' }}>
-              {results.map((r, i) => (
-                <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', padding: '0.75rem', border: '1px solid var(--tb-border)', borderRadius: '0.75rem' }}>
-                  {r.loading ? (
-                    <div style={{ width: '32px', height: '32px', borderRadius: '4px', background: '#eee', animation: 'pulse 1s infinite' }} />
-                  ) : r.faviconUrl ? (
-                    <img
-                      src={r.faviconUrl}
-                      alt={`Favicon for ${r.url}`}
-                      style={{ width: '32px', height: '32px', objectFit: 'contain' }}
-                      onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-                    />
-                  ) : (
-                    <div style={{ width: '32px', height: '32px', borderRadius: '4px', background: '#fee', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem' }}>❌</div>
-                  )}
-                  <span style={{ fontSize: '0.75rem', color: 'var(--tb-text-secondary)', textAlign: 'center', wordBreak: 'break-all' }}>
-                    {extractDomain(r.url)}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </>
-      )}
-    </div>
-  );
+  const download = (r: Result) => { if (r.blob) downloadBlob(r.blob, `favicon-${r.host}.${r.blob.type === 'image/png' ? 'png' : 'ico'}`); };
+  return <SeoFrame note="Downloads images from Google's favicon service through Toolblip's favicon endpoint. The provider may return a generic fallback; a returned image does not prove the site's own favicon exists. Up to 20 domains, three concurrent requests." example={() => update('example.com')} clear={clear}>
+    <SeoField label="URLs input" value={input} onChange={update} multiline maxLength={10000} />
+    <label>Load URLs from file<input ref={file} type="file" accept=".txt,text/plain" aria-label="Load URLs from file" onChange={e => {
+      const selected = e.target.files?.[0]; if (!selected) return;
+      update(''); if (selected.size > 10000 || !/\.txt$/i.test(selected.name)) { request.setError('Choose a .txt file of at most 10 KB.'); return; }
+      const next = new FileReader(); reader.current = next;
+      next.onload = () => { if (reader.current === next) { setInput(String(next.result)); reader.current = null; } };
+      next.onerror = () => { if (reader.current === next) request.setError('Could not read the file.'); }; next.readAsText(selected);
+    }} /></label>
+    <button className="tb-v2-btn tb-v2-btn-primary" disabled={request.loading} onClick={fetchIcons}>{request.loading ? 'Fetching…' : 'Fetch Favicons'}</button>
+    {results.some(r => r.blob) && <button className="tb-v2-btn-sm" onClick={() => results.forEach(download)}>Download All</button>}
+    <SeoOutput error={request.error} text={results.length ? results.map(r => `${r.host}: ${r.error ?? `Downloaded ${r.blob?.size} bytes (provider image; may be a fallback)`}`).join('\n') : ''} filename="favicon-report.txt" />
+    {results.map(r => <div key={r.host}>{r.url && <img src={r.url} alt={`Provider favicon for ${r.host}`} width={32} height={32} />}<span>{r.host}</span>{r.blob && <button className="tb-v2-btn-sm" onClick={() => download(r)}>Download {r.host}</button>}</div>)}
+  </SeoFrame>;
 }

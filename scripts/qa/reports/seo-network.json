@@ -1,0 +1,721 @@
+{
+  "group": "seo-network",
+  "assignedRoutes": 47,
+  "ownedComponents": 38,
+  "status": "implementation-complete; awaiting parent integrated browser fixtures",
+  "branch": "fix/auto-qa-seo-network",
+  "verification": [
+    {
+      "command": "./node_modules/.bin/vitest run lib/seo-network lib/network-tools.test.ts",
+      "result": "passed",
+      "files": 4,
+      "tests": 27,
+      "note": "Node emitted only its module.register deprecation warning."
+    },
+    {
+      "command": "./node_modules/.bin/tsc --noEmit --incremental false",
+      "result": "passed",
+      "exitCode": 0
+    },
+    {
+      "command": "node --check scripts/qa/cases/seo-network.mjs",
+      "result": "passed"
+    },
+    {
+      "command": "Compare exported case slugs with assignment JSON",
+      "result": "passed: 47 cases, 47 unique routes, exact assignment match"
+    },
+    {
+      "command": "git diff --check",
+      "result": "passed"
+    }
+  ],
+  "notRun": [
+    "Browser automation (parent owns integrated fixtures)",
+    "Dev server",
+    "Production build",
+    "Full repository test suite (scoped worker checks requested)",
+    "External publication/deployment"
+  ],
+  "fixedFiles": [
+    "components/tools/AccessibilityCheckerClient.tsx",
+    "components/tools/BatchFaviconDownloaderClient.tsx",
+    "components/tools/BrokenLinkCheckerClient.tsx",
+    "components/tools/CanonicalUrlGeneratorClient.tsx",
+    "components/tools/CidrCalculatorClient.tsx",
+    "components/tools/DnsLookupToolClient.tsx",
+    "components/tools/DnsLookupV2Client.tsx",
+    "components/tools/DockerComposeGeneratorClient.tsx",
+    "components/tools/DomainAgeCheckerClient.tsx",
+    "components/tools/DuplicateUrlDetectorClient.tsx",
+    "components/tools/GoogleAlgorithmTrackerClient.tsx",
+    "components/tools/GoogleSerpPreviewClient.tsx",
+    "components/tools/GoogleSerpSimulatorClient.tsx",
+    "components/tools/HeadingTagAnalyzerClient.tsx",
+    "components/tools/HreflangTagGeneratorClient.tsx",
+    "components/tools/HtaccessRedirectGeneratorClient.tsx",
+    "components/tools/IpRangeCalculatorClient.tsx",
+    "components/tools/JsonLdGeneratorClient.tsx",
+    "components/tools/KeywordDensityCheckerClient.tsx",
+    "components/tools/KeywordExtractorClient.tsx",
+    "components/tools/KeywordGeneratorExpressClient.tsx",
+    "components/tools/MacAddressGeneratorClient.tsx",
+    "components/tools/MetaDescriptionCheckerClient.tsx",
+    "components/tools/MetaTagGeneratorClient.tsx",
+    "components/tools/OgTagDebuggerClient.tsx",
+    "components/tools/OpenGraphGeneratorClient.tsx",
+    "components/tools/OpenGraphPreviewClient.tsx",
+    "components/tools/PageTitleCheckerClient.tsx",
+    "components/tools/PingTestClient.tsx",
+    "components/tools/RobotsTxtEditorClient.tsx",
+    "components/tools/RobotsTxtGeneratorClient.tsx",
+    "components/tools/SEOTitleAnalyzerClient.tsx",
+    "components/tools/SecurityHeadersGeneratorClient.tsx",
+    "components/tools/SeoMetaTagAnalyzerClient.tsx",
+    "components/tools/SeoNetworkLookupClient.tsx",
+    "components/tools/SeoNetworkPreviewClient.tsx",
+    "components/tools/SeoNetworkShared.tsx",
+    "components/tools/SeoNetworkTextClient.tsx",
+    "components/tools/SerpPreviewClient.tsx",
+    "components/tools/SitemapAnalyzerClient.tsx",
+    "components/tools/TwitterCardPreviewClient.tsx",
+    "components/tools/XmlSitemapGeneratorClient.tsx",
+    "lib/seo-network/core.test.ts",
+    "lib/seo-network/core.ts",
+    "lib/seo-network/documents.test.ts",
+    "lib/seo-network/documents.ts",
+    "lib/seo-network/request.test.ts",
+    "lib/seo-network/request.ts",
+    "scripts/qa/cases/seo-network.mjs",
+    "scripts/qa/reports/seo-network.json"
+  ],
+  "routes": [
+    {
+      "slug": "robots-txt-generator",
+      "url": "https://toolblip.com/tools/robots-txt-generator",
+      "component": "RobotsTxtGeneratorClient",
+      "historicallyApproved": false,
+      "status": "implemented; browser acceptance pending parent",
+      "finding": "Live generation; dedicated bot groups retain common access rules; bounded rows; crawl-delay support caveat; real robots.txt download.",
+      "case": "scripts/qa/cases/seo-network.mjs#robots-txt-generator",
+      "remainingWorkerBlockers": []
+    },
+    {
+      "slug": "security-headers-generator",
+      "url": "https://toolblip.com/tools/security-headers-generator",
+      "component": "SecurityHeadersGeneratorClient",
+      "historicallyApproved": false,
+      "status": "implemented; browser acceptance pending parent",
+      "finding": "All four formats retained; header name validation, bounded custom headers, Nginx dollar escaping, explicit clipboard errors, disabled legacy XSS preset, clear removes generated headers.",
+      "case": "scripts/qa/cases/seo-network.mjs#security-headers-generator",
+      "remainingWorkerBlockers": []
+    },
+    {
+      "slug": "xml-sitemap-generator",
+      "url": "https://toolblip.com/tools/xml-sitemap-generator",
+      "component": "XmlSitemapGeneratorClient",
+      "historicallyApproved": false,
+      "status": "implemented; browser acceptance pending parent",
+      "finding": "Live escaped XML; URL resolution, one-host and date validation, bounded entries; image namespace and real XML download.",
+      "case": "scripts/qa/cases/seo-network.mjs#xml-sitemap-generator",
+      "remainingWorkerBlockers": []
+    },
+    {
+      "slug": "json-ld-generator",
+      "url": "https://toolblip.com/tools/json-ld-generator",
+      "component": "JsonLdGeneratorClient",
+      "historicallyApproved": false,
+      "status": "implemented; browser acceptance pending parent",
+      "finding": "All 13 schemas retained; live current output, safe script escaping, complete row/date/price validation; removed invented InStock availability; download.",
+      "case": "scripts/qa/cases/seo-network.mjs#json-ld-generator",
+      "remainingWorkerBlockers": []
+    },
+    {
+      "slug": "htaccess-redirect-generator",
+      "url": "https://toolblip.com/tools/htaccess-redirect-generator",
+      "component": "HtaccessRedirectGeneratorClient",
+      "historicallyApproved": false,
+      "status": "implemented; browser acceptance pending parent",
+      "finding": "Live exact-path rules; config injection validation, explicit base domain for protocol redirects, all four status modes, download.",
+      "case": "scripts/qa/cases/seo-network.mjs#htaccess-redirect-generator",
+      "remainingWorkerBlockers": []
+    },
+    {
+      "slug": "meta-tag-generator",
+      "url": "https://toolblip.com/tools/meta-tag-generator",
+      "component": "MetaTagGeneratorClient",
+      "historicallyApproved": false,
+      "status": "implemented; browser acceptance pending parent",
+      "finding": "Shared live escaped tag generation and responsive preview; desktop/mobile, social platform/card modes where relevant, HTTP(S) validation, examples/clear and current tag download; explicitly approximate.",
+      "case": "scripts/qa/cases/seo-network.mjs#meta-tag-generator",
+      "remainingWorkerBlockers": []
+    },
+    {
+      "slug": "serp-preview",
+      "url": "https://toolblip.com/tools/serp-preview",
+      "component": "SerpPreviewClient",
+      "historicallyApproved": false,
+      "status": "implemented; browser acceptance pending parent",
+      "finding": "Shared live escaped tag generation and responsive preview; desktop/mobile, social platform/card modes where relevant, HTTP(S) validation, examples/clear and current tag download; explicitly approximate.",
+      "case": "scripts/qa/cases/seo-network.mjs#serp-preview",
+      "remainingWorkerBlockers": []
+    },
+    {
+      "slug": "keyword-density-checker",
+      "url": "https://toolblip.com/tools/keyword-density-checker",
+      "component": "KeywordDensityCheckerClient",
+      "historicallyApproved": false,
+      "status": "implemented; browser acceptance pending parent",
+      "finding": "Whole Unicode words and 1/2/3-word windows; explicit density denominator; live output.",
+      "case": "scripts/qa/cases/seo-network.mjs#keyword-density-checker",
+      "remainingWorkerBlockers": []
+    },
+    {
+      "slug": "mac-address-generator",
+      "url": "https://toolblip.com/tools/mac-address-generator",
+      "component": "MacAddressGeneratorClient",
+      "historicallyApproved": false,
+      "status": "implemented; browser acceptance pending parent",
+      "finding": "Shared by both assigned slugs; Web Crypto local-unicast generation, three formats, bounded integer count and collision attempts, explicit errors, current-result download.",
+      "case": "scripts/qa/cases/seo-network.mjs#mac-address-generator",
+      "remainingWorkerBlockers": []
+    },
+    {
+      "slug": "open-graph-preview",
+      "url": "https://toolblip.com/tools/open-graph-preview",
+      "component": "OpenGraphPreviewClient",
+      "historicallyApproved": false,
+      "status": "implemented; browser acceptance pending parent",
+      "finding": "Shared live escaped tag generation and responsive preview; desktop/mobile, social platform/card modes where relevant, HTTP(S) validation, examples/clear and current tag download; explicitly approximate.",
+      "case": "scripts/qa/cases/seo-network.mjs#open-graph-preview",
+      "remainingWorkerBlockers": []
+    },
+    {
+      "slug": "twitter-card-preview",
+      "url": "https://toolblip.com/tools/twitter-card-preview",
+      "component": "TwitterCardPreviewClient",
+      "historicallyApproved": false,
+      "status": "implemented; browser acceptance pending parent",
+      "finding": "Shared live escaped tag generation and responsive preview; desktop/mobile, social platform/card modes where relevant, HTTP(S) validation, examples/clear and current tag download; explicitly approximate.",
+      "case": "scripts/qa/cases/seo-network.mjs#twitter-card-preview",
+      "remainingWorkerBlockers": []
+    },
+    {
+      "slug": "ping-test",
+      "url": "https://toolblip.com/tools/ping-test",
+      "component": "PingTestClient",
+      "historicallyApproved": false,
+      "status": "implemented; browser acceptance pending parent",
+      "finding": "Bounded and cancellable real read-only lookups; stale-result invalidation on edits/modes/clear/unmount; input and concurrency limits; explicit network errors; current JSON report download. DNS timing is explicitly not ICMP or host reachability.",
+      "case": "scripts/qa/cases/seo-network.mjs#ping-test",
+      "remainingWorkerBlockers": []
+    },
+    {
+      "slug": "robots-txt-analyzer",
+      "url": "https://toolblip.com/tools/robots-txt-analyzer",
+      "component": "RobotsTxtEditorClient",
+      "historicallyApproved": false,
+      "status": "implemented; browser acceptance pending parent",
+      "finding": "RFC-style group parsing, merged matching groups, whole-path wildcard/end-anchor handling, allow tie-break, empty rules, UTF-8/percent encoding, extension warnings and path test.",
+      "case": "scripts/qa/cases/seo-network.mjs#robots-txt-analyzer",
+      "remainingWorkerBlockers": []
+    },
+    {
+      "slug": "keyword-extractor",
+      "url": "https://toolblip.com/tools/keyword-extractor",
+      "component": "KeywordExtractorClient",
+      "historicallyApproved": false,
+      "status": "implemented; browser acceptance pending parent",
+      "finding": "Frequency extraction with documented English stop-word filtering and phrase sizes.",
+      "case": "scripts/qa/cases/seo-network.mjs#keyword-extractor",
+      "remainingWorkerBlockers": []
+    },
+    {
+      "slug": "broken-link-checker",
+      "url": "https://toolblip.com/tools/broken-link-checker",
+      "component": "BrokenLinkCheckerClient",
+      "historicallyApproved": false,
+      "status": "implemented; browser acceptance pending parent",
+      "finding": "Bounded and cancellable real read-only lookups; stale-result invalidation on edits/modes/clear/unmount; input and concurrency limits; explicit network errors; current JSON report download. CORS/network/unsupported HEAD stays Unknown; only observed HTTP errors are reported as HTTP errors.",
+      "case": "scripts/qa/cases/seo-network.mjs#broken-link-checker",
+      "remainingWorkerBlockers": []
+    },
+    {
+      "slug": "google-algorithm-tracker",
+      "url": "https://toolblip.com/tools/google-algorithm-tracker",
+      "component": "GoogleAlgorithmTrackerClient",
+      "historicallyApproved": false,
+      "status": "implemented; browser acceptance pending parent",
+      "finding": "Existing historical filter retained; examples/clear; identifies static coverage through December 2024, corrected misleading historical descriptions, authoritative live-history link.",
+      "case": "scripts/qa/cases/seo-network.mjs#google-algorithm-tracker",
+      "remainingWorkerBlockers": []
+    },
+    {
+      "slug": "meta-description-checker",
+      "url": "https://toolblip.com/tools/meta-description-checker",
+      "component": "MetaDescriptionCheckerClient",
+      "historicallyApproved": false,
+      "status": "implemented; browser acceptance pending parent",
+      "finding": "Text/HTML/URL modes; Unicode counts and optional phrase match, no SEO grade.",
+      "case": "scripts/qa/cases/seo-network.mjs#meta-description-checker",
+      "remainingWorkerBlockers": []
+    },
+    {
+      "slug": "domain-age-checker",
+      "url": "https://toolblip.com/tools/domain-age-checker",
+      "component": "DomainAgeCheckerClient",
+      "historicallyApproved": false,
+      "status": "implemented; browser acceptance pending parent",
+      "finding": "Bounded and cancellable real read-only lookups; stale-result invalidation on edits/modes/clear/unmount; input and concurrency limits; explicit network errors; current JSON report download. RDAP missing/future/invalid dates are handled; age uses signed elapsed UTC days.",
+      "case": "scripts/qa/cases/seo-network.mjs#domain-age-checker",
+      "remainingWorkerBlockers": []
+    },
+    {
+      "slug": "accessibility-checker",
+      "url": "https://toolblip.com/tools/accessibility-checker",
+      "component": "AccessibilityCheckerClient",
+      "historicallyApproved": false,
+      "status": "implemented; browser acceptance pending parent",
+      "finding": "Static scope explicitly limited; wrapped/referenced labels, image-link names and hidden controls handled.",
+      "case": "scripts/qa/cases/seo-network.mjs#accessibility-checker",
+      "remainingWorkerBlockers": []
+    },
+    {
+      "slug": "sitemap-analyzer",
+      "url": "https://toolblip.com/tools/sitemap-analyzer",
+      "component": "SitemapAnalyzerClient",
+      "historicallyApproved": false,
+      "status": "implemented; browser acceptance pending parent",
+      "finding": "DOM XML parser, namespace-aware urlset/index entries, malformed XML and DTD rejection, decoded complete URL export.",
+      "case": "scripts/qa/cases/seo-network.mjs#sitemap-analyzer",
+      "remainingWorkerBlockers": []
+    },
+    {
+      "slug": "open-graph-generator",
+      "url": "https://toolblip.com/tools/open-graph-generator",
+      "component": "OpenGraphGeneratorClient",
+      "historicallyApproved": false,
+      "status": "implemented; browser acceptance pending parent",
+      "finding": "Shared live escaped tag generation and responsive preview; desktop/mobile, social platform/card modes where relevant, HTTP(S) validation, examples/clear and current tag download; explicitly approximate.",
+      "case": "scripts/qa/cases/seo-network.mjs#open-graph-generator",
+      "remainingWorkerBlockers": []
+    },
+    {
+      "slug": "dns-lookup",
+      "url": "https://toolblip.com/tools/dns-lookup",
+      "component": "DnsLookupV2Client",
+      "historicallyApproved": false,
+      "status": "implemented; browser acceptance pending parent",
+      "finding": "Bounded and cancellable real read-only lookups; stale-result invalidation on edits/modes/clear/unmount; input and concurrency limits; explicit network errors; current JSON report download.",
+      "case": "scripts/qa/cases/seo-network.mjs#dns-lookup",
+      "remainingWorkerBlockers": []
+    },
+    {
+      "slug": "serp-snippet-preview",
+      "url": "https://toolblip.com/tools/serp-snippet-preview",
+      "component": "SerpPreviewClient",
+      "historicallyApproved": false,
+      "status": "implemented; browser acceptance pending parent",
+      "finding": "Shared live escaped tag generation and responsive preview; desktop/mobile, social platform/card modes where relevant, HTTP(S) validation, examples/clear and current tag download; explicitly approximate.",
+      "case": "scripts/qa/cases/seo-network.mjs#serp-snippet-preview",
+      "remainingWorkerBlockers": []
+    },
+    {
+      "slug": "seo-meta-tag-analyzer",
+      "url": "https://toolblip.com/tools/seo-meta-tag-analyzer",
+      "component": "SeoMetaTagAnalyzerClient",
+      "historicallyApproved": false,
+      "status": "implemented; browser acceptance pending parent",
+      "finding": "Real inert HTML metadata extraction, duplicates and missing-tag observations; no arbitrary SEO grade.",
+      "case": "scripts/qa/cases/seo-network.mjs#seo-meta-tag-analyzer",
+      "remainingWorkerBlockers": []
+    },
+    {
+      "slug": "cidr-calculator",
+      "url": "https://toolblip.com/tools/cidr-calculator",
+      "component": "CidrCalculatorClient",
+      "historicallyApproved": false,
+      "status": "implemented; browser acceptance pending parent",
+      "finding": "Live validated IPv4 calculation; /31-/32 labels avoid claiming broadcast; input limits, clipboard error feedback and download.",
+      "case": "scripts/qa/cases/seo-network.mjs#cidr-calculator",
+      "remainingWorkerBlockers": []
+    },
+    {
+      "slug": "ip-range-calculator",
+      "url": "https://toolblip.com/tools/ip-range-calculator",
+      "component": "IpRangeCalculatorClient",
+      "historicallyApproved": false,
+      "status": "implemented; browser acceptance pending parent",
+      "finding": "Live inclusive range and enclosing CIDR; input limits, clipboard error feedback and download.",
+      "case": "scripts/qa/cases/seo-network.mjs#ip-range-calculator",
+      "remainingWorkerBlockers": []
+    },
+    {
+      "slug": "robots-txt-validator",
+      "url": "https://toolblip.com/tools/robots-txt-validator",
+      "component": "RobotsTxtEditorClient",
+      "historicallyApproved": false,
+      "status": "implemented; browser acceptance pending parent",
+      "finding": "RFC-style group parsing, merged matching groups, whole-path wildcard/end-anchor handling, allow tie-break, empty rules, UTF-8/percent encoding, extension warnings and path test.",
+      "case": "scripts/qa/cases/seo-network.mjs#robots-txt-validator",
+      "remainingWorkerBlockers": []
+    },
+    {
+      "slug": "hreflang-tag-generator",
+      "url": "https://toolblip.com/tools/hreflang-tag-generator",
+      "component": "HreflangTagGeneratorClient",
+      "historicallyApproved": false,
+      "status": "implemented; browser acceptance pending parent",
+      "finding": "HTML/JSON/sitemap modes; validated unique languages and URLs, escaped output, full reciprocal alternates in every sitemap entry.",
+      "case": "scripts/qa/cases/seo-network.mjs#hreflang-tag-generator",
+      "remainingWorkerBlockers": []
+    },
+    {
+      "slug": "google-serp-preview",
+      "url": "https://toolblip.com/tools/google-serp-preview",
+      "component": "GoogleSerpPreviewClient",
+      "historicallyApproved": false,
+      "status": "implemented; browser acceptance pending parent",
+      "finding": "Shared live escaped tag generation and responsive preview; desktop/mobile, social platform/card modes where relevant, HTTP(S) validation, examples/clear and current tag download; explicitly approximate.",
+      "case": "scripts/qa/cases/seo-network.mjs#google-serp-preview",
+      "remainingWorkerBlockers": []
+    },
+    {
+      "slug": "keyword-generator",
+      "url": "https://toolblip.com/tools/keyword-generator",
+      "component": "KeywordGeneratorExpressClient",
+      "historicallyApproved": false,
+      "status": "implemented; browser acceptance pending parent",
+      "finding": "Local question/preposition/modifier templates; explicitly no live volume/competition claims.",
+      "case": "scripts/qa/cases/seo-network.mjs#keyword-generator",
+      "remainingWorkerBlockers": []
+    },
+    {
+      "slug": "heading-tag-analyzer",
+      "url": "https://toolblip.com/tools/heading-tag-analyzer",
+      "component": "HeadingTagAnalyzerClient",
+      "historicallyApproved": false,
+      "status": "implemented; browser acceptance pending parent",
+      "finding": "DOM parsing preserves nested heading text and document order; review prompts for skips.",
+      "case": "scripts/qa/cases/seo-network.mjs#heading-tag-analyzer",
+      "remainingWorkerBlockers": []
+    },
+    {
+      "slug": "page-title-checker",
+      "url": "https://toolblip.com/tools/page-title-checker",
+      "component": "PageTitleCheckerClient",
+      "historicallyApproved": false,
+      "status": "implemented; browser acceptance pending parent",
+      "finding": "Text/HTML/URL modes; Unicode counts, duplicate/missing title observations without a ranking score.",
+      "case": "scripts/qa/cases/seo-network.mjs#page-title-checker",
+      "remainingWorkerBlockers": []
+    },
+    {
+      "slug": "sitemap-extractor",
+      "url": "https://toolblip.com/tools/sitemap-extractor",
+      "component": "SitemapAnalyzerClient",
+      "historicallyApproved": false,
+      "status": "implemented; browser acceptance pending parent",
+      "finding": "DOM XML parser, namespace-aware urlset/index entries, malformed XML and DTD rejection, decoded complete URL export.",
+      "case": "scripts/qa/cases/seo-network.mjs#sitemap-extractor",
+      "remainingWorkerBlockers": []
+    },
+    {
+      "slug": "batch-favicon-downloader",
+      "url": "https://toolblip.com/tools/batch-favicon-downloader",
+      "component": "BatchFaviconDownloaderClient",
+      "historicallyApproved": false,
+      "status": "implemented; browser acceptance pending parent",
+      "finding": "Shared by both assigned slugs; 20-domain/3-request limit, bounded streamed image bytes, signature/dimension/decode validation, cancellation, file-read race protection, object URL cleanup, real per-image and bulk downloads; provider fallback caveat.",
+      "case": "scripts/qa/cases/seo-network.mjs#batch-favicon-downloader",
+      "remainingWorkerBlockers": []
+    },
+    {
+      "slug": "docker-compose-generator",
+      "url": "https://toolblip.com/tools/docker-compose-generator",
+      "component": "DockerComposeGeneratorClient",
+      "historicallyApproved": false,
+      "status": "implemented; browser acceptance pending parent",
+      "finding": "Six templates retained; prevents db/cache service collisions, escapes Compose dollar interpolation, YAML downloads, bounded labeled inputs.",
+      "case": "scripts/qa/cases/seo-network.mjs#docker-compose-generator",
+      "remainingWorkerBlockers": []
+    },
+    {
+      "slug": "robots-txt-editor",
+      "url": "https://toolblip.com/tools/robots-txt-editor",
+      "component": "RobotsTxtEditorClient",
+      "historicallyApproved": false,
+      "status": "implemented; browser acceptance pending parent",
+      "finding": "RFC-style group parsing, merged matching groups, whole-path wildcard/end-anchor handling, allow tie-break, empty rules, UTF-8/percent encoding, extension warnings and path test.",
+      "case": "scripts/qa/cases/seo-network.mjs#robots-txt-editor",
+      "remainingWorkerBlockers": []
+    },
+    {
+      "slug": "og-tag-debugger",
+      "url": "https://toolblip.com/tools/og-tag-debugger",
+      "component": "OgTagDebuggerClient",
+      "historicallyApproved": false,
+      "status": "implemented; browser acceptance pending parent",
+      "finding": "Real HTML/URL inspection plus retained editable tag/preview workflow; safe escaping.",
+      "case": "scripts/qa/cases/seo-network.mjs#og-tag-debugger",
+      "remainingWorkerBlockers": []
+    },
+    {
+      "slug": "canonical-url-generator",
+      "url": "https://toolblip.com/tools/canonical-url-generator",
+      "component": "CanonicalUrlGeneratorClient",
+      "historicallyApproved": false,
+      "status": "implemented; browser acceptance pending parent",
+      "finding": "Explicit HTTP(S) transformations; preserves query semantics by default; safe HTML escaping.",
+      "case": "scripts/qa/cases/seo-network.mjs#canonical-url-generator",
+      "remainingWorkerBlockers": []
+    },
+    {
+      "slug": "random-mac-generator",
+      "url": "https://toolblip.com/tools/random-mac-generator",
+      "component": "MacAddressGeneratorClient",
+      "historicallyApproved": false,
+      "status": "implemented; browser acceptance pending parent",
+      "finding": "Shared by both assigned slugs; Web Crypto local-unicast generation, three formats, bounded integer count and collision attempts, explicit errors, current-result download.",
+      "case": "scripts/qa/cases/seo-network.mjs#random-mac-generator",
+      "remainingWorkerBlockers": []
+    },
+    {
+      "slug": "seo-title-analyzer",
+      "url": "https://toolblip.com/tools/seo-title-analyzer",
+      "component": "SEOTitleAnalyzerClient",
+      "historicallyApproved": false,
+      "status": "implemented; browser acceptance pending parent",
+      "finding": "Text/HTML/URL modes; Unicode counts and missing title observations without a ranking score.",
+      "case": "scripts/qa/cases/seo-network.mjs#seo-title-analyzer",
+      "remainingWorkerBlockers": []
+    },
+    {
+      "slug": "serp-simulator",
+      "url": "https://toolblip.com/tools/serp-simulator",
+      "component": "SerpPreviewClient",
+      "historicallyApproved": false,
+      "status": "implemented; browser acceptance pending parent",
+      "finding": "Shared live escaped tag generation and responsive preview; desktop/mobile, social platform/card modes where relevant, HTTP(S) validation, examples/clear and current tag download; explicitly approximate.",
+      "case": "scripts/qa/cases/seo-network.mjs#serp-simulator",
+      "remainingWorkerBlockers": []
+    },
+    {
+      "slug": "robots-txt-checker",
+      "url": "https://toolblip.com/tools/robots-txt-checker",
+      "component": "RobotsTxtEditorClient",
+      "historicallyApproved": false,
+      "status": "implemented; browser acceptance pending parent",
+      "finding": "RFC-style group parsing, merged matching groups, whole-path wildcard/end-anchor handling, allow tie-break, empty rules, UTF-8/percent encoding, extension warnings and path test.",
+      "case": "scripts/qa/cases/seo-network.mjs#robots-txt-checker",
+      "remainingWorkerBlockers": []
+    },
+    {
+      "slug": "duplicate-url-detector",
+      "url": "https://toolblip.com/tools/duplicate-url-detector",
+      "component": "DuplicateUrlDetectorClient",
+      "historicallyApproved": false,
+      "status": "implemented; browser acceptance pending parent",
+      "finding": "Exact normalized URL grouping by default, opt-in transformations, invalid URLs reported, decoded query delimiters never conflated.",
+      "case": "scripts/qa/cases/seo-network.mjs#duplicate-url-detector",
+      "remainingWorkerBlockers": []
+    },
+    {
+      "slug": "keyword-density-analyzer",
+      "url": "https://toolblip.com/tools/keyword-density-analyzer",
+      "component": "KeywordDensityCheckerClient",
+      "historicallyApproved": false,
+      "status": "implemented; browser acceptance pending parent",
+      "finding": "Whole Unicode words and 1/2/3-word windows; explicit density denominator; live output.",
+      "case": "scripts/qa/cases/seo-network.mjs#keyword-density-analyzer",
+      "remainingWorkerBlockers": []
+    },
+    {
+      "slug": "favicon-grabber",
+      "url": "https://toolblip.com/tools/images/favicon-grabber",
+      "component": "BatchFaviconDownloaderClient",
+      "historicallyApproved": false,
+      "status": "implemented; browser acceptance pending parent",
+      "finding": "Shared by both assigned slugs; 20-domain/3-request limit, bounded streamed image bytes, signature/dimension/decode validation, cancellation, file-read race protection, object URL cleanup, real per-image and bulk downloads; provider fallback caveat.",
+      "case": "scripts/qa/cases/seo-network.mjs#favicon-grabber",
+      "remainingWorkerBlockers": []
+    },
+    {
+      "slug": "dns-lookup-tool",
+      "url": "https://toolblip.com/tools/dns-lookup-tool",
+      "component": "DnsLookupToolClient",
+      "historicallyApproved": false,
+      "status": "implemented; browser acceptance pending parent",
+      "finding": "Bounded and cancellable real read-only lookups; stale-result invalidation on edits/modes/clear/unmount; input and concurrency limits; explicit network errors; current JSON report download.",
+      "case": "scripts/qa/cases/seo-network.mjs#dns-lookup-tool",
+      "remainingWorkerBlockers": []
+    },
+    {
+      "slug": "google-serp-simulator",
+      "url": "https://toolblip.com/tools/google-serp-simulator",
+      "component": "GoogleSerpSimulatorClient",
+      "historicallyApproved": false,
+      "status": "implemented; browser acceptance pending parent",
+      "finding": "Shared live escaped tag generation and responsive preview; desktop/mobile, social platform/card modes where relevant, HTTP(S) validation, examples/clear and current tag download; explicitly approximate.",
+      "case": "scripts/qa/cases/seo-network.mjs#google-serp-simulator",
+      "remainingWorkerBlockers": []
+    }
+  ],
+  "duplicateProposals": [
+    {
+      "canonical": "robots-txt-editor",
+      "aliases": [
+        "robots-txt-analyzer",
+        "robots-txt-validator",
+        "robots-txt-checker"
+      ],
+      "reason": "Already shared editor component; validation and path testing now identical."
+    },
+    {
+      "canonical": "serp-preview",
+      "aliases": [
+        "serp-snippet-preview",
+        "serp-simulator",
+        "google-serp-preview",
+        "google-serp-simulator"
+      ],
+      "reason": "Same editable approximate desktop/mobile preview and tag output; no route-specific live SERP data."
+    },
+    {
+      "canonical": "keyword-density-checker",
+      "aliases": [
+        "keyword-density-analyzer"
+      ],
+      "reason": "Same pre-existing shared component and frequency workflow."
+    },
+    {
+      "canonical": "mac-address-generator",
+      "aliases": [
+        "random-mac-generator"
+      ],
+      "reason": "Same shared generator, including all output formats."
+    },
+    {
+      "canonical": "batch-favicon-downloader",
+      "aliases": [
+        "favicon-grabber"
+      ],
+      "reason": "Same shared component supports one or multiple domains; preserve images-category discovery through redirect."
+    },
+    {
+      "canonical": "sitemap-analyzer",
+      "aliases": [
+        "sitemap-extractor"
+      ],
+      "reason": "Same shared component now supports both analysis and complete location export."
+    }
+  ],
+  "centralMetadataChanges": [
+    {
+      "slugs": [
+        "ping-test"
+      ],
+      "proposal": "Describe as browser DNS lookup/timing, not ICMP ping or proof that a host is reachable. Consider renaming the display title to DNS Response Check."
+    },
+    {
+      "slugs": [
+        "google-algorithm-tracker"
+      ],
+      "proposal": "Describe a selected historical reference through December 2024 and link the official live history; remove real-time tracking claims."
+    },
+    {
+      "slugs": [
+        "seo-meta-tag-analyzer",
+        "seo-title-analyzer",
+        "meta-description-checker",
+        "heading-tag-analyzer"
+      ],
+      "proposal": "Remove numeric SEO grades, ranking predictions and universal optimal-length guarantees. Describe actual parsing/counting checks."
+    },
+    {
+      "slugs": [
+        "accessibility-checker"
+      ],
+      "proposal": "State static HTML checks only; no WCAG certification, rendered contrast or runtime keyboard/focus audit."
+    },
+    {
+      "slugs": [
+        "keyword-generator",
+        "keyword-extractor"
+      ],
+      "proposal": "State local phrase templates/frequency extraction; no search volume, competition, semantic AI or live suggestions."
+    },
+    {
+      "slugs": [
+        "batch-favicon-downloader",
+        "favicon-grabber"
+      ],
+      "proposal": "State Google-provider favicon bytes may be generic fallback; PNG/ICO only, max 20 domains, no invented site-discovery guarantee."
+    },
+    {
+      "slugs": [
+        "broken-link-checker"
+      ],
+      "proposal": "State browser HEAD/CORS limits and Unknown results, max 20 URLs. Do not claim full-site crawling."
+    },
+    {
+      "slugs": [
+        "domain-age-checker"
+      ],
+      "proposal": "Public RDAP registration age, not website age; registry/CORS/data-availability restrictions apply."
+    },
+    {
+      "slugs": [
+        "page-title-checker",
+        "seo-title-analyzer",
+        "seo-meta-tag-analyzer",
+        "og-tag-debugger",
+        "sitemap-analyzer",
+        "sitemap-extractor",
+        "robots-txt-editor",
+        "robots-txt-analyzer",
+        "robots-txt-validator",
+        "robots-txt-checker"
+      ],
+      "proposal": "Describe paste modes plus CORS-enabled direct URL reads. No unrestricted proxy crawling or execution of page scripts."
+    },
+    {
+      "slugs": [
+        "mac-address-generator",
+        "random-mac-generator"
+      ],
+      "proposal": "Locally administered unicast test addresses from Web Crypto; no vendor assignments or global uniqueness guarantee."
+    }
+  ],
+  "coordinatorFollowups": [
+    {
+      "path": "app/api/proxy/route.ts",
+      "finding": "Existing shared endpoint uses weak substring origin checks, incomplete private-host checks, follows redirects, clears timeout before unbounded body read. Owned clients now use direct bounded CORS reads instead; parent should separately review/repair the shared endpoint."
+    },
+    {
+      "path": "app/api/favicon/route.ts",
+      "finding": "Client bounds/decodes returned bytes, but existing shared server endpoint still buffers upstream bytes without a size cap or downstream cancellation. Parent owns server hardening."
+    },
+    {
+      "path": "app/api/dns/resolve/route.ts",
+      "finding": "Existing shared server resolver does not allow NS and buffers JSON. Owned clients query bounded Google DoH directly to preserve NS and distinct resolver errors."
+    }
+  ],
+  "remainingBlockers": [],
+  "integrationRisks": [
+    "Live RDAP, DoH and favicon fixture success depends on actual provider availability. Browser cases fail visibly if the live prerequisite fails; only controlled failure paths are mocked.",
+    "Browser XML/HTML parsing, downloads, responsive layout and image decoding are covered by authored cases but not claimed verified until parent runs them.",
+    "Central ToolUI/catalog/FAQ copy can still advertise old capabilities until the parent applies metadata proposals."
+  ],
+  "references": [
+    "https://www.rfc-editor.org/rfc/rfc9309.html",
+    "https://www.sitemaps.org/protocol.html",
+    "https://status.search.google.com/products/rGHU1u87FJnkP6W2GwMi/history"
+  ],
+  "workflowNotes": [
+    "Worked directly as the dedicated project-approved Codex backup worker; no delegation, browser, server or build.",
+    "No central catalog, FAQ, ToolUI, dependencies, or existing shared helper edits.",
+    "Dependency symlink remains untracked.",
+    "ai-seo-geo-aeo was not found in the available skill roots or Hermes skill tree; parsing work used primary protocol references."
+  ]
+}

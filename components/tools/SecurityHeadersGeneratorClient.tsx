@@ -1,4 +1,6 @@
 'use client';
+import { downloadText } from '@/lib/seo-network/request';
+import { SeoOwnedBoundary } from './SeoNetworkShared';
 
 import { useState, useEffect } from 'react';
 import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
@@ -13,7 +15,7 @@ const HEADER_PRESETS = [
   { name: 'Basic Security', description: 'Essential security headers for most websites' },
   { name: 'Strict CSP', description: 'Content Security Policy without inline scripts' },
   { name: 'HSTS Preload', description: 'HTTP Strict Transport Security for preload list' },
-  { name: 'Full Protection', description: 'Comprehensive security headers' },
+  { name: 'All Headers (Review Required)', description: 'Comprehensive security headers' },
 ];
 
 const createInitialHeaders = (): Record<string, HeaderConfig> => ({
@@ -28,8 +30,8 @@ const createInitialHeaders = (): Record<string, HeaderConfig> => ({
     description: 'Prevents MIME type sniffing',
   },
   'X-XSS-Protection': {
-    enabled: true,
-    value: '1; mode=block',
+    enabled: false,
+    value: '0',
     description: 'Legacy XSS filter (replaced by CSP in modern browsers)',
   },
   'Referrer-Policy': {
@@ -86,7 +88,8 @@ function isValidHeaderName(value: string): boolean {
   return /^[!#$%&'*+\-.^_`|~0-9A-Za-z]+$/.test(value);
 }
 
-export default function SecurityHeadersGeneratorClient() {
+function SecurityHeadersGeneratorForm() {
+  const [error, setError] = useState('');
   const [preset, setPreset] = useState('Basic Security');
   const [copiedFormat, setCopiedFormat] = useState<'headers' | 'nginx' | 'apache' | 'next' | null>(null);
 
@@ -120,7 +123,7 @@ export default function SecurityHeadersGeneratorClient() {
           ...prev,
           'X-Frame-Options': { ...prev['X-Frame-Options'], enabled: true },
           'X-Content-Type-Options': { ...prev['X-Content-Type-Options'], enabled: true },
-          'X-XSS-Protection': { ...prev['X-XSS-Protection'], enabled: true },
+          'X-XSS-Protection': { ...prev['X-XSS-Protection'], enabled: false },
           'Referrer-Policy': { ...prev['Referrer-Policy'], enabled: true },
           'Permissions-Policy': { ...prev['Permissions-Policy'], enabled: true },
         }));
@@ -150,7 +153,7 @@ export default function SecurityHeadersGeneratorClient() {
           'X-Frame-Options': { ...prev['X-Frame-Options'], enabled: true },
         }));
         break;
-      case 'Full Protection':
+      case 'All Headers (Review Required)':
         Object.keys(headers).forEach((key) => {
           setHeaders((prev) => ({
             ...prev,
@@ -167,7 +170,9 @@ export default function SecurityHeadersGeneratorClient() {
     setGeneratedAt(new Date().toISOString());
   }, []);
 
+  const hasHeaders = Object.values(headers).some(h => h.enabled) || customHeaders.length > 0;
   const generate = () => {
+    if (!hasHeaders) return '';
     let output = '# Security Headers\n';
     output += `# Generated: ${generatedAt || '...'}\n\n`;
 
@@ -187,19 +192,20 @@ export default function SecurityHeadersGeneratorClient() {
   };
 
   const generateNginx = () => {
+    if (!hasHeaders) return '';
     let output = '# Nginx Security Headers\n';
     output += `# Generated: ${generatedAt || '...'}\n\n`;
     output += 'server {\n';
 
     Object.entries(headers).forEach(([name, config]) => {
       if (config.enabled) {
-        output += `    add_header ${name} "${quoteConfigValue(config.value)}" always;\n`;
+        output += `    add_header ${name} "${quoteConfigValue(config.value).replace(/\$/g, "\\$")}" always;\n`;
       }
     });
 
     customHeaders.forEach((h) => {
       if (h.name && h.value) {
-        output += `    add_header ${singleLine(h.name)} "${quoteConfigValue(h.value)}" always;\n`;
+        output += `    add_header ${singleLine(h.name)} "${quoteConfigValue(h.value).replace(/\$/g, "\\$")}" always;\n`;
       }
     });
 
@@ -208,6 +214,7 @@ export default function SecurityHeadersGeneratorClient() {
   };
 
   const generateApache = () => {
+    if (!hasHeaders) return '';
     let output = '# Apache Security Headers\n';
     output += `# Generated: ${generatedAt || '...'}\n\n`;
     output += '<IfModule mod_headers.c>\n';
@@ -229,6 +236,7 @@ export default function SecurityHeadersGeneratorClient() {
   };
 
   const generateNextJs = () => {
+    if (!hasHeaders) return '';
     let output = '// Next.js Security Headers (next.config.js)\n\n';
     output += 'const securityHeaders = [\n';
 
@@ -265,14 +273,16 @@ export default function SecurityHeadersGeneratorClient() {
   };
 
   // Guard clipboard access to prevent hydration mismatch
-  const copy = (format: 'headers' | 'nginx' | 'apache' | 'next', text: string) => {
-    if (!isMounted) return;
-    navigator.clipboard.writeText(text).catch(() => {});
-    setCopiedFormat(format);
+  const copy = async (format: 'headers' | 'nginx' | 'apache' | 'next', text: string) => {
+    if (!isMounted || !text) return;
+    try { await navigator.clipboard.writeText(text); setCopiedFormat(format); } catch { setCopiedFormat(null); setError('Clipboard unavailable. Select the result to copy.'); }
     setTimeout(() => setCopiedFormat(null), 1500);
   };
 
   const addCustomHeader = () => {
+    setError('');
+    if (customHeaders.length >= 100) { setError('Limit: 100 custom headers.'); return; }
+    if (!isValidHeaderName(newHeaderName) || !newHeaderValue.trim() || /[\r\n]/.test(newHeaderValue)) { setError('Enter a valid header name and a nonempty single-line value.'); return; }
     const name = singleLine(newHeaderName);
     const value = singleLine(newHeaderValue);
     if (name && value && isValidHeaderName(name)) {
@@ -290,6 +300,7 @@ export default function SecurityHeadersGeneratorClient() {
   };
 
   const loadExample = () => {
+    setError('');
     applyPreset('Strict CSP');
     setCustomHeaders([{ name: 'Cache-Control', value: 'no-store' }]);
     setNewHeaderName('');
@@ -297,14 +308,16 @@ export default function SecurityHeadersGeneratorClient() {
   };
 
   const clear = () => {
+    setError('');
     setPreset('Basic Security');
-    setHeaders(createInitialHeaders());
+    setHeaders(Object.fromEntries(Object.entries(createInitialHeaders()).map(([key, value]) => [key, { ...value, enabled: false }])));
     setCustomHeaders([]);
     setNewHeaderName('');
     setNewHeaderValue('');
     setCopiedFormat(null);
   };
 
+  useEffect(() => setCopiedFormat(null), [headers, customHeaders]);
   const output = generate();
   const nginxOutput = generateNginx();
   const apacheOutput = generateApache();
@@ -338,6 +351,8 @@ export default function SecurityHeadersGeneratorClient() {
 
   return (
     <div>
+      {error && <p role="alert">{error}</p>}
+      <p style={{ fontSize: 13 }}>Configuration snippets require deployment testing. CSP and cross-origin policies can block resources; enable HSTS only for a working HTTPS site.</p>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Presets</span>
         <ToolExampleClearActions onExample={loadExample} onClear={clear} canClear={canClear} exampleCount={1} />
@@ -374,6 +389,7 @@ export default function SecurityHeadersGeneratorClient() {
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
                 <input
+          maxLength={4096}
                   type="checkbox"
                   id={`header-${name}`}
                   checked={config.enabled}
@@ -394,6 +410,7 @@ export default function SecurityHeadersGeneratorClient() {
               </div>
               {config.enabled && (
                   <input
+          maxLength={4096}
                     type="text"
                     id={`header-value-${name}`}
                     aria-label={`${name} value`}
@@ -421,6 +438,7 @@ export default function SecurityHeadersGeneratorClient() {
           </div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '8px' }}>
             <input
+          maxLength={4096}
               type="text"
               aria-label="Custom header name"
               value={newHeaderName}
@@ -431,6 +449,7 @@ export default function SecurityHeadersGeneratorClient() {
               style={{ flex: '1 1 180px', minWidth: 0 }}
             />
             <input
+          maxLength={4096}
               type="text"
               aria-label="Custom header value"
               value={newHeaderValue}
@@ -479,7 +498,7 @@ export default function SecurityHeadersGeneratorClient() {
       </div>
 
       <div className="tb-v2-tool-output-head" style={{ marginTop: '16px' }}>
-        <span className="tb-v2-tool-label">Generated Headers</span>
+        <span className="tb-v2-tool-label">Generated Headers</span><button disabled={!output} className="tb-v2-btn-sm" onClick={() => downloadText(output, "headers.txt")}>Download</button>
         {output && (
           <button
             type="button"
@@ -629,3 +648,5 @@ export default function SecurityHeadersGeneratorClient() {
     </div>
   );
 }
+
+export default function SecurityHeadersGeneratorClient() { return <SeoOwnedBoundary><SecurityHeadersGeneratorForm /></SeoOwnedBoundary>; }

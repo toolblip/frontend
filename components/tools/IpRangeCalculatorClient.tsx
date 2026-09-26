@@ -1,13 +1,15 @@
 "use client";
+import { downloadText } from '@/lib/seo-network/request';
+import { SeoOwnedBoundary } from './SeoNetworkShared';
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ToolExampleClearActions from "@/components/tools/ToolExampleClearActions";
 import { calculateIpRange } from "@/lib/network-tools";
 
 const EXAMPLE_START = "192.168.1.1";
 const EXAMPLE_END = "192.168.1.254";
 
-export default function IpRangeCalculatorClient() {
+function IpRangeCalculatorForm() {
   const [start, setStart] = useState(EXAMPLE_START);
   const [end, setEnd] = useState(EXAMPLE_END);
   const [result, setResult] =
@@ -38,16 +40,17 @@ export default function IpRangeCalculatorClient() {
     setError("");
     setCopied(false);
   };
-  const copy = () => {
+  const copy = async () => {
     if (!result) return;
-    navigator.clipboard
+    await navigator.clipboard
       .writeText(
         `Range: ${result.startIp} - ${result.endIp}\nCount: ${result.count}\nCIDR: ${result.network}/${result.prefix}\nNetmask: ${result.netmask}\nNetwork: ${result.network}\nBroadcast: ${result.broadcast}`,
       )
-      .catch(() => {});
-    setCopied(true);
+      .then(() => setCopied(true)).catch(() => setError("Clipboard unavailable. Select the result to copy."));
     window.setTimeout(() => setCopied(false), 1500);
   };
+  useEffect(() => { if (start || end) calculate(); else { setResult(null); setError(""); } }, [start, end]);
+
   const rows = result
     ? [
         ["First IP", result.firstIp],
@@ -72,23 +75,25 @@ export default function IpRangeCalculatorClient() {
       </div>
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap", padding: 20 }}>
         <input
+          maxLength={32}
           type="text"
           value={start}
           onChange={(event) => setStart(event.target.value)}
           onKeyDown={(event) => event.key === "Enter" && calculate()}
           placeholder="Start IP"
           className="tb-v2-input"
-          style={{ flex: "1 1 220px", fontFamily: "var(--f-mono)" }}
+          style={{ flex: "1 1 180px", minWidth: 0, fontFamily: "var(--f-mono)" }}
           aria-label="Start IP"
         />
         <input
+          maxLength={32}
           type="text"
           value={end}
           onChange={(event) => setEnd(event.target.value)}
           onKeyDown={(event) => event.key === "Enter" && calculate()}
           placeholder="End IP"
           className="tb-v2-input"
-          style={{ flex: "1 1 220px", fontFamily: "var(--f-mono)" }}
+          style={{ flex: "1 1 180px", minWidth: 0, fontFamily: "var(--f-mono)" }}
           aria-label="End IP"
         />
         <button
@@ -107,7 +112,7 @@ export default function IpRangeCalculatorClient() {
       {result && (
         <>
           <div className="tb-v2-tool-output-head">
-            <span className="tb-v2-tool-label">Results</span>
+            <span className="tb-v2-tool-label">Results</span><button className="tb-v2-btn-sm" onClick={() => downloadText(rows.map(([label, value]) => `${label}: ${value}`).join("\n"), "network-result.txt")}>Download</button>
             <button
               type="button"
               onClick={copy}
@@ -123,6 +128,7 @@ export default function IpRangeCalculatorClient() {
                 style={{
                   display: "flex",
                   justifyContent: "space-between",
+                  flexWrap: "wrap",
                   gap: 16,
                   padding: "10px 0",
                   borderBottom: "1px solid var(--tb-border)",
@@ -142,3 +148,5 @@ export default function IpRangeCalculatorClient() {
     </div>
   );
 }
+
+export default function IpRangeCalculatorClient() { return <SeoOwnedBoundary><IpRangeCalculatorForm /></SeoOwnedBoundary>; }

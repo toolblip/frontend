@@ -1,6 +1,8 @@
 'use client';
+import { downloadText } from '@/lib/seo-network/request';
+import { SeoOwnedBoundary } from './SeoNetworkShared';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 interface Rule {
@@ -27,7 +29,7 @@ function singleLine(value: string): string {
   return value.replace(/[\r\n]+/g, ' ').trim();
 }
 
-export default function RobotsTxtGeneratorClient() {
+function RobotsTxtGeneratorForm() {
   const [siteUrl, setSiteUrl] = useState('');
   const [rules, setRules] = useState<Rule[]>([]);
   const [crawlDelays, setCrawlDelays] = useState<CrawlDelay[]>([]);
@@ -76,6 +78,8 @@ export default function RobotsTxtGeneratorClient() {
   const addRule = (path: string, directive: 'Allow' | 'Disallow') => {
     const trimmedPath = singleLine(path);
     if (!trimmedPath) return;
+    if (!trimmedPath.startsWith('/') || /[\s#]/.test(trimmedPath)) { setError('Paths must start with /; encode spaces and #.'); return; }
+    if (rules.length >= 500) { setError('Limit: 500 rules.'); return; }
     setRules((current) => (
       current.some((rule) => rule.path === trimmedPath && rule.directive === directive)
         ? current
@@ -89,6 +93,7 @@ export default function RobotsTxtGeneratorClient() {
 
   const addCrawlDelay = () => {
     if (!newBot) return;
+    if (!Number.isFinite(newCrawlDelay)) { setError('Enter a finite crawl delay.'); return; }
     const delay = Math.min(300, Math.max(1, Math.round(newCrawlDelay)));
     setCrawlDelays((current) => [
       ...current.filter((crawlDelay) => crawlDelay.bot !== newBot),
@@ -109,6 +114,7 @@ export default function RobotsTxtGeneratorClient() {
       setError('Sitemap URL must be an absolute http(s) URL.');
       return;
     }
+    if (sitemaps.length >= 100) { setError('Limit: 100 sitemap URLs.'); return; }
     setSitemaps((current) => (
       current.includes(sitemap) ? current : [...current, sitemap]
     ));
@@ -121,7 +127,7 @@ export default function RobotsTxtGeneratorClient() {
   };
 
   const generate = () => {
-    let output = '';
+    let output = '# Crawl-delay is a crawler extension; Google ignores it.\n';
 
     const commentUrl = singleLine(siteUrl);
     if (commentUrl) {
@@ -147,6 +153,7 @@ export default function RobotsTxtGeneratorClient() {
 
     crawlDelays.forEach(cd => {
       output += `User-agent: ${cd.bot}\n`;
+      defaultRules.forEach(rule => { output += `${rule.directive}: ${singleLine(rule.path)}\n`; });
       output += `Crawl-delay: ${cd.delay}\n\n`;
     });
 
@@ -165,7 +172,7 @@ export default function RobotsTxtGeneratorClient() {
   };
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(generated).catch(() => {});
+    navigator.clipboard.writeText(generated).catch(() => setError('Clipboard unavailable. Select the result to copy.'));
   };
 
   const loadExample = () => {
@@ -175,7 +182,7 @@ export default function RobotsTxtGeneratorClient() {
       { path: '/private/', directive: 'Disallow' },
       { path: '/public/', directive: 'Allow' },
     ]);
-    setCrawlDelays([{ bot: 'Googlebot', delay: 5 }]);
+    setCrawlDelays([{ bot: 'Bingbot', delay: 5 }]);
     setSitemaps(['https://example.com/sitemap.xml']);
     setNewRulePath('');
     setNewBot('');
@@ -198,6 +205,11 @@ export default function RobotsTxtGeneratorClient() {
     setGenerated('');
   };
 
+  useEffect(() => {
+    if (siteUrl || rules.length || crawlDelays.length || sitemaps.length) generate();
+    else { setGenerated(''); setError(''); }
+  }, [siteUrl, rules, crawlDelays, sitemaps]);
+
   return (
     <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
       <div>
@@ -211,6 +223,7 @@ export default function RobotsTxtGeneratorClient() {
           />
         </div>
         <input
+          maxLength={2048}
           id="robots-site-url"
           type="url"
           value={siteUrl}
@@ -243,6 +256,7 @@ export default function RobotsTxtGeneratorClient() {
                     <option value="Allow">Allow</option>
                   </select>
                    <input
+          maxLength={2048}
                      type="text"
                      value={rule.path}
                      aria-label={`Rule ${index + 1} path`}
@@ -270,6 +284,7 @@ export default function RobotsTxtGeneratorClient() {
 
             <div className="flex gap-2 mt-3">
               <input
+          maxLength={2048}
                 type="text"
                 placeholder="/admin/"
                 id="new-rule-path"
@@ -328,6 +343,7 @@ export default function RobotsTxtGeneratorClient() {
                 ))}
               </select>
               <input
+          maxLength={2048}
                 type="number"
                 value={newCrawlDelay}
                 onChange={(e) => setNewCrawlDelay(parseInt(e.target.value) || 10)}
@@ -361,6 +377,7 @@ export default function RobotsTxtGeneratorClient() {
             <h3 className="font-medium mb-3">Sitemap URLs</h3>
             <div className="tb-v2-mode-tabs">
               <input
+          maxLength={2048}
                 type="url"
                 value={newSitemap}
                 onChange={(e) => setNewSitemap(e.target.value)}
@@ -392,11 +409,11 @@ export default function RobotsTxtGeneratorClient() {
 
         <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
           <div className="flex justify-between items-center">
-            <h3 className="font-medium">Generated robots.txt</h3>
+            <h3 className="font-medium">Generated robots.txt</h3><button className="tb-v2-btn-sm" disabled={!generated} onClick={() => downloadText(generated, 'robots.txt')}>Download</button>
             <button
               type="button"
               onClick={generate}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm"
+              className="px-4 py-2 tb-v2-btn tb-v2-btn-primary text-sm"
             >
               Generate
             </button>
@@ -406,8 +423,8 @@ export default function RobotsTxtGeneratorClient() {
 
           {generated && (
             <>
-              <div className="bg-gray-900 rounded-lg p-4">
-                <pre className="text-green-400 text-sm font-mono whitespace-pre-wrap">{generated}</pre>
+              <div className="tb-v2-tool-output-body rounded-lg p-4">
+                <pre className="tb-v2-tool-pre">{generated}</pre>
               </div>
               <button
                 type="button"
@@ -434,3 +451,5 @@ export default function RobotsTxtGeneratorClient() {
     </div>
   );
 }
+
+export default function RobotsTxtGeneratorClient() { return <SeoOwnedBoundary><RobotsTxtGeneratorForm /></SeoOwnedBoundary>; }

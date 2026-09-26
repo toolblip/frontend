@@ -1,6 +1,8 @@
 'use client';
+import { SeoOwnedBoundary } from './SeoNetworkShared';
 
 import { useMemo, useState } from 'react';
+import ToolExampleClearActions from './ToolExampleClearActions';
 
 type UpdateCategory =
   | 'Content Quality'
@@ -126,7 +128,7 @@ const UPDATES: AlgorithmUpdate[] = [
     sortKey: 202106,
     category: 'Page Experience',
     description:
-      'Introduced Core Web Vitals (loading performance, interactivity, and visual stability) alongside mobile-friendliness and safe browsing as page experience ranking signals.',
+      'Rolled out page experience changes including Core Web Vitals. This entry describes the historical rollout, not the current set of ranking signals.',
   },
   {
     name: 'Link Spam Update',
@@ -134,7 +136,7 @@ const UPDATES: AlgorithmUpdate[] = [
     sortKey: 202107,
     category: 'Spam',
     description:
-      'Used Google’s SpamBrain system to more effectively identify and neutralize link spam, including sites participating in link exchanges built purely to manipulate rankings.',
+      'Addressed link spam across multiple languages. Google announced a separate SpamBrain-based link spam update in December 2022.',
   },
   {
     name: 'Helpful Content Update',
@@ -150,7 +152,7 @@ const UPDATES: AlgorithmUpdate[] = [
     sortKey: 202210,
     category: 'Spam',
     description:
-      'Targeted spam techniques such as cloaking, auto-generated content, and expired-domain abuse, using improvements to Google’s automated spam-detection systems.',
+      'Updated automated spam detection. Specific affected techniques were not enumerated in the rollout announcement.',
   },
   {
     name: 'March 2023 Core Update',
@@ -190,7 +192,7 @@ const UPDATES: AlgorithmUpdate[] = [
     sortKey: 202403,
     category: 'Core Update',
     description:
-      'A major, months-long combined core and spam update that introduced new spam policies targeting scaled content abuse, site reputation abuse ("parasite SEO"), and expired-domain abuse. Google stated the goal was to significantly reduce low-quality, unoriginal content in search results.',
+      'A broad core update accompanied by a separate spam update that introduced new spam policies targeting scaled content abuse, site reputation abuse ("parasite SEO"), and expired-domain abuse. Google stated the goal was to significantly reduce low-quality, unoriginal content in search results.',
   },
   {
     name: 'August 2024 Core Update',
@@ -220,7 +222,7 @@ const CATEGORIES: UpdateCategory[] = [
   'Spam',
 ];
 
-export default function GoogleAlgorithmTrackerClient() {
+function GoogleAlgorithmTrackerForm() {
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState<UpdateCategory | 'All'>('All');
 
@@ -252,15 +254,15 @@ export default function GoogleAlgorithmTrackerClient() {
     <div className="flex flex-col gap-4">
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Google Algorithm Update Tracker</span>
-        <button type="button" onClick={reset} className="tb-v2-btn-sm">
-          Reset Filters
-        </button>
+<ToolExampleClearActions onExample={() => { setCategory('All'); setQuery('BERT'); }} onClear={reset} />
       </div>
 
-      <div className="tb-v2-tool-card" style={{ marginTop: 0 }}>
+      <p>Selected historical milestones through December 2024. This is a static reference, not a live tracker or a complete update history. See the <a href="https://status.search.google.com/products/rGHU1u87FJnkP6W2GwMi/history" target="_blank" rel="noreferrer">official Google Search ranking history</a> for current announcements.</p>
+      <div style={{ marginTop: 0, minWidth: 0 }}>
         <div style={{ padding: '20px 20px 0' }}>
           <input
             type="text"
+            maxLength={200}
             value={query}
             onChange={e => setQuery(e.target.value)}
             className="tb-v2-input"
@@ -365,3 +367,5 @@ export default function GoogleAlgorithmTrackerClient() {
     </div>
   );
 }
+
+export default function GoogleAlgorithmTrackerClient() { return <SeoOwnedBoundary><GoogleAlgorithmTrackerForm /></SeoOwnedBoundary>; }

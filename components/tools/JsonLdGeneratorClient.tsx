@@ -1,6 +1,9 @@
 'use client';
+import { validDate } from '@/lib/seo-network/documents';
+import { downloadText } from '@/lib/seo-network/request';
+import { SeoOwnedBoundary } from './SeoNetworkShared';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 type SchemaType =
@@ -297,7 +300,6 @@ function generateProductSchema(data: ProductData) {
       '@type': 'Offer',
       price: data.price.trim(),
       priceCurrency: data.priceCurrency.trim(),
-      availability: 'https://schema.org/InStock',
     },
   };
 
@@ -342,7 +344,7 @@ function generateFaqSchema(questions: { q: string; a: string }[]) {
   };
 }
 
-export default function JsonLdGeneratorClient() {
+function JsonLdGeneratorForm() {
   const [schemaType, setSchemaType] = useState<SchemaType>('WebSite');
   const [generated, setGenerated] = useState('');
   const [copied, setCopied] = useState(false);
@@ -390,6 +392,7 @@ export default function JsonLdGeneratorClient() {
           setGenerated('');
           return;
         }
+        if (searchUrl && !searchUrl.includes('{search_term_string}')) { setError('Search URL must include {search_term_string}.'); setGenerated(''); return; }
         schema = generateWebsiteSchema(siteName, siteUrl, searchUrl);
         break;
       case 'Article':
@@ -405,6 +408,7 @@ export default function JsonLdGeneratorClient() {
           setGenerated('');
           return;
         }
+        if (!validDate(articleData.datePublished) || (articleData.dateModified && (!validDate(articleData.dateModified) || articleData.dateModified < articleData.datePublished))) { setError('Use valid publication and modification dates in chronological order.'); setGenerated(''); return; }
         schema = generateArticleSchema(articleData, schemaType);
         break;
       case 'Product':
@@ -413,8 +417,8 @@ export default function JsonLdGeneratorClient() {
           setGenerated('');
           return;
         }
-        if (!Number.isFinite(Number(productData.price)) || Number(productData.price) < 0) {
-          setError('Product price must be a non-negative number.');
+        if (!/^\d+(?:\.\d+)?$/.test(productData.price.trim()) || !Number.isFinite(Number(productData.price)) || !/^[A-Z]{3}$/.test(productData.priceCurrency.trim())) {
+          setError('Use a non-negative decimal price and a three-letter uppercase currency code.');
           setGenerated('');
           return;
         }
@@ -426,6 +430,7 @@ export default function JsonLdGeneratorClient() {
         schema = generateProductSchema(productData);
         break;
       case 'BreadcrumbList': {
+        if (breadcrumbs.some(item => !item.name.trim() || !item.url.trim())) { setError('Complete every breadcrumb name and URL.'); setGenerated(''); return; }
         const validBreadcrumbs = breadcrumbs.filter((item) => item.name.trim() && item.url.trim());
         if (validBreadcrumbs.length === 0) {
           setError('Add at least one breadcrumb name and URL before generating JSON-LD.');
@@ -441,6 +446,7 @@ export default function JsonLdGeneratorClient() {
         break;
       }
       case 'FAQPage': {
+        if (faqQuestions.some(item => !item.q.trim() || !item.a.trim())) { setError('Complete every question and answer.'); setGenerated(''); return; }
         const validQuestions = faqQuestions.filter((q) => q.q.trim() && q.a.trim());
         if (validQuestions.length === 0) {
           setError('Add at least one complete question and answer before generating JSON-LD.');
@@ -481,6 +487,7 @@ export default function JsonLdGeneratorClient() {
           setGenerated('');
           return;
         }
+        if (schemaType === 'Event' && basicData.endDate && basicData.endDate < basicData.startDate) { setError('Event end must be at or after its start.'); setGenerated(''); return; }
         schema = generateBasicSchema(schemaType, basicData);
     }
 
@@ -491,14 +498,14 @@ export default function JsonLdGeneratorClient() {
     setGenerated(output);
   };
 
-  const copy = () => {
+  const copy = async () => {
     if (!generated) return;
-    navigator.clipboard.writeText(generated).catch(() => {});
-    setCopied(true);
+    try { await navigator.clipboard.writeText(generated); setCopied(true); } catch { setError('Clipboard unavailable. Select the result to copy.'); }
     setTimeout(() => setCopied(false), 1500);
   };
 
   const addBreadcrumb = () => {
+    if (breadcrumbs.length >= 100) return;
     setBreadcrumbs([...breadcrumbs, { name: '', url: '' }]);
   };
 
@@ -507,6 +514,7 @@ export default function JsonLdGeneratorClient() {
   };
 
   const addFaqQuestion = () => {
+    if (faqQuestions.length >= 100) return;
     setFaqQuestions([...faqQuestions, { q: '', a: '' }]);
   };
 
@@ -552,6 +560,12 @@ export default function JsonLdGeneratorClient() {
     setError('');
   };
 
+  useEffect(() => {
+    setCopied(false);
+    if (siteName || siteUrl || articleData.headline || productData.name || basicData.name || breadcrumbs.some(x => x.name || x.url) || faqQuestions.some(x => x.q || x.a)) generate();
+    else { setGenerated(''); setError(''); }
+  }, [schemaType, siteName, siteUrl, searchUrl, articleData, productData, basicData, breadcrumbs, faqQuestions]);
+
   return (
     <div>
       <div className="tb-v2-tool-input-head">
@@ -585,6 +599,7 @@ export default function JsonLdGeneratorClient() {
                  Site Name
                </label>
                <input
+          maxLength={2048}
                  id="site-name"
                 type="text"
                 value={siteName}
@@ -598,6 +613,7 @@ export default function JsonLdGeneratorClient() {
                  Site URL
                </label>
                <input
+          maxLength={2048}
                  id="site-url"
                 type="url"
                 value={siteUrl}
@@ -611,6 +627,7 @@ export default function JsonLdGeneratorClient() {
                  Search Action URL Template
                </label>
                <input
+          maxLength={2048}
                  id="search-url"
                 type="url"
                 value={searchUrl}
@@ -629,6 +646,7 @@ export default function JsonLdGeneratorClient() {
                  Headline
                </label>
                <input
+          maxLength={2048}
                  id="article-headline"
                 type="text"
                 value={articleData.headline}
@@ -642,6 +660,7 @@ export default function JsonLdGeneratorClient() {
                  Description
                </label>
                <textarea
+          maxLength={200000}
                  id="article-description"
                 value={articleData.description}
                 onChange={(e) => setArticleData({ ...articleData, description: e.target.value })}
@@ -656,6 +675,7 @@ export default function JsonLdGeneratorClient() {
                    Author Name
                  </label>
                  <input
+          maxLength={2048}
                    id="article-author-name"
                   type="text"
                   value={articleData.authorName}
@@ -685,6 +705,7 @@ export default function JsonLdGeneratorClient() {
                    Date Published
                  </label>
                  <input
+          maxLength={2048}
                    id="article-date-published"
                   type="date"
                   value={articleData.datePublished}
@@ -697,6 +718,7 @@ export default function JsonLdGeneratorClient() {
                    Date Modified
                  </label>
                  <input
+          maxLength={2048}
                    id="article-date-modified"
                   type="date"
                   value={articleData.dateModified}
@@ -710,6 +732,7 @@ export default function JsonLdGeneratorClient() {
                  Image URL
                </label>
                <input
+          maxLength={2048}
                  id="article-image"
                 type="url"
                 value={articleData.image}
@@ -723,6 +746,7 @@ export default function JsonLdGeneratorClient() {
                  Publisher Name
                </label>
                <input
+          maxLength={2048}
                  id="article-publisher-name"
                 type="text"
                 value={articleData.publisherName}
@@ -741,6 +765,7 @@ export default function JsonLdGeneratorClient() {
                  Product Name
                </label>
                <input
+          maxLength={2048}
                  id="product-name"
                 type="text"
                 value={productData.name}
@@ -754,6 +779,7 @@ export default function JsonLdGeneratorClient() {
                  Description
                </label>
                <textarea
+          maxLength={200000}
                  id="product-description"
                 value={productData.description}
                 onChange={(e) => setProductData({ ...productData, description: e.target.value })}
@@ -768,6 +794,7 @@ export default function JsonLdGeneratorClient() {
                    Brand
                  </label>
                  <input
+          maxLength={2048}
                    id="product-brand"
                   type="text"
                   value={productData.brand}
@@ -781,6 +808,7 @@ export default function JsonLdGeneratorClient() {
                    SKU
                  </label>
                  <input
+          maxLength={2048}
                    id="product-sku"
                   type="text"
                   value={productData.sku}
@@ -796,6 +824,7 @@ export default function JsonLdGeneratorClient() {
                    Price
                  </label>
                  <input
+          maxLength={2048}
                    id="product-price"
                   type="text"
                   value={productData.price}
@@ -827,6 +856,7 @@ export default function JsonLdGeneratorClient() {
                  Image URL
                </label>
                <input
+          maxLength={2048}
                  id="product-image"
                 type="url"
                 value={productData.image}
@@ -845,6 +875,7 @@ export default function JsonLdGeneratorClient() {
                 Name
               </label>
               <input
+          maxLength={2048}
                 id="basic-name"
                 type="text"
                 value={basicData.name}
@@ -859,6 +890,7 @@ export default function JsonLdGeneratorClient() {
                   Description
                 </label>
                 <textarea
+          maxLength={200000}
                   id="basic-description"
                   value={basicData.description}
                   onChange={(e) => updateBasicData('description', e.target.value)}
@@ -873,6 +905,7 @@ export default function JsonLdGeneratorClient() {
                 URL
               </label>
               <input
+          maxLength={2048}
                 id="basic-url"
                 type="url"
                 value={basicData.url}
@@ -887,6 +920,7 @@ export default function JsonLdGeneratorClient() {
                   Job Title
                 </label>
                 <input
+          maxLength={2048}
                   id="basic-job-title"
                   type="text"
                   value={basicData.jobTitle}
@@ -902,6 +936,7 @@ export default function JsonLdGeneratorClient() {
                   Logo URL
                 </label>
                 <input
+          maxLength={2048}
                   id="basic-logo"
                   type="url"
                   value={basicData.logo}
@@ -916,6 +951,7 @@ export default function JsonLdGeneratorClient() {
                   Image URL
                 </label>
                 <input
+          maxLength={2048}
                   id="basic-image"
                   type="url"
                   value={basicData.image}
@@ -932,6 +968,7 @@ export default function JsonLdGeneratorClient() {
                     Telephone
                   </label>
                   <input
+          maxLength={2048}
                     id="basic-telephone"
                     type="tel"
                     value={basicData.telephone}
@@ -945,6 +982,7 @@ export default function JsonLdGeneratorClient() {
                     Address
                   </label>
                   <input
+          maxLength={2048}
                     id="basic-address"
                     type="text"
                     value={basicData.address}
@@ -963,6 +1001,7 @@ export default function JsonLdGeneratorClient() {
                       Start Date
                     </label>
                     <input
+          maxLength={2048}
                       id="event-start-date"
                       type="datetime-local"
                       value={basicData.startDate}
@@ -975,6 +1014,7 @@ export default function JsonLdGeneratorClient() {
                       End Date
                     </label>
                     <input
+          maxLength={2048}
                       id="event-end-date"
                       type="datetime-local"
                       value={basicData.endDate}
@@ -989,6 +1029,7 @@ export default function JsonLdGeneratorClient() {
                       Location Name
                     </label>
                     <input
+          maxLength={2048}
                       id="event-location-name"
                       type="text"
                       value={basicData.locationName}
@@ -1002,6 +1043,7 @@ export default function JsonLdGeneratorClient() {
                       Location Address
                     </label>
                     <input
+          maxLength={2048}
                       id="event-location-address"
                       type="text"
                       value={basicData.locationAddress}
@@ -1025,6 +1067,7 @@ export default function JsonLdGeneratorClient() {
               {breadcrumbs.map((item, index) => (
                 <div key={index} style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                   <input
+          maxLength={2048}
                     type="text"
                     aria-label={`Breadcrumb ${index + 1} name`}
                     value={item.name}
@@ -1036,6 +1079,7 @@ export default function JsonLdGeneratorClient() {
                     style={{ flex: '1 1 180px', minWidth: 0 }}
                   />
                   <input
+          maxLength={2048}
                     type="url"
                     aria-label={`Breadcrumb ${index + 1} URL`}
                     value={item.url}
@@ -1078,6 +1122,7 @@ export default function JsonLdGeneratorClient() {
               {faqQuestions.map((item, index) => (
                 <div key={index} style={{ display: 'flex', flexDirection: 'column', gap: '4px', padding: '8px', border: '1px solid var(--line)', borderRadius: '8px' }}>
                   <input
+          maxLength={2048}
                     type="text"
                     aria-label={`FAQ ${index + 1} question`}
                     value={item.q}
@@ -1088,6 +1133,7 @@ export default function JsonLdGeneratorClient() {
                     className="tb-v2-tool-input"
                   />
                   <textarea
+          maxLength={200000}
                     aria-label={`FAQ ${index + 1} answer`}
                     value={item.a}
                     onChange={(e) => setFaqQuestions((current) => current.map((question, questionIndex) => (
@@ -1132,7 +1178,7 @@ export default function JsonLdGeneratorClient() {
       {generated && (
         <>
           <div className="tb-v2-tool-output-head" style={{ marginTop: '16px' }}>
-            <span className="tb-v2-tool-label">Generated JSON-LD</span>
+            <span className="tb-v2-tool-label">Generated JSON-LD</span><button className="tb-v2-btn-sm" disabled={!generated} onClick={() => downloadText(generated, 'schema.html')}>Download</button>
             <button
               type="button"
               onClick={copy}
@@ -1160,3 +1206,5 @@ export default function JsonLdGeneratorClient() {
     </div>
   );
 }
+
+export default function JsonLdGeneratorClient() { return <SeoOwnedBoundary><JsonLdGeneratorForm /></SeoOwnedBoundary>; }

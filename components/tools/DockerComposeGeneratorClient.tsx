@@ -1,6 +1,8 @@
 "use client";
+import { SeoOwnedBoundary } from './SeoNetworkShared';
 
 import { useMemo, useState } from "react";
+import { downloadText } from '@/lib/seo-network/request';
 import ToolExampleClearActions from "@/components/tools/ToolExampleClearActions";
 import {
   ComposeOptions,
@@ -37,19 +39,19 @@ const EXAMPLE_STATE: ComposeOptions & { template: ComposeTemplate } = {
   dbPassword: "changeme",
 };
 
-export default function DockerComposeGeneratorClient() {
+function DockerComposeGeneratorForm() {
   const [state, setState] = useState(EMPTY_STATE);
   const [copied, setCopied] = useState(false);
   const update = (key: keyof typeof state, value: string) =>
-    setState((current) => ({ ...current, [key]: value }));
+    { setCopied(false); setState((current) => ({ ...current, [key]: value })); }
   const errors = useMemo(
-    () => validateComposeOptions(state.template, state),
+    () => [...validateComposeOptions(state.template, state), ...(["db", "cache"].includes(state.serviceName) ? ["App service name must differ from db and cache."] : [])],
     [state],
   );
   const yaml = useMemo(
     () =>
       errors.length === 0
-        ? generateDockerComposeYaml(state.template, state)
+        ? generateDockerComposeYaml(state.template, state).replace(/\$/g, "$$$$")
         : "# Enter valid values to generate Compose YAML.",
     [errors.length, state],
   );
@@ -116,6 +118,7 @@ export default function DockerComposeGeneratorClient() {
         </select>
         {!["wordpress-mysql", "nginx-static"].includes(state.template) && (
           <input
+            maxLength={512}
             value={state.serviceName}
             onChange={(event) => update("serviceName", event.target.value)}
             className="tb-v2-input"
@@ -125,21 +128,23 @@ export default function DockerComposeGeneratorClient() {
         )}
         <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
           <input
+            maxLength={512}
             value={state.hostPort}
             onChange={(event) => update("hostPort", event.target.value)}
             className="tb-v2-input"
             placeholder="Host port"
             aria-label="Host port"
-            style={{ flex: 1 }}
+            style={{ flex: "1 1 100px", minWidth: 0 }}
           />
           {appPortTemplate && (
             <input
+            maxLength={512}
               value={state.appPort}
               onChange={(event) => update("appPort", event.target.value)}
               className="tb-v2-input"
               placeholder="Container port"
               aria-label="Container port"
-              style={{ flex: 1 }}
+              style={{ flex: "1 1 100px", minWidth: 0 }}
             />
           )}
         </div>
@@ -147,6 +152,7 @@ export default function DockerComposeGeneratorClient() {
           <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
             {(["dbName", "dbUser", "dbPassword"] as const).map((key) => (
               <input
+            maxLength={512}
                 key={key}
                 value={state[key] ?? ""}
                 onChange={(event) => update(key, event.target.value)}
@@ -163,7 +169,7 @@ export default function DockerComposeGeneratorClient() {
         )}
       </div>
       <div className="tb-v2-tool-output-head">
-        <span className="tb-v2-tool-label">docker-compose.yml</span>
+<span className="tb-v2-tool-label">docker-compose.yml</span><button className="tb-v2-btn-sm" disabled={errors.length > 0} onClick={() => downloadText(yaml, "docker-compose.yml")}>Download</button>
         <button
           type="button"
           onClick={copy}
@@ -174,8 +180,10 @@ export default function DockerComposeGeneratorClient() {
         </button>
       </div>
       <div className="tb-v2-tool-output-body">
-        <pre className="tb-v2-tool-pre">{yaml}</pre>
+        <pre style={{ whiteSpace: "pre-wrap", overflowWrap: "anywhere" }} className="tb-v2-tool-pre">{yaml}</pre>
       </div>
     </div>
   );
 }
+
+export default function DockerComposeGeneratorClient() { return <SeoOwnedBoundary><DockerComposeGeneratorForm /></SeoOwnedBoundary>; }
