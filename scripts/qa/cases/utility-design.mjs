@@ -93,7 +93,20 @@ add('text-to-speech',async c=>{const {page,tool:t,expect,check}=c;const native=a
 add('collocations-checker',async({tool:t,expect,check})=>{await fill(t,'Text','make a decision and take into account');await click(t,'Check Collocations');await expect(output(t)).toContainText('make a decision');await expect(output(t)).toContainText('take into account');await fill(t,'Text','make');await click(t,'Check Collocations');await expect(t.getByText('make a decision',{exact:true})).toHaveCount(0);await clear(t);check(true,'Complete phrase matching supports four words and does not invent a phrase for make');});
 add('automation-wizard',async({tool:t,page,expect,check})=>{
  const webkit=page.context().browser()?.browserType().name()==='webkit';
- if(!webkit)await page.context().grantPermissions(['clipboard-read','clipboard-write']);
+ if(!webkit){
+  const capabilities=()=>page.evaluate(async()=>{
+   const state={origin:location.origin,secureContext:isSecureContext,focused:document.hasFocus(),permissions:{},policy:{}};
+   for(const name of ['clipboard-read','clipboard-write']){
+    try{state.permissions[name]=(await navigator.permissions.query({name})).state;}catch(error){state.permissions[name]=`unavailable: ${error.name}`;}
+    try{state.policy[name]=(document.permissionsPolicy||document.featurePolicy)?.allowsFeature(name)??null;}catch{state.policy[name]=null;}
+   }
+   return state;
+  });
+  const before=await capabilities();
+  await page.context().grantPermissions(['clipboard-read','clipboard-write'],{origin:new URL(page.url()).origin});
+  const after=await capabilities();
+  check(true,`[diagnostic] Clipboard capability state before/after exact-origin grant: ${JSON.stringify({before,after})}`);
+ }
  await example(t);await click(t,'Copy YAML');let copied;
  if(webkit){
   // Exercise the real clipboard through a user paste; WebKit's readText API can

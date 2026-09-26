@@ -48,6 +48,44 @@ try {
     } catch (error) { result.status = 'failed'; result.error = String(error.stack ?? error); process.exitCode = 1; }
     finally { await context.close(); }
   }
+  // Neutral controls contain no application JavaScript. They are diagnostic
+  // documents, never substituted for a tool result or used for acceptance.
+  report.controls = [];
+  const png = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII=';
+  const documents = {
+    'iframe-free': null,
+    'minimal-sandbox': '<!doctype html><html><body><p>Neutral sandbox text</p></body></html>',
+    'notebook-sandbox': `<!doctype html><html><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src https: data:"><style>body{font:16px system-ui;line-height:1.6;overflow-wrap:anywhere}pre{white-space:pre-wrap}img,table{max-width:100%}</style></head><body><p><img src="${png}" alt="plot"></p><img></body></html>`,
+  };
+  for (const [control, srcdoc] of Object.entries(documents)) for (const mode of ['protocol', 'native']) {
+    const result = { control, mode, events: [], scriptCount: 0 };
+    report.controls.push(result);
+    const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+    let phase = 'neutral-navigation';
+    try {
+      const page = await context.newPage();
+      page.setDefaultTimeout(10000);
+      page.on('console', message => result.events.push({ phase, type: message.type(), text: message.text(), location: message.location(), at: new Date().toISOString() }));
+      page.on('pageerror', error => result.events.push({ phase, type: 'pageerror', text: String(error), at: new Date().toISOString() }));
+      const url = `${base}/__qa_neutral_frame_control`;
+      const escaped = srcdoc?.replaceAll('&', '&amp;').replaceAll('"', '&quot;');
+      const content = srcdoc === null ? '<p>Neutral content without an iframe</p>' : `<iframe title="Neutral frame" sandbox="" srcdoc="${escaped}" style="width:100%;height:400px"></iframe>`;
+      await page.route(url, route => route.fulfill({ status: 200, contentType: 'text/html', body: `<!doctype html><html><body><div style="height:1500px">Scroll control</div><main id="target">${content}</main><div style="height:1000px"></div></body></html>` }));
+      await page.goto(url, { waitUntil: 'load' });
+      await page.waitForTimeout(250);
+      result.scriptCount = await page.locator('script').count();
+      const target = page.locator('#target');
+      phase = `neutral-scroll-${mode}`;
+      if (mode === 'protocol') await target.scrollIntoViewIfNeeded();
+      else await target.evaluate(element => element.scrollIntoView({ block: 'start', behavior: 'instant' }));
+      await page.waitForTimeout(250);
+      phase = 'neutral-screenshot';
+      await page.screenshot({ path: path.join(output, `${control}-${mode}.png`) });
+      await page.waitForTimeout(250);
+      result.status = 'completed';
+    } catch (error) { result.status = 'failed'; result.error = String(error.stack ?? error); process.exitCode = 1; }
+    finally { await context.close(); }
+  }
 } finally {
   await browser.close(); report.finishedAt = new Date().toISOString();
   await writeFile(path.join(output, 'diagnostic.json'), JSON.stringify(report, null, 2) + '\n');
