@@ -19,7 +19,8 @@ export interface BlogPost {
 // so Turbopack's NFT can trace all blog files without dynamic fs operations.
 
 function resolveFeaturedImage(image: string | null | undefined): string | undefined {
-  return image === 'https://api.radtx.com/gradient/6b7280-374151/1200/630'
+  // Legacy generated covers should not depend on the external placeholder API.
+  return /^https:\/\/api\.radtx\.com\/gradient\/[0-9a-f]{6}-[0-9a-f]{6}\/1200\/630$/.test(image ?? '')
     ? '/images/blog-placeholder.png'
     : image ?? undefined;
 }
