@@ -1,6 +1,9 @@
 'use client';
+import UtilityDesignLayout from './UtilityDesignLayout';
+import ToolExampleClearActions from './ToolExampleClearActions';
 
 import { useState } from 'react';
+import { dump } from 'js-yaml';
 
 interface WorkflowStep {
   id: string;
@@ -44,15 +47,16 @@ export default function AutomationWizardClient() {
     : CONDITION_TEMPLATES;
 
   const handleAddStep = () => {
-    if (!stepName.trim() || !selectedTemplate) return;
-    
+    if (!stepName.trim() || !selectedTemplate || workflowSteps.length >= 100) return;
+    if (selectedType === 'trigger' && workflowSteps.some(s => s.type === 'trigger')) return;
+
     const newStep: WorkflowStep = {
       id: `step-${Date.now()}`,
       name: stepName,
       type: selectedType,
-      config: { ...config, template: selectedTemplate },
+      config: { method: 'GET', interval: 'daily', time: '09:00', provider: 'gmail', condition: 'equals', inputFormat: 'json', outputFormat: 'json', ...config, template: selectedTemplate },
     };
-    
+
     setWorkflowSteps([...workflowSteps, newStep]);
     setStepName('');
     setSelectedTemplate('');
@@ -69,31 +73,14 @@ export default function AutomationWizardClient() {
     if (index === -1) return;
     if (direction === 'up' && index === 0) return;
     if (direction === 'down' && index === workflowSteps.length - 1) return;
-    
+
     const newSteps = [...workflowSteps];
     const targetIndex = direction === 'up' ? index - 1 : index + 1;
     [newSteps[index], newSteps[targetIndex]] = [newSteps[targetIndex], newSteps[index]];
     setWorkflowSteps(newSteps);
   };
 
-  const generateWorkflowYaml = () => {
-    let yaml = 'name: My Automation\ntrigger:\n';
-    
-    const trigger = workflowSteps.find(s => s.type === 'trigger');
-    if (trigger) {
-      yaml += `  type: ${trigger.config.template}\n`;
-      yaml += `  name: ${trigger.name}\n`;
-    }
-    
-    yaml += '\nsteps:\n';
-    workflowSteps.filter(s => s.type !== 'trigger').forEach((step, i) => {
-      yaml += `  - name: ${step.name}\n`;
-      yaml += `    type: ${step.type}\n`;
-      yaml += `    template: ${step.config.template}\n`;
-    });
-    
-    return yaml;
-  };
+  const generateWorkflowYaml = () => dump(JSON.parse(generateWorkflowJson()));
 
   const generateWorkflowJson = () => {
     return JSON.stringify({
@@ -103,11 +90,12 @@ export default function AutomationWizardClient() {
     }, null, 2);
   };
 
-  return (
+  return (<UtilityDesignLayout>
     <div className="tb-v2-flex tb-v2-flex-col tb-v2-gap-6 tb-v2-p-4">
+      <ToolExampleClearActions onExample={() => { setWorkflowSteps([{id:'example-trigger',name:'Daily report',type:'trigger',config:{template:'schedule',interval:'daily',time:'09:00'}}]); }} onClear={() => { setWorkflowSteps([]); setStepName(''); setSelectedTemplate(''); setConfig({}); setShowTemplates(true); }}/>
       <div>
         <h2 className="tb-v2-text-2xl tb-v2-font-bold">Automation Wizard</h2>
-        <p className="tb-v2-text-sm tb-v2-text-gray-500">Create workflow automations without coding</p>
+        <p className="tb-v2-text-sm tb-v2-text-gray-500">Draft a workflow specification. This tool does not run actions or connect accounts.</p>
       </div>
 
       {/* Step Type Selection */}
@@ -155,11 +143,11 @@ export default function AutomationWizardClient() {
       {!showTemplates && selectedTemplate && (
         <div className="tb-v2-card">
           <h3 className="tb-v2-text-lg tb-v2-font-semibold tb-v2-mb-3">Configure Step</h3>
-          
+
           <div className="tb-v2-flex tb-v2-flex-col tb-v2-gap-3">
             <div>
               <label className="tb-v2-label">Step Name</label>
-              <input
+              <input maxLength={100000} aria-label="Step Name"
                 type="text"
                 value={stepName}
                 onChange={(e) => setStepName(e.target.value)}
@@ -172,7 +160,7 @@ export default function AutomationWizardClient() {
               <>
                 <div>
                   <label className="tb-v2-label">URL</label>
-                  <input
+                  <input maxLength={100000} aria-label="Config url"
                     type="text"
                     value={config.url || ''}
                     onChange={(e) => setConfig({ ...config, url: e.target.value })}
@@ -182,7 +170,7 @@ export default function AutomationWizardClient() {
                 </div>
                 <div>
                   <label className="tb-v2-label">Method</label>
-                  <select
+                  <select aria-label="Config method     GET"
                     value={config.method || 'GET'}
                     onChange={(e) => setConfig({ ...config, method: e.target.value })}
                     className="tb-v2-input"
@@ -201,7 +189,7 @@ export default function AutomationWizardClient() {
               <>
                 <div>
                   <label className="tb-v2-label">Interval</label>
-                  <select
+                  <select aria-label="Config interval     daily"
                     value={config.interval || 'daily'}
                     onChange={(e) => setConfig({ ...config, interval: e.target.value })}
                     className="tb-v2-input"
@@ -214,7 +202,7 @@ export default function AutomationWizardClient() {
                 </div>
                 <div>
                   <label className="tb-v2-label">Time</label>
-                  <input
+                  <input aria-label="Config time     09 00"
                     type="time"
                     value={config.time || '09:00'}
                     onChange={(e) => setConfig({ ...config, time: e.target.value })}
@@ -227,7 +215,7 @@ export default function AutomationWizardClient() {
             {selectedTemplate === 'webhook' && (
               <div>
                 <label className="tb-v2-label">Webhook URL</label>
-                <input
+                <input maxLength={100000} aria-label="Config webhook Url"
                   type="text"
                   value={config.webhookUrl || ''}
                   onChange={(e) => setConfig({ ...config, webhookUrl: e.target.value })}
@@ -241,7 +229,7 @@ export default function AutomationWizardClient() {
               <>
                 <div>
                   <label className="tb-v2-label">Email Provider</label>
-                  <select
+                  <select aria-label="Config provider     gmail"
                     value={config.provider || 'gmail'}
                     onChange={(e) => setConfig({ ...config, provider: e.target.value })}
                     className="tb-v2-input"
@@ -258,7 +246,7 @@ export default function AutomationWizardClient() {
               <>
                 <div>
                   <label className="tb-v2-label">To</label>
-                  <input
+                  <input aria-label="Config to"
                     type="email"
                     value={config.to || ''}
                     onChange={(e) => setConfig({ ...config, to: e.target.value })}
@@ -268,7 +256,7 @@ export default function AutomationWizardClient() {
                 </div>
                 <div>
                   <label className="tb-v2-label">Subject</label>
-                  <input
+                  <input maxLength={100000} aria-label="Config subject"
                     type="text"
                     value={config.subject || ''}
                     onChange={(e) => setConfig({ ...config, subject: e.target.value })}
@@ -283,7 +271,7 @@ export default function AutomationWizardClient() {
               <>
                 <div>
                   <label className="tb-v2-label">Slack Webhook URL</label>
-                  <input
+                  <input maxLength={100000} aria-label="Config slack Url"
                     type="text"
                     value={config.slackUrl || ''}
                     onChange={(e) => setConfig({ ...config, slackUrl: e.target.value })}
@@ -293,7 +281,7 @@ export default function AutomationWizardClient() {
                 </div>
                 <div>
                   <label className="tb-v2-label">Channel</label>
-                  <input
+                  <input maxLength={100000} aria-label="Config channel"
                     type="text"
                     value={config.channel || ''}
                     onChange={(e) => setConfig({ ...config, channel: e.target.value })}
@@ -308,7 +296,7 @@ export default function AutomationWizardClient() {
               <>
                 <div>
                   <label className="tb-v2-label">Field</label>
-                  <input
+                  <input maxLength={100000} aria-label="Config field"
                     type="text"
                     value={config.field || ''}
                     onChange={(e) => setConfig({ ...config, field: e.target.value })}
@@ -318,7 +306,7 @@ export default function AutomationWizardClient() {
                 </div>
                 <div>
                   <label className="tb-v2-label">Condition</label>
-                  <select
+                  <select aria-label="Config condition     equals"
                     value={config.condition || 'equals'}
                     onChange={(e) => setConfig({ ...config, condition: e.target.value })}
                     className="tb-v2-input"
@@ -334,7 +322,7 @@ export default function AutomationWizardClient() {
                 </div>
                 <div>
                   <label className="tb-v2-label">Value</label>
-                  <input
+                  <input maxLength={100000} aria-label="Config value"
                     type="text"
                     value={config.value || ''}
                     onChange={(e) => setConfig({ ...config, value: e.target.value })}
@@ -349,7 +337,7 @@ export default function AutomationWizardClient() {
               <>
                 <div>
                   <label className="tb-v2-label">Input Format</label>
-                  <select
+                  <select aria-label="Config input Format     json"
                     value={config.inputFormat || 'json'}
                     onChange={(e) => setConfig({ ...config, inputFormat: e.target.value })}
                     className="tb-v2-input"
@@ -362,7 +350,7 @@ export default function AutomationWizardClient() {
                 </div>
                 <div>
                   <label className="tb-v2-label">Output Format</label>
-                  <select
+                  <select aria-label="Config output Format     json"
                     value={config.outputFormat || 'json'}
                     onChange={(e) => setConfig({ ...config, outputFormat: e.target.value })}
                     className="tb-v2-input"
@@ -458,5 +446,6 @@ export default function AutomationWizardClient() {
         </div>
       )}
     </div>
+  </UtilityDesignLayout>
   );
 }

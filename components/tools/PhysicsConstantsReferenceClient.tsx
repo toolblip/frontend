@@ -1,4 +1,6 @@
 'use client';
+import UtilityDesignLayout from './UtilityDesignLayout';
+import ToolExampleClearActions from './ToolExampleClearActions';
 
 import { useMemo, useState } from 'react';
 
@@ -84,13 +86,14 @@ export default function PhysicsConstantsReferenceClient() {
     setTimeout(() => setCopied(null), 1500);
   };
 
-  return (
+  return (<UtilityDesignLayout>
     <div>
+      <ToolExampleClearActions onExample={() => { setSearch('Speed of light'); setCategory('All'); }} onClear={() => { setSearch(''); setCategory('All'); setCopied(null); }}/>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Search Constants</span>
         <span className="tb-v2-tool-label" style={{ fontWeight: 400 }}>{filtered.length} of {CONSTANTS.length}</span>
       </div>
-      <input
+      <input maxLength={100000} aria-label="Search"
         type="text"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
@@ -140,5 +143,6 @@ export default function PhysicsConstantsReferenceClient() {
         )}
       </div>
     </div>
+  </UtilityDesignLayout>
   );
 }

@@ -1,4 +1,5 @@
 'use client';
+import UtilityDesignLayout from './UtilityDesignLayout';
 
 import { useState } from 'react';
 import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
@@ -36,7 +37,7 @@ function simplify(numerator: number, denominator: number): Fraction {
   };
 }
 
-function parseRangeValue(value: string): number | null {
+export function parseRangeValue(value: string): number | null {
   const trimmed = value.trim();
   if (!trimmed) return null;
 
@@ -59,7 +60,7 @@ function parseRangeValue(value: string): number | null {
 }
 
 function formatDecimal(value: number): string {
-  return value.toFixed(6).replace(/\.?0+$/, '');
+  return String(value);
 }
 
 function formatFraction(fraction: Fraction): string {
@@ -81,7 +82,7 @@ function randomInteger(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function randomFractionInRange(min: number, max: number): Fraction {
+export function randomFractionInRange(min: number, max: number): Fraction {
   for (let attempt = 0; attempt < 100; attempt += 1) {
     const denominator = randomInteger(2, 100);
     const numeratorMin = Math.ceil(min * denominator);
@@ -99,14 +100,13 @@ function randomFractionInRange(min: number, max: number): Fraction {
     }
   }
 
-  const target = min + Math.random() * (max - min);
-  return simplify(Math.max(0, Math.round(target * 1000)), 1000);
+  throw new Error('No fraction with denominator up to 1000 fits this range. Widen the range.');
 }
 
 function createResults(mode: GenerationMode, min: number, max: number, count: number): Result[] {
   return Array.from({ length: count }, () => {
     if (mode === 'decimal') {
-      const value = Number((min + Math.random() * (max - min)).toFixed(4));
+      const value = min + Math.random() * (max - min);
       return { display: formatDecimal(value), decimal: null };
     }
 
@@ -137,14 +137,15 @@ export default function RandomFractionGeneratorClient() {
       setResults([]);
       return;
     }
-    if (min === null || max === null || min < 0 || max <= min) {
+    if (min === null || max === null || min < 0 || max <= min || max > 1e9) {
       setError('Enter a non-negative minimum and a larger maximum. Fractions like 1/2 are supported.');
       setResults([]);
       return;
     }
 
     setError('');
-    setResults(createResults(mode, min, max, parsedCount));
+    try { setResults(createResults(mode, min, max, parsedCount)); }
+    catch (e) { setResults([]); setError((e as Error).message); }
   };
 
   const loadExample = () => {
@@ -188,8 +189,8 @@ export default function RandomFractionGeneratorClient() {
       maxValue !== DEFAULT_MAX,
   );
 
-  return (
-    <div>
+  return (<UtilityDesignLayout>
+    <div onChangeCapture={() => { setResults([]); setError(''); }}>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Random Fraction Generator</span>
         <ToolExampleClearActions
@@ -220,11 +221,11 @@ export default function RandomFractionGeneratorClient() {
           </div>
           <div className="flex flex-col gap-1">
             <label className="tb-v2-tool-label" htmlFor="random-fraction-min">Minimum</label>
-            <input id="random-fraction-min" type="text" value={minValue} onChange={(event) => setMinValue(event.target.value)} className="tb-v2-input" placeholder="0 or 1/2" aria-label="Minimum value" />
+            <input maxLength={100000} id="random-fraction-min" type="text" value={minValue} onChange={(event) => setMinValue(event.target.value)} className="tb-v2-input" placeholder="0 or 1/2" aria-label="Minimum value" />
           </div>
           <div className="flex flex-col gap-1">
             <label className="tb-v2-tool-label" htmlFor="random-fraction-max">Maximum</label>
-            <input id="random-fraction-max" type="text" value={maxValue} onChange={(event) => setMaxValue(event.target.value)} className="tb-v2-input" placeholder="1 or 5/6" aria-label="Maximum value" />
+            <input maxLength={100000} id="random-fraction-max" type="text" value={maxValue} onChange={(event) => setMaxValue(event.target.value)} className="tb-v2-input" placeholder="1 or 5/6" aria-label="Maximum value" />
           </div>
         </div>
         <p className="text-xs" style={{ color: 'var(--fg-2)', marginTop: 8 }}>
@@ -262,5 +263,6 @@ export default function RandomFractionGeneratorClient() {
         )}
       </div>
     </div>
+  </UtilityDesignLayout>
   );
 }

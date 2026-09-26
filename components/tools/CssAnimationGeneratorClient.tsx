@@ -1,4 +1,6 @@
 'use client';
+import UtilityDesignLayout from './UtilityDesignLayout';
+import ToolExampleClearActions from './ToolExampleClearActions';
 
 import { useState, useMemo } from 'react';
 
@@ -68,13 +70,13 @@ export default function CssAnimationGeneratorClient() {
   const replay = () => setReplayKey(k => k + 1);
 
   const copy = () => {
-    navigator.clipboard.writeText(css).catch(() => {});
-    setCopied(true);
+    navigator.clipboard.writeText(css).then(() => setCopied(true), () => setCopied(false));
     setTimeout(() => setCopied(false), 1500);
   };
 
-  return (
+  return (<UtilityDesignLayout>
     <div className="flex flex-col gap-5">
+      <ToolExampleClearActions onExample={() => { setAnimName('spin'); setDuration(2); setTiming('linear'); replay(); }} onClear={() => { setAnimName('fade-in'); setDuration(1); setDelay(0); setInfinite(false); setDirection('normal'); setCopied(false); replay(); }}/>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Animation</span>
       </div>
@@ -94,7 +96,7 @@ export default function CssAnimationGeneratorClient() {
 
       <div className="tb-v2-range-row">
         <label className="tb-v2-tool-label">Duration</label>
-        <input
+        <input aria-label="Duration"
           type="range"
           min={0.1}
           max={5}
@@ -108,7 +110,7 @@ export default function CssAnimationGeneratorClient() {
 
       <div className="tb-v2-range-row">
         <label className="tb-v2-tool-label">Delay</label>
-        <input
+        <input aria-label="Delay"
           type="range"
           min={0}
           max={2}
@@ -123,18 +125,18 @@ export default function CssAnimationGeneratorClient() {
       <div className="flex flex-wrap gap-4">
         <div className="flex flex-col gap-1">
           <label className="tb-v2-tool-label">Timing Function</label>
-          <select value={timing} onChange={e => setTiming(e.target.value)} className="tb-v2-input">
+          <select aria-label="Timing" value={timing} onChange={e => setTiming(e.target.value)} className="tb-v2-input">
             {TIMING_FUNCTIONS.map(t => <option key={t} value={t}>{t}</option>)}
           </select>
         </div>
         <div className="flex flex-col gap-1">
           <label className="tb-v2-tool-label">Direction</label>
-          <select value={direction} onChange={e => setDirection(e.target.value)} className="tb-v2-input">
+          <select aria-label="Direction" value={direction} onChange={e => setDirection(e.target.value)} className="tb-v2-input">
             {DIRECTIONS.map(d => <option key={d} value={d}>{d}</option>)}
           </select>
         </div>
         <label className="flex items-center gap-2 self-end pb-2">
-          <input type="checkbox" checked={infinite} onChange={e => setInfinite(e.target.checked)} />
+          <input aria-label="Infinite" type="checkbox" checked={infinite} onChange={e => setInfinite(e.target.checked)} />
           <span className="tb-v2-tool-label" style={{ margin: 0 }}>Loop infinitely</span>
         </label>
       </div>
@@ -171,5 +173,6 @@ export default function CssAnimationGeneratorClient() {
         <pre style={{ margin: 0, whiteSpace: 'pre-wrap', fontFamily: 'var(--f-mono)', fontSize: 13 }}>{css}</pre>
       </div>
     </div>
+  </UtilityDesignLayout>
   );
 }

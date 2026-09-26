@@ -1,4 +1,6 @@
 'use client';
+import UtilityDesignLayout from './UtilityDesignLayout';
+import ToolExampleClearActions from './ToolExampleClearActions';
 
 import { useMemo, useState } from 'react';
 
@@ -46,7 +48,7 @@ function parsePrompt(raw: string) {
     if (parts.length >= 2) {
       return {
         question: cleanTopic(parts[0]),
-        options: parts.slice(1, 5),
+        options: parts.slice(1, 6),
       };
     }
   }
@@ -55,7 +57,7 @@ function parsePrompt(raw: string) {
   if (lines.length >= 2) {
     return {
       question: cleanTopic(lines[0]),
-      options: lines.slice(1, 5),
+      options: lines.slice(1, 6),
     };
   }
 
@@ -63,7 +65,7 @@ function parsePrompt(raw: string) {
   if (commaParts.length >= 3) {
     return {
       question: cleanTopic(commaParts[0]),
-      options: commaParts.slice(1, 5),
+      options: commaParts.slice(1, 6),
     };
   }
 
@@ -115,7 +117,7 @@ function buildHashtags(topic: string, format: PollFormat) {
   return Array.from(new Set(tags)).slice(0, 2);
 }
 
-function buildOutput(rawInput: string, format: PollFormat) {
+export function buildOutput(rawInput: string, format: PollFormat) {
   const parsed = parsePrompt(rawInput);
   const topic = parsed.question || cleanTopic(rawInput);
   const question = topic ? titleCase(topic) : '';
@@ -133,7 +135,7 @@ function buildOutput(rawInput: string, format: PollFormat) {
     lines.push('Suggested post:');
     lines.push(question ? `Vote on ${question}.` : 'Vote below and share your take.');
     lines.push('');
-    lines.push('Post-ready options:');
+    lines.push('Draft options (check platform limits):');
     options.slice(0, 4).forEach((option, index) => {
       lines.push(`${String.fromCharCode(65 + index)}. ${option}`);
     });
@@ -153,7 +155,7 @@ function buildOutput(rawInput: string, format: PollFormat) {
     lines.push('');
     lines.push('Tip: Instagram polls work best with two quick choices.');
   } else {
-    const surveyOptions = options.length >= 5 ? options.slice(0, 5) : fallbackOptions('survey');
+    const surveyOptions = options;
     lines.push('Survey intro:');
     lines.push(question ? `Use this to collect feedback on ${question}.` : 'Use this to collect focused feedback.');
     lines.push('');
@@ -201,16 +203,16 @@ export default function PollGeneratorClient({ tool = { name: '', slug: '', descr
   const handleCopy = async () => {
     if (!output) return;
     try {
-      await navigator.clipboard.writeText(output);
-      setCopied(true);
+      await navigator.clipboard.writeText(output).then(() => setCopied(true), () => setCopied(false));
       window.setTimeout(() => setCopied(false), 1500);
     } catch {
       // ignore clipboard failures
     }
   };
 
-  return (
+  return (<UtilityDesignLayout>
     <div className="mx-auto max-w-2xl p-6">
+      <ToolExampleClearActions onExample={() => { setInput('Which fruit? | Apple | Pear | Plum'); setOutput(''); }} onClear={() => { setInput(''); setOutput(''); setCopied(false); setIsLoading(false); }}/>
       <div className="mb-6">
         <h1 className="mb-2 text-2xl font-bold">{tool.name}</h1>
         <p className="text-gray-600 dark:text-gray-400">{tool.description}</p>
@@ -233,7 +235,7 @@ export default function PollGeneratorClient({ tool = { name: '', slug: '', descr
                   type="button"
                   role="tab"
                   aria-selected={selected}
-                  onClick={() => setFormat(item)}
+                  onClick={() => {setFormat(item);setOutput('');}}
                   className={`rounded-xl border px-4 py-3 text-sm font-semibold transition ${
                     selected
                       ? 'border-red-500 bg-red-50 text-red-700 dark:border-red-400 dark:bg-red-950/30 dark:text-red-200'
@@ -251,12 +253,12 @@ export default function PollGeneratorClient({ tool = { name: '', slug: '', descr
           <label className="block text-sm font-medium mb-2" htmlFor="poll-input">
             Topic or poll prompt
           </label>
-          <textarea
+          <textarea maxLength={100000} aria-label="Input"
             id="poll-input"
             className="w-full h-32 rounded-xl border p-3 font-mono text-sm dark:bg-gray-800 dark:border-gray-700"
             placeholder="Enter your text..."
             value={input}
-            onChange={(e) => setInput(e.target.value)}
+            onChange={(e) => {setInput(e.target.value);setOutput('');}}
           />
           <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">{helperText}</p>
         </div>
@@ -264,8 +266,8 @@ export default function PollGeneratorClient({ tool = { name: '', slug: '', descr
         <button
           type="button"
           onClick={handleProcess}
-          disabled={isLoading}
-          className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 disabled:opacity-50"
+          disabled={isLoading || !input.trim()}
+          className="rounded-lg bg-red-600 px-4 py-2 text-white hover:bg-red-700 disabled:opacity-50"
         >
           {isLoading ? 'Generating...' : 'Process'}
         </button>
@@ -284,7 +286,7 @@ export default function PollGeneratorClient({ tool = { name: '', slug: '', descr
                 {copied ? 'Copied' : 'Copy'}
               </button>
             </div>
-            <textarea
+            <textarea maxLength={100000} aria-label="Output"
               id="poll-output"
               readOnly
               value={output}
@@ -294,5 +296,6 @@ export default function PollGeneratorClient({ tool = { name: '', slug: '', descr
         )}
       </div>
     </div>
+  </UtilityDesignLayout>
   );
 }

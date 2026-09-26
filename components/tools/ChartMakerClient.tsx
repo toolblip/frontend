@@ -1,4 +1,6 @@
 'use client';
+import UtilityDesignLayout from './UtilityDesignLayout';
+import ToolExampleClearActions from './ToolExampleClearActions';
 
 import { useState, useRef, useEffect } from 'react';
 
@@ -16,6 +18,7 @@ const COLORS = [
 ];
 
 export default function ChartMakerClient() {
+  const [error,setError]=useState('');
   const [chartType, setChartType] = useState<ChartType>('bar');
   const [title, setTitle] = useState('My Chart');
   const [dataPoints, setDataPoints] = useState<DataPoint[]>([
@@ -76,7 +79,7 @@ export default function ChartMakerClient() {
     const barWidth = chartWidth / dataPoints.length * 0.7;
     const gap = chartWidth / dataPoints.length * 0.3;
 
-    const maxValue = Math.max(...dataPoints.map(d => d.value));
+    const maxValue = Math.max(1, ...dataPoints.map(d => d.value));
     const scale = chartHeight / maxValue;
 
     // Draw grid lines
@@ -121,7 +124,7 @@ export default function ChartMakerClient() {
     const chartWidth = width - padding * 2;
     const chartHeight = height - padding * 2;
 
-    const maxValue = Math.max(...dataPoints.map(d => d.value));
+    const maxValue = Math.max(1, ...dataPoints.map(d => d.value));
     const scale = chartHeight / maxValue;
 
     const pointSpacing = chartWidth / (dataPoints.length - 1 || 1);
@@ -194,6 +197,7 @@ export default function ChartMakerClient() {
     const innerRadius = doughnut ? radius * 0.5 : 0;
 
     const total = dataPoints.reduce((sum, d) => sum + d.value, 0);
+    if (total <= 0) return;
     let startAngle = -Math.PI / 2;
 
     dataPoints.forEach((point, i) => {
@@ -202,6 +206,7 @@ export default function ChartMakerClient() {
 
       ctx.fillStyle = point.color || COLORS[i % COLORS.length];
       ctx.beginPath();
+      if (!doughnut) ctx.moveTo(centerX, centerY);
       ctx.arc(centerX, centerY, radius, startAngle, endAngle);
       if (doughnut) {
         ctx.arc(centerX, centerY, innerRadius, endAngle, startAngle, true);
@@ -235,11 +240,12 @@ export default function ChartMakerClient() {
   };
 
   const addDataPoint = () => {
-    if (!newLabel.trim() || !newValue.trim()) return;
-    
-    setDataPoints([...dataPoints, { 
-      label: newLabel.trim(), 
-      value: parseFloat(newValue) || 0 
+    if (!newLabel.trim() || !newValue.trim() || !Number.isFinite(Number(newValue)) || Number(newValue) < 0 || Number(newValue)>1e12 || dataPoints.length >= 100) {setError('Enter a label and a finite value from 0 to 1 trillion; maximum 100 points.');return;}
+    setError('');
+
+    setDataPoints([...dataPoints, {
+      label: newLabel.trim(),
+      value: Number(newValue)
     }]);
     setNewLabel('');
     setNewValue('');
@@ -259,15 +265,18 @@ export default function ChartMakerClient() {
     link.click();
   };
 
-  return (
+  return (<UtilityDesignLayout>
     <div>
+      {error && <p role="alert">{error}</p>}
+      <p>Charts support non-negative values; a pie needs a positive total.</p>
+      <ToolExampleClearActions onExample={() => { setTitle('Quarterly sales'); setDataPoints([{label:'Q1',value:10},{label:'Q2',value:20}]); }} onClear={() => { setError(''); setTitle(''); setDataPoints([]); setNewLabel(''); setNewValue(''); }}/>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Chart Maker</span>
       </div>
 
       <div style={{ marginBottom: '0.75rem' }}>
         <label className="text-xs text-gray-500 dark:text-gray-400" style={{ display: 'block', marginBottom: 6 }}>Chart Title</label>
-        <input
+        <input maxLength={100000}
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
@@ -295,7 +304,7 @@ export default function ChartMakerClient() {
 
       <div style={{ marginBottom: '0.75rem' }}>
         <label className="flex items-center gap-1.5 text-sm text-gray-600 dark:text-gray-400">
-          <input
+          <input aria-label="Show Grid"
             type="checkbox"
             checked={showGrid}
             onChange={(e) => setShowGrid(e.target.checked)}
@@ -308,7 +317,7 @@ export default function ChartMakerClient() {
         <span className="tb-v2-tool-label">Data Points</span>
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr auto', gap: '0.5rem', marginBottom: '0.5rem' }}>
-        <input
+        <input maxLength={100000}
           type="text"
           value={newLabel}
           onChange={(e) => setNewLabel(e.target.value)}
@@ -390,5 +399,6 @@ export default function ChartMakerClient() {
         />
       </div>
     </div>
+  </UtilityDesignLayout>
   );
 }

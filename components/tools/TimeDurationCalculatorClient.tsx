@@ -1,4 +1,6 @@
 'use client';
+import UtilityDesignLayout from './UtilityDesignLayout';
+import ToolExampleClearActions from './ToolExampleClearActions';
 
 import { useMemo, useState } from 'react';
 
@@ -9,14 +11,14 @@ type Mode = 'add' | 'diff';
 // capping those at 23 hours keeps the "assume the end time is the next day"
 // wraparound below from producing a nonsensical result for something that
 // was never really a time-of-day to begin with.
-function parseDuration(value: string): number | null {
+export function parseDuration(value: string): number | null {
   const m = value.match(/^(\d{1,3}):([0-5]?\d):([0-5]?\d)$/);
   if (!m) return null;
   const [, h, mm, s] = m;
   return Number(h) * 3600 + Number(mm) * 60 + Number(s);
 }
 
-function parseClockTime(value: string): number | null {
+export function parseClockTime(value: string): number | null {
   const m = value.match(/^([01]?\d|2[0-3]):([0-5]?\d):([0-5]?\d)$/);
   if (!m) return null;
   const [, h, mm, s] = m;
@@ -56,8 +58,9 @@ export default function TimeDurationCalculatorClient() {
     return formatHms(delta);
   }, [start, end]);
 
-  return (
+  return (<UtilityDesignLayout>
     <div className="tb-v2-tool-card">
+      <ToolExampleClearActions onExample={() => { setMode('add'); setStart('23:30:00'); setDuration('02:00:00'); }} onClear={() => { setStart(''); setDuration(''); setEnd(''); }}/>
       <div className="tb-v2-mode-tabs">
         <button
           className={mode === 'add' ? 'tb-v2-mode-tab-active' : 'tb-v2-mode-tab'}
@@ -76,7 +79,7 @@ export default function TimeDurationCalculatorClient() {
       <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginTop: 16 }}>
         <label className="tb-v2-tool-label">
           Start time (h:mm:ss)
-          <input
+          <input aria-label="Start"
             className="tb-v2-input"
             value={start}
             onChange={(e) => setStart(e.target.value)}
@@ -86,7 +89,7 @@ export default function TimeDurationCalculatorClient() {
         {mode === 'add' ? (
           <label className="tb-v2-tool-label">
             Duration to add (h:mm:ss)
-            <input
+            <input aria-label="Duration"
               className="tb-v2-input"
               value={duration}
               onChange={(e) => setDuration(e.target.value)}
@@ -96,7 +99,7 @@ export default function TimeDurationCalculatorClient() {
         ) : (
           <label className="tb-v2-tool-label">
             End time (h:mm:ss)
-            <input className="tb-v2-input" value={end} onChange={(e) => setEnd(e.target.value)} placeholder="17:00:00" />
+            <input aria-label="End" className="tb-v2-input" value={end} onChange={(e) => setEnd(e.target.value)} placeholder="17:00:00" />
           </label>
         )}
       </div>
@@ -122,5 +125,6 @@ export default function TimeDurationCalculatorClient() {
         )}
       </div>
     </div>
+  </UtilityDesignLayout>
   );
 }

@@ -1,0 +1,661 @@
+{
+  "group": "utility-design",
+  "assignedRoutes": 55,
+  "inventoryReviewed": {
+    "catalogCount": 491,
+    "historicallyApproved": 185,
+    "sharedApprovedComponentsPreserved": [
+      "percentage-calculator",
+      "word-combinations-generator"
+    ]
+  },
+  "status": "implementation-and-scoped-checks-complete; integrated-browser-acceptance-pending-parent",
+  "validation": {
+    "scopedTests": {
+      "command": "npx vitest run lib/utility-design/core.test.ts lib/utility-design/exports.test.ts",
+      "result": "passed",
+      "tests": 15
+    },
+    "typeScript": {
+      "command": "npx tsc --noEmit --incremental false",
+      "result": "passed"
+    },
+    "caseModule": {
+      "command": "node --check scripts/qa/cases/utility-design.mjs; imported module compared against assignment",
+      "result": "55 cases, no missing or duplicate slugs"
+    },
+    "browserCases": "authored, not executed in worker",
+    "build": "not run by worker per contract",
+    "devServer": "not started"
+  },
+  "fixedFiles": [
+    "components/tools/AgeCalculatorClient.tsx",
+    "components/tools/AudioToTextClient.tsx",
+    "components/tools/AutomationWizardClient.tsx",
+    "components/tools/Base64FileEncoderClient.tsx",
+    "components/tools/BillSaleGeneratorClient.tsx",
+    "components/tools/BillSplitterClient.tsx",
+    "components/tools/BmiCalculatorClient.tsx",
+    "components/tools/BusinessPlanGeneratorClient.tsx",
+    "components/tools/ChartMakerClient.tsx",
+    "components/tools/CollocationsCheckerClient.tsx",
+    "components/tools/CountdownTimerClient.tsx",
+    "components/tools/CreateZipFileClient.tsx",
+    "components/tools/CssAnimationGeneratorClient.tsx",
+    "components/tools/CssBorderRadiusGeneratorClient.tsx",
+    "components/tools/CssCursorGeneratorClient.tsx",
+    "components/tools/CssFlexboxGeneratorClient.tsx",
+    "components/tools/CssGridGeneratorClient.tsx",
+    "components/tools/CssNamingConventionClient.tsx",
+    "components/tools/DiscountCalculatorClient.tsx",
+    "components/tools/EnglishDictionaryClient.tsx",
+    "components/tools/FakeAddressGeneratorClient.tsx",
+    "components/tools/HtmlEncoderClient.tsx",
+    "components/tools/HtmlEntityEncoderClient.tsx",
+    "components/tools/ImageShadowGeneratorClient.tsx",
+    "components/tools/Ipv6GeneratorClient.tsx",
+    "components/tools/NDAGeneratorClient.tsx",
+    "components/tools/PhysicsConstantsReferenceClient.tsx",
+    "components/tools/PollGeneratorClientV2.tsx",
+    "components/tools/PressReleaseGeneratorClient.tsx",
+    "components/tools/PrivacyPolicyGeneratorClient.tsx",
+    "components/tools/PurchaseAgreementGeneratorClient.tsx",
+    "components/tools/QuoteOfTheDayClient.tsx",
+    "components/tools/RandomChoicePickerClient.tsx",
+    "components/tools/RandomChoiceWheelClient.tsx",
+    "components/tools/RandomFractionGeneratorClient.tsx",
+    "components/tools/RandomIdGeneratorClient.tsx",
+    "components/tools/RandomIpAddressClient.tsx",
+    "components/tools/RandomNumberGeneratorClient.tsx",
+    "components/tools/RandomPinGeneratorClient.tsx",
+    "components/tools/SassToCssClient.tsx",
+    "components/tools/SlideshowGeneratorClient.tsx",
+    "components/tools/SplitCSVFileClient.tsx",
+    "components/tools/SplitExcelFileClient.tsx",
+    "components/tools/StickyNotesClient.tsx",
+    "components/tools/TextToHandwritingClient.tsx",
+    "components/tools/TextToSpeechClient.tsx",
+    "components/tools/TimeDurationCalculatorClient.tsx",
+    "components/tools/TimeZoneConverterClient.tsx",
+    "components/tools/TimestampDiffCalculatorClient.tsx",
+    "components/tools/UptimeCalculatorClient.tsx",
+    "components/tools/WhatIfScenarioCalculatorClient.tsx",
+    "components/tools/WordCloudGeneratorClient.tsx",
+    "components/tools/UtilityDesignLayout.tsx",
+    "lib/utility-design/sass.worker.ts",
+    "lib/utility-design/exports.test.ts",
+    "lib/utility-design/core.test.ts",
+    "lib/utility-design/document.ts",
+    "lib/utility-design/core.ts",
+    "scripts/qa/cases/utility-design.mjs",
+    "scripts/qa/reports/utility-design.json"
+  ],
+  "duplicateProposals": [
+    {
+      "source": "sla-uptime-calculator",
+      "canonical": "uptime-calculator",
+      "reason": "Both routes already render the identical UptimeCalculatorClient; permanent redirect proposed."
+    },
+    {
+      "source": "html-entity-encoder",
+      "canonical": "html-encoder",
+      "reason": "Both now expose the same safe five-character encoding and browser-standard entity decoding."
+    },
+    {
+      "source": "word-combinations",
+      "canonical": "word-combinations-generator",
+      "reason": "Both routes render the same approved component; implementation unchanged."
+    }
+  ],
+  "centralMetadataChanges": [
+    {
+      "slug": "automation-wizard",
+      "file": "data/tools.ts",
+      "description": "Draft a workflow specification and export YAML or JSON. Does not connect accounts or execute tasks."
+    },
+    {
+      "slug": "text-to-handwriting",
+      "file": "data/tools.ts",
+      "description": "Preview text in device-installed handwriting fonts with a cursive fallback. Copy exports plain text."
+    },
+    {
+      "slug": "split-excel",
+      "file": "data/tools.ts",
+      "description": "Split worksheet values into XLSX files. Cached formula results only; formatting, charts and macros are not preserved."
+    },
+    {
+      "slug": "speech-to-text",
+      "file": "data/tools.ts",
+      "description": "Transcribe with a supported browser speech service and microphone permission. Manual transcript editing is separate."
+    },
+    {
+      "slug": "poll-generator",
+      "file": "data/tools.ts",
+      "description": "Draft poll questions and options. Review platform limits before posting; no hosted voting or publishing."
+    },
+    {
+      "slugs": [
+        "bill-sale-generator",
+        "nda-generator",
+        "privacy-policy-generator",
+        "purchase-agreement-generator"
+      ],
+      "files": [
+        "data/tool-content.ts",
+        "lib/faq.ts"
+      ],
+      "request": "Align any legal-validity/compliance or automated-AI claims with editable draft templates; no legal validity guarantee. Bill of sale exports TXT; PDFs in the other templates explicitly reject unsupported characters and offer TXT."
+    },
+    {
+      "slug": "sass-to-css",
+      "file": "data/tools.ts",
+      "description": "Compile SCSS or indented Sass in a browser worker. Explicit Compile action, local input, bounded execution."
+    }
+  ],
+  "limitations": [
+    "No browser or production pass is claimed. Parent must run all 55 cases and review screenshots at 320px.",
+    "Real microphone recognition and audible speech output require supported browser/OS, permissions and service. Cases separately record detected capability and use isolated fixtures only for lifecycle handling.",
+    "Live dictionary success depends on external endpoint availability; the case does not mock success.",
+    "Parent build must verify Sass worker bundling; actual Sass implementation remains installed dependency and compilation is terminated after 8 seconds.",
+    "Template PDF export uses Helvetica/WinAnsi; unsupported scripts produce an explicit error, with UTF-8 TXT available.",
+    "Excel exports values and cached formula results, not original formatting/formulas/charts/macros.",
+    "Random PIN/ID and IP outputs are property-validated, not tested for a particular random value."
+  ],
+  "perSlug": [
+    {
+      "slug": "html-encoder",
+      "componentPath": "components/tools/HtmlEncoderClient.tsx",
+      "status": "implemented; case-ready; browser-pending",
+      "findingAndFix": "Live inert entity conversion, labeled bounded input and reset.",
+      "case": "scripts/qa/cases/utility-design.mjs",
+      "exampleClearException": null,
+      "remainingBlocker": "Parent integrated browser run required."
+    },
+    {
+      "slug": "css-border-radius-generator",
+      "componentPath": "components/tools/CssBorderRadiusGeneratorClient.tsx",
+      "status": "implemented; case-ready; browser-pending",
+      "findingAndFix": "Labeled corner controls, neutral reset and responsive preview; presets retained.",
+      "case": "scripts/qa/cases/utility-design.mjs",
+      "exampleClearException": null,
+      "remainingBlocker": "Parent integrated browser run required."
+    },
+    {
+      "slug": "sass-to-css",
+      "componentPath": "components/tools/SassToCssClient.tsx",
+      "status": "implemented; case-ready; browser-pending",
+      "findingAndFix": "Actual Sass compilation in terminable worker, explicit syntax, 10000 character and 8 second limits, cancel on input/Clear.",
+      "case": "scripts/qa/cases/utility-design.mjs",
+      "exampleClearException": null,
+      "remainingBlocker": "Parent integrated browser run required."
+    },
+    {
+      "slug": "random-number-generator",
+      "componentPath": "components/tools/RandomNumberGeneratorClient.tsx",
+      "status": "implemented; case-ready; browser-pending",
+      "findingAndFix": "Zero bounds, strict safe-integer ranges, bounded sparse unique sampling and visible validation.",
+      "case": "scripts/qa/cases/utility-design.mjs",
+      "exampleClearException": null,
+      "remainingBlocker": "Parent integrated browser run required."
+    },
+    {
+      "slug": "uptime-calculator",
+      "componentPath": "components/tools/UptimeCalculatorClient.tsx",
+      "status": "implemented; case-ready; browser-pending",
+      "findingAndFix": "Correct seconds/minutes/hours labels; 0\u2013100 percent validation; month/year assumptions visible.",
+      "case": "scripts/qa/cases/utility-design.mjs",
+      "exampleClearException": null,
+      "remainingBlocker": "Parent integrated browser run required."
+    },
+    {
+      "slug": "age-calculator",
+      "componentPath": "components/tools/AgeCalculatorClient.tsx",
+      "status": "implemented; case-ready; browser-pending",
+      "findingAndFix": "UTC date-only calendar math, clamped month-end/leap birthdays, as-of input, future rejection.",
+      "case": "scripts/qa/cases/utility-design.mjs",
+      "exampleClearException": null,
+      "remainingBlocker": "Parent integrated browser run required."
+    },
+    {
+      "slug": "countdown-timer",
+      "componentPath": "components/tools/CountdownTimerClient.tsx",
+      "status": "implemented; case-ready; browser-pending",
+      "findingAndFix": "Elapsed wall-clock calculation, pause/resume, reset cancels running interval.",
+      "case": "scripts/qa/cases/utility-design.mjs",
+      "exampleClearException": null,
+      "remainingBlocker": "Parent integrated browser run required."
+    },
+    {
+      "slug": "text-to-handwriting",
+      "componentPath": "components/tools/TextToHandwritingClient.tsx",
+      "status": "implemented; case-ready; browser-pending",
+      "findingAndFix": "Responsive font preview; device-font fallback and plain-text copy explicitly described.",
+      "case": "scripts/qa/cases/utility-design.mjs",
+      "exampleClearException": null,
+      "remainingBlocker": "Parent integrated browser run required."
+    },
+    {
+      "slug": "random-ip-address",
+      "componentPath": "components/tools/RandomIpAddressClient.tsx",
+      "status": "implemented; case-ready; browser-pending",
+      "findingAndFix": "Bounded count, full hex range, current-result invalidation and reset.",
+      "case": "scripts/qa/cases/utility-design.mjs",
+      "exampleClearException": null,
+      "remainingBlocker": "Parent integrated browser run required."
+    },
+    {
+      "slug": "slideshow-generator",
+      "componentPath": "components/tools/SlideshowGeneratorClient.tsx",
+      "status": "implemented; case-ready; browser-pending",
+      "findingAndFix": "Escaped HTML export retained, bounded slide count, example and reset with valid active slide.",
+      "case": "scripts/qa/cases/utility-design.mjs",
+      "exampleClearException": null,
+      "remainingBlocker": "Parent integrated browser run required."
+    },
+    {
+      "slug": "quote-of-the-day",
+      "componentPath": "components/tools/QuoteOfTheDayClient.tsx",
+      "status": "implemented; case-ready; browser-pending",
+      "findingAndFix": "DST-independent daily index, bounded shuffle; attribution/public-domain certainty removed.",
+      "case": "scripts/qa/cases/utility-design.mjs",
+      "exampleClearException": "Reference-only quote reader uses Shuffle and Back to Today.",
+      "remainingBlocker": "Parent integrated browser run required."
+    },
+    {
+      "slug": "time-zone-converter",
+      "componentPath": "components/tools/TimeZoneConverterClient.tsx",
+      "status": "implemented; case-ready; browser-pending",
+      "findingAndFix": "IANA Intl conversion, DST gap/fold rejection, fractional offsets and explicit calendar dates.",
+      "case": "scripts/qa/cases/utility-design.mjs",
+      "exampleClearException": null,
+      "remainingBlocker": "Parent integrated browser run required."
+    },
+    {
+      "slug": "random-fraction-generator",
+      "componentPath": "components/tools/RandomFractionGeneratorClient.tsx",
+      "status": "implemented; case-ready; browser-pending",
+      "findingAndFix": "Impossible narrow ranges rejected instead of out-of-range rounding; output invalidated on edits.",
+      "case": "scripts/qa/cases/utility-design.mjs",
+      "exampleClearException": null,
+      "remainingBlocker": "Parent integrated browser run required."
+    },
+    {
+      "slug": "ipv6-generator",
+      "componentPath": "components/tools/Ipv6GeneratorClient.tsx",
+      "status": "implemented; case-ready; browser-pending",
+      "findingAndFix": "Correct eight-group EUI-64 insertion and longest-zero-run compression.",
+      "case": "scripts/qa/cases/utility-design.mjs",
+      "exampleClearException": null,
+      "remainingBlocker": "Parent integrated browser run required."
+    },
+    {
+      "slug": "physics-constants-reference",
+      "componentPath": "components/tools/PhysicsConstantsReferenceClient.tsx",
+      "status": "implemented; case-ready; browser-pending",
+      "findingAndFix": "Exact speed-of-light filter case, labeled filter and reset; constants retained.",
+      "case": "scripts/qa/cases/utility-design.mjs",
+      "exampleClearException": null,
+      "remainingBlocker": "Parent integrated browser run required."
+    },
+    {
+      "slug": "speech-to-text",
+      "componentPath": "components/tools/AudioToTextClient.tsx",
+      "status": "implemented; case-ready; browser-pending",
+      "findingAndFix": "Deduplicated session transcript, real unsupported/error state, cleanup and late-event suppression; manual sample explicitly not recognition.",
+      "case": "scripts/qa/cases/utility-design.mjs",
+      "exampleClearException": null,
+      "remainingBlocker": "Real browser speech service/microphone acceptance unverified; fixture lifecycle is not a capability pass."
+    },
+    {
+      "slug": "sticky-notes",
+      "componentPath": "components/tools/StickyNotesClient.tsx",
+      "status": "implemented; case-ready; browser-pending",
+      "findingAndFix": "Guard initial persistence, validate stored data, report blocked storage, reset editing and saved notes.",
+      "case": "scripts/qa/cases/utility-design.mjs",
+      "exampleClearException": null,
+      "remainingBlocker": "Parent integrated browser run required."
+    },
+    {
+      "slug": "css-grid-generator",
+      "componentPath": "components/tools/CssGridGeneratorClient.tsx",
+      "status": "implemented; case-ready; browser-pending",
+      "findingAndFix": "CSS track validation, auto preset fidelity, bounded item counts and neutral reset.",
+      "case": "scripts/qa/cases/utility-design.mjs",
+      "exampleClearException": null,
+      "remainingBlocker": "Parent integrated browser run required."
+    },
+    {
+      "slug": "css-flexbox-generator",
+      "componentPath": "components/tools/CssFlexboxGeneratorClient.tsx",
+      "status": "implemented; case-ready; browser-pending",
+      "findingAndFix": "Example and neutral layout reset with live output and responsive controls.",
+      "case": "scripts/qa/cases/utility-design.mjs",
+      "exampleClearException": null,
+      "remainingBlocker": "Parent integrated browser run required."
+    },
+    {
+      "slug": "html-entity-encoder",
+      "componentPath": "components/tools/HtmlEntityEncoderClient.tsx",
+      "status": "implemented; case-ready; browser-pending",
+      "findingAndFix": "Single-pass browser-standard decoding; invalid code points no longer throw or double-decode.",
+      "case": "scripts/qa/cases/utility-design.mjs",
+      "exampleClearException": null,
+      "remainingBlocker": "Parent integrated browser run required."
+    },
+    {
+      "slug": "sla-uptime-calculator",
+      "componentPath": "components/tools/UptimeCalculatorClient.tsx",
+      "status": "implemented; case-ready; browser-pending",
+      "findingAndFix": "Same corrected uptime component and independent route case.",
+      "case": "scripts/qa/cases/utility-design.mjs",
+      "exampleClearException": null,
+      "remainingBlocker": "Parent integrated browser run required."
+    },
+    {
+      "slug": "word-cloud-generator",
+      "componentPath": "components/tools/WordCloudGeneratorClient.tsx",
+      "status": "implemented; case-ready; browser-pending",
+      "findingAndFix": "Valid canvas font, current-result invalidation, PNG byte/dimension/pixel acceptance case.",
+      "case": "scripts/qa/cases/utility-design.mjs",
+      "exampleClearException": null,
+      "remainingBlocker": "Parent integrated browser run required."
+    },
+    {
+      "slug": "english-dictionary",
+      "componentPath": "components/tools/EnglishDictionaryClient.tsx",
+      "status": "implemented; case-ready; browser-pending",
+      "findingAndFix": "Abort stale requests, 15 second timeout, input bounds, visible failure, reset; live endpoint case plus controlled failure.",
+      "case": "scripts/qa/cases/utility-design.mjs",
+      "exampleClearException": null,
+      "remainingBlocker": "Parent integrated browser run required."
+    },
+    {
+      "slug": "text-to-speech",
+      "componentPath": "components/tools/TextToSpeechClient.tsx",
+      "status": "implemented; case-ready; browser-pending",
+      "findingAndFix": "Feature detection, voice availability notice, cleanup, cancellation, guarded callbacks and visible synthesis errors.",
+      "case": "scripts/qa/cases/utility-design.mjs",
+      "exampleClearException": null,
+      "remainingBlocker": "Real browser speech service/microphone acceptance unverified; fixture lifecycle is not a capability pass."
+    },
+    {
+      "slug": "collocations-checker",
+      "componentPath": "components/tools/CollocationsCheckerClient.tsx",
+      "status": "implemented; case-ready; browser-pending",
+      "findingAndFix": "Full token-boundary phrase matching including four-word phrases; fabricated suggestions removed; limited dictionary scope explicit.",
+      "case": "scripts/qa/cases/utility-design.mjs",
+      "exampleClearException": null,
+      "remainingBlocker": "Parent integrated browser run required."
+    },
+    {
+      "slug": "automation-wizard",
+      "componentPath": "components/tools/AutomationWizardClient.tsx",
+      "status": "implemented; case-ready; browser-pending",
+      "findingAndFix": "Draft-only scope; YAML serializes all config safely and one trigger is retained; no fabricated app connections.",
+      "case": "scripts/qa/cases/utility-design.mjs",
+      "exampleClearException": null,
+      "remainingBlocker": "Parent integrated browser run required."
+    },
+    {
+      "slug": "bill-sale-generator",
+      "componentPath": "components/tools/BillSaleGeneratorClient.tsx",
+      "status": "implemented; case-ready; browser-pending",
+      "findingAndFix": "Validation, stable input identity, mutually exclusive warranty options, exact TXT download; no assumed payment receipt.",
+      "case": "scripts/qa/cases/utility-design.mjs",
+      "exampleClearException": null,
+      "remainingBlocker": "Parent integrated browser run required."
+    },
+    {
+      "slug": "business-plan-generator",
+      "componentPath": "components/tools/BusinessPlanGeneratorClient.tsx",
+      "status": "implemented; case-ready; browser-pending",
+      "findingAndFix": "Uses idea/market/budget in outline; invented market evidence and 50 percent forecast removed; stale result reset.",
+      "case": "scripts/qa/cases/utility-design.mjs",
+      "exampleClearException": null,
+      "remainingBlocker": "Parent integrated browser run required."
+    },
+    {
+      "slug": "chart-maker",
+      "componentPath": "components/tools/ChartMakerClient.tsx",
+      "status": "implemented; case-ready; browser-pending",
+      "findingAndFix": "Pie sectors include center; zero scale guarded; bounded non-negative values, validation and PNG output case.",
+      "case": "scripts/qa/cases/utility-design.mjs",
+      "exampleClearException": null,
+      "remainingBlocker": "Parent integrated browser run required."
+    },
+    {
+      "slug": "nda-generator",
+      "componentPath": "components/tools/NDAGeneratorClient.tsx",
+      "status": "implemented; case-ready; browser-pending",
+      "findingAndFix": "Provided fields retained; draft limitation, reset, paginated bounded PDF, visible unsupported-character error with TXT fallback.",
+      "case": "scripts/qa/cases/utility-design.mjs",
+      "exampleClearException": null,
+      "remainingBlocker": "Parent integrated browser run required."
+    },
+    {
+      "slug": "poll-generator",
+      "componentPath": "components/tools/PollGeneratorClientV2.tsx",
+      "status": "implemented; case-ready; browser-pending",
+      "findingAndFix": "Survey retains supplied options, empty input rejected, draft platform copy, stale output cleared.",
+      "case": "scripts/qa/cases/utility-design.mjs",
+      "exampleClearException": null,
+      "remainingBlocker": "Parent integrated browser run required."
+    },
+    {
+      "slug": "press-release-generator",
+      "componentPath": "components/tools/PressReleaseGeneratorClient.tsx",
+      "status": "implemented; case-ready; browser-pending",
+      "findingAndFix": "All supplied fields including multiline body retained in TXT/PDF; complete clear and cancellation.",
+      "case": "scripts/qa/cases/utility-design.mjs",
+      "exampleClearException": null,
+      "remainingBlocker": "Parent integrated browser run required."
+    },
+    {
+      "slug": "privacy-policy-generator",
+      "componentPath": "components/tools/PrivacyPolicyGeneratorClient.tsx",
+      "status": "implemented; case-ready; browser-pending",
+      "findingAndFix": "Field/checkbox-driven template retained; explicit draft/compliance limitation; PDF/TXT fidelity and clear.",
+      "case": "scripts/qa/cases/utility-design.mjs",
+      "exampleClearException": null,
+      "remainingBlocker": "Parent integrated browser run required."
+    },
+    {
+      "slug": "purchase-agreement-generator",
+      "componentPath": "components/tools/PurchaseAgreementGeneratorClient.tsx",
+      "status": "implemented; case-ready; browser-pending",
+      "findingAndFix": "Provided price/parties/item/payment/delivery fields retained; invalid price suppresses export; draft notice and reset.",
+      "case": "scripts/qa/cases/utility-design.mjs",
+      "exampleClearException": null,
+      "remainingBlocker": "Parent integrated browser run required."
+    },
+    {
+      "slug": "split-csv",
+      "componentPath": "components/tools/SplitCSVFileClient.tsx",
+      "status": "implemented; case-ready; browser-pending",
+      "findingAndFix": "Strict UTF-8/CSV parsing, quoted multiline preservation, size/row/time bounds and stale-load/download cancellation.",
+      "case": "scripts/qa/cases/utility-design.mjs",
+      "exampleClearException": null,
+      "remainingBlocker": "Parent integrated browser run required."
+    },
+    {
+      "slug": "split-excel",
+      "componentPath": "components/tools/SplitExcelFileClient.tsx",
+      "status": "implemented; case-ready; browser-pending",
+      "findingAndFix": "Actual XLSX ZIP directory validation and expanded size limits; row bounds; values-only export limitation; parseable XLSX download case.",
+      "case": "scripts/qa/cases/utility-design.mjs",
+      "exampleClearException": null,
+      "remainingBlocker": "Parent integrated browser run required."
+    },
+    {
+      "slug": "zip",
+      "componentPath": "components/tools/CreateZipFileClient.tsx",
+      "status": "implemented; case-ready; browser-pending",
+      "findingAndFix": "UTF-8 filename flag, exact stored bytes, duplicate/size/count bounds, stale work suppression and object URL cleanup.",
+      "case": "scripts/qa/cases/utility-design.mjs",
+      "exampleClearException": null,
+      "remainingBlocker": "Parent integrated browser run required."
+    },
+    {
+      "slug": "random-choice-wheel",
+      "componentPath": "components/tools/RandomChoiceWheelClient.tsx",
+      "status": "implemented; case-ready; browser-pending",
+      "findingAndFix": "Zero-weight exclusion, positive-total validation, bounded choices, editing/Clear cancels animation.",
+      "case": "scripts/qa/cases/utility-design.mjs",
+      "exampleClearException": null,
+      "remainingBlocker": "Parent integrated browser run required."
+    },
+    {
+      "slug": "image-shadow-generator",
+      "componentPath": "components/tools/ImageShadowGeneratorClient.tsx",
+      "status": "implemented; case-ready; browser-pending",
+      "findingAndFix": "Bounded decoded image dimensions, timeout, live rendering, shadow-only compositing avoids doubling translucent source; PNG margins explicit.",
+      "case": "scripts/qa/cases/utility-design.mjs",
+      "exampleClearException": null,
+      "remainingBlocker": "Parent integrated browser run required."
+    },
+    {
+      "slug": "css-naming-convention",
+      "componentPath": "components/tools/CssNamingConventionClient.tsx",
+      "status": "implemented; case-ready; browser-pending",
+      "findingAndFix": "Acronym-aware tokenization and reset with distinct naming output assertions.",
+      "case": "scripts/qa/cases/utility-design.mjs",
+      "exampleClearException": null,
+      "remainingBlocker": "Parent integrated browser run required."
+    },
+    {
+      "slug": "random-pin-generator",
+      "componentPath": "components/tools/RandomPinGeneratorClient.tsx",
+      "status": "implemented; case-ready; browser-pending",
+      "findingAndFix": "Bounded integer count/length, cryptographic generator retained, current-result invalidation and reset.",
+      "case": "scripts/qa/cases/utility-design.mjs",
+      "exampleClearException": null,
+      "remainingBlocker": "Parent integrated browser run required."
+    },
+    {
+      "slug": "time-duration-calculator",
+      "componentPath": "components/tools/TimeDurationCalculatorClient.tsx",
+      "status": "implemented; case-ready; browser-pending",
+      "findingAndFix": "Existing strict clock versus duration parsing retained; day rollover regression tests, example and reset.",
+      "case": "scripts/qa/cases/utility-design.mjs",
+      "exampleClearException": null,
+      "remainingBlocker": "Parent integrated browser run required."
+    },
+    {
+      "slug": "timestamp-diff-calculator",
+      "componentPath": "components/tools/TimestampDiffCalculatorClient.tsx",
+      "status": "implemented; case-ready; browser-pending",
+      "findingAndFix": "Finite epoch bounds, invalid calendar rejection, explicit numeric units; offset-aware elapsed-time tests.",
+      "case": "scripts/qa/cases/utility-design.mjs",
+      "exampleClearException": null,
+      "remainingBlocker": "Parent integrated browser run required."
+    },
+    {
+      "slug": "fake-address-generator",
+      "componentPath": "components/tools/FakeAddressGeneratorClient.tsx",
+      "status": "implemented; case-ready; browser-pending",
+      "findingAndFix": "Bounded generation and reset; synthetic independently sampled geography explicitly not validated/deliverable.",
+      "case": "scripts/qa/cases/utility-design.mjs",
+      "exampleClearException": null,
+      "remainingBlocker": "Parent integrated browser run required."
+    },
+    {
+      "slug": "css-animation-generator",
+      "componentPath": "components/tools/CssAnimationGeneratorClient.tsx",
+      "status": "implemented; case-ready; browser-pending",
+      "findingAndFix": "Live keyframes retained; example and neutral reset; scoped responsive output.",
+      "case": "scripts/qa/cases/utility-design.mjs",
+      "exampleClearException": null,
+      "remainingBlocker": "Parent integrated browser run required."
+    },
+    {
+      "slug": "css-cursor-generator",
+      "componentPath": "components/tools/CssCursorGeneratorClient.tsx",
+      "status": "implemented; case-ready; browser-pending",
+      "findingAndFix": "Correct quoted URL serialization, live output and neutral reset.",
+      "case": "scripts/qa/cases/utility-design.mjs",
+      "exampleClearException": null,
+      "remainingBlocker": "Parent integrated browser run required."
+    },
+    {
+      "slug": "percentage-change-calc",
+      "componentPath": "components/tools/PercentageCalculatorClient.tsx",
+      "status": "reviewed-preserved; case-ready; browser-pending",
+      "findingAndFix": "Reviewed existing approved shared component; 80 to 100 and zero baseline cases; no implementation changes necessary.",
+      "case": "scripts/qa/cases/utility-design.mjs",
+      "exampleClearException": null,
+      "remainingBlocker": "Parent integrated browser run required."
+    },
+    {
+      "slug": "random-choice-picker",
+      "componentPath": "components/tools/RandomChoicePickerClient.tsx",
+      "status": "implemented; case-ready; browser-pending",
+      "findingAndFix": "Selection retained with empty-list validation; stale output invalidated and complete reset.",
+      "case": "scripts/qa/cases/utility-design.mjs",
+      "exampleClearException": null,
+      "remainingBlocker": "Parent integrated browser run required."
+    },
+    {
+      "slug": "discount-calculator",
+      "componentPath": "components/tools/DiscountCalculatorClient.tsx",
+      "status": "implemented; case-ready; browser-pending",
+      "findingAndFix": "Existing successive-discount/post-discount-tax math preserved; extreme numeric bound and route regression case.",
+      "case": "scripts/qa/cases/utility-design.mjs",
+      "exampleClearException": null,
+      "remainingBlocker": "Parent integrated browser run required."
+    },
+    {
+      "slug": "word-combinations",
+      "componentPath": "components/tools/WordCombinationsGeneratorClient.tsx",
+      "status": "reviewed-preserved; case-ready; browser-pending",
+      "findingAndFix": "Reviewed existing approved shared component; three-word combination/permutation regression case; no implementation changes necessary.",
+      "case": "scripts/qa/cases/utility-design.mjs",
+      "exampleClearException": null,
+      "remainingBlocker": "Parent integrated browser run required."
+    },
+    {
+      "slug": "base64-file-encoder",
+      "componentPath": "components/tools/Base64FileEncoderClient.tsx",
+      "status": "implemented; case-ready; browser-pending",
+      "findingAndFix": "Separate decode input/result, strict padded Base64, bounded cancellable reader, byte-exact download.",
+      "case": "scripts/qa/cases/utility-design.mjs",
+      "exampleClearException": null,
+      "remainingBlocker": "Parent integrated browser run required."
+    },
+    {
+      "slug": "what-if-scenario-calculator",
+      "componentPath": "components/tools/WhatIfScenarioCalculatorClient.tsx",
+      "status": "implemented; case-ready; browser-pending",
+      "findingAndFix": "Correct unary/exponent precedence, fractional literals, own-variable lookup, finite/unique variables and formula length cap.",
+      "case": "scripts/qa/cases/utility-design.mjs",
+      "exampleClearException": null,
+      "remainingBlocker": "Parent integrated browser run required."
+    },
+    {
+      "slug": "bill-splitter",
+      "componentPath": "components/tools/BillSplitterClient.tsx",
+      "status": "implemented; case-ready; browser-pending",
+      "findingAndFix": "Cent allocation now makes displayed shares sum to rounded total; existing custom/tax/tip modes preserved.",
+      "case": "scripts/qa/cases/utility-design.mjs",
+      "exampleClearException": null,
+      "remainingBlocker": "Parent integrated browser run required."
+    },
+    {
+      "slug": "bmi-calculator",
+      "componentPath": "components/tools/BmiCalculatorClient.tsx",
+      "status": "implemented; case-ready; browser-pending",
+      "findingAndFix": "Live calculation, finite positive bounded inputs, example/reset and known 22.9 result case.",
+      "case": "scripts/qa/cases/utility-design.mjs",
+      "exampleClearException": null,
+      "remainingBlocker": "Parent integrated browser run required."
+    },
+    {
+      "slug": "random-id-generator",
+      "componentPath": "components/tools/RandomIdGeneratorClient.tsx",
+      "status": "implemented; case-ready; browser-pending",
+      "findingAndFix": "Cryptographic alphabet generation retained with bounded integer length/count and prefix/reset case.",
+      "case": "scripts/qa/cases/utility-design.mjs",
+      "exampleClearException": null,
+      "remainingBlocker": "Parent integrated browser run required."
+    }
+  ]
+}

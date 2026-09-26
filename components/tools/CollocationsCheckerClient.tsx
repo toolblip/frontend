@@ -1,4 +1,5 @@
 'use client';
+import UtilityDesignLayout from './UtilityDesignLayout';
 
 import { useState } from 'react';
 import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
@@ -24,7 +25,7 @@ const COMMON_COLLOCATIONS: Record<string, string[]> = {
   know: ['know by heart', 'know the truth', 'know best', 'know for sure'],
   go: ['go ahead', 'go away', 'go back', 'go through', 'go beyond', 'go along'],
   see: ['see to it', 'see off', 'see through', 'see eye to eye', 'see red'],
-  use: ['use up', 'use out', 'make use of', 'put to use'],
+  use: ['use up', 'make use of', 'put to use'],
 };
 
 export default function CollocationsCheckerClient() {
@@ -40,32 +41,10 @@ export default function CollocationsCheckerClient() {
   };
 
   const checkCollocations = () => {
-    const words = text.toLowerCase().split(/\s+/);
-    const found: typeof results = [];
-
-    for (let i = 0; i < words.length; i++) {
-      const word = words[i].replace(/[^a-z]/g, '');
-      const bigram = `${word} ${words[i + 1] || ''}`.replace(/[^a-z\s]/g, '').trim();
-      const trigram = `${word} ${words[i + 1] || ''} ${words[i + 2] || ''}`.replace(/[^a-z\s]/g, '').trim();
-
-      if (COMMON_COLLOCATIONS[word]) {
-        const matches = COMMON_COLLOCATIONS[word].filter(
-          (col) => col.includes(bigram) || col.includes(trigram)
-        );
-        if (matches.length > 0) {
-          found.push({ phrase: matches[0], type: 'found' });
-        } else if (bigram.length > 3) {
-          const similar = COMMON_COLLOCATIONS[word].find((col) => {
-            const similarity = col.split(' ').filter((w) => bigram.includes(w)).length;
-            return similarity >= 1;
-          });
-          if (similar) {
-            found.push({ phrase: bigram, type: 'maybe', suggestion: similar });
-          }
-        }
-      }
-    }
-
+    const normalized = text.toLowerCase().match(/[a-z]+(?:'[a-z]+)?/g)?.join(' ') ?? '';
+    const found = [...new Set(Object.values(COMMON_COLLOCATIONS).flat())]
+      .filter(phrase => (` ${normalized} `).includes(` ${phrase} `))
+      .map(phrase => ({ phrase, type: 'found' }));
     setResults(found);
     setChecked(true);
   };
@@ -79,12 +58,11 @@ export default function CollocationsCheckerClient() {
           : `maybe: ${r.phrase}${r.suggestion ? ` (did you mean: ${r.suggestion})` : ''}`
       )
       .join('\n');
-    navigator.clipboard.writeText(output).catch(() => {});
-    setCopied(true);
+    navigator.clipboard.writeText(output).then(() => setCopied(true), () => setCopied(false));
     setTimeout(() => setCopied(false), 1500);
   };
 
-  return (
+  return (<UtilityDesignLayout>
     <div className="tb-v2-tool-card">
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Enter your text</span>
@@ -100,7 +78,8 @@ export default function CollocationsCheckerClient() {
           canClear={text.length > 0 || results.length > 0}
         />
       </div>
-      <textarea
+      <p>Matches a small built-in phrase list; this is not a grammar or usage verdict.</p>
+      <textarea maxLength={100000} aria-label="Text"
         value={text}
         onChange={(e) => {
           setText(e.target.value);
@@ -186,5 +165,6 @@ export default function CollocationsCheckerClient() {
         </>
       )}
     </div>
+  </UtilityDesignLayout>
   );
 }

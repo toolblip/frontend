@@ -1,4 +1,6 @@
 'use client';
+import UtilityDesignLayout from './UtilityDesignLayout';
+import ToolExampleClearActions from './ToolExampleClearActions';
 
 import { useState, useEffect } from 'react';
 
@@ -20,30 +22,31 @@ const colors = [
 ];
 
 export default function StickyNotesClient() {
+  const [ready,setReady]=useState(false);
+  const [storageError,setStorageError]=useState('');
   const [notes, setNotes] = useState<Note[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editContent, setEditContent] = useState('');
 
   // Load from localStorage on mount
   useEffect(() => {
-    const saved = localStorage.getItem('sticky-notes');
-    if (saved) {
-      try {
-        setNotes(JSON.parse(saved));
-      } catch (e) {
-        console.error('Failed to load notes');
-      }
-    }
+    try {
+      const saved=JSON.parse(localStorage.getItem('sticky-notes') || '[]');
+      if(!Array.isArray(saved)) throw new Error('Invalid notes');
+      setNotes(saved.filter(n=>n && typeof n.id==='string' && typeof n.content==='string' && typeof n.color==='string').slice(0,100));
+    } catch { setStorageError('Saved notes could not be loaded.'); }
+    setReady(true);
   }, []);
-
-  // Save to localStorage when notes change
   useEffect(() => {
-    localStorage.setItem('sticky-notes', JSON.stringify(notes));
-  }, [notes]);
+    if(!ready)return;
+    try { localStorage.setItem('sticky-notes',JSON.stringify(notes)); }
+    catch { setStorageError('Browser storage unavailable; notes remain in this tab only.'); }
+  },[notes,ready]);
 
   const addNote = () => {
+    if(notes.length>=100)return;
     const newNote: Note = {
-      id: Date.now().toString(),
+      id: crypto.randomUUID(),
       content: '',
       color: colors[Math.floor(Math.random() * colors.length)],
       createdAt: Date.now(),
@@ -84,11 +87,13 @@ export default function StickyNotesClient() {
 
   const clearAll = () => {
     setNotes([]);
-    localStorage.removeItem('sticky-notes');
+    setEditingId(null); setEditContent('');
   };
 
-  return (
+  return (<UtilityDesignLayout>
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 p-6">
+      <ToolExampleClearActions onExample={() => { setNotes(n => [...n,{id:crypto.randomUUID(),content:'Example: review the project checklist.',color:colors[0],createdAt:Date.now(),position:{x:0,y:0}}]); }} onClear={() => { clearAll(); setEditingId(null); setEditContent(''); }}/>
+      {storageError && <p role="alert">{storageError}</p>}
       <div className="max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-6">
           <div className="tb-v2-mode-tabs">
@@ -129,7 +134,7 @@ export default function StickyNotesClient() {
               >
                 {editingId === note.id ? (
                   <div className="h-full flex flex-col">
-                    <textarea
+                    <textarea maxLength={100000} aria-label="Edit Content"
                       value={editContent}
                       onChange={(e) => setEditContent(e.target.value)}
                       className="flex-1 w-full p-2 rounded border-none resize-none dark:bg-gray-700/50"
@@ -181,5 +186,6 @@ export default function StickyNotesClient() {
         )}
       </div>
     </div>
+  </UtilityDesignLayout>
   );
 }

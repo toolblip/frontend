@@ -1,4 +1,6 @@
 'use client';
+import UtilityDesignLayout from './UtilityDesignLayout';
+import ToolExampleClearActions from './ToolExampleClearActions';
 
 import { useState, useMemo, type CSSProperties } from 'react';
 
@@ -23,13 +25,13 @@ export default function CssFlexboxGeneratorClient() {
   const css = useMemo(() => buildCss(direction, justify, align, wrap, gap), [direction, justify, align, wrap, gap]);
 
   const copy = () => {
-    navigator.clipboard.writeText(css).catch(() => {});
-    setCopied(true);
+    navigator.clipboard.writeText(css).then(() => setCopied(true), () => setCopied(false));
     setTimeout(() => setCopied(false), 1500);
   };
 
-  return (
+  return (<UtilityDesignLayout>
     <div className="flex flex-col gap-5">
+      <ToolExampleClearActions onExample={() => { setDirection('row'); setJustify('space-between'); setAlign('center'); setWrap('wrap'); setGap(16); }} onClear={() => { setDirection('row'); setJustify('flex-start'); setAlign('stretch'); setWrap('nowrap'); setGap(0); setItemCount(4); setCopied(false); }}/>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Flexbox Container</span>
       </div>
@@ -37,25 +39,25 @@ export default function CssFlexboxGeneratorClient() {
       <div className="flex flex-wrap gap-4">
         <div className="flex flex-col gap-1">
           <label className="tb-v2-tool-label">Direction</label>
-          <select value={direction} onChange={e => setDirection(e.target.value)} className="tb-v2-input">
+          <select aria-label="Direction" value={direction} onChange={e => setDirection(e.target.value)} className="tb-v2-input">
             {DIRECTIONS.map(d => <option key={d} value={d}>{d}</option>)}
           </select>
         </div>
         <div className="flex flex-col gap-1">
           <label className="tb-v2-tool-label">Justify Content</label>
-          <select value={justify} onChange={e => setJustify(e.target.value)} className="tb-v2-input">
+          <select aria-label="Justify" value={justify} onChange={e => setJustify(e.target.value)} className="tb-v2-input">
             {JUSTIFY.map(j => <option key={j} value={j}>{j}</option>)}
           </select>
         </div>
         <div className="flex flex-col gap-1">
           <label className="tb-v2-tool-label">Align Items</label>
-          <select value={align} onChange={e => setAlign(e.target.value)} className="tb-v2-input">
+          <select aria-label="Align" value={align} onChange={e => setAlign(e.target.value)} className="tb-v2-input">
             {ALIGN.map(a => <option key={a} value={a}>{a}</option>)}
           </select>
         </div>
         <div className="flex flex-col gap-1">
           <label className="tb-v2-tool-label">Flex Wrap</label>
-          <select value={wrap} onChange={e => setWrap(e.target.value)} className="tb-v2-input">
+          <select aria-label="Wrap" value={wrap} onChange={e => setWrap(e.target.value)} className="tb-v2-input">
             {WRAP.map(w => <option key={w} value={w}>{w}</option>)}
           </select>
         </div>
@@ -63,13 +65,13 @@ export default function CssFlexboxGeneratorClient() {
 
       <div className="tb-v2-range-row">
         <label className="tb-v2-tool-label">Gap</label>
-        <input type="range" min={0} max={40} value={gap} onChange={e => setGap(Number(e.target.value))} className="tb-v2-range" />
+        <input aria-label="Gap" type="range" min={0} max={40} value={gap} onChange={e => setGap(Number(e.target.value))} className="tb-v2-range" />
         <span className="tb-v2-range-val">{gap}px</span>
       </div>
 
       <div className="tb-v2-range-row">
         <label className="tb-v2-tool-label">Item Count</label>
-        <input type="range" min={2} max={8} value={itemCount} onChange={e => setItemCount(Number(e.target.value))} className="tb-v2-range" />
+        <input aria-label="Item Count" type="range" min={2} max={8} value={itemCount} onChange={e => setItemCount(Number(e.target.value))} className="tb-v2-range" />
         <span className="tb-v2-range-val">{itemCount}</span>
       </div>
 
@@ -109,5 +111,6 @@ export default function CssFlexboxGeneratorClient() {
         <pre style={{ margin: 0, whiteSpace: 'pre-wrap', fontFamily: 'var(--f-mono)', fontSize: 13 }}>{css}</pre>
       </div>
     </div>
+  </UtilityDesignLayout>
   );
 }

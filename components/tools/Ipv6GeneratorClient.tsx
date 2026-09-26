@@ -1,33 +1,11 @@
 'use client';
+import UtilityDesignLayout from './UtilityDesignLayout';
+import ToolExampleClearActions from './ToolExampleClearActions';
 
 import { useState, useCallback } from 'react';
+import { ipv6 } from '@/lib/utility-design/core';
 
-function randomHex(len: number): string {
-  return Array.from({ length: len }, () => Math.floor(Math.random() * 16).toString(16)).join('');
-}
-
-function generateIPv6(format: 'full' | 'compressed' | 'eui64'): string {
-  const groups = Array.from({ length: 8 }, () => randomHex(4));
-  if (format === 'eui64') {
-    groups[7] = generateEUI64(groups.slice(0, 6).join(':'));
-    return groups.join(':');
-  }
-  const addr = groups.join(':');
-  if (format === 'compressed') {
-    return addr.replace(/(^|:)0(:0)*(:|$)/, '::').replace(/(^|:)0(:|$)/, ':').replace(/^:::/, '::');
-  }
-  return addr;
-}
-
-function generateEUI64(prefix: string): string {
-  const mac = Array.from({ length: 6 }, () => randomHex(2)).join(':');
-  const parts = mac.split(':').map(p => parseInt(p, 16));
-  parts[0] ^= 0x02;
-  const u = ((parts[0] << 8) | parts[1]).toString(16).padStart(4, '0');
-  const l = ((parts[2] << 8) | parts[3]).toString(16).padStart(4, '0');
-  const n = ((parts[4] << 8) | parts[5]).toString(16).padStart(4, '0');
-  return `${u}:${l}:${n}`;
-}
+function generateIPv6(format: string) { return ipv6(format, crypto.getRandomValues(new Uint8Array(16))); }
 
 export default function Ipv6GeneratorClient() {
   const [format, setFormat] = useState<'full' | 'compressed' | 'eui64'>('compressed');
@@ -36,20 +14,20 @@ export default function Ipv6GeneratorClient() {
   const [copied, setCopied] = useState(false);
 
   const generate = useCallback(() => {
-    const cnt = Math.min(parseInt(count) || 5, 100);
+    const cnt = Math.max(1, Math.min(Math.trunc(Number(count)) || 1, 100));
     const addrs: string[] = [];
     for (let i = 0; i < cnt; i++) addrs.push(generateIPv6(format));
     setAddresses(addrs);
   }, [format, count]);
 
   const copy = () => {
-    navigator.clipboard.writeText(addresses.join('\n')).catch(() => {});
-    setCopied(true);
+    navigator.clipboard.writeText(addresses.join('\n')).then(() => setCopied(true), () => setCopied(false));
     setTimeout(() => setCopied(false), 1500);
   };
 
-  return (
-    <div>
+  return (<UtilityDesignLayout>
+    <div onChangeCapture={() => { setAddresses([]); }}>
+      <ToolExampleClearActions onExample={() => { setFormat('eui64'); setCount('3'); setAddresses([]); }} onClear={() => { setCount('5'); setAddresses([]); setCopied(false); }}/>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Options</span>
       </div>
@@ -95,5 +73,6 @@ export default function Ipv6GeneratorClient() {
         </>
       )}
     </div>
+  </UtilityDesignLayout>
   );
 }

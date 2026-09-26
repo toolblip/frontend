@@ -1,56 +1,11 @@
 'use client';
+import { readBrowserFile } from '@/lib/utility-design/core';
+import UtilityDesignLayout from './UtilityDesignLayout';
+import ToolExampleClearActions from './ToolExampleClearActions';
 
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 
-// Splits a single CSV line respecting double-quote-enclosed fields, so a
-// quoted comma (or quoted newline that made it into one "line" already)
-// doesn't get mistaken for a field separator. This is not a full RFC 4180
-// parser, but it correctly handles the common quoted-comma case.
-function splitCsvLine(line: string): string[] {
-  const fields: string[] = [];
-  let current = '';
-  let inQuotes = false;
-  for (let i = 0; i < line.length; i++) {
-    const ch = line[i];
-    if (inQuotes) {
-      if (ch === '"') {
-        if (line[i + 1] === '"') { current += '"'; i++; } else { inQuotes = false; }
-      } else {
-        current += ch;
-      }
-    } else if (ch === '"') {
-      inQuotes = true;
-    } else if (ch === ',') {
-      fields.push(current);
-      current = '';
-    } else {
-      current += ch;
-    }
-  }
-  fields.push(current);
-  return fields;
-}
-
-// Splits raw CSV text into logical rows, merging physical lines that are
-// part of the same quoted field (an open quote with no matching close on
-// that line means the newline belongs to the field, not the row).
-function splitCsvRows(text: string): string[] {
-  const physicalLines = text.replace(/\r\n/g, '\n').split('\n');
-  const rows: string[] = [];
-  let buffer = '';
-  let quoteCount = 0;
-  for (const line of physicalLines) {
-    buffer = buffer.length ? buffer + '\n' + line : line;
-    quoteCount += (line.match(/"/g) || []).length;
-    if (quoteCount % 2 === 0) {
-      rows.push(buffer);
-      buffer = '';
-      quoteCount = 0;
-    }
-  }
-  if (buffer.length) rows.push(buffer);
-  return rows.filter(r => r.length > 0);
-}
+import { csvRows as splitCsvRows } from '@/lib/utility-design/core';
 
 function chunk<T>(items: T[], size: number): T[][] {
   const out: T[][] = [];
@@ -63,6 +18,8 @@ function sleep(ms: number): Promise<void> {
 }
 
 export default function SplitCSVFileClient() {
+  const generation = useRef(0);
+  useEffect(() => () => { generation.current++; }, []);
   const [fileName, setFileName] = useState('');
   const [header, setHeader] = useState<string | null>(null);
   const [dataRows, setDataRows] = useState<string[]>([]);
@@ -74,6 +31,9 @@ export default function SplitCSVFileClient() {
 
   const loadFile = async (file: File | undefined) => {
     if (!file) return;
+    const id = ++generation.current;
+    setDownloading(false);
+    if (file.size > 10 * 1024 * 1024) { setError('Maximum file size is 10 MiB.'); setHeader(null); setDataRows([]); return; }
     setError('');
     setHeader(null);
     setDataRows([]);
@@ -82,8 +42,10 @@ export default function SplitCSVFileClient() {
       return;
     }
     try {
-      const text = await file.text();
+      const text = new TextDecoder('utf-8', {fatal:true}).decode(await readBrowserFile(file));
+      if (id !== generation.current) return;
       const rows = splitCsvRows(text);
+      if(rows.length > 100001) throw new Error('Maximum 100000 data rows.');
       if (rows.length === 0) {
         setError('This CSV file appears to be empty.');
         return;
@@ -92,7 +54,7 @@ export default function SplitCSVFileClient() {
       setHeader(rows[0]);
       setDataRows(rows.slice(1));
     } catch {
-      setError('Could not read this file.');
+      if (id === generation.current) setError('Could not read this file or CSV is malformed.');
     }
   };
 
@@ -107,9 +69,11 @@ export default function SplitCSVFileClient() {
 
   const downloadAll = async () => {
     if (header === null || chunks.length === 0) return;
+    const id = generation.current;
     setDownloading(true);
     const base = fileName.replace(/\.csv$/i, '') || 'split';
     for (let i = 0; i < chunks.length; i++) {
+      if (id !== generation.current) break;
       const csvText = [header, ...chunks[i]].join('\n');
       const blob = new Blob([csvText], { type: 'text/csv' });
       const url = URL.createObjectURL(blob);
@@ -119,15 +83,16 @@ export default function SplitCSVFileClient() {
       document.body.appendChild(a);
       a.click();
       a.remove();
-      URL.revokeObjectURL(url);
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
       // Small delay between downloads so the browser doesn't block them as a popup flood.
       await sleep(250);
     }
     setDownloading(false);
   };
 
-  return (
+  return (<UtilityDesignLayout>
     <div className="tb-v2-tool-card">
+      <ToolExampleClearActions onExample={() => { void loadFile(new File(['name,note\nAda,hello\nLin,world\n'], 'example.csv', {type:'text/csv'})); }} onClear={() => { generation.current++; setFileName(''); setHeader(null); setDataRows([]); setError(''); setDownloading(false); if(fileInputRef.current) fileInputRef.current.value=''; }}/>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Upload CSV File</span>
       </div>
@@ -142,7 +107,7 @@ export default function SplitCSVFileClient() {
           <span style={{ fontSize: 28 }}>📄</span>
           <span className="tb-v2-dropzone-text">Click or drag a .csv file here</span>
           <span className="tb-v2-dropzone-hint">Parsed entirely in your browser</span>
-          <input ref={fileInputRef} type="file" accept=".csv" onChange={handleFileChange} style={{ display: 'none' }} />
+          <input ref={fileInputRef} aria-label="Upload file" type="file" accept=".csv" onChange={handleFileChange} style={{ display: 'none' }} />
         </div>
       </div>
 
@@ -157,7 +122,7 @@ export default function SplitCSVFileClient() {
           <div className="tb-v2-grid-2">
             <div>
               <span className="tb-v2-tool-label">Rows per output file</span>
-              <input
+              <input aria-label="Rows Per File"
                 type="number"
                 min={1}
                 value={rowsPerFile}
@@ -189,5 +154,6 @@ export default function SplitCSVFileClient() {
         <p className="tb-v2-empty" style={{ margin: '0 20px 20px' }}>Upload a .csv file to split it into smaller files.</p>
       )}
     </div>
+  </UtilityDesignLayout>
   );
 }

@@ -1,4 +1,6 @@
 'use client';
+import UtilityDesignLayout from './UtilityDesignLayout';
+import ToolExampleClearActions from './ToolExampleClearActions';
 
 import { useState } from 'react';
 
@@ -49,25 +51,26 @@ export default function RandomChoicePickerClient() {
     setError('');
   };
 
-  return (
+  return (<UtilityDesignLayout>
     <div className="tb-v2-tool-card">
+      <ToolExampleClearActions onExample={() => { setListText('Tea\nCoffee\nWater'); setPicked([]); setError(''); }} onClear={() => { clearAll(); }}/>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Choices (one per line)</span>
         <button type="button" onClick={clearAll} className="tb-v2-btn-sm">Clear</button>
       </div>
       <div style={{ padding: 20 }}>
-        <textarea
+        <textarea maxLength={100000} aria-label="List Text"
           className="tb-v2-input"
           style={{ minHeight: 160, fontFamily: 'var(--f-mono)' }}
           value={listText}
-          onChange={e => setListText(e.target.value)}
+          onChange={e => {setListText(e.target.value);setPicked([]);setError('');}}
           placeholder="Enter one choice per line..."
         />
 
         <div className="tb-v2-grid-2" style={{ marginTop: 16 }}>
           <div>
             <span className="tb-v2-tool-label">Number to pick</span>
-            <input
+            <input aria-label="Pick Count"
               type="number"
               min={1}
               max={Math.max(1, choices.length)}
@@ -77,7 +80,7 @@ export default function RandomChoicePickerClient() {
             />
           </div>
           <label style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 22, fontSize: 13.5 }}>
-            <input
+            <input aria-label="Remove On Pick"
               type="checkbox"
               checked={removeOnPick}
               onChange={e => setRemoveOnPick(e.target.checked)}
@@ -112,5 +115,6 @@ export default function RandomChoicePickerClient() {
         </div>
       )}
     </div>
+  </UtilityDesignLayout>
   );
 }

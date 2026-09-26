@@ -1,4 +1,6 @@
 'use client';
+import UtilityDesignLayout from './UtilityDesignLayout';
+import ToolExampleClearActions from './ToolExampleClearActions';
 
 import { useState, useMemo } from 'react';
 
@@ -19,38 +21,41 @@ export default function CssGridGeneratorClient() {
   const [rowGap, setRowGap] = useState('');
   const [copied, setCopied] = useState(false);
 
+  const validTrack = (v: string) => /^\d+$/.test(v) ? Number(v)>=1 && Number(v)<=100 : v.trim().length>0 && v.length<500 && typeof CSS !== 'undefined' && CSS.supports('grid-template-columns',v);
+  const valid = validTrack(columns) && validTrack(rows) && gap.trim()!=='' && Number.isFinite(Number(gap)) && Number(gap)>=0 && Number(gap)<=1000;
   const css = useMemo(() => {
+    if(!valid)return '';
     const gapValue = columnGap || rowGap
       ? `${rowGap || gap}px ${columnGap || gap}px`
       : `${gap}px`;
 
     return `.grid-container {
   display: grid;
-  grid-template-columns: ${columns.includes('px') || columns.includes('minmax') || columns.includes('repeat') ? columns : `repeat(${columns}, 1fr)`};
-  grid-template-rows: ${rows.includes('px') || rows.includes('minmax') || rows.includes('repeat') ? rows : `repeat(${rows}, 1fr)`};
+  grid-template-columns: ${!/^\d+$/.test(columns) ? columns : `repeat(${columns}, 1fr)`};
+  grid-template-rows: ${!/^\d+$/.test(rows) ? rows : `repeat(${rows}, 1fr)`};
   gap: ${gapValue};
 }`;
-  }, [columns, rows, gap, columnGap, rowGap]);
+  }, [columns, rows, gap, columnGap, rowGap, valid]);
 
   const html = useMemo(() => {
-    const cols = columns.includes('px') || columns.includes('minmax') || columns.includes('repeat')
+    if(!valid)return '';
+    const cols = !/^\d+$/.test(columns)
       ? 3
       : parseInt(columns) || 3;
-    const rowsCount = rows.includes('px') || rows.includes('minmax') || rows.includes('repeat')
+    const rowsCount = !/^\d+$/.test(rows)
       ? 2
       : parseInt(rows) || 2;
 
     let items = '';
-    for (let i = 1; i <= cols * rowsCount; i++) {
+    for (let i = 1; i <= Math.min(100, cols * rowsCount); i++) {
       items += `  <div class="grid-item">Item ${i}</div>\n`;
     }
     return `<div class="grid-container">
 ${items}</div>`;
-  }, [columns, rows]);
+  }, [columns, rows, valid]);
 
   const copy = () => {
-    navigator.clipboard.writeText(css);
-    setCopied(true);
+    navigator.clipboard.writeText(css).then(() => setCopied(true), () => setCopied(false));
     setTimeout(() => setCopied(false), 1500);
   };
 
@@ -62,8 +67,9 @@ ${items}</div>`;
     setRowGap('');
   };
 
-  return (
+  return (<UtilityDesignLayout>
     <div>
+      <ToolExampleClearActions onExample={() => { loadPreset(PRESETS[0]); }} onClear={() => { setColumns('1'); setRows('1'); setGap('0'); setColumnGap(''); setRowGap(''); setCopied(false); }}/>
       {/* Presets */}
       <div>
         <label className="tb-v2-tool-label">Quick Presets</label>
@@ -84,7 +90,7 @@ ${items}</div>`;
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <div>
           <label className="tb-v2-tool-label">Columns</label>
-          <input
+          <input maxLength={100000} aria-label="Columns"
             type="text"
             value={columns}
             onChange={e => setColumns(e.target.value)}
@@ -94,7 +100,7 @@ ${items}</div>`;
         </div>
         <div>
           <label className="tb-v2-tool-label">Rows</label>
-          <input
+          <input maxLength={100000} aria-label="Rows"
             type="text"
             value={rows}
             onChange={e => setRows(e.target.value)}
@@ -104,7 +110,7 @@ ${items}</div>`;
         </div>
         <div>
           <label className="tb-v2-tool-label">Gap</label>
-          <input
+          <input aria-label="Gap"
             type="number"
             value={gap}
             onChange={e => setGap(e.target.value)}
@@ -118,6 +124,7 @@ ${items}</div>`;
         </div>
       </div>
 
+      {!valid && <p role="alert">Use valid CSS tracks or counts from 1 to 100, and a gap from 0 to 1000 px.</p>}
       {/* Preview */}
       <div>
         <label className="tb-v2-tool-label">Preview</label>
@@ -125,13 +132,13 @@ ${items}</div>`;
           className="p-4 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700"
           style={{
             display: 'grid',
-            gridTemplateColumns: columns.includes('px') || columns.includes('minmax') || columns.includes('repeat') ? columns : `repeat(${columns}, 1fr)`,
-            gridTemplateRows: rows.includes('px') || rows.includes('minmax') || rows.includes('repeat') ? rows : `repeat(${rows}, 1fr)`,
+            gridTemplateColumns: !/^\d+$/.test(columns) ? columns : `repeat(${columns}, 1fr)`,
+            gridTemplateRows: !/^\d+$/.test(rows) ? rows : `repeat(${rows}, 1fr)`,
             gap: `${gap}px`,
             minHeight: 200,
           }}
         >
-          {Array.from({ length: (parseInt(columns) || 3) * (parseInt(rows) || 2) }).map((_, i) => (
+          {Array.from({ length: Math.max(0, Math.min(100, (parseInt(columns) || 3) * (parseInt(rows) || 2))) }).map((_, i) => (
             <div
               key={i}
               className="bg-indigo-100 dark:bg-indigo-900/30 border-2 border-dashed border-indigo-300 dark:border-indigo-700 rounded-lg flex items-center justify-center text-sm text-indigo-600 dark:text-indigo-400"
@@ -160,7 +167,7 @@ ${items}</div>`;
         <div className="tb-v2-tool-output-head">
           <span className="tb-v2-tool-label">HTML</span>
           <button
-            onClick={() => { navigator.clipboard.writeText(html); setCopied(true); setTimeout(() => setCopied(false), 1500); }}
+            onClick={() => { navigator.clipboard.writeText(html).then(()=>setCopied(true),()=>setCopied(false)); setTimeout(() => setCopied(false), 1500); }}
             className="tb-v2-copy-btn"
           >
             {copied ? 'Copied!' : 'Copy'}
@@ -171,5 +178,6 @@ ${items}</div>`;
         </div>
       </div>
     </div>
+  </UtilityDesignLayout>
   );
 }

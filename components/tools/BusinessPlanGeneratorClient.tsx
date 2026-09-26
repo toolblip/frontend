@@ -1,4 +1,6 @@
 'use client';
+import UtilityDesignLayout from './UtilityDesignLayout';
+import ToolExampleClearActions from './ToolExampleClearActions';
 
 import { useState } from 'react';
 
@@ -21,7 +23,7 @@ export default function BusinessPlanGeneratorClient() {
 
       'Company Description': `${idea} is a business dedicated to providing value to ${market.toLowerCase()} through innovative solutions. Our mission is to deliver exceptional quality while maintaining competitive pricing.`,
 
-      'Market Analysis': `Target market includes ${market.toLowerCase()}. The industry shows strong demand for innovative solutions. Key competitors include established players, but opportunities exist for differentiation through superior service and unique offerings.`,
+      'Market Analysis': `Target market includes ${market.toLowerCase()}. Research demand, named competitors, pricing, and customer interviews before making market claims.`,
 
       'Organization & Management': `Small team focused on core operations. Key roles include leadership, product/service delivery, and customer relations. Organizational structure will scale with business growth.`,
 
@@ -31,7 +33,7 @@ export default function BusinessPlanGeneratorClient() {
 
       'Funding Request': `For ${budgetLevel} budget level, we request: Seed funding for equipment/materials (40%), marketing and customer acquisition (35%), operational costs (25%).`,
 
-      'Financial Projections': `Month 1-3: Establishment phase with moderate revenue. Month 4-6: Growth phase targeting 50% revenue increase. Month 7-12: Scale phase with expanded market reach and diversified income streams.`,
+      'Financial Projections': `Fill in monthly units sold, price, fixed costs, variable costs, and cash balance. No revenue forecast can be inferred from these inputs.`,
 
       'Risk Analysis': `Key risks include market competition, cash flow management, and customer acquisition costs. Mitigation strategies: diversify income sources, maintain operational efficiency, and build strong customer relationships.`,
     });
@@ -49,23 +51,21 @@ export default function BusinessPlanGeneratorClient() {
     const text = Object.entries(plan)
       .map(([section, content]) => `## ${section}\n\n${content}`)
       .join('\n\n');
-    navigator.clipboard.writeText(text).catch(() => {});
-    setCopied(true);
+    navigator.clipboard.writeText(text).then(() => setCopied(true), () => setCopied(false));
     setTimeout(() => setCopied(false), 1500);
   };
 
-  return (
-    <div className="flex flex-col gap-4">
+  return (<UtilityDesignLayout>
+    <div onChangeCapture={() => { setPlan(null); setCopied(false); }} className="flex flex-col gap-4">
+      <ToolExampleClearActions onExample={() => { loadExample(); }} onClear={() => { setBusinessIdea(''); setTargetMarket(''); setBudget('medium'); setPlan(null); setCopied(false); }}/>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Business Details</span>
-        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">
-          Load Example
-        </button>
+
       </div>
 
       <div>
         <label className="tb-v2-tool-label" style={{ display: 'block', marginBottom: 6 }}>Business Idea *</label>
-        <textarea
+        <textarea maxLength={100000}
           value={businessIdea}
           onChange={(e) => setBusinessIdea(e.target.value)}
           placeholder="Describe your business idea..."
@@ -77,7 +77,7 @@ export default function BusinessPlanGeneratorClient() {
 
       <div>
         <label className="tb-v2-tool-label" style={{ display: 'block', marginBottom: 6 }}>Target Market</label>
-        <input
+        <input maxLength={100000}
           type="text"
           value={targetMarket}
           onChange={(e) => setTargetMarket(e.target.value)}
@@ -112,7 +112,7 @@ export default function BusinessPlanGeneratorClient() {
 
       {!plan && (
         <p className="tb-v2-empty">
-          Describe your business idea above to generate a full nine-section plan.
+          Describe your idea to draft a nine-section planning outline. Assumptions need your research.
         </p>
       )}
 
@@ -135,5 +135,6 @@ export default function BusinessPlanGeneratorClient() {
         </>
       )}
     </div>
+  </UtilityDesignLayout>
   );
 }

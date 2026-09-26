@@ -1,4 +1,6 @@
 'use client';
+import UtilityDesignLayout from './UtilityDesignLayout';
+import ToolExampleClearActions from './ToolExampleClearActions';
 
 import { useState, useCallback, useMemo } from 'react';
 
@@ -82,8 +84,7 @@ export default function CssBorderRadiusGeneratorClient() {
   }, [corners, unit, borderWidth, borderColor]);
 
   const copy = () => {
-    navigator.clipboard.writeText(cssOutput);
-    setCopied(true);
+    navigator.clipboard.writeText(cssOutput).then(() => setCopied(true), () => setCopied(false));
     setTimeout(() => setCopied(false), 2000);
   };
 
@@ -104,8 +105,9 @@ export default function CssBorderRadiusGeneratorClient() {
     }));
   };
 
-  return (
+  return (<UtilityDesignLayout>
     <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
+      <ToolExampleClearActions onExample={() => { applyPreset(PRESETS[1]); }} onClear={() => { applyPreset({...PRESETS[0], corners:{topLeft:0,topRight:0,bottomLeft:0,bottomRight:0}}); setBorderWidth(0); setCopied(false); }}/>
       {/* Presets */}
       <div>
         <label className="text-xs text-gray-500 uppercase tracking-wide font-medium block mb-2">
@@ -171,7 +173,7 @@ export default function CssBorderRadiusGeneratorClient() {
                   </span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <input
+                  <input aria-label={CORNER_LABELS[corner]}
                     type="range"
                     min={0}
                     max={maxVal}
@@ -179,7 +181,7 @@ export default function CssBorderRadiusGeneratorClient() {
                     onChange={e => updateCorner(corner, Number(e.target.value))}
                     className="flex-1 accent-red-500"
                   />
-                  <input
+                  <input aria-label={CORNER_LABELS[corner]}
                     type="number"
                     min={0}
                     max={maxVal}
@@ -207,7 +209,7 @@ export default function CssBorderRadiusGeneratorClient() {
                 <span className="text-xs text-gray-400">{borderWidth}px</span>
               </div>
               <div className="flex items-center gap-3">
-                <input
+                <input aria-label="Border Width"
                   type="range"
                   min={0}
                   max={16}
@@ -215,7 +217,7 @@ export default function CssBorderRadiusGeneratorClient() {
                   onChange={e => setBorderWidth(Number(e.target.value))}
                   className="flex-1 accent-red-500"
                 />
-                <input
+                <input aria-label="Border Width"
                   type="number"
                   min={0}
                   max={16}
@@ -229,7 +231,7 @@ export default function CssBorderRadiusGeneratorClient() {
             {/* Color */}
             <div className="flex items-center gap-3">
               <span className="text-xs text-gray-500">Color</span>
-              <input
+              <input aria-label="Border Color"
                 type="color"
                 value={borderColor}
                 onChange={e => setBorderColor(e.target.value)}
@@ -282,5 +284,6 @@ export default function CssBorderRadiusGeneratorClient() {
         </div>
       </div>
     </div>
+  </UtilityDesignLayout>
   );
 }

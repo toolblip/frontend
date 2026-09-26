@@ -1,4 +1,5 @@
 'use client';
+import UtilityDesignLayout from './UtilityDesignLayout';
 
 import { useMemo, useState } from 'react';
 import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
@@ -31,7 +32,7 @@ function tokenize(src: string): Token[] {
         j++;
       }
       const numStr = src.slice(i, j);
-      if (!/^\d+(\.\d+)?$/.test(numStr)) throw new Error(`Invalid number "${numStr}"`);
+      if (!/^(?:\d+(?:\.\d*)?|\.\d+)$/.test(numStr)) throw new Error(`Invalid number "${numStr}"`);
       tokens.push({ type: 'num', value: parseFloat(numStr) });
       i = j;
       continue;
@@ -119,11 +120,11 @@ class Parser {
   parseFactor(): number {
     const t = this.next();
     if (!t) throw new Error('Unexpected end of formula');
-    if (t.type === 'op' && t.value === '-') return -this.parseFactor();
-    if (t.type === 'op' && t.value === '+') return this.parseFactor();
+    if (t.type === 'op' && t.value === '-') return -this.parsePower();
+    if (t.type === 'op' && t.value === '+') return this.parsePower();
     if (t.type === 'num') return t.value;
     if (t.type === 'ident') {
-      if (!(t.value in this.vars)) throw new Error(`Unknown variable "${t.value}"`);
+      if (!Object.hasOwn(this.vars, t.value)) throw new Error(`Unknown variable "${t.value}"`);
       return this.vars[t.value];
     }
     if (t.type === 'op' && t.value === '(') {
@@ -136,7 +137,8 @@ class Parser {
   }
 }
 
-function evaluateFormula(formula: string, vars: Record<string, number>): number {
+export function evaluateFormula(formula: string, vars: Record<string, number>): number {
+  if (formula.length > 2000) throw new Error('Limit formula to 2000 characters.');
   const tokens = tokenize(formula);
   if (tokens.length === 0) throw new Error('Formula is empty');
   const parser = new Parser(tokens, vars);
@@ -165,8 +167,8 @@ export default function WhatIfScenarioCalculatorClient() {
     for (const v of variables) {
       const name = v.name.trim();
       if (!name) continue;
-      const num = parseFloat(v.value);
-      map[name] = isNaN(num) ? 0 : num;
+      const num = v.value.trim() ? Number(v.value) : NaN;
+      map[name] = num;
     }
     return map;
   }, [variables]);
@@ -174,11 +176,13 @@ export default function WhatIfScenarioCalculatorClient() {
   const { result, error } = useMemo(() => {
     if (!formula.trim()) return { result: null, error: '' };
     try {
+      const names = variables.map(v => v.name.trim());
+      if (names.some(n => !/^[A-Za-z_][A-Za-z0-9_]*$/.test(n)) || new Set(names).size !== names.length || Object.values(varMap).some(v => !Number.isFinite(v))) throw new Error('Use unique variable names and finite numeric values.');
       return { result: evaluateFormula(formula, varMap), error: '' };
     } catch (e) {
       return { result: null, error: e instanceof Error ? e.message : 'Invalid formula' };
     }
-  }, [formula, varMap]);
+  }, [formula, varMap, variables]);
 
   const updateVar = (id: number, field: 'name' | 'value', val: string) => {
     setVariables(vs => vs.map(v => (v.id === id ? { ...v, [field]: val } : v)));
@@ -211,12 +215,11 @@ export default function WhatIfScenarioCalculatorClient() {
 
   const copyResult = () => {
     if (result === null) return;
-    navigator.clipboard.writeText(String(result)).catch(() => {});
-    setCopied(true);
+    navigator.clipboard.writeText(String(result)).then(() => setCopied(true), () => setCopied(false));
     setTimeout(() => setCopied(false), 1500);
   };
 
-  return (
+  return (<UtilityDesignLayout>
     <div>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Variables</span>
@@ -233,7 +236,7 @@ export default function WhatIfScenarioCalculatorClient() {
       <div style={{ padding: 20, display: 'flex', flexDirection: 'column', gap: 10 }}>
         {variables.map(v => (
           <div key={v.id} style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-            <input
+            <input maxLength={100000} aria-label="Variable name"
               type="text"
               value={v.name}
               onChange={e => updateVar(v.id, 'name', e.target.value)}
@@ -241,7 +244,7 @@ export default function WhatIfScenarioCalculatorClient() {
               className="tb-v2-input"
               style={{ maxWidth: 140, fontFamily: 'var(--f-mono)' }}
             />
-            <input
+            <input aria-label={`Adjust ${v.name}`}
               type="range"
               min={-1000}
               max={1000}
@@ -250,7 +253,7 @@ export default function WhatIfScenarioCalculatorClient() {
               onChange={e => updateVar(v.id, 'value', e.target.value)}
               style={{ flex: 1 }}
             />
-            <input
+            <input aria-label="Variable value"
               type="number"
               value={v.value}
               onChange={e => updateVar(v.id, 'value', e.target.value)}
@@ -267,7 +270,7 @@ export default function WhatIfScenarioCalculatorClient() {
         <span className="tb-v2-tool-label">Formula</span>
       </div>
       <div style={{ padding: 20 }}>
-        <input
+        <input maxLength={100000} aria-label="Formula"
           type="text"
           value={formula}
           onChange={e => setFormula(e.target.value)}
@@ -301,5 +304,6 @@ export default function WhatIfScenarioCalculatorClient() {
         )}
       </div>
     </div>
+  </UtilityDesignLayout>
   );
 }

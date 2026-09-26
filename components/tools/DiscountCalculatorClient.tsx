@@ -1,4 +1,5 @@
 'use client';
+import UtilityDesignLayout from './UtilityDesignLayout';
 
 import { useState } from 'react';
 import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
@@ -11,7 +12,7 @@ const EXAMPLE_TAX = '0';
 function parseFinite(value: string): number | null {
   if (!value.trim()) return null;
   const parsed = Number(value);
-  return Number.isFinite(parsed) ? parsed : null;
+  return Number.isFinite(parsed) && Math.abs(parsed) <= 1e12 ? parsed : null;
 }
 
 function formatCurrency(value: number): string {
@@ -87,12 +88,11 @@ export default function DiscountCalculatorClient() {
       ...(tax > 0 ? [`Tax (${tax}%): ${formatCurrency(result.taxAmount)}`] : []),
       `Final price: ${formatCurrency(result.finalPrice)}`,
     ];
-    navigator.clipboard.writeText(lines.join('\n')).catch(() => {});
-    setCopied(true);
+    navigator.clipboard.writeText(lines.join('\n')).then(() => setCopied(true), () => setCopied(false));
     setTimeout(() => setCopied(false), 1500);
   };
 
-  return (
+  return (<UtilityDesignLayout>
     <div>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Discount Calculator</span>
@@ -212,5 +212,6 @@ export default function DiscountCalculatorClient() {
         )}
       </div>
     </div>
+  </UtilityDesignLayout>
   );
 }

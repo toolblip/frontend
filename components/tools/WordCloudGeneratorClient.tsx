@@ -1,4 +1,6 @@
 'use client';
+import UtilityDesignLayout from './UtilityDesignLayout';
+import ToolExampleClearActions from './ToolExampleClearActions';
 
 import { useState, useRef } from 'react';
 
@@ -112,7 +114,7 @@ export default function WordCloudGeneratorClient() {
     sorted.forEach(([word, count], idx) => {
       const ratio = maxCount === minCount ? 1 : (count - minCount) / (maxCount - minCount);
       const fontSize = Math.round(16 + ratio * 52);
-      ctx.font = `bold ${fontSize}px var(--f-sans, sans-serif)`;
+      ctx.font = `bold ${fontSize}px sans-serif`;
       const metrics = ctx.measureText(word);
       const boxW = metrics.width;
       const boxH = fontSize;
@@ -147,7 +149,7 @@ export default function WordCloudGeneratorClient() {
     });
 
     placedWords.forEach(pw => {
-      ctx.font = `bold ${pw.fontSize}px var(--f-sans, sans-serif)`;
+      ctx.font = `bold ${pw.fontSize}px sans-serif`;
       ctx.fillStyle = pw.color;
       ctx.textBaseline = 'top';
       ctx.fillText(pw.word, pw.x, pw.y);
@@ -166,13 +168,14 @@ export default function WordCloudGeneratorClient() {
     a.click();
   };
 
-  return (
-    <div className="tb-v2-tool-card">
+  return (<UtilityDesignLayout>
+    <div onChangeCapture={() => { setGenerated(false); }} className="tb-v2-tool-card">
+      <ToolExampleClearActions onExample={() => { loadExample(); setGenerated(false); }} onClear={() => { setInput(''); setGenerated(false); setStats({total:0,unique:0,considered:0,placed:0}); }}/>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Text</span>
-        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">Load Example</button>
+
       </div>
-      <textarea
+      <textarea maxLength={100000} aria-label="Input"
         className="tb-v2-tool-textarea"
         placeholder="Paste an article, essay, or any text to visualize as a word cloud..."
         value={input}
@@ -183,13 +186,13 @@ export default function WordCloudGeneratorClient() {
       <div className="tb-v2-section" style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
         <div>
           <span className="tb-v2-tool-label" style={{ display: 'block', marginBottom: 6 }}>Color Palette</span>
-          <select value={palette} onChange={e => setPalette(e.target.value as keyof typeof PALETTES)} className="tb-v2-select">
+          <select aria-label="Palette" value={palette} onChange={e => setPalette(e.target.value as keyof typeof PALETTES)} className="tb-v2-select">
             {Object.keys(PALETTES).map(p => <option key={p} value={p}>{p}</option>)}
           </select>
         </div>
         <div>
           <span className="tb-v2-tool-label" style={{ display: 'block', marginBottom: 6 }}>Shape</span>
-          <select value={shape} onChange={e => setShape(e.target.value as ShapeKey)} className="tb-v2-select">
+          <select aria-label="Shape" value={shape} onChange={e => setShape(e.target.value as ShapeKey)} className="tb-v2-select">
             {Object.keys(SHAPES).map(s => <option key={s} value={s}>{s}</option>)}
           </select>
         </div>
@@ -252,5 +255,6 @@ export default function WordCloudGeneratorClient() {
         )}
       </div>
     </div>
+  </UtilityDesignLayout>
   );
 }

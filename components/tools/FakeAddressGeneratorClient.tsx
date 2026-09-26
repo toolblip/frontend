@@ -1,4 +1,6 @@
 'use client';
+import UtilityDesignLayout from './UtilityDesignLayout';
+import ToolExampleClearActions from './ToolExampleClearActions';
 
 import React, { useState, useEffect } from 'react';
 
@@ -127,7 +129,7 @@ export default function FakeAddressGeneratorClient() {
   }, []);
 
   const generate = () => {
-    const newAddresses = Array.from({ length: count }, () => generateAddress());
+    const newAddresses = Array.from({ length: Math.max(1,Math.min(100,Math.trunc(count)||1)) }, () => generateAddress());
     setAddress(newAddresses[0]);
     setAllAddresses(newAddresses);
   };
@@ -150,7 +152,7 @@ export default function FakeAddressGeneratorClient() {
         <div className="tb-v2-card-header">
           <h2 className="tb-v2-card-title">Fake Address Generator</h2>
           <p className="tb-v2-card-description">
-            Generate realistic fake USA addresses for testing and development
+            Generate synthetic USA-style addresses for testing and development
           </p>
         </div>
         <div className="tb-v2-card p-6 mb-6 text-center text-gray-500">
@@ -160,12 +162,13 @@ export default function FakeAddressGeneratorClient() {
     );
   }
 
-  return (
+  return (<UtilityDesignLayout>
     <div className="tb-v2-card">
+      <ToolExampleClearActions onExample={() => { generate(); }} onClear={() => { setAddress(null); setAllAddresses([]); setShowAll(false); setCount(1); }}/>
       <div className="tb-v2-card-header">
         <h2 className="tb-v2-card-title">Fake Address Generator</h2>
         <p className="tb-v2-card-description">
-          Generate realistic fake USA addresses for testing and development
+          Generate synthetic USA-style addresses for testing and development
         </p>
       </div>
 
@@ -173,7 +176,7 @@ export default function FakeAddressGeneratorClient() {
         <div className="flex flex-wrap gap-4 items-end">
           <div>
             <label className="tb-v2-label">Number of Addresses</label>
-            <input
+            <input aria-label="Count"
               type="number"
               min="1"
               max="100"
@@ -348,12 +351,13 @@ export default function FakeAddressGeneratorClient() {
         <div className="tb-v2-label">Disclaimer</div>
         <div className="tb-v2-card p-4 text-sm text-gray-600">
           <p>
-            These addresses are randomly generated and do not represent actual locations.
+            City, state, and ZIP are sampled independently. They are not validated or deliverable; coincidental real matches are possible.
             They are intended for testing, development, and prototyping purposes only.
             Do not use these addresses for any real-world purposes.
           </p>
         </div>
       </div>
     </div>
+  </UtilityDesignLayout>
   );
 }

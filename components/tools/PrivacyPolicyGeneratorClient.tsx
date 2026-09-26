@@ -1,66 +1,22 @@
 'use client';
+import UtilityDesignLayout from './UtilityDesignLayout';
+import ToolExampleClearActions from './ToolExampleClearActions';
 
-import { useMemo, useState } from 'react';
-import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
+import { useMemo, useState, useRef, useEffect } from 'react';
+import { documentPdf as textToPdf } from '@/lib/utility-design/document';
+import { saveBlob } from '@/lib/utility-design/core';
 
-const PAGE_WIDTH = 612;
-const PAGE_HEIGHT = 792;
-const MARGIN = 56;
-const FONT_SIZE = 10.5;
-const LINE_HEIGHT = 14;
 
-function wrapLine(text: string, font: import('pdf-lib').PDFFont, size: number, maxWidth: number): string[] {
-  if (text === '') return [''];
-  const words = text.split(' ');
-  const lines: string[] = [];
-  let current = '';
-  for (const word of words) {
-    const candidate = current ? `${current} ${word}` : word;
-    if (font.widthOfTextAtSize(candidate, size) > maxWidth && current) {
-      lines.push(current);
-      current = word;
-    } else {
-      current = candidate;
-    }
-  }
-  if (current) lines.push(current);
-  return lines;
-}
-
-async function textToPdf(text: string): Promise<Uint8Array> {
-  const pdfDoc = await PDFDocument.create();
-  const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
-  const boldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
-  const maxWidth = PAGE_WIDTH - MARGIN * 2;
-
-  let page = pdfDoc.addPage([PAGE_WIDTH, PAGE_HEIGHT]);
-  let y = PAGE_HEIGHT - MARGIN;
-
-  const newPage = () => {
-    page = pdfDoc.addPage([PAGE_WIDTH, PAGE_HEIGHT]);
-    y = PAGE_HEIGHT - MARGIN;
-  };
-
-  const paragraphs = text.split('\n');
-  for (const paragraph of paragraphs) {
-    const isHeading = paragraph.length > 0 && paragraph.length < 70 && paragraph === paragraph.toUpperCase() && /[A-Z]/.test(paragraph);
-    const useFont = isHeading ? boldFont : font;
-    const lines = wrapLine(paragraph, useFont, FONT_SIZE, maxWidth);
-    for (const line of lines) {
-      if (y < MARGIN) newPage();
-      page.drawText(line, { x: MARGIN, y, size: FONT_SIZE, font: useFont, color: rgb(0.1, 0.1, 0.1) });
-      y -= LINE_HEIGHT;
-    }
-  }
-
-  return pdfDoc.save();
-}
 
 function todayLong(): string {
   return new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
 }
 
 export default function PrivacyPolicyGeneratorClient() {
+  const revision = useRef(0);
+  useEffect(()=>()=>{revision.current++;},[]);
+  const [exportError, setExportError] = useState('');
+  const [exporting, setExporting] = useState(false);
   const [companyName, setCompanyName] = useState('Acme Corp');
   const [websiteUrl, setWebsiteUrl] = useState('https://www.example.com');
   const [contactEmail, setContactEmail] = useState('privacy@example.com');
@@ -74,6 +30,8 @@ export default function PrivacyPolicyGeneratorClient() {
   const [copied, setCopied] = useState(false);
 
   const documentText = useMemo(() => {
+    if (!(companyName || websiteUrl || contactEmail)) return '';
+
     const name = companyName.trim() || '[Company Name]';
     const url = websiteUrl.trim() || '[Website URL]';
     const email = contactEmail.trim() || '[Contact Email]';
@@ -158,8 +116,7 @@ export default function PrivacyPolicyGeneratorClient() {
   }, [companyName, websiteUrl, contactEmail, collectsAnalytics, collectsNewsletter, collectsContactForm, collectsPayment, thirdPartyServices, applyGdpr, applyCcpa]);
 
   const copyText = () => {
-    navigator.clipboard.writeText(documentText).catch(() => {});
-    setCopied(true);
+    navigator.clipboard.writeText(documentText).then(() => setCopied(true), () => setCopied(false));
     setTimeout(() => setCopied(false), 1500);
   };
 
@@ -170,65 +127,65 @@ export default function PrivacyPolicyGeneratorClient() {
     a.href = url;
     a.download = 'privacy-policy.txt';
     a.click();
-    URL.revokeObjectURL(url);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
   };
 
   const downloadPdf = async () => {
-    const bytes = await textToPdf(documentText);
-    const blob = new Blob([bytes as BlobPart], { type: 'application/pdf' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'privacy-policy.pdf';
-    a.click();
-    URL.revokeObjectURL(url);
+    const id = revision.current; setExporting(true); setExportError('');
+    try { const bytes = await textToPdf(documentText); if(id === revision.current) saveBlob(new Blob([bytes as BlobPart], {type:'application/pdf'}), 'document.pdf'); }
+    catch(e) { if(id === revision.current) setExportError((e as Error).message); }
+    finally { if(id === revision.current) setExporting(false); }
   };
 
-  return (
+  return (<UtilityDesignLayout>
     <div className="tb-v2-tool-card" style={{ padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: 16 }}>
+      <ToolExampleClearActions onExample={() => { revision.current++; setExporting(false); setExportError(''); setCompanyName('Acme Corp'); setWebsiteUrl('https://www.example.com'); setContactEmail('privacy@example.com'); setCollectsAnalytics(true); setCollectsNewsletter(true); setCollectsContactForm(true); setCollectsPayment(false); setThirdPartyServices('Google Analytics, Stripe'); setApplyGdpr(true); setApplyCcpa(true); }} onClear={() => { revision.current++; setExportError(''); setExporting(false); setCompanyName(''); setWebsiteUrl(''); setContactEmail(''); setCollectsAnalytics(false); setCollectsNewsletter(false); setCollectsContactForm(false); setCollectsPayment(false); setThirdPartyServices(''); setApplyGdpr(false); setApplyCcpa(false); }}/>
       <div className="tb-v2-grid-2">
-        <div>
+        <div onChangeCapture={() => { revision.current++; setExporting(false); setExportError(''); }}>
+      {exportError && <p role="alert">{exportError}</p>}
+      {exporting && <p role="status">Preparing PDF…</p>}
+      <p>Editable template draft. Verify all statements and applicable requirements before use; legal validity or compliance is not guaranteed.</p>
           <label className="tb-v2-tool-label">Company / Website Name</label>
-          <input type="text" value={companyName} onChange={e => setCompanyName(e.target.value)} className="tb-v2-input" />
+          <input maxLength={100000} aria-label="Company Name" type="text" value={companyName} onChange={e => setCompanyName(e.target.value)} className="tb-v2-input" />
         </div>
         <div>
           <label className="tb-v2-tool-label">Website URL</label>
-          <input type="text" value={websiteUrl} onChange={e => setWebsiteUrl(e.target.value)} className="tb-v2-input" />
+          <input maxLength={100000} aria-label="Website Url" type="text" value={websiteUrl} onChange={e => setWebsiteUrl(e.target.value)} className="tb-v2-input" />
         </div>
         <div>
           <label className="tb-v2-tool-label">Contact Email</label>
-          <input type="email" value={contactEmail} onChange={e => setContactEmail(e.target.value)} className="tb-v2-input" />
+          <input aria-label="Contact Email" type="email" value={contactEmail} onChange={e => setContactEmail(e.target.value)} className="tb-v2-input" />
         </div>
         <div>
           <label className="tb-v2-tool-label">Third-Party Services (comma separated)</label>
-          <input type="text" value={thirdPartyServices} onChange={e => setThirdPartyServices(e.target.value)} className="tb-v2-input" placeholder="e.g. Google Analytics, Stripe" />
+          <input maxLength={100000} aria-label="Third Party Services" type="text" value={thirdPartyServices} onChange={e => setThirdPartyServices(e.target.value)} className="tb-v2-input" placeholder="e.g. Google Analytics, Stripe" />
         </div>
       </div>
 
       <div>
         <span className="tb-v2-tool-label" style={{ display: 'block', marginBottom: 8 }}>What data does your site collect?</span>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-          <label className="tb-v2-checkbox-row"><input type="checkbox" checked={collectsAnalytics} onChange={e => setCollectsAnalytics(e.target.checked)} /> Analytics / cookies</label>
-          <label className="tb-v2-checkbox-row"><input type="checkbox" checked={collectsNewsletter} onChange={e => setCollectsNewsletter(e.target.checked)} /> Email newsletter signups</label>
-          <label className="tb-v2-checkbox-row"><input type="checkbox" checked={collectsContactForm} onChange={e => setCollectsContactForm(e.target.checked)} /> Contact form submissions</label>
-          <label className="tb-v2-checkbox-row"><input type="checkbox" checked={collectsPayment} onChange={e => setCollectsPayment(e.target.checked)} /> Payment processing</label>
+          <label className="tb-v2-checkbox-row"><input aria-label="Collects Analytics" type="checkbox" checked={collectsAnalytics} onChange={e => setCollectsAnalytics(e.target.checked)} /> Analytics / cookies</label>
+          <label className="tb-v2-checkbox-row"><input aria-label="Collects Newsletter" type="checkbox" checked={collectsNewsletter} onChange={e => setCollectsNewsletter(e.target.checked)} /> Email newsletter signups</label>
+          <label className="tb-v2-checkbox-row"><input aria-label="Collects Contact Form" type="checkbox" checked={collectsContactForm} onChange={e => setCollectsContactForm(e.target.checked)} /> Contact form submissions</label>
+          <label className="tb-v2-checkbox-row"><input aria-label="Collects Payment" type="checkbox" checked={collectsPayment} onChange={e => setCollectsPayment(e.target.checked)} /> Payment processing</label>
         </div>
       </div>
 
       <div>
         <span className="tb-v2-tool-label" style={{ display: 'block', marginBottom: 8 }}>Jurisdiction</span>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-          <label className="tb-v2-checkbox-row"><input type="checkbox" checked={applyGdpr} onChange={e => setApplyGdpr(e.target.checked)} /> Include GDPR (EU/EEA) section</label>
-          <label className="tb-v2-checkbox-row"><input type="checkbox" checked={applyCcpa} onChange={e => setApplyCcpa(e.target.checked)} /> Include CCPA (California) section</label>
+          <label className="tb-v2-checkbox-row"><input aria-label="Apply Gdpr" type="checkbox" checked={applyGdpr} onChange={e => setApplyGdpr(e.target.checked)} /> Include GDPR (EU/EEA) section</label>
+          <label className="tb-v2-checkbox-row"><input aria-label="Apply Ccpa" type="checkbox" checked={applyCcpa} onChange={e => setApplyCcpa(e.target.checked)} /> Include CCPA (California) section</label>
         </div>
       </div>
 
       <div className="tb-v2-tool-output-head">
         <span className="tb-v2-tool-label">Preview</span>
         <div style={{ display: 'flex', gap: 8 }}>
-          <button onClick={copyText} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}>{copied ? 'Copied' : 'Copy'}</button>
-          <button onClick={downloadTxt} className="tb-v2-btn-sm">Download .txt</button>
-          <button onClick={downloadPdf} className="tb-v2-btn-sm">Download .pdf</button>
+          <button disabled={!documentText} onClick={copyText} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}>{copied ? 'Copied' : 'Copy'}</button>
+          <button disabled={!documentText} onClick={downloadTxt} className="tb-v2-btn-sm">Download .txt</button>
+          <button disabled={exporting || !documentText} onClick={downloadPdf} className="tb-v2-btn-sm">Download .pdf</button>
         </div>
       </div>
       <div className="tb-v2-tool-output-body">
@@ -239,5 +196,6 @@ export default function PrivacyPolicyGeneratorClient() {
         This is a generic template and does not constitute legal advice. Consult a qualified attorney to ensure compliance with applicable laws (including GDPR, CCPA, or others) for your specific business.
       </p>
     </div>
+  </UtilityDesignLayout>
   );
 }

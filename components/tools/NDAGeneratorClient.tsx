@@ -1,66 +1,22 @@
 'use client';
+import UtilityDesignLayout from './UtilityDesignLayout';
+import ToolExampleClearActions from './ToolExampleClearActions';
 
-import { useMemo, useState } from 'react';
-import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
+import { useMemo, useState, useRef, useEffect } from 'react';
+import { documentPdf as textToPdf } from '@/lib/utility-design/document';
+import { saveBlob } from '@/lib/utility-design/core';
 
-const PAGE_WIDTH = 612;
-const PAGE_HEIGHT = 792;
-const MARGIN = 56;
-const FONT_SIZE = 10.5;
-const LINE_HEIGHT = 14;
 
-function wrapLine(text: string, font: import('pdf-lib').PDFFont, size: number, maxWidth: number): string[] {
-  if (text === '') return [''];
-  const words = text.split(' ');
-  const lines: string[] = [];
-  let current = '';
-  for (const word of words) {
-    const candidate = current ? `${current} ${word}` : word;
-    if (font.widthOfTextAtSize(candidate, size) > maxWidth && current) {
-      lines.push(current);
-      current = word;
-    } else {
-      current = candidate;
-    }
-  }
-  if (current) lines.push(current);
-  return lines;
-}
-
-async function textToPdf(text: string): Promise<Uint8Array> {
-  const pdfDoc = await PDFDocument.create();
-  const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
-  const boldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
-  const maxWidth = PAGE_WIDTH - MARGIN * 2;
-
-  let page = pdfDoc.addPage([PAGE_WIDTH, PAGE_HEIGHT]);
-  let y = PAGE_HEIGHT - MARGIN;
-
-  const newPage = () => {
-    page = pdfDoc.addPage([PAGE_WIDTH, PAGE_HEIGHT]);
-    y = PAGE_HEIGHT - MARGIN;
-  };
-
-  const paragraphs = text.split('\n');
-  for (const paragraph of paragraphs) {
-    const isHeading = paragraph.length > 0 && paragraph === paragraph.toUpperCase() && /[A-Z]/.test(paragraph) && paragraph.length < 70;
-    const useFont = isHeading ? boldFont : font;
-    const lines = wrapLine(paragraph, useFont, FONT_SIZE, maxWidth);
-    for (const line of lines) {
-      if (y < MARGIN) newPage();
-      page.drawText(line, { x: MARGIN, y, size: FONT_SIZE, font: useFont, color: rgb(0.1, 0.1, 0.1) });
-      y -= LINE_HEIGHT;
-    }
-  }
-
-  return pdfDoc.save();
-}
 
 function todayISO(): string {
   return new Date().toISOString().slice(0, 10);
 }
 
 export default function NDAGeneratorClient() {
+  const revision = useRef(0);
+  useEffect(()=>()=>{revision.current++;},[]);
+  const [exportError, setExportError] = useState('');
+  const [exporting, setExporting] = useState(false);
   const [discloser, setDiscloser] = useState('Acme Corp.');
   const [receiver, setReceiver] = useState('Jane Doe');
   const [effectiveDate, setEffectiveDate] = useState(todayISO());
@@ -71,6 +27,9 @@ export default function NDAGeneratorClient() {
   const [copied, setCopied] = useState(false);
 
   const documentText = useMemo(() => {
+    if (!(discloser || receiver || purpose)) return '';
+
+    if (!Number.isInteger(termYears) || termYears < 1 || termYears > 100) return '';
     const partyA = discloser.trim() || '[Disclosing Party]';
     const partyB = receiver.trim() || '[Receiving Party]';
     const date = effectiveDate || '[Effective Date]';
@@ -148,8 +107,7 @@ export default function NDAGeneratorClient() {
   }, [discloser, receiver, effectiveDate, purpose, termYears, governingState, mutual]);
 
   const copyText = () => {
-    navigator.clipboard.writeText(documentText).catch(() => {});
-    setCopied(true);
+    navigator.clipboard.writeText(documentText).then(() => setCopied(true), () => setCopied(false));
     setTimeout(() => setCopied(false), 1500);
   };
 
@@ -160,53 +118,53 @@ export default function NDAGeneratorClient() {
     a.href = url;
     a.download = 'nda.txt';
     a.click();
-    URL.revokeObjectURL(url);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
   };
 
   const downloadPdf = async () => {
-    const bytes = await textToPdf(documentText);
-    const blob = new Blob([bytes as BlobPart], { type: 'application/pdf' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'nda.pdf';
-    a.click();
-    URL.revokeObjectURL(url);
+    const id = revision.current; setExporting(true); setExportError('');
+    try { const bytes = await textToPdf(documentText); if(id === revision.current) saveBlob(new Blob([bytes as BlobPart], {type:'application/pdf'}), 'document.pdf'); }
+    catch(e) { if(id === revision.current) setExportError((e as Error).message); }
+    finally { if(id === revision.current) setExporting(false); }
   };
 
-  return (
+  return (<UtilityDesignLayout>
     <div className="tb-v2-tool-card" style={{ padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: 16 }}>
+      <ToolExampleClearActions onExample={() => { revision.current++; setExporting(false); setExportError(''); setDiscloser('Acme Corp.'); setReceiver('Jane Doe'); setEffectiveDate(todayISO()); setPurpose('evaluating a potential business relationship'); setTermYears(2); setGoverningState('Delaware'); setMutual(true); }} onClear={() => { revision.current++; setExportError(''); setExporting(false); setDiscloser(''); setReceiver(''); setEffectiveDate(''); setPurpose(''); setTermYears(1); setGoverningState(''); setMutual(false); }}/>
       <label className="tb-v2-checkbox-row" style={{ width: 'fit-content' }}>
-        <input type="checkbox" checked={mutual} onChange={e => setMutual(e.target.checked)} />
+        <input aria-label="Mutual" type="checkbox" checked={mutual} onChange={e => setMutual(e.target.checked)} />
         Mutual NDA (both parties disclose confidential information)
       </label>
 
       <div className="tb-v2-grid-2">
-        <div>
+        <div onChangeCapture={() => { revision.current++; setExporting(false); setExportError(''); }}>
+      {exportError && <p role="alert">{exportError}</p>}
+      {exporting && <p role="status">Preparing PDF…</p>}
+      <p>Editable template draft. Verify all statements and applicable requirements before use; legal validity or compliance is not guaranteed.</p>
           <label className="tb-v2-tool-label">{mutual ? 'Party A' : 'Disclosing Party'} Name</label>
-          <input type="text" value={discloser} onChange={e => setDiscloser(e.target.value)} className="tb-v2-input" />
+          <input maxLength={100000} aria-label="Discloser" type="text" value={discloser} onChange={e => setDiscloser(e.target.value)} className="tb-v2-input" />
         </div>
         <div>
           <label className="tb-v2-tool-label">{mutual ? 'Party B' : 'Receiving Party'} Name</label>
-          <input type="text" value={receiver} onChange={e => setReceiver(e.target.value)} className="tb-v2-input" />
+          <input maxLength={100000} aria-label="Receiver" type="text" value={receiver} onChange={e => setReceiver(e.target.value)} className="tb-v2-input" />
         </div>
         <div>
           <label className="tb-v2-tool-label">Effective Date</label>
-          <input type="date" value={effectiveDate} onChange={e => setEffectiveDate(e.target.value)} className="tb-v2-input" />
+          <input aria-label="Effective Date" type="date" value={effectiveDate} onChange={e => setEffectiveDate(e.target.value)} className="tb-v2-input" />
         </div>
         <div>
           <label className="tb-v2-tool-label">Term (years)</label>
-          <input type="number" min={1} value={termYears} onChange={e => setTermYears(Number(e.target.value) || 1)} className="tb-v2-input" />
+          <input aria-label="Term Years" type="number" min={1} value={termYears} onChange={e => setTermYears(Number(e.target.value) || 1)} className="tb-v2-input" />
         </div>
         <div>
           <label className="tb-v2-tool-label">Governing State/Jurisdiction</label>
-          <input type="text" value={governingState} onChange={e => setGoverningState(e.target.value)} className="tb-v2-input" />
+          <input maxLength={100000} aria-label="Governing State" type="text" value={governingState} onChange={e => setGoverningState(e.target.value)} className="tb-v2-input" />
         </div>
       </div>
 
       <div>
         <label className="tb-v2-tool-label">Purpose / Confidential Information Description</label>
-        <textarea
+        <textarea maxLength={100000} aria-label="Purpose"
           value={purpose}
           onChange={e => setPurpose(e.target.value)}
           className="tb-v2-tool-textarea"
@@ -217,9 +175,9 @@ export default function NDAGeneratorClient() {
       <div className="tb-v2-tool-output-head">
         <span className="tb-v2-tool-label">Document Preview</span>
         <div style={{ display: 'flex', gap: 8 }}>
-          <button onClick={copyText} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}>{copied ? 'Copied' : 'Copy'}</button>
-          <button onClick={downloadTxt} className="tb-v2-btn-sm">Download .txt</button>
-          <button onClick={downloadPdf} className="tb-v2-btn-sm">Download .pdf</button>
+          <button disabled={!documentText} onClick={copyText} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}>{copied ? 'Copied' : 'Copy'}</button>
+          <button disabled={!documentText} onClick={downloadTxt} className="tb-v2-btn-sm">Download .txt</button>
+          <button disabled={exporting || !documentText} onClick={downloadPdf} className="tb-v2-btn-sm">Download .pdf</button>
         </div>
       </div>
       <div className="tb-v2-tool-output-body">
@@ -230,5 +188,6 @@ export default function NDAGeneratorClient() {
         This is a generic template provided for convenience and does not constitute legal advice. Consult a qualified attorney before relying on this document.
       </p>
     </div>
+  </UtilityDesignLayout>
   );
 }
