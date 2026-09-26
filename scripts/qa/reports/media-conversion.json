@@ -1,0 +1,1465 @@
+{
+  "group": "media-conversion",
+  "generatedAt": "2026-09-26T06:23:21.871739+00:00",
+  "assignmentCount": 36,
+  "summary": {
+    "implementedAwaitingIntegratedBrowserQA": 26,
+    "preparedAwaitingCentralRouteMapping": 8,
+    "blockedOnMP3Encoder": 2,
+    "browserAcceptanceClaimed": false
+  },
+  "historicalApprovalInventory": {
+    "source": "/Users/rayhan/.herdr/worktrees/toolblip-workspace/manually-check-all-tools/qa/automatic/inventory.json",
+    "catalogCount": 491,
+    "approvedCount": 185,
+    "assignedApprovedCount": 0,
+    "approvedGroupRoutesPreserved": [
+      "json-yaml-converter",
+      "unit-converter",
+      "number-base-converter",
+      "binary-to-text",
+      "html-to-markdown",
+      "json-xml-converter",
+      "morse-code-translator",
+      "unix-timestamp-converter",
+      "rot47-cipher",
+      "json-csv-converter",
+      "timestamp-converter",
+      "csv-tsv-converter",
+      "roman-numeral-converter",
+      "fraction-to-decimal",
+      "length-converter",
+      "weight-converter",
+      "currency-converter",
+      "json-toml-converter",
+      "number-to-words",
+      "metric-imperial-converter",
+      "data-size-converter",
+      "decimal-to-binary",
+      "temp-converter",
+      "rot13-express",
+      "angle-unit-converter",
+      "pressure-converter",
+      "energy-converter",
+      "byte-converter",
+      "area-converter",
+      "frequency-converter",
+      "force-converter",
+      "html-to-plain-text",
+      "octal-to-decimal",
+      "html-table-to-json",
+      "binary-to-decimal",
+      "scientific-notation-converter",
+      "cooking-unit-converter",
+      "hex-to-decimal-converter",
+      "decimal-to-hex-converter"
+    ],
+    "protectedSharedComponents": [
+      {
+        "componentPath": "components/tools/JsonToMarkdownTableClient.tsx",
+        "approvedRoute": "json-to-markdown-table",
+        "unchanged": true
+      },
+      {
+        "componentPath": "components/tools/ImageFormatConverterClient.tsx",
+        "approvedRoute": "image-format-converter",
+        "unchanged": true
+      }
+    ],
+    "additionalNoncatalogConsumersPreserved": [
+      "avif-converter",
+      "heic-converter",
+      "heif-converter",
+      "table-to-markdown"
+    ]
+  },
+  "fixedFiles": [
+    "components/tools/AacToWavClient.tsx",
+    "components/tools/AddSubtitlesClient.tsx",
+    "components/tools/AllInOneUnitConverterClient.tsx",
+    "components/tools/Base64ImageDecoderClient.tsx",
+    "components/tools/BaseNumberConverterClient.tsx",
+    "components/tools/BinHexDecConverterClient.tsx",
+    "components/tools/BinaryDecimalHexConverterClient.tsx",
+    "components/tools/CsvToExcelClient.tsx",
+    "components/tools/CsvToXmlClient.tsx",
+    "components/tools/CutterClient.tsx",
+    "components/tools/ExcelToCsvClient.tsx",
+    "components/tools/ExcelToPdfClient.tsx",
+    "components/tools/ExcelToXmlClient.tsx",
+    "components/tools/ExtractAudioClient.tsx",
+    "components/tools/GifToApngClient.tsx",
+    "components/tools/GifToJpgClient.tsx",
+    "components/tools/GifToPngClient.tsx",
+    "components/tools/HeicToJpgClient.tsx",
+    "components/tools/HeicToPngClient.tsx",
+    "components/tools/JpgToPngClient.tsx",
+    "components/tools/LogoTraceConverterClient.tsx",
+    "components/tools/MP4ToMP3Client.tsx",
+    "components/tools/MediaConversionImageClient.tsx",
+    "components/tools/MediaConversionMarkdownClient.tsx",
+    "components/tools/MkvToMp3Client.tsx",
+    "components/tools/SqlToJsonClient.tsx",
+    "components/tools/TemperatureUnitConverterClient.tsx",
+    "components/tools/media-conversion/AudioConverter.tsx",
+    "components/tools/media-conversion/DataConverter.tsx",
+    "components/tools/media-conversion/ImageConverter.tsx",
+    "components/tools/media-conversion/NumberConverter.tsx",
+    "components/tools/media-conversion/Result.tsx",
+    "components/tools/media-conversion/SpreadsheetConverter.tsx",
+    "components/tools/media-conversion/UnitConverter.tsx",
+    "components/tools/media-conversion/VideoConverter.tsx",
+    "components/tools/media-conversion/useMediaJob.ts",
+    "lib/media-conversion/audio.ts",
+    "lib/media-conversion/data.test.ts",
+    "lib/media-conversion/data.ts",
+    "lib/media-conversion/image.ts",
+    "lib/media-conversion/media.test.ts",
+    "lib/media-conversion/spreadsheet.test.ts",
+    "lib/media-conversion/spreadsheet.ts",
+    "lib/media-conversion/units.ts",
+    "lib/media-conversion/video.ts",
+    "public/samples/media-conversion/example.aac",
+    "public/samples/media-conversion/example.gif",
+    "public/samples/media-conversion/example.heic",
+    "public/samples/media-conversion/example.m4a",
+    "public/samples/media-conversion/example.mkv",
+    "public/samples/media-conversion/example.mp4",
+    "scripts/qa/cases/media-conversion.mjs",
+    "scripts/qa/reports/media-conversion.json"
+  ],
+  "verification": {
+    "scopedTests": {
+      "command": "./node_modules/.bin/vitest run lib/media-conversion",
+      "exitCode": 0,
+      "filesPassed": 3,
+      "testsPassed": 48
+    },
+    "typescript": {
+      "command": "./node_modules/.bin/tsc --noEmit --incremental false",
+      "exitCode": 0
+    },
+    "browserCaseSyntax": {
+      "command": "node --check scripts/qa/cases/media-conversion.mjs",
+      "exitCode": 0
+    },
+    "assignmentCoverage": {
+      "expected": 36,
+      "uniqueCases": 36,
+      "missing": []
+    },
+    "whitespace": {
+      "command": "git diff --check",
+      "exitCode": 0
+    },
+    "notRun": [
+      "dev server",
+      "production build",
+      "browser worker",
+      "integrated browser acceptance",
+      "production QA"
+    ],
+    "note": "Parent runs integrated tests after central route mapping. Native decoder/encoder failures are not mocked into successful conversion. MP3 case explicitly fails until implemented."
+  },
+  "centralRouteMappingProposals": [
+    {
+      "file": "app/tools/[slug]/ToolUI.tsx",
+      "slugs": [
+        "jpg-to-webp",
+        "png-to-webp",
+        "svg-to-png",
+        "svg-to-jpg",
+        "svg-to-webp",
+        "webp-to-jpg",
+        "webp-to-png"
+      ],
+      "import": "import MediaConversionImageClient from '@/components/tools/MediaConversionImageClient';",
+      "render": "<MediaConversionImageClient />",
+      "preserveExistingRoutes": [
+        "image-format-converter",
+        "avif-converter",
+        "heic-converter",
+        "heif-converter"
+      ],
+      "reason": "Assigned format routes need format-specific defaults and byte/dimension/cancel fixes without modifying the historically approved shared component."
+    },
+    {
+      "file": "app/tools/[slug]/ToolUI.tsx",
+      "slugs": [
+        "markdown-table-from-json"
+      ],
+      "import": "import MediaConversionMarkdownClient from '@/components/tools/MediaConversionMarkdownClient';",
+      "render": "<MediaConversionMarkdownClient />",
+      "preserveExistingRoutes": [
+        "json-to-markdown-table",
+        "table-to-markdown"
+      ],
+      "reason": "Fix heterogeneous/malformed JSON rows and downloads for assigned route while preserving approved shared implementation."
+    }
+  ],
+  "centralMetadataProposals": [
+    {
+      "slug": "sql-to-json",
+      "files": [
+        "data/tools.ts",
+        "data/tool-content.ts",
+        "lib/faq.ts"
+      ],
+      "description": "Convert SQL INSERT VALUES literals to JSON. Unsupported expressions and unsafe integer literals are rejected.",
+      "action": "Replace conflicting format/quality/size/universal-support claims in route description, content and FAQ with this implementation contract; do not claim new browser acceptance."
+    },
+    {
+      "slug": "csv-to-excel",
+      "files": [
+        "data/tools.ts",
+        "data/tool-content.ts",
+        "lib/faq.ts"
+      ],
+      "description": "Convert well-formed CSV text to a real XLSX workbook while preserving cell text.",
+      "action": "Replace conflicting format/quality/size/universal-support claims in route description, content and FAQ with this implementation contract; do not claim new browser acceptance."
+    },
+    {
+      "slug": "csv-to-xml",
+      "files": [
+        "data/tools.ts",
+        "data/tool-content.ts",
+        "lib/faq.ts"
+      ],
+      "description": "Convert CSV rows to XML fields with column names preserved as attributes.",
+      "action": "Replace conflicting format/quality/size/universal-support claims in route description, content and FAQ with this implementation contract; do not claim new browser acceptance."
+    },
+    {
+      "slug": "excel-to-csv",
+      "files": [
+        "data/tools.ts",
+        "data/tool-content.ts",
+        "lib/faq.ts"
+      ],
+      "description": "Export cell values from a selected XLSX sheet to quoted CSV.",
+      "action": "Replace conflicting format/quality/size/universal-support claims in route description, content and FAQ with this implementation contract; do not claim new browser acceptance."
+    },
+    {
+      "slug": "excel-to-xml",
+      "files": [
+        "data/tools.ts",
+        "data/tool-content.ts",
+        "lib/faq.ts"
+      ],
+      "description": "Export a selected XLSX sheet to XML fields; the first row supplies field names.",
+      "action": "Replace conflicting format/quality/size/universal-support claims in route description, content and FAQ with this implementation contract; do not claim new browser acceptance."
+    },
+    {
+      "slug": "excel-to-pdf",
+      "files": [
+        "data/tools.ts",
+        "data/tool-content.ts",
+        "lib/faq.ts"
+      ],
+      "description": "Export XLSX cell values as wrapped, paginated PDF text. Spreadsheet styling and charts are not preserved.",
+      "action": "Replace conflicting format/quality/size/universal-support claims in route description, content and FAQ with this implementation contract; do not claim new browser acceptance."
+    },
+    {
+      "slug": "aac-to-wav",
+      "files": [
+        "data/tools.ts",
+        "data/tool-content.ts",
+        "lib/faq.ts"
+      ],
+      "description": "Decode browser-supported AAC audio to 16-bit PCM WAV. Maximum 20 MB and 120 decoded seconds.",
+      "action": "Replace conflicting format/quality/size/universal-support claims in route description, content and FAQ with this implementation contract; do not claim new browser acceptance."
+    },
+    {
+      "slug": "m4a-to-wav",
+      "files": [
+        "data/tools.ts",
+        "data/tool-content.ts",
+        "lib/faq.ts"
+      ],
+      "description": "Decode browser-supported M4A audio to 16-bit PCM WAV. Maximum 20 MB and 120 decoded seconds.",
+      "action": "Replace conflicting format/quality/size/universal-support claims in route description, content and FAQ with this implementation contract; do not claim new browser acceptance."
+    },
+    {
+      "slug": "mp4-to-wav",
+      "files": [
+        "data/tools.ts",
+        "data/tool-content.ts",
+        "lib/faq.ts"
+      ],
+      "description": "Decode browser-supported MP4 audio to 16-bit PCM WAV. Files without decodable audio are rejected.",
+      "action": "Replace conflicting format/quality/size/universal-support claims in route description, content and FAQ with this implementation contract; do not claim new browser acceptance."
+    },
+    {
+      "slug": "extract-audio",
+      "files": [
+        "data/tools.ts",
+        "data/tool-content.ts",
+        "lib/faq.ts"
+      ],
+      "description": "Extract browser-decodable audio from supported containers to 16-bit PCM WAV.",
+      "action": "Replace conflicting format/quality/size/universal-support claims in route description, content and FAQ with this implementation contract; do not claim new browser acceptance."
+    },
+    {
+      "slug": "mp4-to-mp3",
+      "files": [
+        "data/tools.ts",
+        "data/tool-content.ts",
+        "lib/faq.ts"
+      ],
+      "description": "MP3 encoding is currently unavailable. A separately selected WAV export is available for browser-decodable MP4 audio.",
+      "action": "Replace conflicting format/quality/size/universal-support claims in route description, content and FAQ with this implementation contract; do not claim new browser acceptance."
+    },
+    {
+      "slug": "mkv-to-mp3",
+      "files": [
+        "data/tools.ts",
+        "data/tool-content.ts",
+        "lib/faq.ts"
+      ],
+      "description": "MP3 encoding is currently unavailable. A separately selected WAV export depends on browser support for the MKV audio codec.",
+      "action": "Replace conflicting format/quality/size/universal-support claims in route description, content and FAQ with this implementation contract; do not claim new browser acceptance."
+    },
+    {
+      "slug": "cutter",
+      "files": [
+        "data/tools.ts",
+        "data/tool-content.ts",
+        "lib/faq.ts"
+      ],
+      "description": "Record a selected video range as WebM with audio. Real-time re-encoding, up to 60 seconds per export.",
+      "action": "Replace conflicting format/quality/size/universal-support claims in route description, content and FAQ with this implementation contract; do not claim new browser acceptance."
+    },
+    {
+      "slug": "add-subtitles",
+      "files": [
+        "data/tools.ts",
+        "data/tool-content.ts",
+        "lib/faq.ts"
+      ],
+      "description": "Preview and burn plain SRT or WebVTT captions into a re-encoded WebM video with audio.",
+      "action": "Replace conflicting format/quality/size/universal-support claims in route description, content and FAQ with this implementation contract; do not claim new browser acceptance."
+    },
+    {
+      "slug": "gif-to-apng",
+      "files": [
+        "data/tools.ts",
+        "data/tool-content.ts",
+        "lib/faq.ts"
+      ],
+      "description": "Convert composited GIF animation frames to PNG/APNG. Output size is measured and may be larger.",
+      "action": "Replace conflicting format/quality/size/universal-support claims in route description, content and FAQ with this implementation contract; do not claim new browser acceptance."
+    },
+    {
+      "slug": "gif-to-jpg",
+      "files": [
+        "data/tools.ts",
+        "data/tool-content.ts",
+        "lib/faq.ts"
+      ],
+      "description": "Export a selected composited GIF frame to JPEG with a chosen background color.",
+      "action": "Replace conflicting format/quality/size/universal-support claims in route description, content and FAQ with this implementation contract; do not claim new browser acceptance."
+    },
+    {
+      "slug": "gif-to-png",
+      "files": [
+        "data/tools.ts",
+        "data/tool-content.ts",
+        "lib/faq.ts"
+      ],
+      "description": "Export a selected composited GIF frame to a static PNG.",
+      "action": "Replace conflicting format/quality/size/universal-support claims in route description, content and FAQ with this implementation contract; do not claim new browser acceptance."
+    },
+    {
+      "slug": "heic-to-jpg",
+      "files": [
+        "data/tools.ts",
+        "data/tool-content.ts",
+        "lib/faq.ts"
+      ],
+      "description": "Convert the first image in supported HEIC/HEIF files to JPEG using the bundled decoder. Unsupported variants report an error.",
+      "action": "Replace conflicting format/quality/size/universal-support claims in route description, content and FAQ with this implementation contract; do not claim new browser acceptance."
+    },
+    {
+      "slug": "heic-to-png",
+      "files": [
+        "data/tools.ts",
+        "data/tool-content.ts",
+        "lib/faq.ts"
+      ],
+      "description": "Convert the first image in supported HEIC/HEIF files to PNG using the bundled decoder. Unsupported variants report an error.",
+      "action": "Replace conflicting format/quality/size/universal-support claims in route description, content and FAQ with this implementation contract; do not claim new browser acceptance."
+    },
+    {
+      "slug": "trace",
+      "files": [
+        "data/tools.ts",
+        "data/tool-content.ts",
+        "lib/faq.ts"
+      ],
+      "description": "Trace a raster image up to one megapixel into SVG paths using selectable tracing presets.",
+      "action": "Replace conflicting format/quality/size/universal-support claims in route description, content and FAQ with this implementation contract; do not claim new browser acceptance."
+    },
+    {
+      "slug": "base64-image-decoder",
+      "files": [
+        "data/tools.ts",
+        "data/tool-content.ts",
+        "lib/faq.ts"
+      ],
+      "description": "Decode and validate Base64 PNG, JPEG, WebP or GIF data and download the original raster format.",
+      "action": "Replace conflicting format/quality/size/universal-support claims in route description, content and FAQ with this implementation contract; do not claim new browser acceptance."
+    },
+    {
+      "slug": "markdown-table-from-json",
+      "files": [
+        "data/tools.ts",
+        "data/tool-content.ts",
+        "lib/faq.ts"
+      ],
+      "description": "Convert JSON objects to a Markdown table with the union of their keys and escaped cell text.",
+      "action": "Replace conflicting format/quality/size/universal-support claims in route description, content and FAQ with this implementation contract; do not claim new browser acceptance."
+    },
+    {
+      "slug": "jpg-to-webp",
+      "files": [
+        "data/tools.ts",
+        "data/tool-content.ts",
+        "lib/faq.ts"
+      ],
+      "description": "Convert JPG image bytes to WEBP with validated output dimensions and measured size. Browser encoder support varies.",
+      "action": "Replace conflicting format/quality/size/universal-support claims in route description, content and FAQ with this implementation contract; do not claim new browser acceptance."
+    },
+    {
+      "slug": "png-to-webp",
+      "files": [
+        "data/tools.ts",
+        "data/tool-content.ts",
+        "lib/faq.ts"
+      ],
+      "description": "Convert PNG image bytes to WEBP with validated output dimensions and measured size. Browser encoder support varies.",
+      "action": "Replace conflicting format/quality/size/universal-support claims in route description, content and FAQ with this implementation contract; do not claim new browser acceptance."
+    },
+    {
+      "slug": "svg-to-png",
+      "files": [
+        "data/tools.ts",
+        "data/tool-content.ts",
+        "lib/faq.ts"
+      ],
+      "description": "Convert SVG image bytes to PNG with validated output dimensions and measured size. Browser encoder support varies.",
+      "action": "Replace conflicting format/quality/size/universal-support claims in route description, content and FAQ with this implementation contract; do not claim new browser acceptance."
+    },
+    {
+      "slug": "svg-to-jpg",
+      "files": [
+        "data/tools.ts",
+        "data/tool-content.ts",
+        "lib/faq.ts"
+      ],
+      "description": "Convert SVG image bytes to JPG with validated output dimensions and measured size. Browser encoder support varies.",
+      "action": "Replace conflicting format/quality/size/universal-support claims in route description, content and FAQ with this implementation contract; do not claim new browser acceptance."
+    },
+    {
+      "slug": "svg-to-webp",
+      "files": [
+        "data/tools.ts",
+        "data/tool-content.ts",
+        "lib/faq.ts"
+      ],
+      "description": "Convert SVG image bytes to WEBP with validated output dimensions and measured size. Browser encoder support varies.",
+      "action": "Replace conflicting format/quality/size/universal-support claims in route description, content and FAQ with this implementation contract; do not claim new browser acceptance."
+    },
+    {
+      "slug": "webp-to-jpg",
+      "files": [
+        "data/tools.ts",
+        "data/tool-content.ts",
+        "lib/faq.ts"
+      ],
+      "description": "Convert WEBP image bytes to JPG with validated output dimensions and measured size. Browser encoder support varies.",
+      "action": "Replace conflicting format/quality/size/universal-support claims in route description, content and FAQ with this implementation contract; do not claim new browser acceptance."
+    },
+    {
+      "slug": "webp-to-png",
+      "files": [
+        "data/tools.ts",
+        "data/tool-content.ts",
+        "lib/faq.ts"
+      ],
+      "description": "Convert WEBP image bytes to PNG with validated output dimensions and measured size. Browser encoder support varies.",
+      "action": "Replace conflicting format/quality/size/universal-support claims in route description, content and FAQ with this implementation contract; do not claim new browser acceptance."
+    },
+    {
+      "slug": "jpg-to-png",
+      "files": [
+        "data/tools.ts",
+        "data/tool-content.ts",
+        "lib/faq.ts"
+      ],
+      "description": "Convert JPG image bytes to PNG with validated output dimensions and measured size. Browser encoder support varies.",
+      "action": "Replace conflicting format/quality/size/universal-support claims in route description, content and FAQ with this implementation contract; do not claim new browser acceptance."
+    },
+    {
+      "slug": "binary-decimal-hex-converter",
+      "files": [
+        "data/tools.ts",
+        "data/tool-content.ts",
+        "lib/faq.ts"
+      ],
+      "description": "Convert whole integers exactly between binary, decimal and hexadecimal, including values above Number safe precision.",
+      "action": "Replace conflicting format/quality/size/universal-support claims in route description, content and FAQ with this implementation contract; do not claim new browser acceptance."
+    },
+    {
+      "slug": "bin-hex-dec-converter",
+      "files": [
+        "data/tools.ts",
+        "data/tool-content.ts",
+        "lib/faq.ts"
+      ],
+      "description": "Convert whole integers exactly between binary, decimal and hexadecimal, including values above Number safe precision.",
+      "action": "Replace conflicting format/quality/size/universal-support claims in route description, content and FAQ with this implementation contract; do not claim new browser acceptance."
+    },
+    {
+      "slug": "base-number-converter",
+      "files": [
+        "data/tools.ts",
+        "data/tool-content.ts",
+        "lib/faq.ts"
+      ],
+      "description": "Convert whole integers exactly between bases 2\u201336. Invalid digits and fractions are rejected.",
+      "action": "Replace conflicting format/quality/size/universal-support claims in route description, content and FAQ with this implementation contract; do not claim new browser acceptance."
+    },
+    {
+      "slug": "temperature-unit-converter",
+      "files": [
+        "data/tools.ts",
+        "data/tool-content.ts",
+        "lib/faq.ts"
+      ],
+      "description": "Convert Celsius, Fahrenheit and Kelvin with live results, presets and absolute-zero validation.",
+      "action": "Replace conflicting format/quality/size/universal-support claims in route description, content and FAQ with this implementation contract; do not claim new browser acceptance."
+    },
+    {
+      "slug": "all-in-one-unit-converter",
+      "files": [
+        "data/tools.ts",
+        "data/tool-content.ts",
+        "lib/faq.ts"
+      ],
+      "description": "Convert length, weight, temperature, area, volume and speed with live validated results.",
+      "action": "Replace conflicting format/quality/size/universal-support claims in route description, content and FAQ with this implementation contract; do not claim new browser acceptance."
+    },
+    {
+      "slug": "general-unit-converter",
+      "files": [
+        "data/tools.ts",
+        "data/tool-content.ts",
+        "lib/faq.ts"
+      ],
+      "description": "Convert length, weight, temperature, area, volume and speed with live validated results.",
+      "action": "Replace conflicting format/quality/size/universal-support claims in route description, content and FAQ with this implementation contract; do not claim new browser acceptance."
+    }
+  ],
+  "dependencyProposals": [
+    {
+      "slugs": [
+        "mkv-to-mp3",
+        "mp4-to-mp3"
+      ],
+      "indispensableFor": "actual MP3 encoding",
+      "suggestedPackage": "@breezystack/lamejs",
+      "installBy": "parent only, pin and review a release in central package/lockfile",
+      "currentDependencyChanged": false,
+      "versionVerified": true,
+      "integrationRequired": [
+        "Add a browser MP3 encoder adapter using Mp3Encoder for mono/stereo 44100 Hz PCM at explicit bitrate (e.g. 128 kbps).",
+        "Encode bounded Int16 PCM in 1152-sample blocks, append flush output, check signal between blocks, and close decoder resources.",
+        "Verify MPEG frame signatures, decoded duration, channels, bitrate and non-silent 440Hz fixture; do not accept WAV bytes with an MP3 name.",
+        "Keep explicit decoder errors for unsupported MKV codecs.",
+        "Remove intentional MP3 acceptance failure only after actual MP3 output is tested."
+      ],
+      "alternative": "A real bounded FFmpeg conversion backend can handle additional codecs but is outside owned scope; none exists in this checkout.",
+      "suggestedVersion": "1.2.7",
+      "source": "https://www.npmjs.com/package/@breezystack/lamejs",
+      "upstream": "https://github.com/shijinyu/lamejs",
+      "license": "LGPL-3.0",
+      "proposedInstallCommand": "npm install --save-exact @breezystack/lamejs@1.2.7"
+    }
+  ],
+  "duplicateProposals": [
+    {
+      "from": "general-unit-converter",
+      "to": "all-in-one-unit-converter",
+      "type": "permanent redirect",
+      "evidence": "Both assigned routes already map to AllInOneUnitConverterClient with no route props; identical six categories and controls."
+    },
+    {
+      "from": "bin-hex-dec-converter",
+      "to": "binary-decimal-hex-converter",
+      "type": "permanent redirect",
+      "evidence": "Both implement the same binary/decimal/hex whole-integer conversion with use-as-input; now share group NumberConverter all mode. No capability removed."
+    }
+  ],
+  "fixtures": {
+    "directory": "public/samples/media-conversion",
+    "provenance": "Generated locally for this task; no remote media. ffmpeg lavfi red 64x48 video + 440 Hz mono 2-second sine; remuxed MP4/M4A/AAC/MKV. ffmpeg testsrc 16x12 2-frame GIF. ImageMagick 16x12 red PNG encoded with local heif-enc to HEIC.",
+    "files": [
+      "example.mkv",
+      "example.mp4",
+      "example.gif",
+      "example.heic",
+      "example.aac",
+      "example.m4a"
+    ]
+  },
+  "routes": [
+    {
+      "slug": "sql-to-json",
+      "grouping": "data",
+      "historicallyApproved": false,
+      "originalComponent": "components/tools/SqlToJsonClient.tsx",
+      "status": "implemented_awaiting_integrated_browser_QA",
+      "findingsAndChanges": [
+        "Loose SQL/CSV parsing could silently truncate or lose values. Markdown only inspected the first object and discarded later columns.",
+        "Strict bounded parsers, safe integer rejection for JSON SQL numbers, quoted/empty literals, duplicate header preservation, all-object Markdown validation and header union, live output and current-result download.",
+        "SQL supports INSERT VALUES literals only. XML uses field name attributes. Markdown escapes pipes, HTML and newlines."
+      ],
+      "browserCase": {
+        "file": "scripts/qa/cases/media-conversion.mjs",
+        "slug": "sql-to-json",
+        "status": "authored_not_run",
+        "assertions": "Downloads and independently parses exact expected JSON/Markdown/XML, malformed-input error, stale-download removal and Clear."
+      },
+      "scopedTests": [
+        "lib/media-conversion/data.test.ts"
+      ],
+      "remainingBlockers": []
+    },
+    {
+      "slug": "binary-decimal-hex-converter",
+      "grouping": "units",
+      "historicallyApproved": false,
+      "originalComponent": "components/tools/BinaryDecimalHexConverterClient.tsx",
+      "status": "implemented_awaiting_integrated_browser_QA",
+      "findingsAndChanges": [
+        "parseInt/parseFloat accepted trailing garbage, lost integer precision, and converted empty/invalid inputs to misleading zero results.",
+        "Exact BigInt bases 2\u201336, strict finite input parsing, live results, absolute-zero checks, exact common SI factors, v2 Example/Clear, and preserved category/preset/use-as-input workflows.",
+        "Base conversion is integer-only and bounded to 4096 input characters. Unit output is rounded to 12 significant digits."
+      ],
+      "browserCase": {
+        "file": "scripts/qa/cases/media-conversion.mjs",
+        "slug": "binary-decimal-hex-converter",
+        "status": "authored_not_run",
+        "assertions": "Independent known-answer checks above Number precision, invalid digit rejection, 100C=212F, 1000m=1km, 36km/h=10m/s, absolute-zero rejection and empty Clear state."
+      },
+      "scopedTests": [
+        "lib/media-conversion/data.test.ts"
+      ],
+      "remainingBlockers": []
+    },
+    {
+      "slug": "temperature-unit-converter",
+      "grouping": "units",
+      "historicallyApproved": false,
+      "originalComponent": "components/tools/TemperatureUnitConverterClient.tsx",
+      "status": "implemented_awaiting_integrated_browser_QA",
+      "findingsAndChanges": [
+        "parseInt/parseFloat accepted trailing garbage, lost integer precision, and converted empty/invalid inputs to misleading zero results.",
+        "Exact BigInt bases 2\u201336, strict finite input parsing, live results, absolute-zero checks, exact common SI factors, v2 Example/Clear, and preserved category/preset/use-as-input workflows.",
+        "Base conversion is integer-only and bounded to 4096 input characters. Unit output is rounded to 12 significant digits."
+      ],
+      "browserCase": {
+        "file": "scripts/qa/cases/media-conversion.mjs",
+        "slug": "temperature-unit-converter",
+        "status": "authored_not_run",
+        "assertions": "Independent known-answer checks above Number precision, invalid digit rejection, 100C=212F, 1000m=1km, 36km/h=10m/s, absolute-zero rejection and empty Clear state."
+      },
+      "scopedTests": [
+        "lib/media-conversion/data.test.ts"
+      ],
+      "remainingBlockers": []
+    },
+    {
+      "slug": "base-number-converter",
+      "grouping": "units",
+      "historicallyApproved": false,
+      "originalComponent": "components/tools/BaseNumberConverterClient.tsx",
+      "status": "implemented_awaiting_integrated_browser_QA",
+      "findingsAndChanges": [
+        "parseInt/parseFloat accepted trailing garbage, lost integer precision, and converted empty/invalid inputs to misleading zero results.",
+        "Exact BigInt bases 2\u201336, strict finite input parsing, live results, absolute-zero checks, exact common SI factors, v2 Example/Clear, and preserved category/preset/use-as-input workflows.",
+        "Base conversion is integer-only and bounded to 4096 input characters. Unit output is rounded to 12 significant digits."
+      ],
+      "browserCase": {
+        "file": "scripts/qa/cases/media-conversion.mjs",
+        "slug": "base-number-converter",
+        "status": "authored_not_run",
+        "assertions": "Independent known-answer checks above Number precision, invalid digit rejection, 100C=212F, 1000m=1km, 36km/h=10m/s, absolute-zero rejection and empty Clear state."
+      },
+      "scopedTests": [
+        "lib/media-conversion/data.test.ts"
+      ],
+      "remainingBlockers": []
+    },
+    {
+      "slug": "aac-to-wav",
+      "grouping": "audio",
+      "historicallyApproved": false,
+      "originalComponent": "components/tools/AacToWavClient.tsx",
+      "status": "implemented_awaiting_integrated_browser_QA",
+      "findingsAndChanges": [
+        "Audio paths lacked bounded decoding/context cleanup. MP3-named routes actually created WAV.",
+        "Validate container bytes and limits, close AudioContext, encode interleaved 16-bit PCM WAV, export the current result, and cancel/invalidate stale work.",
+        "Browser audio decoder support is conditional. MKV may fail on the integrated browser; a real codec failure is not accepted as conversion success."
+      ],
+      "browserCase": {
+        "file": "scripts/qa/cases/media-conversion.mjs",
+        "slug": "aac-to-wav",
+        "status": "authored_not_run",
+        "assertions": "Downloads RIFF/WAVE; verifies declared chunk sizes, 16-bit PCM, 44.1kHz mono approximately 2-second non-silent 440Hz signal, invalid container cleanup and Clear. MP3 cases explicitly fail acceptance after testing the WAV fallback."
+      },
+      "scopedTests": [
+        "lib/media-conversion/media.test.ts"
+      ],
+      "remainingBlockers": [],
+      "runtimeConstraints": "Browser audio decoder support is conditional. MKV may fail on the integrated browser; a real codec failure is not accepted as conversion success."
+    },
+    {
+      "slug": "add-subtitles",
+      "grouping": "video",
+      "historicallyApproved": false,
+      "originalComponent": "components/tools/AddSubtitlesClient.tsx",
+      "status": "implemented_awaiting_integrated_browser_QA",
+      "findingsAndChanges": [
+        "Cutting could publish stale/partial results after error or Clear; subtitles only overlaid a preview and did not export video.",
+        "Real-time canvas/WebAudio WebM recording, selected-range validation, audio capture, caption burn-in plus preview, explicit re-encoding, abort/timeout/track/context/URL cleanup.",
+        "No MP4 output, lossless cuts or frame-exact timing claims. Browser WebM encoder required; 30 MB, 60-second export, 2,073,600-pixel limits."
+      ],
+      "browserCase": {
+        "file": "scripts/qa/cases/media-conversion.mjs",
+        "slug": "add-subtitles",
+        "status": "authored_not_run",
+        "assertions": "Downloads WebM; verifies EBML signature, browser-decoded 64x48 scene pixels, approximately 1-second selected duration, subtitle pixels, invalid range, cancel and Clear."
+      },
+      "scopedTests": [
+        "lib/media-conversion/media.test.ts"
+      ],
+      "remainingBlockers": [],
+      "runtimeConstraints": "No MP4 output, lossless cuts or frame-exact timing claims. Browser WebM encoder required; 30 MB, 60-second export, 2,073,600-pixel limits."
+    },
+    {
+      "slug": "csv-to-excel",
+      "grouping": "spreadsheet",
+      "historicallyApproved": false,
+      "originalComponent": "components/tools/CsvToExcelClient.tsx",
+      "status": "implemented_awaiting_integrated_browser_QA",
+      "findingsAndChanges": [
+        "CSV-to-Excel produced HTML renamed .xls. Custom XLSX readers and exports lacked consistent limits/reset/error handling.",
+        "Real SheetJS XLSX output and parsing, selected-sheet exports, quoting-preserving CSV, name-attribute XML, real paginated PDF, ZIP metadata expansion bounds and workbook dimensions/cell limits.",
+        "XLSX only. Cell values, not Excel styling/charts/formula calculation. PDF built-in font supports Western European text; unsupported glyphs fail explicitly."
+      ],
+      "browserCase": {
+        "file": "scripts/qa/cases/media-conversion.mjs",
+        "slug": "csv-to-excel",
+        "status": "authored_not_run",
+        "assertions": "Downloads actual XLSX/PDF/CSV/XML; parses workbook/cell values or PDF content streams/XML nodes, validates selected-sheet invalidation, malformed workbook/CSV rejection and Clear."
+      },
+      "scopedTests": [
+        "lib/media-conversion/spreadsheet.test.ts"
+      ],
+      "remainingBlockers": []
+    },
+    {
+      "slug": "csv-to-xml",
+      "grouping": "data",
+      "historicallyApproved": false,
+      "originalComponent": "components/tools/CsvToXmlClient.tsx",
+      "status": "implemented_awaiting_integrated_browser_QA",
+      "findingsAndChanges": [
+        "Loose SQL/CSV parsing could silently truncate or lose values. Markdown only inspected the first object and discarded later columns.",
+        "Strict bounded parsers, safe integer rejection for JSON SQL numbers, quoted/empty literals, duplicate header preservation, all-object Markdown validation and header union, live output and current-result download.",
+        "SQL supports INSERT VALUES literals only. XML uses field name attributes. Markdown escapes pipes, HTML and newlines."
+      ],
+      "browserCase": {
+        "file": "scripts/qa/cases/media-conversion.mjs",
+        "slug": "csv-to-xml",
+        "status": "authored_not_run",
+        "assertions": "Downloads and independently parses exact expected JSON/Markdown/XML, malformed-input error, stale-download removal and Clear."
+      },
+      "scopedTests": [
+        "lib/media-conversion/data.test.ts"
+      ],
+      "remainingBlockers": []
+    },
+    {
+      "slug": "cutter",
+      "grouping": "video",
+      "historicallyApproved": false,
+      "originalComponent": "components/tools/CutterClient.tsx",
+      "status": "implemented_awaiting_integrated_browser_QA",
+      "findingsAndChanges": [
+        "Cutting could publish stale/partial results after error or Clear; subtitles only overlaid a preview and did not export video.",
+        "Real-time canvas/WebAudio WebM recording, selected-range validation, audio capture, caption burn-in plus preview, explicit re-encoding, abort/timeout/track/context/URL cleanup.",
+        "No MP4 output, lossless cuts or frame-exact timing claims. Browser WebM encoder required; 30 MB, 60-second export, 2,073,600-pixel limits."
+      ],
+      "browserCase": {
+        "file": "scripts/qa/cases/media-conversion.mjs",
+        "slug": "cutter",
+        "status": "authored_not_run",
+        "assertions": "Downloads WebM; verifies EBML signature, browser-decoded 64x48 scene pixels, approximately 1-second selected duration, subtitle pixels, invalid range, cancel and Clear."
+      },
+      "scopedTests": [
+        "lib/media-conversion/media.test.ts"
+      ],
+      "remainingBlockers": [],
+      "runtimeConstraints": "No MP4 output, lossless cuts or frame-exact timing claims. Browser WebM encoder required; 30 MB, 60-second export, 2,073,600-pixel limits."
+    },
+    {
+      "slug": "excel-to-csv",
+      "grouping": "spreadsheet",
+      "historicallyApproved": false,
+      "originalComponent": "components/tools/ExcelToCsvClient.tsx",
+      "status": "implemented_awaiting_integrated_browser_QA",
+      "findingsAndChanges": [
+        "CSV-to-Excel produced HTML renamed .xls. Custom XLSX readers and exports lacked consistent limits/reset/error handling.",
+        "Real SheetJS XLSX output and parsing, selected-sheet exports, quoting-preserving CSV, name-attribute XML, real paginated PDF, ZIP metadata expansion bounds and workbook dimensions/cell limits.",
+        "XLSX only. Cell values, not Excel styling/charts/formula calculation. PDF built-in font supports Western European text; unsupported glyphs fail explicitly."
+      ],
+      "browserCase": {
+        "file": "scripts/qa/cases/media-conversion.mjs",
+        "slug": "excel-to-csv",
+        "status": "authored_not_run",
+        "assertions": "Downloads actual XLSX/PDF/CSV/XML; parses workbook/cell values or PDF content streams/XML nodes, validates selected-sheet invalidation, malformed workbook/CSV rejection and Clear."
+      },
+      "scopedTests": [
+        "lib/media-conversion/spreadsheet.test.ts"
+      ],
+      "remainingBlockers": []
+    },
+    {
+      "slug": "excel-to-pdf",
+      "grouping": "spreadsheet",
+      "historicallyApproved": false,
+      "originalComponent": "components/tools/ExcelToPdfClient.tsx",
+      "status": "implemented_awaiting_integrated_browser_QA",
+      "findingsAndChanges": [
+        "CSV-to-Excel produced HTML renamed .xls. Custom XLSX readers and exports lacked consistent limits/reset/error handling.",
+        "Real SheetJS XLSX output and parsing, selected-sheet exports, quoting-preserving CSV, name-attribute XML, real paginated PDF, ZIP metadata expansion bounds and workbook dimensions/cell limits.",
+        "XLSX only. Cell values, not Excel styling/charts/formula calculation. PDF built-in font supports Western European text; unsupported glyphs fail explicitly."
+      ],
+      "browserCase": {
+        "file": "scripts/qa/cases/media-conversion.mjs",
+        "slug": "excel-to-pdf",
+        "status": "authored_not_run",
+        "assertions": "Downloads actual XLSX/PDF/CSV/XML; parses workbook/cell values or PDF content streams/XML nodes, validates selected-sheet invalidation, malformed workbook/CSV rejection and Clear."
+      },
+      "scopedTests": [
+        "lib/media-conversion/spreadsheet.test.ts"
+      ],
+      "remainingBlockers": []
+    },
+    {
+      "slug": "excel-to-xml",
+      "grouping": "spreadsheet",
+      "historicallyApproved": false,
+      "originalComponent": "components/tools/ExcelToXmlClient.tsx",
+      "status": "implemented_awaiting_integrated_browser_QA",
+      "findingsAndChanges": [
+        "CSV-to-Excel produced HTML renamed .xls. Custom XLSX readers and exports lacked consistent limits/reset/error handling.",
+        "Real SheetJS XLSX output and parsing, selected-sheet exports, quoting-preserving CSV, name-attribute XML, real paginated PDF, ZIP metadata expansion bounds and workbook dimensions/cell limits.",
+        "XLSX only. Cell values, not Excel styling/charts/formula calculation. PDF built-in font supports Western European text; unsupported glyphs fail explicitly."
+      ],
+      "browserCase": {
+        "file": "scripts/qa/cases/media-conversion.mjs",
+        "slug": "excel-to-xml",
+        "status": "authored_not_run",
+        "assertions": "Downloads actual XLSX/PDF/CSV/XML; parses workbook/cell values or PDF content streams/XML nodes, validates selected-sheet invalidation, malformed workbook/CSV rejection and Clear."
+      },
+      "scopedTests": [
+        "lib/media-conversion/spreadsheet.test.ts"
+      ],
+      "remainingBlockers": []
+    },
+    {
+      "slug": "extract-audio",
+      "grouping": "audio",
+      "historicallyApproved": false,
+      "originalComponent": "components/tools/ExtractAudioClient.tsx",
+      "status": "implemented_awaiting_integrated_browser_QA",
+      "findingsAndChanges": [
+        "Audio paths lacked bounded decoding/context cleanup. MP3-named routes actually created WAV.",
+        "Validate container bytes and limits, close AudioContext, encode interleaved 16-bit PCM WAV, export the current result, and cancel/invalidate stale work.",
+        "Browser audio decoder support is conditional. MKV may fail on the integrated browser; a real codec failure is not accepted as conversion success."
+      ],
+      "browserCase": {
+        "file": "scripts/qa/cases/media-conversion.mjs",
+        "slug": "extract-audio",
+        "status": "authored_not_run",
+        "assertions": "Downloads RIFF/WAVE; verifies declared chunk sizes, 16-bit PCM, 44.1kHz mono approximately 2-second non-silent 440Hz signal, invalid container cleanup and Clear. MP3 cases explicitly fail acceptance after testing the WAV fallback."
+      },
+      "scopedTests": [
+        "lib/media-conversion/media.test.ts"
+      ],
+      "remainingBlockers": [],
+      "runtimeConstraints": "Browser audio decoder support is conditional. MKV may fail on the integrated browser; a real codec failure is not accepted as conversion success."
+    },
+    {
+      "slug": "gif-to-apng",
+      "grouping": "image",
+      "historicallyApproved": false,
+      "originalComponent": "components/tools/GifToApngClient.tsx",
+      "status": "implemented_awaiting_integrated_browser_QA",
+      "findingsAndChanges": [
+        "Inputs were often validated by MIME/extension alone; asynchronous operations leaked URLs or exposed stale results.",
+        "Bounded byte signatures/dimensions, GIF total-frame budget, encoder MIME and byte validation, decoded output dimension checks, measured byte counts, explicit JPEG background, cancel/generation guards and result URL cleanup.",
+        "Real canvas transcodes; HEIC uses existing heic2any; GIF uses existing gifuct-js/upng-js; tracing uses existing imagetracerjs. No new dependencies."
+      ],
+      "browserCase": {
+        "file": "scripts/qa/cases/media-conversion.mjs",
+        "slug": "gif-to-apng",
+        "status": "authored_not_run",
+        "assertions": "Downloads and saves actual output; signature/extension, browser-decoded 16x12 dimensions and pixels, alpha/JPEG background where applicable, APNG frame count/delays/pixel differences, SVG paths, quality invalidation, bad bytes and Clear."
+      },
+      "scopedTests": [
+        "lib/media-conversion/media.test.ts"
+      ],
+      "remainingBlockers": [],
+      "runtimeConstraints": "Real canvas transcodes; HEIC uses existing heic2any; GIF uses existing gifuct-js/upng-js; tracing uses existing imagetracerjs. No new dependencies."
+    },
+    {
+      "slug": "gif-to-jpg",
+      "grouping": "image",
+      "historicallyApproved": false,
+      "originalComponent": "components/tools/GifToJpgClient.tsx",
+      "status": "implemented_awaiting_integrated_browser_QA",
+      "findingsAndChanges": [
+        "Inputs were often validated by MIME/extension alone; asynchronous operations leaked URLs or exposed stale results.",
+        "Bounded byte signatures/dimensions, GIF total-frame budget, encoder MIME and byte validation, decoded output dimension checks, measured byte counts, explicit JPEG background, cancel/generation guards and result URL cleanup.",
+        "Real canvas transcodes; HEIC uses existing heic2any; GIF uses existing gifuct-js/upng-js; tracing uses existing imagetracerjs. No new dependencies."
+      ],
+      "browserCase": {
+        "file": "scripts/qa/cases/media-conversion.mjs",
+        "slug": "gif-to-jpg",
+        "status": "authored_not_run",
+        "assertions": "Downloads and saves actual output; signature/extension, browser-decoded 16x12 dimensions and pixels, alpha/JPEG background where applicable, APNG frame count/delays/pixel differences, SVG paths, quality invalidation, bad bytes and Clear."
+      },
+      "scopedTests": [
+        "lib/media-conversion/media.test.ts"
+      ],
+      "remainingBlockers": [],
+      "runtimeConstraints": "Real canvas transcodes; HEIC uses existing heic2any; GIF uses existing gifuct-js/upng-js; tracing uses existing imagetracerjs. No new dependencies."
+    },
+    {
+      "slug": "gif-to-png",
+      "grouping": "image",
+      "historicallyApproved": false,
+      "originalComponent": "components/tools/GifToPngClient.tsx",
+      "status": "implemented_awaiting_integrated_browser_QA",
+      "findingsAndChanges": [
+        "Inputs were often validated by MIME/extension alone; asynchronous operations leaked URLs or exposed stale results.",
+        "Bounded byte signatures/dimensions, GIF total-frame budget, encoder MIME and byte validation, decoded output dimension checks, measured byte counts, explicit JPEG background, cancel/generation guards and result URL cleanup.",
+        "Real canvas transcodes; HEIC uses existing heic2any; GIF uses existing gifuct-js/upng-js; tracing uses existing imagetracerjs. No new dependencies."
+      ],
+      "browserCase": {
+        "file": "scripts/qa/cases/media-conversion.mjs",
+        "slug": "gif-to-png",
+        "status": "authored_not_run",
+        "assertions": "Downloads and saves actual output; signature/extension, browser-decoded 16x12 dimensions and pixels, alpha/JPEG background where applicable, APNG frame count/delays/pixel differences, SVG paths, quality invalidation, bad bytes and Clear."
+      },
+      "scopedTests": [
+        "lib/media-conversion/media.test.ts"
+      ],
+      "remainingBlockers": [],
+      "runtimeConstraints": "Real canvas transcodes; HEIC uses existing heic2any; GIF uses existing gifuct-js/upng-js; tracing uses existing imagetracerjs. No new dependencies."
+    },
+    {
+      "slug": "heic-to-jpg",
+      "grouping": "image",
+      "historicallyApproved": false,
+      "originalComponent": "components/tools/HeicToJpgClient.tsx",
+      "status": "implemented_awaiting_integrated_browser_QA",
+      "findingsAndChanges": [
+        "Inputs were often validated by MIME/extension alone; asynchronous operations leaked URLs or exposed stale results.",
+        "Bounded byte signatures/dimensions, GIF total-frame budget, encoder MIME and byte validation, decoded output dimension checks, measured byte counts, explicit JPEG background, cancel/generation guards and result URL cleanup.",
+        "Real canvas transcodes; HEIC uses existing heic2any; GIF uses existing gifuct-js/upng-js; tracing uses existing imagetracerjs. No new dependencies."
+      ],
+      "browserCase": {
+        "file": "scripts/qa/cases/media-conversion.mjs",
+        "slug": "heic-to-jpg",
+        "status": "authored_not_run",
+        "assertions": "Downloads and saves actual output; signature/extension, browser-decoded 16x12 dimensions and pixels, alpha/JPEG background where applicable, APNG frame count/delays/pixel differences, SVG paths, quality invalidation, bad bytes and Clear."
+      },
+      "scopedTests": [
+        "lib/media-conversion/media.test.ts"
+      ],
+      "remainingBlockers": [],
+      "runtimeConstraints": "Real canvas transcodes; HEIC uses existing heic2any; GIF uses existing gifuct-js/upng-js; tracing uses existing imagetracerjs. No new dependencies."
+    },
+    {
+      "slug": "heic-to-png",
+      "grouping": "image",
+      "historicallyApproved": false,
+      "originalComponent": "components/tools/HeicToPngClient.tsx",
+      "status": "implemented_awaiting_integrated_browser_QA",
+      "findingsAndChanges": [
+        "Inputs were often validated by MIME/extension alone; asynchronous operations leaked URLs or exposed stale results.",
+        "Bounded byte signatures/dimensions, GIF total-frame budget, encoder MIME and byte validation, decoded output dimension checks, measured byte counts, explicit JPEG background, cancel/generation guards and result URL cleanup.",
+        "Real canvas transcodes; HEIC uses existing heic2any; GIF uses existing gifuct-js/upng-js; tracing uses existing imagetracerjs. No new dependencies."
+      ],
+      "browserCase": {
+        "file": "scripts/qa/cases/media-conversion.mjs",
+        "slug": "heic-to-png",
+        "status": "authored_not_run",
+        "assertions": "Downloads and saves actual output; signature/extension, browser-decoded 16x12 dimensions and pixels, alpha/JPEG background where applicable, APNG frame count/delays/pixel differences, SVG paths, quality invalidation, bad bytes and Clear."
+      },
+      "scopedTests": [
+        "lib/media-conversion/media.test.ts"
+      ],
+      "remainingBlockers": [],
+      "runtimeConstraints": "Real canvas transcodes; HEIC uses existing heic2any; GIF uses existing gifuct-js/upng-js; tracing uses existing imagetracerjs. No new dependencies."
+    },
+    {
+      "slug": "jpg-to-png",
+      "grouping": "image",
+      "historicallyApproved": false,
+      "originalComponent": "components/tools/JpgToPngClient.tsx",
+      "status": "implemented_awaiting_integrated_browser_QA",
+      "findingsAndChanges": [
+        "Inputs were often validated by MIME/extension alone; asynchronous operations leaked URLs or exposed stale results.",
+        "Bounded byte signatures/dimensions, GIF total-frame budget, encoder MIME and byte validation, decoded output dimension checks, measured byte counts, explicit JPEG background, cancel/generation guards and result URL cleanup.",
+        "Real canvas transcodes; HEIC uses existing heic2any; GIF uses existing gifuct-js/upng-js; tracing uses existing imagetracerjs. No new dependencies."
+      ],
+      "browserCase": {
+        "file": "scripts/qa/cases/media-conversion.mjs",
+        "slug": "jpg-to-png",
+        "status": "authored_not_run",
+        "assertions": "Downloads and saves actual output; signature/extension, browser-decoded 16x12 dimensions and pixels, alpha/JPEG background where applicable, APNG frame count/delays/pixel differences, SVG paths, quality invalidation, bad bytes and Clear."
+      },
+      "scopedTests": [
+        "lib/media-conversion/media.test.ts"
+      ],
+      "remainingBlockers": [],
+      "runtimeConstraints": "Real canvas transcodes; HEIC uses existing heic2any; GIF uses existing gifuct-js/upng-js; tracing uses existing imagetracerjs. No new dependencies."
+    },
+    {
+      "slug": "jpg-to-webp",
+      "grouping": "image",
+      "historicallyApproved": false,
+      "originalComponent": "components/tools/ImageFormatConverterClient.tsx",
+      "status": "awaiting_central_route_mapping",
+      "findingsAndChanges": [
+        "Inputs were often validated by MIME/extension alone; asynchronous operations leaked URLs or exposed stale results.",
+        "Bounded byte signatures/dimensions, GIF total-frame budget, encoder MIME and byte validation, decoded output dimension checks, measured byte counts, explicit JPEG background, cancel/generation guards and result URL cleanup.",
+        "Real canvas transcodes; HEIC uses existing heic2any; GIF uses existing gifuct-js/upng-js; tracing uses existing imagetracerjs. No new dependencies."
+      ],
+      "browserCase": {
+        "file": "scripts/qa/cases/media-conversion.mjs",
+        "slug": "jpg-to-webp",
+        "status": "authored_not_run",
+        "assertions": "Downloads and saves actual output; signature/extension, browser-decoded 16x12 dimensions and pixels, alpha/JPEG background where applicable, APNG frame count/delays/pixel differences, SVG paths, quality invalidation, bad bytes and Clear."
+      },
+      "scopedTests": [
+        "lib/media-conversion/media.test.ts"
+      ],
+      "remainingBlockers": [
+        "Parent must map only jpg-to-webp to MediaConversionImageClient in app/tools/[slug]/ToolUI.tsx; protected approved component left byte-for-byte unchanged."
+      ],
+      "preparedComponent": "components/tools/MediaConversionImageClient.tsx",
+      "runtimeConstraints": "Real canvas transcodes; HEIC uses existing heic2any; GIF uses existing gifuct-js/upng-js; tracing uses existing imagetracerjs. No new dependencies."
+    },
+    {
+      "slug": "m4a-to-wav",
+      "grouping": "audio",
+      "historicallyApproved": false,
+      "originalComponent": "components/tools/AacToWavClient.tsx",
+      "status": "implemented_awaiting_integrated_browser_QA",
+      "findingsAndChanges": [
+        "Audio paths lacked bounded decoding/context cleanup. MP3-named routes actually created WAV.",
+        "Validate container bytes and limits, close AudioContext, encode interleaved 16-bit PCM WAV, export the current result, and cancel/invalidate stale work.",
+        "Browser audio decoder support is conditional. MKV may fail on the integrated browser; a real codec failure is not accepted as conversion success."
+      ],
+      "browserCase": {
+        "file": "scripts/qa/cases/media-conversion.mjs",
+        "slug": "m4a-to-wav",
+        "status": "authored_not_run",
+        "assertions": "Downloads RIFF/WAVE; verifies declared chunk sizes, 16-bit PCM, 44.1kHz mono approximately 2-second non-silent 440Hz signal, invalid container cleanup and Clear. MP3 cases explicitly fail acceptance after testing the WAV fallback."
+      },
+      "scopedTests": [
+        "lib/media-conversion/media.test.ts"
+      ],
+      "remainingBlockers": [],
+      "runtimeConstraints": "Browser audio decoder support is conditional. MKV may fail on the integrated browser; a real codec failure is not accepted as conversion success."
+    },
+    {
+      "slug": "mkv-to-mp3",
+      "grouping": "audio",
+      "historicallyApproved": false,
+      "originalComponent": "components/tools/MkvToMp3Client.tsx",
+      "status": "blocked_dependency",
+      "findingsAndChanges": [
+        "Audio paths lacked bounded decoding/context cleanup. MP3-named routes actually created WAV.",
+        "Validate container bytes and limits, close AudioContext, encode interleaved 16-bit PCM WAV, export the current result, and cancel/invalidate stale work.",
+        "Browser audio decoder support is conditional. MKV may fail on the integrated browser; a real codec failure is not accepted as conversion success."
+      ],
+      "browserCase": {
+        "file": "scripts/qa/cases/media-conversion.mjs",
+        "slug": "mkv-to-mp3",
+        "status": "authored_not_run",
+        "assertions": "Downloads RIFF/WAVE; verifies declared chunk sizes, 16-bit PCM, 44.1kHz mono approximately 2-second non-silent 440Hz signal, invalid container cleanup and Clear. MP3 cases explicitly fail acceptance after testing the WAV fallback."
+      },
+      "scopedTests": [
+        "lib/media-conversion/media.test.ts"
+      ],
+      "remainingBlockers": [
+        "No MP3 encoder dependency or conversion backend. Current component honestly rejects MP3 and exposes an explicitly selected real WAV alternative. MP3 acceptance case intentionally records failure."
+      ],
+      "runtimeConstraints": "Browser audio decoder support is conditional. MKV may fail on the integrated browser; a real codec failure is not accepted as conversion success."
+    },
+    {
+      "slug": "mp4-to-mp3",
+      "grouping": "audio",
+      "historicallyApproved": false,
+      "originalComponent": "components/tools/MP4ToMP3Client.tsx",
+      "status": "blocked_dependency",
+      "findingsAndChanges": [
+        "Audio paths lacked bounded decoding/context cleanup. MP3-named routes actually created WAV.",
+        "Validate container bytes and limits, close AudioContext, encode interleaved 16-bit PCM WAV, export the current result, and cancel/invalidate stale work.",
+        "Browser audio decoder support is conditional. MKV may fail on the integrated browser; a real codec failure is not accepted as conversion success."
+      ],
+      "browserCase": {
+        "file": "scripts/qa/cases/media-conversion.mjs",
+        "slug": "mp4-to-mp3",
+        "status": "authored_not_run",
+        "assertions": "Downloads RIFF/WAVE; verifies declared chunk sizes, 16-bit PCM, 44.1kHz mono approximately 2-second non-silent 440Hz signal, invalid container cleanup and Clear. MP3 cases explicitly fail acceptance after testing the WAV fallback."
+      },
+      "scopedTests": [
+        "lib/media-conversion/media.test.ts"
+      ],
+      "remainingBlockers": [
+        "No MP3 encoder dependency or conversion backend. Current component honestly rejects MP3 and exposes an explicitly selected real WAV alternative. MP3 acceptance case intentionally records failure."
+      ],
+      "runtimeConstraints": "Browser audio decoder support is conditional. MKV may fail on the integrated browser; a real codec failure is not accepted as conversion success."
+    },
+    {
+      "slug": "mp4-to-wav",
+      "grouping": "audio",
+      "historicallyApproved": false,
+      "originalComponent": "components/tools/AacToWavClient.tsx",
+      "status": "implemented_awaiting_integrated_browser_QA",
+      "findingsAndChanges": [
+        "Audio paths lacked bounded decoding/context cleanup. MP3-named routes actually created WAV.",
+        "Validate container bytes and limits, close AudioContext, encode interleaved 16-bit PCM WAV, export the current result, and cancel/invalidate stale work.",
+        "Browser audio decoder support is conditional. MKV may fail on the integrated browser; a real codec failure is not accepted as conversion success."
+      ],
+      "browserCase": {
+        "file": "scripts/qa/cases/media-conversion.mjs",
+        "slug": "mp4-to-wav",
+        "status": "authored_not_run",
+        "assertions": "Downloads RIFF/WAVE; verifies declared chunk sizes, 16-bit PCM, 44.1kHz mono approximately 2-second non-silent 440Hz signal, invalid container cleanup and Clear. MP3 cases explicitly fail acceptance after testing the WAV fallback."
+      },
+      "scopedTests": [
+        "lib/media-conversion/media.test.ts"
+      ],
+      "remainingBlockers": [],
+      "runtimeConstraints": "Browser audio decoder support is conditional. MKV may fail on the integrated browser; a real codec failure is not accepted as conversion success."
+    },
+    {
+      "slug": "png-to-webp",
+      "grouping": "image",
+      "historicallyApproved": false,
+      "originalComponent": "components/tools/ImageFormatConverterClient.tsx",
+      "status": "awaiting_central_route_mapping",
+      "findingsAndChanges": [
+        "Inputs were often validated by MIME/extension alone; asynchronous operations leaked URLs or exposed stale results.",
+        "Bounded byte signatures/dimensions, GIF total-frame budget, encoder MIME and byte validation, decoded output dimension checks, measured byte counts, explicit JPEG background, cancel/generation guards and result URL cleanup.",
+        "Real canvas transcodes; HEIC uses existing heic2any; GIF uses existing gifuct-js/upng-js; tracing uses existing imagetracerjs. No new dependencies."
+      ],
+      "browserCase": {
+        "file": "scripts/qa/cases/media-conversion.mjs",
+        "slug": "png-to-webp",
+        "status": "authored_not_run",
+        "assertions": "Downloads and saves actual output; signature/extension, browser-decoded 16x12 dimensions and pixels, alpha/JPEG background where applicable, APNG frame count/delays/pixel differences, SVG paths, quality invalidation, bad bytes and Clear."
+      },
+      "scopedTests": [
+        "lib/media-conversion/media.test.ts"
+      ],
+      "remainingBlockers": [
+        "Parent must map only png-to-webp to MediaConversionImageClient in app/tools/[slug]/ToolUI.tsx; protected approved component left byte-for-byte unchanged."
+      ],
+      "preparedComponent": "components/tools/MediaConversionImageClient.tsx",
+      "runtimeConstraints": "Real canvas transcodes; HEIC uses existing heic2any; GIF uses existing gifuct-js/upng-js; tracing uses existing imagetracerjs. No new dependencies."
+    },
+    {
+      "slug": "svg-to-png",
+      "grouping": "image",
+      "historicallyApproved": false,
+      "originalComponent": "components/tools/ImageFormatConverterClient.tsx",
+      "status": "awaiting_central_route_mapping",
+      "findingsAndChanges": [
+        "Inputs were often validated by MIME/extension alone; asynchronous operations leaked URLs or exposed stale results.",
+        "Bounded byte signatures/dimensions, GIF total-frame budget, encoder MIME and byte validation, decoded output dimension checks, measured byte counts, explicit JPEG background, cancel/generation guards and result URL cleanup.",
+        "Real canvas transcodes; HEIC uses existing heic2any; GIF uses existing gifuct-js/upng-js; tracing uses existing imagetracerjs. No new dependencies."
+      ],
+      "browserCase": {
+        "file": "scripts/qa/cases/media-conversion.mjs",
+        "slug": "svg-to-png",
+        "status": "authored_not_run",
+        "assertions": "Downloads and saves actual output; signature/extension, browser-decoded 16x12 dimensions and pixels, alpha/JPEG background where applicable, APNG frame count/delays/pixel differences, SVG paths, quality invalidation, bad bytes and Clear."
+      },
+      "scopedTests": [
+        "lib/media-conversion/media.test.ts"
+      ],
+      "remainingBlockers": [
+        "Parent must map only svg-to-png to MediaConversionImageClient in app/tools/[slug]/ToolUI.tsx; protected approved component left byte-for-byte unchanged."
+      ],
+      "preparedComponent": "components/tools/MediaConversionImageClient.tsx",
+      "runtimeConstraints": "Real canvas transcodes; HEIC uses existing heic2any; GIF uses existing gifuct-js/upng-js; tracing uses existing imagetracerjs. No new dependencies."
+    },
+    {
+      "slug": "svg-to-jpg",
+      "grouping": "image",
+      "historicallyApproved": false,
+      "originalComponent": "components/tools/ImageFormatConverterClient.tsx",
+      "status": "awaiting_central_route_mapping",
+      "findingsAndChanges": [
+        "Inputs were often validated by MIME/extension alone; asynchronous operations leaked URLs or exposed stale results.",
+        "Bounded byte signatures/dimensions, GIF total-frame budget, encoder MIME and byte validation, decoded output dimension checks, measured byte counts, explicit JPEG background, cancel/generation guards and result URL cleanup.",
+        "Real canvas transcodes; HEIC uses existing heic2any; GIF uses existing gifuct-js/upng-js; tracing uses existing imagetracerjs. No new dependencies."
+      ],
+      "browserCase": {
+        "file": "scripts/qa/cases/media-conversion.mjs",
+        "slug": "svg-to-jpg",
+        "status": "authored_not_run",
+        "assertions": "Downloads and saves actual output; signature/extension, browser-decoded 16x12 dimensions and pixels, alpha/JPEG background where applicable, APNG frame count/delays/pixel differences, SVG paths, quality invalidation, bad bytes and Clear."
+      },
+      "scopedTests": [
+        "lib/media-conversion/media.test.ts"
+      ],
+      "remainingBlockers": [
+        "Parent must map only svg-to-jpg to MediaConversionImageClient in app/tools/[slug]/ToolUI.tsx; protected approved component left byte-for-byte unchanged."
+      ],
+      "preparedComponent": "components/tools/MediaConversionImageClient.tsx",
+      "runtimeConstraints": "Real canvas transcodes; HEIC uses existing heic2any; GIF uses existing gifuct-js/upng-js; tracing uses existing imagetracerjs. No new dependencies."
+    },
+    {
+      "slug": "svg-to-webp",
+      "grouping": "image",
+      "historicallyApproved": false,
+      "originalComponent": "components/tools/ImageFormatConverterClient.tsx",
+      "status": "awaiting_central_route_mapping",
+      "findingsAndChanges": [
+        "Inputs were often validated by MIME/extension alone; asynchronous operations leaked URLs or exposed stale results.",
+        "Bounded byte signatures/dimensions, GIF total-frame budget, encoder MIME and byte validation, decoded output dimension checks, measured byte counts, explicit JPEG background, cancel/generation guards and result URL cleanup.",
+        "Real canvas transcodes; HEIC uses existing heic2any; GIF uses existing gifuct-js/upng-js; tracing uses existing imagetracerjs. No new dependencies."
+      ],
+      "browserCase": {
+        "file": "scripts/qa/cases/media-conversion.mjs",
+        "slug": "svg-to-webp",
+        "status": "authored_not_run",
+        "assertions": "Downloads and saves actual output; signature/extension, browser-decoded 16x12 dimensions and pixels, alpha/JPEG background where applicable, APNG frame count/delays/pixel differences, SVG paths, quality invalidation, bad bytes and Clear."
+      },
+      "scopedTests": [
+        "lib/media-conversion/media.test.ts"
+      ],
+      "remainingBlockers": [
+        "Parent must map only svg-to-webp to MediaConversionImageClient in app/tools/[slug]/ToolUI.tsx; protected approved component left byte-for-byte unchanged."
+      ],
+      "preparedComponent": "components/tools/MediaConversionImageClient.tsx",
+      "runtimeConstraints": "Real canvas transcodes; HEIC uses existing heic2any; GIF uses existing gifuct-js/upng-js; tracing uses existing imagetracerjs. No new dependencies."
+    },
+    {
+      "slug": "trace",
+      "grouping": "image",
+      "historicallyApproved": false,
+      "originalComponent": "components/tools/LogoTraceConverterClient.tsx",
+      "status": "implemented_awaiting_integrated_browser_QA",
+      "findingsAndChanges": [
+        "Inputs were often validated by MIME/extension alone; asynchronous operations leaked URLs or exposed stale results.",
+        "Bounded byte signatures/dimensions, GIF total-frame budget, encoder MIME and byte validation, decoded output dimension checks, measured byte counts, explicit JPEG background, cancel/generation guards and result URL cleanup.",
+        "Real canvas transcodes; HEIC uses existing heic2any; GIF uses existing gifuct-js/upng-js; tracing uses existing imagetracerjs. No new dependencies."
+      ],
+      "browserCase": {
+        "file": "scripts/qa/cases/media-conversion.mjs",
+        "slug": "trace",
+        "status": "authored_not_run",
+        "assertions": "Downloads and saves actual output; signature/extension, browser-decoded 16x12 dimensions and pixels, alpha/JPEG background where applicable, APNG frame count/delays/pixel differences, SVG paths, quality invalidation, bad bytes and Clear."
+      },
+      "scopedTests": [
+        "lib/media-conversion/media.test.ts"
+      ],
+      "remainingBlockers": [],
+      "runtimeConstraints": "Real canvas transcodes; HEIC uses existing heic2any; GIF uses existing gifuct-js/upng-js; tracing uses existing imagetracerjs. No new dependencies."
+    },
+    {
+      "slug": "webp-to-jpg",
+      "grouping": "image",
+      "historicallyApproved": false,
+      "originalComponent": "components/tools/ImageFormatConverterClient.tsx",
+      "status": "awaiting_central_route_mapping",
+      "findingsAndChanges": [
+        "Inputs were often validated by MIME/extension alone; asynchronous operations leaked URLs or exposed stale results.",
+        "Bounded byte signatures/dimensions, GIF total-frame budget, encoder MIME and byte validation, decoded output dimension checks, measured byte counts, explicit JPEG background, cancel/generation guards and result URL cleanup.",
+        "Real canvas transcodes; HEIC uses existing heic2any; GIF uses existing gifuct-js/upng-js; tracing uses existing imagetracerjs. No new dependencies."
+      ],
+      "browserCase": {
+        "file": "scripts/qa/cases/media-conversion.mjs",
+        "slug": "webp-to-jpg",
+        "status": "authored_not_run",
+        "assertions": "Downloads and saves actual output; signature/extension, browser-decoded 16x12 dimensions and pixels, alpha/JPEG background where applicable, APNG frame count/delays/pixel differences, SVG paths, quality invalidation, bad bytes and Clear."
+      },
+      "scopedTests": [
+        "lib/media-conversion/media.test.ts"
+      ],
+      "remainingBlockers": [
+        "Parent must map only webp-to-jpg to MediaConversionImageClient in app/tools/[slug]/ToolUI.tsx; protected approved component left byte-for-byte unchanged."
+      ],
+      "preparedComponent": "components/tools/MediaConversionImageClient.tsx",
+      "runtimeConstraints": "Real canvas transcodes; HEIC uses existing heic2any; GIF uses existing gifuct-js/upng-js; tracing uses existing imagetracerjs. No new dependencies."
+    },
+    {
+      "slug": "webp-to-png",
+      "grouping": "image",
+      "historicallyApproved": false,
+      "originalComponent": "components/tools/ImageFormatConverterClient.tsx",
+      "status": "awaiting_central_route_mapping",
+      "findingsAndChanges": [
+        "Inputs were often validated by MIME/extension alone; asynchronous operations leaked URLs or exposed stale results.",
+        "Bounded byte signatures/dimensions, GIF total-frame budget, encoder MIME and byte validation, decoded output dimension checks, measured byte counts, explicit JPEG background, cancel/generation guards and result URL cleanup.",
+        "Real canvas transcodes; HEIC uses existing heic2any; GIF uses existing gifuct-js/upng-js; tracing uses existing imagetracerjs. No new dependencies."
+      ],
+      "browserCase": {
+        "file": "scripts/qa/cases/media-conversion.mjs",
+        "slug": "webp-to-png",
+        "status": "authored_not_run",
+        "assertions": "Downloads and saves actual output; signature/extension, browser-decoded 16x12 dimensions and pixels, alpha/JPEG background where applicable, APNG frame count/delays/pixel differences, SVG paths, quality invalidation, bad bytes and Clear."
+      },
+      "scopedTests": [
+        "lib/media-conversion/media.test.ts"
+      ],
+      "remainingBlockers": [
+        "Parent must map only webp-to-png to MediaConversionImageClient in app/tools/[slug]/ToolUI.tsx; protected approved component left byte-for-byte unchanged."
+      ],
+      "preparedComponent": "components/tools/MediaConversionImageClient.tsx",
+      "runtimeConstraints": "Real canvas transcodes; HEIC uses existing heic2any; GIF uses existing gifuct-js/upng-js; tracing uses existing imagetracerjs. No new dependencies."
+    },
+    {
+      "slug": "base64-image-decoder",
+      "grouping": "base64",
+      "historicallyApproved": false,
+      "originalComponent": "components/tools/Base64ImageDecoderClient.tsx",
+      "status": "implemented_awaiting_integrated_browser_QA",
+      "findingsAndChanges": [
+        "Decoder trusted declared MIME, never validated image bytes/dimensions, leaked URLs, raced delayed decode, and always named downloads .png.",
+        "Strict padded Base64 and MIME/signature checks, raster decoding/dimension validation, correct extension, file/text size limits, current-result invalidation, example/clear and URL cleanup.",
+        "PNG/JPEG/WebP/GIF only. Explicit Decode action for bounded expensive image decoding."
+      ],
+      "browserCase": {
+        "file": "scripts/qa/cases/media-conversion.mjs",
+        "slug": "base64-image-decoder",
+        "status": "authored_not_run",
+        "assertions": "Real JPEG data-URL -> downloaded JPEG signature/extension/dimensions/red pixels; declared PNG versus JPEG bytes rejection and Clear."
+      },
+      "scopedTests": [
+        "lib/media-conversion/media.test.ts"
+      ],
+      "remainingBlockers": []
+    },
+    {
+      "slug": "all-in-one-unit-converter",
+      "grouping": "units",
+      "historicallyApproved": false,
+      "originalComponent": "components/tools/AllInOneUnitConverterClient.tsx",
+      "status": "implemented_awaiting_integrated_browser_QA",
+      "findingsAndChanges": [
+        "parseInt/parseFloat accepted trailing garbage, lost integer precision, and converted empty/invalid inputs to misleading zero results.",
+        "Exact BigInt bases 2\u201336, strict finite input parsing, live results, absolute-zero checks, exact common SI factors, v2 Example/Clear, and preserved category/preset/use-as-input workflows.",
+        "Base conversion is integer-only and bounded to 4096 input characters. Unit output is rounded to 12 significant digits."
+      ],
+      "browserCase": {
+        "file": "scripts/qa/cases/media-conversion.mjs",
+        "slug": "all-in-one-unit-converter",
+        "status": "authored_not_run",
+        "assertions": "Independent known-answer checks above Number precision, invalid digit rejection, 100C=212F, 1000m=1km, 36km/h=10m/s, absolute-zero rejection and empty Clear state."
+      },
+      "scopedTests": [
+        "lib/media-conversion/data.test.ts"
+      ],
+      "remainingBlockers": []
+    },
+    {
+      "slug": "markdown-table-from-json",
+      "grouping": "data",
+      "historicallyApproved": false,
+      "originalComponent": "components/tools/JsonToMarkdownTableClient.tsx",
+      "status": "awaiting_central_route_mapping",
+      "findingsAndChanges": [
+        "Loose SQL/CSV parsing could silently truncate or lose values. Markdown only inspected the first object and discarded later columns.",
+        "Strict bounded parsers, safe integer rejection for JSON SQL numbers, quoted/empty literals, duplicate header preservation, all-object Markdown validation and header union, live output and current-result download.",
+        "SQL supports INSERT VALUES literals only. XML uses field name attributes. Markdown escapes pipes, HTML and newlines."
+      ],
+      "browserCase": {
+        "file": "scripts/qa/cases/media-conversion.mjs",
+        "slug": "markdown-table-from-json",
+        "status": "authored_not_run",
+        "assertions": "Downloads and independently parses exact expected JSON/Markdown/XML, malformed-input error, stale-download removal and Clear."
+      },
+      "scopedTests": [
+        "lib/media-conversion/data.test.ts"
+      ],
+      "remainingBlockers": [
+        "Parent must map only markdown-table-from-json to MediaConversionMarkdownClient in app/tools/[slug]/ToolUI.tsx; protected approved component left byte-for-byte unchanged."
+      ],
+      "preparedComponent": "components/tools/MediaConversionMarkdownClient.tsx"
+    },
+    {
+      "slug": "general-unit-converter",
+      "grouping": "units",
+      "historicallyApproved": false,
+      "originalComponent": "components/tools/AllInOneUnitConverterClient.tsx",
+      "status": "implemented_awaiting_integrated_browser_QA",
+      "findingsAndChanges": [
+        "parseInt/parseFloat accepted trailing garbage, lost integer precision, and converted empty/invalid inputs to misleading zero results.",
+        "Exact BigInt bases 2\u201336, strict finite input parsing, live results, absolute-zero checks, exact common SI factors, v2 Example/Clear, and preserved category/preset/use-as-input workflows.",
+        "Base conversion is integer-only and bounded to 4096 input characters. Unit output is rounded to 12 significant digits."
+      ],
+      "browserCase": {
+        "file": "scripts/qa/cases/media-conversion.mjs",
+        "slug": "general-unit-converter",
+        "status": "authored_not_run",
+        "assertions": "Independent known-answer checks above Number precision, invalid digit rejection, 100C=212F, 1000m=1km, 36km/h=10m/s, absolute-zero rejection and empty Clear state."
+      },
+      "scopedTests": [
+        "lib/media-conversion/data.test.ts"
+      ],
+      "remainingBlockers": []
+    },
+    {
+      "slug": "bin-hex-dec-converter",
+      "grouping": "units",
+      "historicallyApproved": false,
+      "originalComponent": "components/tools/BinHexDecConverterClient.tsx",
+      "status": "implemented_awaiting_integrated_browser_QA",
+      "findingsAndChanges": [
+        "parseInt/parseFloat accepted trailing garbage, lost integer precision, and converted empty/invalid inputs to misleading zero results.",
+        "Exact BigInt bases 2\u201336, strict finite input parsing, live results, absolute-zero checks, exact common SI factors, v2 Example/Clear, and preserved category/preset/use-as-input workflows.",
+        "Base conversion is integer-only and bounded to 4096 input characters. Unit output is rounded to 12 significant digits."
+      ],
+      "browserCase": {
+        "file": "scripts/qa/cases/media-conversion.mjs",
+        "slug": "bin-hex-dec-converter",
+        "status": "authored_not_run",
+        "assertions": "Independent known-answer checks above Number precision, invalid digit rejection, 100C=212F, 1000m=1km, 36km/h=10m/s, absolute-zero rejection and empty Clear state."
+      },
+      "scopedTests": [
+        "lib/media-conversion/data.test.ts"
+      ],
+      "remainingBlockers": []
+    }
+  ],
+  "integrationNotes": [
+    "Only 25 assigned unapproved component files changed. Two approved shared components and all central files are untouched.",
+    "Owned new helpers live only in lib/media-conversion and components/tools/media-conversion. No cross-group helper edits.",
+    "node_modules dependency symlink remains untracked.",
+    "No push, merge, branch switch, server, build or browser worker.",
+    "Scopes and runtime limits are displayed in the UI; Clear cancels, invalidates generations and clears downloadable state. Expensive synchronous library work is bounded but cannot be preempted mid-call; stale results are discarded."
+  ]
+}
