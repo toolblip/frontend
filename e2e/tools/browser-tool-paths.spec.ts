@@ -18,7 +18,7 @@ async function dismissCookies(page: Page) {
   const slug = new URL(page.url()).pathname.split('/').pop();
   if (slug && ['add-pages-to-pdf', 'annotate-pdf', 'edit-pdf', 'extract-images-from-pdf',
     'merge-pdfs', 'pdf-rearrange', 'delete-pages-from-pdf', 'sign-pdf',
-    'unlock-pdf', 'add-watermark-to-pdf'].includes(slug)) {
+    'pdf-password-remover', 'add-watermark-to-pdf'].includes(slug)) {
     await waitForToolHandler(page.getByRole('button', { name: 'Example', exact: true }), 'onClick');
   }
 }
@@ -34,7 +34,8 @@ test.describe('Browser tool execution paths', () => {
       ['rearrange', 'pdf-rearrange'],
       ['delete-pages', 'delete-pages-from-pdf'],
       ['sign', 'sign-pdf'],
-      ['unlock', 'unlock-pdf'],
+      ['unlock', 'pdf-password-remover'],
+      ['unlock-pdf', 'pdf-password-remover'],
       ['watermark', 'add-watermark-to-pdf'],
     ] as const;
 
@@ -63,7 +64,7 @@ test.describe('Browser tool execution paths', () => {
       await expect(page.getByRole('button', { name: 'Clear', exact: true })).toBeVisible();
     }
 
-    for (const canonicalSlug of ['sign-pdf', 'unlock-pdf', 'add-watermark-to-pdf']) {
+    for (const canonicalSlug of ['sign-pdf', 'pdf-password-remover', 'add-watermark-to-pdf']) {
       const response = await request.get(`/tools/${canonicalSlug}`);
       expect(response.status()).toBe(200);
     }
@@ -525,8 +526,8 @@ test.describe('Browser tool execution paths', () => {
     expect(download.suggestedFilename()).toMatch(/^signed-sign-sample\.pdf$/i);
   });
 
-  test('unlock-pdf requires permission acknowledgment before processing', async ({ page }, testInfo) => {
-    await page.goto('/tools/unlock-pdf');
+  test('pdf-password-remover requires permission acknowledgment before processing', async ({ page }, testInfo) => {
+    await page.goto('/tools/pdf-password-remover');
     await dismissCookies(page);
 
     const example = page.getByRole('button', { name: 'Example', exact: true });

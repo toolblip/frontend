@@ -21,7 +21,7 @@ The workflow uses Node 24 and runs Monday at 03:00 UTC or manually. Its first Ac
 ## Integrated local validation
 
 - [x] Tracker: 14 Node tests passed with synthetic credentials and injected transport/time.
-- [x] Full Vitest suite after integration fixes: 69 files, 862 tests; one worker and a 30-second timeout for CPU-heavy tests.
+- [x] Full Vitest suite after integration fixes: `npx vitest run --maxWorkers=1 > /tmp/tb-recovery-default-vitest.log 2>&1` passed with exit code 0 (69 files, 862 tests), without a timeout override.
 - [x] Standalone TypeScript check and production build completed with exit code 0; 1,553 pages generated.
 - [x] Production-server HTTP acceptance: 46 flat aliases and nine category aliases, policy-aware metadata, 337 canonical tool sitemap URLs, discovery links and unknown-blog 404.
 - [x] Browser acceptance: 68 Playwright tests passed, including focused regressions and populated examples at 1440px/375px; eight existing functional fixtures also passed in isolated Chrome. Together these cover all twelve priority tools.
