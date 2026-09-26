@@ -25,7 +25,7 @@ node scripts/qa/run.mjs --engine webkit \
   --inventory /absolute/path/to/inventory.json --out "$TMPDIR/opencode/toolblip-webkit-new-run"
 ```
 
-On HTTP development origins only, `--strip-dev-upgrade-csp` removes the `upgrade-insecure-requests` directive from document CSP headers. Other directives stay intact. It is rejected for HTTPS and Toolblip production origins. This changes the development response and is recorded in metadata; don't treat that run as an unchanged production audit.
+On HTTP development origins only, `--strip-dev-upgrade-csp` removes the `upgrade-insecure-requests` directive from document CSP headers and the loopback WebP worker response (whose own policy controls its WASM fetch). Other directives stay intact. It is rejected for HTTPS and Toolblip production origins. This changes the development response and is recorded in metadata; don't treat that run as an unchanged production audit.
 
 For Chrome on loopback origins, that option also grants the context's origin-scoped local-network permission. Chrome otherwise can block the real HMR WebSocket after document interception changes its network address classification. Runtime errors remain recorded and blocking.
 
@@ -49,11 +49,11 @@ expectedConsoleErrors: [
 
 These rules use exact pathnames, without query strings, fragments, or wildcards. They only apply to responses on the audit origin. Console text must match exactly and its source URL and status must link to an observed nonblocking HTTP response. An HTTP rule alone doesn't exempt its console error. Arbitrary application console messages and page exceptions cannot be exempted. Invalid rules fail fixture loading. All matched records keep their original fields, classification, reason, and `blocking: false`; linked console records include `httpEvidence`.
 
-Each case receives exactly `{page, tool, check, expect, baseURL, artifactsDir}`. `tool` is the first `.tb-v2-tool-card`; `expect` is Playwright's assertion API. Use scoped selectors and independent expected answers. Call `check(boolean, message)` at least once. It records evidence and throws on anything other than `true`. A caught failure still fails the fixture; Playwright assertions alone don't replace `check`. Save downloads with `download.saveAs()` into `artifactsDir`, since the browser runs through a server connection.
+Each case receives `{page, tool, check, expect, baseURL, artifactsDir, abortExpectedRequest}`. Use `abortExpectedRequest(route, reason)` only for an intentional failed-request test. It records the intercepted request identity and links a strict browser resource-error message to that unique injection. Real failures, missing source URLs and ambiguous matches remain blocking. `tool` is the first `.tb-v2-tool-card`; `expect` is Playwright's assertion API. Use scoped selectors and independent expected answers. Call `check(boolean, message)` at least once. It records evidence and throws on anything other than `true`. A caught failure still fails the fixture; Playwright assertions alone don't replace `check`. Save downloads with `download.saveAs()` into `artifactsDir`, since the browser runs through a server connection.
 
 Examples and Clear are required by default. An empty form may have a disabled Clear button. Reference tools can set `requiresExample: false` or `requiresClear: false`; document why in the case, preferably with `exceptionReason` so it also appears in the report. Fixtures should test Clear behavior after input, invalid input, and relevant modes. The baseline checks presence, not those functional behaviors.
 
-Actions have an 8-second timeout, navigation and development CSP document fetches 30 seconds, hydration detection 45 seconds, and each fixture 60 seconds. Hydration requires React properties on tool descendants. It isn't proof that a tool works; fixtures must wait for their own usable actions and outputs.
+Actions have an 8-second timeout, navigation and development CSP document fetches 30 seconds, hydration detection 45 seconds, and each fixture 60 seconds. Canonical metadata is checked after hydration, allowing up to eight seconds for streamed metadata without relaxing exact URL checks. Hydration requires React properties on tool descendants. It isn't proof that a tool works; fixtures must wait for their own usable actions and outputs.
 
 # Read results
 

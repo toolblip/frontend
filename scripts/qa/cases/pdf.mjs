@@ -1,3 +1,4 @@
+import { reviewPdfPlacement, reviewPdfImageDecode } from '../regressions/pdf-review.mjs';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { PDFDocument, PDFName, decodePDFRawStream } from 'pdf-lib';
@@ -235,6 +236,9 @@ export default slugs.map(slug => ({ slug, async test({ page, tool, check, expect
     prove(extractedJpeg.equals(jpg),'DCT JPEG extraction preserves original bytes and format');
     await clear(); await load(); await expect(tool.getByText('No embedded images were found in this PDF.',{exact:true})).toBeVisible(); prove(true,'Text-only PDF reports zero images without fake exports');
   }
+  const reviewContext = { page, tool, slug, check, expect, artifactsDir };
+  if (['annotate-pdf','edit-pdf','sign-pdf'].includes(slug)) await reviewPdfPlacement(reviewContext);
+  if (slug === 'extract-images-from-pdf') await reviewPdfImageDecode(reviewContext);
   const oldViewport=page.viewportSize(); await page.setViewportSize({width:320,height:800});
   prove(await page.evaluate(()=>document.documentElement.scrollWidth <= window.innerWidth+1),'Loaded tool does not cause horizontal overflow at 320px');
   if(oldViewport) await page.setViewportSize(oldViewport);

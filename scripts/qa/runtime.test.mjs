@@ -72,3 +72,44 @@ test('HTTP rules cannot suppress arbitrary console errors or broaden to other or
   const external=runtime([{...http('/api/test',503),url:'https://other.invalid/api/test'}]); classifyRuntime(external,base,fixture); assert.equal(external.status,'failed');
   for (const pathname of ['*','/api/*','//other.invalid/api','/api/test?all=true']) assert.throws(()=>classifyRuntime(runtime(),base,{expectedHttpErrors:[{pathname,status:503,reason:'Invalid broad rule'}]}),/expectedHttpErrors/);
 });
+
+const injectedFailure = (extra={}) => ({url:base+'/lookup',requestId:'request-1',sequence:4,failure:{errorText:'net::ERR_FAILED'},injectedAbort:{requestId:'request-1',sequence:2,errorCode:'failed',reason:'Controlled lookup failure'},...extra});
+const abortConsole = (extra={}) => ({text:'Failed to load resource: net::ERR_FAILED',source:{url:base+'/lookup'},sequence:3,...extra});
+test('explicit injected abort links strict resource console evidence to the exact failed request',()=>{
+  for (const text of ['Failed to load resource: net::ERR_FAILED','Failed to load resource: An error occurred while loading the resource.']) {
+    const r=runtime([], [abortConsole({text})]); r.failedRequests=[injectedFailure()];
+    classifyRuntime(r,base); assert.equal(r.status,'passed');
+    assert.equal(r.consoleErrors[0].failedRequestEvidence,'failedRequests[0]');
+    assert.equal(r.failedRequests[0].classification,'expected-fixture-abort');
+  }
+});
+test('abort allowance rejects earlier same-URL errors, arbitrary text, missing evidence, and mismatched identity',()=>{
+  for (const [c,f] of [
+    [abortConsole({sequence:1}),injectedFailure()],
+    [abortConsole({text:'tool failure'}),injectedFailure()],
+    [abortConsole({source:{url:base+'/other'}}),injectedFailure()],
+    [abortConsole(),injectedFailure({injectedAbort:undefined})],
+    [abortConsole(),injectedFailure({requestId:'other'})],
+    [abortConsole(),injectedFailure({failure:{errorText:'net::ERR_CONNECTION_REFUSED'}})],
+  ]) { const r=runtime([], [c]); r.failedRequests=[f]; classifyRuntime(r,base); assert.equal(r.status,'failed'); }
+});
+test('ambiguous same-URL real failures and duplicate console records remain blocking',()=>{
+  const r=runtime([], [abortConsole()]); r.failedRequests=[injectedFailure(),{url:base+'/lookup',requestId:'real',sequence:1,failure:{errorText:'net::ERR_FAILED'}}];
+  classifyRuntime(r,base); assert.equal(r.status,'failed');
+  const duplicate=runtime([], [abortConsole(),abortConsole({sequence:5})]); duplicate.failedRequests=[injectedFailure()];
+  classifyRuntime(duplicate,base); assert.equal(duplicate.status,'failed');
+});
+
+test('earlier same-URL console remains blocking alongside an allowed later injected error',()=>{
+  const r=runtime([], [abortConsole({sequence:1}),abortConsole()]); r.failedRequests=[injectedFailure()];
+  classifyRuntime(r,base); assert.equal(r.status,'failed');
+  assert.equal(r.consoleErrors[0].blocking,true); assert.equal(r.consoleErrors[1].blocking,false);
+});
+test('sequential explicit failures pair one-to-one while overlapping injections are ambiguous',()=>{
+  const second=injectedFailure({requestId:'request-2',sequence:8,injectedAbort:{requestId:'request-2',sequence:6,errorCode:'failed',reason:'Second controlled failure'}});
+  const r=runtime([], [abortConsole(),abortConsole({sequence:7})]); r.failedRequests=[injectedFailure(),second];
+  classifyRuntime(r,base); assert.equal(r.status,'passed');
+  assert.equal(r.consoleErrors[1].failedRequestEvidence,'failedRequests[1]');
+  const ambiguous=runtime([], [abortConsole({sequence:7})]); ambiguous.failedRequests=[injectedFailure(),second];
+  classifyRuntime(ambiguous,base); assert.equal(ambiguous.status,'failed');
+});

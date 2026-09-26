@@ -1,6 +1,7 @@
 /** Parent-run integrated browser cases. This worker does not start a server/browser. */
 import { mkdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
+import { execFileSync } from 'node:child_process';
 import { createRequire } from 'node:module';
 import { inflateSync } from 'node:zlib';
 const require = createRequire(import.meta.url);
@@ -174,25 +175,31 @@ function spreadsheetCase(slug, format) {
 function audioCase(slug, mp3 = false) {
   return { slug, async test(ctx) {
     const { tool, check, expect } = ctx; await example(ctx); await expect(tool.getByRole('button', { name: 'Convert', exact: true })).toBeEnabled();
-    if (mp3) {
-      await tool.getByRole('button', { name: 'Convert', exact: true }).click(); await expect(tool.getByRole('alert')).toContainText('MP3 encoding is unavailable'); await expect(tool.getByRole('link', { name: /^Download/ })).toHaveCount(0);
-      check(true, 'Known MP3 dependency blocker is reported; WAV is never labeled MP3. This does not establish MP3 conversion acceptance.');
-      await tool.getByLabel('Output format', { exact: true }).selectOption('wav');
-    }
     await tool.getByRole('button', { name: 'Convert', exact: true }).click();
-    // Unsupported browser codecs are a real failure/blocker, never an automatic passing branch.
-    await expect(tool.getByRole('link', { name: /^Download WAV/ })).toBeVisible({ timeout: 45000 });
+    // Unsupported codecs remain failures: acceptance requires decoded downloaded audio.
+    await expect(tool.getByRole('link', { name: mp3 ? /^Download MP3/ : /^Download WAV/ })).toBeVisible({ timeout: 45000 });
     const { bytes, filename } = await downloadBytes({ ...ctx, slug });
-    check(filename.endsWith('.wav') && bytes.toString('ascii', 0, 4) === 'RIFF' && bytes.toString('ascii', 8, 12) === 'WAVE', 'Download is actual RIFF/WAVE with a WAV extension.');
-    const channels = bytes.readUInt16LE(22), rate = bytes.readUInt32LE(24), size = bytes.readUInt32LE(40);
-    check(bytes.readUInt16LE(20) === 1 && bytes.readUInt16LE(34) === 16 && size + 44 === bytes.length && bytes.readUInt32LE(4) + 8 === bytes.length, 'WAV is 16-bit PCM with exact container/data sizes.');
-    const duration = size / (rate * channels * 2); check(channels === 1 && Math.abs(duration - 2) < 0.15, `Decoded audio retains the two-second mono signal (${duration.toFixed(3)} seconds).`);
-    let crossings = 0, peak = 0, previous = 0;
-    for (let p = 44; p < bytes.length; p += channels * 2) { const s = bytes.readInt16LE(p); peak = Math.max(peak, Math.abs(s)); if (s >= 0 && previous < 0) crossings++; previous = s; }
-    check(peak > 1000 && Math.abs(crossings / duration - 440) < 25, 'Downloaded PCM contains the actual approximately 440 Hz tone, not silence.');
+    let samples, duration;
+    if (mp3) {
+      check(filename.endsWith('.mp3') && bytes[0] === 255 && (bytes[1] & 224) === 224, 'Download has MPEG audio frames and an MP3 extension.');
+      const probe = JSON.parse(execFileSync('ffprobe', ['-v', 'error', '-show_streams', '-of', 'json', 'pipe:0'], { input: bytes }).toString());
+      check(probe.streams[0].codec_name === 'mp3' && probe.streams[0].channels === 1, 'Independent FFprobe identifies genuine mono MP3 audio.');
+      const pcm = execFileSync('ffmpeg', ['-v', 'error', '-i', 'pipe:0', '-f', 's16le', '-ac', '1', '-ar', '44100', 'pipe:1'], { input: bytes, maxBuffer: 4 * 1024 * 1024 });
+      samples = Array.from({ length: pcm.length / 2 }, (_, i) => pcm.readInt16LE(i * 2)); duration = samples.length / 44100;
+    } else {
+      check(filename.endsWith('.wav') && bytes.toString('ascii', 0, 4) === 'RIFF' && bytes.toString('ascii', 8, 12) === 'WAVE', 'Download is actual RIFF/WAVE with a WAV extension.');
+      const channels = bytes.readUInt16LE(22), rate = bytes.readUInt32LE(24), size = bytes.readUInt32LE(40);
+      check(bytes.readUInt16LE(20) === 1 && bytes.readUInt16LE(34) === 16 && size + 44 === bytes.length && bytes.readUInt32LE(4) + 8 === bytes.length, 'WAV is 16-bit PCM with exact container/data sizes.');
+      check(channels === 1, 'Decoded WAV retains mono channels.'); duration = size / (rate * channels * 2);
+      samples = Array.from({ length: size / 2 }, (_, i) => bytes.readInt16LE(44 + i * 2));
+    }
+    check(Math.abs(duration - 2) < 0.15, `Decoded download retains two-second signal (${duration.toFixed(3)} seconds).`);
+    let crossings = 0, peak = 0, negative = false;
+    // Hysteresis excludes MP3 padding and near-zero quantization noise.
+    for (const sample of samples) { peak = Math.max(peak, Math.abs(sample)); if (sample < -500) negative = true; if (sample > 500 && negative) { crossings++; negative = false; } }
+    check(peak > 1000 && Math.abs(crossings / duration - 440) < 25, 'Independently decoded download contains the actual approximately 440 Hz tone, not silence.');
     await tool.getByLabel('Media file', { exact: true }).setInputFiles({ name: 'broken.mp4', mimeType: 'video/mp4', buffer: Buffer.from('not media') });
     await tool.getByRole('button', { name: 'Convert', exact: true }).click(); await expect(tool.getByRole('alert')).toContainText('Invalid input container'); await expect(tool.getByRole('link', { name: /^Download/ })).toHaveCount(0); check(true, 'Bad container bytes reject conversion and stale output.'); await clear(ctx);
-    if (mp3) check(false, 'BLOCKED: MP3 encoding is not implemented without an encoder dependency. The verified WAV fallback is not acceptance of this MP3 route.');
   } };
 }
 function videoCase(slug, subtitles = false) {
@@ -216,6 +223,10 @@ function videoCase(slug, subtitles = false) {
     }, bytes.toString('base64'));
     check(evidence.width === 64 && evidence.height === 48 && evidence.first[0] > 180 && evidence.first[1] < 60, 'Downloaded video decodes with original dimensions and red scene pixels.');
     check(Math.abs(evidence.duration - 1) < 0.3, `Export duration matches the selected 1-second range within recording tolerance (${evidence.duration}).`);
+    const audio = execFileSync('ffmpeg', ['-v', 'error', '-i', 'pipe:0', '-vn', '-f', 's16le', '-ac', '1', '-ar', '44100', 'pipe:1'], { input: bytes, maxBuffer: 4 * 1024 * 1024 });
+    const audioDuration = audio.length / 88200; let crossings = 0, negative = false, peak = 0;
+    for (let i = 0; i < audio.length; i += 2) { const sample = audio.readInt16LE(i); peak = Math.max(peak, Math.abs(sample)); if (sample < -500) negative = true; if (sample > 500 && negative) { crossings++; negative = false; } }
+    check(Math.abs(audioDuration - 1) < 0.3 && peak > 1000 && Math.abs(crossings / audioDuration - 440) < 35, `Independent audio decode preserves the selected tone and duration (${audioDuration.toFixed(3)} seconds).`);
     if (subtitles) check(evidence.white > 5 && evidence.dark > 50, 'Caption glyphs and dark caption background are present in the downloaded video pixels.');
     await tool.getByLabel('End seconds', { exact: true }).fill('0.2'); await expect(tool.getByRole('link', { name: /^Download/ })).toHaveCount(0);
     await tool.getByRole('button', { name: 'Convert', exact: true }).click(); await expect(tool.getByRole('alert')).toContainText(/range|overlap/i); check(true, 'Invalid range rejects export instead of silently clamping.');

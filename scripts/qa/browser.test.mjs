@@ -147,3 +147,37 @@ test('framework resource completion does not prove tool hydration', async () => 
   assert.equal(result.functional.status, 'passed');
   assert.equal(result.hydration.evidence, 'react-tool-descendants');
 });
+
+test('streamed canonical metadata is awaited after tool hydration', async () => {
+  const result = await audit('streamed-canonical', {
+    canonical: null,
+    script: `delete document.querySelector('input')['__reactProps$qa'];
+      setTimeout(() => {
+        const link = document.createElement('link');
+        link.rel = 'canonical'; link.href = 'https://toolblip.com/tools/test';
+        document.head.append(link);
+        document.querySelector('input')['__reactProps$qa'] = {};
+      }, 2200);`,
+    fixture: {slug:'test',test:async({tool,check,expect})=>{
+      await tool.getByRole('button',{name:/Examples/}).click();
+      await expect(tool.getByLabel('Answer')).toHaveValue('42');
+      check(true,'Known answer after streamed metadata');
+    }},
+  });
+  assert.equal(result.canonical.status,'passed');
+  assert.equal(result.status,'passed');
+});
+
+
+test('real browser: intentional request abort retains exact evidence without masking application errors', async () => {
+  const result = await audit('injected-abort', {fixture:{slug:'test',test:async({page,abortExpectedRequest,check})=>{
+    await page.route('https://qa.invalid/injected-failure', route=>abortExpectedRequest(route, 'Controlled rejection exercises application error state'));
+    const rejected = await page.evaluate(async()=> {try {await fetch('/injected-failure');return false;} catch {return true;}});
+    check(rejected, 'Actual intercepted request rejects in browser');
+  }}});
+  assert.equal(result.functional.status,'passed');
+  assert.equal(result.runtime.status,'passed');
+  const failure = result.runtime.failedRequests.find(request=>request.url.endsWith('/injected-failure'));
+  assert.ok(failure.injectedAbort.requestId);
+  assert.equal(failure.requestId,failure.injectedAbort.requestId);
+});

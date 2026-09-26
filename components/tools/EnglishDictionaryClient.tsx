@@ -24,7 +24,7 @@ export default function EnglishDictionaryClient() {
     request.current?.abort();
     if (!q || q.length > 100) { setEntries(null); setError('Enter a word up to 100 characters.'); return; }
     const controller = new AbortController(); request.current = controller;
-    const timeout = setTimeout(() => controller.abort(), 15000);
+    const timeout = setTimeout(() => controller.abort(), 30000);
     setLoading(true);
     setError('');
     setEntries(null);

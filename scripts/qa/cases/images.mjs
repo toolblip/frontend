@@ -1,3 +1,4 @@
+import { dpiUploadSettings, avifUploadExport } from '../regressions/misc-review.mjs';
 import { readFile, mkdir } from 'node:fs/promises';
 import path from 'node:path';
 
@@ -53,6 +54,26 @@ const add = (slugs, test) => slugs.forEach(slug => cases.push({ slug, test: asyn
   await ctx.page.waitForFunction(() => [...document.querySelectorAll('.tb-v2-tool-card button')].some(el =>
     Object.keys(el).some(key => key.startsWith('__reactProps$') && typeof el[key]?.onClick === 'function')));
   await test(ctx);
+  if (slug === 'image-dpi-resizer') {
+    await dpiUploadSettings({ ...ctx, slug });
+    ctx.check(true, 'Changing DPI during native image load uses current settings; Clear rejects a late load and exported PNG carries the requested density.');
+  }
+  if (['crop', 'meme-maker', 'batch-image-resizer'].includes(slug)) {
+    await clear(ctx);
+    await avifUploadExport({ ...ctx, slug }, async () => {
+      if (slug === 'batch-image-resizer') {
+        await ctx.tool.getByLabel('Lock target aspect ratio').uncheck();
+        await ctx.tool.getByLabel('Width', { exact: true }).fill('2');
+        await ctx.tool.getByLabel('Height', { exact: true }).fill('2');
+        await ctx.tool.getByRole('button', { name: 'Resize Images', exact: true }).click();
+        await ctx.tool.getByRole('link', { name: 'Download 1', exact: true }).click();
+      } else {
+        await ctx.tool.getByRole('button', { name: slug === 'crop' ? 'Download' : 'Download Meme', exact: true }).click();
+      }
+    });
+    ctx.check(true, 'Real AVIF upload exports independently decoded opaque red PNG pixels.');
+    await clear(ctx);
+  }
 } }));
 add(['detect', 'image-dimension-checker'], async ctx => {
   await upload(ctx); await ctx.expect(ctx.tool.getByText('80 × 40', { exact: true })).toBeVisible();

@@ -1,3 +1,4 @@
+import { base64RoundTrips, binaryRoundTrips } from '../regressions/misc-review.mjs';
 import { createHash, createHmac, createPrivateKey, createPublicKey } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
@@ -42,8 +43,8 @@ add('html-encoder-decoder html-attribute-encoder',async({tool,expect,check})=>{
  check(true,'Entities encode correctly and nested entities decode once');
 });
 add('binary-converter',async({tool,expect,check})=>{
- await examples(tool);await expect(pre(tool)).toHaveText('11000011 10101001');
- await tool.getByRole('button',{name:'Binary to Text',exact:true}).click();await fill(tool,'Input','11000011 10101001');await expect(pre(tool)).toHaveText('é');
+ await examples(tool);await expect(tool.locator('.tb-v2-tool-output-body p')).toHaveText('11000011 10101001');
+ await tool.getByRole('button',{name:'Binary to Text',exact:true}).click();await fill(tool,'Input','11000011 10101001');await expect(tool.locator('.tb-v2-tool-output-body p')).toHaveText('é');
  await fill(tool,'Input','0000001');await expect(tool.getByRole('alert')).toBeVisible();check(true,'UTF-8 byte vector and incomplete-byte rejection');
 });
 add('backslash-escape-unescape json-escape-unescape',async({tool,expect,check})=>{
@@ -177,6 +178,8 @@ export default Object.entries(tests).map(([slug,test])=>({slug,requiresExample:t
  await page.setViewportSize({width:320,height:900});
  await tool.getByRole('button',{name:'Clear',exact:true}).first().click();
  await test({...ctx,slug});
+ if(slug==='base64-encoder-decoder') { await base64RoundTrips(ctx); check(true,'BOM and large ASCII, CJK and astral text survive Base64 encode/decode swaps without truncation'); }
+ if(slug==='binary-converter') { await binaryRoundTrips(ctx); check(true,'Large ASCII, CJK and astral text survive UTF-8 binary swaps without truncation'); }
  const layout=await tool.evaluate(root=>({client:root.clientWidth,scroll:root.scrollWidth,left:root.getBoundingClientRect().left,right:root.getBoundingClientRect().right,viewport:document.documentElement.clientWidth}));
  check(layout.scroll<=layout.client+1&&layout.left>=-1&&layout.right<=layout.viewport+1,'Functional interactions at 320px stay within the tool and viewport');
  await page.screenshot({path:path.join(ctx.artifactsDir,'security-functional-320.png')});

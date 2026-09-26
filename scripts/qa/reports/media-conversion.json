@@ -1,11 +1,29 @@
 {
   "group": "media-conversion",
-  "generatedAt": "2026-09-26T06:23:21.871739+00:00",
+  "generatedAt": "2026-09-26T07:08:11.065780+00:00",
   "assignmentCount": 36,
   "summary": {
-    "implementedAwaitingIntegratedBrowserQA": 26,
-    "preparedAwaitingCentralRouteMapping": 8,
-    "blockedOnMP3Encoder": 2,
+    "assignmentCount": 36,
+    "encoderBlockers": 0,
+    "pendingRouteMappings": 0,
+    "isolatedComponentPassed": {
+      "chrome": 36,
+      "webkit": 36
+    },
+    "latestIntegrated": {
+      "chrome": {
+        "run": "auto-media-chrome-3 + reruns 4/5",
+        "passed": 28,
+        "failed": 8,
+        "notRun": 0
+      },
+      "webkit": {
+        "run": "auto-media-webkit-4 + readiness reruns 5/6",
+        "passed": 23,
+        "failed": 13,
+        "notRun": 0
+      }
+    },
     "browserAcceptanceClaimed": false
   },
   "historicalApprovalInventory": {
@@ -126,40 +144,124 @@
     "public/samples/media-conversion/example.mkv",
     "public/samples/media-conversion/example.mp4",
     "scripts/qa/cases/media-conversion.mjs",
-    "scripts/qa/reports/media-conversion.json"
+    "scripts/qa/reports/media-conversion.json",
+    "lib/media-conversion/demux.ts",
+    "lib/media-conversion/demux.test.ts",
+    "package.json",
+    "package-lock.json",
+    "app/tools/[slug]/ToolUI.tsx"
   ],
   "verification": {
     "scopedTests": {
-      "command": "./node_modules/.bin/vitest run lib/media-conversion",
+      "command": "./node_modules/.bin/vitest run lib/media-conversion lib/image-optimizer-webp.test.ts",
       "exitCode": 0,
-      "filesPassed": 3,
-      "testsPassed": 48
+      "testsPassed": 60,
+      "filesPassed": 5
     },
     "typescript": {
-      "command": "./node_modules/.bin/tsc --noEmit --incremental false",
-      "exitCode": 0
+      "command": "./node_modules/.bin/tsc --project /private/tmp/media-tsconfig.json --noEmit --incremental false",
+      "exitCode": 0,
+      "scope": "All owned media helpers/components; full project tsc also passed before later changes by other workers."
     },
-    "browserCaseSyntax": {
-      "command": "node --check scripts/qa/cases/media-conversion.mjs",
-      "exitCode": 0
-    },
-    "assignmentCoverage": {
-      "expected": 36,
-      "uniqueCases": 36,
-      "missing": []
-    },
-    "whitespace": {
-      "command": "git diff --check",
-      "exitCode": 0
-    },
-    "notRun": [
-      "dev server",
-      "production build",
-      "browser worker",
-      "integrated browser acceptance",
-      "production QA"
+    "supplementalArtifacts": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/media-supplemental-proof",
+    "codecProof": [
+      {
+        "engine": "chrome",
+        "ext": "aac",
+        "sourceDuration": 2.043356009070295,
+        "channels": 1,
+        "mp3Bytes": 33436,
+        "decodedDuration": 2.089795918367347,
+        "peak": 4059,
+        "frequency": 420.61523437499994
+      },
+      {
+        "engine": "chrome",
+        "ext": "m4a",
+        "sourceDuration": 2,
+        "channels": 1,
+        "mp3Bytes": 32600,
+        "decodedDuration": 2.0375510204081633,
+        "peak": 4058,
+        "frequency": 431.40024038461536
+      },
+      {
+        "engine": "chrome",
+        "ext": "mp4",
+        "sourceDuration": 2,
+        "channels": 1,
+        "mp3Bytes": 32600,
+        "decodedDuration": 2.0375510204081633,
+        "peak": 4058,
+        "frequency": 431.40024038461536
+      },
+      {
+        "engine": "chrome",
+        "ext": "mkv",
+        "sourceDuration": 2.0231292517006803,
+        "channels": 1,
+        "mp3Bytes": 33018,
+        "decodedDuration": 2.063673469387755,
+        "peak": 4059,
+        "frequency": 425.9394778481013
+      },
+      {
+        "engine": "webkit",
+        "ext": "aac",
+        "sourceDuration": 1.9954648526077097,
+        "channels": 1,
+        "mp3Bytes": 32600,
+        "decodedDuration": 2.0375510204081633,
+        "peak": 4059,
+        "frequency": 426.4923878205128
+      },
+      {
+        "engine": "webkit",
+        "ext": "m4a",
+        "sourceDuration": 1.9954648526077097,
+        "channels": 1,
+        "mp3Bytes": 32600,
+        "decodedDuration": 2.0375510204081633,
+        "peak": 4059,
+        "frequency": 426.4923878205128
+      },
+      {
+        "engine": "webkit",
+        "ext": "mp4",
+        "sourceDuration": 2.020136054421769,
+        "channels": 1,
+        "mp3Bytes": 33018,
+        "decodedDuration": 2.063673469387755,
+        "peak": 4059,
+        "frequency": 425.9394778481013
+      },
+      {
+        "engine": "webkit",
+        "ext": "mkv",
+        "sourceDuration": 1.9954648526077097,
+        "channels": 1,
+        "mp3Bytes": 32600,
+        "decodedDuration": 2.0375510204081633,
+        "peak": 4059,
+        "frequency": 426.4923878205128
+      }
     ],
-    "note": "Parent runs integrated tests after central route mapping. Native decoder/encoder failures are not mocked into successful conversion. MP3 case explicitly fails until implemented."
+    "integratedRuns": {
+      "chrome": "auto-media-chrome-3",
+      "webkit": "auto-media-webkit-4"
+    },
+    "chromeFailureRerun": "auto-media-chrome-4-failures",
+    "webkitReadinessReruns": [
+      "auto-media-webkit-5-readiness",
+      "auto-media-webkit-6-readiness"
+    ],
+    "chromeFinalReadinessRerun": "auto-media-chrome-5-readiness",
+    "runnerShutdownIssue": "Chrome full run 3 and failure rerun 4 exited 3; one-route readiness rerun 5 passed its route but exited 1. All reported Browser server close timeout after 5000ms. These runner failures remain open.",
+    "initialRequestedRun": "auto-media-chrome-1 selected 75 routes, including 39 historically approved routes with no fixtures; retained and stopped, then --pending-only selected exactly 36.",
+    "notRun": [
+      "production build",
+      "production QA"
+    ]
   },
   "centralRouteMappingProposals": [
     {
@@ -174,14 +276,52 @@
         "webp-to-png"
       ],
       "import": "import MediaConversionImageClient from '@/components/tools/MediaConversionImageClient';",
-      "render": "<MediaConversionImageClient />",
+      "render": "MediaConversionMarkdownClient for markdown; explicit source and output props for each image route.",
       "preserveExistingRoutes": [
         "image-format-converter",
         "avif-converter",
         "heic-converter",
         "heif-converter"
       ],
-      "reason": "Assigned format routes need format-specific defaults and byte/dimension/cancel fixes without modifying the historically approved shared component."
+      "reason": "Assigned format routes need format-specific defaults and byte/dimension/cancel fixes without modifying the historically approved shared component.",
+      "status": "implemented",
+      "perRoute": {
+        "jpg-to-webp": {
+          "component": "MediaConversionImageClient",
+          "source": "jpeg",
+          "output": "webp"
+        },
+        "png-to-webp": {
+          "component": "MediaConversionImageClient",
+          "source": "png",
+          "output": "webp"
+        },
+        "svg-to-png": {
+          "component": "MediaConversionImageClient",
+          "source": "svg",
+          "output": "png"
+        },
+        "svg-to-jpg": {
+          "component": "MediaConversionImageClient",
+          "source": "svg",
+          "output": "jpeg"
+        },
+        "svg-to-webp": {
+          "component": "MediaConversionImageClient",
+          "source": "svg",
+          "output": "webp"
+        },
+        "webp-to-jpg": {
+          "component": "MediaConversionImageClient",
+          "source": "webp",
+          "output": "jpeg"
+        },
+        "webp-to-png": {
+          "component": "MediaConversionImageClient",
+          "source": "webp",
+          "output": "png"
+        }
+      }
     },
     {
       "file": "app/tools/[slug]/ToolUI.tsx",
@@ -189,12 +329,18 @@
         "markdown-table-from-json"
       ],
       "import": "import MediaConversionMarkdownClient from '@/components/tools/MediaConversionMarkdownClient';",
-      "render": "<MediaConversionMarkdownClient />",
+      "render": "MediaConversionMarkdownClient for markdown; explicit source and output props for each image route.",
       "preserveExistingRoutes": [
         "json-to-markdown-table",
         "table-to-markdown"
       ],
-      "reason": "Fix heterogeneous/malformed JSON rows and downloads for assigned route while preserving approved shared implementation."
+      "reason": "Fix heterogeneous/malformed JSON rows and downloads for assigned route while preserving approved shared implementation.",
+      "status": "implemented",
+      "perRoute": {
+        "markdown-table-from-json": {
+          "component": "MediaConversionMarkdownClient"
+        }
+      }
     }
   ],
   "centralMetadataProposals": [
@@ -305,7 +451,7 @@
         "data/tool-content.ts",
         "lib/faq.ts"
       ],
-      "description": "MP3 encoding is currently unavailable. A separately selected WAV export is available for browser-decodable MP4 audio.",
+      "description": "Convert decodable MP4 audio to real 128 kbps mono/stereo MP3 with LAME. Maximum 20 MB and 120 seconds. AAC-LC container fallback is included; other codecs depend on browser decoding.",
       "action": "Replace conflicting format/quality/size/universal-support claims in route description, content and FAQ with this implementation contract; do not claim new browser acceptance."
     },
     {
@@ -315,7 +461,7 @@
         "data/tool-content.ts",
         "lib/faq.ts"
       ],
-      "description": "MP3 encoding is currently unavailable. A separately selected WAV export depends on browser support for the MKV audio codec.",
+      "description": "Convert decodable MKV audio to real 128 kbps mono/stereo MP3 with LAME. Maximum 20 MB and 120 seconds. AAC-LC container fallback is included; other codecs depend on browser decoding.",
       "action": "Replace conflicting format/quality/size/universal-support claims in route description, content and FAQ with this implementation contract; do not claim new browser acceptance."
     },
     {
@@ -325,7 +471,7 @@
         "data/tool-content.ts",
         "lib/faq.ts"
       ],
-      "description": "Record a selected video range as WebM with audio. Real-time re-encoding, up to 60 seconds per export.",
+      "description": "Record a selected video range as WebM with audio. Real-time re-encoding, up to 60 seconds per export. Source limit: 30 MB, 120 seconds and 2,073,600 pixels. A browser-decodable audio track is required; output uses separately decoded audio to avoid WebKit media-element timing stalls. Source limit: 30 MB, 120 seconds and 2,073,600 pixels. A browser-decodable audio track is required; output uses separately decoded audio to avoid WebKit media-element timing stalls. Source limit: 30 MB, 120 seconds and 2,073,600 pixels. A browser-decodable audio track is required; output uses separately decoded audio to avoid WebKit media-element timing stalls. Source limit: 30 MB, 120 seconds and 2,073,600 pixels. A browser-decodable audio track is required; output uses separately decoded audio to avoid WebKit media-element timing stalls. Source limit: 30 MB, 120 seconds and 2,073,600 pixels. A browser-decodable audio track is required; output uses separately decoded audio to avoid WebKit media-element timing stalls. Source limit: 30 MB, 120 seconds and 2,073,600 pixels. A browser-decodable audio track is required; output uses separately decoded audio to avoid WebKit media-element timing stalls. Source limit: 30 MB, 120 seconds and 2,073,600 pixels. A browser-decodable audio track is required; output uses separately decoded audio to avoid WebKit media-element timing stalls. Source limit: 30 MB, 120 seconds and 2,073,600 pixels. A browser-decodable audio track is required; output uses separately decoded audio to avoid WebKit media-element timing stalls.",
       "action": "Replace conflicting format/quality/size/universal-support claims in route description, content and FAQ with this implementation contract; do not claim new browser acceptance."
     },
     {
@@ -335,7 +481,7 @@
         "data/tool-content.ts",
         "lib/faq.ts"
       ],
-      "description": "Preview and burn plain SRT or WebVTT captions into a re-encoded WebM video with audio.",
+      "description": "Preview and burn plain SRT or WebVTT captions into a re-encoded WebM video with audio. Source limit: 30 MB, 120 seconds and 2,073,600 pixels. A browser-decodable audio track is required; output uses separately decoded audio to avoid WebKit media-element timing stalls. Source limit: 30 MB, 120 seconds and 2,073,600 pixels. A browser-decodable audio track is required; output uses separately decoded audio to avoid WebKit media-element timing stalls. Source limit: 30 MB, 120 seconds and 2,073,600 pixels. A browser-decodable audio track is required; output uses separately decoded audio to avoid WebKit media-element timing stalls. Source limit: 30 MB, 120 seconds and 2,073,600 pixels. A browser-decodable audio track is required; output uses separately decoded audio to avoid WebKit media-element timing stalls. Source limit: 30 MB, 120 seconds and 2,073,600 pixels. A browser-decodable audio track is required; output uses separately decoded audio to avoid WebKit media-element timing stalls. Source limit: 30 MB, 120 seconds and 2,073,600 pixels. A browser-decodable audio track is required; output uses separately decoded audio to avoid WebKit media-element timing stalls. Source limit: 30 MB, 120 seconds and 2,073,600 pixels. A browser-decodable audio track is required; output uses separately decoded audio to avoid WebKit media-element timing stalls. Source limit: 30 MB, 120 seconds and 2,073,600 pixels. A browser-decodable audio track is required; output uses separately decoded audio to avoid WebKit media-element timing stalls.",
       "action": "Replace conflicting format/quality/size/universal-support claims in route description, content and FAQ with this implementation contract; do not claim new browser acceptance."
     },
     {
@@ -425,7 +571,7 @@
         "data/tool-content.ts",
         "lib/faq.ts"
       ],
-      "description": "Convert JPG image bytes to WEBP with validated output dimensions and measured size. Browser encoder support varies.",
+      "description": "Convert JPG image bytes to WEBP with validated output dimensions and measured size. Uses native encoding or the existing bundled local WebP codec.",
       "action": "Replace conflicting format/quality/size/universal-support claims in route description, content and FAQ with this implementation contract; do not claim new browser acceptance."
     },
     {
@@ -435,7 +581,7 @@
         "data/tool-content.ts",
         "lib/faq.ts"
       ],
-      "description": "Convert PNG image bytes to WEBP with validated output dimensions and measured size. Browser encoder support varies.",
+      "description": "Convert PNG image bytes to WEBP with validated output dimensions and measured size. Uses native encoding or the existing bundled local WebP codec.",
       "action": "Replace conflicting format/quality/size/universal-support claims in route description, content and FAQ with this implementation contract; do not claim new browser acceptance."
     },
     {
@@ -465,7 +611,7 @@
         "data/tool-content.ts",
         "lib/faq.ts"
       ],
-      "description": "Convert SVG image bytes to WEBP with validated output dimensions and measured size. Browser encoder support varies.",
+      "description": "Convert SVG image bytes to WEBP with validated output dimensions and measured size. Uses native encoding or the existing bundled local WebP codec.",
       "action": "Replace conflicting format/quality/size/universal-support claims in route description, content and FAQ with this implementation contract; do not claim new browser acceptance."
     },
     {
@@ -561,28 +707,17 @@
   ],
   "dependencyProposals": [
     {
-      "slugs": [
-        "mkv-to-mp3",
-        "mp4-to-mp3"
-      ],
-      "indispensableFor": "actual MP3 encoding",
-      "suggestedPackage": "@breezystack/lamejs",
-      "installBy": "parent only, pin and review a release in central package/lockfile",
-      "currentDependencyChanged": false,
-      "versionVerified": true,
-      "integrationRequired": [
-        "Add a browser MP3 encoder adapter using Mp3Encoder for mono/stereo 44100 Hz PCM at explicit bitrate (e.g. 128 kbps).",
-        "Encode bounded Int16 PCM in 1152-sample blocks, append flush output, check signal between blocks, and close decoder resources.",
-        "Verify MPEG frame signatures, decoded duration, channels, bitrate and non-silent 440Hz fixture; do not accept WAV bytes with an MP3 name.",
-        "Keep explicit decoder errors for unsupported MKV codecs.",
-        "Remove intentional MP3 acceptance failure only after actual MP3 output is tested."
-      ],
-      "alternative": "A real bounded FFmpeg conversion backend can handle additional codecs but is outside owned scope; none exists in this checkout.",
-      "suggestedVersion": "1.2.7",
-      "source": "https://www.npmjs.com/package/@breezystack/lamejs",
-      "upstream": "https://github.com/shijinyu/lamejs",
-      "license": "LGPL-3.0",
-      "proposedInstallCommand": "npm install --save-exact @breezystack/lamejs@1.2.7"
+      "package": "@breezystack/lamejs",
+      "version": "1.2.7",
+      "status": "installed_and_verified",
+      "exports": {
+        "import": "./dist/lamejs.js",
+        "require": "./dist/lamejs.iife.js",
+        "types": "./type.d.ts"
+      },
+      "api": "new Mp3Encoder(channels, sampleRate, 128); encodeBuffer(Int16Array, optionalRight); flush()",
+      "install": "npm --package-lock-only; isolated /private/tmp/toolblip-media-lamejs-127; only package symlink exposed in existing shared node_modules",
+      "sharedNodeModulesSymlinkIntact": true
     }
   ],
   "duplicateProposals": [
@@ -617,7 +752,7 @@
       "grouping": "data",
       "historicallyApproved": false,
       "originalComponent": "components/tools/SqlToJsonClient.tsx",
-      "status": "implemented_awaiting_integrated_browser_QA",
+      "status": "accepted_both_browsers",
       "findingsAndChanges": [
         "Loose SQL/CSV parsing could silently truncate or lose values. Markdown only inspected the first object and discarded later columns.",
         "Strict bounded parsers, safe integer rejection for JSON SQL numbers, quoted/empty literals, duplicate header preservation, all-object Markdown validation and header union, live output and current-result download.",
@@ -626,20 +761,70 @@
       "browserCase": {
         "file": "scripts/qa/cases/media-conversion.mjs",
         "slug": "sql-to-json",
-        "status": "authored_not_run",
+        "status": "executed",
         "assertions": "Downloads and independently parses exact expected JSON/Markdown/XML, malformed-input error, stale-download removal and Clear."
       },
       "scopedTests": [
         "lib/media-conversion/data.test.ts"
       ],
-      "remainingBlockers": []
+      "remainingBlockers": [],
+      "integratedBrowsers": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "blockers": [],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-chrome-4-failures/tools/sql-to-json.json"
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "blockers": [],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-webkit-4/tools/sql-to-json.json"
+        }
+      },
+      "isolatedComponents": {
+        "chrome": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Downloaded JSON preserves SQL strings, booleans and both rows."
+            },
+            {
+              "ok": true,
+              "message": "Invalid current input rejects partial parsing and removes the previous download."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        },
+        "webkit": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Downloaded JSON preserves SQL strings, booleans and both rows."
+            },
+            {
+              "ok": true,
+              "message": "Invalid current input rejects partial parsing and removes the previous download."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        }
+      }
     },
     {
       "slug": "binary-decimal-hex-converter",
       "grouping": "units",
       "historicallyApproved": false,
       "originalComponent": "components/tools/BinaryDecimalHexConverterClient.tsx",
-      "status": "implemented_awaiting_integrated_browser_QA",
+      "status": "accepted_both_browsers",
       "findingsAndChanges": [
         "parseInt/parseFloat accepted trailing garbage, lost integer precision, and converted empty/invalid inputs to misleading zero results.",
         "Exact BigInt bases 2\u201336, strict finite input parsing, live results, absolute-zero checks, exact common SI factors, v2 Example/Clear, and preserved category/preset/use-as-input workflows.",
@@ -648,20 +833,70 @@
       "browserCase": {
         "file": "scripts/qa/cases/media-conversion.mjs",
         "slug": "binary-decimal-hex-converter",
-        "status": "authored_not_run",
+        "status": "executed",
         "assertions": "Independent known-answer checks above Number precision, invalid digit rejection, 100C=212F, 1000m=1km, 36km/h=10m/s, absolute-zero rejection and empty Clear state."
       },
       "scopedTests": [
         "lib/media-conversion/data.test.ts"
       ],
-      "remainingBlockers": []
+      "remainingBlockers": [],
+      "integratedBrowsers": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "blockers": [],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-chrome-4-failures/tools/binary-decimal-hex-converter.json"
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "blockers": [],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-webkit-4/tools/binary-decimal-hex-converter.json"
+        }
+      },
+      "isolatedComponents": {
+        "chrome": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Integer conversion preserves 9007199254740993 exactly beyond Number safe precision."
+            },
+            {
+              "ok": true,
+              "message": "Invalid base digit is rejected instead of partial parseInt conversion."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        },
+        "webkit": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Integer conversion preserves 9007199254740993 exactly beyond Number safe precision."
+            },
+            {
+              "ok": true,
+              "message": "Invalid base digit is rejected instead of partial parseInt conversion."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        }
+      }
     },
     {
       "slug": "temperature-unit-converter",
       "grouping": "units",
       "historicallyApproved": false,
       "originalComponent": "components/tools/TemperatureUnitConverterClient.tsx",
-      "status": "implemented_awaiting_integrated_browser_QA",
+      "status": "accepted_both_browsers",
       "findingsAndChanges": [
         "parseInt/parseFloat accepted trailing garbage, lost integer precision, and converted empty/invalid inputs to misleading zero results.",
         "Exact BigInt bases 2\u201336, strict finite input parsing, live results, absolute-zero checks, exact common SI factors, v2 Example/Clear, and preserved category/preset/use-as-input workflows.",
@@ -670,20 +905,70 @@
       "browserCase": {
         "file": "scripts/qa/cases/media-conversion.mjs",
         "slug": "temperature-unit-converter",
-        "status": "authored_not_run",
+        "status": "executed",
         "assertions": "Independent known-answer checks above Number precision, invalid digit rejection, 100C=212F, 1000m=1km, 36km/h=10m/s, absolute-zero rejection and empty Clear state."
       },
       "scopedTests": [
         "lib/media-conversion/data.test.ts"
       ],
-      "remainingBlockers": []
+      "remainingBlockers": [],
+      "integratedBrowsers": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "blockers": [],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-chrome-4-failures/tools/temperature-unit-converter.json"
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "blockers": [],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-webkit-4/tools/temperature-unit-converter.json"
+        }
+      },
+      "isolatedComponents": {
+        "chrome": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "100 Celsius converts to 212 Fahrenheit."
+            },
+            {
+              "ok": true,
+              "message": "Below absolute zero is rejected."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        },
+        "webkit": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "100 Celsius converts to 212 Fahrenheit."
+            },
+            {
+              "ok": true,
+              "message": "Below absolute zero is rejected."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        }
+      }
     },
     {
       "slug": "base-number-converter",
       "grouping": "units",
       "historicallyApproved": false,
       "originalComponent": "components/tools/BaseNumberConverterClient.tsx",
-      "status": "implemented_awaiting_integrated_browser_QA",
+      "status": "accepted_both_browsers",
       "findingsAndChanges": [
         "parseInt/parseFloat accepted trailing garbage, lost integer precision, and converted empty/invalid inputs to misleading zero results.",
         "Exact BigInt bases 2\u201336, strict finite input parsing, live results, absolute-zero checks, exact common SI factors, v2 Example/Clear, and preserved category/preset/use-as-input workflows.",
@@ -692,20 +977,70 @@
       "browserCase": {
         "file": "scripts/qa/cases/media-conversion.mjs",
         "slug": "base-number-converter",
-        "status": "authored_not_run",
+        "status": "executed",
         "assertions": "Independent known-answer checks above Number precision, invalid digit rejection, 100C=212F, 1000m=1km, 36km/h=10m/s, absolute-zero rejection and empty Clear state."
       },
       "scopedTests": [
         "lib/media-conversion/data.test.ts"
       ],
-      "remainingBlockers": []
+      "remainingBlockers": [],
+      "integratedBrowsers": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "blockers": [],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-chrome-4-failures/tools/base-number-converter.json"
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "blockers": [],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-webkit-4/tools/base-number-converter.json"
+        }
+      },
+      "isolatedComponents": {
+        "chrome": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Integer conversion preserves 9007199254740993 exactly beyond Number safe precision."
+            },
+            {
+              "ok": true,
+              "message": "Invalid base digit is rejected instead of partial parseInt conversion."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        },
+        "webkit": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Integer conversion preserves 9007199254740993 exactly beyond Number safe precision."
+            },
+            {
+              "ok": true,
+              "message": "Invalid base digit is rejected instead of partial parseInt conversion."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        }
+      }
     },
     {
       "slug": "aac-to-wav",
       "grouping": "audio",
       "historicallyApproved": false,
       "originalComponent": "components/tools/AacToWavClient.tsx",
-      "status": "implemented_awaiting_integrated_browser_QA",
+      "status": "integration_blocked",
       "findingsAndChanges": [
         "Audio paths lacked bounded decoding/context cleanup. MP3-named routes actually created WAV.",
         "Validate container bytes and limits, close AudioContext, encode interleaved 16-bit PCM WAV, export the current result, and cancel/invalidate stale work.",
@@ -714,21 +1049,110 @@
       "browserCase": {
         "file": "scripts/qa/cases/media-conversion.mjs",
         "slug": "aac-to-wav",
-        "status": "authored_not_run",
+        "status": "executed",
         "assertions": "Downloads RIFF/WAVE; verifies declared chunk sizes, 16-bit PCM, 44.1kHz mono approximately 2-second non-silent 440Hz signal, invalid container cleanup and Clear. MP3 cases explicitly fail acceptance after testing the WAV fallback."
       },
       "scopedTests": [
         "lib/media-conversion/media.test.ts"
       ],
-      "remainingBlockers": [],
-      "runtimeConstraints": "Browser audio decoder support is conditional. MKV may fail on the integrated browser; a real codec failure is not accepted as conversion success."
+      "remainingBlockers": [
+        "chrome: Loading media from  'blob:http://localhost:3190/ba446213-ff92-49d0-8a52-94fc57df3d02' violates the following Content Security Policy directive: \"default-src 'self'\". Note that 'media-src' was not explicitly set, so 'default-src' is used as a fallback. The action has been blocked.",
+        "webkit: Refused to load blob:http://localhost:3190/42f7e7f6-51b9-45e7-931b-eff746d376c2 because it appears in neither the media-src directive nor the default-src directive of the Content Security Policy."
+      ],
+      "runtimeConstraints": "Browser audio decoder support is conditional. MKV may fail on the integrated browser; a real codec failure is not accepted as conversion success.",
+      "integratedBrowsers": {
+        "chrome": {
+          "status": "failed",
+          "functional": "passed",
+          "blockers": [
+            "Loading media from  'blob:http://localhost:3190/ba446213-ff92-49d0-8a52-94fc57df3d02' violates the following Content Security Policy directive: \"default-src 'self'\". Note that 'media-src' was not explicitly set, so 'default-src' is used as a fallback. The action has been blocked."
+          ],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-chrome-4-failures/tools/aac-to-wav.json"
+        },
+        "webkit": {
+          "status": "failed",
+          "functional": "passed",
+          "blockers": [
+            "Refused to load blob:http://localhost:3190/42f7e7f6-51b9-45e7-931b-eff746d376c2 because it appears in neither the media-src directive nor the default-src directive of the Content Security Policy."
+          ],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-webkit-4/tools/aac-to-wav.json"
+        }
+      },
+      "isolatedComponents": {
+        "chrome": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Download is actual RIFF/WAVE with a WAV extension."
+            },
+            {
+              "ok": true,
+              "message": "WAV is 16-bit PCM with exact container/data sizes."
+            },
+            {
+              "ok": true,
+              "message": "Decoded WAV retains mono channels."
+            },
+            {
+              "ok": true,
+              "message": "Decoded download retains two-second signal (2.043 seconds)."
+            },
+            {
+              "ok": true,
+              "message": "Independently decoded download contains the actual approximately 440 Hz tone, not silence."
+            },
+            {
+              "ok": true,
+              "message": "Bad container bytes reject conversion and stale output."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        },
+        "webkit": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Download is actual RIFF/WAVE with a WAV extension."
+            },
+            {
+              "ok": true,
+              "message": "WAV is 16-bit PCM with exact container/data sizes."
+            },
+            {
+              "ok": true,
+              "message": "Decoded WAV retains mono channels."
+            },
+            {
+              "ok": true,
+              "message": "Decoded download retains two-second signal (1.995 seconds)."
+            },
+            {
+              "ok": true,
+              "message": "Independently decoded download contains the actual approximately 440 Hz tone, not silence."
+            },
+            {
+              "ok": true,
+              "message": "Bad container bytes reject conversion and stale output."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        }
+      }
     },
     {
       "slug": "add-subtitles",
       "grouping": "video",
       "historicallyApproved": false,
       "originalComponent": "components/tools/AddSubtitlesClient.tsx",
-      "status": "implemented_awaiting_integrated_browser_QA",
+      "status": "integration_blocked",
       "findingsAndChanges": [
         "Cutting could publish stale/partial results after error or Clear; subtitles only overlaid a preview and did not export video.",
         "Real-time canvas/WebAudio WebM recording, selected-range validation, audio capture, caption burn-in plus preview, explicit re-encoding, abort/timeout/track/context/URL cleanup.",
@@ -737,21 +1161,128 @@
       "browserCase": {
         "file": "scripts/qa/cases/media-conversion.mjs",
         "slug": "add-subtitles",
-        "status": "authored_not_run",
+        "status": "executed",
         "assertions": "Downloads WebM; verifies EBML signature, browser-decoded 64x48 scene pixels, approximately 1-second selected duration, subtitle pixels, invalid range, cancel and Clear."
       },
       "scopedTests": [
         "lib/media-conversion/media.test.ts"
       ],
-      "remainingBlockers": [],
-      "runtimeConstraints": "No MP4 output, lossless cuts or frame-exact timing claims. Browser WebM encoder required; 30 MB, 60-second export, 2,073,600-pixel limits."
+      "remainingBlockers": [
+        "chrome: expect(locator).toBeEnabled() failed\n\nLocator:  locator('.tb-v2-tool-card').first().getByRole('button', { name: 'Convert', exact: true })\nExpected: enabled\nReceived: disabled\nTimeout:  5000ms; Loading media from  'blob:http://localhost:3190/d5c1c556-1e5f-4307-ae8e-80fce0148030' violates the following Content Security Policy directive: \"default-src 'self'\". Note that 'media-src' was not explicitly set, so 'default-src' is used as a fallback. The action has been blocked.",
+        "webkit: expect(locator).toBeEnabled() failed\n\nLocator:  locator('.tb-v2-tool-card').first().getByRole('button', { name: 'Convert', exact: true })\nExpected: enabled\nReceived: disabled\nTimeout:  5000ms; Refused to load blob:http://localhost:3190/5eb5b99d-3f50-4a32-a840-15af7b650800 because it appears in neither the media-src directive nor the default-src directive of the Content Security Policy."
+      ],
+      "runtimeConstraints": "No MP4 output, lossless cuts or frame-exact timing claims. Browser WebM encoder required; 30 MB, 60-second export, 2,073,600-pixel limits.",
+      "integratedBrowsers": {
+        "chrome": {
+          "status": "failed",
+          "functional": "failed",
+          "blockers": [
+            "expect(locator).toBeEnabled() failed\n\nLocator:  locator('.tb-v2-tool-card').first().getByRole('button', { name: 'Convert', exact: true })\nExpected: enabled\nReceived: disabled\nTimeout:  5000ms",
+            "Loading media from  'blob:http://localhost:3190/d5c1c556-1e5f-4307-ae8e-80fce0148030' violates the following Content Security Policy directive: \"default-src 'self'\". Note that 'media-src' was not explicitly set, so 'default-src' is used as a fallback. The action has been blocked."
+          ],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-chrome-4-failures/tools/add-subtitles.json"
+        },
+        "webkit": {
+          "status": "failed",
+          "functional": "failed",
+          "blockers": [
+            "expect(locator).toBeEnabled() failed\n\nLocator:  locator('.tb-v2-tool-card').first().getByRole('button', { name: 'Convert', exact: true })\nExpected: enabled\nReceived: disabled\nTimeout:  5000ms",
+            "Refused to load blob:http://localhost:3190/5eb5b99d-3f50-4a32-a840-15af7b650800 because it appears in neither the media-src directive nor the default-src directive of the Content Security Policy."
+          ],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-webkit-4/tools/add-subtitles.json"
+        }
+      },
+      "isolatedComponents": {
+        "chrome": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Download has a WebM/EBML signature."
+            },
+            {
+              "ok": true,
+              "message": "Downloaded video decodes with original dimensions and red scene pixels."
+            },
+            {
+              "ok": true,
+              "message": "Export duration matches the selected 1-second range within recording tolerance (1.017)."
+            },
+            {
+              "ok": true,
+              "message": "Independent audio decode preserves the selected tone and duration (0.960 seconds)."
+            },
+            {
+              "ok": true,
+              "message": "Caption glyphs and dark caption background are present in the downloaded video pixels."
+            },
+            {
+              "ok": true,
+              "message": "Invalid range rejects export instead of silently clamping."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            },
+            {
+              "ok": true,
+              "message": "Cancellation stops recording and does not expose a partial success download."
+            }
+          ]
+        },
+        "webkit": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Download has a WebM/EBML signature."
+            },
+            {
+              "ok": true,
+              "message": "Downloaded video decodes with original dimensions and red scene pixels."
+            },
+            {
+              "ok": true,
+              "message": "Export duration matches the selected 1-second range within recording tolerance (1.021)."
+            },
+            {
+              "ok": true,
+              "message": "Independent audio decode preserves the selected tone and duration (1.008 seconds)."
+            },
+            {
+              "ok": true,
+              "message": "Caption glyphs and dark caption background are present in the downloaded video pixels."
+            },
+            {
+              "ok": true,
+              "message": "Invalid range rejects export instead of silently clamping."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            },
+            {
+              "ok": true,
+              "message": "Cancellation stops recording and does not expose a partial success download."
+            }
+          ]
+        }
+      }
     },
     {
       "slug": "csv-to-excel",
       "grouping": "spreadsheet",
       "historicallyApproved": false,
       "originalComponent": "components/tools/CsvToExcelClient.tsx",
-      "status": "implemented_awaiting_integrated_browser_QA",
+      "status": "accepted_both_browsers",
       "findingsAndChanges": [
         "CSV-to-Excel produced HTML renamed .xls. Custom XLSX readers and exports lacked consistent limits/reset/error handling.",
         "Real SheetJS XLSX output and parsing, selected-sheet exports, quoting-preserving CSV, name-attribute XML, real paginated PDF, ZIP metadata expansion bounds and workbook dimensions/cell limits.",
@@ -760,20 +1291,78 @@
       "browserCase": {
         "file": "scripts/qa/cases/media-conversion.mjs",
         "slug": "csv-to-excel",
-        "status": "authored_not_run",
+        "status": "executed",
         "assertions": "Downloads actual XLSX/PDF/CSV/XML; parses workbook/cell values or PDF content streams/XML nodes, validates selected-sheet invalidation, malformed workbook/CSV rejection and Clear."
       },
       "scopedTests": [
         "lib/media-conversion/spreadsheet.test.ts"
       ],
-      "remainingBlockers": []
+      "remainingBlockers": [],
+      "integratedBrowsers": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "blockers": [],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-chrome-4-failures/tools/csv-to-excel.json"
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "blockers": [],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-webkit-4/tools/csv-to-excel.json"
+        }
+      },
+      "isolatedComponents": {
+        "chrome": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Excel output is an OOXML ZIP, not HTML with an XLS extension."
+            },
+            {
+              "ok": true,
+              "message": "XLSX round-trip preserves quoted commas and ampersands."
+            },
+            {
+              "ok": true,
+              "message": "Invalid current input rejects partial parsing and removes the previous download."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        },
+        "webkit": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Excel output is an OOXML ZIP, not HTML with an XLS extension."
+            },
+            {
+              "ok": true,
+              "message": "XLSX round-trip preserves quoted commas and ampersands."
+            },
+            {
+              "ok": true,
+              "message": "Invalid current input rejects partial parsing and removes the previous download."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        }
+      }
     },
     {
       "slug": "csv-to-xml",
       "grouping": "data",
       "historicallyApproved": false,
       "originalComponent": "components/tools/CsvToXmlClient.tsx",
-      "status": "implemented_awaiting_integrated_browser_QA",
+      "status": "accepted_both_browsers",
       "findingsAndChanges": [
         "Loose SQL/CSV parsing could silently truncate or lose values. Markdown only inspected the first object and discarded later columns.",
         "Strict bounded parsers, safe integer rejection for JSON SQL numbers, quoted/empty literals, duplicate header preservation, all-object Markdown validation and header union, live output and current-result download.",
@@ -782,20 +1371,70 @@
       "browserCase": {
         "file": "scripts/qa/cases/media-conversion.mjs",
         "slug": "csv-to-xml",
-        "status": "authored_not_run",
+        "status": "executed",
         "assertions": "Downloads and independently parses exact expected JSON/Markdown/XML, malformed-input error, stale-download removal and Clear."
       },
       "scopedTests": [
         "lib/media-conversion/data.test.ts"
       ],
-      "remainingBlockers": []
+      "remainingBlockers": [],
+      "integratedBrowsers": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "blockers": [],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-chrome-4-failures/tools/csv-to-xml.json"
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "blockers": [],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-webkit-5-readiness/tools/csv-to-xml.json"
+        }
+      },
+      "isolatedComponents": {
+        "chrome": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Downloaded XML parses and preserves field names and escaped values."
+            },
+            {
+              "ok": true,
+              "message": "Invalid current input rejects partial parsing and removes the previous download."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        },
+        "webkit": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Downloaded XML parses and preserves field names and escaped values."
+            },
+            {
+              "ok": true,
+              "message": "Invalid current input rejects partial parsing and removes the previous download."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        }
+      }
     },
     {
       "slug": "cutter",
       "grouping": "video",
       "historicallyApproved": false,
       "originalComponent": "components/tools/CutterClient.tsx",
-      "status": "implemented_awaiting_integrated_browser_QA",
+      "status": "integration_blocked",
       "findingsAndChanges": [
         "Cutting could publish stale/partial results after error or Clear; subtitles only overlaid a preview and did not export video.",
         "Real-time canvas/WebAudio WebM recording, selected-range validation, audio capture, caption burn-in plus preview, explicit re-encoding, abort/timeout/track/context/URL cleanup.",
@@ -804,21 +1443,120 @@
       "browserCase": {
         "file": "scripts/qa/cases/media-conversion.mjs",
         "slug": "cutter",
-        "status": "authored_not_run",
+        "status": "executed",
         "assertions": "Downloads WebM; verifies EBML signature, browser-decoded 64x48 scene pixels, approximately 1-second selected duration, subtitle pixels, invalid range, cancel and Clear."
       },
       "scopedTests": [
         "lib/media-conversion/media.test.ts"
       ],
-      "remainingBlockers": [],
-      "runtimeConstraints": "No MP4 output, lossless cuts or frame-exact timing claims. Browser WebM encoder required; 30 MB, 60-second export, 2,073,600-pixel limits."
+      "remainingBlockers": [
+        "chrome: expect(locator).toBeEnabled() failed\n\nLocator:  locator('.tb-v2-tool-card').first().getByRole('button', { name: 'Convert', exact: true })\nExpected: enabled\nReceived: disabled\nTimeout:  5000ms; Loading media from  'blob:http://localhost:3190/9a170a32-032e-42e2-8af2-67f09c2db15c' violates the following Content Security Policy directive: \"default-src 'self'\". Note that 'media-src' was not explicitly set, so 'default-src' is used as a fallback. The action has been blocked.",
+        "webkit: expect(locator).toBeEnabled() failed\n\nLocator:  locator('.tb-v2-tool-card').first().getByRole('button', { name: 'Convert', exact: true })\nExpected: enabled\nReceived: disabled\nTimeout:  5000ms; Refused to load blob:http://localhost:3190/c9357a0e-c213-4b7d-812f-21f17cfd0edd because it appears in neither the media-src directive nor the default-src directive of the Content Security Policy."
+      ],
+      "runtimeConstraints": "No MP4 output, lossless cuts or frame-exact timing claims. Browser WebM encoder required; 30 MB, 60-second export, 2,073,600-pixel limits.",
+      "integratedBrowsers": {
+        "chrome": {
+          "status": "failed",
+          "functional": "failed",
+          "blockers": [
+            "expect(locator).toBeEnabled() failed\n\nLocator:  locator('.tb-v2-tool-card').first().getByRole('button', { name: 'Convert', exact: true })\nExpected: enabled\nReceived: disabled\nTimeout:  5000ms",
+            "Loading media from  'blob:http://localhost:3190/9a170a32-032e-42e2-8af2-67f09c2db15c' violates the following Content Security Policy directive: \"default-src 'self'\". Note that 'media-src' was not explicitly set, so 'default-src' is used as a fallback. The action has been blocked."
+          ],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-chrome-4-failures/tools/cutter.json"
+        },
+        "webkit": {
+          "status": "failed",
+          "functional": "failed",
+          "blockers": [
+            "expect(locator).toBeEnabled() failed\n\nLocator:  locator('.tb-v2-tool-card').first().getByRole('button', { name: 'Convert', exact: true })\nExpected: enabled\nReceived: disabled\nTimeout:  5000ms",
+            "Refused to load blob:http://localhost:3190/c9357a0e-c213-4b7d-812f-21f17cfd0edd because it appears in neither the media-src directive nor the default-src directive of the Content Security Policy."
+          ],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-webkit-4/tools/cutter.json"
+        }
+      },
+      "isolatedComponents": {
+        "chrome": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Download has a WebM/EBML signature."
+            },
+            {
+              "ok": true,
+              "message": "Downloaded video decodes with original dimensions and red scene pixels."
+            },
+            {
+              "ok": true,
+              "message": "Export duration matches the selected 1-second range within recording tolerance (0.999)."
+            },
+            {
+              "ok": true,
+              "message": "Independent audio decode preserves the selected tone and duration (0.960 seconds)."
+            },
+            {
+              "ok": true,
+              "message": "Invalid range rejects export instead of silently clamping."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            },
+            {
+              "ok": true,
+              "message": "Cancellation stops recording and does not expose a partial success download."
+            }
+          ]
+        },
+        "webkit": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Download has a WebM/EBML signature."
+            },
+            {
+              "ok": true,
+              "message": "Downloaded video decodes with original dimensions and red scene pixels."
+            },
+            {
+              "ok": true,
+              "message": "Export duration matches the selected 1-second range within recording tolerance (1.008)."
+            },
+            {
+              "ok": true,
+              "message": "Independent audio decode preserves the selected tone and duration (1.008 seconds)."
+            },
+            {
+              "ok": true,
+              "message": "Invalid range rejects export instead of silently clamping."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            },
+            {
+              "ok": true,
+              "message": "Cancellation stops recording and does not expose a partial success download."
+            }
+          ]
+        }
+      }
     },
     {
       "slug": "excel-to-csv",
       "grouping": "spreadsheet",
       "historicallyApproved": false,
       "originalComponent": "components/tools/ExcelToCsvClient.tsx",
-      "status": "implemented_awaiting_integrated_browser_QA",
+      "status": "accepted_both_browsers",
       "findingsAndChanges": [
         "CSV-to-Excel produced HTML renamed .xls. Custom XLSX readers and exports lacked consistent limits/reset/error handling.",
         "Real SheetJS XLSX output and parsing, selected-sheet exports, quoting-preserving CSV, name-attribute XML, real paginated PDF, ZIP metadata expansion bounds and workbook dimensions/cell limits.",
@@ -827,20 +1565,86 @@
       "browserCase": {
         "file": "scripts/qa/cases/media-conversion.mjs",
         "slug": "excel-to-csv",
-        "status": "authored_not_run",
+        "status": "executed",
         "assertions": "Downloads actual XLSX/PDF/CSV/XML; parses workbook/cell values or PDF content streams/XML nodes, validates selected-sheet invalidation, malformed workbook/CSV rejection and Clear."
       },
       "scopedTests": [
         "lib/media-conversion/spreadsheet.test.ts"
       ],
-      "remainingBlockers": []
+      "remainingBlockers": [],
+      "integratedBrowsers": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "blockers": [],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-chrome-3/tools/excel-to-csv.json"
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "blockers": [],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-webkit-5-readiness/tools/excel-to-csv.json"
+        }
+      },
+      "isolatedComponents": {
+        "chrome": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Extension matches selected export."
+            },
+            {
+              "ok": true,
+              "message": "CSV bytes preserve escaped comma and all cell values."
+            },
+            {
+              "ok": true,
+              "message": "Changing sheets invalidates old output."
+            },
+            {
+              "ok": true,
+              "message": "Renamed HTML is rejected as invalid XLSX."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        },
+        "webkit": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Extension matches selected export."
+            },
+            {
+              "ok": true,
+              "message": "CSV bytes preserve escaped comma and all cell values."
+            },
+            {
+              "ok": true,
+              "message": "Changing sheets invalidates old output."
+            },
+            {
+              "ok": true,
+              "message": "Renamed HTML is rejected as invalid XLSX."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        }
+      }
     },
     {
       "slug": "excel-to-pdf",
       "grouping": "spreadsheet",
       "historicallyApproved": false,
       "originalComponent": "components/tools/ExcelToPdfClient.tsx",
-      "status": "implemented_awaiting_integrated_browser_QA",
+      "status": "accepted_both_browsers",
       "findingsAndChanges": [
         "CSV-to-Excel produced HTML renamed .xls. Custom XLSX readers and exports lacked consistent limits/reset/error handling.",
         "Real SheetJS XLSX output and parsing, selected-sheet exports, quoting-preserving CSV, name-attribute XML, real paginated PDF, ZIP metadata expansion bounds and workbook dimensions/cell limits.",
@@ -849,20 +1653,94 @@
       "browserCase": {
         "file": "scripts/qa/cases/media-conversion.mjs",
         "slug": "excel-to-pdf",
-        "status": "authored_not_run",
+        "status": "executed",
         "assertions": "Downloads actual XLSX/PDF/CSV/XML; parses workbook/cell values or PDF content streams/XML nodes, validates selected-sheet invalidation, malformed workbook/CSV rejection and Clear."
       },
       "scopedTests": [
         "lib/media-conversion/spreadsheet.test.ts"
       ],
-      "remainingBlockers": []
+      "remainingBlockers": [],
+      "integratedBrowsers": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "blockers": [],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-chrome-3/tools/excel-to-pdf.json"
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "blockers": [],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-webkit-6-readiness/tools/excel-to-pdf.json"
+        }
+      },
+      "isolatedComponents": {
+        "chrome": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Extension matches selected export."
+            },
+            {
+              "ok": true,
+              "message": "PDF has a real PDF header."
+            },
+            {
+              "ok": true,
+              "message": "PDF content streams contain the actual worksheet cell text."
+            },
+            {
+              "ok": true,
+              "message": "Changing sheets invalidates old output."
+            },
+            {
+              "ok": true,
+              "message": "Renamed HTML is rejected as invalid XLSX."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        },
+        "webkit": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Extension matches selected export."
+            },
+            {
+              "ok": true,
+              "message": "PDF has a real PDF header."
+            },
+            {
+              "ok": true,
+              "message": "PDF content streams contain the actual worksheet cell text."
+            },
+            {
+              "ok": true,
+              "message": "Changing sheets invalidates old output."
+            },
+            {
+              "ok": true,
+              "message": "Renamed HTML is rejected as invalid XLSX."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        }
+      }
     },
     {
       "slug": "excel-to-xml",
       "grouping": "spreadsheet",
       "historicallyApproved": false,
       "originalComponent": "components/tools/ExcelToXmlClient.tsx",
-      "status": "implemented_awaiting_integrated_browser_QA",
+      "status": "accepted_both_browsers",
       "findingsAndChanges": [
         "CSV-to-Excel produced HTML renamed .xls. Custom XLSX readers and exports lacked consistent limits/reset/error handling.",
         "Real SheetJS XLSX output and parsing, selected-sheet exports, quoting-preserving CSV, name-attribute XML, real paginated PDF, ZIP metadata expansion bounds and workbook dimensions/cell limits.",
@@ -871,20 +1749,86 @@
       "browserCase": {
         "file": "scripts/qa/cases/media-conversion.mjs",
         "slug": "excel-to-xml",
-        "status": "authored_not_run",
+        "status": "executed",
         "assertions": "Downloads actual XLSX/PDF/CSV/XML; parses workbook/cell values or PDF content streams/XML nodes, validates selected-sheet invalidation, malformed workbook/CSV rejection and Clear."
       },
       "scopedTests": [
         "lib/media-conversion/spreadsheet.test.ts"
       ],
-      "remainingBlockers": []
+      "remainingBlockers": [],
+      "integratedBrowsers": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "blockers": [],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-chrome-3/tools/excel-to-xml.json"
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "blockers": [],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-webkit-4/tools/excel-to-xml.json"
+        }
+      },
+      "isolatedComponents": {
+        "chrome": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Extension matches selected export."
+            },
+            {
+              "ok": true,
+              "message": "XML download round-trips the selected worksheet values."
+            },
+            {
+              "ok": true,
+              "message": "Changing sheets invalidates old output."
+            },
+            {
+              "ok": true,
+              "message": "Renamed HTML is rejected as invalid XLSX."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        },
+        "webkit": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Extension matches selected export."
+            },
+            {
+              "ok": true,
+              "message": "XML download round-trips the selected worksheet values."
+            },
+            {
+              "ok": true,
+              "message": "Changing sheets invalidates old output."
+            },
+            {
+              "ok": true,
+              "message": "Renamed HTML is rejected as invalid XLSX."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        }
+      }
     },
     {
       "slug": "extract-audio",
       "grouping": "audio",
       "historicallyApproved": false,
       "originalComponent": "components/tools/ExtractAudioClient.tsx",
-      "status": "implemented_awaiting_integrated_browser_QA",
+      "status": "integration_blocked",
       "findingsAndChanges": [
         "Audio paths lacked bounded decoding/context cleanup. MP3-named routes actually created WAV.",
         "Validate container bytes and limits, close AudioContext, encode interleaved 16-bit PCM WAV, export the current result, and cancel/invalidate stale work.",
@@ -893,21 +1837,110 @@
       "browserCase": {
         "file": "scripts/qa/cases/media-conversion.mjs",
         "slug": "extract-audio",
-        "status": "authored_not_run",
+        "status": "executed",
         "assertions": "Downloads RIFF/WAVE; verifies declared chunk sizes, 16-bit PCM, 44.1kHz mono approximately 2-second non-silent 440Hz signal, invalid container cleanup and Clear. MP3 cases explicitly fail acceptance after testing the WAV fallback."
       },
       "scopedTests": [
         "lib/media-conversion/media.test.ts"
       ],
-      "remainingBlockers": [],
-      "runtimeConstraints": "Browser audio decoder support is conditional. MKV may fail on the integrated browser; a real codec failure is not accepted as conversion success."
+      "remainingBlockers": [
+        "chrome: Loading media from  'blob:http://localhost:3190/1fec7e67-2473-45d9-a67c-0e54d351bbb8' violates the following Content Security Policy directive: \"default-src 'self'\". Note that 'media-src' was not explicitly set, so 'default-src' is used as a fallback. The action has been blocked.",
+        "webkit: Refused to load blob:http://localhost:3190/b0a3882d-bdfc-4883-8f8d-598bc97ba13b because it appears in neither the media-src directive nor the default-src directive of the Content Security Policy."
+      ],
+      "runtimeConstraints": "Browser audio decoder support is conditional. MKV may fail on the integrated browser; a real codec failure is not accepted as conversion success.",
+      "integratedBrowsers": {
+        "chrome": {
+          "status": "failed",
+          "functional": "passed",
+          "blockers": [
+            "Loading media from  'blob:http://localhost:3190/1fec7e67-2473-45d9-a67c-0e54d351bbb8' violates the following Content Security Policy directive: \"default-src 'self'\". Note that 'media-src' was not explicitly set, so 'default-src' is used as a fallback. The action has been blocked."
+          ],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-chrome-4-failures/tools/extract-audio.json"
+        },
+        "webkit": {
+          "status": "failed",
+          "functional": "passed",
+          "blockers": [
+            "Refused to load blob:http://localhost:3190/b0a3882d-bdfc-4883-8f8d-598bc97ba13b because it appears in neither the media-src directive nor the default-src directive of the Content Security Policy."
+          ],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-webkit-4/tools/extract-audio.json"
+        }
+      },
+      "isolatedComponents": {
+        "chrome": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Download is actual RIFF/WAVE with a WAV extension."
+            },
+            {
+              "ok": true,
+              "message": "WAV is 16-bit PCM with exact container/data sizes."
+            },
+            {
+              "ok": true,
+              "message": "Decoded WAV retains mono channels."
+            },
+            {
+              "ok": true,
+              "message": "Decoded download retains two-second signal (2.000 seconds)."
+            },
+            {
+              "ok": true,
+              "message": "Independently decoded download contains the actual approximately 440 Hz tone, not silence."
+            },
+            {
+              "ok": true,
+              "message": "Bad container bytes reject conversion and stale output."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        },
+        "webkit": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Download is actual RIFF/WAVE with a WAV extension."
+            },
+            {
+              "ok": true,
+              "message": "WAV is 16-bit PCM with exact container/data sizes."
+            },
+            {
+              "ok": true,
+              "message": "Decoded WAV retains mono channels."
+            },
+            {
+              "ok": true,
+              "message": "Decoded download retains two-second signal (2.020 seconds)."
+            },
+            {
+              "ok": true,
+              "message": "Independently decoded download contains the actual approximately 440 Hz tone, not silence."
+            },
+            {
+              "ok": true,
+              "message": "Bad container bytes reject conversion and stale output."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        }
+      }
     },
     {
       "slug": "gif-to-apng",
       "grouping": "image",
       "historicallyApproved": false,
       "originalComponent": "components/tools/GifToApngClient.tsx",
-      "status": "implemented_awaiting_integrated_browser_QA",
+      "status": "accepted_both_browsers",
       "findingsAndChanges": [
         "Inputs were often validated by MIME/extension alone; asynchronous operations leaked URLs or exposed stale results.",
         "Bounded byte signatures/dimensions, GIF total-frame budget, encoder MIME and byte validation, decoded output dimension checks, measured byte counts, explicit JPEG background, cancel/generation guards and result URL cleanup.",
@@ -916,21 +1949,111 @@
       "browserCase": {
         "file": "scripts/qa/cases/media-conversion.mjs",
         "slug": "gif-to-apng",
-        "status": "authored_not_run",
+        "status": "executed",
         "assertions": "Downloads and saves actual output; signature/extension, browser-decoded 16x12 dimensions and pixels, alpha/JPEG background where applicable, APNG frame count/delays/pixel differences, SVG paths, quality invalidation, bad bytes and Clear."
       },
       "scopedTests": [
         "lib/media-conversion/media.test.ts"
       ],
       "remainingBlockers": [],
-      "runtimeConstraints": "Real canvas transcodes; HEIC uses existing heic2any; GIF uses existing gifuct-js/upng-js; tracing uses existing imagetracerjs. No new dependencies."
+      "runtimeConstraints": "Real canvas transcodes; HEIC uses existing heic2any; GIF uses existing gifuct-js/upng-js; tracing uses existing imagetracerjs. No new dependencies.",
+      "integratedBrowsers": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "blockers": [],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-chrome-4-failures/tools/gif-to-apng.json"
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "blockers": [],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-webkit-4/tools/gif-to-apng.json"
+        }
+      },
+      "isolatedComponents": {
+        "chrome": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Downloaded bytes are actual PNG, not a renamed input."
+            },
+            {
+              "ok": true,
+              "message": "Displayed output byte count equals the actual downloaded file size."
+            },
+            {
+              "ok": true,
+              "message": "Download extension matches encoded format."
+            },
+            {
+              "ok": true,
+              "message": "Decoded download dimensions are 16 \u00d7 12 (got 16 \u00d7 12)."
+            },
+            {
+              "ok": true,
+              "message": "APNG carries two timed animation frames with 500 ms delays."
+            },
+            {
+              "ok": true,
+              "message": "Animation frames contain different rendered pixels."
+            },
+            {
+              "ok": true,
+              "message": "Corrupt input produces a visible error and cannot export a stale result."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        },
+        "webkit": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Downloaded bytes are actual PNG, not a renamed input."
+            },
+            {
+              "ok": true,
+              "message": "Displayed output byte count equals the actual downloaded file size."
+            },
+            {
+              "ok": true,
+              "message": "Download extension matches encoded format."
+            },
+            {
+              "ok": true,
+              "message": "Decoded download dimensions are 16 \u00d7 12 (got 16 \u00d7 12)."
+            },
+            {
+              "ok": true,
+              "message": "APNG carries two timed animation frames with 500 ms delays."
+            },
+            {
+              "ok": true,
+              "message": "Animation frames contain different rendered pixels."
+            },
+            {
+              "ok": true,
+              "message": "Corrupt input produces a visible error and cannot export a stale result."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        }
+      }
     },
     {
       "slug": "gif-to-jpg",
       "grouping": "image",
       "historicallyApproved": false,
       "originalComponent": "components/tools/GifToJpgClient.tsx",
-      "status": "implemented_awaiting_integrated_browser_QA",
+      "status": "accepted_both_browsers",
       "findingsAndChanges": [
         "Inputs were often validated by MIME/extension alone; asynchronous operations leaked URLs or exposed stale results.",
         "Bounded byte signatures/dimensions, GIF total-frame budget, encoder MIME and byte validation, decoded output dimension checks, measured byte counts, explicit JPEG background, cancel/generation guards and result URL cleanup.",
@@ -939,21 +2062,111 @@
       "browserCase": {
         "file": "scripts/qa/cases/media-conversion.mjs",
         "slug": "gif-to-jpg",
-        "status": "authored_not_run",
+        "status": "executed",
         "assertions": "Downloads and saves actual output; signature/extension, browser-decoded 16x12 dimensions and pixels, alpha/JPEG background where applicable, APNG frame count/delays/pixel differences, SVG paths, quality invalidation, bad bytes and Clear."
       },
       "scopedTests": [
         "lib/media-conversion/media.test.ts"
       ],
       "remainingBlockers": [],
-      "runtimeConstraints": "Real canvas transcodes; HEIC uses existing heic2any; GIF uses existing gifuct-js/upng-js; tracing uses existing imagetracerjs. No new dependencies."
+      "runtimeConstraints": "Real canvas transcodes; HEIC uses existing heic2any; GIF uses existing gifuct-js/upng-js; tracing uses existing imagetracerjs. No new dependencies.",
+      "integratedBrowsers": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "blockers": [],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-chrome-3/tools/gif-to-jpg.json"
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "blockers": [],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-webkit-5-readiness/tools/gif-to-jpg.json"
+        }
+      },
+      "isolatedComponents": {
+        "chrome": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Downloaded bytes are actual JPEG, not a renamed input."
+            },
+            {
+              "ok": true,
+              "message": "Displayed output byte count equals the actual downloaded file size."
+            },
+            {
+              "ok": true,
+              "message": "Download extension matches encoded format."
+            },
+            {
+              "ok": true,
+              "message": "Decoded download dimensions are 16 \u00d7 12 (got 16 \u00d7 12)."
+            },
+            {
+              "ok": true,
+              "message": "Changing quality invalidates the old download."
+            },
+            {
+              "ok": true,
+              "message": "Downloaded bytes are actual JPEG, not a renamed input."
+            },
+            {
+              "ok": true,
+              "message": "Corrupt input produces a visible error and cannot export a stale result."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        },
+        "webkit": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Downloaded bytes are actual JPEG, not a renamed input."
+            },
+            {
+              "ok": true,
+              "message": "Displayed output byte count equals the actual downloaded file size."
+            },
+            {
+              "ok": true,
+              "message": "Download extension matches encoded format."
+            },
+            {
+              "ok": true,
+              "message": "Decoded download dimensions are 16 \u00d7 12 (got 16 \u00d7 12)."
+            },
+            {
+              "ok": true,
+              "message": "Changing quality invalidates the old download."
+            },
+            {
+              "ok": true,
+              "message": "Downloaded bytes are actual JPEG, not a renamed input."
+            },
+            {
+              "ok": true,
+              "message": "Corrupt input produces a visible error and cannot export a stale result."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        }
+      }
     },
     {
       "slug": "gif-to-png",
       "grouping": "image",
       "historicallyApproved": false,
       "originalComponent": "components/tools/GifToPngClient.tsx",
-      "status": "implemented_awaiting_integrated_browser_QA",
+      "status": "accepted_both_browsers",
       "findingsAndChanges": [
         "Inputs were often validated by MIME/extension alone; asynchronous operations leaked URLs or exposed stale results.",
         "Bounded byte signatures/dimensions, GIF total-frame budget, encoder MIME and byte validation, decoded output dimension checks, measured byte counts, explicit JPEG background, cancel/generation guards and result URL cleanup.",
@@ -962,21 +2175,95 @@
       "browserCase": {
         "file": "scripts/qa/cases/media-conversion.mjs",
         "slug": "gif-to-png",
-        "status": "authored_not_run",
+        "status": "executed",
         "assertions": "Downloads and saves actual output; signature/extension, browser-decoded 16x12 dimensions and pixels, alpha/JPEG background where applicable, APNG frame count/delays/pixel differences, SVG paths, quality invalidation, bad bytes and Clear."
       },
       "scopedTests": [
         "lib/media-conversion/media.test.ts"
       ],
       "remainingBlockers": [],
-      "runtimeConstraints": "Real canvas transcodes; HEIC uses existing heic2any; GIF uses existing gifuct-js/upng-js; tracing uses existing imagetracerjs. No new dependencies."
+      "runtimeConstraints": "Real canvas transcodes; HEIC uses existing heic2any; GIF uses existing gifuct-js/upng-js; tracing uses existing imagetracerjs. No new dependencies.",
+      "integratedBrowsers": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "blockers": [],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-chrome-3/tools/gif-to-png.json"
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "blockers": [],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-webkit-4/tools/gif-to-png.json"
+        }
+      },
+      "isolatedComponents": {
+        "chrome": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Downloaded bytes are actual PNG, not a renamed input."
+            },
+            {
+              "ok": true,
+              "message": "Displayed output byte count equals the actual downloaded file size."
+            },
+            {
+              "ok": true,
+              "message": "Download extension matches encoded format."
+            },
+            {
+              "ok": true,
+              "message": "Decoded download dimensions are 16 \u00d7 12 (got 16 \u00d7 12)."
+            },
+            {
+              "ok": true,
+              "message": "Corrupt input produces a visible error and cannot export a stale result."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        },
+        "webkit": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Downloaded bytes are actual PNG, not a renamed input."
+            },
+            {
+              "ok": true,
+              "message": "Displayed output byte count equals the actual downloaded file size."
+            },
+            {
+              "ok": true,
+              "message": "Download extension matches encoded format."
+            },
+            {
+              "ok": true,
+              "message": "Decoded download dimensions are 16 \u00d7 12 (got 16 \u00d7 12)."
+            },
+            {
+              "ok": true,
+              "message": "Corrupt input produces a visible error and cannot export a stale result."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        }
+      }
     },
     {
       "slug": "heic-to-jpg",
       "grouping": "image",
       "historicallyApproved": false,
       "originalComponent": "components/tools/HeicToJpgClient.tsx",
-      "status": "implemented_awaiting_integrated_browser_QA",
+      "status": "accepted_both_browsers",
       "findingsAndChanges": [
         "Inputs were often validated by MIME/extension alone; asynchronous operations leaked URLs or exposed stale results.",
         "Bounded byte signatures/dimensions, GIF total-frame budget, encoder MIME and byte validation, decoded output dimension checks, measured byte counts, explicit JPEG background, cancel/generation guards and result URL cleanup.",
@@ -985,21 +2272,119 @@
       "browserCase": {
         "file": "scripts/qa/cases/media-conversion.mjs",
         "slug": "heic-to-jpg",
-        "status": "authored_not_run",
+        "status": "executed",
         "assertions": "Downloads and saves actual output; signature/extension, browser-decoded 16x12 dimensions and pixels, alpha/JPEG background where applicable, APNG frame count/delays/pixel differences, SVG paths, quality invalidation, bad bytes and Clear."
       },
       "scopedTests": [
         "lib/media-conversion/media.test.ts"
       ],
       "remainingBlockers": [],
-      "runtimeConstraints": "Real canvas transcodes; HEIC uses existing heic2any; GIF uses existing gifuct-js/upng-js; tracing uses existing imagetracerjs. No new dependencies."
+      "runtimeConstraints": "Real canvas transcodes; HEIC uses existing heic2any; GIF uses existing gifuct-js/upng-js; tracing uses existing imagetracerjs. No new dependencies.",
+      "integratedBrowsers": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "blockers": [],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-chrome-3/tools/heic-to-jpg.json"
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "blockers": [],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-webkit-4/tools/heic-to-jpg.json"
+        }
+      },
+      "isolatedComponents": {
+        "chrome": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Downloaded bytes are actual JPEG, not a renamed input."
+            },
+            {
+              "ok": true,
+              "message": "Displayed output byte count equals the actual downloaded file size."
+            },
+            {
+              "ok": true,
+              "message": "Download extension matches encoded format."
+            },
+            {
+              "ok": true,
+              "message": "Decoded download dimensions are 16 \u00d7 12 (got 16 \u00d7 12)."
+            },
+            {
+              "ok": true,
+              "message": "Converted pixels preserve the red fixture region."
+            },
+            {
+              "ok": true,
+              "message": "Changing quality invalidates the old download."
+            },
+            {
+              "ok": true,
+              "message": "Downloaded bytes are actual JPEG, not a renamed input."
+            },
+            {
+              "ok": true,
+              "message": "Corrupt input produces a visible error and cannot export a stale result."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        },
+        "webkit": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Downloaded bytes are actual JPEG, not a renamed input."
+            },
+            {
+              "ok": true,
+              "message": "Displayed output byte count equals the actual downloaded file size."
+            },
+            {
+              "ok": true,
+              "message": "Download extension matches encoded format."
+            },
+            {
+              "ok": true,
+              "message": "Decoded download dimensions are 16 \u00d7 12 (got 16 \u00d7 12)."
+            },
+            {
+              "ok": true,
+              "message": "Converted pixels preserve the red fixture region."
+            },
+            {
+              "ok": true,
+              "message": "Changing quality invalidates the old download."
+            },
+            {
+              "ok": true,
+              "message": "Downloaded bytes are actual JPEG, not a renamed input."
+            },
+            {
+              "ok": true,
+              "message": "Corrupt input produces a visible error and cannot export a stale result."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        }
+      }
     },
     {
       "slug": "heic-to-png",
       "grouping": "image",
       "historicallyApproved": false,
       "originalComponent": "components/tools/HeicToPngClient.tsx",
-      "status": "implemented_awaiting_integrated_browser_QA",
+      "status": "accepted_both_browsers",
       "findingsAndChanges": [
         "Inputs were often validated by MIME/extension alone; asynchronous operations leaked URLs or exposed stale results.",
         "Bounded byte signatures/dimensions, GIF total-frame budget, encoder MIME and byte validation, decoded output dimension checks, measured byte counts, explicit JPEG background, cancel/generation guards and result URL cleanup.",
@@ -1008,21 +2393,103 @@
       "browserCase": {
         "file": "scripts/qa/cases/media-conversion.mjs",
         "slug": "heic-to-png",
-        "status": "authored_not_run",
+        "status": "executed",
         "assertions": "Downloads and saves actual output; signature/extension, browser-decoded 16x12 dimensions and pixels, alpha/JPEG background where applicable, APNG frame count/delays/pixel differences, SVG paths, quality invalidation, bad bytes and Clear."
       },
       "scopedTests": [
         "lib/media-conversion/media.test.ts"
       ],
       "remainingBlockers": [],
-      "runtimeConstraints": "Real canvas transcodes; HEIC uses existing heic2any; GIF uses existing gifuct-js/upng-js; tracing uses existing imagetracerjs. No new dependencies."
+      "runtimeConstraints": "Real canvas transcodes; HEIC uses existing heic2any; GIF uses existing gifuct-js/upng-js; tracing uses existing imagetracerjs. No new dependencies.",
+      "integratedBrowsers": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "blockers": [],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-chrome-3/tools/heic-to-png.json"
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "blockers": [],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-webkit-4/tools/heic-to-png.json"
+        }
+      },
+      "isolatedComponents": {
+        "chrome": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Downloaded bytes are actual PNG, not a renamed input."
+            },
+            {
+              "ok": true,
+              "message": "Displayed output byte count equals the actual downloaded file size."
+            },
+            {
+              "ok": true,
+              "message": "Download extension matches encoded format."
+            },
+            {
+              "ok": true,
+              "message": "Decoded download dimensions are 16 \u00d7 12 (got 16 \u00d7 12)."
+            },
+            {
+              "ok": true,
+              "message": "Converted pixels preserve the red fixture region."
+            },
+            {
+              "ok": true,
+              "message": "Corrupt input produces a visible error and cannot export a stale result."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        },
+        "webkit": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Downloaded bytes are actual PNG, not a renamed input."
+            },
+            {
+              "ok": true,
+              "message": "Displayed output byte count equals the actual downloaded file size."
+            },
+            {
+              "ok": true,
+              "message": "Download extension matches encoded format."
+            },
+            {
+              "ok": true,
+              "message": "Decoded download dimensions are 16 \u00d7 12 (got 16 \u00d7 12)."
+            },
+            {
+              "ok": true,
+              "message": "Converted pixels preserve the red fixture region."
+            },
+            {
+              "ok": true,
+              "message": "Corrupt input produces a visible error and cannot export a stale result."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        }
+      }
     },
     {
       "slug": "jpg-to-png",
       "grouping": "image",
       "historicallyApproved": false,
       "originalComponent": "components/tools/JpgToPngClient.tsx",
-      "status": "implemented_awaiting_integrated_browser_QA",
+      "status": "accepted_both_browsers",
       "findingsAndChanges": [
         "Inputs were often validated by MIME/extension alone; asynchronous operations leaked URLs or exposed stale results.",
         "Bounded byte signatures/dimensions, GIF total-frame budget, encoder MIME and byte validation, decoded output dimension checks, measured byte counts, explicit JPEG background, cancel/generation guards and result URL cleanup.",
@@ -1031,21 +2498,103 @@
       "browserCase": {
         "file": "scripts/qa/cases/media-conversion.mjs",
         "slug": "jpg-to-png",
-        "status": "authored_not_run",
+        "status": "executed",
         "assertions": "Downloads and saves actual output; signature/extension, browser-decoded 16x12 dimensions and pixels, alpha/JPEG background where applicable, APNG frame count/delays/pixel differences, SVG paths, quality invalidation, bad bytes and Clear."
       },
       "scopedTests": [
         "lib/media-conversion/media.test.ts"
       ],
       "remainingBlockers": [],
-      "runtimeConstraints": "Real canvas transcodes; HEIC uses existing heic2any; GIF uses existing gifuct-js/upng-js; tracing uses existing imagetracerjs. No new dependencies."
+      "runtimeConstraints": "Real canvas transcodes; HEIC uses existing heic2any; GIF uses existing gifuct-js/upng-js; tracing uses existing imagetracerjs. No new dependencies.",
+      "integratedBrowsers": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "blockers": [],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-chrome-3/tools/jpg-to-png.json"
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "blockers": [],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-webkit-4/tools/jpg-to-png.json"
+        }
+      },
+      "isolatedComponents": {
+        "chrome": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Downloaded bytes are actual PNG, not a renamed input."
+            },
+            {
+              "ok": true,
+              "message": "Displayed output byte count equals the actual downloaded file size."
+            },
+            {
+              "ok": true,
+              "message": "Download extension matches encoded format."
+            },
+            {
+              "ok": true,
+              "message": "Decoded download dimensions are 16 \u00d7 12 (got 16 \u00d7 12)."
+            },
+            {
+              "ok": true,
+              "message": "Converted pixels preserve the red fixture region."
+            },
+            {
+              "ok": true,
+              "message": "Corrupt input produces a visible error and cannot export a stale result."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        },
+        "webkit": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Downloaded bytes are actual PNG, not a renamed input."
+            },
+            {
+              "ok": true,
+              "message": "Displayed output byte count equals the actual downloaded file size."
+            },
+            {
+              "ok": true,
+              "message": "Download extension matches encoded format."
+            },
+            {
+              "ok": true,
+              "message": "Decoded download dimensions are 16 \u00d7 12 (got 16 \u00d7 12)."
+            },
+            {
+              "ok": true,
+              "message": "Converted pixels preserve the red fixture region."
+            },
+            {
+              "ok": true,
+              "message": "Corrupt input produces a visible error and cannot export a stale result."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        }
+      }
     },
     {
       "slug": "jpg-to-webp",
       "grouping": "image",
       "historicallyApproved": false,
       "originalComponent": "components/tools/ImageFormatConverterClient.tsx",
-      "status": "awaiting_central_route_mapping",
+      "status": "integration_blocked",
       "findingsAndChanges": [
         "Inputs were often validated by MIME/extension alone; asynchronous operations leaked URLs or exposed stale results.",
         "Bounded byte signatures/dimensions, GIF total-frame budget, encoder MIME and byte validation, decoded output dimension checks, measured byte counts, explicit JPEG background, cancel/generation guards and result URL cleanup.",
@@ -1054,24 +2603,128 @@
       "browserCase": {
         "file": "scripts/qa/cases/media-conversion.mjs",
         "slug": "jpg-to-webp",
-        "status": "authored_not_run",
+        "status": "executed",
         "assertions": "Downloads and saves actual output; signature/extension, browser-decoded 16x12 dimensions and pixels, alpha/JPEG background where applicable, APNG frame count/delays/pixel differences, SVG paths, quality invalidation, bad bytes and Clear."
       },
       "scopedTests": [
         "lib/media-conversion/media.test.ts"
       ],
       "remainingBlockers": [
-        "Parent must map only jpg-to-webp to MediaConversionImageClient in app/tools/[slug]/ToolUI.tsx; protected approved component left byte-for-byte unchanged."
+        "webkit: expect(locator).toBeVisible() failed\n\nLocator: locator('.tb-v2-tool-card').first().getByRole('link', { name: /^Download/ })\nExpected: visible\nTimeout: 45000ms\nError: element(s) not found; TypeError: Load failed; /localhost:3190/__nextjs_original-stack-frames due to access control checks.; Failed to load resource: A TLS error caused the secure connection to fail.; A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:\n\n- A server/client branch `if (typeof window !== 'undefined')`.\n- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.\n- Date formatting in a user's locale which doesn't match the server.\n- External changing data without sending a snapshot of it along with the HTML.\n- Invalid HTML tag nesting.\n\nIt can also happen if the client has a browser extension installed which messes with the HTML before React loaded.\n\n%s%s https://react.dev/link/hydration-mismatch \n\n  ...\n    <SegmentViewNode type=\"page\" pagePath=\"tools/[slu...\">\n      <SegmentTrieNode>\n      <ToolDetailPage>\n        <ToolDetailView>\n          <div data-testid=\"tool-detai...\" className=\"tb-v2-tool...\">\n            <div className=\"tb-v2-cont...\">\n              <nav>\n              <div>\n              <p>\n              <ToolEngagementBar>\n              <ToolWrapper toolSlug=\"jpg-to-webp\" toolName=\"JPG to Web...\">\n                <div className=\"relative\">\n                  <div className=\"tb-v2-tool...\">\n                    <ToolUI tool={{name:\"JPG ...\", ...}}>\n                      <LoadableComponent source=\"jpeg\" output=\"webp\">\n                        <MediaConversionImageClient source=\"jpeg\" output=\"webp\">\n                          <ImageConverter source=\"jpeg\" output=\"webp\">\n                            <div className=\"tb-v2-section\" style={{display:\"grid\", ...}}>\n                              <div>\n     "
       ],
       "preparedComponent": "components/tools/MediaConversionImageClient.tsx",
-      "runtimeConstraints": "Real canvas transcodes; HEIC uses existing heic2any; GIF uses existing gifuct-js/upng-js; tracing uses existing imagetracerjs. No new dependencies."
+      "runtimeConstraints": "Real canvas transcodes; HEIC uses existing heic2any; GIF uses existing gifuct-js/upng-js; tracing uses existing imagetracerjs. No new dependencies.",
+      "integratedBrowsers": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "blockers": [],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-chrome-3/tools/jpg-to-webp.json"
+        },
+        "webkit": {
+          "status": "failed",
+          "functional": "failed",
+          "blockers": [
+            "expect(locator).toBeVisible() failed\n\nLocator: locator('.tb-v2-tool-card').first().getByRole('link', { name: /^Download/ })\nExpected: visible\nTimeout: 45000ms\nError: element(s) not found",
+            "TypeError: Load failed",
+            "/localhost:3190/__nextjs_original-stack-frames due to access control checks.",
+            "Failed to load resource: A TLS error caused the secure connection to fail.",
+            "A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:\n\n- A server/client branch `if (typeof window !== 'undefined')`.\n- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.\n- Date formatting in a user's locale which doesn't match the server.\n- External changing data without sending a snapshot of it along with the HTML.\n- Invalid HTML tag nesting.\n\nIt can also happen if the client has a browser extension installed which messes with the HTML before React loaded.\n\n%s%s https://react.dev/link/hydration-mismatch \n\n  ...\n    <SegmentViewNode type=\"page\" pagePath=\"tools/[slu...\">\n      <SegmentTrieNode>\n      <ToolDetailPage>\n        <ToolDetailView>\n          <div data-testid=\"tool-detai...\" className=\"tb-v2-tool...\">\n            <div className=\"tb-v2-cont...\">\n              <nav>\n              <div>\n              <p>\n              <ToolEngagementBar>\n              <ToolWrapper toolSlug=\"jpg-to-webp\" toolName=\"JPG to Web...\">\n                <div className=\"relative\">\n                  <div className=\"tb-v2-tool...\">\n                    <ToolUI tool={{name:\"JPG ...\", ...}}>\n                      <LoadableComponent source=\"jpeg\" output=\"webp\">\n                        <MediaConversionImageClient source=\"jpeg\" output=\"webp\">\n                          <ImageConverter source=\"jpeg\" output=\"webp\">\n                            <div className=\"tb-v2-section\" style={{display:\"grid\", ...}}>\n                              <div>\n     "
+          ],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-webkit-4/tools/jpg-to-webp.json"
+        }
+      },
+      "isolatedComponents": {
+        "chrome": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Downloaded bytes are actual WEBP, not a renamed input."
+            },
+            {
+              "ok": true,
+              "message": "Displayed output byte count equals the actual downloaded file size."
+            },
+            {
+              "ok": true,
+              "message": "Download extension matches encoded format."
+            },
+            {
+              "ok": true,
+              "message": "Decoded download dimensions are 16 \u00d7 12 (got 16 \u00d7 12)."
+            },
+            {
+              "ok": true,
+              "message": "Converted pixels preserve the red fixture region."
+            },
+            {
+              "ok": true,
+              "message": "Changing quality invalidates the old download."
+            },
+            {
+              "ok": true,
+              "message": "Downloaded bytes are actual WEBP, not a renamed input."
+            },
+            {
+              "ok": true,
+              "message": "Corrupt input produces a visible error and cannot export a stale result."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        },
+        "webkit": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Downloaded bytes are actual WEBP, not a renamed input."
+            },
+            {
+              "ok": true,
+              "message": "Displayed output byte count equals the actual downloaded file size."
+            },
+            {
+              "ok": true,
+              "message": "Download extension matches encoded format."
+            },
+            {
+              "ok": true,
+              "message": "Decoded download dimensions are 16 \u00d7 12 (got 16 \u00d7 12)."
+            },
+            {
+              "ok": true,
+              "message": "Converted pixels preserve the red fixture region."
+            },
+            {
+              "ok": true,
+              "message": "Changing quality invalidates the old download."
+            },
+            {
+              "ok": true,
+              "message": "Downloaded bytes are actual WEBP, not a renamed input."
+            },
+            {
+              "ok": true,
+              "message": "Corrupt input produces a visible error and cannot export a stale result."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        }
+      }
     },
     {
       "slug": "m4a-to-wav",
       "grouping": "audio",
       "historicallyApproved": false,
       "originalComponent": "components/tools/AacToWavClient.tsx",
-      "status": "implemented_awaiting_integrated_browser_QA",
+      "status": "integration_blocked",
       "findingsAndChanges": [
         "Audio paths lacked bounded decoding/context cleanup. MP3-named routes actually created WAV.",
         "Validate container bytes and limits, close AudioContext, encode interleaved 16-bit PCM WAV, export the current result, and cancel/invalidate stale work.",
@@ -1080,71 +2733,320 @@
       "browserCase": {
         "file": "scripts/qa/cases/media-conversion.mjs",
         "slug": "m4a-to-wav",
-        "status": "authored_not_run",
+        "status": "executed",
         "assertions": "Downloads RIFF/WAVE; verifies declared chunk sizes, 16-bit PCM, 44.1kHz mono approximately 2-second non-silent 440Hz signal, invalid container cleanup and Clear. MP3 cases explicitly fail acceptance after testing the WAV fallback."
       },
       "scopedTests": [
         "lib/media-conversion/media.test.ts"
       ],
-      "remainingBlockers": [],
-      "runtimeConstraints": "Browser audio decoder support is conditional. MKV may fail on the integrated browser; a real codec failure is not accepted as conversion success."
+      "remainingBlockers": [
+        "chrome: navigation: page.goto: Timeout 30000ms exceeded.; Failed to load resource: net::ERR_INCOMPLETE_CHUNKED_ENCODING; Failed to load resource: net::ERR_CONNECTION_REFUSED",
+        "webkit: Refused to load blob:http://localhost:3190/0a7e1e0d-18c8-45a4-882a-310f2c6b7776 because it appears in neither the media-src directive nor the default-src directive of the Content Security Policy."
+      ],
+      "runtimeConstraints": "Browser audio decoder support is conditional. MKV may fail on the integrated browser; a real codec failure is not accepted as conversion success.",
+      "integratedBrowsers": {
+        "chrome": {
+          "status": "failed",
+          "functional": "not-run",
+          "blockers": [
+            "navigation: page.goto: Timeout 30000ms exceeded.",
+            "Failed to load resource: net::ERR_INCOMPLETE_CHUNKED_ENCODING",
+            "Failed to load resource: net::ERR_CONNECTION_REFUSED"
+          ],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-chrome-4-failures/tools/m4a-to-wav.json"
+        },
+        "webkit": {
+          "status": "failed",
+          "functional": "passed",
+          "blockers": [
+            "Refused to load blob:http://localhost:3190/0a7e1e0d-18c8-45a4-882a-310f2c6b7776 because it appears in neither the media-src directive nor the default-src directive of the Content Security Policy."
+          ],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-webkit-4/tools/m4a-to-wav.json"
+        }
+      },
+      "isolatedComponents": {
+        "chrome": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Download is actual RIFF/WAVE with a WAV extension."
+            },
+            {
+              "ok": true,
+              "message": "WAV is 16-bit PCM with exact container/data sizes."
+            },
+            {
+              "ok": true,
+              "message": "Decoded WAV retains mono channels."
+            },
+            {
+              "ok": true,
+              "message": "Decoded download retains two-second signal (2.000 seconds)."
+            },
+            {
+              "ok": true,
+              "message": "Independently decoded download contains the actual approximately 440 Hz tone, not silence."
+            },
+            {
+              "ok": true,
+              "message": "Bad container bytes reject conversion and stale output."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        },
+        "webkit": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Download is actual RIFF/WAVE with a WAV extension."
+            },
+            {
+              "ok": true,
+              "message": "WAV is 16-bit PCM with exact container/data sizes."
+            },
+            {
+              "ok": true,
+              "message": "Decoded WAV retains mono channels."
+            },
+            {
+              "ok": true,
+              "message": "Decoded download retains two-second signal (1.995 seconds)."
+            },
+            {
+              "ok": true,
+              "message": "Independently decoded download contains the actual approximately 440 Hz tone, not silence."
+            },
+            {
+              "ok": true,
+              "message": "Bad container bytes reject conversion and stale output."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        }
+      }
     },
     {
       "slug": "mkv-to-mp3",
       "grouping": "audio",
       "historicallyApproved": false,
       "originalComponent": "components/tools/MkvToMp3Client.tsx",
-      "status": "blocked_dependency",
+      "status": "integration_blocked",
       "findingsAndChanges": [
-        "Audio paths lacked bounded decoding/context cleanup. MP3-named routes actually created WAV.",
-        "Validate container bytes and limits, close AudioContext, encode interleaved 16-bit PCM WAV, export the current result, and cancel/invalidate stale work.",
-        "Browser audio decoder support is conditional. MKV may fail on the integrated browser; a real codec failure is not accepted as conversion success."
+        "Real 128 kbps LAME MP3 encoding with MPEG frames, clipped Int16 PCM, 1152-sample chunks, flush and yielding cancellation.",
+        "Native source decoding with bounded AAC-LC demux fallback for nonfragmented MP4/M4A and unlaced MKV.",
+        "Independent FFprobe codec/channel identification and FFmpeg duration and audible-tone proof in both browsers."
       ],
       "browserCase": {
         "file": "scripts/qa/cases/media-conversion.mjs",
         "slug": "mkv-to-mp3",
-        "status": "authored_not_run",
-        "assertions": "Downloads RIFF/WAVE; verifies declared chunk sizes, 16-bit PCM, 44.1kHz mono approximately 2-second non-silent 440Hz signal, invalid container cleanup and Clear. MP3 cases explicitly fail acceptance after testing the WAV fallback."
+        "status": "executed",
+        "assertions": "Downloads MP3; FFprobe identifies mp3 mono; FFmpeg independently decodes approximately 2-second audible 440 Hz tone. Invalid container and Clear remove stale download."
       },
       "scopedTests": [
         "lib/media-conversion/media.test.ts"
       ],
       "remainingBlockers": [
-        "No MP3 encoder dependency or conversion backend. Current component honestly rejects MP3 and exposes an explicitly selected real WAV alternative. MP3 acceptance case intentionally records failure."
+        "chrome: Loading media from  'blob:http://localhost:3190/974578dd-1c3f-45c9-a832-f4a20e2438cb' violates the following Content Security Policy directive: \"default-src 'self'\". Note that 'media-src' was not explicitly set, so 'default-src' is used as a fallback. The action has been blocked.",
+        "webkit: Refused to load blob:http://localhost:3190/80dfbcfb-787d-49e9-be7b-13479f5fcf26 because it appears in neither the media-src directive nor the default-src directive of the Content Security Policy."
       ],
-      "runtimeConstraints": "Browser audio decoder support is conditional. MKV may fail on the integrated browser; a real codec failure is not accepted as conversion success."
+      "runtimeConstraints": "MP3 output supports mono/stereo at 128 kbps. Native input codec support varies. Fallback supports unencrypted AAC-LC only; unsupported variants remain errors.",
+      "integratedBrowsers": {
+        "chrome": {
+          "status": "failed",
+          "functional": "passed",
+          "blockers": [
+            "Loading media from  'blob:http://localhost:3190/974578dd-1c3f-45c9-a832-f4a20e2438cb' violates the following Content Security Policy directive: \"default-src 'self'\". Note that 'media-src' was not explicitly set, so 'default-src' is used as a fallback. The action has been blocked."
+          ],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-chrome-4-failures/tools/mkv-to-mp3.json"
+        },
+        "webkit": {
+          "status": "failed",
+          "functional": "passed",
+          "blockers": [
+            "Refused to load blob:http://localhost:3190/80dfbcfb-787d-49e9-be7b-13479f5fcf26 because it appears in neither the media-src directive nor the default-src directive of the Content Security Policy."
+          ],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-webkit-4/tools/mkv-to-mp3.json"
+        }
+      },
+      "isolatedComponents": {
+        "chrome": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Download has MPEG audio frames and an MP3 extension."
+            },
+            {
+              "ok": true,
+              "message": "Independent FFprobe identifies genuine mono MP3 audio."
+            },
+            {
+              "ok": true,
+              "message": "Decoded download retains two-second signal (2.064 seconds)."
+            },
+            {
+              "ok": true,
+              "message": "Independently decoded download contains the actual approximately 440 Hz tone, not silence."
+            },
+            {
+              "ok": true,
+              "message": "Bad container bytes reject conversion and stale output."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        },
+        "webkit": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Download has MPEG audio frames and an MP3 extension."
+            },
+            {
+              "ok": true,
+              "message": "Independent FFprobe identifies genuine mono MP3 audio."
+            },
+            {
+              "ok": true,
+              "message": "Decoded download retains two-second signal (2.038 seconds)."
+            },
+            {
+              "ok": true,
+              "message": "Independently decoded download contains the actual approximately 440 Hz tone, not silence."
+            },
+            {
+              "ok": true,
+              "message": "Bad container bytes reject conversion and stale output."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        }
+      }
     },
     {
       "slug": "mp4-to-mp3",
       "grouping": "audio",
       "historicallyApproved": false,
       "originalComponent": "components/tools/MP4ToMP3Client.tsx",
-      "status": "blocked_dependency",
+      "status": "integration_blocked",
       "findingsAndChanges": [
-        "Audio paths lacked bounded decoding/context cleanup. MP3-named routes actually created WAV.",
-        "Validate container bytes and limits, close AudioContext, encode interleaved 16-bit PCM WAV, export the current result, and cancel/invalidate stale work.",
-        "Browser audio decoder support is conditional. MKV may fail on the integrated browser; a real codec failure is not accepted as conversion success."
+        "Real 128 kbps LAME MP3 encoding with MPEG frames, clipped Int16 PCM, 1152-sample chunks, flush and yielding cancellation.",
+        "Native source decoding with bounded AAC-LC demux fallback for nonfragmented MP4/M4A and unlaced MKV.",
+        "Independent FFprobe codec/channel identification and FFmpeg duration and audible-tone proof in both browsers."
       ],
       "browserCase": {
         "file": "scripts/qa/cases/media-conversion.mjs",
         "slug": "mp4-to-mp3",
-        "status": "authored_not_run",
-        "assertions": "Downloads RIFF/WAVE; verifies declared chunk sizes, 16-bit PCM, 44.1kHz mono approximately 2-second non-silent 440Hz signal, invalid container cleanup and Clear. MP3 cases explicitly fail acceptance after testing the WAV fallback."
+        "status": "executed",
+        "assertions": "Downloads MP3; FFprobe identifies mp3 mono; FFmpeg independently decodes approximately 2-second audible 440 Hz tone. Invalid container and Clear remove stale download."
       },
       "scopedTests": [
         "lib/media-conversion/media.test.ts"
       ],
       "remainingBlockers": [
-        "No MP3 encoder dependency or conversion backend. Current component honestly rejects MP3 and exposes an explicitly selected real WAV alternative. MP3 acceptance case intentionally records failure."
+        "chrome: Loading media from  'blob:http://localhost:3190/90ce9be4-7332-47b4-bde7-668e722eb86c' violates the following Content Security Policy directive: \"default-src 'self'\". Note that 'media-src' was not explicitly set, so 'default-src' is used as a fallback. The action has been blocked.",
+        "webkit: Refused to load blob:http://localhost:3190/a88a7f50-d017-43ea-bebd-2dd4ad230875 because it appears in neither the media-src directive nor the default-src directive of the Content Security Policy."
       ],
-      "runtimeConstraints": "Browser audio decoder support is conditional. MKV may fail on the integrated browser; a real codec failure is not accepted as conversion success."
+      "runtimeConstraints": "MP3 output supports mono/stereo at 128 kbps. Native input codec support varies. Fallback supports unencrypted AAC-LC only; unsupported variants remain errors.",
+      "integratedBrowsers": {
+        "chrome": {
+          "status": "failed",
+          "functional": "passed",
+          "blockers": [
+            "Loading media from  'blob:http://localhost:3190/90ce9be4-7332-47b4-bde7-668e722eb86c' violates the following Content Security Policy directive: \"default-src 'self'\". Note that 'media-src' was not explicitly set, so 'default-src' is used as a fallback. The action has been blocked."
+          ],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-chrome-4-failures/tools/mp4-to-mp3.json"
+        },
+        "webkit": {
+          "status": "failed",
+          "functional": "passed",
+          "blockers": [
+            "Refused to load blob:http://localhost:3190/a88a7f50-d017-43ea-bebd-2dd4ad230875 because it appears in neither the media-src directive nor the default-src directive of the Content Security Policy."
+          ],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-webkit-4/tools/mp4-to-mp3.json"
+        }
+      },
+      "isolatedComponents": {
+        "chrome": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Download has MPEG audio frames and an MP3 extension."
+            },
+            {
+              "ok": true,
+              "message": "Independent FFprobe identifies genuine mono MP3 audio."
+            },
+            {
+              "ok": true,
+              "message": "Decoded download retains two-second signal (2.038 seconds)."
+            },
+            {
+              "ok": true,
+              "message": "Independently decoded download contains the actual approximately 440 Hz tone, not silence."
+            },
+            {
+              "ok": true,
+              "message": "Bad container bytes reject conversion and stale output."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        },
+        "webkit": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Download has MPEG audio frames and an MP3 extension."
+            },
+            {
+              "ok": true,
+              "message": "Independent FFprobe identifies genuine mono MP3 audio."
+            },
+            {
+              "ok": true,
+              "message": "Decoded download retains two-second signal (2.064 seconds)."
+            },
+            {
+              "ok": true,
+              "message": "Independently decoded download contains the actual approximately 440 Hz tone, not silence."
+            },
+            {
+              "ok": true,
+              "message": "Bad container bytes reject conversion and stale output."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        }
+      }
     },
     {
       "slug": "mp4-to-wav",
       "grouping": "audio",
       "historicallyApproved": false,
       "originalComponent": "components/tools/AacToWavClient.tsx",
-      "status": "implemented_awaiting_integrated_browser_QA",
+      "status": "integration_blocked",
       "findingsAndChanges": [
         "Audio paths lacked bounded decoding/context cleanup. MP3-named routes actually created WAV.",
         "Validate container bytes and limits, close AudioContext, encode interleaved 16-bit PCM WAV, export the current result, and cancel/invalidate stale work.",
@@ -1153,21 +3055,110 @@
       "browserCase": {
         "file": "scripts/qa/cases/media-conversion.mjs",
         "slug": "mp4-to-wav",
-        "status": "authored_not_run",
+        "status": "executed",
         "assertions": "Downloads RIFF/WAVE; verifies declared chunk sizes, 16-bit PCM, 44.1kHz mono approximately 2-second non-silent 440Hz signal, invalid container cleanup and Clear. MP3 cases explicitly fail acceptance after testing the WAV fallback."
       },
       "scopedTests": [
         "lib/media-conversion/media.test.ts"
       ],
-      "remainingBlockers": [],
-      "runtimeConstraints": "Browser audio decoder support is conditional. MKV may fail on the integrated browser; a real codec failure is not accepted as conversion success."
+      "remainingBlockers": [
+        "chrome: Loading media from  'blob:http://localhost:3190/214746d2-3176-4dd0-863b-e68b7fc36d56' violates the following Content Security Policy directive: \"default-src 'self'\". Note that 'media-src' was not explicitly set, so 'default-src' is used as a fallback. The action has been blocked.",
+        "webkit: Refused to load blob:http://localhost:3190/d6755853-cfae-4da0-9a09-d37c024badfe because it appears in neither the media-src directive nor the default-src directive of the Content Security Policy."
+      ],
+      "runtimeConstraints": "Browser audio decoder support is conditional. MKV may fail on the integrated browser; a real codec failure is not accepted as conversion success.",
+      "integratedBrowsers": {
+        "chrome": {
+          "status": "failed",
+          "functional": "passed",
+          "blockers": [
+            "Loading media from  'blob:http://localhost:3190/214746d2-3176-4dd0-863b-e68b7fc36d56' violates the following Content Security Policy directive: \"default-src 'self'\". Note that 'media-src' was not explicitly set, so 'default-src' is used as a fallback. The action has been blocked."
+          ],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-chrome-4-failures/tools/mp4-to-wav.json"
+        },
+        "webkit": {
+          "status": "failed",
+          "functional": "passed",
+          "blockers": [
+            "Refused to load blob:http://localhost:3190/d6755853-cfae-4da0-9a09-d37c024badfe because it appears in neither the media-src directive nor the default-src directive of the Content Security Policy."
+          ],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-webkit-4/tools/mp4-to-wav.json"
+        }
+      },
+      "isolatedComponents": {
+        "chrome": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Download is actual RIFF/WAVE with a WAV extension."
+            },
+            {
+              "ok": true,
+              "message": "WAV is 16-bit PCM with exact container/data sizes."
+            },
+            {
+              "ok": true,
+              "message": "Decoded WAV retains mono channels."
+            },
+            {
+              "ok": true,
+              "message": "Decoded download retains two-second signal (2.000 seconds)."
+            },
+            {
+              "ok": true,
+              "message": "Independently decoded download contains the actual approximately 440 Hz tone, not silence."
+            },
+            {
+              "ok": true,
+              "message": "Bad container bytes reject conversion and stale output."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        },
+        "webkit": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Download is actual RIFF/WAVE with a WAV extension."
+            },
+            {
+              "ok": true,
+              "message": "WAV is 16-bit PCM with exact container/data sizes."
+            },
+            {
+              "ok": true,
+              "message": "Decoded WAV retains mono channels."
+            },
+            {
+              "ok": true,
+              "message": "Decoded download retains two-second signal (2.020 seconds)."
+            },
+            {
+              "ok": true,
+              "message": "Independently decoded download contains the actual approximately 440 Hz tone, not silence."
+            },
+            {
+              "ok": true,
+              "message": "Bad container bytes reject conversion and stale output."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        }
+      }
     },
     {
       "slug": "png-to-webp",
       "grouping": "image",
       "historicallyApproved": false,
       "originalComponent": "components/tools/ImageFormatConverterClient.tsx",
-      "status": "awaiting_central_route_mapping",
+      "status": "integration_blocked",
       "findingsAndChanges": [
         "Inputs were often validated by MIME/extension alone; asynchronous operations leaked URLs or exposed stale results.",
         "Bounded byte signatures/dimensions, GIF total-frame budget, encoder MIME and byte validation, decoded output dimension checks, measured byte counts, explicit JPEG background, cancel/generation guards and result URL cleanup.",
@@ -1176,24 +3167,135 @@
       "browserCase": {
         "file": "scripts/qa/cases/media-conversion.mjs",
         "slug": "png-to-webp",
-        "status": "authored_not_run",
+        "status": "executed",
         "assertions": "Downloads and saves actual output; signature/extension, browser-decoded 16x12 dimensions and pixels, alpha/JPEG background where applicable, APNG frame count/delays/pixel differences, SVG paths, quality invalidation, bad bytes and Clear."
       },
       "scopedTests": [
         "lib/media-conversion/media.test.ts"
       ],
       "remainingBlockers": [
-        "Parent must map only png-to-webp to MediaConversionImageClient in app/tools/[slug]/ToolUI.tsx; protected approved component left byte-for-byte unchanged."
+        "webkit: expect(locator).toBeVisible() failed\n\nLocator: locator('.tb-v2-tool-card').first().getByRole('link', { name: /^Download/ })\nExpected: visible\nTimeout: 45000ms\nError: element(s) not found; TypeError: Load failed; /localhost:3190/__nextjs_original-stack-frames due to access control checks.; Failed to load resource: A TLS error caused the secure connection to fail."
       ],
       "preparedComponent": "components/tools/MediaConversionImageClient.tsx",
-      "runtimeConstraints": "Real canvas transcodes; HEIC uses existing heic2any; GIF uses existing gifuct-js/upng-js; tracing uses existing imagetracerjs. No new dependencies."
+      "runtimeConstraints": "Real canvas transcodes; HEIC uses existing heic2any; GIF uses existing gifuct-js/upng-js; tracing uses existing imagetracerjs. No new dependencies.",
+      "integratedBrowsers": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "blockers": [],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-chrome-3/tools/png-to-webp.json"
+        },
+        "webkit": {
+          "status": "failed",
+          "functional": "failed",
+          "blockers": [
+            "expect(locator).toBeVisible() failed\n\nLocator: locator('.tb-v2-tool-card').first().getByRole('link', { name: /^Download/ })\nExpected: visible\nTimeout: 45000ms\nError: element(s) not found",
+            "TypeError: Load failed",
+            "/localhost:3190/__nextjs_original-stack-frames due to access control checks.",
+            "Failed to load resource: A TLS error caused the secure connection to fail."
+          ],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-webkit-4/tools/png-to-webp.json"
+        }
+      },
+      "isolatedComponents": {
+        "chrome": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Downloaded bytes are actual WEBP, not a renamed input."
+            },
+            {
+              "ok": true,
+              "message": "Displayed output byte count equals the actual downloaded file size."
+            },
+            {
+              "ok": true,
+              "message": "Download extension matches encoded format."
+            },
+            {
+              "ok": true,
+              "message": "Decoded download dimensions are 16 \u00d7 12 (got 16 \u00d7 12)."
+            },
+            {
+              "ok": true,
+              "message": "Converted pixels preserve the red fixture region."
+            },
+            {
+              "ok": true,
+              "message": "Transparent source pixels remain transparent."
+            },
+            {
+              "ok": true,
+              "message": "Changing quality invalidates the old download."
+            },
+            {
+              "ok": true,
+              "message": "Downloaded bytes are actual WEBP, not a renamed input."
+            },
+            {
+              "ok": true,
+              "message": "Corrupt input produces a visible error and cannot export a stale result."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        },
+        "webkit": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Downloaded bytes are actual WEBP, not a renamed input."
+            },
+            {
+              "ok": true,
+              "message": "Displayed output byte count equals the actual downloaded file size."
+            },
+            {
+              "ok": true,
+              "message": "Download extension matches encoded format."
+            },
+            {
+              "ok": true,
+              "message": "Decoded download dimensions are 16 \u00d7 12 (got 16 \u00d7 12)."
+            },
+            {
+              "ok": true,
+              "message": "Converted pixels preserve the red fixture region."
+            },
+            {
+              "ok": true,
+              "message": "Transparent source pixels remain transparent."
+            },
+            {
+              "ok": true,
+              "message": "Changing quality invalidates the old download."
+            },
+            {
+              "ok": true,
+              "message": "Downloaded bytes are actual WEBP, not a renamed input."
+            },
+            {
+              "ok": true,
+              "message": "Corrupt input produces a visible error and cannot export a stale result."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        }
+      }
     },
     {
       "slug": "svg-to-png",
       "grouping": "image",
       "historicallyApproved": false,
       "originalComponent": "components/tools/ImageFormatConverterClient.tsx",
-      "status": "awaiting_central_route_mapping",
+      "status": "accepted_both_browsers",
       "findingsAndChanges": [
         "Inputs were often validated by MIME/extension alone; asynchronous operations leaked URLs or exposed stale results.",
         "Bounded byte signatures/dimensions, GIF total-frame budget, encoder MIME and byte validation, decoded output dimension checks, measured byte counts, explicit JPEG background, cancel/generation guards and result URL cleanup.",
@@ -1202,24 +3304,112 @@
       "browserCase": {
         "file": "scripts/qa/cases/media-conversion.mjs",
         "slug": "svg-to-png",
-        "status": "authored_not_run",
+        "status": "executed",
         "assertions": "Downloads and saves actual output; signature/extension, browser-decoded 16x12 dimensions and pixels, alpha/JPEG background where applicable, APNG frame count/delays/pixel differences, SVG paths, quality invalidation, bad bytes and Clear."
       },
       "scopedTests": [
         "lib/media-conversion/media.test.ts"
       ],
-      "remainingBlockers": [
-        "Parent must map only svg-to-png to MediaConversionImageClient in app/tools/[slug]/ToolUI.tsx; protected approved component left byte-for-byte unchanged."
-      ],
+      "remainingBlockers": [],
       "preparedComponent": "components/tools/MediaConversionImageClient.tsx",
-      "runtimeConstraints": "Real canvas transcodes; HEIC uses existing heic2any; GIF uses existing gifuct-js/upng-js; tracing uses existing imagetracerjs. No new dependencies."
+      "runtimeConstraints": "Real canvas transcodes; HEIC uses existing heic2any; GIF uses existing gifuct-js/upng-js; tracing uses existing imagetracerjs. No new dependencies.",
+      "integratedBrowsers": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "blockers": [],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-chrome-3/tools/svg-to-png.json"
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "blockers": [],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-webkit-4/tools/svg-to-png.json"
+        }
+      },
+      "isolatedComponents": {
+        "chrome": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Downloaded bytes are actual PNG, not a renamed input."
+            },
+            {
+              "ok": true,
+              "message": "Displayed output byte count equals the actual downloaded file size."
+            },
+            {
+              "ok": true,
+              "message": "Download extension matches encoded format."
+            },
+            {
+              "ok": true,
+              "message": "Decoded download dimensions are 16 \u00d7 12 (got 16 \u00d7 12)."
+            },
+            {
+              "ok": true,
+              "message": "Converted pixels preserve the red fixture region."
+            },
+            {
+              "ok": true,
+              "message": "Transparent source pixels remain transparent."
+            },
+            {
+              "ok": true,
+              "message": "Corrupt input produces a visible error and cannot export a stale result."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        },
+        "webkit": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Downloaded bytes are actual PNG, not a renamed input."
+            },
+            {
+              "ok": true,
+              "message": "Displayed output byte count equals the actual downloaded file size."
+            },
+            {
+              "ok": true,
+              "message": "Download extension matches encoded format."
+            },
+            {
+              "ok": true,
+              "message": "Decoded download dimensions are 16 \u00d7 12 (got 16 \u00d7 12)."
+            },
+            {
+              "ok": true,
+              "message": "Converted pixels preserve the red fixture region."
+            },
+            {
+              "ok": true,
+              "message": "Transparent source pixels remain transparent."
+            },
+            {
+              "ok": true,
+              "message": "Corrupt input produces a visible error and cannot export a stale result."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        }
+      }
     },
     {
       "slug": "svg-to-jpg",
       "grouping": "image",
       "historicallyApproved": false,
       "originalComponent": "components/tools/ImageFormatConverterClient.tsx",
-      "status": "awaiting_central_route_mapping",
+      "status": "accepted_both_browsers",
       "findingsAndChanges": [
         "Inputs were often validated by MIME/extension alone; asynchronous operations leaked URLs or exposed stale results.",
         "Bounded byte signatures/dimensions, GIF total-frame budget, encoder MIME and byte validation, decoded output dimension checks, measured byte counts, explicit JPEG background, cancel/generation guards and result URL cleanup.",
@@ -1228,24 +3418,128 @@
       "browserCase": {
         "file": "scripts/qa/cases/media-conversion.mjs",
         "slug": "svg-to-jpg",
-        "status": "authored_not_run",
+        "status": "executed",
         "assertions": "Downloads and saves actual output; signature/extension, browser-decoded 16x12 dimensions and pixels, alpha/JPEG background where applicable, APNG frame count/delays/pixel differences, SVG paths, quality invalidation, bad bytes and Clear."
       },
       "scopedTests": [
         "lib/media-conversion/media.test.ts"
       ],
-      "remainingBlockers": [
-        "Parent must map only svg-to-jpg to MediaConversionImageClient in app/tools/[slug]/ToolUI.tsx; protected approved component left byte-for-byte unchanged."
-      ],
+      "remainingBlockers": [],
       "preparedComponent": "components/tools/MediaConversionImageClient.tsx",
-      "runtimeConstraints": "Real canvas transcodes; HEIC uses existing heic2any; GIF uses existing gifuct-js/upng-js; tracing uses existing imagetracerjs. No new dependencies."
+      "runtimeConstraints": "Real canvas transcodes; HEIC uses existing heic2any; GIF uses existing gifuct-js/upng-js; tracing uses existing imagetracerjs. No new dependencies.",
+      "integratedBrowsers": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "blockers": [],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-chrome-3/tools/svg-to-jpg.json"
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "blockers": [],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-webkit-5-readiness/tools/svg-to-jpg.json"
+        }
+      },
+      "isolatedComponents": {
+        "chrome": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Downloaded bytes are actual JPEG, not a renamed input."
+            },
+            {
+              "ok": true,
+              "message": "Displayed output byte count equals the actual downloaded file size."
+            },
+            {
+              "ok": true,
+              "message": "Download extension matches encoded format."
+            },
+            {
+              "ok": true,
+              "message": "Decoded download dimensions are 16 \u00d7 12 (got 16 \u00d7 12)."
+            },
+            {
+              "ok": true,
+              "message": "Converted pixels preserve the red fixture region."
+            },
+            {
+              "ok": true,
+              "message": "JPEG composites transparent pixels on white."
+            },
+            {
+              "ok": true,
+              "message": "Changing quality invalidates the old download."
+            },
+            {
+              "ok": true,
+              "message": "Downloaded bytes are actual JPEG, not a renamed input."
+            },
+            {
+              "ok": true,
+              "message": "Corrupt input produces a visible error and cannot export a stale result."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        },
+        "webkit": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Downloaded bytes are actual JPEG, not a renamed input."
+            },
+            {
+              "ok": true,
+              "message": "Displayed output byte count equals the actual downloaded file size."
+            },
+            {
+              "ok": true,
+              "message": "Download extension matches encoded format."
+            },
+            {
+              "ok": true,
+              "message": "Decoded download dimensions are 16 \u00d7 12 (got 16 \u00d7 12)."
+            },
+            {
+              "ok": true,
+              "message": "Converted pixels preserve the red fixture region."
+            },
+            {
+              "ok": true,
+              "message": "JPEG composites transparent pixels on white."
+            },
+            {
+              "ok": true,
+              "message": "Changing quality invalidates the old download."
+            },
+            {
+              "ok": true,
+              "message": "Downloaded bytes are actual JPEG, not a renamed input."
+            },
+            {
+              "ok": true,
+              "message": "Corrupt input produces a visible error and cannot export a stale result."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        }
+      }
     },
     {
       "slug": "svg-to-webp",
       "grouping": "image",
       "historicallyApproved": false,
       "originalComponent": "components/tools/ImageFormatConverterClient.tsx",
-      "status": "awaiting_central_route_mapping",
+      "status": "integration_blocked",
       "findingsAndChanges": [
         "Inputs were often validated by MIME/extension alone; asynchronous operations leaked URLs or exposed stale results.",
         "Bounded byte signatures/dimensions, GIF total-frame budget, encoder MIME and byte validation, decoded output dimension checks, measured byte counts, explicit JPEG background, cancel/generation guards and result URL cleanup.",
@@ -1254,24 +3548,135 @@
       "browserCase": {
         "file": "scripts/qa/cases/media-conversion.mjs",
         "slug": "svg-to-webp",
-        "status": "authored_not_run",
+        "status": "executed",
         "assertions": "Downloads and saves actual output; signature/extension, browser-decoded 16x12 dimensions and pixels, alpha/JPEG background where applicable, APNG frame count/delays/pixel differences, SVG paths, quality invalidation, bad bytes and Clear."
       },
       "scopedTests": [
         "lib/media-conversion/media.test.ts"
       ],
       "remainingBlockers": [
-        "Parent must map only svg-to-webp to MediaConversionImageClient in app/tools/[slug]/ToolUI.tsx; protected approved component left byte-for-byte unchanged."
+        "webkit: expect(locator).toBeVisible() failed\n\nLocator: locator('.tb-v2-tool-card').first().getByRole('link', { name: /^Download/ })\nExpected: visible\nTimeout: 45000ms\nError: element(s) not found; TypeError: Load failed; /localhost:3190/__nextjs_original-stack-frames due to access control checks.; Failed to load resource: A TLS error caused the secure connection to fail."
       ],
       "preparedComponent": "components/tools/MediaConversionImageClient.tsx",
-      "runtimeConstraints": "Real canvas transcodes; HEIC uses existing heic2any; GIF uses existing gifuct-js/upng-js; tracing uses existing imagetracerjs. No new dependencies."
+      "runtimeConstraints": "Real canvas transcodes; HEIC uses existing heic2any; GIF uses existing gifuct-js/upng-js; tracing uses existing imagetracerjs. No new dependencies.",
+      "integratedBrowsers": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "blockers": [],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-chrome-3/tools/svg-to-webp.json"
+        },
+        "webkit": {
+          "status": "failed",
+          "functional": "failed",
+          "blockers": [
+            "expect(locator).toBeVisible() failed\n\nLocator: locator('.tb-v2-tool-card').first().getByRole('link', { name: /^Download/ })\nExpected: visible\nTimeout: 45000ms\nError: element(s) not found",
+            "TypeError: Load failed",
+            "/localhost:3190/__nextjs_original-stack-frames due to access control checks.",
+            "Failed to load resource: A TLS error caused the secure connection to fail."
+          ],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-webkit-4/tools/svg-to-webp.json"
+        }
+      },
+      "isolatedComponents": {
+        "chrome": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Downloaded bytes are actual WEBP, not a renamed input."
+            },
+            {
+              "ok": true,
+              "message": "Displayed output byte count equals the actual downloaded file size."
+            },
+            {
+              "ok": true,
+              "message": "Download extension matches encoded format."
+            },
+            {
+              "ok": true,
+              "message": "Decoded download dimensions are 16 \u00d7 12 (got 16 \u00d7 12)."
+            },
+            {
+              "ok": true,
+              "message": "Converted pixels preserve the red fixture region."
+            },
+            {
+              "ok": true,
+              "message": "Transparent source pixels remain transparent."
+            },
+            {
+              "ok": true,
+              "message": "Changing quality invalidates the old download."
+            },
+            {
+              "ok": true,
+              "message": "Downloaded bytes are actual WEBP, not a renamed input."
+            },
+            {
+              "ok": true,
+              "message": "Corrupt input produces a visible error and cannot export a stale result."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        },
+        "webkit": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Downloaded bytes are actual WEBP, not a renamed input."
+            },
+            {
+              "ok": true,
+              "message": "Displayed output byte count equals the actual downloaded file size."
+            },
+            {
+              "ok": true,
+              "message": "Download extension matches encoded format."
+            },
+            {
+              "ok": true,
+              "message": "Decoded download dimensions are 16 \u00d7 12 (got 16 \u00d7 12)."
+            },
+            {
+              "ok": true,
+              "message": "Converted pixels preserve the red fixture region."
+            },
+            {
+              "ok": true,
+              "message": "Transparent source pixels remain transparent."
+            },
+            {
+              "ok": true,
+              "message": "Changing quality invalidates the old download."
+            },
+            {
+              "ok": true,
+              "message": "Downloaded bytes are actual WEBP, not a renamed input."
+            },
+            {
+              "ok": true,
+              "message": "Corrupt input produces a visible error and cannot export a stale result."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        }
+      }
     },
     {
       "slug": "trace",
       "grouping": "image",
       "historicallyApproved": false,
       "originalComponent": "components/tools/LogoTraceConverterClient.tsx",
-      "status": "implemented_awaiting_integrated_browser_QA",
+      "status": "accepted_both_browsers",
       "findingsAndChanges": [
         "Inputs were often validated by MIME/extension alone; asynchronous operations leaked URLs or exposed stale results.",
         "Bounded byte signatures/dimensions, GIF total-frame budget, encoder MIME and byte validation, decoded output dimension checks, measured byte counts, explicit JPEG background, cancel/generation guards and result URL cleanup.",
@@ -1280,21 +3685,95 @@
       "browserCase": {
         "file": "scripts/qa/cases/media-conversion.mjs",
         "slug": "trace",
-        "status": "authored_not_run",
+        "status": "executed",
         "assertions": "Downloads and saves actual output; signature/extension, browser-decoded 16x12 dimensions and pixels, alpha/JPEG background where applicable, APNG frame count/delays/pixel differences, SVG paths, quality invalidation, bad bytes and Clear."
       },
       "scopedTests": [
         "lib/media-conversion/media.test.ts"
       ],
       "remainingBlockers": [],
-      "runtimeConstraints": "Real canvas transcodes; HEIC uses existing heic2any; GIF uses existing gifuct-js/upng-js; tracing uses existing imagetracerjs. No new dependencies."
+      "runtimeConstraints": "Real canvas transcodes; HEIC uses existing heic2any; GIF uses existing gifuct-js/upng-js; tracing uses existing imagetracerjs. No new dependencies.",
+      "integratedBrowsers": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "blockers": [],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-chrome-3/tools/trace.json"
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "blockers": [],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-webkit-4/tools/trace.json"
+        }
+      },
+      "isolatedComponents": {
+        "chrome": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Downloaded bytes are actual SVG, not a renamed input."
+            },
+            {
+              "ok": true,
+              "message": "Displayed output byte count equals the actual downloaded file size."
+            },
+            {
+              "ok": true,
+              "message": "Download extension matches encoded format."
+            },
+            {
+              "ok": true,
+              "message": "Decoded download dimensions are 16 \u00d7 12 (got 16 \u00d7 12)."
+            },
+            {
+              "ok": true,
+              "message": "Corrupt input produces a visible error and cannot export a stale result."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        },
+        "webkit": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Downloaded bytes are actual SVG, not a renamed input."
+            },
+            {
+              "ok": true,
+              "message": "Displayed output byte count equals the actual downloaded file size."
+            },
+            {
+              "ok": true,
+              "message": "Download extension matches encoded format."
+            },
+            {
+              "ok": true,
+              "message": "Decoded download dimensions are 16 \u00d7 12 (got 16 \u00d7 12)."
+            },
+            {
+              "ok": true,
+              "message": "Corrupt input produces a visible error and cannot export a stale result."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        }
+      }
     },
     {
       "slug": "webp-to-jpg",
       "grouping": "image",
       "historicallyApproved": false,
       "originalComponent": "components/tools/ImageFormatConverterClient.tsx",
-      "status": "awaiting_central_route_mapping",
+      "status": "integration_blocked",
       "findingsAndChanges": [
         "Inputs were often validated by MIME/extension alone; asynchronous operations leaked URLs or exposed stale results.",
         "Bounded byte signatures/dimensions, GIF total-frame budget, encoder MIME and byte validation, decoded output dimension checks, measured byte counts, explicit JPEG background, cancel/generation guards and result URL cleanup.",
@@ -1303,24 +3782,133 @@
       "browserCase": {
         "file": "scripts/qa/cases/media-conversion.mjs",
         "slug": "webp-to-jpg",
-        "status": "authored_not_run",
+        "status": "executed",
         "assertions": "Downloads and saves actual output; signature/extension, browser-decoded 16x12 dimensions and pixels, alpha/JPEG background where applicable, APNG frame count/delays/pixel differences, SVG paths, quality invalidation, bad bytes and Clear."
       },
       "scopedTests": [
         "lib/media-conversion/media.test.ts"
       ],
       "remainingBlockers": [
-        "Parent must map only webp-to-jpg to MediaConversionImageClient in app/tools/[slug]/ToolUI.tsx; protected approved component left byte-for-byte unchanged."
+        "webkit: expect(locator).toBeEnabled() failed\n\nLocator:  locator('.tb-v2-tool-card').first().getByRole('button', { name: 'Convert', exact: true })\nExpected: enabled\nReceived: disabled\nTimeout:  5000ms; Failed to load resource: A TLS error caused the secure connection to fail."
       ],
       "preparedComponent": "components/tools/MediaConversionImageClient.tsx",
-      "runtimeConstraints": "Real canvas transcodes; HEIC uses existing heic2any; GIF uses existing gifuct-js/upng-js; tracing uses existing imagetracerjs. No new dependencies."
+      "runtimeConstraints": "Real canvas transcodes; HEIC uses existing heic2any; GIF uses existing gifuct-js/upng-js; tracing uses existing imagetracerjs. No new dependencies.",
+      "integratedBrowsers": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "blockers": [],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-chrome-3/tools/webp-to-jpg.json"
+        },
+        "webkit": {
+          "status": "failed",
+          "functional": "failed",
+          "blockers": [
+            "expect(locator).toBeEnabled() failed\n\nLocator:  locator('.tb-v2-tool-card').first().getByRole('button', { name: 'Convert', exact: true })\nExpected: enabled\nReceived: disabled\nTimeout:  5000ms",
+            "Failed to load resource: A TLS error caused the secure connection to fail."
+          ],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-webkit-4/tools/webp-to-jpg.json"
+        }
+      },
+      "isolatedComponents": {
+        "chrome": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Downloaded bytes are actual JPEG, not a renamed input."
+            },
+            {
+              "ok": true,
+              "message": "Displayed output byte count equals the actual downloaded file size."
+            },
+            {
+              "ok": true,
+              "message": "Download extension matches encoded format."
+            },
+            {
+              "ok": true,
+              "message": "Decoded download dimensions are 16 \u00d7 12 (got 16 \u00d7 12)."
+            },
+            {
+              "ok": true,
+              "message": "Converted pixels preserve the red fixture region."
+            },
+            {
+              "ok": true,
+              "message": "JPEG composites transparent pixels on white."
+            },
+            {
+              "ok": true,
+              "message": "Changing quality invalidates the old download."
+            },
+            {
+              "ok": true,
+              "message": "Downloaded bytes are actual JPEG, not a renamed input."
+            },
+            {
+              "ok": true,
+              "message": "Corrupt input produces a visible error and cannot export a stale result."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        },
+        "webkit": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Downloaded bytes are actual JPEG, not a renamed input."
+            },
+            {
+              "ok": true,
+              "message": "Displayed output byte count equals the actual downloaded file size."
+            },
+            {
+              "ok": true,
+              "message": "Download extension matches encoded format."
+            },
+            {
+              "ok": true,
+              "message": "Decoded download dimensions are 16 \u00d7 12 (got 16 \u00d7 12)."
+            },
+            {
+              "ok": true,
+              "message": "Converted pixels preserve the red fixture region."
+            },
+            {
+              "ok": true,
+              "message": "JPEG composites transparent pixels on white."
+            },
+            {
+              "ok": true,
+              "message": "Changing quality invalidates the old download."
+            },
+            {
+              "ok": true,
+              "message": "Downloaded bytes are actual JPEG, not a renamed input."
+            },
+            {
+              "ok": true,
+              "message": "Corrupt input produces a visible error and cannot export a stale result."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        }
+      }
     },
     {
       "slug": "webp-to-png",
       "grouping": "image",
       "historicallyApproved": false,
       "originalComponent": "components/tools/ImageFormatConverterClient.tsx",
-      "status": "awaiting_central_route_mapping",
+      "status": "integration_blocked",
       "findingsAndChanges": [
         "Inputs were often validated by MIME/extension alone; asynchronous operations leaked URLs or exposed stale results.",
         "Bounded byte signatures/dimensions, GIF total-frame budget, encoder MIME and byte validation, decoded output dimension checks, measured byte counts, explicit JPEG background, cancel/generation guards and result URL cleanup.",
@@ -1329,24 +3917,117 @@
       "browserCase": {
         "file": "scripts/qa/cases/media-conversion.mjs",
         "slug": "webp-to-png",
-        "status": "authored_not_run",
+        "status": "executed",
         "assertions": "Downloads and saves actual output; signature/extension, browser-decoded 16x12 dimensions and pixels, alpha/JPEG background where applicable, APNG frame count/delays/pixel differences, SVG paths, quality invalidation, bad bytes and Clear."
       },
       "scopedTests": [
         "lib/media-conversion/media.test.ts"
       ],
       "remainingBlockers": [
-        "Parent must map only webp-to-png to MediaConversionImageClient in app/tools/[slug]/ToolUI.tsx; protected approved component left byte-for-byte unchanged."
+        "webkit: expect(locator).toBeEnabled() failed\n\nLocator:  locator('.tb-v2-tool-card').first().getByRole('button', { name: 'Convert', exact: true })\nExpected: enabled\nReceived: disabled\nTimeout:  5000ms; Failed to load resource: A TLS error caused the secure connection to fail."
       ],
       "preparedComponent": "components/tools/MediaConversionImageClient.tsx",
-      "runtimeConstraints": "Real canvas transcodes; HEIC uses existing heic2any; GIF uses existing gifuct-js/upng-js; tracing uses existing imagetracerjs. No new dependencies."
+      "runtimeConstraints": "Real canvas transcodes; HEIC uses existing heic2any; GIF uses existing gifuct-js/upng-js; tracing uses existing imagetracerjs. No new dependencies.",
+      "integratedBrowsers": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "blockers": [],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-chrome-5-readiness/tools/webp-to-png.json"
+        },
+        "webkit": {
+          "status": "failed",
+          "functional": "failed",
+          "blockers": [
+            "expect(locator).toBeEnabled() failed\n\nLocator:  locator('.tb-v2-tool-card').first().getByRole('button', { name: 'Convert', exact: true })\nExpected: enabled\nReceived: disabled\nTimeout:  5000ms",
+            "Failed to load resource: A TLS error caused the secure connection to fail."
+          ],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-webkit-4/tools/webp-to-png.json"
+        }
+      },
+      "isolatedComponents": {
+        "chrome": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Downloaded bytes are actual PNG, not a renamed input."
+            },
+            {
+              "ok": true,
+              "message": "Displayed output byte count equals the actual downloaded file size."
+            },
+            {
+              "ok": true,
+              "message": "Download extension matches encoded format."
+            },
+            {
+              "ok": true,
+              "message": "Decoded download dimensions are 16 \u00d7 12 (got 16 \u00d7 12)."
+            },
+            {
+              "ok": true,
+              "message": "Converted pixels preserve the red fixture region."
+            },
+            {
+              "ok": true,
+              "message": "Transparent source pixels remain transparent."
+            },
+            {
+              "ok": true,
+              "message": "Corrupt input produces a visible error and cannot export a stale result."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        },
+        "webkit": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Downloaded bytes are actual PNG, not a renamed input."
+            },
+            {
+              "ok": true,
+              "message": "Displayed output byte count equals the actual downloaded file size."
+            },
+            {
+              "ok": true,
+              "message": "Download extension matches encoded format."
+            },
+            {
+              "ok": true,
+              "message": "Decoded download dimensions are 16 \u00d7 12 (got 16 \u00d7 12)."
+            },
+            {
+              "ok": true,
+              "message": "Converted pixels preserve the red fixture region."
+            },
+            {
+              "ok": true,
+              "message": "Transparent source pixels remain transparent."
+            },
+            {
+              "ok": true,
+              "message": "Corrupt input produces a visible error and cannot export a stale result."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        }
+      }
     },
     {
       "slug": "base64-image-decoder",
       "grouping": "base64",
       "historicallyApproved": false,
       "originalComponent": "components/tools/Base64ImageDecoderClient.tsx",
-      "status": "implemented_awaiting_integrated_browser_QA",
+      "status": "accepted_both_browsers",
       "findingsAndChanges": [
         "Decoder trusted declared MIME, never validated image bytes/dimensions, leaked URLs, raced delayed decode, and always named downloads .png.",
         "Strict padded Base64 and MIME/signature checks, raster decoding/dimension validation, correct extension, file/text size limits, current-result invalidation, example/clear and URL cleanup.",
@@ -1355,20 +4036,86 @@
       "browserCase": {
         "file": "scripts/qa/cases/media-conversion.mjs",
         "slug": "base64-image-decoder",
-        "status": "authored_not_run",
+        "status": "executed",
         "assertions": "Real JPEG data-URL -> downloaded JPEG signature/extension/dimensions/red pixels; declared PNG versus JPEG bytes rejection and Clear."
       },
       "scopedTests": [
         "lib/media-conversion/media.test.ts"
       ],
-      "remainingBlockers": []
+      "remainingBlockers": [],
+      "integratedBrowsers": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "blockers": [],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-chrome-3/tools/base64-image-decoder.json"
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "blockers": [],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-webkit-4/tools/base64-image-decoder.json"
+        }
+      },
+      "isolatedComponents": {
+        "chrome": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Downloaded bytes are actual JPEG, not a renamed input."
+            },
+            {
+              "ok": true,
+              "message": "JPEG Base64 downloads as JPEG."
+            },
+            {
+              "ok": true,
+              "message": "Decoded JPEG retains dimensions and real red pixels."
+            },
+            {
+              "ok": true,
+              "message": "MIME/signature mismatch is rejected."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        },
+        "webkit": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Downloaded bytes are actual JPEG, not a renamed input."
+            },
+            {
+              "ok": true,
+              "message": "JPEG Base64 downloads as JPEG."
+            },
+            {
+              "ok": true,
+              "message": "Decoded JPEG retains dimensions and real red pixels."
+            },
+            {
+              "ok": true,
+              "message": "MIME/signature mismatch is rejected."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        }
+      }
     },
     {
       "slug": "all-in-one-unit-converter",
       "grouping": "units",
       "historicallyApproved": false,
       "originalComponent": "components/tools/AllInOneUnitConverterClient.tsx",
-      "status": "implemented_awaiting_integrated_browser_QA",
+      "status": "accepted_both_browsers",
       "findingsAndChanges": [
         "parseInt/parseFloat accepted trailing garbage, lost integer precision, and converted empty/invalid inputs to misleading zero results.",
         "Exact BigInt bases 2\u201336, strict finite input parsing, live results, absolute-zero checks, exact common SI factors, v2 Example/Clear, and preserved category/preset/use-as-input workflows.",
@@ -1377,20 +4124,78 @@
       "browserCase": {
         "file": "scripts/qa/cases/media-conversion.mjs",
         "slug": "all-in-one-unit-converter",
-        "status": "authored_not_run",
+        "status": "executed",
         "assertions": "Independent known-answer checks above Number precision, invalid digit rejection, 100C=212F, 1000m=1km, 36km/h=10m/s, absolute-zero rejection and empty Clear state."
       },
       "scopedTests": [
         "lib/media-conversion/data.test.ts"
       ],
-      "remainingBlockers": []
+      "remainingBlockers": [],
+      "integratedBrowsers": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "blockers": [],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-chrome-3/tools/all-in-one-unit-converter.json"
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "blockers": [],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-webkit-4/tools/all-in-one-unit-converter.json"
+        }
+      },
+      "isolatedComponents": {
+        "chrome": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "1000 meters converts to 1 kilometer."
+            },
+            {
+              "ok": true,
+              "message": "36 km/h equals exactly 10 m/s at displayed precision."
+            },
+            {
+              "ok": true,
+              "message": "Below absolute zero is rejected."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        },
+        "webkit": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "1000 meters converts to 1 kilometer."
+            },
+            {
+              "ok": true,
+              "message": "36 km/h equals exactly 10 m/s at displayed precision."
+            },
+            {
+              "ok": true,
+              "message": "Below absolute zero is rejected."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        }
+      }
     },
     {
       "slug": "markdown-table-from-json",
       "grouping": "data",
       "historicallyApproved": false,
       "originalComponent": "components/tools/JsonToMarkdownTableClient.tsx",
-      "status": "awaiting_central_route_mapping",
+      "status": "accepted_both_browsers",
       "findingsAndChanges": [
         "Loose SQL/CSV parsing could silently truncate or lose values. Markdown only inspected the first object and discarded later columns.",
         "Strict bounded parsers, safe integer rejection for JSON SQL numbers, quoted/empty literals, duplicate header preservation, all-object Markdown validation and header union, live output and current-result download.",
@@ -1399,23 +4204,71 @@
       "browserCase": {
         "file": "scripts/qa/cases/media-conversion.mjs",
         "slug": "markdown-table-from-json",
-        "status": "authored_not_run",
+        "status": "executed",
         "assertions": "Downloads and independently parses exact expected JSON/Markdown/XML, malformed-input error, stale-download removal and Clear."
       },
       "scopedTests": [
         "lib/media-conversion/data.test.ts"
       ],
-      "remainingBlockers": [
-        "Parent must map only markdown-table-from-json to MediaConversionMarkdownClient in app/tools/[slug]/ToolUI.tsx; protected approved component left byte-for-byte unchanged."
-      ],
-      "preparedComponent": "components/tools/MediaConversionMarkdownClient.tsx"
+      "remainingBlockers": [],
+      "preparedComponent": "components/tools/MediaConversionMarkdownClient.tsx",
+      "integratedBrowsers": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "blockers": [],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-chrome-3/tools/markdown-table-from-json.json"
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "blockers": [],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-webkit-4/tools/markdown-table-from-json.json"
+        }
+      },
+      "isolatedComponents": {
+        "chrome": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Downloaded Markdown matches the independently expected table."
+            },
+            {
+              "ok": true,
+              "message": "Invalid current input rejects partial parsing and removes the previous download."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        },
+        "webkit": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Downloaded Markdown matches the independently expected table."
+            },
+            {
+              "ok": true,
+              "message": "Invalid current input rejects partial parsing and removes the previous download."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        }
+      }
     },
     {
       "slug": "general-unit-converter",
       "grouping": "units",
       "historicallyApproved": false,
       "originalComponent": "components/tools/AllInOneUnitConverterClient.tsx",
-      "status": "implemented_awaiting_integrated_browser_QA",
+      "status": "accepted_both_browsers",
       "findingsAndChanges": [
         "parseInt/parseFloat accepted trailing garbage, lost integer precision, and converted empty/invalid inputs to misleading zero results.",
         "Exact BigInt bases 2\u201336, strict finite input parsing, live results, absolute-zero checks, exact common SI factors, v2 Example/Clear, and preserved category/preset/use-as-input workflows.",
@@ -1424,20 +4277,78 @@
       "browserCase": {
         "file": "scripts/qa/cases/media-conversion.mjs",
         "slug": "general-unit-converter",
-        "status": "authored_not_run",
+        "status": "executed",
         "assertions": "Independent known-answer checks above Number precision, invalid digit rejection, 100C=212F, 1000m=1km, 36km/h=10m/s, absolute-zero rejection and empty Clear state."
       },
       "scopedTests": [
         "lib/media-conversion/data.test.ts"
       ],
-      "remainingBlockers": []
+      "remainingBlockers": [],
+      "integratedBrowsers": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "blockers": [],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-chrome-3/tools/general-unit-converter.json"
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "blockers": [],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-webkit-4/tools/general-unit-converter.json"
+        }
+      },
+      "isolatedComponents": {
+        "chrome": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "1000 meters converts to 1 kilometer."
+            },
+            {
+              "ok": true,
+              "message": "36 km/h equals exactly 10 m/s at displayed precision."
+            },
+            {
+              "ok": true,
+              "message": "Below absolute zero is rejected."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        },
+        "webkit": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "1000 meters converts to 1 kilometer."
+            },
+            {
+              "ok": true,
+              "message": "36 km/h equals exactly 10 m/s at displayed precision."
+            },
+            {
+              "ok": true,
+              "message": "Below absolute zero is rejected."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        }
+      }
     },
     {
       "slug": "bin-hex-dec-converter",
       "grouping": "units",
       "historicallyApproved": false,
       "originalComponent": "components/tools/BinHexDecConverterClient.tsx",
-      "status": "implemented_awaiting_integrated_browser_QA",
+      "status": "accepted_both_browsers",
       "findingsAndChanges": [
         "parseInt/parseFloat accepted trailing garbage, lost integer precision, and converted empty/invalid inputs to misleading zero results.",
         "Exact BigInt bases 2\u201336, strict finite input parsing, live results, absolute-zero checks, exact common SI factors, v2 Example/Clear, and preserved category/preset/use-as-input workflows.",
@@ -1446,20 +4357,91 @@
       "browserCase": {
         "file": "scripts/qa/cases/media-conversion.mjs",
         "slug": "bin-hex-dec-converter",
-        "status": "authored_not_run",
+        "status": "executed",
         "assertions": "Independent known-answer checks above Number precision, invalid digit rejection, 100C=212F, 1000m=1km, 36km/h=10m/s, absolute-zero rejection and empty Clear state."
       },
       "scopedTests": [
         "lib/media-conversion/data.test.ts"
       ],
-      "remainingBlockers": []
+      "remainingBlockers": [],
+      "integratedBrowsers": {
+        "chrome": {
+          "status": "passed",
+          "functional": "passed",
+          "blockers": [],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-chrome-3/tools/bin-hex-dec-converter.json"
+        },
+        "webkit": {
+          "status": "passed",
+          "functional": "passed",
+          "blockers": [],
+          "artifact": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-media-webkit-4/tools/bin-hex-dec-converter.json"
+        }
+      },
+      "isolatedComponents": {
+        "chrome": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Integer conversion preserves 9007199254740993 exactly beyond Number safe precision."
+            },
+            {
+              "ok": true,
+              "message": "Invalid base digit is rejected instead of partial parseInt conversion."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        },
+        "webkit": {
+          "status": "passed",
+          "evidence": [
+            {
+              "ok": true,
+              "message": "Integer conversion preserves 9007199254740993 exactly beyond Number safe precision."
+            },
+            {
+              "ok": true,
+              "message": "Invalid base digit is rejected instead of partial parseInt conversion."
+            },
+            {
+              "ok": true,
+              "message": "Clear removes the downloadable result and errors."
+            }
+          ]
+        }
+      }
     }
   ],
   "integrationNotes": [
-    "Only 25 assigned unapproved component files changed. Two approved shared components and all central files are untouched.",
-    "Owned new helpers live only in lib/media-conversion and components/tools/media-conversion. No cross-group helper edits.",
-    "node_modules dependency symlink remains untracked.",
-    "No push, merge, branch switch, server, build or browser worker.",
-    "Scopes and runtime limits are displayed in the UI; Clear cancels, invalidates generations and clears downloadable state. Expensive synchronous library work is bounded but cannot be preempted mid-call; stale results are discarded."
+    "Authorized package manifests and exactly eight mapping cases updated; concurrent parent dynamic-import refactor in ToolUI preserved.",
+    "Approved shared image/Markdown components unchanged. Existing WebP helper/codec consumed without editing them.",
+    "Shared node_modules symlink preserved; only @breezystack/lamejs linked to temporary prefix.",
+    "No new server, production build, commit, or delegation.",
+    "Owned async converters disable Examples until their own mount effect has run, preventing clicks before a dynamically loaded tool hydrates. Two previously failing route checks now pass.",
+    "Isolated component tests mount actual production components and execute unchanged functional fixtures against real local input bytes; this is supplemental proof, not integrated route acceptance.",
+    "Video recording now uses muted visual playback plus separately decoded source audio. Independent output audio and pixel/duration assertions pass in both browsers."
+  ],
+  "centralConfigurationSuggestions": [
+    {
+      "file": "next.config.mjs",
+      "change": "Add media-src 'self' blob: to the effective CSP of AAC/M4A/MP4/WAV extraction, MP3, cutter and add-subtitles routes.",
+      "reason": "Browser console confirms blob audio is rejected under default-src 'self'; video decoding also requires blob media.",
+      "scope": "Parent-owned central config; not modified by this worker."
+    },
+    {
+      "area": "shared dev server and harness",
+      "change": "Run the final 36 cases after concurrent editing/server reloads settle. Preserve all runtime assertions.",
+      "reason": "Observed hydration timeouts, transient HTTP 500 from PDF merge markers (subsequently resolved), HMR navigation interruptions, engagement recordViewOnce/refreshStats unhandled fetch rejection, and incomplete JS loading. Runner was not edited."
+    },
+    {
+      "file": "scripts/qa/browser.mjs",
+      "change": "Harness owner: extend local-only upgrade-insecure-requests stripping to worker script response headers when --strip-dev-upgrade-csp is enabled; current document-only filter leaves WebP WASM fetch upgraded to https://localhost:3190.",
+      "evidence": "auto-media-webkit-4/tools/jpg-to-webp.json records TLS error for https://localhost:3190/codecs/webp-converter/vendor/jsquash-webp-1.5.0/codec/enc/webp_enc.wasm; identical real worker/codec passes isolated WebKit tests.",
+      "scope": "Do not alter production CSP or suppress runtime errors."
+    }
   ]
 }

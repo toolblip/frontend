@@ -38,7 +38,7 @@ async function renderExport(page, bytes, samples, workerSrc) {
   },{bytes:Array.from(bytes),samples,workerSrc});
 }
 async function download(page,button,destination) {
-  const pending=page.waitForEvent('download');await button.click();const file=await pending;
+  const [file] = await Promise.all([page.waitForEvent('download'), button.click()]);
   await file.saveAs(destination);return readFile(destination);
 }
 function prover({expect,check}) {return (value,description)=>{check?.(value,description);expect(value,description).toBe(true);};}
@@ -48,7 +48,12 @@ async function reset(tool) {
 }
 async function surfacePoint(surface,x,y,width,height) {
   const box=await surface.boundingBox();if(!box) throw new Error('PDF preview surface missing');
-  return {x:x/width*box.width,y:y/height*box.height};
+  return {x:Math.round(box.x+x/width*box.width),y:Math.round(box.y+y/height*box.height)};
+}
+async function clickSurface(page,surface,x,y,width,height) {
+  await surface.scrollIntoViewIfNeeded();
+  const point=await surfacePoint(surface,x,y,width,height);
+  await page.mouse.click(point.x,point.y);
 }
 
 export async function reviewPdfPlacement(context) {
@@ -67,7 +72,7 @@ export async function reviewPdfPlacement(context) {
       await tool.getByRole('button',{name:'Text',exact:true}).click();
       await tool.getByLabel('Comment or label').fill('REVIEW');await tool.getByLabel('Text font size').fill('20');await tool.getByLabel('Markup color').fill('#000000');
       const surface=tool.locator('.tb-pdf-annotate-page');
-      await surface.click({position:await surfacePoint(surface,20,30,width,height)});
+      await clickSurface(page,surface,20,30,width,height);
       await expect(tool.getByLabel('Markup left')).toHaveValue('20');await expect(tool.getByLabel('Markup top')).toHaveValue('30');
       await tool.getByRole('button',{name:'Add Markup',exact:true}).click();
       await tool.getByRole('button',{name:'Rectangle',exact:true}).click();
@@ -77,11 +82,12 @@ export async function reviewPdfPlacement(context) {
     } else if(slug==='edit-pdf') {
       const surface=tool.locator('.tb-pdf-edit-page');await expect(surface.locator(':scope > img')).toBeVisible();
       await tool.getByRole('button',{name:'Text',exact:true}).click();await tool.getByLabel('Text to add').fill('REVIEW');await tool.getByLabel('Text size').fill('20');
-      await surface.click({position:await surfacePoint(surface,20,30,width,height)});
-      await tool.getByRole('button',{name:'Remove',exact:true}).click();
-      const box=await surface.boundingBox();const start=await surfacePoint(surface,20,110,width,height),end=await surfacePoint(surface,100,140,width,height);
-      await page.mouse.move(box.x+start.x,box.y+start.y);await page.mouse.down();await page.mouse.move(box.x+end.x,box.y+end.y,{steps:4});await page.mouse.up();
-      await tool.getByRole('button',{name:'Remove',exact:true}).click();
+      await clickSurface(page,surface,20,30,width,height);
+      await tool.locator('button.tb-pdf-edit-tool-button').filter({hasText:'Remove'}).click();
+      await surface.scrollIntoViewIfNeeded();
+      const start=await surfacePoint(surface,20,110,width,height),end=await surfacePoint(surface,100,140,width,height);
+      await page.mouse.move(start.x,start.y);await page.mouse.down();await page.mouse.move(end.x,end.y,{steps:4});await page.mouse.up();
+      await expect(tool.locator('button.tb-pdf-edit-tool-button').filter({hasText:'Remove'})).toHaveAttribute('aria-pressed','false');
       // Source text is rotated in the preview; its replacement must retain those axes.
       await tool.getByRole('button',{name:'Select PDF text: SOURCE',exact:true}).click();
       await tool.getByLabel('Selected PDF text').fill('REPLACED');await tool.getByRole('button',{name:'Save text',exact:true}).click();
@@ -98,7 +104,8 @@ export async function reviewPdfPlacement(context) {
     }
     await tool.screenshot({path:path.join(artifactsDir,`${stem}-preview.png`)});
     const bytes=await download(page,exportButton,path.join(artifactsDir,`${stem}-export.pdf`));
-    const rendered=await renderExport(page,bytes,[[50,45],[110,45],[50,75],[110,75],[20,120],[50,120],[110,120],[18,45],[142,45],[50,28],[50,92]],workerSrc);
+    // Sample outside the cover at x=10; x=110 can overlap the independent text-replacement cover.
+    const rendered=await renderExport(page,bytes,[[50,45],[110,45],[50,75],[110,75],[20,120],[50,120],[10,120],[18,45],[142,45],[50,28],[50,92]],workerSrc);
     await writeFile(path.join(artifactsDir,`${stem}-render.png`),Buffer.from(rendered.png,'base64'));
     prove(rendered.width===width&&rendered.height===height,`${stem}: PDF.js renders the rotated CropBox dimensions`);
     if(slug==='sign-pdf') {

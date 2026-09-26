@@ -1,6 +1,8 @@
 // Classifications annotate raw records; they never delete or rewrite browser evidence.
 const parseURL = value => { try { return new URL(value); } catch { return null; } };
 const resourceFailure = /^Failed to load resource: the server responded with a status of (\d{3})(?: \([^\n]*\))?\.?$/;
+const abortedResourceFailure = /^Failed to load resource: (?:net::ERR_FAILED|An error occurred while loading the resource\.)$/;
+const injectedFailure = record => record.requestId && record.injectedAbort?.requestId === record.requestId && record.injectedAbort.errorCode === 'failed' && typeof record.injectedAbort.reason === 'string' && record.injectedAbort.reason.trim() && Number.isInteger(record.injectedAbort.sequence) && record.injectedAbort.sequence < record.sequence && ['net::ERR_FAILED', 'Failed', 'An error occurred while loading the resource.'].includes(record.failure?.errorText);
 const beacon = /^https:\/\/static\.cloudflareinsights\.com\/beacon\.min\.js(?:\/[^\s'"<>]*)?(?:\?[^\s'"<>]*)?$/;
 
 export function validateExpectations(fixture = {}) {
@@ -16,6 +18,8 @@ export function classifyRuntime(runtime, base, fixture) {
   const annotate = (record,classification,reason,extra={}) => Object.assign(record,{blocking:false,classification,reason,...extra});
   for (const kind of ['pageErrors','consoleErrors','httpErrors']) for (const record of runtime[kind]) Object.assign(record,{blocking:true,classification:'unclassified',reason:'Unrecognized runtime error'});
   for (const record of runtime.failedRequests ?? []) Object.assign(record,{blocking:false,classification:'discovery',reason:'Request failure retained as discovery evidence; HTTP, console and page errors are evaluated separately'});
+  for (const record of runtime.failedRequests ?? []) if (injectedFailure(record)) annotate(record,'expected-fixture-abort',record.injectedAbort.reason);
+  const linkedAborts = new Set();
   runtime.httpErrors.forEach(record=>{
     const url = parseURL(record.url);
     if (url?.origin !== origin) return;
@@ -34,6 +38,18 @@ export function classifyRuntime(runtime, base, fixture) {
     if (scriptCSP && beacon.test(scriptCSP[1]) && /(?:Content Security Policy|content security policy)/.test(text) && /(?:script-src|script-src-elem)/.test(text)) {
       annotate(record,'shared-environment','Cloudflare edge-injected analytics beacon is blocked by the existing script CSP; environment observation remains unresolved');
       return;
+    }
+    if (abortedResourceFailure.test(text) && record.source?.url && Number.isInteger(record.sequence)) {
+      // ConsoleMessage exposes no request identity. Pair only a unique recorded
+      // injection and retain ambiguous/real same-URL failures as blocking evidence.
+      const failures = (runtime.failedRequests ?? []).map((request,index)=>({request,index})).filter(({request})=>request.url === record.source.url);
+      const candidates = failures.filter(({request,index})=>injectedFailure(request) && !linkedAborts.has(index) && request.injectedAbort.sequence < record.sequence);
+      if (failures.every(({request})=>injectedFailure(request)) && candidates.length === 1) {
+        const {request,index} = candidates[0];
+        linkedAborts.add(index);
+        annotate(record,'expected-fixture-abort',`${request.injectedAbort.reason}; strict browser resource failure linked to recorded injected abort`,{failedRequestEvidence:`failedRequests[${index}]`});
+        return;
+      }
     }
     const status = Number(text.match(resourceFailure)?.[1]);
     const sourceURL = record.source?.url;

@@ -1,6 +1,7 @@
 import { mkdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
 import yaml from 'js-yaml';
+import { wwwSchemes } from '../regressions/misc-review.mjs';
 
 // Independent fixture values. These cases never mock a successful service response.
 // Network availability failures should fail the integration run, not silently pass.
@@ -159,7 +160,7 @@ async function lookup(ctx, kind) {
   check(JSON.parse((await download(ctx)).toString()) !== null, 'Current network report downloads as JSON.');
   // Controlled FAILURE only; no synthetic success response.
   const pattern = kind === 'rdap' ? '**/rdap.org/**' : kind === 'links' ? `${baseURL}/**` : '**/dns.google/resolve?*';
-  await page.route(pattern, route => route.abort('failed'));
+  await page.route(pattern, route => ctx.abortExpectedRequest(route, 'Controlled lookup network failure verifies explicit error output'));
   try {
     await tool.getByRole('button', { name: 'Lookup', exact: true }).click();
     if (kind === 'rdap') await expect(tool.getByRole('alert')).toBeVisible();
@@ -219,7 +220,8 @@ async function jsonLd(ctx) {
   const { tool, check, expect } = ctx;
   const types = { 'Web Site': 'WebSite', 'Web Page': 'WebPage', Article: 'Article', 'News Article': 'NewsArticle', 'Blog Post': 'BlogPosting', Product: 'Product', 'Local Business': 'LocalBusiness', Restaurant: 'Restaurant', Event: 'Event', Person: 'Person', Organization: 'Organization', 'Breadcrumb List': 'BreadcrumbList', 'FAQ Page': 'FAQPage' };
   for (const [label, type] of Object.entries(types)) {
-    await tool.getByRole('button', { name: label, exact: true }).click(); await example(ctx);
+    await tool.getByRole('tab', { name: label, exact: true }).click(); await example(ctx);
+    await example(ctx); // Repeated examples must retain the generated result.
     await expect(tool.locator('pre')).toContainText(`"@type": "${type}"`);
     const text = await tool.locator('pre').innerText(), data = JSON.parse(text.replace(/^<script[^>]*>\s*/, '').replace(/\s*<\/script>$/, ''));
     check(data['@context'] === 'https://schema.org' && data['@type'] === type, `${type} mode generates parseable structured data.`);
@@ -227,13 +229,15 @@ async function jsonLd(ctx) {
     if (type === 'BreadcrumbList') check(data.itemListElement.length === 3 && data.itemListElement[2].position === 3, 'Breadcrumb positions are sequential.');
     if (type === 'FAQPage') check(data.mainEntity.length === 2 && data.mainEntity[0].acceptedAnswer['@type'] === 'Answer', 'FAQ mode includes two real question/answer pairs.');
   }
-  await tool.getByRole('button', { name: 'Web Site', exact: true }).click(); await example(ctx);
+  await tool.getByRole('tab', { name: 'Web Site', exact: true }).click(); await example(ctx);
   await tool.getByLabel('Site Name', { exact: true }).fill('</script><img src=x>');
   const downloaded = (await download(ctx)).toString(); check(!downloaded.includes('<img') && downloaded.includes('\\u003c/script>'), 'JSON-LD download safely escapes script termination.');
   await tool.getByLabel('Site URL', { exact: true }).fill('javascript:alert(1)'); await expect(tool.getByRole('alert')).toBeVisible();
   await responsive(ctx); await tool.getByRole('button', { name: 'Clear', exact: true }).click(); await expect(tool.locator('pre')).toHaveCount(0);
 }
 async function redirects(ctx) {
+  await wwwSchemes(ctx);
+  ctx.check(true, 'Both www redirect modes preserve the incoming HTTP or HTTPS scheme.');
   const { tool, check, expect } = ctx; await example(ctx);
   await expect(tool.getByLabel('Output', { exact: true })).not.toHaveValue('');
   const text = (await download(ctx)).toString();

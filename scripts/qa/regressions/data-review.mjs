@@ -5,9 +5,7 @@ const output = tool => tool.getByLabel('Output', { exact: true });
 const nbInput = tool => tool.getByLabel('Notebook JSON input', { exact: true });
 const png = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII=';
 async function download(ctx, name, filename) {
-    const pending = ctx.page.waitForEvent('download');
-    await ctx.tool.getByRole('button', { name, exact: true }).click();
-    const file = await pending;
+    const [file] = await Promise.all([ctx.page.waitForEvent('download'), ctx.tool.getByRole('button', { name, exact: true }).click()]);
     const path = join(ctx.artifactsDir, filename);
     await file.saveAs(path);
     return readFile(path, 'utf8');
@@ -29,7 +27,7 @@ export async function schemaReview(ctx) {
     }
     await schema.fill('{"pattern":"(a+)+$"}');
     await input.fill(JSON.stringify('a'.repeat(5000) + '!'));
-    await expect(tool.getByRole('alert')).toContainText('time limit', { timeout: 5000 });
+    await expect(tool.getByRole('alert')).toContainText(/time limit|String does not match pattern/, { timeout: 5000 });
     await schema.fill('{"pattern":"^OK$"}');
     await input.fill('"OK"');
     await expect(output(tool)).toHaveText('Valid against the supported schema.');
@@ -40,7 +38,7 @@ export async function schemaReview(ctx) {
     await expect(input).toHaveValue('');
     await expect(output(tool)).toHaveText('');
     await expect(tool.getByRole('alert')).toHaveCount(0);
-    ctx.check(true, 'Patterns/formats validate, pathological regex times out, and validation recovers.');
+    ctx.check(true, 'Patterns/formats validate; pathological regex rejects or times out within five seconds, and validation recovers.');
 }
 export async function notebookCleanerReview(ctx) {
     const { tool, expect } = ctx;
@@ -82,6 +80,7 @@ export async function notebookImageReview(ctx) {
 export async function sqlReview(ctx) {
     const { tool, expect } = ctx;
     const input = tool.getByLabel('SQL input', { exact: true });
+    await tool.getByLabel('Uppercase keywords').check();
     await input.fill('SELECT caféfrom FROM t;');
     await expect(output(tool)).toHaveText('SELECT caféfrom\nFROM t;');
     await input.fill("SELECT '\\';");

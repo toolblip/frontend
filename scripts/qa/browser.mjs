@@ -35,7 +35,10 @@ export async function snapshot(tool) {
 
 export async function stripDevUpgradeCSP(route, onError = () => {}) {
   try {
-    if (route.request().resourceType() !== 'document') return await route.continue();
+    const request = route.request();
+    const url = new URL(request.url());
+    const localCodecWorker = ['localhost', '127.0.0.1', '[::1]'].includes(url.hostname) && url.pathname === '/codecs/webp-converter/webp-worker.js';
+    if (request.resourceType() !== 'document' && !localCodecWorker) return await route.continue();
     const response = await route.fetch({maxRedirects:0,timeout:30_000});
     const headers = response.headers();
     for (const key of ['content-security-policy','content-security-policy-report-only']) {
@@ -64,7 +67,22 @@ export async function auditTool({browser, entry, expectedEntry = entry, fixture,
   let page;
   let active = true;
   let phase = 'navigation';
-  const stamp = () => ({at:new Date().toISOString(),phase,pageURL:page?.url()});
+  let sequence = 0;
+  let requestNumber = 0;
+  const requestIds = new WeakMap();
+  const injectedAborts = new WeakMap();
+  const requestId = request => {
+    if (!requestIds.has(request)) requestIds.set(request, `request-${++requestNumber}`);
+    return requestIds.get(request);
+  };
+  const stamp = () => ({at:new Date().toISOString(),phase,pageURL:page?.url(),sequence:++sequence});
+  const abortExpectedRequest = async (route, reason) => {
+    if (typeof reason !== 'string' || !reason.trim()) throw new Error('Expected request abort requires an evidence reason');
+    const request = route.request();
+    injectedAborts.set(request, {...stamp(),requestId:requestId(request),errorCode:'failed',reason});
+    try { await route.abort('failed'); }
+    catch (error) { injectedAborts.delete(request); throw error; }
+  };
   try {
     await mkdir(artifactsDir,{recursive:true});
     context = await browser.newContext({viewport:{width:1280,height:900},acceptDownloads:true,serviceWorkers:'allow'});
@@ -79,7 +97,7 @@ export async function auditTool({browser, entry, expectedEntry = entry, fixture,
     page = await context.newPage();
     page.on('pageerror',error=>{if(active) result.runtime.pageErrors.push({...stamp(),...serializeError(error)});});
     page.on('console',message=>{if(active && message.type() === 'error') result.runtime.consoleErrors.push({...stamp(),text:message.text(),source:message.location()});});
-    page.on('requestfailed',request=>{if(active) result.runtime.failedRequests.push({...stamp(),url:request.url(),resourceType:request.resourceType(),failure:request.failure()});});
+    page.on('requestfailed',request=>{if(active) result.runtime.failedRequests.push({...stamp(),requestId:requestId(request),url:request.url(),method:request.method(),resourceType:request.resourceType(),failure:request.failure(),injectedAbort:injectedAborts.get(request)});});
     page.on('response',response=>{if(active && response.status() >= 400) result.runtime.httpErrors.push({...stamp(),url:response.url(),status:response.status(),resourceType:response.request().resourceType(),method:response.request().method()});});
     page.on('dialog',async dialog=>{if(active) result.runtime.dialogs.push({...stamp(),type:dialog.type(),message:dialog.message()}); await dialog.dismiss().catch(()=>{});});
     const response = await page.goto(result.route.requestedURL,{waitUntil:'domcontentloaded'});
@@ -94,17 +112,6 @@ export async function auditTool({browser, entry, expectedEntry = entry, fixture,
     result.route.expectedURL = expectedURL;
     const normalize = value => new URL(value).origin + new URL(value).pathname.replace(/\/$/,'');
     result.route.status = normalize(page.url()) === normalize(expectedURL) ? 'passed':'failed';
-    result.route.canonical = await page.locator('link[rel="canonical"]').first().getAttribute('href',{timeout:1500}).catch(()=>null);
-    const expectedCanonical = toolURL(expectedEntry,'https://toolblip.com');
-    const actualCanonical = result.route.canonical;
-    let canonicalReason = null;
-    try {
-      if (!actualCanonical) throw Error('Missing canonical');
-      const parsed = new URL(actualCanonical);
-      if (!['https:','http:'].includes(parsed.protocol)) throw Error('Malformed canonical');
-      if (actualCanonical !== expectedCanonical) throw Error('Wrong canonical');
-    } catch (error) { canonicalReason = error.message; }
-    result.canonical = {status:canonicalReason ? 'failed':'passed',actual:actualCanonical,expected:expectedCanonical,reason:canonicalReason};
     if (!response?.ok()) throw Error(`Document HTTP status ${response?.status() ?? 'unavailable'}`);
     phase = 'hydration';
     const tool = page.locator('.tb-v2-tool-card').first();
@@ -117,6 +124,19 @@ export async function auditTool({browser, entry, expectedEntry = entry, fixture,
     },undefined,{timeout:45_000});
     result.hydration = {status:'passed',evidence:await hydration.jsonValue()};
     await hydration.dispose();
+    // Next can stream metadata after the initial document shell. Inspect it
+    // after hydration, without relaxing canonical identity or missing-link checks.
+    result.route.canonical = await page.locator('link[rel="canonical"]').first().getAttribute('href',{timeout:8000}).catch(()=>null);
+    const expectedCanonical = toolURL(expectedEntry,'https://toolblip.com');
+    const actualCanonical = result.route.canonical;
+    let canonicalReason = null;
+    try {
+      if (!actualCanonical) throw Error('Missing canonical');
+      const parsed = new URL(actualCanonical);
+      if (!['https:','http:'].includes(parsed.protocol)) throw Error('Malformed canonical');
+      if (actualCanonical !== expectedCanonical) throw Error('Wrong canonical');
+    } catch (error) { canonicalReason = error.message; }
+    result.canonical = {status:canonicalReason ? 'failed':'passed',actual:actualCanonical,expected:expectedCanonical,reason:canonicalReason};
     const decline = page.getByRole('button',{name:/^decline(?: analytics cookies)?$/i}).first();
     await decline.click({timeout:2000}).then(()=>{result.cookies='declined';}).catch(()=>{result.cookies='decline-not-available';});
     phase = 'baseline';
@@ -129,7 +149,7 @@ export async function auditTool({browser, entry, expectedEntry = entry, fixture,
     result.snapshots.before = await snapshot(tool);
     phase = 'fixture';
     if (fixture && !options['smoke-only']) {
-      result.functional = await executeFixture(fixture,{page,tool,expect,baseURL:options.base,artifactsDir});
+      result.functional = await executeFixture(fixture,{page,tool,expect,baseURL:options.base,artifactsDir,abortExpectedRequest});
     } else {
       phase = 'smoke-discovery';
       // Discovery only. Neither changed text nor a successful click proves correctness.
