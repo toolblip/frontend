@@ -2,20 +2,25 @@ const LARAVEL_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.toolblip.com
 
 type RouteContext = { params: Promise<{ id: string }> };
 
-// Fire-and-forget click tracking, called via navigator.sendBeacon from the
-// outbound sponsor link — the user's browser navigates to the sponsor
-// directly, this just increments the counter server-side.
+// Preserve the upstream acknowledgement: the client only updates its count
+// when this request succeeds, independently of outbound navigation.
 export async function POST(_req: Request, context: RouteContext) {
   const { id } = await context.params;
+  if (!/^[1-9]\d*$/.test(id) || !Number.isSafeInteger(Number(id))) {
+    return Response.json({ message: "Invalid sponsor ID." }, { status: 400 });
+  }
   try {
-    await fetch(`${LARAVEL_URL}/api/sponsors/click/${encodeURIComponent(id)}`, {
+    const upstream = await fetch(`${LARAVEL_URL}/api/sponsors/click/${id}`, {
       method: "POST",
       headers: { Accept: "application/json" },
+      cache: "no-store",
+      redirect: "error",
     });
-  } catch (err) {
-    // Best-effort — a dropped click ping shouldn't surface to the caller,
-    // but it should still leave a trace server-side.
-    console.error("Sponsors click proxy error:", err);
+    return new Response(upstream.body, {
+      status: upstream.status,
+      headers: { "Content-Type": upstream.headers.get("Content-Type") || "application/json" },
+    });
+  } catch {
+    return Response.json({ message: "Unable to record sponsor click." }, { status: 502 });
   }
-  return new Response(null, { status: 204 });
 }

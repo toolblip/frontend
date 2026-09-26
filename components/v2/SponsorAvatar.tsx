@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { apiPath } from '@/lib/sponsors';
 
 const AVATAR_COLORS = ['#d93030', '#a855f7', '#0ea5e9', '#16a34a', '#f59e0b', '#ec4899'];
 
@@ -18,9 +19,13 @@ function snapFaviconSz(sz: number): number {
   return 256;
 }
 
-/** Same-origin proxy — see app/api/favicon/route.ts. Avoids Serwist breaking
+/** Prefer the verified SkaleAgents logo over Google's stale cached favicon.
+ * Otherwise use the same-origin proxy — see app/api/favicon/route.ts. Avoids Serwist breaking
  * Google/unavatar cross-origin image redirects for returning PWA clients. */
 export function sponsorFaviconSrc(domain: string, size = 128): string {
+  if (domain.toLowerCase().replace(/^www\./, '') === 'skaleagents.com') {
+    return apiPath('/sponsor-logos/skaleagents.svg');
+  }
   return `/api/favicon?domain=${encodeURIComponent(domain)}&sz=${snapFaviconSz(size)}`;
 }
 

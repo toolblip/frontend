@@ -6,6 +6,7 @@ import Link from 'next/link';
 import useShowAds from '@/hooks/useShowAds';
 import SponsorAvatar from '@/components/v2/SponsorAvatar';
 import {
+  applySponsorClick,
   displayIdentity,
   fetchSponsorsTop,
   formatBid,
@@ -27,6 +28,12 @@ export default function SponsorStrip() {
   const showAds = useShowAds();
   const [slots, setSlots] = useState<SponsorSlot[] | null>(() => readSponsorsTopCache()?.slots ?? null);
   const [minBidCents, setMinBidCents] = useState(() => Math.max(100, readSponsorsTopCache()?.min_bid_cents ?? 100));
+
+  const handleClick = (slot: SponsorSlot) => {
+    void pingSponsorClick(slot).then(result => {
+      if (result) setSlots(current => current && applySponsorClick(current, slot, result));
+    });
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -59,9 +66,9 @@ export default function SponsorStrip() {
     <div className="tb-v2-sponsor-strip">
       <div className="tb-v2-container">
         <div className="tb-v2-sponsor-grid">
-          <SlotCard rank={2} slot={second} loading={loading} minBidCents={minBidCents} className="tb-v2-sponsor-slot-2" />
-          <SlotCard rank={1} slot={first} loading={loading} minBidCents={minBidCents} className="tb-v2-sponsor-slot-1" primary />
-          <SlotCard rank={3} slot={third} loading={loading} minBidCents={minBidCents} className="tb-v2-sponsor-slot-3" />
+          <SlotCard rank={2} slot={second} loading={loading} minBidCents={minBidCents} className="tb-v2-sponsor-slot-2" onSponsorClick={handleClick} />
+          <SlotCard rank={1} slot={first} loading={loading} minBidCents={minBidCents} className="tb-v2-sponsor-slot-1" onSponsorClick={handleClick} primary />
+          <SlotCard rank={3} slot={third} loading={loading} minBidCents={minBidCents} className="tb-v2-sponsor-slot-3" onSponsorClick={handleClick} />
           <div className="tb-v2-sponsor-bidyours-wrap">
             <Link href="/sponsors" className="tb-v2-sponsor-bidyours tb-v2-btn tb-v2-btn-primary">
               <span>Outbid</span>
@@ -82,6 +89,7 @@ function SlotCard({
   minBidCents,
   className,
   primary,
+  onSponsorClick,
 }: {
   rank: number;
   slot?: SponsorSlot;
@@ -89,6 +97,7 @@ function SlotCard({
   minBidCents: number;
   className: string;
   primary?: boolean;
+  onSponsorClick: (slot: SponsorSlot) => void;
 }) {
   if (loading) {
     return <div className={`tb-v2-sponsor-card tb-v2-sponsor-card-skeleton ${className}`} aria-hidden="true" />;
@@ -111,9 +120,7 @@ function SlotCard({
         href={withSponsorSource(slot.url, 'strip')}
         target="_blank"
         rel="sponsored nofollow noopener"
-        onClick={() => {
-          if (!slot.placeholder) pingSponsorClick(slot.id);
-        }}
+        onClick={() => onSponsorClick(slot)}
         className="tb-v2-sponsor-card"
         data-testid={primary ? 'sponsor-strip-primary' : 'sponsor-strip-slot'}
       >

@@ -45,7 +45,7 @@ const CACHE_TTL_MS = 60_000;
  * Prefixes an absolute app path with NEXT_PUBLIC_BASE_PATH when set. Only
  * the local Tailscale-preview tooling sets this (path-mounting a worktree's
  * dev server at /{slug}/toolblip) — Next.js rewrites next/link/next/router
- * automatically under a basePath, but not plain fetch()/sendBeacon() calls
+ * automatically under a basePath, but not plain fetch() calls
  * to a hardcoded string, so those need the prefix applied explicitly.
  * A no-op everywhere else (local dev, CI, Railway), where the var is unset.
  */
@@ -81,7 +81,10 @@ export function writeSponsorsTopCache(data: SponsorsTopResponse): void {
 }
 
 export async function fetchSponsorsTop(): Promise<SponsorsTopResponse> {
-  const res = await fetch(apiPath("/api/sponsors/top"), { headers: { Accept: "application/json" } });
+  const res = await fetch(apiPath("/api/sponsors/top"), {
+    headers: { Accept: "application/json" },
+    cache: "no-store",
+  });
   if (!res.ok) throw new Error("Failed to load sponsors");
   return res.json();
 }
@@ -89,6 +92,7 @@ export async function fetchSponsorsTop(): Promise<SponsorsTopResponse> {
 export async function fetchSponsorsLeaderboard(page = 1): Promise<SponsorsLeaderboardResponse> {
   const res = await fetch(apiPath(`/api/sponsors/leaderboard?page=${page}`), {
     headers: { Accept: "application/json" },
+    cache: "no-store",
   });
   if (!res.ok) throw new Error("Failed to load the sponsors leaderboard");
   return res.json();
@@ -133,13 +137,56 @@ export function formatTimeAgo(iso: string | null, now: number = Date.now()): str
   return `${days} day${days === 1 ? "" : "s"} ago`;
 }
 
-/** Fire-and-forget click ping — never blocks or delays the outbound navigation. */
-export function pingSponsorClick(id: number): void {
+export type SponsorClickTarget = Pick<SponsorSlot, 'id' | 'domain' | 'placeholder'>;
+export type SponsorClickResult = { clicks: number | null };
+
+/** One request per click, kept alive during navigation. A null result never
+ * changes the displayed count; paid 204s acknowledge one persisted click. */
+export async function pingSponsorClick(target: number | SponsorClickTarget): Promise<SponsorClickResult | null> {
+  const placeholder = typeof target !== 'number' && target.placeholder ? target : null;
+  const id = typeof target === 'number' ? target : target.id;
+  if (!placeholder && (!Number.isSafeInteger(id) || id <= 0)) return null;
+
   try {
-    navigator.sendBeacon?.(apiPath(`/api/sponsors/click/${id}`));
+    const res = await fetch(apiPath(placeholder ? '/api/sponsors/placeholder-click' : `/api/sponsors/click/${id}`), {
+      method: 'POST',
+      keepalive: true,
+      headers: placeholder
+        ? { Accept: 'application/json', 'Content-Type': 'application/json' }
+        : { Accept: 'application/json' },
+      ...(placeholder ? { body: JSON.stringify({ domain: placeholder.domain }) } : {}),
+    });
+    if (!res.ok) return null;
+    let clicks: number | null = null;
+    if (placeholder || res.status !== 204) {
+      const data = await res.json();
+      if (!Number.isSafeInteger(data?.clicks) || data.clicks < 0) return null;
+      clicks = data.clicks;
+    }
+    try {
+      sessionStorage.removeItem(CACHE_KEY);
+    } catch {
+      // Storage can be unavailable; the server remains the source of truth.
+    }
+    return { clicks };
   } catch {
-    // best-effort only
+    // Tracking must not interrupt navigation or produce an unhandled rejection.
+    return null;
   }
+}
+
+/** Placeholder IDs are positional, so match their stable domain instead.
+ * Functional state updates preserve overlapping paid clicks; max prevents
+ * out-of-order placeholder responses from moving the aggregate backwards. */
+export function applySponsorClick(slots: SponsorSlot[], target: SponsorClickTarget, result: SponsorClickResult | null): SponsorSlot[] {
+  if (!result) return slots;
+  return slots.map(slot => {
+    const matches = target.placeholder
+      ? slot.placeholder && slot.domain === target.domain
+      : !slot.placeholder && slot.id === target.id;
+    if (!matches) return slot;
+    return { ...slot, clicks: result.clicks === null ? slot.clicks + 1 : Math.max(slot.clicks, result.clicks) };
+  });
 }
 
 /** Tags an outbound sponsor URL so the sponsor's own analytics can attribute

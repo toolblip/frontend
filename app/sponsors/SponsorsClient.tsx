@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { IconRefresh, IconX } from '@/components/v2/icons';
 import SponsorAvatar, { sponsorFaviconSrc } from '@/components/v2/SponsorAvatar';
 import {
+  applySponsorClick,
   apiPath,
   displayIdentity,
   fetchSponsorsLeaderboard,
@@ -88,10 +89,12 @@ function SponsorRow({
   row,
   onClaim,
   minBidDollars,
+  onSponsorClick,
 }: {
   row: SponsorSlot;
   onClaim: (row: SponsorSlot) => void;
   minBidDollars: number;
+  onSponsorClick: (slot: SponsorSlot) => void;
 }) {
   const isCard = row.rank <= 3;
   const timeAgo = formatTimeAgo(row.last_bid_at);
@@ -109,9 +112,7 @@ function SponsorRow({
         href={withSponsorSource(row.url, 'leaderboard')}
         target="_blank"
         rel="sponsored nofollow noopener"
-        onClick={() => {
-          if (!row.placeholder) pingSponsorClick(row.id);
-        }}
+        onClick={() => onSponsorClick(row)}
         className="tb-v2-sponsor-row-link"
       >
         <span
@@ -194,6 +195,12 @@ export default function SponsorsClient() {
   const [board, setBoard] = useState<SponsorsLeaderboardResponse | null>(null);
   const [boardLoading, setBoardLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+
+  const handleSponsorClick = (slot: SponsorSlot) => {
+    void pingSponsorClick(slot).then(result => {
+      if (result) setBoard(current => current && { ...current, data: applySponsorClick(current.data, slot, result) });
+    });
+  };
 
   const [url, setUrl] = useState('');
   const previewDomain = useMemo(() => previewDomainFor(url), [url]);
@@ -478,13 +485,13 @@ export default function SponsorsClient() {
               rows
                 .filter((r) => r.rank <= 3)
                 .map((row) => (
-                  <SponsorRow key={row.id} row={row} onClaim={handleClaim} minBidDollars={minBidDollars} />
+                  <SponsorRow key={row.id} row={row} onClaim={handleClaim} minBidDollars={minBidDollars} onSponsorClick={handleSponsorClick} />
                 ))}
           </div>
           {!boardLoading && rows.some((r) => r.rank > 3) && (
             <div className="tb-v2-sponsor-flat-list">
               {rows.filter((r) => r.rank > 3).map((row) => (
-                <SponsorRow key={row.id} row={row} onClaim={handleClaim} minBidDollars={minBidDollars} />
+                <SponsorRow key={row.id} row={row} onClaim={handleClaim} minBidDollars={minBidDollars} onSponsorClick={handleSponsorClick} />
               ))}
             </div>
           )}
