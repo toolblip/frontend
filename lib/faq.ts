@@ -271,6 +271,7 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Is the Base64 tool safe for sensitive data?', a: 'Yes. Encoding and decoding both happen in your browser. Nothing is uploaded or logged, so it is safe to use with API tokens, internal payloads, and other confidential content.' },
   ],
   'url-encode': [
+    { q: 'What happens if I try to decode text that is not validly encoded?', a: 'An error message is shown instead of garbled output, since decodeURIComponent throws on malformed percent-encoded sequences rather than guessing at the intended characters.' },
     { q: 'What is URL encoding?', a: 'URL encoding (percent-encoding) converts characters that have special meaning in URLs  -  like spaces, &, ?, and =  -  into a safe form so they can be passed in a link or query string without breaking the URL.' },
     { q: 'When do I need to URL-encode a string?', a: 'Any time you embed user input, paths, or query parameters into a URL  -  building deep links, constructing API requests, or debugging a broken redirect. Encode values individually, not the whole URL.' },
     { q: "What's the difference between encodeURI and encodeURIComponent?", a: 'encodeURIComponent encodes every reserved character, which is what you want for query values and is what this tool uses. encodeURI leaves URL structural characters (/ ? : etc.) alone, which is rarely what you want when encoding user-supplied data.' },
@@ -292,13 +293,15 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Is there a limit on how much text I can convert?', a: "No. The Case Converter handles paragraphs or entire documents in milliseconds, and it all happens in your browser so there's no upload limit." },
   ],
   'regex-tester': [
-    { q: 'What is the Regex Tester?', a: 'The Regex Tester is a free online playground for regular expressions. Type a pattern, paste the text to match against, and see matches and capture groups highlighted live with flag support (g, i, m, s, u).' },
+    { q: 'What is the Regex Tester?', a: 'The Regex Tester is a free online playground for regular expressions. Type a pattern, paste the text to match against, and see matches and capture groups highlighted live with flag controls (g, i, m, s, u, y).' },
     { q: 'Which regex flavor does the Regex Tester use?', a: 'The Regex Tester uses JavaScript (ECMAScript) regex, which is the flavor you ship in a web app, Node.js script, or browser-side code. Named groups, lookbehinds, and unicode property escapes are all supported in modern browsers.' },
     { q: 'Can I test multiline regex patterns?', a: 'Yes. Toggle the m flag to make ^ and $ match line boundaries, or s to let . match newlines. The Regex Tester shows exactly which flags are active.' },
-    { q: 'Does the Regex Tester explain my pattern?', a: 'Yes. The Regex Tester breaks down each token in the pattern  -  anchors, character classes, quantifiers, groups  -  into plain English so you can verify what it actually matches.' },
+    { q: 'Does it show capture groups?', a: 'Yes. The match list shows numbered and named capture groups for up to the first 100 matches, followed by the remaining match count. It does not explain regex tokens or preview replacements.' },
     { q: 'Is my regex and test text private?', a: 'Yes. Everything in the Regex Tester runs in your browser. Nothing is sent to any server, so you can test patterns against confidential logs and data.' },
   ],
   'jwt-decoder': [
+    { q: 'What standard claims does it surface?', a: 'The Standard claims section shows issuer, subject, audience, and token times when available. It formats iat, nbf, and exp as readable timestamps; the payload contains their original values.' },
+    { q: 'How can I tell if a token is expired at a glance?', a: 'A badge next to the input reads "Not expired," "Expired," or "Not yet valid" based on the exp and nbf claims compared against the current time, or "No exp claim" if the token does not set one.' },
     { q: 'What does the JWT Decoder show me?', a: 'The JWT Decoder splits a JSON Web Token into its three parts  -  header, payload, and signature  -  and pretty-prints the JSON so you can inspect claims like exp, iat, iss, and any custom fields.' },
     { q: 'Does the JWT Decoder verify the signature?', a: 'The JWT Decoder shows you what a token claims. Verification requires the secret or public key that issued the token and should be done server-side  -  never trust an unverified JWT for authorization.' },
     { q: 'Can I decode an expired JWT?', a: 'Yes. The JWT Decoder decodes any valid JWT regardless of expiry, which is useful for debugging expired-token bugs. Look at the exp claim to see when it was valid.' },
@@ -314,9 +317,9 @@ const OVERRIDES: Record<string, FAQ[]> = {
   ],
   'lorem-ipsum-generator': [
     { q: 'What is Lorem Ipsum?', a: 'Lorem Ipsum is pseudo-Latin placeholder text used by designers and developers since the 1500s. It fills layouts with realistic-looking content so you can evaluate typography, spacing, and hierarchy without being distracted by the meaning of the words.' },
-    { q: 'How much text can I generate?', a: 'Drag the slider for 1 to 20 paragraphs, each with 4–8 randomized sentences. Output regenerates instantly in your browser whenever you change the count or hit Regenerate.' },
+    { q: 'How much text can I generate?', a: 'Choose Words, Sentences, or Paragraphs, then enter a count from 1 to 100. The output updates when you change these settings or click Regenerate.' },
     { q: 'Does the Lorem Ipsum Generator start with "Lorem ipsum dolor sit amet"?', a: 'Yes by default  -  and you can toggle it off if you\'d rather jump straight into randomized content. Starting with the classic phrase signals "placeholder" to anyone reviewing the mockup.' },
-    { q: 'Can I generate HTML-wrapped Lorem Ipsum?', a: 'Yes. The Lorem Ipsum Generator outputs plain text by default, or wraps paragraphs in `<p>` tags with a single toggle so you can paste straight into a template.' },
+    { q: 'Can I generate a short placeholder for a label?', a: 'Choose Words and enter the length you need. The generator repeats a fixed source passage when needed and copies plain text, without HTML tags.' },
     { q: 'Is it OK to use Lorem Ipsum in a real product?', a: 'Only during design and prototyping. Ship with real copy  -  Lorem Ipsum left in production is the sort of thing that ends up on social media.' },
   ],
   'qr-code-generator': [
@@ -504,9 +507,9 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Can I edit the transcript after speaking?', a: 'Yes. The transcript appears in an editable area as you speak, and you can copy it to your clipboard once you\'re done, or replace it entirely using the manual input box.' },
   ],
   'automation-wizard': [
-    { q: 'Does the Automation Wizard actually run my automations?', a: 'No, it\'s a builder: you assemble triggers, actions, and conditions from template blocks, and it exports the result as a JSON or YAML workflow definition. Running it requires feeding that definition into an actual automation platform.' },
-    { q: 'What kinds of triggers and actions can I add?', a: 'Triggers include webhooks, schedules, incoming email, and form submissions. Actions include HTTP requests, sending email, posting to Slack, and simple data transforms or filters.' },
-    { q: 'What format is the exported workflow in?', a: 'You can export as JSON, structured around a trigger plus an ordered list of steps, or as YAML with the same trigger/steps shape, whichever your automation runner expects.' },
+    { q: 'Does the builder run my workflow?', a: 'No. It records a draft in this browser tab. It does not run triggers or actions, send requests, schedule jobs, or connect accounts.' },
+    { q: 'Can I import the output into an automation platform?', a: 'The generic JSON and YAML schema has not been verified for compatibility with any runner. Use the outline as planning notes, then implement and test it in your chosen platform.' },
+    { q: 'What do the two copy formats include?', a: 'JSON includes the first trigger and the remaining action or condition steps, with their entered settings. YAML includes names and types but omits those settings. Copy your draft before leaving the page; it is not saved between visits.' },
   ],
   'api-auth-header-generator': [
     { q: 'What types of auth headers can it build?', a: 'Bearer tokens, HTTP Basic auth from a username and password, and custom API-key headers with your own header name and optional prefix.' },
@@ -529,7 +532,7 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Is this a complete, validated OpenAPI spec?', a: 'It\'s a starting skeleton, not a full spec, since it can only infer structure from one example response. Run the output through an OpenAPI validator before relying on it for codegen or docs hosting.' },
   ],
   'all-in-one-unit-converter': [
-    { q: 'Which unit categories does it cover?', a: 'Length, weight, temperature, volume, and several other common categories, all in one converter instead of separate tools per category.' },
+    { q: 'Which unit categories does it cover?', a: 'Length, weight, temperature, area, volume, and speed. Selecting a category updates both unit dropdowns.' },
     { q: 'How does it handle temperature, since that isn\'t a simple multiply?', a: 'Temperature uses a dedicated formula-based conversion between Celsius, Fahrenheit, and Kelvin, rather than the multiply-by-factor math used for length, weight, and volume.' },
     { q: 'How accurate are the conversions?', a: 'Length, weight, and volume conversions use fixed numeric factors between units, so results are exact to floating-point precision, not rounded estimates.' },
   ],
@@ -1675,6 +1678,7 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'What other stats besides the readability scores does it show?', a: 'Word count, sentence count, average word length, and average sentence length, all calculated the moment you type at least one word.' },
   ],
   'reading-time-calculator': [
+    { q: 'Can I adjust the assumed reading speed?', a: 'It starts at 200 words per minute. Adjust the slider from 100 to 500 in steps of 10; the estimate updates as you type. This estimates reading time, rather than measuring your reading speed.' },
     { q: 'What format does the time show for very short text?', a: 'Text estimated at under a minute displays as just a seconds value like "38s", switching to the combined "Xm Ys" format only once the estimate reaches a full minute.' },
     { q: 'How does it treat multiple punctuation marks in a row, like "?!" or "..."?', a: 'A run of consecutive ., !, or ? characters counts as a single sentence ending rather than one per character, so "Wait..." only adds one to the sentence count.' },
     { q: 'Do I need at least two blank lines to start a new paragraph?', a: 'Yes, the text is split wherever two or more consecutive line breaks appear, a single line break within a block is treated as part of the same paragraph.' },
@@ -1893,6 +1897,7 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Can I copy the reversed text without selecting it manually?', a: 'Yes, a Copy button appears next to the Reversed label as soon as there is output, copying the current mode\'s result to your clipboard in one click.' },
   ],
   'text-statistics': [
+    { q: 'Does sentence count work on text with no punctuation at all?', a: "Yes, if there's no period, question mark, or exclamation point anywhere but you've still entered words, it counts that as one sentence rather than showing zero." },
     { q: 'How is average sentence length calculated?', a: 'It counts sentences by matching runs of ".", "!", or "?" in your text, then divides your total word count by that sentence count to get words per sentence.' },
     { q: 'How does it estimate syllables per word?', a: 'It strips non-letters from each word, treats words of 3 letters or fewer as one syllable, drops a trailing silent e or -ed/-es ending, then counts groups of vowels (a, e, i, o, u, y) in what remains.' },
     { q: 'What other numbers show up besides syllables, sentence length, and word length?', a: 'The full grid also shows character count with and without spaces, paragraph count, estimated reading and speaking time in minutes, and a Flesch reading ease score.' },
@@ -1968,6 +1973,7 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Is there a shortcut for the current time?', a: 'Yes, a "Use current time" button fills in the present moment instantly instead of typing or picking it manually.' },
   ],
   'uptime-calculator': [
+    { q: 'How precise is the downtime figure?', a: 'The highlighted period shows allowed downtime to 4 decimal places in minutes, while the grid cells switch to a rounded minutes or hours display depending on which is more readable for that period.' },
     { q: 'How do I set the SLA percentage?', a: 'A slider and a matching number input let you set anything from 90% to 99.999% uptime in steps of 0.001%, covering everything from a loose SLA down to "five nines".' },
     { q: 'What time periods does it break the downtime down into?', a: 'Tabs for year, month, week, day, and hour, and the calculator shows the allowed downtime for all five periods at once in a results grid rather than one at a time.' },
     { q: 'What is the calculation based on?', a: 'It multiplies the length of each period by (100% minus your chosen SLA percentage) to get the allowed downtime, the same math used to translate an SLA target into a concrete outage budget.' },

@@ -223,7 +223,7 @@ Bookmark [/tools/regex-tester](/tools/regex-tester) and open it whenever you nee
 - [/tools/json-formatter](/tools/json-formatter)  -  format and validate JSON with the same no-signup, instant approach
 - [/tools/base64-encoder](/tools/base64-encoder)  -  encode/decode base64 100% in-browser
 - [/tools/uuid-generator](/tools/uuid-generator)  -  generate UUIDs (v1, v4, v7) instantly
-- [/tools/url-encoder](/tools/url-encoder)  -  encode/decode URLs without sending data anywhere
+- [/tools/url-encode](/tools/url-encode)  -  encode/decode URLs without sending data anywhere
 
 ## The Bottom Line
 

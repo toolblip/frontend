@@ -197,11 +197,15 @@ Output: contract-annotated.pdf`,
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "automation-wizard": {
-    description: `Connecting two apps so that one action automatically triggers another, a new form submission adding a row to a spreadsheet, a new file automatically getting a notification sent about it, is a task a lot of people assume needs writing code, when the actual logic behind most of these automations is simple: when this specific thing happens, do that specific thing in response. This tool builds that kind of trigger-and-action automation visually, connecting apps and defining what should happen automatically without writing a script or hiring someone who can. Useful for automating a repetitive manual task that currently gets done by hand every single time it comes up, connecting two apps that don't otherwise talk to each other directly, or setting up a simple automated workflow without learning to code just for one recurring task.`,
+    description: `Draft a workflow before implementing it. Add planned triggers, actions, and conditions, name each step, and put them in order. Copy the outline as JSON or YAML for planning or discussion. This tool does not connect apps, run steps, or schedule jobs. The export schema has not been verified for compatibility with any automation runner. JSON includes entered settings; YAML only lists names and step types, so it is not a complete configuration.`,
     examples: [
-
+      {
+        title: 'Plan a scheduled notification',
+        code: `Trigger idea: daily schedule\nAction idea: send an email\nOutput: draft outline to implement and test separately`,
+        note: 'No schedule or email is created. Copy the draft before leaving the page.',
+      },
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["Add and reorder draft steps", "Copy generic JSON or YAML", "No app connections"],
   },
   "avi-to-gif": {
     description: `Old camcorder footage, a video downloaded years ago, a clip pulled off an old hard drive, AVI shows up often enough in exactly this kind of legacy material, and turning a specific memorable moment from it into a shareable GIF means pulling that footage forward into a format actually usable today rather than leaving it stuck in an old container nobody shares directly anymore. This tool converts an AVI video into an animated GIF, built around extracting a short, shareable moment from older footage. Useful for turning a funny few seconds from an old AVI recording into a GIF worth sharing, pulling a reaction clip out of legacy camcorder footage, or converting an old downloaded AVI file into something that actually posts cleanly on a modern platform.`,
@@ -2500,7 +2504,7 @@ Cause: Trailing comma`
   "lorem-ipsum-generator": {
     description: `Lorem ipsum isn't randomly generated gibberish, it's a scrambled passage from a first-century Latin text by Cicero that's been the standard placeholder for typesetting since the 1500s, and a design mockup calling for the genuine, traditional version needs that actual text rather than a modern readable alternative built around a topic or a full sentence. This tool generates classic lorem ipsum with the paragraph count, sentence count, and word count all set precisely, producing exactly as much of the traditional text as a layout actually calls for. Useful for filling a design mockup with the standard placeholder text every designer already recognizes, generating a precise word count to test a layout's text limit, or copying a quick block of genuine lorem ipsum instead of a modern readable substitute.`,
     examples: [
-
+      { title: 'A five-word placeholder', code: 'Lorem ipsum dolor sit amet', note: 'Select Words, set Count to 5, and keep the classic opening enabled.' },
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
@@ -2581,7 +2585,18 @@ Cause: Trailing comma`
   "markdown-to-html": {
     description: `Seeing raw Markdown syntax next to its rendered HTML output side by side, updating live as each character gets typed, is a genuinely faster way to learn Markdown's syntax than reading a reference table, since the effect of an asterisk or a pound sign becomes immediately visible rather than something to look up separately. This tool converts Markdown into HTML with exactly that live, split-pane view, tables, code blocks, and standard formatting all rendering instantly as the Markdown is written, with the resulting HTML ready to copy out directly. Useful for learning Markdown syntax by watching it render in real time, converting a chunk of Markdown into clean HTML to paste into a CMS that doesn't accept Markdown directly, or previewing exactly how a table or a code block will actually look before committing to the raw syntax.`,
     examples: [
+      { title: `Basic Markdown`, code: `# Heading
 
+**Bold text** and *italic*
+
+- List item 1
+- List item 2`
+        ,note: `Write markdown with live preview.` },
+      { title: `Tables`, code: `| Name | Age |
+|------|-----|
+| Alice | 25 |
+| Bob   | 30 |`
+        ,note: `Supports GitHub-flavored markdown tables.` }
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
