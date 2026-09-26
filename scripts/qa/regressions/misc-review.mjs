@@ -3,6 +3,7 @@
  */
 import { readFile, mkdir } from 'node:fs/promises';
 import path from 'node:path';
+import { clickWhenSettled } from '../helpers/settled-click.mjs';
 const click = (tool, name) => tool.getByRole('button', { name, exact: true }).click();
 const clear = tool => tool.getByRole('button', { name: /^Clear(?: all)?$/i }).first().click();
 async function downloaded({ page, artifactsDir, slug }, action) {
@@ -54,27 +55,27 @@ export async function wwwSchemes({tool, expect}) {
 
 export async function base64RoundTrips({tool, expect}) {
   await clear(tool);
-  await tool.getByRole('tab',{name:'Decode',exact:true}).click();
+  await clickWhenSettled(tool.getByRole('tab',{name:'Decode',exact:true}));
   await tool.getByLabel('Input',{exact:true}).fill('77u/QQ==');
   await expect.poll(() => tool.locator('pre').textContent()).toBe('\uFEFFA');
-  await tool.getByRole('button',{name:/Swap/}).click();
+  await clickWhenSettled(tool.getByRole('button',{name:/Swap/}));
   await expect(tool.locator('pre')).toHaveText('77u/QQ==');
   for (const input of ['a'.repeat(80000),'漢'.repeat(40000),'é😀'.repeat(25000)]) {
-    await tool.getByRole('tab',{name:'Encode',exact:true}).click();
+    await clickWhenSettled(tool.getByRole('tab',{name:'Encode',exact:true}));
     await tool.getByLabel('Input',{exact:true}).fill(input);
     await expect.poll(() => tool.locator('pre').textContent()).toBe(Buffer.from(input).toString('base64'));
-    await tool.getByRole('button',{name:/Swap/}).click();
+    await clickWhenSettled(tool.getByRole('button',{name:/Swap/}));
     await expect.poll(() => tool.locator('pre').textContent()).toBe(input);
   }
 }
 export async function binaryRoundTrips({tool, expect}) {
   for (const input of ['a'.repeat(12000),'漢'.repeat(12000),'é😀'.repeat(12000)]) {
-    await click(tool,'Text to Binary');
+    await clickWhenSettled(tool.getByRole('button',{name:'Text to Binary',exact:true}));
     await tool.getByLabel('Input',{exact:true}).fill(input);
     const output=tool.locator('.tb-v2-tool-output-body p');
     const expected=[...Buffer.from(input)].map(b=>b.toString(2).padStart(8,'0')).join(' ');
     await expect.poll(() => output.textContent()).toBe(expected);
-    await click(tool,'Swap');
+    await clickWhenSettled(tool.getByRole('button',{name:'Swap',exact:true}));
     await expect(tool.getByLabel('Input', {exact:true})).toHaveValue(expected);
     await expect.poll(async () => (await output.textContent()) === input).toBe(true);
   }
