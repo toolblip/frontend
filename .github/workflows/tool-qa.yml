@@ -1,4 +1,4 @@
-name: Hosted production tool QA pilot
+name: Hosted production tool QA
 
 on:
   pull_request:
@@ -17,13 +17,14 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  production-pilot:
+  production-audit:
     runs-on: ubuntu-24.04
     timeout-minutes: 35
     strategy:
       fail-fast: false
       max-parallel: 2
       matrix:
+        group: [developer-general, seo-network, developer-security, developer-data, utility-design, media-conversion, pdf, images]
         engine: [chrome, webkit]
     steps:
       # actions/checkout credential cleanup runs submodule foreach, which fails
@@ -73,13 +74,14 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           QA_ENGINE: ${{ matrix.engine }}
-        run: node "$RUNNER_TEMP/tool-qa/cloud/run.mjs" "$GITHUB_WORKSPACE" "$RUNNER_TEMP/tool-qa" "$QA_ENGINE"
+          QA_GROUP: ${{ matrix.group }}
+        run: node "$RUNNER_TEMP/tool-qa/cloud/run.mjs" "$GITHUB_WORKSPACE" "$RUNNER_TEMP/tool-qa" "$QA_ENGINE" "$QA_GROUP"
       - name: Upload all provenance, reports, downloads and screenshots
         if: always()
         id: artifact
         uses: actions/upload-artifact@v4
         with:
-          name: production-developer-data-${{ matrix.engine }}-${{ github.run_id }}-${{ github.run_attempt }}
+          name: production-${{ matrix.group }}-${{ matrix.engine }}-${{ github.run_id }}-${{ github.run_attempt }}
           path: ${{ runner.temp }}/tool-qa/
           if-no-files-found: error
           retention-days: 14

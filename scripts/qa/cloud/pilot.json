@@ -6,5 +6,15 @@
   "deployedMerge": "5556e2240964fb5dc393a740aec275aee505c7ef",
   "source": "2b6c29142113db66a21644efb88fcc0b62c541e6",
   "tree": "fd67dafeeb8c233d3697169d40a63d65342a0ce2",
-  "group": "developer-data"
+  "groups": [
+    "developer-general",
+    "seo-network",
+    "developer-security",
+    "developer-data",
+    "utility-design",
+    "media-conversion",
+    "pdf",
+    "images"
+  ],
+  "auditTimeoutMs": 1500000
 }
