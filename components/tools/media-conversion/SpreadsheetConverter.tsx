@@ -28,8 +28,8 @@ export default function SpreadsheetConverter({ format }: { format: 'csv' | 'xml'
     else blob = new Blob([format === 'csv' ? csvString(sheet.rows) : rowsToXml(sheet.rows)], { type: format === 'csv' ? 'text/csv;charset=utf-8' : 'application/xml' });
     return { blob, name: `${name.replace(/\.xlsx$/i, '')}-${sheet.name.replace(/[^\w-]/g, '_')}.${format}`, detail: `${sheet.rows.length} rows` };
   });
-  return <div className="tb-v2-section" style={{ display: 'grid', gap: 12, minWidth: 0 }}>
-    <div className="tb-v2-tool-input-head" style={{ flexWrap: 'wrap', gap: 8 }}><span className="tb-v2-tool-label">Excel workbook</span><ToolExampleClearActions onExample={() => load(undefined, true)} onClear={clear} /></div>
+  return <div className="tb-v2-section" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr)', gap: 12, minWidth: 0 }}>
+    <div className="tb-v2-tool-input-head" style={{ flexWrap: 'wrap', gap: 8 }}><span className="tb-v2-tool-label">Excel workbook</span><ToolExampleClearActions exampleDisabled={!job.ready} onExample={() => load(undefined, true)} onClear={clear} /></div>
     <input ref={fileInput} type="file" accept=".xlsx" aria-label="Workbook file" style={{ maxWidth: '100%' }} onChange={e => { if (e.target.files?.[0]) load(e.target.files[0]); }} />
     <p>XLSX only, up to 5 MB. Exports cell values from the selected sheet; formulas aren't recalculated. {format === 'pdf' ? 'PDF is a wrapped, paginated text export, without Excel formatting or charts. The PDF font supports Western European text.' : format === 'xml' ? 'The first row supplies field name attributes.' : 'CSV preserves cell text, including formula-like strings. Review untrusted data before opening it in a spreadsheet.'}</p>
     {!!sheets.length && <label>Sheet<select aria-label="Sheet" className="tb-v2-select" value={index} onChange={e => { job.cancel(); setIndex(Number(e.target.value)); }}>{sheets.map((s, i) => <option key={i} value={i}>{s.name}</option>)}</select></label>}

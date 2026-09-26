@@ -18,6 +18,7 @@
     "seo:bing:submit": "python3 scripts/bing-nightly-submit.py"
   },
   "dependencies": {
+    "@breezystack/lamejs": "1.2.7",
     "@imgly/background-removal": "^1.7.0",
     "@modelcontextprotocol/sdk": "^1.29.0",
     "@serwist/turbopack": "^9.5.12",

@@ -33,8 +33,8 @@ export default function DataConverter({ mode }: { mode: keyof typeof examples })
     const [ext, type] = mode === 'sql' ? ['json', 'application/json'] : mode === 'markdown' ? ['md', 'text/markdown'] : ['xml', 'application/xml'];
     return { blob: new Blob([parsed.output], { type }), name: `converted.${ext}` };
   });
-  return <div className="tb-v2-section" style={{ display: 'grid', gap: 12, minWidth: 0 }}>
-    <div className="tb-v2-tool-input-head" style={{ flexWrap: 'wrap', gap: 8 }}><span className="tb-v2-tool-label">{mode === 'sql' ? 'SQL INSERT statements' : mode === 'markdown' ? 'JSON' : 'CSV'}</span><ToolExampleClearActions onExample={() => change(examples[mode])} onClear={() => change('')} /></div>
+  return <div className="tb-v2-section" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr)', gap: 12, minWidth: 0 }}>
+    <div className="tb-v2-tool-input-head" style={{ flexWrap: 'wrap', gap: 8 }}><span className="tb-v2-tool-label">{mode === 'sql' ? 'SQL INSERT statements' : mode === 'markdown' ? 'JSON' : 'CSV'}</span><ToolExampleClearActions exampleDisabled={!job.ready} onExample={() => change(examples[mode])} onClear={() => change('')} /></div>
     {mode === 'sql' && <p>INSERT VALUES literals only. Expressions and unsafe numeric integers are rejected. Quote large identifiers to preserve their digits.</p>}
     {mode === 'xml' && <p>Column names are preserved in field name attributes, including duplicate headers.</p>}
     <textarea aria-label="Input" className="tb-v2-tool-textarea" value={input} maxLength={1000001} onChange={e => change(e.target.value)} />

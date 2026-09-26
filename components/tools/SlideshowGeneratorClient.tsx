@@ -2,7 +2,7 @@
 import UtilityDesignLayout from './UtilityDesignLayout';
 import ToolExampleClearActions from './ToolExampleClearActions';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 interface Slide {
   id: number;
@@ -11,10 +11,8 @@ interface Slide {
   bgColor: string;
 }
 
-let nextId = 1;
-
-function newSlide(): Slide {
-  return { id: nextId++, title: `Slide ${nextId - 1}`, body: '', bgColor: '#111827' };
+function newSlide(id: number): Slide {
+  return { id, title: `Slide ${id}`, body: '', bgColor: '#111827' };
 }
 
 function escapeHtml(s: string): string {
@@ -90,7 +88,8 @@ ${slideDivs}
 }
 
 export default function SlideshowGeneratorClient() {
-  const [slides, setSlides] = useState<Slide[]>([newSlide(), newSlide()]);
+  const nextId = useRef(3);
+  const [slides, setSlides] = useState<Slide[]>(() => [newSlide(1), newSlide(2)]);
   const [activeId, setActiveId] = useState<number>(slides[0].id);
   const [previewIndex, setPreviewIndex] = useState(0);
 
@@ -102,7 +101,7 @@ export default function SlideshowGeneratorClient() {
 
   const addSlide = () => {
     if(slides.length>=100)return;
-    const s = {...newSlide(),id:Date.now()};
+    const s = newSlide(nextId.current++);
     setSlides(ss => [...ss, s]);
     setActiveId(s.id);
   };
@@ -155,14 +154,14 @@ export default function SlideshowGeneratorClient() {
             key={s.id}
             onClick={() => setActiveId(s.id)}
             style={{
-              display: 'flex', alignItems: 'center', gap: 8,
+              display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 8,
               padding: '8px 10px', borderRadius: 8, cursor: 'pointer',
               border: `1px solid ${s.id === active.id ? 'var(--red)' : 'var(--line)'}`,
               background: s.id === active.id ? 'var(--surface-2)' : 'transparent',
             }}
           >
             <span style={{ width: 10, height: 10, borderRadius: 3, background: s.bgColor, flexShrink: 0 }} />
-            <span style={{ fontSize: 13.5, flex: 1, fontWeight: s.id === active.id ? 600 : 400 }}>
+            <span style={{ fontSize: 13.5, flex: '1 1 120px', fontWeight: s.id === active.id ? 600 : 400 }}>
               {i + 1}. {s.title || 'Untitled slide'}
             </span>
             <button type="button" onClick={e => { e.stopPropagation(); moveSlide(s.id, -1); }} disabled={i === 0} className="tb-v2-btn-sm">↑</button>

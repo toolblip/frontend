@@ -23,7 +23,7 @@ export default function Base64ImageDecoderClient() {
     const bytes = new Uint8Array(await response.arrayBuffer()); let binary = ''; for (const b of bytes) binary += String.fromCharCode(b);
     signal.throwIfAborted(); setInput('data:image/png;base64,' + btoa(binary)); return null;
   }); };
-  return <div className="tb-v2-section" style={{ display: 'grid', gap: 12, minWidth: 0 }}>
+  return <div className="tb-v2-section" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr)', gap: 12, minWidth: 0 }}>
     <div className="tb-v2-tool-input-head" style={{ flexWrap: 'wrap', gap: 8 }}><span className="tb-v2-tool-label">Base64 image data</span><ToolExampleClearActions onExample={example} onClear={() => { change(''); if (ref.current) ref.current.value = ''; }} /></div>
     <textarea aria-label="Base64 input" className="tb-v2-tool-textarea" value={input} maxLength={7000001} onChange={e => change(e.target.value)} />
     <input ref={ref} aria-label="Base64 text file" type="file" accept=".txt,.b64" style={{ maxWidth: '100%' }} onChange={e => { const f = e.target.files?.[0]; if (f) { change(''); void job.run(async signal => { if (f.size > 7000000) throw new Error('File exceeds 7 MB.'); const text = await f.text(); signal.throwIfAborted(); setInput(text); return null; }); } }} />

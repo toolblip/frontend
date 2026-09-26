@@ -90,9 +90,9 @@ export default function PressReleaseGeneratorClient() {
   };
 
   return (<UtilityDesignLayout>
-    <div className="tb-v2-tool-card" style={{ padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: 16 }}>
+    <div className="tb-v2-tool-card" style={{ padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: 16 }} onChangeCapture={() => { revision.current++; setExporting(false); setExportError(''); }}>
       <ToolExampleClearActions onExample={() => { revision.current++; setExporting(false); setExportError(''); setBody('Our team is opening a new workshop on July 1.'); setHeadline('Acme Corp Launches New Product Line'); setDateline('San Francisco, CA'); setDate(todayISO()); setCompanyName('Acme Corp'); setBoilerplate('Acme Corp is a company that builds useful things for its customers. Founded in 2020, Acme Corp is headquartered in San Francisco, CA.'); setContactName('Jane Doe'); setContactEmail('press@acmecorp.com'); setContactPhone('(555) 123-4567'); }} onClear={() => { revision.current++; setExportError(''); setExporting(false); setBody(''); setHeadline(''); setDateline(''); setDate(''); setCompanyName(''); setBoilerplate(''); setContactName(''); setContactEmail(''); setContactPhone(''); }}/>
-      <div onChangeCapture={() => { revision.current++; setExporting(false); setExportError(''); }}>
+      <div>
       {exportError && <p role="alert">{exportError}</p>}
       {exporting && <p role="status">Preparing PDF…</p>}
       <p>Editable template draft. Verify all statements and applicable requirements before use; legal validity or compliance is not guaranteed.</p>

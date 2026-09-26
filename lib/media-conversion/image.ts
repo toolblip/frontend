@@ -126,3 +126,18 @@ export async function sanitizeSvg(bytes: Uint8Array): Promise<Blob> {
   dimensions(width, height); root.setAttribute('width', String(width)); root.setAttribute('height', String(height));
   return new Blob([new XMLSerializer().serializeToString(doc)], { type: 'image/svg+xml' });
 }
+
+/** Native encoders with the existing local WebP codec for browsers without WebP export. */
+export async function encodeCanvas(canvas: HTMLCanvasElement, mime: string, quality: number, signal: AbortSignal): Promise<Blob> {
+  signal.throwIfAborted();
+  if (mime !== 'image/webp') return canvasBlob(canvas, mime, quality);
+  const { encodeImageOptimizerWebp } = await import('../image-optimizer-webp');
+  const blob = await encodeImageOptimizerWebp({
+    width: canvas.width, height: canvas.height, quality: quality * 100, signal,
+    encodeNative: () => canvasBlob(canvas, mime, quality),
+    getRgba: () => canvas.getContext('2d')!.getImageData(0, 0, canvas.width, canvas.height).data,
+  });
+  signal.throwIfAborted();
+  if (!blob) throw new Error('The local WebP encoder did not produce a valid image.');
+  return blob;
+}

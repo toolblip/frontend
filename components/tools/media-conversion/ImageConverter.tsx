@@ -2,7 +2,7 @@
 import { useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import ToolExampleClearActions from '../ToolExampleClearActions';
-import { canvasBlob, checkedImage, dimensions, gifFrames, IMAGE_BYTES, imageKind, preflightImage, sanitizeSvg, type ImageKind } from '@/lib/media-conversion/image';
+import { encodeCanvas, checkedImage, dimensions, gifFrames, IMAGE_BYTES, imageKind, preflightImage, sanitizeSvg, type ImageKind } from '@/lib/media-conversion/image';
 import { useMediaJob } from './useMediaJob';
 import Result from './Result';
 type Mode = 'png' | 'jpeg' | 'webp' | 'apng' | 'trace';
@@ -28,7 +28,7 @@ export default function ImageConverter({ output, source }: { output?: Mode; sour
       } else {
         const canvas = document.createElement('canvas'); canvas.width = 16; canvas.height = 12;
         const ctx = canvas.getContext('2d')!; ctx.fillStyle = '#ff0000'; ctx.fillRect(0, 0, 8, 12);
-        const kind = expected || 'png'; const blob = await canvasBlob(canvas, `image/${kind}`, 0.9);
+        const kind = expected || 'png'; const blob = await encodeCanvas(canvas, `image/${kind}`, 0.9, signal);
         f = new File([blob], `example.${kind === 'jpeg' ? 'jpg' : kind}`, { type: blob.type });
       }
       signal.throwIfAborted(); setFile(f); return null;
@@ -80,13 +80,13 @@ export default function ImageConverter({ output, source }: { output?: Mode; sour
     if (target === 'jpeg') {
       const ctx = canvas.getContext('2d')!; ctx.globalCompositeOperation = 'destination-over'; ctx.fillStyle = background; ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
-    const blob = await canvasBlob(canvas, `image/${target}`, quality / 100); signal.throwIfAborted();
+    const blob = await encodeCanvas(canvas, `image/${target}`, quality / 100, signal); signal.throwIfAborted();
     const verification = await checkedImage(blob, signal);
     if (verification.naturalWidth !== canvas.width || verification.naturalHeight !== canvas.height) throw new Error('Output dimensions changed unexpectedly.');
     return { blob, name: `${file.name.replace(/\.[^.]+$/, '')}.${target === 'jpeg' ? 'jpg' : target}`, detail: `${canvas.width} × ${canvas.height} · input ${file.size} bytes · ${blob.size > file.size ? 'larger' : blob.size < file.size ? 'smaller' : 'same size'} output`, preview: 'image' };
   });
-  return <div className="tb-v2-section" style={{ display: 'grid', gap: 12, minWidth: 0, overflowWrap: 'anywhere' }}>
-    <div className="tb-v2-tool-input-head" style={{ flexWrap: 'wrap', gap: 8 }}><span className="tb-v2-tool-label">Image to {target.toUpperCase()}</span><ToolExampleClearActions onExample={example} onClear={clear} /></div>
+  return <div className="tb-v2-section" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr)', gap: 12, minWidth: 0, overflowWrap: 'anywhere' }}>
+    <div className="tb-v2-tool-input-head" style={{ flexWrap: 'wrap', gap: 8 }}><span className="tb-v2-tool-label">Image to {target.toUpperCase()}</span><ToolExampleClearActions exampleDisabled={!job.ready} onExample={example} onClear={clear} /></div>
     <p>Maximum 10 MB and 16 megapixels. {expected ? `${expected.toUpperCase()} input required.` : 'PNG, JPEG, WebP, GIF, HEIC and self-contained static SVG inputs.'} {target === 'jpeg' ? 'Transparency is flattened onto the chosen background.' : 'Transparency is preserved where the source supports it.'} {expected === 'heic' ? 'Uses the bundled HEIC decoder; unsupported HEIF variants fail explicitly. Only the first image is exported.' : ''} {target === 'trace' ? 'Tracing is limited to 1 megapixel.' : ''}</p>
     {expected === 'gif' && <p>{target === 'apng' ? 'Animation is composited with disposal rules. Maximum 200 frames and 16 million total frame pixels. A one-frame GIF exports a static PNG.' : 'Exports one composited GIF frame as a static image.'}</p>}
     <div onDragOver={e => e.preventDefault()} onDrop={e => { e.preventDefault(); if (e.dataTransfer.files[0]) choose(e.dataTransfer.files[0]); }}>

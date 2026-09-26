@@ -25,6 +25,15 @@ export function parseSubtitles(source: string): Cue[] {
 export function validateRange(start: number, end: number, duration: number) {
   if (![start, end, duration].every(Number.isFinite) || start < 0 || end > duration + 0.001 || end <= start || end - start > 60) throw new Error('Select a range within the video, longer than zero and at most 60 seconds.');
 }
+export function assertRecordingTiming(recordedSeconds: number, videoSeconds: number, audioSeconds: number) {
+  // MediaRecorder timestamps canvas frames using elapsed recording time. Playback
+  // and decoded audio have independent clocks; a stalled clock would stretch the
+  // export or desynchronize it. Allow scheduling/frame jitter, not accumulated drift.
+  const clocks = [recordedSeconds, videoSeconds, audioSeconds];
+  if (!clocks.every(Number.isFinite) || Math.max(...clocks) - Math.min(...clocks) > 0.2) {
+    throw new Error('Video and audio fell out of sync while recording. Keep this tab visible and try again when your device is less busy.');
+  }
+}
 export function waitMedia(video: HTMLVideoElement, event: string, signal: AbortSignal) {
   return new Promise<void>((resolve, reject) => {
     const cleanup = () => { clearTimeout(timer); video.removeEventListener(event, done); video.removeEventListener('error', error); signal.removeEventListener('abort', abort); };
@@ -42,15 +51,16 @@ export async function renderVideo(file: File, start: number, end: number, cues: 
   if (typeof MediaRecorder === 'undefined') throw new Error('This browser cannot record video.');
   const mime = ['video/webm;codecs=vp8,opus', 'video/webm;codecs=vp9,opus', 'video/webm'].find(m => MediaRecorder.isTypeSupported(m));
   if (!mime) throw new Error('This browser has no WebM video encoder.');
-  const video = document.createElement('video'); video.playsInline = true; video.preload = 'auto';
+  const video = document.createElement('video'); video.playsInline = true; video.preload = 'auto'; video.muted = true;
   const url = URL.createObjectURL(file);
-  let context: AudioContext | undefined, source: MediaElementAudioSourceNode | undefined, stream: MediaStream | undefined, audioStream: MediaStream | undefined, recorder: MediaRecorder | undefined;
+  let context: AudioContext | undefined, source: AudioBufferSourceNode | undefined, stream: MediaStream | undefined, audioStream: MediaStream | undefined, recorder: MediaRecorder | undefined;
   let raf = 0;
   const abortResources = () => { video.pause(); stream?.getTracks().forEach(t => t.stop()); if (context && context.state !== 'closed') void context.close().catch(() => {}); };
   signal.addEventListener('abort', abortResources, { once: true });
   try {
     const loaded = waitMedia(video, 'loadeddata', signal); video.src = url; await loaded;
     validateRange(start, end, video.duration);
+    if (video.duration > 120) throw new Error('Source video must be at most 120 seconds for bounded audio decoding.');
     const width = video.videoWidth, height = video.videoHeight;
     if (!width || !height || width * height > 1920 * 1080) throw new Error('Video must be at most 1920 × 1080 pixels (2,073,600 total pixels).');
     if (start > 0) { const sought = waitMedia(video, 'seeked', signal); video.currentTime = start; await sought; }
@@ -58,7 +68,11 @@ export async function renderVideo(file: File, start: number, end: number, cues: 
     const ctx = canvas.getContext('2d')!;
     if (!canvas.captureStream) throw new Error('Canvas recording is unsupported in this browser.');
     stream = canvas.captureStream(30);
-    context = new AudioContext(); source = context.createMediaElementSource(video); const destination = context.createMediaStreamDestination(); source.connect(destination); audioStream = destination.stream;
+    context = new AudioContext();
+    const audio = await context.decodeAudioData(await file.arrayBuffer()); signal.throwIfAborted();
+    if (audio.length * audio.numberOfChannels > 24_000_000 || audio.numberOfChannels > 8) throw new Error('Source audio exceeds the PCM memory limit.');
+    source = context.createBufferSource(); source.buffer = audio;
+    const destination = context.createMediaStreamDestination(); source.connect(destination); audioStream = destination.stream;
     for (const track of audioStream.getAudioTracks()) stream.addTrack(track);
     await context.resume(); signal.throwIfAborted();
     const paint = () => {
@@ -87,18 +101,22 @@ export async function renderVideo(file: File, start: number, end: number, cues: 
     const rec = recorder;
     const blob = await new Promise<Blob>((resolve, reject) => {
       let failed = false;
+      let recordingStartedAt: number | undefined, audioStartedAt = 0;
+      const assertTiming = () => {
+        if (recordingStartedAt !== undefined) assertRecordingTiming((performance.now() - recordingStartedAt) / 1000, video.currentTime - start, context!.currentTime - audioStartedAt);
+      };
       const cleanup = () => { clearTimeout(timeout); cancelAnimationFrame(raf); signal.removeEventListener('abort', abort); video.removeEventListener('error', error); video.removeEventListener('ended', ended); video.pause(); };
       const fail = (message: string) => { if (failed) return; failed = true; cleanup(); if (rec.state !== 'inactive') rec.stop(); reject(new Error(message)); };
       const abort = () => fail('Video processing cancelled.'); const error = () => fail('Video decode failed during recording.');
-      const stop = () => { try { paint(); } catch (e) { fail((e as Error).message); return; } cleanup(); if (rec.state !== 'inactive') rec.stop(); };
+      const stop = () => { try { assertTiming(); paint(); } catch (e) { fail((e as Error).message); return; } cleanup(); if (rec.state !== 'inactive') rec.stop(); };
       const ended = () => { if (video.currentTime + 0.15 < end) fail('Video ended before the selected range.'); else stop(); };
       const timeout = setTimeout(() => fail('Recording stalled or timed out. Keep this tab visible while converting.'), (end - start) * 1000 + 15000);
       rec.ondataavailable = e => { if (e.data.size) chunks.push(e.data); };
       rec.onerror = () => fail('Video encoding failed.');
       rec.onstop = () => { cleanup(); if (failed) return; const result = new Blob(chunks, { type: 'video/webm' }); if (result.size < 100) reject(new Error('Encoder produced no video.')); else resolve(result); };
       signal.addEventListener('abort', abort, { once: true }); video.addEventListener('error', error); video.addEventListener('ended', ended);
-      const tick = () => { if (failed || rec.state === 'inactive') return; try { paint(); } catch (e) { fail((e as Error).message); return; } if (video.currentTime >= end) stop(); else raf = requestAnimationFrame(tick); };
-      rec.start(250); video.play().then(() => { raf = requestAnimationFrame(tick); }).catch(() => fail('Playback was blocked by the browser. Try converting again.'));
+      const tick = () => { if (failed || rec.state === 'inactive') return; try { assertTiming(); paint(); } catch (e) { fail((e as Error).message); return; } if (video.currentTime >= end) stop(); else raf = requestAnimationFrame(tick); };
+      video.play().then(() => { if (failed || signal.aborted) return; paint(); recordingStartedAt = performance.now(); audioStartedAt = context!.currentTime; rec.start(250); source!.start(audioStartedAt, start, end - start); raf = requestAnimationFrame(tick); }).catch(() => fail('Playback was blocked by the browser. Try converting again.'));
       if (signal.aborted) abort();
     });
     signal.throwIfAborted();
@@ -109,7 +127,7 @@ export async function renderVideo(file: File, start: number, end: number, cues: 
     signal.removeEventListener('abort', abortResources);
     cancelAnimationFrame(raf); video.pause();
     if (recorder && recorder.state !== 'inactive') recorder.stop();
-    stream?.getTracks().forEach(t => t.stop()); audioStream?.getTracks().forEach(t => t.stop()); source?.disconnect();
+    stream?.getTracks().forEach(t => t.stop()); audioStream?.getTracks().forEach(t => t.stop()); try { source?.stop(); } catch { /* A cancelled source may not have started. */ } source?.disconnect();
     if (context && context.state !== 'closed') await context.close();
     video.removeAttribute('src'); video.load(); URL.revokeObjectURL(url);
   }

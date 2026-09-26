@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { imageKind, preflightImage, composeGif, dimensions, gifFrames, type GifPatch } from './image';
-import { mediaContainer, pcmWav } from './audio';
+import { mediaContainer, pcmWav, pcmMp3 } from './audio';
 import { parseSubtitles, validateRange } from './video';
 const fixture = (name: string) => new Uint8Array(readFileSync(`public/samples/media-conversion/example.${name}`));
 describe('binary formats and limits', () => {
@@ -81,5 +81,19 @@ describe('browser image lifecycle and encoder failure boundaries', () => {
       const controller = new AbortController(); const pending = checkedImage(new Blob(['pending']), controller.signal); controller.abort();
       await expect(pending).rejects.toThrow('cancelled'); expect(revoke).toHaveBeenCalledTimes(2);
     } finally { vi.unstubAllGlobals(); revoke.mockRestore(); }
+  });
+});
+
+
+describe('MP3 encoding', () => {
+  it('encodes mono PCM into MPEG audio frames and honors cancellation', async () => {
+    const samples = Float32Array.from({ length: 44100 }, (_, i) => 0.5 * Math.sin(2 * Math.PI * 440 * i / 44100));
+    const blob = await pcmMp3([samples], 44100, new AbortController().signal);
+    const bytes = new Uint8Array(await blob.arrayBuffer());
+    expect(blob.type).toBe('audio/mpeg'); expect(bytes.length).toBeGreaterThan(10000);
+    expect(bytes[0]).toBe(255); expect(bytes[1] & 224).toBe(224);
+    const abort = new AbortController(); abort.abort();
+    await expect(pcmMp3([samples], 44100, abort.signal)).rejects.toThrow();
+    await expect(pcmMp3([new Float32Array([NaN])], 44100, new AbortController().signal)).rejects.toThrow();
   });
 });

@@ -10,7 +10,7 @@ export default function UnitConverter({ temperatureOnly = false }: { temperature
   const changeCategory = (c: Category) => { setCategory(c); setFrom(units[c][0].value); setTo(units[c][1].value); setNotice(''); };
   let result = '', error = '';
   try { if (input.trim()) { const n = finiteNumber(input); const value = category === 'temperature' ? temperature(n, from, to) : n * units[category].find(u => u.value === from)!.factor / units[category].find(u => u.value === to)!.factor; if (!Number.isFinite(value)) throw new Error('Result exceeds the numeric range.'); result = String(Number(value.toPrecision(12))); } } catch (e) { error = (e as Error).message; }
-  return <div className="tb-v2-section" style={{ display: 'grid', gap: 12, minWidth: 0 }}>
+  return <div className="tb-v2-section" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr)', gap: 12, minWidth: 0 }}>
     <div className="tb-v2-tool-input-head" style={{ flexWrap: 'wrap', gap: 8 }}><span className="tb-v2-tool-label">Unit conversion</span><ToolExampleClearActions onExample={() => { changeCategory(initial); setInput(temperatureOnly ? '100' : '1000'); }} onClear={() => { setInput(''); setNotice(''); }} /></div>
     {!temperatureOnly && <label>Category<select className="tb-v2-select" aria-label="Category" value={category} onChange={e => changeCategory(e.target.value as Category)}>{Object.keys(units).map(c => <option key={c} value={c}>{c}</option>)}</select></label>}
     <label>Value<input className="tb-v2-input" aria-label="Value" value={input} maxLength={256} onChange={e => { setInput(e.target.value); setNotice(''); }} /></label>

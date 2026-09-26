@@ -5,7 +5,9 @@ export function xmlDocument(text: string) {
     if (/<!DOCTYPE/i.test(text))
         throw new Error('DTD declarations are not supported.');
     const doc = new DOMParser().parseFromString(text, 'application/xml');
-    const error = doc.getElementsByTagNameNS('http://www.mozilla.org/newlayout/xml/parsererror.xml', 'parsererror')[0];
+    // Gecko uses its parser-error namespace; Chromium and WebKit use XHTML.
+    const error = doc.getElementsByTagNameNS('http://www.mozilla.org/newlayout/xml/parsererror.xml', 'parsererror')[0]
+        ?? doc.getElementsByTagNameNS('http://www.w3.org/1999/xhtml', 'parsererror')[0];
     if (error || doc.documentElement?.nodeName === 'parsererror')
         throw new Error(error?.textContent || 'Invalid XML');
     return doc;

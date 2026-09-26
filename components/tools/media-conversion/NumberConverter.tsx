@@ -8,7 +8,7 @@ export default function NumberConverter({ all = false }: { all?: boolean }) {
   try { if (input.trim()) { number = parseBase(input, from); output = all ? `Binary: ${number.toString(2)}\nDecimal: ${number.toString(10)}\nHexadecimal: ${number.toString(16).toUpperCase()}` : number.toString(to).toUpperCase(); } } catch (e) { error = (e as Error).message; }
   const change = (value: string) => { setInput(value); setNotice(''); };
   const bases = all ? [2, 10, 16] : Array.from({ length: 35 }, (_, n) => n + 2);
-  return <div className="tb-v2-section" style={{ display: 'grid', gap: 12, minWidth: 0 }}>
+  return <div className="tb-v2-section" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr)', gap: 12, minWidth: 0 }}>
     <div className="tb-v2-tool-input-head" style={{ flexWrap: 'wrap', gap: 8 }}><span className="tb-v2-tool-label">Integer</span><ToolExampleClearActions onExample={() => { change('255'); setFrom(10); setTo(2); }} onClear={() => change('')} /></div>
     <input className="tb-v2-input" aria-label="Number input" value={input} maxLength={4097} onChange={e => change(e.target.value)} />
     <label>Source base<select className="tb-v2-select" aria-label="Source base" value={from} onChange={e => { setFrom(Number(e.target.value)); setNotice(''); }}>{bases.map(n => <option key={n} value={n}>Base {n}</option>)}</select></label>

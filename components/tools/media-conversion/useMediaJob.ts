@@ -6,6 +6,8 @@ export function useMediaJob() {
   const [result, setResult] = useState<(MediaResult & { url: string }) | null>(null);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
+  const [ready, setReady] = useState(false);
+  useEffect(() => { setReady(true); }, []);
   const generation = useRef(0);
   const url = useRef('');
   const controller = useRef<AbortController | null>(null);
@@ -39,5 +41,5 @@ export function useMediaJob() {
       if (generation.current === id) setError(e instanceof Error ? e.message : 'Conversion failed.');
     } finally { clearTimeout(timeout); if (abortListener) ctrl.signal.removeEventListener('abort', abortListener); if (generation.current === id) setBusy(false); }
   };
-  return { result, error, busy, cancel, run, setError, generation };
+  return { result, error, busy, ready, cancel, run, setError, generation };
 }
