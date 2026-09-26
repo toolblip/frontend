@@ -1,5 +1,5 @@
 // A/B diagnostic: preserve the notebook sandbox and compare screenshot framing only.
-import { mkdir, writeFile, readFile } from 'node:fs/promises';
+import { mkdir, writeFile, readFile, rename } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import { pathToFileURL } from 'node:url';
 import path from 'node:path';
@@ -16,6 +16,11 @@ const fixture = (await import(pathToFileURL(path.join(root, 'scripts/qa/cases/de
 const { stripDevUpgradeCSP } = await import(pathToFileURL(path.join(root, 'scripts/qa/browser.mjs')).href);
 const browser = await (engine === 'chrome' ? chromium : webkit).launch({ headless: true, ...(engine === 'chrome' ? { channel: 'chrome' } : {}) });
 const report = { purpose: 'scroll-diagnosis-only', engine, base, startedAt: new Date().toISOString(), scenarios: [] };
+const saveReport = async () => {
+  await writeFile(path.join(output, 'diagnostic.json.tmp'), JSON.stringify(report, null, 2) + '\n');
+  await rename(path.join(output, 'diagnostic.json.tmp'), path.join(output, 'diagnostic.json'));
+};
+await saveReport();
 try {
   for (const mode of ['protocol', 'native']) {
     const directory = path.join(output, mode); await mkdir(directory);
@@ -47,7 +52,7 @@ try {
       }
       result.status = 'completed';
     } catch (error) { result.status = 'failed'; result.error = String(error.stack ?? error); process.exitCode = 1; }
-    finally { await context.close(); }
+    finally { await saveReport(); await context.close(); }
   }
   // Neutral controls contain no application JavaScript. They are diagnostic
   // documents, never substituted for a tool result or used for acceptance.
@@ -85,12 +90,12 @@ try {
       await page.waitForTimeout(250);
       result.status = 'completed';
     } catch (error) { result.status = 'failed'; result.error = String(error.stack ?? error); process.exitCode = 1; }
-    finally { await context.close(); }
+    finally { await saveReport(); await context.close(); }
   }
   // Isolate the actual notebook image-export check without replacing its bytes.
   // Existing full-fixture scenarios above remain unchanged acceptance-independent baselines.
   report.downloadInspections = [];
-  for (const mode of ['embedded', 'standalone', 'standalone-no-preview-probe']) {
+  for (const mode of ['embedded', 'standalone', 'standalone-no-preview-probe', 'standalone-attribute-only', 'standalone-direct-frame']) {
     const result = { mode, scope: 'actual-notebook-image-export-step', events: [], evidence: [] };
     report.downloadInspections.push(result);
     const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
@@ -113,12 +118,33 @@ try {
       phase = 'actual-image-input';
       const notebook = { nbformat: 4, nbformat_minor: 4, metadata: {}, cells: [{ cell_type: 'markdown', metadata: {}, source: `![plot](${png})\n\n<img src="data:image/svg+xml;base64,PHN2Zz48L3N2Zz4=" onerror="alert(1)">` }] };
       await input.fill(JSON.stringify(notebook));
-      if (mode !== 'standalone-no-preview-probe') {
-        phase = 'preview-frame-probe';
+      const preview = tool.locator('iframe[title="Notebook preview"]');
+      await expect(preview).toHaveAttribute('sandbox', '');
+      if (mode === 'standalone-direct-frame') {
+        phase = 'preview-parent-element-handle';
+        const handle = await preview.elementHandle();
+        if (!handle) throw Error('Preview element is missing');
+        try {
+          const frame = await handle.contentFrame();
+          if (!frame) throw Error('Preview frame is missing');
+          phase = 'preview-direct-frame-evaluate';
+          await expect.poll(() => frame.evaluate(expected => {
+            const img = document.querySelector('img[alt="plot"]');
+            return !!img && img.getAttribute('src') === expected && img.complete && img.naturalWidth > 0;
+          }, png)).toBe(true);
+        } finally { await handle.dispose(); }
+        result.evidence.push('Direct frame evaluation proves exact preview PNG source and successful decode with sandbox unchanged.');
+      } else if (mode !== 'standalone-no-preview-probe') {
         const plot = tool.frameLocator('iframe[title="Notebook preview"]').getByRole('img', { name: 'plot', exact: true });
+        phase = 'preview-locator-attribute';
         await expect(plot).toHaveAttribute('src', png);
-        await expect.poll(() => plot.evaluate(img => img.complete && img.naturalWidth > 0)).toBe(true);
-        result.evidence.push('Actual application preview decodes the exact retained PNG.');
+        if (mode === 'standalone-attribute-only') {
+          result.evidence.push('Diagnostic isolation only: preview source checked; preview decode intentionally not asserted in this control.');
+        } else {
+          phase = 'preview-locator-evaluate';
+          await expect.poll(() => plot.evaluate(img => img.complete && img.naturalWidth > 0)).toBe(true);
+          result.evidence.push('Actual application preview decodes the exact retained PNG.');
+        }
       }
       phase = 'actual-download';
       const [download] = await Promise.all([page.waitForEvent('download'), tool.getByRole('button', { name: 'Download HTML', exact: true }).click()]);
@@ -151,9 +177,9 @@ try {
       }
       result.status = 'completed';
     } catch (error) { result.status = 'failed'; result.error = String(error.stack ?? error); process.exitCode = 1; }
-    finally { await context.close(); }
+    finally { await saveReport(); await context.close(); }
   }
 } finally {
   await browser.close(); report.finishedAt = new Date().toISOString();
-  await writeFile(path.join(output, 'diagnostic.json'), JSON.stringify(report, null, 2) + '\n');
+  await saveReport();
 }
