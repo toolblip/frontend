@@ -1,0 +1,84 @@
+name: Hosted supplemental production QA
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/tool-qa-supplemental.yml'
+      - 'scripts/qa/hosted-supplemental.mjs'
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash
+permissions:
+  contents: read
+  deployments: read
+concurrency:
+  group: supplemental-tool-qa-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  supplemental:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        engine: [chrome, webkit]
+    steps:
+      - name: Fetch reviewed launcher anonymously
+        env:
+          QA_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/supplemental-tool-qa/cloud"
+          git init .
+          git remote add origin https://github.com/toolblip/frontend.git
+          GIT_TERMINAL_PROMPT=0 GIT_CONFIG_NOSYSTEM=1 GIT_CONFIG_GLOBAL=/dev/null git fetch --no-tags origin "$QA_HEAD"
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$QA_HEAD"
+          if git config --local --name-only --get-regexp 'extraheader|credential|sshcommand'; then
+            echo 'Unexpected persisted authentication configuration' >&2
+            exit 1
+          fi
+          cp scripts/qa/hosted-supplemental.mjs "$RUNNER_TEMP/supplemental-tool-qa/"
+          cp scripts/qa/cloud/{run.mjs,pilot.json,inventory.json} "$RUNNER_TEMP/supplemental-tool-qa/cloud/"
+          cp .github/workflows/tool-qa-supplemental.yml "$RUNNER_TEMP/supplemental-tool-qa/workflow.yml"
+          echo "QA_WORKFLOW_REVISION=$QA_HEAD" >> "$GITHUB_ENV"
+          SOURCE=$(node -p "require('./scripts/qa/cloud/pilot.json').source")
+          git checkout --detach "$SOURCE"
+          test -z "$(git status --porcelain --untracked-files=no)"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Install official engine and output tools
+        env:
+          QA_ENGINE: ${{ matrix.engine }}
+        run: |
+          npx --no-install playwright install --with-deps "$QA_ENGINE"
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg poppler-utils
+      - name: Historical tools and real tweet provider
+        env:
+          GH_TOKEN: ${{ github.token }}
+          QA_ENGINE: ${{ matrix.engine }}
+        run: node "$RUNNER_TEMP/supplemental-tool-qa/hosted-supplemental.mjs" "$GITHUB_WORKSPACE" "$RUNNER_TEMP/supplemental-tool-qa" "$QA_ENGINE"
+      - name: Preserve supplemental evidence
+        if: always()
+        id: artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: supplemental-tools-${{ matrix.engine }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/supplemental-tool-qa/
+          if-no-files-found: error
+          retention-days: 14
+      - name: Record immutable artifact identity
+        if: always() && steps.artifact.outcome == 'success'
+        env:
+          ARTIFACT_ID: ${{ steps.artifact.outputs.artifact-id }}
+          ARTIFACT_DIGEST: ${{ steps.artifact.outputs.artifact-digest }}
+          ARTIFACT_URL: ${{ steps.artifact.outputs.artifact-url }}
+        run: printf 'Artifact ID:%s\nDigest:%s\nURL:%s\n' "$ARTIFACT_ID" "$ARTIFACT_DIGEST" "$ARTIFACT_URL" >> "$GITHUB_STEP_SUMMARY"
