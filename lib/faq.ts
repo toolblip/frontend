@@ -1799,10 +1799,28 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'What do the numbers above the result mean?', a: 'A small counter shows your input\'s character count and its byte count side by side, useful since multi-byte characters make those two numbers diverge.' },
     { q: 'Is my text sent to a server to compute the hash?', a: 'No, the hash is computed entirely in your browser using the Web Crypto API, nothing you type leaves your device.' },
   ],
+  'grayscale': [
+    { q: 'How do I convert an image to grayscale?', a: 'Upload an image or choose Examples. The preview updates automatically without an Apply button. Every RGB channel receives the same weighted luma value: 0.299 red + 0.587 green + 0.114 blue. Alpha is unchanged. This is a full grayscale conversion, with no intensity slider.' },
+    { q: 'What files and download formats are supported?', a: 'Upload PNG, JPEG, WebP, GIF or SVG up to 20 MiB, 8192 pixels per side and 16 megapixels. JPEG downloads use JPEG at 90% quality; other inputs download as PNG. Transparency and dimensions are preserved. GIF uses its first frame, and SVG is rasterized.' },
+    { q: 'How do I save or reset the result?', a: 'Download current image saves the encoded preview. It’s disabled while a new preview is processing. Clear removes the image and cancels pending work. File sizes are shown in exact bytes; the result may be larger than the source.' },
+  ],
+  'pixelate': [
+    { q: 'Can I pixelate just a face or a selected area?', a: 'No. This tool pixelates the whole image. It averages colors in square blocks with alpha weighting and keeps each source pixel’s alpha. It doesn’t offer region selection or guarantee that identifying details will be hidden.' },
+    { q: 'How does Block size work?', a: 'Upload an image or choose Examples, then move Block size from 1 to 64 pixels. The preview updates automatically from the original image. A size of 1 leaves the pixels unchanged; larger blocks give a coarser result.' },
+    { q: 'What files and download formats are supported?', a: 'Upload PNG, JPEG, WebP, GIF or SVG up to 20 MiB, 8192 pixels per side and 16 megapixels. JPEG downloads use JPEG at 90% quality; other inputs download as PNG. Transparency and dimensions are preserved. GIF uses its first frame, and SVG is rasterized.' },
+    { q: 'How do I save or reset the result?', a: 'Download current image saves the encoded preview. It’s disabled while a new preview is processing. Clear removes the image and cancels pending work. File sizes are shown in exact bytes; the result may be larger than the source.' },
+  ],
   'sharpen': [
-    { q: 'What does the Intensity slider actually change?', a: 'It scales a 3x3 sharpen convolution kernel from 0.1x to 3x strength, higher values push the edge-contrast effect further before the result is clamped back into the 0-255 color range.' },
-    { q: 'How is the sharpening applied to my photo?', a: 'The image is drawn to a hidden canvas, then every pixel is recalculated from its 8 neighbors using a fixed edge-enhancing kernel, and the result replaces the original pixel data before being redrawn.' },
-    { q: 'What format is the downloaded file?', a: 'A PNG named "sharpened-image.png", exported straight from the canvas after you click Apply Sharpen.' },
+    { q: 'What does Sharpen amount change?', a: 'Upload an image or choose Examples, then adjust the amount from 0 to 3. The preview updates automatically. The filter adds a scaled difference between each pixel and its four direct neighbors. Zero leaves the pixels unchanged, and uniform colors keep their brightness at every setting.' },
+    { q: 'Does changing the slider sharpen the previous result again?', a: 'No. Every preview starts from the original pixels. Transparency is preserved, and fully transparent neighbors don’t introduce dark halos. High settings can amplify noise and create harsh edges.' },
+    { q: 'What files and download formats are supported?', a: 'Upload PNG, JPEG, WebP, GIF or SVG up to 20 MiB, 8192 pixels per side and 16 megapixels. JPEG downloads use JPEG at 90% quality; other inputs download as PNG. Transparency and dimensions are preserved. GIF uses its first frame, and SVG is rasterized.' },
+    { q: 'How do I save or reset the result?', a: 'Download current image saves the encoded preview. It’s disabled while a new preview is processing. Clear removes the image and cancels pending work. File sizes are shown in exact bytes; the result may be larger than the source.' },
+  ],
+  'unblur': [
+    { q: 'Can this recover a severely blurred photo?', a: 'No. A gentle unsharp mask can improve mildly soft edges, but it can’t recover lost detail or severe motion blur. It doesn’t use AI or deconvolution.' },
+    { q: 'How do I adjust the result?', a: 'Upload an image or choose Examples, then adjust Unblur strength from 0 to 100%. The preview updates automatically from the original pixels using a 3×3 alpha-weighted local blur. Zero leaves the pixels unchanged.' },
+    { q: 'What files and download formats are supported?', a: 'Upload PNG, JPEG, WebP, GIF or SVG up to 20 MiB, 8192 pixels per side and 16 megapixels. JPEG downloads use JPEG at 90% quality; other inputs download as PNG. Transparency and dimensions are preserved. GIF uses its first frame, and SVG is rasterized.' },
+    { q: 'How do I save or reset the result?', a: 'Download current image saves the encoded preview. It’s disabled while a new preview is processing. Clear removes the image and cancels pending work. File sizes are shown in exact bytes; the result may be larger than the source.' },
   ],
   'sitemap-analyzer': [
     { q: 'Do I paste the sitemap or point it at a URL?', a: 'You paste the raw XML directly into the text box, there\'s no fetch-by-URL option, a "Load Sample" button fills in a working three-URL example if you want to see the format first.' },
