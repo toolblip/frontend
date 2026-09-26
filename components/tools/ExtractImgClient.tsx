@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { PDFDocument, PDFName, PDFDict, PDFArray, PDFRawStream, PDFRef, PDFNumber, PDFString, PDFHexString, decodePDFRawStream } from 'pdf-lib';
 import { readPdfToolFile, loadPdfForTools } from '@/lib/pdf-qa/pdf';
+import { hasSupportedImageDecode } from '@/lib/pdf-qa/image-decode';
 import { rgbaPixels } from '@/lib/pdf-qa/pixels';
 import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
@@ -165,15 +166,12 @@ async function extractImages(bytes: Uint8Array, active: () => boolean): Promise<
         const height = heightObj instanceof PDFNumber ? heightObj.asNumber() : 0;
         totalPixels += width * height;
         if (!Number.isInteger(width) || !Number.isInteger(height) || width <= 0 || height <= 0 || width * height > 16000000 || totalPixels > 32000000) { skipped++; continue; }
-        // Do not silently discard color-key masks, decode transforms or predictors.
-        if (['Mask', 'Decode', 'DecodeParms'].some(key => xObject.dict.has(PDFName.of(key)))) { skipped++; continue; }
+        // Explicit identity Decode and Predictor 1 are harmless; other transforms stay skipped.
+        if (xObject.dict.has(PDFName.of('Mask')) || !hasSupportedImageDecode(xObject.dict)) { skipped++; continue; }
         let alpha: Uint8Array | undefined;
         const mask = xObject.dict.lookup(PDFName.of('SMask'));
         if (mask) {
-          if (!(mask instanceof PDFRawStream) || mask.dict.lookup(PDFName.of('Width'))?.toString() !== String(width) || mask.dict.lookup(PDFName.of('Height'))?.toString() !== String(height) || mask.dict.lookup(PDFName.of('BitsPerComponent'))?.toString() !== '8' || mask.dict.lookup(PDFName.of('ColorSpace')) !== PDFName.of('DeviceGray') || ['DecodeParms', 'Matte'].some(key => mask.dict.has(PDFName.of(key)))) { skipped++; continue; }
-          // PDF producers explicitly write the default grayscale decode range.
-          const decode = mask.dict.lookup(PDFName.of('Decode'));
-          if (decode && (!(decode instanceof PDFArray) || decode.size() !== 2 || decode.lookup(0)?.toString() !== '0' || decode.lookup(1)?.toString() !== '1')) { skipped++; continue; }
+          if (!(mask instanceof PDFRawStream) || mask.dict.lookup(PDFName.of('Width'))?.toString() !== String(width) || mask.dict.lookup(PDFName.of('Height'))?.toString() !== String(height) || mask.dict.lookup(PDFName.of('BitsPerComponent'))?.toString() !== '8' || mask.dict.lookup(PDFName.of('ColorSpace')) !== PDFName.of('DeviceGray') || mask.dict.has(PDFName.of('Matte')) || !hasSupportedImageDecode(mask.dict)) { skipped++; continue; }
           alpha = decodePDFRawStream(mask).decode();
         }
 

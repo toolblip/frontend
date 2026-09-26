@@ -1,8 +1,9 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
+import { PDFDocument, StandardFonts, rgb, degrees } from 'pdf-lib';
 import { readPdfToolFile, loadPdfForTools } from '@/lib/pdf-qa/pdf';
+import { visiblePageGeometry, drawInVisiblePage, visibleTextGeometry } from '@/lib/pdf-qa/geometry';
 import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 type AnchorX = 'left' | 'center' | 'right';
@@ -36,6 +37,9 @@ interface ImageOverlay {
 }
 
 interface TextEditOverlay {
+  baselineX: number;
+  baselineY: number;
+  angle: number;
   id: number;
   kind: 'text-edit';
   sourceId: string;
@@ -60,6 +64,9 @@ interface EraseOverlay {
 }
 
 interface PdfTextItem {
+  baselineX: number;
+  baselineY: number;
+  angle: number;
   id: string;
   page: number;
   text: string;
@@ -154,7 +161,7 @@ export default function EditClient() {
     setError('');
     try {
       const doc = await loadPdfForTools(bytes);
-      const sizes = doc.getPages().map(p => p.getSize());
+      const sizes = doc.getPages().map(p => visiblePageGeometry(p));
       if (sizes.length === 0) throw new Error('The PDF has no pages.');
       if (requestId !== loadVersionRef.current) return;
       setFileBytes(bytes);
@@ -235,6 +242,7 @@ export default function EditClient() {
         id: nextOverlayId++, kind: 'text-edit', sourceId: selectedText.id, page: currentPage,
         text: draftText.trim(), fontSize: draftFontSize, color: draftColor,
         x: selectedText.x, y: selectedText.y, width: selectedText.width, height: selectedText.height,
+        baselineX: selectedText.baselineX, baselineY: selectedText.baselineY, angle: selectedText.angle,
       },
     ]);
     setSelectedText(null);
@@ -366,29 +374,30 @@ export default function EditClient() {
       for (const ov of overlays) {
         const page = pages[ov.page - 1];
         if (!page) continue;
-        const { width, height } = page.getSize();
+        await drawInVisiblePage(page, async ({ width, height }) => {
 
-        if (ov.kind === 'erase' || ov.kind === 'text-edit') {
-          page.drawRectangle({ x: ov.x - 1, y: height - ov.y - ov.height - 1, width: ov.width + 2, height: ov.height + 2, color: rgb(1, 1, 1) });
-          if (ov.kind === 'text-edit') {
+          if (ov.kind === 'erase' || ov.kind === 'text-edit') {
+            page.drawRectangle({ x: ov.x - 1, y: height - ov.y - ov.height - 1, width: ov.width + 2, height: ov.height + 2, color: rgb(1, 1, 1) });
+            if (ov.kind === 'text-edit') {
+              const [r, g, b] = hexToRgb01(ov.color);
+              page.drawText(ov.text, { x: ov.baselineX, y: height - ov.baselineY, rotate: degrees(-ov.angle), size: ov.fontSize, font, color: rgb(r, g, b) });
+            }
+          } else if (ov.kind === 'text') {
+            const textWidth = font.widthOfTextAtSize(ov.text, ov.fontSize);
+            const x = ov.anchorX === 'left' ? ov.offsetX : ov.anchorX === 'right' ? width - ov.offsetX - textWidth : (width - textWidth) / 2 + ov.offsetX;
+            const y = ov.anchorY === 'top' ? height - ov.offsetY - ov.fontSize : ov.anchorY === 'bottom' ? ov.offsetY : (height - ov.fontSize) / 2 - ov.offsetY;
             const [r, g, b] = hexToRgb01(ov.color);
-            page.drawText(ov.text, { x: ov.x, y: height - ov.y - ov.fontSize, size: ov.fontSize, font, color: rgb(r, g, b) });
+            page.drawText(ov.text, { x, y, size: ov.fontSize, font, color: rgb(r, g, b) });
+          } else {
+            const img = ov.format === 'png' ? await doc.embedPng(ov.bytes) : await doc.embedJpg(ov.bytes);
+            const scale = ov.widthPt / img.width;
+            const drawWidth = ov.widthPt;
+            const drawHeight = img.height * scale;
+            const x = ov.anchorX === 'left' ? ov.offsetX : ov.anchorX === 'right' ? width - ov.offsetX - drawWidth : (width - drawWidth) / 2 + ov.offsetX;
+            const y = ov.anchorY === 'top' ? height - ov.offsetY - drawHeight : ov.anchorY === 'bottom' ? ov.offsetY : (height - drawHeight) / 2 - ov.offsetY;
+            page.drawImage(img, { x, y, width: drawWidth, height: drawHeight });
           }
-        } else if (ov.kind === 'text') {
-          const textWidth = font.widthOfTextAtSize(ov.text, ov.fontSize);
-          const x = ov.anchorX === 'left' ? ov.offsetX : ov.anchorX === 'right' ? width - ov.offsetX - textWidth : (width - textWidth) / 2 + ov.offsetX;
-          const y = ov.anchorY === 'top' ? height - ov.offsetY - ov.fontSize : ov.anchorY === 'bottom' ? ov.offsetY : (height - ov.fontSize) / 2 - ov.offsetY;
-          const [r, g, b] = hexToRgb01(ov.color);
-          page.drawText(ov.text, { x, y, size: ov.fontSize, font, color: rgb(r, g, b) });
-        } else {
-          const img = ov.format === 'png' ? await doc.embedPng(ov.bytes) : await doc.embedJpg(ov.bytes);
-          const scale = ov.widthPt / img.width;
-          const drawWidth = ov.widthPt;
-          const drawHeight = img.height * scale;
-          const x = ov.anchorX === 'left' ? ov.offsetX : ov.anchorX === 'right' ? width - ov.offsetX - drawWidth : (width - drawWidth) / 2 + ov.offsetX;
-          const y = ov.anchorY === 'top' ? height - ov.offsetY - drawHeight : ov.anchorY === 'bottom' ? ov.offsetY : (height - drawHeight) / 2 - ov.offsetY;
-          page.drawImage(img, { x, y, width: drawWidth, height: drawHeight });
-        }
+        });
       }
 
       const outBytes = await doc.save();
@@ -436,16 +445,10 @@ export default function EditClient() {
           const items: PdfTextItem[] = textContent.items.flatMap((item, index) => {
             if (!('str' in item) || !item.str.trim()) return [];
             const transform = pdfjs.Util.transform(textViewport.transform, item.transform);
-            const fontSize = Math.max(6, Math.hypot(transform[2], transform[3]));
+            const style = textContent.styles[item.fontName];
             return [{
-              id: `${currentPage}-${index}`,
-              page: currentPage,
-              text: item.str,
-              x: Math.max(0, transform[4]),
-              y: Math.max(0, transform[5] - fontSize),
-              width: Math.max(4, item.width),
-              height: fontSize,
-              fontSize,
+              id: `${currentPage}-${index}`, page: currentPage, text: item.str,
+              ...visibleTextGeometry(transform, item.width * pdfPage.userUnit, style?.ascent ?? 1, style?.descent ?? 0),
             }];
           });
           const canvas = window.document.createElement('canvas');
@@ -571,17 +574,19 @@ export default function EditClient() {
                     />
                   ))}
                   {pageOverlays.map(ov => {
-                    if (ov.kind === 'erase') {
-                      return <div key={ov.id} className="tb-pdf-edit-erase-overlay" style={{ left: `${(ov.x / pageSize.width) * 100}%`, top: `${(ov.y / pageSize.height) * 100}%`, width: `${(ov.width / pageSize.width) * 100}%`, height: `${(ov.height / pageSize.height) * 100}%` }} />;
-                    }
-                    if (ov.kind === 'text-edit') {
-                      return <div key={ov.id} className="tb-pdf-edit-overlay-text tb-pdf-edit-replacement-text" title={ov.text} style={{ left: `${(ov.x / pageSize.width) * 100}%`, top: `${(ov.y / pageSize.height) * 100}%`, width: `${(ov.width / pageSize.width) * 100}%`, minHeight: `${(ov.height / pageSize.height) * 100}%`, color: ov.color, fontSize: `${Math.max(8, ov.fontSize * pageScale * zoom)}px` }}>{ov.text}</div>;
+                    if (ov.kind === 'erase' || ov.kind === 'text-edit') {
+                      return <svg key={ov.id} aria-hidden="true" viewBox={`0 0 ${pageSize.width} ${pageSize.height}`} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', zIndex: 3, pointerEvents: 'none' }}>
+                        <rect x={ov.x - 1} y={ov.y - 1} width={ov.width + 2} height={ov.height + 2} fill="white" />
+                        {ov.kind === 'text-edit' && <text x={ov.baselineX} y={ov.baselineY} transform={`rotate(${ov.angle} ${ov.baselineX} ${ov.baselineY})`} fontSize={ov.fontSize} fontFamily="Arial, Helvetica, sans-serif" fontWeight={400} xmlSpace="preserve" fill={ov.color}>{ov.text}</text>}
+                      </svg>;
                     }
                     const { xPct, yPct } = markerPercent(ov.anchorX, ov.anchorY, ov.offsetX, ov.offsetY, pageSize.width, pageSize.height);
                     return ov.kind === 'text' ? (
-                      <div key={ov.id} title={ov.text} className="tb-pdf-edit-overlay-text" style={{ left: `${xPct}%`, top: `${yPct}%`, color: ov.color, fontSize: `${Math.max(8, ov.fontSize * pageScale * zoom)}px` }}>{ov.text}</div>
+                      <svg key={ov.id} aria-hidden="true" viewBox={`0 0 ${pageSize.width} ${pageSize.height}`} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', zIndex: 1, pointerEvents: 'none' }}>
+                        <text x={xPct / 100 * pageSize.width} y={yPct / 100 * pageSize.height + (ov.anchorY === 'top' ? ov.fontSize : ov.anchorY === 'middle' ? ov.fontSize / 2 : 0)} textAnchor={ov.anchorX === 'left' ? 'start' : ov.anchorX === 'right' ? 'end' : 'middle'} fontSize={ov.fontSize} fontFamily="Arial, Helvetica, sans-serif" fontWeight={400} xmlSpace="preserve" fill={ov.color}>{ov.text}</text>
+                      </svg>
                     ) : (
-                      <img key={ov.id} src={ov.previewUrl} alt="Image overlay preview" title="Image overlay" className="tb-pdf-edit-overlay-image" style={{ left: `${xPct}%`, top: `${yPct}%`, width: `${Math.min(45, Math.max(8, (ov.widthPt / pageSize.width) * 100))}%` }} />
+                      <img key={ov.id} src={ov.previewUrl} alt="Image overlay preview" title="Image overlay" className="tb-pdf-edit-overlay-image" style={{ left: `${xPct}%`, top: `${yPct}%`, width: `${(ov.widthPt / pageSize.width) * 100}%`, height: 'auto', border: 0, borderRadius: 0, boxShadow: 'none' }} />
                     );
                   })}
                   {eraseDraft && <div className="tb-pdf-edit-erase-overlay draft" style={{ left: `${(eraseDraft.x / pageSize.width) * 100}%`, top: `${(eraseDraft.y / pageSize.height) * 100}%`, width: `${(eraseDraft.width / pageSize.width) * 100}%`, height: `${(eraseDraft.height / pageSize.height) * 100}%` }} />}

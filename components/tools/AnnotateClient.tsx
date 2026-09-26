@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import { readPdfToolFile, loadPdfForTools } from '@/lib/pdf-qa/pdf';
+import { visiblePageGeometry, drawInVisiblePage } from '@/lib/pdf-qa/geometry';
 import ToolExampleClearActions from "@/components/tools/ToolExampleClearActions";
 
 type AnnotationType = "highlight" | "rectangle" | "text";
@@ -88,7 +89,7 @@ export default function AnnotateClient() {
       setPageCount(doc.getPageCount());
       setPage(1);
       setAnnotations([]);
-      setPageSizes(doc.getPages().map((p) => p.getSize()));
+      setPageSizes(doc.getPages().map((p) => visiblePageGeometry(p)));
       setError("");
       setStatus("idle");
     } catch {
@@ -353,37 +354,38 @@ export default function AnnotateClient() {
       for (const ann of annotations) {
         const p = doc.getPages()[ann.page - 1];
         if (!p) continue;
-        const size = p.getSize();
-        const c = color01(ann.color);
-        const drawY = size.height - ann.y - ann.height;
-        if (ann.type === "highlight")
-          p.drawRectangle({
-            x: ann.x,
-            y: drawY,
-            width: ann.width,
-            height: ann.height,
-            color: c,
-            opacity: 0.28,
-            borderColor: c,
-            borderWidth: 1,
-          });
-        else if (ann.type === "rectangle")
-          p.drawRectangle({
-            x: ann.x,
-            y: drawY,
-            width: ann.width,
-            height: ann.height,
-            borderColor: c,
-            borderWidth: 2,
-          });
-        else
-          p.drawText(ann.text, {
-            x: ann.x,
-            y: size.height - ann.y - ann.fontSize,
-            size: ann.fontSize,
-            font,
-            color: c,
-          });
+        await drawInVisiblePage(p, (size) => {
+          const c = color01(ann.color);
+          const drawY = size.height - ann.y - ann.height;
+          if (ann.type === "highlight")
+            p.drawRectangle({
+              x: ann.x,
+              y: drawY,
+              width: ann.width,
+              height: ann.height,
+              color: c,
+              opacity: 0.28,
+              borderColor: c,
+              borderWidth: 1,
+            });
+          else if (ann.type === "rectangle")
+            p.drawRectangle({
+              x: ann.x,
+              y: drawY,
+              width: ann.width,
+              height: ann.height,
+              borderColor: c,
+              borderWidth: 2,
+            });
+          else
+            p.drawText(ann.text, {
+              x: ann.x,
+              y: size.height - ann.y - ann.fontSize,
+              size: ann.fontSize,
+              font,
+              color: c,
+            });
+        });
       }
       const blob = new Blob([(await doc.save()) as BlobPart], {
         type: "application/pdf",
@@ -580,26 +582,13 @@ export default function AnnotateClient() {
                 annotations
                   .filter((ann) => ann.page === page)
                   .map((ann) => (
-                    <div
-                      key={ann.id}
-                      aria-hidden="true"
-                      style={{
-                        position: "absolute",
-                        left: `${(ann.x / pageSize.width) * 100}%`,
-                        top: `${(ann.y / pageSize.height) * 100}%`,
-                        width: ann.type === "text" ? "auto" : `${(ann.width / pageSize.width) * 100}%`,
-                        height: ann.type === "text" ? "auto" : `${(ann.height / pageSize.height) * 100}%`,
-                        backgroundColor: ann.type === "highlight" ? `${ann.color}59` : "transparent",
-                        border: ann.type === "rectangle" ? `2px solid ${ann.color}` : "none",
-                        color: ann.color,
-                        fontSize: ann.type === "text" ? 14 : undefined,
-                        fontWeight: 700,
-                        pointerEvents: "none",
-                        whiteSpace: "nowrap",
-                      }}
-                    >
-                      {ann.type === "text" ? ann.text : null}
-                    </div>
+                    <svg key={ann.id} aria-hidden="true" viewBox={`0 0 ${pageSize.width} ${pageSize.height}`} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none' }}>
+                      {ann.type === 'text' ? (
+                        <text x={ann.x} y={ann.y + ann.fontSize} fontSize={ann.fontSize} fontFamily="Arial, Helvetica, sans-serif" fontWeight={400} xmlSpace="preserve" fill={ann.color}>{ann.text}</text>
+                      ) : (
+                        <rect x={ann.x} y={ann.y} width={ann.width} height={ann.height} fill={ann.type === 'highlight' ? ann.color : 'none'} fillOpacity={0.28} stroke={ann.color} strokeWidth={ann.type === 'highlight' ? 1 : 2} />
+                      )}
+                    </svg>
                   ))}
               {preview && draftBox && draftBox.w > 0 && draftBox.h > 0 && (
                 <div

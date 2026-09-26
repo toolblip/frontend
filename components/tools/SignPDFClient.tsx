@@ -5,6 +5,7 @@ import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 import { useSubscription } from '@/hooks/useSubscription';
 import { checkFileSize } from '@/lib/tier-limits';
 import { assertPdfFileSize, readPdfToolFile, loadPdfForTools } from '@/lib/pdf-qa/pdf';
+import { drawInVisiblePage } from '@/lib/pdf-qa/geometry';
 import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 type Mode = 'draw' | 'type' | 'upload';
@@ -345,11 +346,10 @@ export default function SignPDFClient() {
       if (!page) throw new Error('Invalid page');
       const image = sig.kind === 'png' ? await pdfDoc.embedPng(sig.bytes) : await pdfDoc.embedJpg(sig.bytes);
       if (image.width * image.height > 16000000) throw new Error('Signature image exceeds 16 million pixels.');
-      const width = Math.max(1, Math.min(sigWidth, page.getWidth()));
-      const height = Math.max(1, Math.min(sigHeight, page.getHeight()));
-      const x = Math.max(0, Math.min(posX, page.getWidth() - width));
-      const y = Math.max(0, Math.min(posY, page.getHeight() - height));
-      page.drawImage(image, { x, y, width, height });
+      // Use exactly the rectangle shown in the preview; no export-only clamping.
+      await drawInVisiblePage(page, () => {
+        page.drawImage(image, { x: posX, y: posY, width: sigWidth, height: sigHeight });
+      });
       const pdfBytes = await pdfDoc.save();
       if (requestId !== loadVersionRef.current) return;
       const blob = new Blob([pdfBytes as BlobPart], { type: 'application/pdf' });
