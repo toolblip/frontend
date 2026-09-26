@@ -1,0 +1,673 @@
+{
+  "group": "central-metadata",
+  "status": "copy-updated-and-static-checks-passed; parent browser review required",
+  "scope": {
+    "inputReports": [
+      "scripts/qa/reports/pdf.json",
+      "scripts/qa/reports/images.json",
+      "scripts/qa/reports/developer-data.json",
+      "scripts/qa/reports/developer-security.json",
+      "scripts/qa/reports/seo-network.json"
+    ],
+    "sourceComponentsReadOnly": true,
+    "catalogRowsRemoved": 0,
+    "duplicatesConsolidated": false,
+    "redirectsChanged": false,
+    "conditionalRedirectsIgnored": true,
+    "buildRun": false,
+    "browserRun": false,
+    "devServerStarted": false,
+    "commitCreated": false,
+    "delegationUsed": false
+  },
+  "inputReportSha256AtHandoff": {
+    "pdf": "91e0c329b6a0784987c43a0400d865b404662a24553fde51d63ba0df2aa0836c",
+    "images": "962afc14fc2ab94258ac7a0d19e8c64ff34d1c37b93168e9dbeaa9c715fc45a7",
+    "developer-data": "79414b0f13b25a112ec7b374f4df082a5c4609cb0077285aa92c43f47999e32c",
+    "developer-security": "e2c88722202dfe7a168bb4ea82dfb838b845424124bc4fc685766602a7323618",
+    "seo-network": "e75692611d030104441d35207e2a6dd2340aa4b723bfdb3ecb3a13d86dd7488c"
+  },
+  "updatedSlugCount": 69,
+  "updates": [
+    {
+      "slug": "accessibility-checker",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "add-pages-to-pdf",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "add-watermark-to-pdf",
+      "files": [
+        "data/tool-content.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "annotate-pdf",
+      "files": [
+        "data/tool-content.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "batch-favicon-downloader",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "batch-image-resizer",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "broken-link-checker",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "browser-image-resizer",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "crop",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "crop-circle",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "db-query-formatter",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "delete-pages-from-pdf",
+      "files": [
+        "data/tool-content.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "detect",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "domain-age-checker",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "edit-pdf",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "email-validator",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "encodings-reference",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts"
+      ]
+    },
+    {
+      "slug": "extract-images-from-pdf",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "favicon-grabber",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "google-algorithm-tracker",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "hash-collision-finder",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "heading-tag-analyzer",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "html-to-jsx",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "image-background-remover",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "image-dimension-checker",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "image-dpi-resizer",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "image-size-resizer",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "json-graph-visualizer",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "json-path-evaluator",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "json-path-tester",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "json-schema-validator",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "jupyter-cleaner",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "keyword-extractor",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "keyword-generator",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "mac-address-generator",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "markdown-to-pdf",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "meme-maker",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "merge-pdfs",
+      "files": [
+        "data/tool-content.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "meta-description-checker",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "notebook-to-html",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "og-tag-debugger",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "page-title-checker",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "password-strength-checker",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "pdf-password-remover",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "pdf-rearrange",
+      "files": [
+        "data/tool-content.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "photo-metadata-remover",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "ping-test",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts"
+      ]
+    },
+    {
+      "slug": "profile-photo",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "random-mac-generator",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "robots-txt-analyzer",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "robots-txt-checker",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "robots-txt-editor",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "robots-txt-validator",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "rotate",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts"
+      ]
+    },
+    {
+      "slug": "seo-meta-tag-analyzer",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "seo-title-analyzer",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "sign-pdf",
+      "files": [
+        "data/tool-content.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "sitemap-analyzer",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "sitemap-extractor",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "sql-formatter",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "sql-prettifier",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "ssh-key-generator",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "tweet-to-image-converter",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "ulid-generator",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "unlock-pdf",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "uuid-v1-generator",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "uuid-validator",
+      "files": [
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "xml-formatter",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts",
+        "lib/faq.ts"
+      ]
+    },
+    {
+      "slug": "xml-validator",
+      "files": [
+        "data/tool-content.ts",
+        "data/tools.ts",
+        "lib/faq.ts"
+      ]
+    }
+  ],
+  "fixedFiles": [
+    "data/tools.ts",
+    "data/tool-content.ts",
+    "lib/faq.ts",
+    "scripts/qa/reports/central-metadata.json"
+  ],
+  "keyCorrections": [
+    "PDF white overlays are not secure redaction; covered content remains recoverable. Encrypted unlock rasterizes pages and loses selectable text, links, interactive forms and digital signatures. Unencrypted resave examples no longer claim permission metadata removal.",
+    "PDF limits documented: 25 MiB per input, 100 pages, 2000 points per page side; merge 20 files/100 total pages; add-pages 20 insert files/100 source pages/100 final pages; extraction 16M pixels per image/32M cumulative pixels with qualified JPEG/raster/mask support. Existing plan-specific upload limits may be lower and are disclosed for the affected PDF tools.",
+    "Image signature/decode bounds, JPEG versus PNG output, live crop/meme/profile previews, DPI resampling and metadata, incomplete EXIF scan, AI model download/cancellation, paid tweet customization and provider limits documented.",
+    "Developer data copy matches the current bounded schema/JSONPath grammar, graph structure limits, ASCII direct PDF versus richer browser print, v4 notebook output/metadata behavior, lexical SQL checks and XML/JSX limitations.",
+    "Email syntax-only checks, truncated hash prefixes, password heuristics, UUID v1 string ordering, UUID v1-v8/Nil/Max validation, ULID random suffixes and SSH PKCS8 compatibility corrected.",
+    "SEO observations no longer promise grades, rankings, full WCAG audits or live keyword data; DNS timing, RDAP, HEAD/CORS, historical algorithm coverage, favicon provider fallback and locally administered MAC scope documented."
+  ],
+  "preservedCapabilities": [
+    "All catalog rows, names, categories, tags, aliases and redirects retained.",
+    "Useful PDF workflow examples retained; only false unlock-resave examples corrected.",
+    "Local IMG.LY AI segmentation remains described alongside Auto Detect and Color Key.",
+    "Approved FaviconGeneratorClient still implements PNG, ICO and SVG plus text, emoji and image modes; no removal claim or rewrite applied to those approved capabilities.",
+    "Approved ImageResizerClient supports Auto/PNG/JPEG/WebP; only scoped aliases had false batch/PNG-only copy corrected.",
+    "Profile photo route resolves to ProfilePhotoEditorClient, not the unused ProfilePhotoClient stub. Circle/square, pan, zoom and color controls preserved in copy.",
+    "JSONPath recursive descent, negative indexes and simple comparison filters remain documented; schema Format JSON/Format schema retained.",
+    "Open Graph editing and previews, robots path testing and sitemap-index location export retained."
+  ],
+  "uncertainties": [
+    {
+      "slugs": [
+        "json-schema-validator"
+      ],
+      "finding": "Current helper rejects pattern, format, references and tuple items. This records present functionality, not a decision that prior working capabilities should be removed. Source reviewer may restore support; parent must revise copy after that review."
+    },
+    {
+      "slugs": [
+        "sql-formatter",
+        "sql-prettifier",
+        "db-query-formatter",
+        "notebook-to-html",
+        "json-graph-visualizer",
+        "markdown-to-pdf"
+      ],
+      "finding": "Current source lacks previously advertised SQL highlighting/minify, notebook highlighting/rich outputs, graph ID-reference/export workflows and custom PDF themes. Old copy alone does not establish that these were working, nor justify permanent removal. Parent/source reviewer must check prior functionality and restore any accidental regression, then update this copy."
+    },
+    {
+      "slugs": [
+        "profile-photo"
+      ],
+      "finding": "images.json labels the component ProfilePhotoClient, but app/tools/[slug]/ToolUI.tsx maps it to ProfilePhotoEditorClient. Reviewed the mapped component; no inference of lost controls from the unused stub."
+    },
+    {
+      "slugs": [
+        "extract-images-from-pdf"
+      ],
+      "finding": "Extraction source is concurrently being fixed. Copy states supported grayscale soft masks and skipped unsupported transforms without promising universal or exact extraction. Parent must browser-verify the final supported codec/mask set."
+    },
+    {
+      "slugs": [
+        "tweet-to-image-converter",
+        "batch-favicon-downloader",
+        "favicon-grabber",
+        "domain-age-checker",
+        "broken-link-checker",
+        "ping-test"
+      ],
+      "finding": "Provider availability, CORS, decoded downloads and clipboard behavior need parent browser verification. Source review is not live acceptance."
+    },
+    {
+      "slugs": [
+        "image-background-remover"
+      ],
+      "finding": "Actual local model integration is present. AI download/runtime success and cancellation behavior require browser acceptance; no fake-AI or removal claim was made."
+    },
+    {
+      "slugs": [],
+      "finding": "Other workers and parent may change implementations or reports during integration. This handoff covers only the five named reports; later reports, route consolidation and conditional redirects were not applied."
+    },
+    {
+      "slugs": [],
+      "finding": "ToolUI, component copy and shared category templates were outside this edit scope. Scoped FAQ overrides avoid changing unrelated approved tools. Parent should reconcile any remaining wrapper claims during browser review."
+    }
+  ],
+  "validation": [
+    {
+      "command": "git diff --check",
+      "exitCode": 0
+    },
+    {
+      "command": "Catalog invariant comparison against HEAD",
+      "result": "Only descriptions changed in data/tools.ts; row order and all other catalog content preserved."
+    },
+    {
+      "command": "Scoped entry comparison against HEAD",
+      "result": "No unrelated tool-content or FAQ entries changed."
+    },
+    {
+      "command": "./node_modules/.bin/tsc --noEmit --incremental false",
+      "exitCode": 0,
+      "result": "Final run passed with no diagnostics after all copy adjustments."
+    }
+  ]
+}

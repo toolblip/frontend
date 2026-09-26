@@ -26,14 +26,14 @@ const TOOL_CONTENT: Record<string, ToolContent> = {
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "accessibility-checker": {
-    description: `A page can pass a basic HTML syntax check and still be genuinely unusable for someone relying on a screen reader or navigating with low vision, a heading structure that skips from an h1 straight to an h4, text with a contrast ratio too low to actually read comfortably, or an image with no alt text at all, none of which show up as a markup error. This tool checks web content specifically against WCAG accessibility standards, flagging a contrast ratio that falls short, a missing alt attribute, or a heading structure that skips a level rather than just confirming the HTML itself is valid. Useful for catching a genuine WCAG compliance gap before it becomes a legal or an accessibility complaint, confirming a heading hierarchy is structured correctly for screen reader navigation, or checking whether a design's color choices actually meet a minimum contrast standard.`,
+    description: `Inspect pasted HTML for missing image alt text, accessible names, form labels, document language, title and landmarks. These are static markup checks, not WCAG certification. The tool does not measure rendered contrast or test runtime keyboard navigation and focus.`,
     examples: [
 
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "add-pages-to-pdf": {
-    description: `Reordering pages that already exist in a document and inserting brand new content into it are two genuinely different operations, dragging page 6 ahead of page 4 doesn't add anything new to the file, while dropping in a blank page for handwritten notes or copying in a page from an entirely different PDF does, and a tool built for one doesn't necessarily handle the other well. This tool adds blank pages or pages copied from another PDF at a specific position within an existing document, leaving the existing pages in their original order. Useful for inserting a blank page for notes between two existing pages in a report, copying a signature page from one PDF into a specific spot in another, or adding several new pages to a document without rebuilding the whole file from scratch.`,
+    description: `Insert blank pages or pages from another PDF at a chosen position. Reorder or delete pages before exporting; blank pages use the base document’s geometry. Input PDFs are limited to 25 MiB, 100 pages and 2,000 points per page side. Plan-specific upload limits may be lower. Up to 20 insert files, 100 source pages and 100 final pages are allowed.`,
     examples: [
       {
         title: 'Insert a blank notes page',
@@ -51,7 +51,7 @@ Output: contract.pdf with the signature page appended`,
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "delete-pages-from-pdf": {
-    description: `Removing specific pages from a PDF is a different operation from splitting or merging, those create new files from parts of the original, while deletion modifies the existing document by taking pages out entirely, and the result needs to preserve all the remaining pages in their original order. This tool lets you select individual page tiles to delete from a PDF, then produces a new file with only the pages you kept. Useful for removing blank pages from a scanned document, taking out an accidentally included page from a report, or stripping out pages that contain sensitive information before sharing a PDF with others.`,
+    description: `Removing specific pages from a PDF is a different operation from splitting or merging, those create new files from parts of the original, while deletion modifies the existing document by taking pages out entirely, and the result needs to preserve all the remaining pages in their original order. This tool lets you select individual page tiles to delete from a PDF, then produces a new file with only the pages you kept. Useful for removing blank pages from a scanned document, taking out an accidentally included page from a report, or stripping out pages that contain sensitive information before sharing a PDF with others. Input PDFs are limited to 25 MiB, 100 pages and 2,000 points per page side. Plan-specific upload limits may be lower.`,
     examples: [
       {
         title: 'Remove blank pages from a scan',
@@ -116,7 +116,7 @@ Output: contract.pdf with the signature page appended`,
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "annotate-pdf": {
-    description: `Leaving feedback on a shared draft and actually changing the document's content are two different operations that shouldn't be confused, a reviewer highlighting a paragraph and adding a comment needs the original text to stay visible underneath the markup. This tool draws text comments, highlights, and rectangles over a PDF page without replacing its underlying content. Useful for leaving feedback on a shared draft, highlighting a specific clause in a contract for discussion before anyone edits it, or marking up a document for review while keeping the actual text intact.`,
+    description: `Leaving feedback on a shared draft and actually changing the document's content are two different operations that shouldn't be confused, a reviewer highlighting a paragraph and adding a comment needs the original text to stay visible underneath the markup. This tool draws text comments, highlights, and rectangles over a PDF page without replacing its underlying content. Useful for leaving feedback on a shared draft, highlighting a specific clause in a contract for discussion before anyone edits it, or marking up a document for review while keeping the actual text intact. Input PDFs are limited to 25 MiB, 100 pages and 2,000 points per page side.`,
     examples: [
       {
         title: 'Leave feedback without editing the original',
@@ -281,14 +281,14 @@ Output: Hello World!`
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "batch-favicon-downloader": {
-    description: `Building a bookmarks page, a link directory, or a competitor research spreadsheet with each site's actual icon next to its name means grabbing dozens of favicons one at a time otherwise, opening each site, finding its favicon file, and saving it individually, a repetitive task multiplied by however many sites are on the list. This tool extracts and downloads favicons from a whole list of URLs in one click, rather than requiring each site to be visited and its icon saved separately. Useful for building a visual bookmarks or link directory page with real site icons instead of generic placeholders, collecting favicons for a competitive research project covering many sites at once, or grabbing icons for an entire list of links in one pass instead of one at a time.`,
+    description: `Fetch favicons for up to 20 domains from Google’s favicon service through Toolblip’s endpoint. Download returned PNG or ICO images individually or in a batch. The provider may return a generic fallback, so an image does not prove the site has its own favicon. SVG retrieval and direct site crawling are not provided.`,
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["Network access required for URL requests"]
   },
   "batch-image-resizer": {
-    description: `Resizing fifty product photos to the same dimensions one at a time in an image editor is the kind of repetitive task that eats an afternoon for something that should take minutes, especially once each photo needs opening, resizing, and re-exporting individually with the same settings applied every single time. This tool resizes an entire batch of images to the same target dimensions in one pass, with aspect ratio lock applied consistently across every file so nothing in the batch ends up stretched or squashed. Useful for resizing an entire product catalog's photos to a marketplace's required dimensions in one operation, preparing a batch of images for a website that all need matching thumbnail dimensions, or standardizing a folder of mismatched photo sizes into one consistent dimension without processing each file by hand.`,
+    description: `Resize up to 20 images with 100 MiB total input and 100 megapixels total output. Each image fits inside the target dimensions without stretching: JPEG uses white padding; other supported inputs export PNG with transparent padding. Choose presets or dimensions, lock the target ratio, and download individual results or all results. Resizing does not guarantee smaller files.`,
     examples: [
 
     ],
@@ -381,14 +381,14 @@ Output: Hello World!`
     features: ["Clean interface", "Fast processing", "No signup required", "Requires internet access"]
   },
   "broken-link-checker": {
-    description: `Auditing a page's outbound links usually starts with actually collecting every link on that page first, which is tedious enough by hand that a dead link buried deep in an old post routinely goes unnoticed for months. This tool scans an entire webpage automatically, finding every outbound link on it and checking each one's HTTP status without requiring the list assembled or pasted in beforehand. Useful for auditing a single page's links automatically after a site redesign to catch anything that broke, finding a dead link buried in an old blog post without manually collecting every URL on the page first, or confirming every outbound link on a page actually resolves before it's shared widely.`,
+    description: `Paste up to 20 URLs to inspect HTTP HEAD responses, with three concurrent requests. CORS blocks, timeouts and unsupported HEAD requests produce Unknown results, not proof of a broken link. Only observed HTTP errors are labeled as such. This tool does not crawl an entire website.`,
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["Network access required for URL requests"]
   },
   "browser-image-resizer": {
-    description: `Resizing a personal or sensitive photo, a scanned ID, a private family picture, means thinking twice about a tool that uploads the image to a server first, however briefly, which is exactly the concern this tool avoids by resizing entirely inside the browser: the image never leaves the device, with aspect ratio lock and batch resizing both available without any of the photos ever being sent anywhere. Useful for resizing a batch of genuinely private photos without uploading any of them to a server, processing images with no internet connection required once the tool itself has loaded, or handling a sensitive image where local-only processing actually matters more than the convenience of a server-side tool.`,
+    description: `Resize one image locally with an optional aspect ratio lock. Choose Auto, PNG, JPEG or WebP output. Auto keeps supported source formats and otherwise uses PNG; the download reports the actual browser-encoded format. Review the generated result before saving. Use Batch Image Resizer for multiple files.`,
     examples: [
 
     ],
@@ -792,14 +792,14 @@ WCAG AA: Pass (large text)`
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "crop": {
-    description: `Cropping to remove a stranger who wandered into the edge of a photo or a messy background element doesn't call for picking a named preset ratio first, the exact resulting dimensions genuinely don't matter, what matters is dragging a crop box freely to whatever size actually gets rid of the unwanted part. This tool crops an image to any size and aspect ratio freely, built around removing something unwanted from a photo rather than hitting a specific output ratio a preset list would offer. Useful for cropping out a photobomber or a distracting background element without worrying about the exact resulting ratio, trimming a photo down to just the relevant part quickly, or cropping freely to any custom size when no standard preset actually fits what needs removing.`,
+    description: `Drag a freeform crop region and review the live result. JPEG inputs export JPEG at 92% quality; other supported inputs export PNG with transparency. The crop retains the selected pixel dimensions, but JPEG re-encoding can change quality. Draw a new region to change the selection.`,
     examples: [
 
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "crop-circle": {
-    description: `A circular crop doesn't just trim a square photo's edges, it discards its corners entirely, so a face perfectly centered in a square crop can still end up with an ear or a chin clipped once that same photo is masked into a circle, a problem invisible until the circular shape is actually applied. This tool crops an image into a circle or an oval, showing exactly where the circular mask falls so a subject stays properly centered within it rather than just within the square crop behind it. Useful for cropping a profile photo so a face stays fully inside the circular mask a chat app or a social platform will actually display, creating an avatar that doesn't clip anything important at the edges, or previewing how a square photo will look once it's masked into a circle before committing to the crop.`,
+    description: `Crop a centered circle from an image, adjust its size and border width or color, and download PNG with transparent corners. Rectangular sources use a centered square crop without stretching. There is no separate oval control.`,
     examples: [
 
     ],
@@ -1009,7 +1009,7 @@ WCAG AA: Pass (large text)`
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "db-query-formatter": {
-    description: `A query pulled straight from a database's slow-query log or an ORM's debug trace usually shows up as one dense, unreadable line, generated by application code rather than typed by a person, which is a genuinely different starting point than a query already being hand-written in an editor with at least some formatting applied as it goes. This tool formats and prettifies SQL queries with keyword highlighting and indentation, built around turning a raw, machine-generated query string into something readable for actual debugging. Useful for formatting a query copied straight out of a slow-query log to actually understand what it's doing, cleaning up an ORM's auto-generated SQL trace before diagnosing a performance issue, or making a dense, single-line query readable enough to spot the actual problem in it.`,
+    description: `Make SQL easier to read with 2- or 4-space indentation and optional uppercase keywords. Lexical formatting preserves quoted text and comments and checks quote and parenthesis balance. It does not validate SQL grammar or database-specific semantics. The current output is plain text.`,
     examples: [
 
     ],
@@ -1030,7 +1030,7 @@ WCAG AA: Pass (large text)`
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "detect": {
-    description: `A file renamed from .png to .jpg doesn't actually become a JPEG just because the extension changed, the real format lives in the file's own binary signature at the very start of its content, and software that trusts the extension rather than checking that signature is exactly how a mismatched file ends up throwing a confusing, unhelpful "can't open this file" error. This tool detects an image's actual format by reading its binary signature directly, along with its real dimensions, size, and color depth, rather than trusting whatever the file extension happens to claim. Useful for figuring out a file's true format when its extension doesn't seem to match how it actually behaves, catching a mismatched extension before it causes an unexplained error somewhere else, or checking an image's actual color depth and dimensions without opening it in a full editor first.`,
+    description: `Inspect PNG, JPEG, GIF, WebP, BMP, ICO or SVG files by signature and actual browser decoding. See dimensions, file size, available color-depth data and reported-type mismatches. Files are limited to 20 MiB, 8,192 pixels per side and 24 megapixels. A recognized signature alone is not enough if the browser cannot decode the image.`,
     examples: [
 
     ],
@@ -1072,11 +1072,11 @@ WCAG AA: Pass (large text)`
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "domain-age-checker": {
-    description: `A domain's registration age matters in two completely different situations, a buyer evaluating whether an aged domain being sold on a marketplace actually carries the history it claims to, and an owner who simply needs to know when their own domain expires before it lapses and becomes available for someone else to register. This tool checks any domain's registration age and expiry date directly, answering both questions from the same lookup rather than requiring a separate whois search for each. Useful for evaluating an aged domain before buying it from a marketplace, confirming exactly when your own domain needs renewing before it accidentally lapses, or checking how long a competitor's domain has actually been registered.`,
+    description: `Look up public RDAP registration events, expiry dates, nameservers and status when available. Age is elapsed days since registration, not the age of a website. Registries may omit dates or block browser requests through CORS or other access restrictions.`,
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["Network access required for URL requests"]
   },
   "dominant-color-extractor": {
     description: `Asking what color an image actually is, the single hue that defines its overall mood or backbone, is a different question from wanting a usable design palette pulled from it, and answering it means ranking colors by how much of the image's actual pixel area each one covers, not just listing which colors happen to be present somewhere in the frame. This tool extracts an image's dominant colors ranked by actual pixel coverage, surfacing which single color genuinely defines the image rather than an unordered palette. Useful for finding the one color that most defines a photo's overall mood at a glance, ranking colors by how much of an image they actually cover rather than just listing what's present, or identifying an image's backbone color for a quick visual summary rather than a full design palette.`,
@@ -1121,7 +1121,7 @@ WCAG AA: Pass (large text)`
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "edit-pdf": {
-    description: `Adding a note, label, or replacement graphic to a PDF often means opening a full editor just to place one small overlay, while the original document content should remain available underneath for review. This tool adds text and image overlays to PDF pages in your browser without replacing the existing PDF text or images. Useful for adding a visible label to a finished report, placing a logo or signature image on a form, or adding a note to a PDF while keeping its original content intact.`,
+    description: `Click a PDF page to place text or image overlays and adjust positions in PDF points. Replacement and removal controls add white overlays; the original content remains recoverable. This is not secure redaction. Input PDFs are limited to 25 MiB, 100 pages and 2,000 points per page side.`,
     examples: [
       {
         title: 'Add a review note to a finalized PDF',
@@ -1146,7 +1146,7 @@ Output: brochure-updated.pdf`,
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "email-validator": {
-    description: `An email address can look perfectly valid, correct syntax, a plausible domain, an @ symbol in the right place, and still bounce the moment something is actually sent to it, because a typo'd domain like gmial.com passes every formatting check while having no mail server configured to receive anything at all. This tool checks an email address's format and then looks up whether its domain actually has MX records configured, catching the gap between looking valid and being deliverable. Useful for catching a mistyped domain before it silently bounces a signup confirmation, checking a list of collected addresses for ones with no mail server behind them, or confirming a business email domain is actually set up to receive mail before relying on it.`,
+    description: `Check the syntax of unquoted ASCII email addresses, including local-part dots, lengths and domain labels. This does not check DNS, MX records, mailbox existence or deliverability.`,
     examples: [
 
     ],
@@ -1160,7 +1160,7 @@ Output: brochure-updated.pdf`,
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "encodings-reference": {
-    description: `A character that shows up as three garbled symbols instead of one accented letter is usually a UTF-8 byte sequence read as something else entirely, and tracking that down means understanding several encoding layers at once, how a character maps to raw bytes, how those bytes might get represented as Base64, how a reserved character gets percent-encoded in a URL, rather than consulting a separate page for each one. This tool provides reference tables covering ASCII, UTF-8, HTML entities, URL encoding, Base64, and more, built as a single cross-reference rather than several separate lookup pages. Useful for tracking down an encoding mismatch bug by checking how a character is represented across several layers at once, looking up a Base64 or percent-encoded value's meaning without switching between reference sites, or understanding how a character moves from its raw byte representation through to a URL-safe or HTML-safe form.`,
+    description: `Look up printable ASCII characters 32 through 126, common HTML entities, URI-component escaping and the Base64 alphabet. Search the selected table by character, name or code. This is a reference, not a text encoder or a UTF-8 byte cross-reference.`,
     examples: [
 
     ],
@@ -1237,7 +1237,7 @@ Output: brochure-updated.pdf`,
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "extract-images-from-pdf": {
-    description: `A PDF report with embedded photos or charts holds each image as a separate object inside the file's structure, and getting one of those images back out usually means an awkward screenshot-and-crop rather than actually recovering the original embedded file at its full quality. This tool pulls common embedded JPEG and raster images out directly, downloadable individually or bundled together as a ZIP, while reporting uncommon encodings it can't decode. Useful for recovering a photo or chart embedded in a PDF report without the quality loss a screenshot would introduce, pulling supported images out of a PDF at once instead of extracting each one individually, or getting a specific graphic back out of a document where the original image file is otherwise nowhere to be found.`,
+    description: `Extract supported embedded images individually or as a ZIP. Supported DCT JPEG streams retain their original bytes; supported 8-bit raster samples are reconstructed as PNG, including supported grayscale soft masks. CMYK conversion is approximate. Unsupported codecs, predictors, decode transforms and color-key masks are skipped, so extraction is not a guarantee of exact visual fidelity. Input PDFs are limited to 25 MiB, 100 pages and 2,000 points per page side. Extraction is limited to 16 million pixels per image and 32 million cumulative image pixels.`,
     examples: [
       {
         title: 'Pull supported images out of a PDF report',
@@ -1306,11 +1306,11 @@ Output: chart-page4.png`,
     features: ["Emoji, text, and logo input modes", "PNG, ICO, and SVG downloads", "Transparent background option", "Runs in your browser"]
   },
   "favicon-grabber": {
-    description: `Wanting to see how a competitor's or a reference site's favicon actually looks up close, needing to recover your own site's icon file after the original source got lost somewhere, or building something like a bookmarks app that needs to display each saved site's actual icon all come down to the same need, pulling a favicon directly off a live website rather than starting from scratch. This tool downloads the favicon from any website URL in ICO, PNG, and SVG formats, retrieving whatever version is actually available rather than requiring the original source file. Useful for grabbing a competitor's favicon for design comparison or inspiration, recovering your own site's icon after losing its original source file, or pulling a specific site's icon in SVG format for an app that displays saved sites with their actual icons.`,
+    description: `Fetch favicons for up to 20 domains from Google’s favicon service through Toolblip’s endpoint. Download returned PNG or ICO images individually or in a batch. The provider may return a generic fallback, so an image does not prove the site has its own favicon. SVG retrieval and direct site crawling are not provided.`,
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["Network access required for URL requests"]
   },
   "favicon-icon-generator": {
     description: `Not having a logo yet doesn't have to stop a favicon from getting made, typing a couple of initials or picking an emoji works as a starting point just as well as uploading an actual image does, and getting ICO, PNG, and SVG output together in one pass covers older browsers, modern ones, and scalable dark-mode-aware favicons without running the same source through three separate single-format tools. This tool generates favicon icons from text, emoji, or an uploaded image, producing ICO, PNG, and SVG output together from whichever starting point is actually available. Useful for generating a quick favicon from typed initials or an emoji when no logo exists yet, producing all three common favicon formats from one image in a single pass, or covering older and modern browser favicon requirements together instead of running separate tools for each format.`,
@@ -1432,7 +1432,7 @@ Output: chart-page4.png`,
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "google-algorithm-tracker": {
-    description: `Google rarely announces the specifics of an algorithm change directly, most updates get identified after the fact by the SEO community noticing ranking volatility across many sites at once, which means the real value of tracking these updates is connecting a specific date a site's traffic mysteriously shifted to a documented update that actually rolled out around then, rather than being left to wonder what happened. This tool tracks major Google algorithm updates and the SEO factors each one actually affected, turning an unexplained ranking change into a dated event with a known cause. Useful for connecting a sudden traffic drop to a specific documented algorithm update instead of guessing at the cause, checking which SEO factors a recent update actually targeted before making a reactive change, or reviewing a timeline of major updates when investigating a longer-term ranking trend.`,
+    description: `Browse and filter a selected historical list of Google algorithm updates through December 2024. It is not a live tracker or an explanation of any particular traffic change. Use the linked official Google Search Status Dashboard history for current updates: https://status.search.google.com/products/rGHU1u87FJnkP6W2GwMi/history.`,
     examples: [
 
     ],
@@ -1500,7 +1500,7 @@ Output: chart-page4.png`,
     features: ["Automatic preview", "Original dimensions", "Transparency preserved", "Local image processing"]
   },
   "hash-collision-finder": {
-    description: `Two different inputs producing the exact same hash output is called a collision, and whether that's realistically findable says a lot about how broken a hash function actually is, MD5 has practical, publicly demonstrated collisions, SHA-1 has its own published collision attack, while SHA-256 has none found within any remotely practical search, a genuinely different security posture across three algorithms often lumped together as roughly equivalent. This tool searches for actual hash collisions among short inputs across MD5, SHA-1, and SHA-256, demonstrating in practice rather than in theory which of these algorithms can still be broken this way. Useful for showing concretely why MD5 is considered unsuitable for security purposes, illustrating SHA-1's known weakness with an actual generated collision, or confirming that SHA-256 resists the same short-input search that breaks the other two.`,
+    description: `Search for matching truncated SHA-1 or SHA-256 prefixes, with a limit of 100,000 attempts. This demonstrates the birthday paradox; it does not find full-length hash collisions or break either algorithm.`,
     examples: [
 
     ],
@@ -1528,7 +1528,7 @@ Output: chart-page4.png`,
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "heading-tag-analyzer": {
-    description: `A page can look perfectly organized visually while its actual heading structure is a mess underneath, an H1 followed straight by an H4 with no H2 or H3 in between, two H1 tags competing on the same page, headings used purely for their font size rather than to reflect the page's actual outline, all invisible to a sighted visitor but very much visible to a screen reader or a search engine trying to parse the page's structure. This tool analyzes a webpage's full heading hierarchy from H1 through H6 and flags exactly where the structure breaks, a skipped level, a duplicate H1, headings out of logical order. Useful for auditing a page's heading structure before publishing, fixing an accessibility issue where a screen reader user can't navigate a page's headings logically, or confirming a content page's outline actually reflects its heading tags rather than just its visual styling.`,
+    description: `Parse HTML headings from H1 through H6, including nested text, in document order. Review missing headings, repeated H1s and skipped levels as prompts for editorial review. These observations are not ranking predictions or a complete accessibility audit.`,
     examples: [
 
     ],
@@ -1738,7 +1738,7 @@ Output: chart-page4.png`,
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "html-to-jsx": {
-    description: `Pasting HTML straight into a React component usually fails in a few small but specific ways, class needs to become className since class is a reserved word in JavaScript, a self-closing tag like <img> or <br> that HTML allows without a closing slash needs one in JSX, and an inline style attribute has to become a JavaScript object instead of a plain CSS string, each easy to miss while converting a chunk of markup by hand. This tool converts HTML directly into JSX, handling that attribute renaming and self-closing tag syntax automatically rather than leaving each one for a compiler error to catch one at a time. Useful for pasting a design's HTML markup into a React component without manually renaming every class attribute, converting a static HTML template into JSX before turning it into a component, or catching self-closing tag requirements that HTML itself never enforced.`,
+    description: `Convert HTML attributes such as class and for, inline styles and text into JSX. The browser parser may repair malformed markup before conversion. Inline event-handler strings, executable embeds, JavaScript URLs and CSS !important are rejected. Arbitrary JavaScript is not converted; add React handlers yourself.`,
     examples: [
 
     ],
@@ -1836,11 +1836,11 @@ Output: chart-page4.png`,
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "image-background-remover": {
-    description: `Removing a background from a photo of an ID document, a private family photo, or anything else genuinely sensitive means the image itself is worth thinking twice about before uploading anywhere, since a server-side tool means that photo actually left your device and sat somewhere else's storage, however briefly. This tool processes the background removal entirely inside the browser, so the image never gets uploaded anywhere at all, the same privacy guarantee that matters most for exactly the kind of photo where background removal is being considered in the first place. Useful for removing the background from a genuinely sensitive photo without it ever leaving your own device, processing an image with no internet connection needed once the tool itself has loaded, or handling a batch of private photos where uploading each one somewhere isn't something you want to do repeatedly.`,
+    description: `Use local IMG.LY model inference for AI background removal, or use corner-based Auto Detect and Color Key modes for color matching. AI mode downloads model assets and may fail if downloads or the runtime are unavailable. Export the result as PNG. Cancel discards the pending result but may not stop model computation.`,
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["Local processing; model download required"]
   },
   "image-blur-hash-generator": {
     description: `A blank space or a spinner while an image loads reads as unfinished, but a full low-resolution thumbnail costs its own network request and adds weight before the real image even starts loading, which is exactly the gap BlurHash fills: a compact string, often under thirty characters, that encodes a blurred approximation of an image directly as text, embeddable right in the page's HTML or an API response with no extra image request at all. This tool generates that BlurHash string from any image, ready to render as an instant blurred placeholder the moment a page loads, before the actual image has downloaded. Useful for showing a smooth blurred preview while a gallery's images lazy-load, embedding a placeholder directly in an API response without an extra image request, or avoiding the blank-space flash that shows before a slow-loading image finally appears.`,
@@ -1901,14 +1901,14 @@ Output: chart-page4.png`,
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "image-dimension-checker": {
-    description: `A file's actual width, height, and size aren't always what the filename or a quick glance suggests, and finding out usually means either opening it in an editor or uploading it somewhere just to see the properties reported back, an unnecessary round trip when the only real need is a quick number check before deciding whether an image actually fits a specific requirement. This tool reads an image's width, height, and file size directly, without uploading it anywhere, supporting JPEG, PNG, and WebP files checked entirely on the local machine. Useful for confirming an image meets a minimum required dimension before submitting it to an upload form, checking a file's exact size before attaching it somewhere with a strict limit, or verifying an image's actual pixel dimensions without opening a full editor or sending the file anywhere first.`,
+    description: `Inspect PNG, JPEG, GIF, WebP, BMP, ICO or SVG files by signature and actual browser decoding. See dimensions, file size, available color-depth data and reported-type mismatches. Files are limited to 20 MiB, 8,192 pixels per side and 24 megapixels. A recognized signature alone is not enough if the browser cannot decode the image.`,
     examples: [
 
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "image-dpi-resizer": {
-    description: `Knowing the math behind a print resolution requirement is one thing, actually producing a file at that resolution is a separate step, and a tool that only calculates the numbers still leaves the actual DPI change and resizing to be done somewhere else by hand. This tool performs that change directly: it resizes an image and sets its DPI for print, preserving the aspect ratio throughout, so the output file is genuinely ready to send to a print shop rather than a set of numbers describing what still needs to happen to the file. Useful for preparing an image at the exact DPI and dimensions a print job actually requires, converting a web-resolution image into a print-ready file without the aspect ratio shifting in the process, or getting a finished, correctly-specified file instead of a calculation to apply manually.`,
+    description: `Enter an assumed current DPI and a target DPI to resample pixels while retaining the corresponding print size. Current DPI is not read from the file. Export PNG with target DPI metadata. Images are limited to 20 MiB input, 8,192 pixels per side and 24 megapixels; upscaling cannot recover lost detail.`,
     examples: [
 
     ],
@@ -2010,7 +2010,7 @@ Output: chart-page4.png`,
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "image-size-resizer": {
-    description: `A named platform preset works when the destination is Instagram or a LinkedIn banner, but sometimes the actual requirement is a specific pixel width and height typed in directly, decided by a form's upload rules or a design spec rather than any named platform, and applied across a whole batch of files at once rather than one image at a time. This tool resizes images to exact pixel dimensions with an aspect ratio lock and batch support, built around typed-in target dimensions applied to many files together rather than a single platform preset. Useful for resizing a whole batch of product photos to one exact required pixel size at once, locking the aspect ratio so a resize stays proportional instead of distorting, or hitting a precise width and height dictated by an upload form's rules rather than any named social platform.`,
+    description: `Resize one image locally with an optional aspect ratio lock. Choose Auto, PNG, JPEG or WebP output. Auto keeps supported source formats and otherwise uses PNG; the download reports the actual browser-encoded format. Review the generated result before saving. Use Batch Image Resizer for multiple files.`,
     examples: [
 
     ],
@@ -2151,7 +2151,7 @@ Output: {"name":"John","age":30}`
     features: ["Syntax error highlighting", "Line numbers", "Copy to clipboard", "No data leaves browser"]
   },
   "json-graph-visualizer": {
-    description: `A normalized JSON response where one object references another by id, a comment referencing a user, an order referencing a product, reads as a flat list of disconnected records until those references are actually traced by eye, and a reference pointing at an id that doesn't exist anywhere in the document is easy to miss entirely reading raw nested JSON. This tool visualizes those relationships as an actual graph of nodes and edges, highlighting a missing or broken reference directly rather than leaving it buried in a JSON structure that has to be searched manually. Useful for tracing how entities in a normalized API response actually reference each other, catching a dangling reference before it causes a runtime error downstream, or exporting a relationship map to document a complex object graph for debugging later.`,
+    description: `Visualize nested JSON values and their parent-child relationships in a graph, with a limit of 200 values. This shows document structure, not references between records with matching IDs. It does not detect dangling ID references or provide graph export.`,
     examples: [
 
     ],
@@ -2172,14 +2172,14 @@ Output: {"name":"John","age":30}`
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "json-path-evaluator": {
-    description: `A simple dot-notation path like $.store.name handles the easy case, but JSONPath's real power shows up in a filter expression like $.store.book[?(@.price < 10)], selecting only the nodes that match a condition, or a recursive descent operator like $..author, finding every author field no matter how deeply nested it is, syntax that's genuinely harder to get right than a plain property lookup. This tool evaluates JSONPath expressions against real JSON data, handling filter conditions and recursive descent correctly rather than only simple property paths. Useful for testing a filter expression that selects nodes matching a specific condition, confirming a recursive descent query actually finds every matching field at any depth, or debugging a JSONPath expression that returns the wrong nodes before it goes into actual code.`,
+    description: `Query JSON using $, dot or quoted keys, positive or negative indexes, wildcards, recursive descent and simple property comparison filters. Slices, unions and JavaScript expressions are not supported. Results update as you edit; [] means no matches. Examples loads sample JSON and a path. Expressions are limited to 2,000 characters, 50,000 visits and 10,000 matches.`,
     examples: [
 
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "json-path-tester": {
-    description: `Confirming that a JSONPath expression's syntax is actually correct, whether a wildcard behaves the way documentation claims, whether bracket notation and dot notation for the same key really are interchangeable, is a different, more foundational question than iterating on candidate expressions or digging one specific value out of a huge nested response, closer to checking an assumption than solving a particular extraction problem. This tool tests a JSONPath expression against real JSON data and highlights every matched result directly within the full structure instantly, showing exactly where in the tree a given path actually points rather than only listing extracted values separately. Useful for confirming a piece of JSONPath syntax actually behaves the way it's documented to, seeing exactly where a wildcard or a filter condition matches within the full JSON structure, or verifying dot notation and bracket notation produce the identical result for the same key.`,
+    description: `Query JSON using $, dot or quoted keys, positive or negative indexes, wildcards, recursive descent and simple property comparison filters. Slices, unions and JavaScript expressions are not supported. Results update as you edit; [] means no matches. Examples loads sample JSON and a path. Expressions are limited to 2,000 characters, 50,000 visits and 10,000 matches.`,
     examples: [
 
     ],
@@ -2200,7 +2200,7 @@ Output: {"name":"John","age":30}`
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "json-schema-validator": {
-    description: `Writing a schema and generating one from sample data are both just the setup, the actual question that matters day to day is whether a specific piece of JSON, an API payload, a config file, actually conforms to that schema, and a generic parse error doesn't say which field broke the rule or why. This tool validates JSON against a schema and returns a detailed error for each violation, naming the exact field and the exact rule it failed rather than a single generic failure message. Useful for confirming an API response actually matches its documented schema before trusting it in production, catching exactly which field in a config file violates a required type or pattern, or checking a payload against a schema during development before it ever reaches a real integration test.`,
+    description: `Validate JSON against a draft-07 subset and see property-path errors. Supported checks include type, enum, const, numeric bounds, multipleOf, string length, array size and uniqueness, single-schema items, object properties and required keys, additionalProperties, allOf, anyOf, oneOf and not. Boolean schemas are supported. References, pattern, format, tuple items and other unsupported keywords return errors. Format schema and Format JSON re-indent valid JSON separately.`,
     examples: [
 
     ],
@@ -2323,7 +2323,7 @@ Cause: Trailing comma`
     features: ["Line/column error reporting", "Real-time validation", "Supports all JSON types", "Detailed error messages"]
   },
   "jupyter-cleaner": {
-    description: `A notebook's code can stay completely unchanged between two commits and still produce an enormous, unreadable diff, because every time a cell runs, its execution count increments and its output, sometimes a large embedded plot image encoded as a long base64 string, gets rewritten even when nothing about the actual logic changed at all. This tool strips every output, execution count, and piece of metadata out of a Jupyter notebook, keeping only the source code and markdown cells that actually reflect real changes. Useful for cleaning a notebook before committing it so diffs reflect genuine code changes instead of output noise, stripping large embedded plot images out of a notebook before it goes into version control, or removing execution counts that increment on every run and clutter a diff with nothing meaningful in it.`,
+    description: `Clean a v4 notebook by emptying code-cell outputs, resetting execution counts to null and removing execution, collapsed and scrolled metadata from code cells. Source, cell IDs, attachments, notebook metadata and other cell metadata are preserved. Paste JSON or upload an .ipynb file up to 100 KB, then download the cleaned notebook.`,
     examples: [
 
     ],
@@ -2393,14 +2393,14 @@ Cause: Trailing comma`
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "keyword-extractor": {
-    description: `Figuring out what a piece of text is actually about at a glance, without reading the whole thing, means identifying which specific words and phrases carry the real subject matter rather than the connecting words and common terms that show up in every piece of writing regardless of topic. This tool extracts the specific keywords and key phrases that actually represent a text's subject matter, filtering out common words to surface what a page or a piece of writing is genuinely about. Useful for quickly identifying a competitor's target keywords by extracting them straight from their published page, checking whether a piece of content actually centers on the keyword it was supposed to be optimized for, or getting a fast summary of a long article's actual subject matter without reading it in full.`,
+    description: `Count words and phrases in supplied text, with phrase-size options and English stop-word filtering. Results reflect frequency in your input, not semantic AI analysis, search volume or keyword competition.`,
     examples: [
 
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "keyword-generator": {
-    description: `A single seed term rarely represents everything worth targeting around a topic, the actual related searches people run span variations, questions, and comparisons that don't show up just by staring at one phrase, which is why expanding one term into a broader set of tagged suggestions matters more for content planning than confirming how one specific keyword alone is already performing. This tool generates keyword suggestions from any seed term, tagged with search intent and volume hints, built around expanding one starting idea outward rather than analyzing a keyword that's already been chosen. Useful for expanding a single topic idea into a set of related keywords worth targeting before writing anything, checking which suggestions carry commercial versus informational intent before picking a content angle, or scanning volume hints across a batch of generated suggestions to prioritize which one to write about first.`,
+    description: `Expand a seed phrase using local question, preposition and modifier templates. These are brainstorming suggestions, not live search suggestions, search-volume data or competition estimates.`,
     examples: [
 
     ],
@@ -2533,7 +2533,7 @@ Cause: Trailing comma`
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "mac-address-generator": {
-    description: `A MAC address carries a specific bit, the second bit of its first byte, that tells a network whether the address was assigned by an actual hardware manufacturer or deliberately marked as locally administered, meaning it was made up for a specific purpose and isn't claiming to belong to any real registered device, which matters a great deal for a virtual machine or a container that needs a unique address without any risk of colliding with or impersonating real hardware. This tool generates random MAC addresses with that locally administered bit set correctly, safe for virtual network interfaces rather than mimicking a real manufacturer's address. Useful for assigning a unique, collision-safe address to a virtual machine's network interface, generating MAC addresses for a container platform that needs many unique identifiers on demand, or creating test addresses explicitly marked as non-manufacturer rather than imitating real hardware.`,
+    description: `Generate locally administered unicast MAC addresses using Web Crypto, with colon, hyphen or no-separator formatting. These are test values, not vendor assignments, hardware identities or guaranteed globally unique addresses.`,
     examples: [
 
     ],
@@ -2586,7 +2586,7 @@ Cause: Trailing comma`
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "markdown-to-pdf": {
-    description: `A Markdown file with code blocks and a table renders fine in an editor's preview pane, but getting that same document into something that can actually be shared, printed, or attached to an email means turning it into a PDF, and doing that entirely client-side matters when the document contains anything that shouldn't be uploaded to a server just to get converted. This tool converts Markdown into a professional PDF instantly, supporting tables, code blocks, and custom themes, with the entire conversion happening client-side rather than through a server upload. Useful for turning a Markdown README or a set of notes into a shareable, printable PDF without uploading the file anywhere, converting a Markdown document containing code blocks into a PDF that preserves their formatting, or generating a themed PDF from Markdown content that shouldn't leave the local machine during conversion.`,
+    description: `Preview sanitized Markdown and its HTML. Direct PDF download produces paginated ASCII text with headings and code blocks; Unicode, images and tables require Print / Save PDF. Browser printing retains richer styling and depends on browser print settings. There is no custom-theme selector.`,
     examples: [
 
     ],
@@ -2607,14 +2607,14 @@ Cause: Trailing comma`
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "meme-maker": {
-    description: `A meme reads as a meme because of a recognizable visual convention, bold white text with a black outline, usually in Impact font, positioned at the top and bottom of an image rather than tucked wherever there happens to be space, a format so specific that the same joke in a different font or placed in the middle just reads as a captioned photo instead of an actual meme. This tool builds on that convention directly: pick a popular template or upload an original image, add top and bottom text styled the way memes are expected to look, and export instantly. Useful for making a meme from a recognizable template without formatting the text and font manually, captioning a personal photo in the format people actually recognize as a meme, or quickly producing something shareable without opening a full editor just to add two lines of text.`,
+    description: `Upload an image or load the example, then add top and bottom captions. Adjust font size, text color and outline color while the PNG preview updates. Download the current result; there is no library of popular meme templates.`,
     examples: [
 
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "merge-pdfs": {
-    description: `Combining several PDFs into one document by hand usually means opening each file separately and manually copying pages across, an error-prone process for anything beyond two or three short files, especially once the pages need to end up in a specific order pulled from multiple different sources rather than just appended one after another. This tool merges multiple PDF files into a single document, combining pages from different sources in whatever order they're actually needed rather than a fixed append-only sequence. Useful for combining several scanned documents into one PDF for a single submission, merging a cover letter, a resume, and a portfolio into one file for a job application, or assembling pages pulled from multiple source PDFs into one document in a specific intended order.`,
+    description: `Combining several PDFs into one document by hand usually means opening each file separately and manually copying pages across, an error-prone process for anything beyond two or three short files, especially once the pages need to end up in a specific order pulled from multiple different sources rather than just appended one after another. This tool merges multiple PDF files into a single document, combining pages from different sources in whatever order they're actually needed rather than a fixed append-only sequence. Useful for combining several scanned documents into one PDF for a single submission, merging a cover letter, a resume, and a portfolio into one file for a job application, or assembling pages pulled from multiple source PDFs into one document in a specific intended order. Input PDFs are limited to 25 MiB, 100 pages and 2,000 points per page side. Plan-specific upload limits may be lower. Merge up to 20 files with no more than 100 pages in total.`,
     examples: [
       {
         title: 'Combine scanned documents for one submission',
@@ -2632,11 +2632,11 @@ Output: application-packet.pdf (in that order)`,
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "meta-description-checker": {
-    description: `Google gives a meta description roughly 155 to 160 characters before truncating it, a noticeably different limit than a title tag's, and a description that reads too generic or doesn't actually match the page's content risks Google overriding it entirely with its own auto-generated snippet instead of using what was actually written. This tool checks a meta description's length and quality specifically for SEO readiness and click-through rate, catching both a truncation risk and a description too generic to actually earn a click. Useful for confirming an existing meta description fits within Google's actual character limit before it gets cut off, checking whether a description reads specific enough that Google is unlikely to replace it with its own snippet, or auditing a page's meta description before publishing to make sure it's actually working toward a click rather than just filling space.`,
+    description: `Inspect a meta description from text, HTML or a CORS-accessible URL. Count Unicode characters and check for an optional phrase. There is no SEO grade, ranking prediction or universal ideal length; search snippets may differ from the supplied description.`,
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["Network access required for URL requests"]
   },
   "meta-description-generator": {
     description: `A meta description that reads perfectly well in an editor can still get cut off mid-sentence in an actual Google result once it crosses roughly a hundred and fifty-five to a hundred and sixty characters, and writing one by summarizing a page from memory risks producing something that sounds plausible but doesn't actually match what the page covers. This tool generates an SEO-optimized meta description directly from a page's actual content, with character count alerts flagging anything that would get truncated in search results before it ships. Useful for generating a description that stays inside a safe character limit instead of getting cut off in a live search result, producing a summary grounded in what a page's content actually says rather than a generic guess, or catching an over-length description during drafting instead of after it's already published and truncated.`,
@@ -2821,7 +2821,7 @@ Output: application-packet.pdf (in that order)`,
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "notebook-to-html": {
-    description: `A Jupyter notebook's actual value, its markdown explanations, its code, and the plots or printed results that code actually produced, is locked inside a JSON file that needs Jupyter itself installed to view properly, which isn't always something a reader on the other end actually has. This tool renders a pasted .ipynb notebook as HTML directly in the browser, showing rendered markdown cells, syntax-highlighted code, and its outputs together exactly as they'd appear inside Jupyter itself. Useful for sharing a data science notebook's results with someone who doesn't have Jupyter installed, viewing a notebook's rendered output and plots without running Python locally at all, or embedding a notebook's analysis into a webpage or a blog post as static HTML.`,
+    description: `Paste or upload a v4 .ipynb notebook to preview and download HTML. Markdown is sanitized; code and raw cells are shown as plain text. Saved stream, error and text/plain outputs are included without running code. Rich plots, widgets and syntax highlighting are not included. Notebook uploads are limited to 100 KB.`,
     examples: [
 
     ],
@@ -2849,11 +2849,11 @@ Output: application-packet.pdf (in that order)`,
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "og-tag-debugger": {
-    description: `When a shared link isn't previewing correctly anywhere, on Facebook, on Twitter, in a Slack unfurl, the actual problem could be a missing Open Graph tag, a malformed Twitter Card tag, or both at once, and checking one platform's preview at a time doesn't reveal which underlying tag is actually broken or absent. This tool validates both Open Graph and Twitter Card meta tags for a URL together, flagging exactly which tags are missing or malformed rather than only showing how a link happens to render on one specific platform. Useful for diagnosing why a link isn't generating a preview on any platform at all, confirming both tag systems are present and correctly formatted after a site redesign, or catching a malformed og:image tag that's silently breaking previews everywhere it's shared.`,
+    description: `Inspect Open Graph tags in pasted HTML or a CORS-accessible URL. The separate editor retains editable tags and an approximate social preview. Page scripts are not executed, and previews do not reproduce platform caches or guarantee a published card’s appearance.`,
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["Network access required for URL requests"]
   },
   "ogg-to-wav": {
     description: `A compressed audio format like OGG has to be decoded in real time before it can actually play, which adds a small but real amount of processing overhead every time a sound effect triggers, something that matters far more in a game engine firing dozens of short sound effects per second than it does for a song playing once start to finish. This tool converts an OGG file into WAV, an uncompressed format many game engines and real-time audio tools specifically prefer for short sound effects, since it plays back directly without a decode step eating into the same processing budget as everything else running at once. Useful for preparing a game's sound effects for an engine that expects uncompressed audio, converting an open-source audio asset into a format ready for further editing, or getting OGG game audio into WAV before importing it into a project that expects that format.`,
@@ -2902,11 +2902,11 @@ Output: red, green, and blue`, note: `Switch the separator to New line, then pas
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "page-title-checker": {
-    description: `A title tag written in a CMS draft and the title tag actually live on a published page aren't guaranteed to be the same thing, a template override, a plugin, or an unsaved edit can leave the deployed version different from whatever's assumed to be there, which only a check against the real, currently indexed page can actually catch. This tool checks a page's title length and quality directly from its live URL, evaluating what's genuinely deployed right now rather than text typed in and assumed to match. Useful for confirming a page's live title actually matches what was intended to be published, catching a template or plugin override that changed a title tag after the fact, or auditing an already-live page's title for length and quality without needing to know what the source content management system currently shows.`,
+    description: `Review title text and Unicode character counts from pasted text, HTML or a URL that permits cross-origin requests. HTML inspection reports missing title markup. Counts are descriptive, not ranking scores or a guarantee that a title will fit every search result. Page scripts are not executed.`,
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["Network access required for URL requests"]
   },
   "pagespeed-preview": {
     description: `Search ranking doesn't care about total page weight directly, it cares about Core Web Vitals specifically, largest contentful paint, interaction responsiveness, and layout shift, the exact metrics Google actually measures and factors into ranking rather than a generic size total. This tool previews an estimated page speed score and those Core Web Vitals for any URL, showing the specific numbers that actually affect search ranking rather than a general performance impression. Useful for checking whether a page's Core Web Vitals actually meet the thresholds Google rewards in ranking, seeing which specific vital, loading, interactivity, or visual stability, is dragging a score down, or comparing an estimated score before and after a performance fix to confirm it actually helped ranking.`,
@@ -2984,14 +2984,14 @@ Result: 847291`
     features: ["Cryptographically secure", "Customizable options", "Strength indicator", "Copy to clipboard"]
   },
   "password-strength-checker": {
-    description: `A password that satisfies every common composition rule, one uppercase letter, one number, one symbol, can still be genuinely weak if it follows a predictable pattern like capitalizing the first letter and tacking a "1!" onto the end, exactly the kind of password composition rules encourage without actually measuring how unpredictable the result really is. Entropy measures that unpredictability directly, in bits, rather than checking off a checklist of character types, which is a meaningfully different and more honest way to score a password's actual strength. This tool checks a password's entropy and returns specific, practical suggestions for genuinely improving it, rather than just a pass or fail against composition rules. Useful for understanding why a password that technically meets every complexity rule might still be weak, or getting concrete suggestions for strengthening a password beyond just adding another required character type.`,
+    description: `Review password length, character types and obvious patterns locally. The score is a heuristic, not measured entropy or a crack-time prediction. Random-model bits are a theoretical upper bound for independently sampled characters. No breach database is queried.`,
     examples: [
 
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "pdf-password-remover": {
-    description: `A PDF you have permission to use can still be inconvenient when it asks for a password every time it opens or carries restrictions that no longer serve a purpose. This tool unlocks an accessible PDF in your browser: files that open normally are re-saved, and files that require an opening password are rendered into a new password-free PDF when you provide the current password. The password-protected path produces a flattened document, so the visible pages are preserved but the original text and form structure aren't editable.`,
+    description: `Provide the opening password when required. Encrypted PDFs are rendered into a new password-free PDF with rasterized pages: selectable text, links, interactive forms and digital signatures are not preserved. Unencrypted PDFs are already password-free and are re-saved without rasterization. Processing stays in your browser. Input PDFs are limited to 25 MiB, 100 pages and 2,000 points per page side. Plan-specific upload limits may be lower.`,
     examples: [
       {
         title: 'Unlock a PDF with its current password',
@@ -3001,7 +3001,7 @@ Result: 847291`
       {
         title: 'Re-save a PDF that opens normally',
         code: `Input: handout.pdf (no opening password)\nOutput: handout-unlocked.pdf`,
-        note: 'Re-saves the accessible PDF locally without its existing permission metadata.',
+        note: 'An unencrypted PDF is already password-free and is re-saved without rasterization.',
       },
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
@@ -3035,7 +3035,7 @@ Result: 847291`
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "photo-metadata-remover": {
-    description: `A phone photo carries its GPS coordinates embedded directly in its EXIF data by default, which means a picture taken at home and posted publicly can reveal an exact home address to anyone who knows to check, a detail most people never realize is riding along inside the file until after it's already been shared somewhere. This tool strips EXIF and other metadata from photos specifically to protect privacy before sharing online, removing that embedded location and device data before a personal photo goes public. Useful for stripping GPS coordinates out of a phone photo before posting it on social media, removing embedded device and location data from a personal photo shared in a group chat, or cleaning metadata from any photo before it goes somewhere public where that information shouldn't travel along with it.`,
+    description: `Re-encode decoded pixels into a new image without copying source metadata. JPEG inputs stay JPEG and may change pixels or quality; other supported inputs export PNG, preserving transparency. Animation is flattened. The common-JPEG-tag scan is incomplete, so an empty scan is not proof that a source has no metadata.`,
     examples: [
 
     ],
@@ -3056,11 +3056,11 @@ Result: 847291`
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "ping-test": {
-    description: `Browsers cannot send an ICMP ping directly, so this tool performs a bounded DNS-over-HTTPS check instead. Enter a hostname to query its A and AAAA records through Google DNS, see the resolver response time, and inspect each returned address and TTL. Use it to confirm that a hostname currently resolves without opening a terminal; it does not test server reachability or network latency.`,
+    description: `Look up A and AAAA records through Google DNS-over-HTTPS and download the report. Timing includes resolver and network overhead. This is not ICMP ping, host latency or proof that a host is reachable. Missing records, NXDOMAIN and request errors are reported separately.`,
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["Network access required for URL requests"]
   },
   "pixel-density-calculator": {
     description: `The same 3,000 by 2,000 pixel photo that looks crisp printed as a small 4x6 print can look visibly soft and pixelated printed as a 24x36 poster, not because the file changed, but because the same fixed number of pixels gets spread across far more physical inches, lowering the effective pixel density at the larger size below what looks sharp. This tool calculates PPI and DPI for an image at different dimensions and print sizes, showing whether a specific size actually has enough pixel density to look sharp rather than assuming a resolution that worked once will work at any size. Useful for checking whether a photo has enough resolution for a specific poster size before sending it to print, confirming an image meets a print shop's minimum DPI requirement, or figuring out the largest size a given image can print at while still looking sharp.`,
@@ -3187,7 +3187,7 @@ Result: 847291`
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "profile-photo": {
-    description: `A profile picture has different demands than a regular photo edit: it needs to read clearly at a small size, often cropped into a circle, and it's usually a self-portrait, which means the retouching that matters most, evening out skin tone, subtly brightening the shot, cropping tightly on the face, is a narrower and more specific set of adjustments than a full general-purpose photo editor offers. This tool bundles exactly that set: crop, filter, and retouch tools built specifically around preparing a self-portrait for use as a profile picture rather than a general editing toolkit with everything else included. Useful for cropping and retouching a selfie into a clean profile picture for a social account, evening out lighting and skin tone in a self-portrait before using it professionally, or quickly preparing a headshot-style crop without opening a full photo editor for one small adjustment.`,
+    description: `Choose a circle or square crop, zoom and pan the image, then adjust brightness, contrast and saturation. Set the output size and download the current PNG preview. These are crop and color controls, not skin retouching tools.`,
     examples: [
 
     ],
@@ -3298,7 +3298,7 @@ Output: xn--85bp0auq.xn--54b7fta0cc`
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "random-mac-generator": {
-    description: `A MAC address isn't just a random string of hex digits, its first three bytes, the OUI, are actually assigned to a specific manufacturer, which is why a genuinely realistic test address needs to look plausible at that level too, not just be technically well-formed, and the difference between the standard 48-bit EUI-48 format most devices use and the extended 64-bit EUI-64 format used in other addressing contexts matters depending on what's actually being tested. This tool generates random MAC addresses in OUI-aware, EUI-48, or EUI-64 format. Useful for generating a batch of plausible-looking test addresses for a network simulation, creating a MAC address in EUI-64 format for testing an IPv6 interface identifier, or producing device addresses for test fixtures without accidentally reusing the same one twice.`,
+    description: `Generate locally administered unicast MAC addresses using Web Crypto, with colon, hyphen or no-separator formatting. These are test values, not vendor assignments, hardware identities or guaranteed globally unique addresses.`,
     examples: [
 
     ],
@@ -3417,7 +3417,7 @@ Output: xn--85bp0auq.xn--54b7fta0cc`
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "pdf-rearrange": {
-    description: `Fixing a scanned document where the pages landed out of order, or one where a page ended up upside down, means either rescanning from scratch or opening a full PDF editor just to move and rotate a handful of pages, both heavier than the actual fix requires when the content itself is already fine. This tool reorders, rotates, and reorganizes PDF pages through a drag-and-drop interface, built for restructuring an existing document's page order rather than editing the content on any individual page. Useful for fixing a scanned document's pages that came out in the wrong order, rotating a page that landed sideways or upside down without touching the rest of the file, or reorganizing a multi-source PDF's pages into the sequence they were actually meant to be read in.`,
+    description: `Fixing a scanned document where the pages landed out of order, or one where a page ended up upside down, means either rescanning from scratch or opening a full PDF editor just to move and rotate a handful of pages, both heavier than the actual fix requires when the content itself is already fine. This tool reorders, rotates, and reorganizes PDF pages through a drag-and-drop interface, built for restructuring an existing document's page order rather than editing the content on any individual page. Useful for fixing a scanned document's pages that came out in the wrong order, rotating a page that landed sideways or upside down without touching the rest of the file, or reorganizing a multi-source PDF's pages into the sequence they were actually meant to be read in. Input PDFs are limited to 25 MiB, 100 pages and 2,000 points per page side.`,
     examples: [
       {
         title: 'Fix a scanned document with pages out of order',
@@ -3622,25 +3622,25 @@ Output: xn--85bp0auq.xn--54b7fta0cc`
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "robots-txt-analyzer": {
-    description: `Editing robots.txt visually and watching a live crawler simulation update is one workflow, meant for building or actively changing rules, but auditing a file that's already live and presumably working is a different task, checking what's actually being blocked, confirming a sitemap reference is present, without necessarily changing anything at all. This tool analyzes an existing robots.txt file to check crawler directives, blocked paths, and sitemap references, built for auditing a file that's already deployed rather than editing or building one from scratch. Useful for auditing a live site's robots.txt to confirm exactly which paths are actually being blocked, checking that a sitemap reference is present and correctly formatted, or reviewing an inherited robots.txt file's directives before deciding whether anything actually needs changing.`,
+    description: `Paste robots.txt or fetch a URL that permits cross-origin requests. Edit and validate directives, inspect user-agent groups and test paths. Matching combines applicable groups, supports wildcards and end anchors, and prefers Allow on equally specific matches. Empty Allow and Disallow rules have no effect. Extension warnings do not mean every crawler behaves identically; robots.txt is not access control.`,
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["Network access required for URL requests"]
   },
   "robots-txt-checker": {
-    description: `A robots.txt file is easy to get subtly wrong in ways a text editor won't ever flag, a Disallow line under the wrong user-agent block, a rule that unintentionally blocks an entire section of a site, a Sitemap directive pointing at a URL that doesn't actually resolve, mistakes that only show up once a crawler starts behaving strangely. This tool validates a robots.txt file's actual structure, listing every user-agent block along with the paths it allows or blocks, and flagging a syntax problem before it quietly affects how a site gets crawled. Useful for reviewing a robots.txt file after an edit to confirm a whole section wasn't accidentally blocked, checking that a Sitemap directive actually points somewhere valid, or auditing an unfamiliar site's crawler rules to see exactly what's off-limits.`,
+    description: `Paste robots.txt or fetch a URL that permits cross-origin requests. Edit and validate directives, inspect user-agent groups and test paths. Matching combines applicable groups, supports wildcards and end anchors, and prefers Allow on equally specific matches. Empty Allow and Disallow rules have no effect. Extension warnings do not mean every crawler behaves identically; robots.txt is not access control.`,
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["Network access required for URL requests"]
   },
   "robots-txt-editor": {
-    description: `Analyzing an already-deployed robots.txt file answers whether its current rules are working as intended, but actually changing those rules is a different task, one where seeing the effect of an edit immediately, before it's saved, matters more than analyzing a finished file after the fact. This tool provides a visual interface for editing robots.txt rules, simulating how a crawler would respond to each change live as it's being made rather than only after the file is finalized. Useful for building a robots.txt file's rules visually while watching how each one affects crawler access in real time, testing a rule change's effect immediately before committing it to a live file, or authoring a new robots.txt from scratch with instant feedback on what each line actually blocks.`,
+    description: `Paste robots.txt or fetch a URL that permits cross-origin requests. Edit and validate directives, inspect user-agent groups and test paths. Matching combines applicable groups, supports wildcards and end anchors, and prefers Allow on equally specific matches. Empty Allow and Disallow rules have no effect. Extension warnings do not mean every crawler behaves identically; robots.txt is not access control.`,
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["Network access required for URL requests"]
   },
   "robots-txt-generator": {
     description: `A single misplaced line in robots.txt, Disallow: / instead of a specific folder, can block every search engine from an entire site without any warning until traffic quietly drops off weeks later, and the file's simple-looking syntax, User-agent, Disallow, Allow, Sitemap, hides exactly how easy that mistake actually is to make by hand. This tool builds a robots.txt file through actual configuration options rather than typing directives from memory, letting specific crawlers be allowed or blocked for specific paths and a sitemap URL added without guessing at syntax. Useful for blocking a crawler from an admin section or a staging folder without accidentally blocking the whole site, allowing one search engine's crawler while restricting another's, or generating a correct robots.txt file for a brand-new site that doesn't have one yet.`,
@@ -3664,11 +3664,11 @@ Output: xn--85bp0auq.xn--54b7fta0cc`
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "robots-txt-validator": {
-    description: `A typo in a directive, Dissalow instead of Disallow, a missing colon, a Sitemap URL that isn't actually absolute, doesn't throw an error anywhere a person would notice, a crawler just silently ignores or misinterprets the malformed line, which means a robots.txt file can look complete and still be quietly broken in a way that never surfaces until crawl behavior stops matching what the file was supposed to say. This tool validates robots.txt syntax and checks for common errors and misconfigurations, catching a malformed directive itself rather than testing what a specific URL is allowed to do or auditing an already-working file's overall directives. Useful for catching a typo'd directive before it silently gets ignored by every crawler that reads it, validating a Sitemap URL is actually formatted as an absolute address, or checking a robots.txt file's syntax is technically correct before it goes live.`,
+    description: `Paste robots.txt or fetch a URL that permits cross-origin requests. Edit and validate directives, inspect user-agent groups and test paths. Matching combines applicable groups, supports wildcards and end anchors, and prefers Allow on equally specific matches. Empty Allow and Disallow rules have no effect. Extension warnings do not mean every crawler behaves identically; robots.txt is not access control.`,
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["Network access required for URL requests"]
   },
   "roman-numeral-converter": {
     description: `IIII isn't a valid way to write four, IV is, and Roman numerals follow specific formation rules about which combinations are actually allowed and how many times a numeral can repeat in a row, which means a Roman numeral copied from an old book, a movie's copyright year, or a clock face might not actually be correctly formed at all, something a naive character-by-character parser would never catch. This tool converts numbers to Roman numerals and back, with validation confirming an existing Roman numeral is actually correctly formed rather than assuming whatever's typed in follows the real rules. Useful for checking whether a Roman numeral seen on a clock face or a book's copyright page is actually valid formatting, catching a mistake in a hand-typed Roman numeral before it's used somewhere, or converting a number into properly formatted Roman numerals rather than an invalid combination that happens to look plausible.`,
@@ -3692,7 +3692,7 @@ Output: xn--85bp0auq.xn--54b7fta0cc`
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "rotate": {
-    description: `A phone photo that shows up sideways or upside down in one app but fine in another is usually an EXIF orientation problem rather than anything wrong with the actual image data, and the fastest fix isn't opening a full editor, it's a quick 90 or 180 degree snap rotation that puts the photo the right way up in one step. This tool rotates an image by 90, 180, or a custom angle, built around quickly fixing an image's orientation rather than composing a precise creative angle. Useful for correcting a sideways photo straight out of a phone's camera roll, flipping a scanned document that came out upside down back to readable, or quickly fixing orientation on a batch of photos before uploading them somewhere that displays EXIF rotation inconsistently.`,
+    description: `Rotate clockwise in 90-degree steps and inspect the live preview before downloading. The export uses JPEG for JPEG sources and PNG for other supported inputs, preserving transparency where supported.`,
     examples: [
 
     ],
@@ -3783,11 +3783,11 @@ Output: xn--85bp0auq.xn--54b7fta0cc`
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "seo-meta-tag-analyzer": {
-    description: `A meta description that's present, valid length, and technically well-formed can still read as generic and forgettable, the kind of description that fills the space without actually giving anyone a reason to click, which is a different problem from a tag being missing or broken entirely, the kind of gap a simple presence check would already catch. This tool analyzes existing SEO meta tags, Open Graph tags, and Twitter Card tags together and generates optimization suggestions, evaluating whether a tag that's technically present is actually working rather than just confirming it exists. Useful for getting a stronger, more specific rewrite suggestion for a meta description that's present but reads generic, checking whether an existing title tag is actually compelling rather than just correctly formatted, or getting concrete optimization suggestions across a page's full set of SEO and social tags at once rather than a simple pass or fail.`,
+    description: `Inspect a pasted HTML document or read a URL that permits cross-origin requests. Review title, description, Open Graph and other metadata, including missing and duplicate tags. Page scripts are not executed. The report does not assign an SEO grade or predict rankings.`,
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["Network access required for URL requests"]
   },
   "seo-tag-analyzer": {
     description: `A link shared on Twitter renders completely differently than the same link shared on Facebook or found in a Google search result, each platform reading its own specific tag, a Twitter Card, an Open Graph tag, a plain meta description, and a page missing any one of them falls back to a generic, unappealing preview on that specific platform. This tool analyzes a page's existing SEO meta tags, Open Graph tags, and Twitter Card tags together, generating whichever ones are missing and previewing exactly how the page will actually appear when shared or found in search. Useful for checking why a shared link looks broken or generic on one specific platform, generating a complete set of missing Open Graph tags before a page gets shared widely, or previewing a search snippet's actual appearance before publishing a page.`,
@@ -3797,11 +3797,11 @@ Output: xn--85bp0auq.xn--54b7fta0cc`
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "seo-title-analyzer": {
-    description: `A title tag can fit comfortably within Google's character limit and still underperform on click-through rate, since length alone doesn't capture whether a title actually reads as specific, includes a number or a compelling angle, or sounds too generic to stand out among several other results saying roughly the same thing. This tool analyzes an existing SEO title's length and quality together, evaluating what actually correlates with click-through rate in a Google search result rather than only flagging whether it's too long. Useful for auditing an existing title tag's quality beyond just its character count, checking whether a title actually reads as compelling enough to earn a click among competing search results, or comparing two already-written title options to see which one is likely to perform better.`,
+    description: `Review title text and Unicode character counts from pasted text, HTML or a URL that permits cross-origin requests. HTML inspection reports missing title markup. Counts are descriptive, not ranking scores or a guarantee that a title will fit every search result. Page scripts are not executed.`,
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["Network access required for URL requests"]
   },
   "seo-title-tag-generator": {
     description: `Google doesn't show an entire title tag once it runs past roughly sixty characters, cutting it off mid-word with an ellipsis instead, and a title that reads perfectly well in an editor can still get truncated awkwardly in an actual search result without a character count actually being watched while writing it. This tool generates an SEO-optimized title tag with a live character count and a preview of how it will actually appear in a Google search result, catching a truncation problem before the page ever gets indexed. Useful for writing a title that fits within Google's actual display limit instead of getting cut off, previewing exactly how a page will look in search results before publishing, or trimming an existing title tag that's currently running too long.`,
@@ -3879,7 +3879,7 @@ Output: xn--85bp0auq.xn--54b7fta0cc`
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "sign-pdf": {
-    description: `A contract that needs a visual signature doesn't have to mean printing it out, signing it by hand, and scanning it back in, when a signature can be drawn directly with a mouse or a finger, typed in a script-style font, or uploaded as an image. This tool places one visual signature on a selected page of a PDF, then lets you position and size it before downloading the result. It doesn't create a cryptographic digital signature or legal e-signature certificate.`,
+    description: `A contract that needs a visual signature doesn't have to mean printing it out, signing it by hand, and scanning it back in, when a signature can be drawn directly with a mouse or a finger, typed in a script-style font, or uploaded as an image. This tool places one visual signature on a selected page of a PDF, then lets you position and size it before downloading the result. It doesn't create a cryptographic digital signature or legal e-signature certificate. Input PDFs are limited to 25 MiB, 100 pages and 2,000 points per page side. Plan-specific upload limits may be lower.`,
     examples: [
       {
         title: 'Sign a contract by hand on a touchscreen',
@@ -3895,18 +3895,18 @@ Output: xn--85bp0auq.xn--54b7fta0cc`
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "sitemap-analyzer": {
-    description: `A sitemap that lists every URL correctly but is missing pages that actually exist on the site is incomplete in a way a per-URL metadata check wouldn't catch, and a sitemap bloated with duplicate, redirected, or low-value URLs wastes a search engine's limited crawl budget on a large site, two coverage-and-efficiency problems distinct from whether the priority or lastmod fields attached to each listed URL carry real signal. This tool analyzes an XML sitemap for URL coverage, missing entries, and crawl budget optimization, evaluating the sitemap's overall completeness and efficiency rather than the metadata quality of URLs already listed. Useful for finding pages that exist on a site but are missing from its sitemap entirely, identifying low-value or redirected URLs bloating a large sitemap's crawl budget, or auditing whether a sitemap's actual coverage matches what a site genuinely contains.`,
+    description: `Paste sitemap XML or fetch a URL that permits cross-origin requests. Parse namespace-aware urlset and sitemapindex entries, report malformed XML and export the listed locations. DTD declarations are rejected. An index lists child sitemap URLs; it does not crawl those sitemaps or execute page scripts.`,
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["Network access required for URL requests"]
   },
   "sitemap-extractor": {
-    description: `Sometimes the actual need isn't an analysis of a sitemap's quality or coverage at all, it's simply the raw list of URLs pulled out cleanly and fast, ready to drop into a spreadsheet or feed into a separate audit tool that does the actual analysis afterward. This tool extracts every URL from a sitemap.xml file instantly, producing a clean content inventory rather than an assessment of coverage gaps or metadata quality. Useful for pulling a complete URL list out of a large sitemap to feed into a separate SEO audit tool, building a quick content inventory of everything a site's sitemap currently lists, or extracting URLs in bulk from a sitemap without needing any analysis of the sitemap itself layered on top.`,
+    description: `Paste sitemap XML or fetch a URL that permits cross-origin requests. Parse namespace-aware urlset and sitemapindex entries, report malformed XML and export the listed locations. DTD declarations are rejected. An index lists child sitemap URLs; it does not crawl those sitemaps or execute page scripts.`,
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["Network access required for URL requests"]
   },
   "sitemap-html-generator": {
     description: `An XML sitemap exists purely for search engine crawlers and is invisible to an actual visitor, which is a completely different job from an HTML sitemap, a real page on the site itself, linked from the footer, that a person can click through to see every page laid out in one navigable list, useful both for a visitor trying to find something and a crawler that benefits from another set of internal links to follow. This tool builds that HTML sitemap page from a list of URLs, generating clean, organized links a visitor can actually click through rather than the machine-readable format meant only for crawlers. Useful for adding a genuine sitemap page to a site's footer, giving search engines an additional set of internal links to discover pages through, or building a clean directory page for a site with enough pages that regular navigation menus don't cover everything.`,
@@ -4021,14 +4021,14 @@ Output: (order changes each time)`, note: `Random order uses a Fisher-Yates shuf
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "sql-formatter": {
-    description: `A query minified down to one line for an environment variable or a compact log entry and the same query formatted for a code review need opposite treatment, and getting from one to the other by hand means either manually stripping every line break or manually reintroducing indentation depending on which direction is needed. This tool does both: beautifies a cramped query into properly indented, readable SQL, or minifies a formatted query back down to a single compact line, aware of the quoting conventions that differ between databases, backticks in MySQL, double quotes in PostgreSQL, so identifiers stay correctly quoted either direction. Useful for cleaning up a query before a code review, minifying a formatted query down for a config value or a single-line log entry, or reformatting a query pulled from a different database system without its identifier quoting breaking in the process.`,
+    description: `Make SQL easier to read with 2- or 4-space indentation and optional uppercase keywords. Lexical formatting preserves quoted text and comments and checks quote and parenthesis balance. It does not validate SQL grammar or database-specific semantics. The current output is plain text.`,
     examples: [
 
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "sql-prettifier": {
-    description: `A SQL query dumped from an ORM's debug log usually comes out as one dense, barely readable line, and a multi-table JOIN with several conditions genuinely needs consistent indentation to actually follow which clause belongs to which part of the query, a structure that's invisible once everything gets flattened onto a single line. This tool formats and indents SQL queries with keyword highlighting and a customizable style, turning a dense query back into something with visible structure rather than one unreadable line. Useful for reading a query dumped from an ORM's debug output that came out as one unreadable line, formatting a complex multi-JOIN query so its structure is actually visible at a glance, or reformatting a query to match a specific team's preferred SQL style before it goes into a shared repository.`,
+    description: `Make SQL easier to read with 2- or 4-space indentation and optional uppercase keywords. Lexical formatting preserves quoted text and comments and checks quote and parenthesis balance. It does not validate SQL grammar or database-specific semantics. The current output is plain text.`,
     examples: [
 
     ],
@@ -4063,7 +4063,7 @@ Output: (order changes each time)`, note: `Random order uses a Fisher-Yates shuf
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "ssh-key-generator": {
-    description: `RSA is the oldest and most universally compatible SSH key algorithm but needs a noticeably larger key size for the same actual security, while Ed25519 is newer, faster, and produces a much shorter key at an equivalent or better security level, a real difference worth knowing before picking one for a new server versus an older system that hasn't caught up yet. This tool generates RSA, ECDSA, and Ed25519 SSH key pairs directly in the browser, producing whichever algorithm actually fits a specific server's supported options. Useful for generating a modern Ed25519 key for a new server that supports it, creating an RSA key pair for an older system that doesn't yet support the newer algorithms, or generating an SSH key pair entirely without opening a terminal to run ssh-keygen.`,
+    description: `Generate RSA, ECDSA or Ed25519 key pairs using browser cryptography. The public key is an OpenSSH line; the private key is unencrypted PKCS8 PEM. Some SSH clients need a converted private-key format, particularly for Ed25519. Browser algorithm support varies.`,
     examples: [
 
     ],
@@ -4488,11 +4488,11 @@ Cairo`, note: `Same list, flipped. Use this for a reverse leaderboard or log.` }
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "tweet-to-image-converter": {
-    description: `A tweet can't actually be embedded as a live post on Instagram, a slide deck, or a printed flyer, but a graphic styled to look exactly like an authentic tweet, matching the platform's actual layout, font, and handle styling, carries the same recognizable visual credibility a generic quote card never quite manages. This tool turns any tweet URL or custom text into a styled image that reads as an actual tweet screenshot, with a chosen theme and background, rather than a plain text-on-image graphic. Useful for repurposing a tweet's content as a shareable image on a platform where tweets can't be embedded live, creating a tweet-styled graphic for a joke or an announcement that borrows Twitter's recognizable visual format, or generating a clean, on-brand tweet screenshot without the surrounding clutter of an actual browser window.`,
+    description: `Fetch tweet text through third-party oEmbed when availability and CORS permit, or use the paid Customize mode to enter your own author and text. Choose themes, backgrounds and platform sizes, then download the current PNG. Examples loads labeled sample text, not a fetched tweet. Provider responses do not supply verified engagement metrics.`,
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["Network access required for URL requests"]
   },
   "twitter-card-preview": {
     description: `A link that looks great when shared on Facebook can still show up broken on Twitter, because Twitter reads its own twitter:card meta tags rather than the Open Graph tags other platforms rely on, and it renders two different layouts, a small summary card or a large image card, each with its own aspect ratio expectations that a page's existing OG image might not satisfy. This tool renders a live preview of exactly how a URL appears when shared on Twitter, checking both card types against the page's actual meta tags rather than assuming Open Graph coverage is enough. Useful for confirming a large image card displays with the correct aspect ratio instead of an awkward crop, catching a missing twitter:card tag that would otherwise fall back to a plain link, or comparing how a page looks in the summary layout versus the large image layout before sharing it.`,
@@ -4509,7 +4509,7 @@ Cairo`, note: `Same list, flipped. Use this for a reverse leaderboard or log.` }
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "ulid-generator": {
-    description: `A ULID isn't a UUID at all, it's a different, older specification encoded in Crockford's Base32, twenty-six characters with no visually ambiguous letters like I, l, O, or 0, which makes it noticeably shorter than a standard UUID's thirty-six characters and genuinely easier to read aloud, type by hand, or reference in a support ticket without a stray typo silently pointing at the wrong record. This tool generates ULIDs, time-sortable identifiers built around compact, human-friendly encoding rather than the standard UUID hex format. Useful for generating an identifier that's actually practical to read aloud or type manually, choosing a shorter, sortable ID for a system where UUID's format isn't a hard requirement, or picking ULID specifically for its unambiguous character set over other time-sortable identifier formats.`,
+    description: `Generate 26-character ULIDs using a millisecond timestamp and cryptographically random suffix. Crockford Base32 excludes I, L, O and U; it includes the digits 0 and 1. Timestamp prefixes provide ordering across milliseconds, but values generated within one millisecond are not monotonic. Batch generation and lowercase output are available.`,
     examples: [
 
     ],
@@ -4556,7 +4556,7 @@ Cairo`, note: `Same list, flipped. Use this for a reverse leaderboard or log.` }
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "unlock-pdf": {
-    description: `A PDF you have permission to use can still be inconvenient when it asks for a password every time it opens or carries restrictions that no longer serve a purpose. This tool unlocks an accessible PDF in your browser: files that open normally are re-saved, and files that require an opening password are rendered into a new password-free PDF when you provide the current password. The password-protected path produces a flattened document, so the visible pages are preserved but the original text and form structure aren't editable.`,
+    description: `Provide the opening password when required. Encrypted PDFs are rendered into a new password-free PDF with rasterized pages: selectable text, links, interactive forms and digital signatures are not preserved. Unencrypted PDFs are already password-free and are re-saved without rasterization. Processing stays in your browser. Input PDFs are limited to 25 MiB, 100 pages and 2,000 points per page side. Plan-specific upload limits may be lower.`,
     examples: [
       {
         title: 'Unlock a PDF with its current password',
@@ -4566,7 +4566,7 @@ Cairo`, note: `Same list, flipped. Use this for a reverse leaderboard or log.` }
       {
         title: 'Re-save a PDF that opens normally',
         code: `Input: handout.pdf (no opening password)\nOutput: handout-unlocked.pdf`,
-        note: 'Re-saves the accessible PDF locally without its existing permission metadata.',
+        note: 'An unencrypted PDF is already password-free and is re-saved without rasterization.',
       },
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
@@ -4677,7 +4677,7 @@ Cairo`, note: `Same list, flipped. Use this for a reverse leaderboard or log.` }
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "uuid-v1-generator": {
-    description: `A version 1 UUID isn't purely random the way a version 4 UUID is, it encodes an actual timestamp along with a node identifier traditionally derived from the generating machine's MAC address, which makes it naturally sortable by creation time but also means it can leak a real piece of hardware identification embedded right in the identifier, a known privacy consideration that pushed systems toward alternatives that don't encode anything hardware-specific. This tool generates version 1 UUIDs from a given timestamp, time-ordered and correctly structured, for systems that specifically require or already rely on that format. Useful for generating a UUID that needs to sort by creation time for a legacy system already built around version 1, understanding what information is actually embedded inside a version 1 UUID before using it somewhere sensitive, or producing a time-based identifier for a system that predates newer sortable alternatives.`,
+    description: `Generate UUID v1 values using the current timestamp, a random multicast node identifier and cryptographic randomness. Your hardware MAC address is not read. Choose a batch size, uppercase output or braces. UUID v1 strings do not sort globally by creation time because of their field layout.`,
     examples: [
 
     ],
@@ -4761,7 +4761,7 @@ Cairo`, note: `Same list, flipped. Use this for a reverse leaderboard or log.` }
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "add-watermark-to-pdf": {
-    description: `A contract draft or a confidential report often needs to be marked clearly across every single page before it goes anywhere outside a small group, not just the first page, since a recipient screenshotting or forwarding just one page should still see it's a draft, not a final version. This tool adds a visible text or image watermark across every page of a PDF, with opacity, rotation, and sizing controls, without encrypting the file or restricting access. Useful for stamping "CONFIDENTIAL" across an entire document before sharing it externally, marking every page of a draft contract so an out-of-context screenshot still reads as unfinished, or branding a document with a logo before distributing it publicly.`,
+    description: `A contract draft or a confidential report often needs to be marked clearly across every single page before it goes anywhere outside a small group, not just the first page, since a recipient screenshotting or forwarding just one page should still see it's a draft, not a final version. This tool adds a visible text or image watermark across every page of a PDF, with opacity, rotation, and sizing controls, without encrypting the file or restricting access. Useful for stamping "CONFIDENTIAL" across an entire document before sharing it externally, marking every page of a draft contract so an out-of-context screenshot still reads as unfinished, or branding a document with a logo before distributing it publicly. Input PDFs are limited to 25 MiB, 100 pages and 2,000 points per page side. Plan-specific upload limits may be lower.`,
     examples: [
       {
         title: 'Stamp DRAFT across every page',
@@ -4961,7 +4961,7 @@ Cairo`, note: `Same list, flipped. Use this for a reverse leaderboard or log.` }
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "xml-formatter": {
-    description: `XML enforces a stricter structural rule than most formats, every opening tag needs a matching closing tag with the exact same name, and a raw ampersand or angle bracket inside actual content has to be escaped as an entity or the parser fails outright, mistakes that are easy to introduce by hand and genuinely hard to spot in a wall of unformatted markup. This tool formats and validates XML, applying proper indentation with syntax highlighting and flagging a specific structural error, an unescaped character, a mismatched tag, the moment something breaks. Useful for pretty-printing a minified XML API response into something actually readable, catching a mismatched or unclosed tag before it breaks a downstream parser, or validating a hand-edited XML config file before it gets deployed.`,
+    description: `Format XML with 2- or 4-space indentation or minify whitespace between child elements. Mixed text, CDATA and xml:space="preserve" are retained. The browser parser checks well-formedness; DTD declarations are rejected and XSD validation is not provided.`,
     examples: [
 
     ],
@@ -4996,7 +4996,7 @@ Cairo`, note: `Same list, flipped. Use this for a reverse leaderboard or log.` }
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "xml-validator": {
-    description: `An XML file that looks fine on a quick read can still be malformed somewhere specific, a tag that was never closed, a mismatched namespace prefix, an attribute missing its closing quote, and finding exactly where without a real error message means scanning the whole document line by line hoping to spot the one thing wrong. This tool validates XML syntax and reports exactly where a problem is, the specific line number and a detailed message describing what's actually wrong, rather than a generic pass-or-fail with no indication of where to even start looking. Useful for pinpointing exactly which line an unclosed tag or a malformed attribute is on instead of scanning an entire document by eye, debugging why an XML file a parser rejects looks fine at a glance, or confirming a document is genuinely well-formed before it gets used somewhere that would fail on a syntax error.`,
+    description: `Check XML well-formedness using the browser parser, which reports malformed tags, attributes and other parsing errors. Error details depend on the browser. DTD declarations are rejected; a successful parse does not establish XSD or DTD validity.`,
     examples: [
 
     ],
