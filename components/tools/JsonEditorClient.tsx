@@ -1,4 +1,7 @@
 'use client';
+import { useDataClipboard } from './developer-data/useDataClipboard';
+import ToolExampleClearActions from './ToolExampleClearActions';
+import { parseJson } from '@/lib/developer-data/core';
 
 import { useMemo, useState } from 'react';
 
@@ -23,8 +26,9 @@ function lineColFromPosition(text: string, pos: number): { line: number; column:
 }
 
 function parseWithLocation(text: string): { value: unknown; error: ParseError | null } {
+  if (!text.trim()) return { value: undefined, error: null };
   try {
-    return { value: JSON.parse(text), error: null };
+    return { value: parseJson(text), error: null };
   } catch (e) {
     const message = (e as Error).message;
     const posMatch = message.match(/position (\d+)/i);
@@ -104,7 +108,6 @@ function TreeNode({ label, value, depth }: { label: string; value: unknown; dept
 
 export default function JsonEditorClient() {
   const [input, setInput] = useState(SAMPLE);
-  const [copied, setCopied] = useState(false);
 
   const { value, error } = useMemo(() => parseWithLocation(input), [input]);
 
@@ -118,17 +121,15 @@ export default function JsonEditorClient() {
     setInput(JSON.stringify(value));
   };
 
-  const copy = () => {
-    navigator.clipboard.writeText(input).catch(() => {});
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
-  };
+  const { copied, copy, reset: setCopied, copyError } = useDataClipboard(input);
 
   return (
-    <div>
-      <div className="tb-v2-tool-input-head">
+    <div style={{minWidth:0,maxWidth:"100%",overflowWrap:"anywhere"}}>
+      {copyError && <p role="alert" className="tb-v2-error">{copyError}</p>}
+      <div className="tb-v2-tool-input-head" style={{flexWrap:"wrap",gap:8}}>
         <span className="tb-v2-tool-label">JSON</span>
-        <div style={{ display: 'flex', gap: 8 }}>
+        <ToolExampleClearActions onExample={() => setInput(SAMPLE)} onClear={() => { setInput('');setCopied(false); }} />
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
           <button type="button" onClick={format} disabled={!!error} className="tb-v2-btn tb-v2-btn-ghost tb-v2-btn-sm">Format</button>
           <button type="button" onClick={minify} disabled={!!error} className="tb-v2-btn tb-v2-btn-ghost tb-v2-btn-sm">Minify</button>
           <button type="button" onClick={copy} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}>{copied ? 'Copied' : 'Copy'}</button>
@@ -146,13 +147,13 @@ export default function JsonEditorClient() {
 
       <div className="tb-v2-tool-output-head">
         <span className="tb-v2-tool-label">
-          {error ? 'Invalid JSON' : 'Valid JSON'}
+          {!input.trim() ? 'JSON editor' : error ? 'Invalid JSON' : 'Valid JSON'}
         </span>
       </div>
-      <div className="tb-v2-tool-output-body">
+      <div className="tb-v2-tool-output-body" style={{maxWidth:"100%",overflowX:"auto"}}>
         {error ? (
           <p className="tb-v2-error" role="alert">
-            <strong>Syntax error{error.line !== null ? ` at line ${error.line}, column ${error.column}` : ''}:</strong> {error.message}
+            <strong>Input error{error.line !== null ? ` at line ${error.line}, column ${error.column}` : ''}:</strong> {error.message}
           </p>
         ) : value === undefined ? (
           <p className="tb-v2-empty">Nothing to show yet.</p>

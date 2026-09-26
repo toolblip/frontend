@@ -1,0 +1,745 @@
+{
+  "group": "developer-data",
+  "branch": "fix/auto-qa-developer-data",
+  "assignedRouteCount": 27,
+  "implementedFixtureCount": 27,
+  "status": "implemented; parent browser acceptance pending",
+  "inventoryReview": {
+    "source": "/Users/rayhan/.herdr/worktrees/toolblip-workspace/manually-check-all-tools/qa/automatic/inventory.json",
+    "historicallyApprovedSharingAssignedComponents": [],
+    "allAssignedComponentsInspected": true
+  },
+  "fixedFiles": [
+    "components/tools/CodeDiffClient.tsx",
+    "components/tools/CsvGeneratorClient.tsx",
+    "components/tools/DbQueryFormatterClient.tsx",
+    "components/tools/HtmlToJsxClient.tsx",
+    "components/tools/IPynbFormatterClient.tsx",
+    "components/tools/JsonEditorClient.tsx",
+    "components/tools/JsonFormatterClient.tsx",
+    "components/tools/JsonGraphVisualizerClient.tsx",
+    "components/tools/JsonPathTesterClient.tsx",
+    "components/tools/JsonSchemaValidatorClient.tsx",
+    "components/tools/JsonToPythonClient.tsx",
+    "components/tools/JsonToTypescriptClient.tsx",
+    "components/tools/JsonTreeViewClient.tsx",
+    "components/tools/JsonValidatorClient.tsx",
+    "components/tools/JupyterCleanerClient.tsx",
+    "components/tools/MarkdownToHtmlClient.tsx",
+    "components/tools/MarkdownToPdfClient.tsx",
+    "components/tools/NotebookToHtmlClient.tsx",
+    "components/tools/SqlFormatterClient.tsx",
+    "components/tools/SqlPrettifierClient.tsx",
+    "components/tools/XmlFormatterClient.tsx",
+    "components/tools/XmlValidatorClient.tsx",
+    "components/tools/developer-data/Converters.tsx",
+    "components/tools/developer-data/DataUi.tsx",
+    "components/tools/developer-data/MarkdownTool.tsx",
+    "components/tools/developer-data/NotebookTool.tsx",
+    "components/tools/developer-data/useDataClipboard.ts",
+    "lib/developer-data/browser.ts",
+    "lib/developer-data/core.test.ts",
+    "lib/developer-data/core.ts",
+    "lib/developer-data/graph.ts",
+    "lib/developer-data/jsonpath.ts",
+    "lib/developer-data/notebook.ts",
+    "lib/developer-data/pdf.ts",
+    "lib/developer-data/schema.ts",
+    "lib/developer-data/sql.ts",
+    "scripts/qa/cases/developer-data.mjs",
+    "scripts/qa/reports/developer-data.json"
+  ],
+  "checks": [
+    {
+      "command": "npx vitest run lib/developer-data/core.test.ts",
+      "result": "passed",
+      "tests": 72,
+      "evidence": "Python AST syntax, TypeScript compiler diagnostics, independent known conversions, parser/schema/SQL failures, notebook preservation, graph edges and real PDF bytes/text/pagination."
+    },
+    {
+      "command": "npx tsc --noEmit --incremental false",
+      "result": "passed"
+    },
+    {
+      "command": "node --check scripts/qa/cases/developer-data.mjs",
+      "result": "passed"
+    },
+    {
+      "command": "assignment/fixture slug-set comparison",
+      "result": "27 assigned, 27 cases; no missing or duplicate slugs"
+    },
+    {
+      "command": "git diff --check",
+      "result": "passed"
+    }
+  ],
+  "notRun": [
+    "dev server",
+    "build",
+    "browser/Playwright",
+    "production checks",
+    "visual PDF acceptance"
+  ],
+  "perSlug": [
+    {
+      "slug": "json-formatter",
+      "component": "components/tools/JsonFormatterClient.tsx",
+      "status": "implemented; fixture not executed in worker",
+      "findingsAndFixes": "Preserves saved settings and format/minify/indent; adds bounded parsing, v2 reset and truthful clipboard feedback.",
+      "coverage": {
+        "case": "scripts/qa/cases/developer-data.mjs#json-formatter",
+        "checks": [
+          "independent known result or actual download bytes",
+          "relevant invalid or resource-limit input; CSV free-form quoting",
+          "Examples",
+          "Clear"
+        ],
+        "browserStatus": "parent run required"
+      },
+      "limitations": [],
+      "blockers": []
+    },
+    {
+      "slug": "markdown-to-html",
+      "component": "components/tools/MarkdownToHtmlClient.tsx",
+      "status": "implemented; fixture not executed in worker",
+      "findingsAndFixes": "Uses GFM parser, HTML allowlist sanitization, sandboxed preview, current copy output and v2 reset.",
+      "coverage": {
+        "case": "scripts/qa/cases/developer-data.mjs#markdown-to-html",
+        "checks": [
+          "independent known result or actual download bytes",
+          "relevant invalid or resource-limit input; CSV free-form quoting",
+          "Examples",
+          "Clear"
+        ],
+        "browserStatus": "parent run required"
+      },
+      "limitations": [],
+      "blockers": []
+    },
+    {
+      "slug": "xml-formatter",
+      "component": "components/tools/XmlFormatterClient.tsx",
+      "status": "implemented; fixture not executed in worker",
+      "findingsAndFixes": "Replaces destructive recursion with DOM serialization preserving single children, mixed text, CDATA, comments and namespaces; retains format/minify/indent.",
+      "coverage": {
+        "case": "scripts/qa/cases/developer-data.mjs#xml-formatter",
+        "checks": [
+          "independent known result or actual download bytes",
+          "relevant invalid or resource-limit input; CSV free-form quoting",
+          "Examples",
+          "Clear"
+        ],
+        "browserStatus": "parent run required"
+      },
+      "limitations": [
+        "No DTD support; minify removes whitespace between child elements except mixed/CDATA/xml:space preserved content."
+      ],
+      "blockers": []
+    },
+    {
+      "slug": "sql-prettifier",
+      "component": "components/tools/SqlPrettifierClient.tsx",
+      "status": "implemented; fixture not executed in worker",
+      "findingsAndFixes": "Shares lexical formatter that protects strings, comments, bind prefixes and operators; reports lexical balance failures.",
+      "coverage": {
+        "case": "scripts/qa/cases/developer-data.mjs#sql-prettifier",
+        "checks": [
+          "independent known result or actual download bytes",
+          "relevant invalid or resource-limit input; CSV free-form quoting",
+          "Examples",
+          "Clear"
+        ],
+        "browserStatus": "parent run required"
+      },
+      "limitations": [
+        "Lexical formatter, not a database grammar validator."
+      ],
+      "blockers": []
+    },
+    {
+      "slug": "json-to-typescript",
+      "component": "components/tools/JsonToTypescriptClient.tsx",
+      "status": "implemented; fixture not executed in worker",
+      "findingsAndFixes": "Fixes invalid nested declarations, missing array suffixes, heterogeneous arrays, quoted keys and unsafe type names; retains name/quote/semicolon options.",
+      "coverage": {
+        "case": "scripts/qa/cases/developer-data.mjs#json-to-typescript",
+        "checks": [
+          "independent known result or actual download bytes",
+          "relevant invalid or resource-limit input; CSV free-form quoting",
+          "Examples",
+          "Clear"
+        ],
+        "browserStatus": "parent run required"
+      },
+      "limitations": [],
+      "blockers": []
+    },
+    {
+      "slug": "json-path-tester",
+      "component": "components/tools/JsonPathTesterClient.tsx",
+      "status": "implemented; fixture not executed in worker",
+      "findingsAndFixes": "Uses bounded grammar and node-set evaluation for root, keys, indexes, wildcard, recursive descent and simple comparisons; rejects unsupported expressions without eval.",
+      "coverage": {
+        "case": "scripts/qa/cases/developer-data.mjs#json-path-tester",
+        "checks": [
+          "independent known result or actual download bytes",
+          "relevant invalid or resource-limit input; CSV free-form quoting",
+          "Examples",
+          "Clear"
+        ],
+        "browserStatus": "parent run required"
+      },
+      "limitations": [
+        "Documented JSONPath subset. Slices, unions and arbitrary script expressions explicitly rejected."
+      ],
+      "blockers": []
+    },
+    {
+      "slug": "json-schema-validator",
+      "component": "components/tools/JsonSchemaValidatorClient.tsx",
+      "status": "implemented; fixture not executed in worker",
+      "findingsAndFixes": "Corrects null/object/integer types, falsy const, boolean subschemas, deep enum/uniqueness and own-property required checks; unsupported keywords fail visibly.",
+      "coverage": {
+        "case": "scripts/qa/cases/developer-data.mjs#json-schema-validator",
+        "checks": [
+          "independent known result or actual download bytes",
+          "relevant invalid or resource-limit input; CSV free-form quoting",
+          "Examples",
+          "Clear"
+        ],
+        "browserStatus": "parent run required"
+      },
+      "limitations": [
+        "Draft-07 subset only. References, patterns, formats, tuple items and unlisted keywords explicitly rejected."
+      ],
+      "blockers": []
+    },
+    {
+      "slug": "json-to-typescript-interface",
+      "component": "components/tools/JsonToTypescriptClient.tsx",
+      "status": "implemented; fixture not executed in worker",
+      "findingsAndFixes": "Fixes invalid nested declarations, missing array suffixes, heterogeneous arrays, quoted keys and unsafe type names; retains name/quote/semicolon options.",
+      "coverage": {
+        "case": "scripts/qa/cases/developer-data.mjs#json-to-typescript-interface",
+        "checks": [
+          "independent known result or actual download bytes",
+          "relevant invalid or resource-limit input; CSV free-form quoting",
+          "Examples",
+          "Clear"
+        ],
+        "browserStatus": "parent run required"
+      },
+      "limitations": [],
+      "blockers": []
+    },
+    {
+      "slug": "json-editor",
+      "component": "components/tools/JsonEditorClient.tsx",
+      "status": "implemented; fixture not executed in worker",
+      "findingsAndFixes": "Preserves format/minify and tree workflows; clear becomes a neutral empty state; bounds parsing and reports clipboard errors.",
+      "coverage": {
+        "case": "scripts/qa/cases/developer-data.mjs#json-editor",
+        "checks": [
+          "independent known result or actual download bytes",
+          "relevant invalid or resource-limit input; CSV free-form quoting",
+          "Examples",
+          "Clear"
+        ],
+        "browserStatus": "parent run required"
+      },
+      "limitations": [],
+      "blockers": []
+    },
+    {
+      "slug": "code-diff",
+      "component": "components/tools/CodeDiffClient.tsx",
+      "status": "implemented; fixture not executed in worker",
+      "findingsAndFixes": "Uses bounded LCS, handles empty inputs correctly and updates live to prevent stale output/copy.",
+      "coverage": {
+        "case": "scripts/qa/cases/developer-data.mjs#code-diff",
+        "checks": [
+          "independent known result or actual download bytes",
+          "relevant invalid or resource-limit input; CSV free-form quoting",
+          "Examples",
+          "Clear"
+        ],
+        "browserStatus": "parent run required"
+      },
+      "limitations": [],
+      "blockers": []
+    },
+    {
+      "slug": "json-tree-view",
+      "component": "components/tools/JsonTreeViewClient.tsx",
+      "status": "implemented; fixture not executed in worker",
+      "findingsAndFixes": "Preserves search/expand/collapse; adds bounded parsing, escaped copy paths, clipboard failure feedback and v2 reset.",
+      "coverage": {
+        "case": "scripts/qa/cases/developer-data.mjs#json-tree-view",
+        "checks": [
+          "independent known result or actual download bytes",
+          "relevant invalid or resource-limit input; CSV free-form quoting",
+          "Examples",
+          "Clear"
+        ],
+        "browserStatus": "parent run required"
+      },
+      "limitations": [],
+      "blockers": []
+    },
+    {
+      "slug": "json-to-python",
+      "component": "components/tools/JsonToPythonClient.tsx",
+      "status": "implemented; fixture not executed in worker",
+      "findingsAndFixes": "Generates one assignment with nested Python literals and quoted dictionary keys rather than invalid embedded assignments.",
+      "coverage": {
+        "case": "scripts/qa/cases/developer-data.mjs#json-to-python",
+        "checks": [
+          "independent known result or actual download bytes",
+          "relevant invalid or resource-limit input; CSV free-form quoting",
+          "Examples",
+          "Clear"
+        ],
+        "browserStatus": "parent run required"
+      },
+      "limitations": [],
+      "blockers": []
+    },
+    {
+      "slug": "xml-validator",
+      "component": "components/tools/XmlValidatorClient.tsx",
+      "status": "implemented; fixture not executed in worker",
+      "findingsAndFixes": "Uses bounded real DOM parsing, live validation and reset; distinguishes well-formedness from schema validation.",
+      "coverage": {
+        "case": "scripts/qa/cases/developer-data.mjs#xml-validator",
+        "checks": [
+          "independent known result or actual download bytes",
+          "relevant invalid or resource-limit input; CSV free-form quoting",
+          "Examples",
+          "Clear"
+        ],
+        "browserStatus": "parent run required"
+      },
+      "limitations": [
+        "Well-formedness only, no XSD/DTD validation."
+      ],
+      "blockers": []
+    },
+    {
+      "slug": "html-to-jsx",
+      "component": "components/tools/HtmlToJsxClient.tsx",
+      "status": "implemented; fixture not executed in worker",
+      "findingsAndFixes": "Uses real HTML DOM parsing, valid JSX string expressions, style objects, void tags and attribute names; rejects executable content and inline handlers.",
+      "coverage": {
+        "case": "scripts/qa/cases/developer-data.mjs#html-to-jsx",
+        "checks": [
+          "independent known result or actual download bytes",
+          "relevant invalid or resource-limit input; CSV free-form quoting",
+          "Examples",
+          "Clear"
+        ],
+        "browserStatus": "parent run required"
+      },
+      "limitations": [],
+      "blockers": []
+    },
+    {
+      "slug": "json-validator",
+      "component": "components/tools/JsonValidatorClient.tsx",
+      "status": "implemented; fixture not executed in worker",
+      "findingsAndFixes": "Preserves syntax validation including valid large JSON numbers; adds input bounds, v2 reset and truthful clipboard feedback.",
+      "coverage": {
+        "case": "scripts/qa/cases/developer-data.mjs#json-validator",
+        "checks": [
+          "independent known result or actual download bytes",
+          "relevant invalid or resource-limit input; CSV free-form quoting",
+          "Examples",
+          "Clear"
+        ],
+        "browserStatus": "parent run required"
+      },
+      "limitations": [],
+      "blockers": []
+    },
+    {
+      "slug": "markdown-preview",
+      "component": "components/tools/MarkdownToHtmlClient.tsx",
+      "status": "implemented; fixture not executed in worker",
+      "findingsAndFixes": "Uses GFM parser, HTML allowlist sanitization, sandboxed preview, current copy output and v2 reset.",
+      "coverage": {
+        "case": "scripts/qa/cases/developer-data.mjs#markdown-preview",
+        "checks": [
+          "independent known result or actual download bytes",
+          "relevant invalid or resource-limit input; CSV free-form quoting",
+          "Examples",
+          "Clear"
+        ],
+        "browserStatus": "parent run required"
+      },
+      "limitations": [],
+      "blockers": []
+    },
+    {
+      "slug": "json-path-evaluator",
+      "component": "components/tools/JsonPathTesterClient.tsx",
+      "status": "implemented; fixture not executed in worker",
+      "findingsAndFixes": "Uses bounded grammar and node-set evaluation for root, keys, indexes, wildcard, recursive descent and simple comparisons; rejects unsupported expressions without eval.",
+      "coverage": {
+        "case": "scripts/qa/cases/developer-data.mjs#json-path-evaluator",
+        "checks": [
+          "independent known result or actual download bytes",
+          "relevant invalid or resource-limit input; CSV free-form quoting",
+          "Examples",
+          "Clear"
+        ],
+        "browserStatus": "parent run required"
+      },
+      "limitations": [
+        "Documented JSONPath subset. Slices, unions and arbitrary script expressions explicitly rejected."
+      ],
+      "blockers": []
+    },
+    {
+      "slug": "csv-generator",
+      "component": "components/tools/CsvGeneratorClient.tsx",
+      "status": "implemented; fixture not executed in worker",
+      "findingsAndFixes": "Retains table builder; quotes CR/LF/comma/quotes, emits CRLF records, bounds table size, labels cells, resets fully and cleans up download URLs.",
+      "coverage": {
+        "case": "scripts/qa/cases/developer-data.mjs#csv-generator",
+        "checks": [
+          "independent known result or actual download bytes",
+          "relevant invalid or resource-limit input; CSV free-form quoting",
+          "Examples",
+          "Clear"
+        ],
+        "browserStatus": "parent run required"
+      },
+      "limitations": [],
+      "blockers": []
+    },
+    {
+      "slug": "markdown-to-pdf",
+      "component": "components/tools/MarkdownToPdfClient.tsx",
+      "status": "implemented; fixture not executed in worker",
+      "findingsAndFixes": "Adds real paginated ASCII text PDF bytes, bounds/errors/cancellation and sanitized GFM preview; retains print workflow for rich content and Unicode.",
+      "coverage": {
+        "case": "scripts/qa/cases/developer-data.mjs#markdown-to-pdf",
+        "checks": [
+          "independent known result or actual download bytes",
+          "relevant invalid or resource-limit input; CSV free-form quoting",
+          "Examples",
+          "Clear"
+        ],
+        "browserStatus": "parent run required"
+      },
+      "limitations": [
+        "Direct PDF supports ASCII text. Unicode/images/tables use browser Print / Save PDF; print dialog and visual PDF layout require parent acceptance."
+      ],
+      "blockers": []
+    },
+    {
+      "slug": "markdown-editor",
+      "component": "components/tools/MarkdownToHtmlClient.tsx",
+      "status": "implemented; fixture not executed in worker",
+      "findingsAndFixes": "Uses GFM parser, HTML allowlist sanitization, sandboxed preview, current copy output and v2 reset.",
+      "coverage": {
+        "case": "scripts/qa/cases/developer-data.mjs#markdown-editor",
+        "checks": [
+          "independent known result or actual download bytes",
+          "relevant invalid or resource-limit input; CSV free-form quoting",
+          "Examples",
+          "Clear"
+        ],
+        "browserStatus": "parent run required"
+      },
+      "limitations": [],
+      "blockers": []
+    },
+    {
+      "slug": "sql-formatter",
+      "component": "components/tools/SqlFormatterClient.tsx",
+      "status": "implemented; fixture not executed in worker",
+      "findingsAndFixes": "Shares lexical formatter protecting literal whitespace, escaped/dollar quotes, comments, prefixes and operators; retains uppercase and indent options.",
+      "coverage": {
+        "case": "scripts/qa/cases/developer-data.mjs#sql-formatter",
+        "checks": [
+          "independent known result or actual download bytes",
+          "relevant invalid or resource-limit input; CSV free-form quoting",
+          "Examples",
+          "Clear"
+        ],
+        "browserStatus": "parent run required"
+      },
+      "limitations": [
+        "Lexical formatter, not a database grammar validator."
+      ],
+      "blockers": []
+    },
+    {
+      "slug": "db-query-formatter",
+      "component": "components/tools/DbQueryFormatterClient.tsx",
+      "status": "implemented; fixture not executed in worker",
+      "findingsAndFixes": "Shares lexical formatter; avoids modifying literal/comment contents or appending semicolons; adds current copy/reset and format controls.",
+      "coverage": {
+        "case": "scripts/qa/cases/developer-data.mjs#db-query-formatter",
+        "checks": [
+          "independent known result or actual download bytes",
+          "relevant invalid or resource-limit input; CSV free-form quoting",
+          "Examples",
+          "Clear"
+        ],
+        "browserStatus": "parent run required"
+      },
+      "limitations": [
+        "Lexical formatter, not a database grammar validator."
+      ],
+      "blockers": []
+    },
+    {
+      "slug": "json-to-typescript-types",
+      "component": "components/tools/JsonToTypescriptClient.tsx",
+      "status": "implemented; fixture not executed in worker",
+      "findingsAndFixes": "Fixes invalid nested declarations, missing array suffixes, heterogeneous arrays, quoted keys and unsafe type names; retains name/quote/semicolon options.",
+      "coverage": {
+        "case": "scripts/qa/cases/developer-data.mjs#json-to-typescript-types",
+        "checks": [
+          "independent known result or actual download bytes",
+          "relevant invalid or resource-limit input; CSV free-form quoting",
+          "Examples",
+          "Clear"
+        ],
+        "browserStatus": "parent run required"
+      },
+      "limitations": [],
+      "blockers": []
+    },
+    {
+      "slug": "notebook-to-html",
+      "component": "components/tools/NotebookToHtmlClient.tsx",
+      "status": "implemented; fixture not executed in worker",
+      "findingsAndFixes": "Validates v4 cell structure; safely renders Markdown, raw/code and text outputs; adds bounded upload, stale-read invalidation, download and reset.",
+      "coverage": {
+        "case": "scripts/qa/cases/developer-data.mjs#notebook-to-html",
+        "checks": [
+          "independent known result or actual download bytes",
+          "relevant invalid or resource-limit input; CSV free-form quoting",
+          "Examples",
+          "Clear"
+        ],
+        "browserStatus": "parent run required"
+      },
+      "limitations": [
+        "Only text outputs exported; binary plots, widgets and rich MIME outputs visibly omitted."
+      ],
+      "blockers": []
+    },
+    {
+      "slug": "ipynb-formatter",
+      "component": "components/tools/IPynbFormatterClient.tsx",
+      "status": "implemented; fixture not executed in worker",
+      "findingsAndFixes": "Validates notebook/cells before rendering; preserves order by default and retains explicit execution sorting and valid downloads.",
+      "coverage": {
+        "case": "scripts/qa/cases/developer-data.mjs#ipynb-formatter",
+        "checks": [
+          "independent known result or actual download bytes",
+          "relevant invalid or resource-limit input; CSV free-form quoting",
+          "Examples",
+          "Clear"
+        ],
+        "browserStatus": "parent run required"
+      },
+      "limitations": [],
+      "blockers": []
+    },
+    {
+      "slug": "jupyter-cleaner",
+      "component": "components/tools/JupyterCleanerClient.tsx",
+      "status": "implemented; fixture not executed in worker",
+      "findingsAndFixes": "Removes outputs/execution state while preserving cell IDs, attachments, source and unrelated metadata; bounded upload/current download/reset.",
+      "coverage": {
+        "case": "scripts/qa/cases/developer-data.mjs#jupyter-cleaner",
+        "checks": [
+          "independent known result or actual download bytes",
+          "relevant invalid or resource-limit input; CSV free-form quoting",
+          "Examples",
+          "Clear"
+        ],
+        "browserStatus": "parent run required"
+      },
+      "limitations": [],
+      "blockers": []
+    },
+    {
+      "slug": "json-graph-visualizer",
+      "component": "components/tools/JsonGraphVisualizerClient.tsx",
+      "status": "implemented; fixture not executed in worker",
+      "findingsAndFixes": "Fixes duplicate primitive edges, caps graphs at 200 values, expands viewBox and removes impossible shared-reference toggle; v2 reset.",
+      "coverage": {
+        "case": "scripts/qa/cases/developer-data.mjs#json-graph-visualizer",
+        "checks": [
+          "independent known result or actual download bytes",
+          "relevant invalid or resource-limit input; CSV free-form quoting",
+          "Examples",
+          "Clear"
+        ],
+        "browserStatus": "parent run required"
+      },
+      "limitations": [],
+      "blockers": []
+    }
+  ],
+  "duplicateProposals": [
+    {
+      "canonical": "json-to-typescript",
+      "redirects": [
+        "json-to-typescript-interface",
+        "json-to-typescript-types"
+      ],
+      "reason": "Already shared identical implementation and controls."
+    },
+    {
+      "canonical": "json-path-tester",
+      "redirects": [
+        "json-path-evaluator"
+      ],
+      "reason": "Already shared evaluator and controls."
+    },
+    {
+      "canonical": "markdown-to-html",
+      "redirects": [
+        "markdown-preview",
+        "markdown-editor"
+      ],
+      "reason": "Already shared editor/preview/HTML workflow."
+    },
+    {
+      "canonical": "sql-formatter",
+      "redirects": [
+        "sql-prettifier",
+        "db-query-formatter"
+      ],
+      "reason": "Equivalent SQL formatting; consolidated implementation retains useful case/indent controls."
+    }
+  ],
+  "centralMetadataChanges": [
+    {
+      "slugs": [
+        "json-schema-validator"
+      ],
+      "files": [
+        "data/tools.ts",
+        "data/tool-content.ts",
+        "lib/faq.ts"
+      ],
+      "needed": "Describe the exact supported draft-07 subset. Remove pattern/format/full-dialect promises; unsupported keywords are errors. Format schema and Format JSON remain available."
+    },
+    {
+      "slugs": [
+        "json-path-tester",
+        "json-path-evaluator"
+      ],
+      "files": [
+        "data/tools.ts",
+        "data/tool-content.ts",
+        "lib/faq.ts"
+      ],
+      "needed": "Document supported grammar, [] for no matches, and Examples loading. Remove complete JSONPath/preloaded data claims."
+    },
+    {
+      "slugs": [
+        "json-graph-visualizer"
+      ],
+      "files": [
+        "data/tools.ts",
+        "data/tool-content.ts",
+        "lib/faq.ts"
+      ],
+      "needed": "Replace ID-reference/dangling-reference/cycle/export-map claims with a nested JSON structure graph limited to 200 values. No graph export implemented."
+    },
+    {
+      "slugs": [
+        "markdown-to-pdf"
+      ],
+      "files": [
+        "data/tools.ts",
+        "data/tool-content.ts",
+        "lib/faq.ts"
+      ],
+      "needed": "Remove custom-theme/instant professional-PDF promises. Direct download is paginated ASCII text; browser print retains Unicode and richer styling."
+    },
+    {
+      "slugs": [
+        "notebook-to-html"
+      ],
+      "files": [
+        "data/tools.ts",
+        "data/tool-content.ts",
+        "lib/faq.ts"
+      ],
+      "needed": "Describe v4 notebooks, sanitized Markdown, plain code and text outputs. Remove syntax-highlighting/exact-Jupyter/plots/widgets claims."
+    },
+    {
+      "slugs": [
+        "jupyter-cleaner"
+      ],
+      "files": [
+        "data/tools.ts",
+        "data/tool-content.ts",
+        "lib/faq.ts"
+      ],
+      "needed": "Describe preservation of notebook metadata, cell IDs and attachments. Removes outputs, execution counts and execution/collapsed/scrolled cell metadata only."
+    },
+    {
+      "slugs": [
+        "sql-formatter",
+        "sql-prettifier",
+        "db-query-formatter"
+      ],
+      "files": [
+        "data/tools.ts",
+        "data/tool-content.ts",
+        "lib/faq.ts"
+      ],
+      "needed": "Describe lexical formatting and balance checks, not SQL grammar validation; output no longer uses fragile syntax highlighting."
+    },
+    {
+      "slugs": [
+        "xml-formatter",
+        "xml-validator"
+      ],
+      "files": [
+        "data/tools.ts",
+        "data/tool-content.ts",
+        "lib/faq.ts"
+      ],
+      "needed": "Clarify XML well-formedness, unsupported DTD/XSD and minify whitespace behavior."
+    },
+    {
+      "slugs": [
+        "html-to-jsx"
+      ],
+      "files": [
+        "data/tools.ts",
+        "data/tool-content.ts",
+        "lib/faq.ts"
+      ],
+      "needed": "Browser parser repairs malformed markup. Inline handler strings/executable embeds/CSS !important are rejected; arbitrary JavaScript conversion is unsupported."
+    }
+  ],
+  "remainingBlockers": [
+    {
+      "scope": "release acceptance",
+      "reason": "Parent must run all 27 fixtures on integrated local/production app, downloads, 320px layout, DOMParser behavior and previews."
+    },
+    {
+      "scope": "central copy",
+      "reason": "Coordinator must reconcile central claims above. Worker cannot edit central catalog/FAQ/ToolUI/redirect configuration."
+    }
+  ],
+  "ownership": {
+    "centralFilesEdited": false,
+    "dependenciesChanged": false,
+    "nodeModulesSymlink": "left untracked",
+    "pushOrMerge": false
+  }
+}

@@ -1,141 +1,8 @@
 'use client';
+import ToolExampleClearActions from './ToolExampleClearActions';
+import { buildGraph, type GraphNode, type GraphEdge } from '@/lib/developer-data/graph';
 
 import { useMemo, useState } from 'react';
-
-type JsonValue =
-  | string
-  | number
-  | boolean
-  | null
-  | JsonValue[]
-  | { [key: string]: JsonValue };
-
-interface GraphNode {
-  id: string;
-  label: string;
-  kind: 'object' | 'array' | 'string' | 'number' | 'boolean' | 'null' | 'root';
-  depth: number;
-}
-
-interface GraphEdge {
-  from: string;
-  to: string;
-  key: string;
-}
-
-interface Graph {
-  nodes: GraphNode[];
-  edges: GraphEdge[];
-  refCount: number;
-  cycle: boolean;
-  error?: string;
-}
-
-function buildGraph(input: string): Graph {
-  const trimmed = input.trim();
-  if (!trimmed) {
-    return { nodes: [], edges: [], refCount: 0, cycle: false };
-  }
-  let parsed: JsonValue;
-  try {
-    parsed = JSON.parse(trimmed) as JsonValue;
-  } catch (e) {
-    return {
-      nodes: [],
-      edges: [],
-      refCount: 0,
-      cycle: false,
-      error: (e as Error).message,
-    };
-  }
-
-  const nodes: GraphNode[] = [];
-  const edges: GraphEdge[] = [];
-  const valueToId = new Map<JsonValue, string>();
-  let refCount = 0;
-
-  const visit = (value: JsonValue, key: string, depth: number, parentId: string | null): string => {
-    if (value !== null && typeof value === 'object') {
-      const existing = valueToId.get(value);
-      if (existing) {
-        if (parentId) {
-          edges.push({ from: parentId, to: existing, key });
-          refCount += 1;
-        }
-        return existing;
-      }
-      const id = `n${nodes.length}`;
-      const kind: GraphNode['kind'] = Array.isArray(value) ? 'array' : 'object';
-      nodes.push({ id, label: key || (Array.isArray(value) ? '[]' : '{}'), kind, depth });
-      valueToId.set(value, id);
-      if (Array.isArray(value)) {
-        value.forEach((item, i) => {
-          const childId = visit(item, String(i), depth + 1, id);
-          if (childId !== id) {
-            edges.push({ from: id, to: childId, key: String(i) });
-          }
-        });
-      } else {
-        for (const [k, v] of Object.entries(value)) {
-          const childId = visit(v, k, depth + 1, id);
-          if (childId !== id) {
-            edges.push({ from: id, to: childId, key: k });
-          }
-        }
-      }
-      return id;
-    }
-
-    const id = `n${nodes.length}`;
-    let label = '';
-    let kind: GraphNode['kind'];
-    if (value === null) {
-      label = 'null';
-      kind = 'null';
-    } else if (typeof value === 'string') {
-      label = JSON.stringify(value).slice(0, 24);
-      kind = 'string';
-    } else if (typeof value === 'number') {
-      label = String(value);
-      kind = 'number';
-    } else {
-      label = String(value);
-      kind = 'boolean';
-    }
-    nodes.push({ id, label, kind, depth });
-    if (parentId) {
-      edges.push({ from: parentId, to: id, key });
-    }
-    return id;
-  };
-
-  visit(parsed, '$', 0, null);
-
-  // Detect cycle (a node referencing itself indirectly)
-  const adj = new Map<string, string[]>();
-  for (const edge of edges) {
-    if (!adj.has(edge.from)) adj.set(edge.from, []);
-    adj.get(edge.from)!.push(edge.to);
-  }
-  const cycle = (() => {
-    const visiting = new Set<string>();
-    const visited = new Set<string>();
-    const dfs = (id: string): boolean => {
-      if (visiting.has(id)) return true;
-      if (visited.has(id)) return false;
-      visiting.add(id);
-      const next = adj.get(id) ?? [];
-      for (const n of next) if (dfs(n)) return true;
-      visiting.delete(id);
-      visited.add(id);
-      return false;
-    };
-    for (const n of nodes) if (dfs(n.id)) return true;
-    return false;
-  })();
-
-  return { nodes, edges, refCount, cycle };
-}
 
 function kindColor(kind: GraphNode['kind']): string {
   switch (kind) {
@@ -181,7 +48,7 @@ function layoutNodes(nodes: GraphNode[], edges: GraphEdge[]): Map<string, { x: n
 
   for (const [depth, list] of byDepth.entries()) {
     const rowHeight = Math.max(60, (CANVAS_H - 40) / list.length);
-    const x = 30 + depth * colWidth;
+    const x = 60 + depth * colWidth;
     list.forEach((node, i) => {
       const y = 30 + i * rowHeight + rowHeight / 2;
       positions.set(node.id, { x, y });
@@ -192,7 +59,6 @@ function layoutNodes(nodes: GraphNode[], edges: GraphEdge[]): Map<string, { x: n
 
 export default function JsonGraphVisualizerClient() {
   const [input, setInput] = useState('');
-  const [showRefs, setShowRefs] = useState(true);
 
   const graph = useMemo(() => buildGraph(input), [input]);
   const positions = useMemo(() => layoutNodes(graph.nodes, graph.edges), [graph]);
@@ -207,18 +73,13 @@ export default function JsonGraphVisualizerClient() {
       };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" style={{minWidth:0,maxWidth:"100%"}}>
+      <p>Each JSON value has its own node. JSON cannot encode shared references or cycles. Graphs are limited to 200 values.</p>
       <div>
-        <div className="tb-v2-tool-input-head">
+        <div className="tb-v2-tool-input-head" style={{flexWrap:"wrap",gap:8}}>
           <span className="tb-v2-tool-label">JSON</span>
-          <label className="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-400">
-            <input
-              type="checkbox"
-              checked={showRefs}
-              onChange={(e) => setShowRefs(e.target.checked)}
-            />
-            Show shared references
-          </label>
+        <ToolExampleClearActions onExample={() => setInput('{"name":"Ada","items":[1,true,null]}')} onClear={() => { setInput(''); }} />
+
         </div>
         <textarea
           value={input}
@@ -230,7 +91,7 @@ export default function JsonGraphVisualizerClient() {
         />
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2">
         <div className="rounded-xl border border-gray-200 bg-white p-4 text-center dark:border-gray-800 dark:bg-gray-900">
           <p className="text-2xl font-bold text-gray-900 dark:text-white">
             {'error' in summary ? '—' : summary.nodes}
@@ -243,20 +104,7 @@ export default function JsonGraphVisualizerClient() {
           </p>
           <p className="text-xs text-gray-500 dark:text-gray-400">Edges</p>
         </div>
-        <div className="rounded-xl border border-gray-200 bg-white p-4 text-center dark:border-gray-800 dark:bg-gray-900">
-          <p className="text-2xl font-bold text-gray-900 dark:text-white">
-            {'error' in summary ? '—' : summary.refs}
-          </p>
-          <p className="text-xs text-gray-500 dark:text-gray-400">Shared refs</p>
-        </div>
-        <div className="rounded-xl border border-gray-200 bg-white p-4 text-center dark:border-gray-800 dark:bg-gray-900">
-          <p
-            className={`text-2xl font-bold ${'error' in summary ? 'text-gray-400' : summary.cycle ? 'text-red-600' : 'text-emerald-600'}`}
-          >
-            {'error' in summary ? '—' : summary.cycle ? 'Yes' : 'No'}
-          </p>
-          <p className="text-xs text-gray-500 dark:text-gray-400">Cycle</p>
-        </div>
+
       </div>
 
       {'error' in summary ? (
@@ -274,7 +122,7 @@ export default function JsonGraphVisualizerClient() {
         <div className="rounded-2xl border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-900">
           <div className="overflow-x-auto">
             <svg
-              viewBox={`0 0 ${CANVAS_W} ${CANVAS_H}`}
+              viewBox={`0 0 ${Math.max(CANVAS_W, ...Array.from(positions.values()).map(p => p.x + 70))} ${Math.max(CANVAS_H, ...Array.from(positions.values()).map(p => p.y + 40))}`}
               width={CANVAS_W}
               height={CANVAS_H}
               className="mx-auto max-w-full"
@@ -293,7 +141,6 @@ export default function JsonGraphVisualizerClient() {
                 const to = positions.get(edge.to);
                 if (!from || !to) return null;
                 const isRef = graph.refCount > 0 && to.x <= from.x;
-                if (isRef && !showRefs) return null;
                 const midX = (from.x + to.x) / 2;
                 const path = `M ${from.x} ${from.y} C ${midX} ${from.y}, ${midX} ${to.y}, ${to.x} ${to.y}`;
                 return (
