@@ -91,7 +91,25 @@ add('text-to-speech',async c=>{const {page,tool:t,expect,check}=c;const native=a
  check(false,'Human review required: listen to actual synthesized audio and verify it matches the entered text; mocked lifecycle events do not establish audible output.');
 });
 add('collocations-checker',async({tool:t,expect,check})=>{await fill(t,'Text','make a decision and take into account');await click(t,'Check Collocations');await expect(output(t)).toContainText('make a decision');await expect(output(t)).toContainText('take into account');await fill(t,'Text','make');await click(t,'Check Collocations');await expect(t.getByText('make a decision',{exact:true})).toHaveCount(0);await clear(t);check(true,'Complete phrase matching supports four words and does not invent a phrase for make');});
-add('automation-wizard',async({tool:t,page,expect,check})=>{await page.context().grantPermissions(page.context().browser()?.browserType().name()==='webkit'?['clipboard-read']:['clipboard-read','clipboard-write']);await example(t);await click(t,'Copy YAML');await expect.poll(()=>page.evaluate(()=>navigator.clipboard.readText())).toContain('Daily report');const parsed=yamlLoad(await page.evaluate(()=>navigator.clipboard.readText()));check(parsed.trigger.name==='Daily report'&&parsed.trigger.config.interval==='daily'&&parsed.trigger.config.time==='09:00','YAML retains workflow name and all configured schedule fields');await clear(t);await expect(t.getByRole('button',{name:'Copy YAML'})).toHaveCount(0);});
+add('automation-wizard',async({tool:t,page,expect,check})=>{
+ const webkit=page.context().browser()?.browserType().name()==='webkit';
+ if(!webkit)await page.context().grantPermissions(['clipboard-read','clipboard-write']);
+ await example(t);await click(t,'Copy YAML');let copied;
+ if(webkit){
+  // Exercise the real clipboard through a user paste; WebKit's readText API can
+  // reject permission even after a successful user-triggered write.
+  const probe=await page.evaluateHandle(()=>{const element=document.createElement('textarea');element.setAttribute('aria-label','QA clipboard paste target');document.body.append(element);element.focus();return element;});
+  try{
+   await page.keyboard.press(process.platform==='darwin'?'Meta+V':'Control+V');
+   await expect.poll(()=>probe.evaluate(element=>element.value)).toContain('Daily report');
+   copied=await probe.evaluate(element=>element.value);
+  }finally{await probe.evaluate(element=>element.remove());await probe.dispose();}
+ }else{
+  await expect.poll(()=>page.evaluate(()=>navigator.clipboard.readText())).toContain('Daily report');
+  copied=await page.evaluate(()=>navigator.clipboard.readText());
+ }
+ const parsed=yamlLoad(copied);check(parsed.trigger.name==='Daily report'&&parsed.trigger.config.interval==='daily'&&parsed.trigger.config.time==='09:00','YAML retains workflow name and all configured schedule fields');await clear(t);await expect(t.getByRole('button',{name:'Copy YAML'})).toHaveCount(0);
+});
 add('bill-sale-generator',async c=>{await example(c.tool);await click(c.tool,'Generate Bill of Sale');const b=await download(c,'Download TXT');const txt=b.toString();c.check(txt.includes('Alex Seller')&&txt.includes('Sam Buyer')&&txt.includes('B-101')&&txt.includes('210.00'),'Bill of sale download includes supplied parties, item and price plus tax');await fill(c.tool,'Sale Price ($)','-1');await click(c.tool,'Generate Bill of Sale');await c.expect(c.tool.getByRole('alert')).toBeVisible();await clear(c.tool);await c.expect(c.tool.getByRole('button',{name:'Download TXT'})).toHaveCount(0);});
 add('business-plan-generator',async({tool:t,expect,check})=>{await fill(t,'Business idea','Bicycle repair studio');await fill(t,'Target market','local commuters');await t.getByLabel('Budget level').selectOption('low');await click(t,'Generate Business Plan');await expect(output(t)).toContainText('Bicycle repair studio');await expect(output(t)).toContainText('local commuters');await expect(output(t)).toContainText('low budget');await expect(output(t)).not.toContainText('50% revenue increase');await clear(t);await expect(t.getByLabel('Business idea')).toHaveValue('');check(true,'Outline reflects all supplied inputs and does not fabricate financial projections');});
 add('chart-maker',async c=>{await example(c.tool);await click(c.tool,'Pie');await png(c,'Download Chart');await c.expect(c.tool.getByText('Q1: 10',{exact:true})).toBeVisible();await c.expect(c.tool.getByText('Q2: 20',{exact:true})).toBeVisible();await clear(c.tool);await c.expect(c.tool.getByLabel('Chart title')).toHaveValue('');c.check(true,'Pie PNG decodes and current data labels are present; Clear removes dataset');});

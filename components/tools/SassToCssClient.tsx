@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
+import { browserWorkerURLs } from '../../lib/generated/browser-worker-urls';
 import ToolExampleClearActions from './ToolExampleClearActions';
 import UtilityDesignLayout from './UtilityDesignLayout';
 export default function SassToCssClient() {
@@ -14,7 +15,7 @@ export default function SassToCssClient() {
     if(input.length>10000){setError('Limit Sass to 10000 characters.');return;}
     const id=generation.current;setLoading(true);
     try {
-      const w=new Worker(new URL('../../lib/utility-design/sass.worker.ts',import.meta.url));worker.current=w;
+      const w=new Worker(browserWorkerURLs.sass);worker.current=w;
       const timer=setTimeout(()=>{if(id===generation.current){w.terminate();setLoading(false);setError('Compilation exceeded 8 seconds. Simplify loops and retry.');}},8000);
       w.onmessage=e=>{clearTimeout(timer);w.terminate();if(id!==generation.current)return;setLoading(false);setOutput(e.data.output||'');setError(e.data.error||'');};
       w.onerror=()=>{clearTimeout(timer);w.terminate();if(id===generation.current){setLoading(false);setError('Sass compiler could not load in this browser.');}};
