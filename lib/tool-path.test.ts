@@ -56,3 +56,21 @@ describe('isImageToolSlug', () => {
     expect(isImageToolSlug('json-formatter')).toBe(false);
   });
 });
+
+describe('retired Unblur route', () => {
+  it('resolves to Sharpen without a duplicate public catalog row', () => {
+    expect(getToolBySlug('unblur')?.slug).toBe('sharpen');
+    expect(getToolPathBySlug('unblur')).toBe('/tools/images/sharpen');
+    expect(tools.some((tool) => tool.slug === 'unblur')).toBe(false);
+    expect(tools.filter((tool) => tool.slug === 'sharpen')).toHaveLength(1);
+  });
+
+  it('permanently redirects both legacy paths directly to Sharpen', async () => {
+    const { default: config } = await import('../next.config.mjs');
+    const redirects = await config.redirects!();
+    for (const source of ['/tools/unblur', '/tools/images/unblur']) {
+      expect(redirects.find((entry: { source: string }) => entry.source === source))
+        .toEqual({ source, destination: '/tools/images/sharpen', permanent: true });
+    }
+  });
+});
