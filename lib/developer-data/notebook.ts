@@ -1,9 +1,10 @@
 import { parseJson } from './core';
 import { markdownHtml, previewDocument } from './browser';
+export const NOTEBOOK_BUDGET = { maxBytes: 10 * 1024 * 1024, maxDepth: 64, maxNodes: 100000 };
 const obj = (v: any) => v !== null && typeof v === 'object' && !Array.isArray(v);
 export const notebookExample = JSON.stringify({ nbformat: 4, nbformat_minor: 5, metadata: { kernelspec: { name: 'python3', display_name: 'Python 3' } }, cells: [{ id: 'intro', cell_type: 'markdown', metadata: {}, source: ['# Notebook\n', 'Hello **Ada**.'] }, { id: 'code', cell_type: 'code', metadata: {}, source: ['print(42)'], execution_count: 2, outputs: [{ output_type: 'stream', name: 'stdout', text: ['42\n'] }] }] }, null, 2);
 export function notebook(text: string) {
-    const n = parseJson(text);
+    const n = parseJson(text, NOTEBOOK_BUDGET);
     if (!obj(n) || n.nbformat !== 4 || !Number.isInteger(n.nbformat_minor) || n.nbformat_minor < 0 || !obj(n.metadata) || !Array.isArray(n.cells))
         throw new Error('Expected a v4 notebook with nbformat_minor, metadata and cells.');
     const ids = new Set<string>();
@@ -31,7 +32,10 @@ export function notebook(text: string) {
     }
     return n;
 }
-export function cleanNotebook(text: string) { const n = notebook(text); return { ...n, cells: n.cells.map((c: any) => c.cell_type === 'code' ? { ...c, execution_count: null, outputs: [], metadata: Object.fromEntries(Object.entries(c.metadata).filter(([k]) => !['execution', 'collapsed', 'scrolled'].includes(k))) } : c) }; }
+export function cleanNotebook(text: string) { const n = notebook(text); const metadata: Record<string, any> = {};
+    if (obj(n.metadata.kernelspec)) metadata.kernelspec = n.metadata.kernelspec;
+    if (obj(n.metadata.language_info)) metadata.language_info = Object.fromEntries(Object.entries(n.metadata.language_info).filter(([k]) => ['name', 'version'].includes(k)));
+    return { ...n, metadata, cells: n.cells.map((c: any) => c.cell_type === 'code' ? { ...c, execution_count: null, outputs: [], metadata: Object.fromEntries(Object.entries(c.metadata).filter(([k]) => !['execution', 'collapsed', 'scrolled', 'jupyter_outputs_outputsed'].includes(k))) } : c) }; }
 export function formatNotebook(text: string, sort = false) { const n = notebook(text); if (sort)
     n.cells = n.cells.map((c: any, i: number) => ({ c, i })).sort((a: any, b: any) => (a.c.execution_count ?? Infinity) - (b.c.execution_count ?? Infinity) || a.i - b.i).map((x: any) => x.c); return JSON.stringify(n, null, 2); }
 const escape = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -40,7 +44,7 @@ export function notebookHtml(text: string) {
     const n = notebook(text);
     return previewDocument(n.cells.map((c: any) => {
         if (c.cell_type === 'markdown')
-            return markdownHtml(source(c.source));
+            return markdownHtml(source(c.source), NOTEBOOK_BUDGET.maxBytes);
         let html = '<pre><code>' + escape(source(c.source)) + '</code></pre>';
         for (const o of c.outputs ?? []) {
             const text = o.output_type === 'stream' ? source(o.text) : o.output_type === 'error' ? source(o.traceback?.join('\n')) : source(o.data?.['text/plain']);

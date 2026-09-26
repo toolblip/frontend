@@ -4,12 +4,17 @@ export function bounded(text: string) {
         throw new Error('Input exceeds 100,000 characters.');
     return text;
 }
-export function parseJson(text: string): any {
-    const value = JSON.parse(bounded(text));
+export interface JsonBudget { maxBytes: number; maxDepth: number; maxNodes: number }
+export function parseJson(text: string, budget?: JsonBudget): any {
+    if (budget) {
+        if (text.length > budget.maxBytes || new TextEncoder().encode(text).byteLength > budget.maxBytes)
+            throw new Error(`JSON exceeds ${budget.maxBytes.toLocaleString('en-US')} bytes.`);
+    } else bounded(text);
+    const value = JSON.parse(text);
     let count = 0;
     function visit(v: unknown, depth: number) {
-        if (++count > 10000 || depth > 64)
-            throw new Error('JSON exceeds 10,000 values or 64 nesting levels.');
+        if (++count > (budget?.maxNodes ?? 10000) || depth > (budget?.maxDepth ?? 64))
+            throw new Error(`JSON exceeds ${(budget?.maxNodes ?? 10000).toLocaleString('en-US')} values or ${budget?.maxDepth ?? 64} nesting levels.`);
         if (typeof v === 'number' && (!Number.isFinite(v) || Number.isInteger(v) && !Number.isSafeInteger(v)))
             throw new Error('Number exceeds the supported safe range.');
         if (v && typeof v === 'object')

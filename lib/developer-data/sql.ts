@@ -1,6 +1,7 @@
 import { bounded } from './core';
 const keywords = new Set('SELECT FROM WHERE AND OR JOIN LEFT RIGHT INNER OUTER FULL CROSS NATURAL ON AS ORDER BY GROUP HAVING LIMIT OFFSET INSERT INTO VALUES UPDATE SET DELETE CREATE TABLE ALTER DROP INDEX VIEW DATABASE SCHEMA DISTINCT COUNT SUM AVG MAX MIN IN NOT NULL IS LIKE BETWEEN EXISTS CASE WHEN THEN ELSE END UNION ALL ASC DESC USING PRIMARY KEY FOREIGN REFERENCES CONSTRAINT DEFAULT CHECK UNIQUE CASCADE EXPLAIN WITH RECURSIVE OVER PARTITION WINDOW'.split(' '));
-export function formatSql(input: string, uppercase = true, indent = 2): string {
+export type SqlDialect = 'standard' | 'mysql' | 'postgresql';
+export function formatSql(input: string, uppercase = true, indent = 2, dialect: SqlDialect = 'standard'): string {
     bounded(input);
     const tokens: {
         text: string;
@@ -52,6 +53,8 @@ export function formatSql(input: string, uppercase = true, indent = 2): string {
         }
         if ("'\"`[".includes(input[i])) {
             const end = input[i] === '[' ? ']' : input[i];
+            const escapeString = dialect === 'postgresql' && input[i] === "'" && /(?:^|[^\p{L}\p{M}\p{N}_$])[eE]$/u.test(input.slice(0, i));
+            const backslashEscapes = escapeString || dialect === 'mysql' && (input[i] === "'" || input[i] === '"');
             let j = i + 1, closed = false;
             while (j < input.length) {
                 if (input[j] === end) {
@@ -63,7 +66,7 @@ export function formatSql(input: string, uppercase = true, indent = 2): string {
                     closed = true;
                     break;
                 }
-                if (input[j] === '\\')
+                if (backslashEscapes && input[j] === '\\')
                     j++;
                 j++;
             }
@@ -73,7 +76,7 @@ export function formatSql(input: string, uppercase = true, indent = 2): string {
             i = j;
             continue;
         }
-        if ((m = rest.match(/^[A-Za-z_][\w$]*|^\d+(?:\.\d+)?(?:[eE][+-]?\d+)?/))) {
+        if ((m = rest.match(/^[\p{L}_][\p{L}\p{M}\p{N}_$]*|^\d+(?:\.\d+)?(?:[eE][+-]?\d+)?/u))) {
             tokens.push({ text: m[0], kind: 'word' });
             i += m[0].length;
             continue;

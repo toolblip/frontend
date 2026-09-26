@@ -28,6 +28,24 @@ export function formatXml(text: string, indent = 2) {
     }
     return Array.from(doc.childNodes).map(n => render(n, 0)).join('\n');
 }
+// Accept only bounded base64 raster payloads with matching file signatures.
+// SVG and arbitrary data URLs never enter the allowlist.
+export function rasterDataUrl(url: string): boolean {
+    if (url.length > 7_000_000) return false; // at most ~5 MiB decoded
+    const match = /^data:image\/(png|jpeg|gif|webp);base64,([A-Za-z0-9+/]+={0,2})$/i.exec(url);
+    if (!match || match[2].length % 4 !== 0) return false;
+    try {
+        const bytes = atob(match[2]);
+        if (btoa(bytes) !== match[2]) return false;
+        switch (match[1].toLowerCase()) {
+            case 'png': return bytes.startsWith('\x89PNG\r\n\x1a\n') && bytes.length >= 33 && bytes.slice(12, 16) === 'IHDR';
+            case 'jpeg': return bytes.startsWith('\xff\xd8\xff') && bytes.endsWith('\xff\xd9');
+            case 'gif': return /^(GIF87a|GIF89a)/.test(bytes) && bytes.length >= 14 && bytes.endsWith(';');
+            case 'webp': return bytes.length >= 20 && bytes.startsWith('RIFF') && bytes.slice(8, 12) === 'WEBP' && ['VP8 ', 'VP8L', 'VP8X'].includes(bytes.slice(12, 16));
+        }
+    } catch { return false; }
+    return false;
+}
 const allowed = new Set('P BR HR H1 H2 H3 H4 H5 H6 UL OL LI BLOCKQUOTE PRE CODE STRONG EM DEL A IMG TABLE THEAD TBODY TR TH TD DIV SPAN SUP SUB'.split(' '));
 export function safeHtml(html: string): string {
     const doc = new DOMParser().parseFromString(html, 'text/html');
@@ -41,7 +59,7 @@ export function safeHtml(html: string): string {
                 const name = attr.name.toLowerCase();
                 const url = (name === 'href' && el.tagName === 'A') || (name === 'src' && el.tagName === 'IMG');
                 if (url) {
-                    if (!/^(https?:\/\/|mailto:|#)/i.test(attr.value))
+                    if (!/^(https?:\/\/|mailto:|#)/i.test(attr.value) && !(name === 'src' && el.tagName === 'IMG' && rasterDataUrl(attr.value)))
                         el.removeAttribute(attr.name);
                 }
                 else if (!['alt', 'title', 'colspan', 'rowspan'].includes(name))
@@ -53,7 +71,12 @@ export function safeHtml(html: string): string {
     clean(doc.body);
     return doc.body.innerHTML;
 }
-export function markdownHtml(text: string) { return safeHtml(marked.parse(bounded(text), { async: false, gfm: true }) as string); }
+export function markdownHtml(text: string, maxBytes?: number) {
+    if (maxBytes !== undefined) {
+        if (text.length > maxBytes || new TextEncoder().encode(text).byteLength > maxBytes) throw new Error('Markdown exceeds the notebook byte budget.');
+    } else bounded(text);
+    return safeHtml(marked.parse(text, { async: false, gfm: true }) as string);
+}
 export function previewDocument(html: string) { return '<!doctype html><html><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src \'none\'; style-src \'unsafe-inline\'; img-src https: data:"><style>body{font:16px system-ui;line-height:1.6;overflow-wrap:anywhere}pre{white-space:pre-wrap}img,table{max-width:100%}</style></head><body>' + html + '</body></html>'; }
 export function htmlToJsx(text: string) {
     bounded(text);
