@@ -1495,11 +1495,9 @@ Output: chart-page4.png`,
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "grayscale": {
-    description: `A full black-and-white conversion strips out every trace of color, but that's not always the look actually wanted, a partially desaturated photo, muted rather than fully monochrome, is a distinctly more contemporary editorial style than a stark, dated-feeling full grayscale switch flipped all the way on. This tool converts images to grayscale with adjustable intensity, allowing a partial desaturation rather than only a full black-and-white conversion. Useful for applying a subtle, muted color treatment that stops short of full monochrome for a modern editorial look, converting a photo to classic full black-and-white when that starker effect is actually wanted, or dialing in exactly how much color to strip out rather than committing to an all-or-nothing switch.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    description: `Convert the whole image to grayscale using 0.299 red + 0.587 green + 0.114 blue. Upload an image or choose Examples to see the result automatically. The original dimensions and transparency are preserved. JPEG inputs download as JPEG at 90% quality. PNG, WebP, GIF and SVG inputs download as PNG. GIF uses its first frame and SVG is rasterized. Dimensions stay the same, and file size may increase. Download current image saves the encoded preview. Files must be no larger than 20 MiB, 8192 pixels per side and 16 megapixels.`,
+    examples: [],
+    features: ["Automatic preview", "Original dimensions", "Transparency preserved", "Local image processing"]
   },
   "hash-collision-finder": {
     description: `Two different inputs producing the exact same hash output is called a collision, and whether that's realistically findable says a lot about how broken a hash function actually is, MD5 has practical, publicly demonstrated collisions, SHA-1 has its own published collision attack, while SHA-256 has none found within any remotely practical search, a genuinely different security posture across three algorithms often lumped together as roughly equivalent. This tool searches for actual hash collisions among short inputs across MD5, SHA-1, and SHA-256, demonstrating in practice rather than in theory which of these algorithms can still be broken this way. Useful for showing concretely why MD5 is considered unsuitable for security purposes, illustrating SHA-1's known weakness with an actual generated collision, or confirming that SHA-256 resists the same short-input search that breaks the other two.`,
@@ -3072,11 +3070,9 @@ Result: 847291`
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "pixelate": {
-    description: `A soft blur on a background is meant to look good, an artistic depth-of-field effect that still lets a shape read as recognizable, but obscuring a face or a license plate for actual privacy needs something closer to destroying the underlying detail entirely, which is exactly what pixelation does by averaging a block of pixels down into one flat color rather than just softening the edges around it. This tool pixelates a face or an object directly in a photo, reducing that specific region to blocky, unrecognizable color averages rather than a soft, still-legible blur. Useful for anonymizing a bystander's face in a street photo before posting it publicly, obscuring a license plate or another identifying detail in an image meant to be shared widely, or protecting a minor's identity in a family photo without blurring or cropping out the rest of the scene.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    description: `Pixelate the whole image with square blocks from 1 to 64 pixels. Each block uses an alpha-weighted average color while keeping each pixel’s transparency. This isn’t a region editor. Upload an image or choose Examples, then adjust Block size for a live preview. A block size of 1 leaves the pixels unchanged. JPEG inputs download as JPEG at 90% quality. PNG, WebP, GIF and SVG inputs download as PNG. GIF uses its first frame and SVG is rasterized. Dimensions stay the same, and file size may increase. Download current image saves the encoded preview. Files must be no larger than 20 MiB, 8192 pixels per side and 16 megapixels.`,
+    examples: [],
+    features: ["Automatic preview", "Original dimensions", "Transparency preserved", "Local image processing"]
   },
   "placeholder-image-generator": {
     description: `A gray box standing in for a photo that hasn't arrived yet says nothing about whether an image slot is actually rendering at its intended size, but a placeholder with its own dimensions printed directly on it, 800x600 spelled out across the box itself, turns that into something checkable at a glance, if the box looks stretched or tiny compared to what the label says, that's an immediate, visible layout bug rather than something only caught after real content goes in. This tool generates placeholder images at any size with custom text, color, and format. Useful for confirming an image slot renders at its actual intended size before final photos are ready, generating a placeholder labeled with its own dimensions to catch a layout bug immediately, or filling a mockup with sized, labeled placeholders instead of a single generic gray box.`,
@@ -3864,11 +3860,9 @@ Output: xn--85bp0auq.xn--54b7fta0cc`
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "sharpen": {
-    description: `A phone photo that came out slightly soft, an old scan that lost some clarity, or an image that got a little blurry after resizing all share the same fix, boosting the contrast right at each edge so detail that's technically present but visually mushy reads as sharp again. This tool sharpens a blurry photo by enhancing exactly that edge detail, improving perceived clarity without changing the actual color or exposure of the image. Useful for crisping up a slightly out-of-focus phone photo before printing it, improving the legibility of text in a scanned document photo, or restoring some perceived sharpness to an image that got soft after being resized or compressed.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    description: `Boost edge contrast with an adjustable four-neighbor sharpening filter. Upload an image or choose Examples, then adjust Sharpen amount from 0 to 3 for a live preview. Zero leaves the pixels unchanged. Uniform colors keep their brightness at every setting, though strong sharpening can amplify noise or create harsh edges. JPEG inputs download as JPEG at 90% quality. PNG, WebP, GIF and SVG inputs download as PNG. GIF uses its first frame and SVG is rasterized. Dimensions stay the same, and file size may increase. Download current image saves the encoded preview. Files must be no larger than 20 MiB, 8192 pixels per side and 16 megapixels.`,
+    examples: [],
+    features: ["Automatic preview", "Original dimensions", "Transparency preserved", "Local image processing"]
   },
   "shell-command-generator": {
     description: `Bash and zsh share most of their core syntax, but fish deliberately breaks from that lineage, using its own syntax for variables, conditionals, and loops, which means the exact same plain English request, find every file modified in the last week, doesn't translate into one universal command, it needs to come out differently depending on which shell is actually going to run it. This tool generates a shell command from a plain English description, targeted specifically at bash, zsh, or fish rather than a single syntax assumed to work everywhere. Useful for getting a fish-specific command that won't silently misbehave if pasted from a bash-oriented answer, generating the same request in both bash and zsh to confirm they're actually interchangeable, or producing a command in whichever shell a specific script or terminal setup actually uses.`,
@@ -4522,11 +4516,9 @@ Cairo`, note: `Same list, flipped. Use this for a reverse leaderboard or log.` }
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "unblur": {
-    description: `Sharpening amplifies contrast at edges that are already there, which works fine on an image that's merely a little soft, but a photo that's genuinely out of focus or blurred by camera shake is missing detail outright, not just softened, and no amount of edge-contrast amplification recovers information that was never actually captured in the first place. This tool uses AI-based deblurring to reconstruct plausible detail in a genuinely blurry or low-resolution photo, going beyond what a standard sharpening filter can do with edges that are already faint or missing entirely. Useful for recovering a genuinely out-of-focus photo that a normal sharpen filter can't actually fix, salvaging a motion-blurred shot from camera shake, or improving a low-resolution image where the real detail needs to be reconstructed rather than just made to look crisper.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    description: `Improve mildly soft edges with a gentle unsharp mask based on a 3×3 local blur. Upload an image or choose Examples, then adjust Unblur strength from 0 to 100% for a live preview. Zero leaves the pixels unchanged. This tool doesn’t use AI and can’t recover lost detail or severe motion blur. JPEG inputs download as JPEG at 90% quality. PNG, WebP, GIF and SVG inputs download as PNG. GIF uses its first frame and SVG is rasterized. Dimensions stay the same, and file size may increase. Download current image saves the encoded preview. Files must be no larger than 20 MiB, 8192 pixels per side and 16 megapixels.`,
+    examples: [],
+    features: ["Automatic preview", "Original dimensions", "Transparency preserved", "Local image processing"]
   },
   "unicode-character-inspector": {
     description: `Typing an em dash, a proper curly quote, or a trademark symbol reliably in a design tool or a CMS field usually means knowing its exact code point first, since a keyboard shortcut that works in one piece of software often does nothing in another, and guessing at the right character by eye doesn't confirm it's actually correct. This tool inspects any Unicode character and shows its code point, UTF-8 bytes, and HTML entity, giving the precise identifier needed to insert a specific typographic character correctly wherever it's actually needed. Useful for looking up an em dash or a curly quote's exact code point before inserting it into a design tool that doesn't accept a direct keyboard shortcut, finding the HTML entity for a trademark or a copyright symbol, or confirming a special character pasted from another source is actually correct and not a visually similar lookalike.`,
