@@ -65,3 +65,14 @@ describe('formatter and parser regressions',()=>{
  it('detects browser and device in overlapping UA tokens',()=>{expect(parseUA('Mozilla/5.0 Windows Chrome/120.0 Safari/537.36 Edg/121.0').browser).toBe('Edge');expect(parseUA('iPad Version/17.2 Mobile Safari/604.1')).toMatchObject({browser:'Safari',version:'17.2',device:'Tablet',os:'iOS'});});
  it('escapes styled template content and rejects complex selectors',()=>{expect(cssToStyledComponents('.card { color: red; }')).toContain('const Card = styled("div")');expect(()=>cssToStyledComponents('.card:hover { color: red; }')).toThrow('simple');});
 });
+
+
+describe('HTML RCDATA preservation', () => {
+ it.each(['title', 'textarea', 'TITLE', 'TEXTAREA'])('preserves literal comment-like text and entities in %s', tag => {
+  const element = `<${tag}>A<!--keep-->&amp;<b>B</b></${tag}>`;
+  expect(minifyHtml(element + '<!--remove-->')).toBe(element);
+ });
+ it('does not mistake a custom element for a title element', () => {
+  expect(minifyHtml('<title-card>A<!--remove-->B</title-card>')).toBe('<title-card>AB</title-card>');
+ });
+});

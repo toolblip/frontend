@@ -367,6 +367,15 @@ export type ToolIndexingDecision =
 /** Explicit decisions override legacy eligibility. New tools default to pending.
  * A reviewed decision needs a real YYYY-MM-DD date and a nonblank evidence
  * reference covering fresh public QA, distinct purpose, and honest copy.
- * Neither the 12-tool recovery cohort nor the eight candidates are approved here.
+ * Candidate decisions below are based on the dated public-route review.
  */
-export const TOOL_INDEXING_DECISIONS: Readonly<Record<string, ToolIndexingDecision>> = Object.freeze({});
+export const TOOL_INDEXING_DECISIONS: Readonly<Record<string, ToolIndexingDecision>> = Object.freeze({
+  'json-to-typescript': { status: 'reviewed', reviewedAt: '2026-09-26', evidence: 'docs/gsc-candidate-review-2026-09-26.md#public-qa-and-distinct-purpose-decisions' },
+  'html-table-generator': { status: 'reviewed', reviewedAt: '2026-09-26', evidence: 'docs/gsc-candidate-review-2026-09-26.md#public-qa-and-distinct-purpose-decisions' },
+  'json-to-python': { status: 'reviewed', reviewedAt: '2026-09-26', evidence: 'docs/gsc-candidate-review-2026-09-26.md#public-qa-and-distinct-purpose-decisions' },
+  'html-minifier': { status: 'hold', reason: 'Public minifier removes literal comment-like title text. Local RCDATA repair awaits deployment and public QA; see docs/gsc-candidate-review-2026-09-26.md.' },
+  'ipynb-formatter': { status: 'reviewed', reviewedAt: '2026-09-26', evidence: 'docs/gsc-candidate-review-2026-09-26.md#public-qa-and-distinct-purpose-decisions' },
+  'ldap-filter-generator': { status: 'hold', reason: 'Public equality filter leaves asterisk unescaped. Local repair awaits deployment and public QA; see docs/gsc-candidate-review-2026-09-26.md.' },
+  'time-zone-converter': { status: 'hold', reason: 'Public mobile Copy label wraps across lines. Local layout repair awaits deployment and public QA; see docs/gsc-candidate-review-2026-09-26.md.' },
+  'split-csv': { status: 'hold', reason: 'Public mobile loaded-file banner splits the filename into narrow columns. Local layout repair awaits deployment and public QA; see docs/gsc-candidate-review-2026-09-26.md.' },
+});

@@ -5,11 +5,11 @@ export function minifyCss(input:string) {
  root.walk(node=>{node.raws.before='';node.raws.after='';if(node.type==='decl')node.raws.between=':';else if(node.type==='rule'||node.type==='atrule')node.raws.between='';});
  root.raws.after=''; return root.toString();
 }
-/** Preserve text whitespace and raw elements; only remove ordinary HTML comments. */
+/** Preserve text whitespace, raw elements and title/textarea RCDATA; only remove ordinary HTML comments. */
 export function minifyHtml(input:string) {
  let result='', i=0;
  while(i<input.length){
-  const raw=input.slice(i).match(/^<(script|style|pre|textarea)\b[^>]*>/i);
+  const raw=input.slice(i).match(/^<(script|style|pre|textarea|title)(?=[\t\n\f\r />])[^>]*>/i);
   if(raw){const end=new RegExp(`</${raw[1]}\\s*>`,'ig');end.lastIndex=i+raw[0].length;const m=end.exec(input);if(!m)throw new Error(`Unclosed ${raw[1]} element`);const stop=m.index+m[0].length;result+=input.slice(i,stop);i=stop;continue;}
   if(input.startsWith('<!--',i)){const end=input.indexOf('-->',i+4);if(end<0)throw new Error('Unclosed HTML comment');const comment=input.slice(i,end+3);if(/^<!--\[if/i.test(comment)||comment.startsWith('<!--!'))result+=comment;i=end+3;continue;}
   // Copy complete tags so quoted attributes and literal comment text remain intact.
