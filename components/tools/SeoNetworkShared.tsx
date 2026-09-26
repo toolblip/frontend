@@ -7,7 +7,7 @@ export function SeoFrame({ children, example, clear, note }: { children: ReactNo
   return <div className="seo-network" style={{ minWidth: 0, overflowWrap: 'anywhere' }}>
     <style>{`.seo-network input,.seo-network select,.seo-network textarea{min-width:0;max-width:100%;box-sizing:border-box}.seo-network pre{white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word;max-width:100%}.seo-network .tb-v2-tool-input-head,.seo-network .tb-v2-tool-output-head{flex-wrap:wrap;gap:10px}.seo-network label{display:block}.seo-network .seo-fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:14px}`}</style>
     <div className="tb-v2-tool-input-head"><span className="tb-v2-tool-label">Input</span><ToolExampleClearActions onExample={example} onClear={clear} /></div>
-    <div style={{ padding: 16, display: 'grid', gap: 14 }}>{note && <p style={{ fontSize: 13 }}>{note}</p>}{children}</div>
+    <div style={{ padding: 16, display: 'grid', gridTemplateColumns: 'minmax(0, 1fr)', gap: 14 }}>{note && <p style={{ fontSize: 13 }}>{note}</p>}{children}</div>
   </div>;
 }
 export function SeoField({ label, value, onChange, multiline = false, maxLength = 200000 }: { label: string; value: string; onChange: (value: string) => void; multiline?: boolean; maxLength?: number }) {

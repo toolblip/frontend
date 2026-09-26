@@ -32,10 +32,11 @@ export default function StickyNotesClient() {
   useEffect(() => {
     try {
       const saved=JSON.parse(localStorage.getItem('sticky-notes') || '[]');
-      if(!Array.isArray(saved)) throw new Error('Invalid notes');
-      setNotes(saved.filter(n=>n && typeof n.id==='string' && typeof n.content==='string' && typeof n.color==='string').slice(0,100));
-    } catch { setStorageError('Saved notes could not be loaded.'); }
-    setReady(true);
+      if(!Array.isArray(saved) || !saved.every(n => n && typeof n.id === 'string' && typeof n.content === 'string' && typeof n.color === 'string')) throw new Error('Invalid notes');
+      // Keep every record and all legacy fields. The limit applies only to creation.
+      setNotes(saved);
+      setReady(true);
+    } catch { setStorageError('Saved notes could not be loaded. Stored data has been kept; Clear explicitly discards it.'); }
   }, []);
   useEffect(() => {
     if(!ready)return;
@@ -44,7 +45,7 @@ export default function StickyNotesClient() {
   },[notes,ready]);
 
   const addNote = () => {
-    if(notes.length>=100)return;
+    if(!ready || notes.length>=100)return;
     const newNote: Note = {
       id: crypto.randomUUID(),
       content: '',
@@ -86,19 +87,21 @@ export default function StickyNotesClient() {
   };
 
   const clearAll = () => {
+    setReady(true); setStorageError('');
     setNotes([]);
     setEditingId(null); setEditContent('');
   };
 
   return (<UtilityDesignLayout>
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 p-6">
-      <ToolExampleClearActions onExample={() => { setNotes(n => [...n,{id:crypto.randomUUID(),content:'Example: review the project checklist.',color:colors[0],createdAt:Date.now(),position:{x:0,y:0}}]); }} onClear={() => { clearAll(); setEditingId(null); setEditContent(''); }}/>
+      <ToolExampleClearActions onExample={() => { if (!ready) return; setNotes(n => n.length >= 100 ? n : [...n,{id:crypto.randomUUID(),content:'Example: review the project checklist.',color:colors[0],createdAt:Date.now(),position:{x:0,y:0}}]); }} onClear={() => { clearAll(); setEditingId(null); setEditContent(''); }}/>
       {storageError && <p role="alert">{storageError}</p>}
       <div className="max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-6">
           <div className="tb-v2-mode-tabs">
             <button
               onClick={addNote}
+              disabled={!ready || notes.length >= 100}
               className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
             >
               Add Note
@@ -128,8 +131,8 @@ export default function StickyNotesClient() {
                 key={note.id}
                 className={`absolute w-64 p-4 rounded-lg shadow-lg ${note.color} cursor-move`}
                 style={{
-                  left: note.position.x,
-                  top: note.position.y,
+                  left: note.position?.x ?? 0,
+                  top: note.position?.y ?? 0,
                 }}
               >
                 {editingId === note.id ? (

@@ -4,6 +4,8 @@ import DeveloperGeneralFrame from './DeveloperGeneralFrame';
 import ToolExampleClearActions from './ToolExampleClearActions';
 import { formatCss, formatPython, formatHtml, minifyCss, minifyHtml } from '@/lib/developer-general/code';
 import { transformJavaScript } from '@/lib/developer-general/esbuild-browser';
+import { formatScript, compactTypeScript } from '@/lib/developer-general/format-script';
+import { loadScriptFormatter } from '@/lib/developer-general/script-formatter-browser';
 import { useState, useRef } from 'react';
 
 type Language = 'javascript' | 'typescript' | 'python' | 'html' | 'css' | 'json';
@@ -45,7 +47,7 @@ export default function CodeBeautifierClient() {
       switch (language) {
         case 'javascript':
         case 'typescript':
-          result = await transformJavaScript(code, false, language === 'typescript');
+          result = formatScript(await loadScriptFormatter(), code, language === 'typescript', options.indentSize, options.useTabs);
           break;
         case 'python':
           result = formatPython(code, options.useTabs ? '\t' : ' '.repeat(options.indentSize));
@@ -75,7 +77,7 @@ export default function CodeBeautifierClient() {
   const minifyCode = async () => {
     if(!beautifiedCode || beautifiedCode.startsWith('Error:'))return;
     const id=++generation.current;setBusy(true);
-    try {const result=language==='json'?JSON.stringify(JSON.parse(beautifiedCode)):language==='css'?minifyCss(beautifiedCode):language==='html'?minifyHtml(beautifiedCode):language==='python'?beautifiedCode:await transformJavaScript(beautifiedCode,true);
+    try {const result=language==='json'?JSON.stringify(JSON.parse(beautifiedCode)):language==='css'?minifyCss(beautifiedCode):language==='html'?minifyHtml(beautifiedCode):language==='python'?beautifiedCode:language==='typescript'?compactTypeScript(await loadScriptFormatter(),beautifiedCode):await transformJavaScript(beautifiedCode,true);
       if(id===generation.current)setBeautifiedCode(result);
     }catch(e){if(id===generation.current)setBeautifiedCode('Error: '+(e as Error).message);}finally{if(id===generation.current)setBusy(false);}
   };
@@ -109,7 +111,7 @@ export default function CodeBeautifierClient() {
   return (
     <DeveloperGeneralFrame><div className="flex flex-col gap-4">
       <ToolExampleClearActions onExample={() => {generation.current++;setBusy(false);loadExample();}} onClear={() => {generation.current++;setBusy(false);setCode('');setBeautifiedCode('');setCopied(false);}} />
-      <p>JavaScript/TypeScript uses esbuild (TypeScript types are removed). JSON and CSS support indentation. Python reindents existing blocks without inferring structure. HTML formats block boundaries conservatively; it is not a conformance validator.</p>
+      <p>JavaScript and TypeScript formatting preserves comments and type annotations. Python reindents existing blocks without inferring structure. HTML formats block boundaries conservatively; it is not a conformance validator.</p>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Language</span>
 
@@ -157,7 +159,7 @@ export default function CodeBeautifierClient() {
       </div>
 
       <div className="tb-v2-section" style={{ padding: '16px 20px' }}>
-        <h3 className="tb-v2-section-title" style={{ marginBottom: 12 }}>Indentation (JSON, CSS, Python and HTML)</h3>
+        <h3 className="tb-v2-section-title" style={{ marginBottom: 12 }}>Indentation</h3>
         <div className="flex flex-wrap gap-6">
           <label className="flex items-center gap-2">
             <input

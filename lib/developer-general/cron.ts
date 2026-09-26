@@ -134,7 +134,7 @@ function describeSchedule({ minutes, hours, daysOfMonth, months, daysOfWeek, par
   } else if (allDow && !allDom) {
     daySeg = daysOfMonth.length === 1 ? `the ${ordinal(daysOfMonth[0])} of each month` : `days ${daysOfMonth.join(', ')} of the month`;
   } else if (!allDow && !allDom) {
-    daySeg = `${daysOfMonth.join(',')} or ${daysOfWeek.map((d) => DOW_SHORT[d]).join(',')}`;
+    daySeg = `${daysOfMonth.join(',')} ${parts[2].startsWith('*') || parts[4].startsWith('*') ? 'and' : 'or'} ${daysOfWeek.map((d) => DOW_SHORT[d]).join(',')}`;
   }
 
   let monthSeg: string | null = null;
@@ -167,6 +167,7 @@ export function computeNextRuns(parsed: ParsedCron, count: number, now = new Dat
   const domSet = new Set(parsed.daysOfMonth);
   const monthSet = new Set(parsed.months);
   const dowSet = new Set(parsed.daysOfWeek);
+  // A wildcard prefix selects AND semantics, but its stepped set still constrains membership.
   const domRestricted = !parsed.parts[2].startsWith('*');
   const dowRestricted = !parsed.parts[4].startsWith('*');
   const maxDate = new Date(now);
@@ -188,8 +189,8 @@ export function computeNextRuns(parsed: ParsedCron, count: number, now = new Dat
     }
     const dom = cursor.getDate();
     const dow = cursor.getDay();
-    const domMatch = domRestricted ? domSet.has(dom) : true;
-    const dowMatch = dowRestricted ? dowSet.has(dow) : true;
+    const domMatch = domSet.has(dom);
+    const dowMatch = dowSet.has(dow);
     const dayMatch = domRestricted && dowRestricted ? domMatch || dowMatch : domMatch && dowMatch;
     if (!dayMatch) { cursor.setDate(cursor.getDate() + 1); cursor.setHours(0, 0, 0, 0); continue; }
     const hour = cursor.getHours();

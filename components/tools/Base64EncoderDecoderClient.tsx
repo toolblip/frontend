@@ -1,5 +1,5 @@
 'use client';
-import { copySecurityText } from '@/lib/developer-security/primitives';
+import { copySecurityText, MAX_TEXT, MAX_BASE64_INPUT } from '@/lib/developer-security/primitives';
 import DeveloperSecurityFrame, { useSecurityTask } from './DeveloperSecurityFrame';
 import { encodeBase64 as base64Encode, decodeBase64 as base64Decode } from '@/lib/developer-security/primitives';
 
@@ -120,7 +120,7 @@ export default function Base64EncoderDecoderClient() {
         </div>
       )}
 
-      <textarea aria-label="Input" maxLength={100000}
+      <textarea aria-label="Input" maxLength={mode === 'encode' ? MAX_TEXT : MAX_BASE64_INPUT}
         value={input}
         onChange={(e) => setInput(e.target.value)}
         placeholder={mode === 'encode' ? 'Enter text to Base64 encode...' : 'Enter Base64 string to decode...'}

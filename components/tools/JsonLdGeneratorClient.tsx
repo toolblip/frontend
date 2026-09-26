@@ -527,8 +527,6 @@ function JsonLdGeneratorForm() {
   };
 
   const loadExample = () => {
-    setGenerated('');
-    setError('');
     if (schemaType === 'WebSite') {
       setSiteName('Example Site');
       setSiteUrl('https://example.com');
@@ -581,8 +579,6 @@ function JsonLdGeneratorForm() {
             aria-selected={schemaType === type.value}
             onClick={() => {
               setSchemaType(type.value);
-              setGenerated('');
-              setError('');
             }}
             className={`tb-v2-mode-tab ${schemaType === type.value ? 'on' : ''}`}
           >

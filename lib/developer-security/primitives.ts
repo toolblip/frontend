@@ -1,6 +1,18 @@
 import { md5 } from './md5';
 import { randomFromAlphabet, randomInt } from '../secureRandom';
 export const MAX_TEXT = 100_000;
+// UTF-8 needs at most three bytes per UTF-16 code unit (astral pairs need four).
+const MAX_UTF8_BYTES = MAX_TEXT * 3;
+export const MAX_BASE64_INPUT = Math.ceil(MAX_UTF8_BYTES / 3) * 4 + MAX_TEXT;
+export const MAX_BINARY_INPUT = MAX_UTF8_BYTES * 9;
+function encodedInput(text: string, limit: number) {
+  if (text.length > limit) throw new Error('Encoded input exceeds the supported text budget.');
+  return text.replace(/\s/g, '');
+}
+function decodeUtf8(bytes: Uint8Array) {
+  if (bytes.length > MAX_UTF8_BYTES) throw new Error('Decoded payload exceeds the supported text budget.');
+  return bounded(new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(bytes));
+}
 export function bounded(text: string) { if(text.length > MAX_TEXT) throw new Error('Input exceeds 100,000 characters.'); return text; }
 export const hex = (b: Uint8Array) => Array.from(b, x=>x.toString(16).padStart(2,'0')).join('');
 export async function digest(algorithm: string, text: string) {
@@ -14,17 +26,19 @@ export function bytesBase64(bytes: Uint8Array) {
   let s=''; for(const b of bytes) s+=String.fromCharCode(b); return btoa(s);
 }
 export function decodeBase64(text: string) {
-  let s=bounded(text).replace(/\s/g,'');
+  let s=encodedInput(text, MAX_BASE64_INPUT);
+  if (s.length > Math.ceil(MAX_UTF8_BYTES / 3) * 4) throw new Error('Decoded payload exceeds the supported text budget.');
   if(!s.includes('=') && s.length%4!==1)s+='='.repeat((4-s.length%4)%4);
   if(!/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/.test(s)) throw new Error('Invalid padded Base64.');
   const bin=atob(s); if(btoa(bin)!==s) throw new Error('Noncanonical Base64 padding bits.');
-  return new TextDecoder('utf-8',{fatal:true}).decode(Uint8Array.from(bin,c=>c.charCodeAt(0)));
+  return decodeUtf8(Uint8Array.from(bin,c=>c.charCodeAt(0)));
 }
 export function textToBinary(text: string) { return Array.from(new TextEncoder().encode(bounded(text)),b=>b.toString(2).padStart(8,'0')).join(' '); }
 export function binaryToText(text: string) {
-  const s=bounded(text).replace(/\s/g,'');
+  const s=encodedInput(text, MAX_BINARY_INPUT);
+  if (s.length > MAX_UTF8_BYTES * 8) throw new Error('Decoded payload exceeds the supported text budget.');
   if(!s || !/^[01]+$/.test(s) || s.length%8) throw new Error('Use complete 8-bit binary bytes containing only 0 and 1.');
-  return new TextDecoder('utf-8',{fatal:true}).decode(Uint8Array.from(s.match(/.{8}/g)!,b=>parseInt(b,2)));
+  return decodeUtf8(Uint8Array.from(s.match(/.{8}/g)!,b=>parseInt(b,2)));
 }
 export const escapeJson = (s:string)=>JSON.stringify(bounded(s)).slice(1,-1);
 export const unescapeJson = (s:string):string=>JSON.parse('"'+bounded(s)+'"');

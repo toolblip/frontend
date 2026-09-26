@@ -1,5 +1,5 @@
 'use client';
-import { copySecurityText } from '@/lib/developer-security/primitives';
+import { copySecurityText, MAX_TEXT, MAX_BINARY_INPUT } from '@/lib/developer-security/primitives';
 import DeveloperSecurityFrame, { useSecurityTask } from './DeveloperSecurityFrame';
 import { textToBinary, binaryToText } from '@/lib/developer-security/primitives';
 
@@ -94,7 +94,7 @@ export default function BinaryConverterClient() {
           </span>
 
         </div>
-        <textarea aria-label="Input" maxLength={100000}
+        <textarea aria-label="Input" maxLength={mode === 'textToBinary' ? MAX_TEXT : MAX_BINARY_INPUT}
           value={input}
           onChange={(e) => { setInput(e.target.value); setResult(''); setError(null); }}
           placeholder={mode === 'textToBinary' ? 'Enter text to convert...' : 'Enter binary (e.g., 01001000 01100101 01101100 01101100 01101111)...'}

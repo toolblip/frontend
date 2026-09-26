@@ -18,7 +18,22 @@ export function imageSignature(b: Uint8Array): string | null {
         return 'image/gif';
     if (ascii(0, 4) === 'RIFF' && ascii(8, 4) === 'WEBP')
         return 'image/webp';
-    if (ascii(0, 2) === 'BM' && b.length >= 30)
+    // ISO-BMFF file type box: never search arbitrary payload bytes for a brand.
+    if (b.length >= 16 && ascii(4, 4) === 'ftyp') {
+        const view = new DataView(b.buffer, b.byteOffset, b.byteLength);
+        let size = view.getUint32(0), header = 8;
+        if (size === 1) {
+            if (b.length < 24 || view.getUint32(8) !== 0) return null;
+            size = view.getUint32(12);
+            header = 16;
+        } else if (size === 0) size = b.length;
+        if (size < header + 8 || size > b.length || (size - header - 8) % 4 !== 0) return null;
+        if (['avif', 'avis'].includes(ascii(header, 4))) return 'image/avif';
+        for (let offset = header + 8; offset + 4 <= size; offset += 4) {
+            if (['avif', 'avis'].includes(ascii(offset, 4))) return 'image/avif';
+        }
+    }
+    if (ascii(0, 2) === 'BM'  && b.length >= 30)
         return 'image/bmp';
     if (b.length >= 22 && b[0] === 0 && b[1] === 0 && b[2] === 1 && b[3] === 0)
         return 'image/x-icon';

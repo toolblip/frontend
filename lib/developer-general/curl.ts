@@ -3,7 +3,15 @@ export function shellWords(command: string): string[] {
   const words: string[] = []; let word = '', quote = '', active = false;
   for (let i = 0; i < command.length; i++) {
     const c = command[i];
-    if (c === '\\' && quote !== "'") { if (++i >= command.length) throw new Error('Trailing escape'); if (command[i] !== '\n') word += command[i]; active = true; }
+    if (c === '\\' && quote !== "'") {
+      const next = command[++i];
+      if (next === undefined) throw new Error('Trailing escape');
+      // Inside double quotes only these five characters consume the backslash.
+      if (next === '\n') continue;
+      if (quote === '"' && !['"', '$', '`', '\\'].includes(next)) word += '\\';
+      word += next;
+      active = true;
+    }
     else if (quote) { if (c === quote) quote = ''; else word += c; }
     else if (c === '"' || c === "'") { quote = c; active = true; }
     else if (/\s/.test(c)) { if (active) words.push(word); word = ''; active = false; }
