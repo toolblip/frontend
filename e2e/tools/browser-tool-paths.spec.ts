@@ -1,4 +1,5 @@
-import { test, expect, type Page } from '@playwright/test';
+import { test, expect, type Page, type Locator } from '@playwright/test';
+import { readFile } from 'node:fs/promises';
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 
 // Stage 2 Feature 1 Group B: verify representative real browser-only tool
@@ -10,6 +11,16 @@ async function dismissCookies(page: Page) {
   if (await accept.isVisible().catch(() => false)) {
     await accept.click();
   }
+}
+
+// Server-rendered controls can appear before React attaches event handlers.
+// Wait for the handler used by this action, rather than sleeping or retrying it.
+async function waitForToolHandler(locator: Locator, handler: 'onClick' | 'onChange') {
+  await expect(locator).toBeVisible();
+  await expect.poll(() => locator.evaluate((element, eventName) => {
+    const node = element as unknown as Record<string, Record<string, unknown>>;
+    return Object.keys(node).some(key => key.startsWith('__reactProps$') && typeof node[key]?.[eventName] === 'function');
+  }, handler)).toBe(true);
 }
 
 test.describe('Browser tool execution paths', () => {
@@ -207,7 +218,9 @@ test.describe('Browser tool execution paths', () => {
     await page.goto('/tools/edit-pdf');
     await dismissCookies(page);
 
-    await page.getByRole('button', { name: 'Example', exact: true }).click();
+    const example = page.getByRole('button', { name: 'Example', exact: true });
+    await waitForToolHandler(example, 'onClick');
+    await example.click();
     await expect(page.getByText('sample.pdf · 1 page', { exact: true })).toBeVisible();
     await expect(page.getByText('Click or drag a PDF here', { exact: true })).toHaveCount(0);
     await expect(page.getByTestId('edit-preview-image')).toBeVisible();
@@ -229,16 +242,16 @@ test.describe('Browser tool execution paths', () => {
     await page.getByRole('button', { name: 'Select PDF text: Sample PDF Document' }).click();
     await page.getByLabel('Selected PDF text').fill('Edited heading');
     await page.getByRole('button', { name: 'Save text', exact: true }).click();
-    await expect(page.getByTitle('Edited heading')).toBeVisible();
+    await expect(page.locator('.tb-pdf-edit-page svg text').filter({ hasText: /^Edited heading$/ })).toBeVisible();
 
     await page.getByRole('button', { name: 'Select PDF text: This is a placeholder page for practicing edits.' }).click();
     await page.getByRole('button', { name: 'Remove text', exact: true }).click();
-    await expect(page.getByText(/Removed page content/)).toBeVisible();
+    await expect(page.getByText(/Covered page content/)).toBeVisible();
 
     await page.getByRole('button', { name: 'Text', exact: true }).click();
     await page.getByLabel('Text to add').fill('Hello from the editor');
     await page.locator('.tb-pdf-edit-page').click({ position: { x: 100, y: 100 } });
-    await expect(page.getByTitle('Hello from the editor')).toBeVisible();
+    await expect(page.locator('.tb-pdf-edit-page svg text').filter({ hasText: /^Hello from the editor$/ })).toBeVisible();
     const downloadPromise = page.waitForEvent('download');
     await page.getByRole('button', { name: 'Save and Download PDF' }).click();
     const download = await downloadPromise;
@@ -250,7 +263,7 @@ test.describe('Browser tool execution paths', () => {
     expect(output.getPageCount()).toBe(1);
   });
 
-  test('DNS lookup uses the canonical route and preserves the V2 interface', async ({ page, request }) => {
+  test('DNS lookup uses the canonical route and exposes hostname and record-type controls', async ({ page, request }) => {
     for (const legacyPath of ['/tools/dns-lookup-v2', '/tools/dns-lookup-express']) {
       const response = await request.get(legacyPath, { maxRedirects: 0 });
       expect(response.status()).toBe(308);
@@ -260,9 +273,15 @@ test.describe('Browser tool execution paths', () => {
     await page.goto('/tools/dns-lookup');
     await dismissCookies(page);
     await expect(page).toHaveURL(/\/tools\/dns-lookup$/);
-    await expect(page.getByRole('button', { name: 'Lookup All' })).toBeVisible();
-    await expect(page.getByText('Results by Type', { exact: true })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'AAAA', exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Lookup', exact: true })).toBeVisible();
+    await expect(page.getByLabel('Hostname', { exact: true })).toBeVisible();
+    const recordType = page.getByLabel('Record type', { exact: true });
+    await waitForToolHandler(recordType, 'onChange');
+    await expect(recordType).toHaveValue('ALL');
+    await recordType.selectOption('AAAA');
+    await expect(recordType).toHaveValue('AAAA');
+    await recordType.selectOption('ALL');
+    await expect(recordType).toHaveValue('ALL');
   });
 
   test('json-formatter formats valid JSON live and flags syntax errors', async ({ page }) => {
@@ -272,6 +291,7 @@ test.describe('Browser tool execution paths', () => {
     const input = page.getByLabel('JSON input');
     const output = page.locator('pre.tb-v2-tool-pre');
 
+    await waitForToolHandler(input, 'onChange');
     await input.fill('{"b":2,"a":1}');
     await expect(output).toContainText('"b": 2');
     await expect(output).toContainText('"a": 1');
@@ -283,7 +303,7 @@ test.describe('Browser tool execution paths', () => {
     // Invalid JSON surfaces a clear error instead of silently failing.
     await page.getByRole('tab', { name: 'Format' }).click();
     await input.fill('not json');
-    await expect(page.locator('p.tb-v2-error')).toContainText(/Syntax error/i);
+    await expect(page.locator('p.tb-v2-error')).toContainText(/Input error/i);
   });
 
   test('base64 tool encodes and decodes round-trip in the browser', async ({ page }) => {
@@ -504,11 +524,13 @@ test.describe('Browser tool execution paths', () => {
     expect(download.suggestedFilename()).toMatch(/^signed-sign-sample\.pdf$/i);
   });
 
-  test('unlock-pdf requires permission acknowledgment before processing', async ({ page }) => {
+  test('unlock-pdf requires permission acknowledgment before processing', async ({ page }, testInfo) => {
     await page.goto('/tools/unlock-pdf');
     await dismissCookies(page);
 
-    await page.getByRole('button', { name: 'Example', exact: true }).click();
+    const example = page.getByRole('button', { name: 'Example', exact: true });
+    await waitForToolHandler(example, 'onClick');
+    await example.click();
     await expect(page.getByText('unlock-sample.pdf', { exact: true }).first()).toBeVisible({ timeout: 15000 });
 
     const permission = page.getByRole('checkbox', { name: 'I confirm that I own this PDF or have permission from its owner to unlock it.' });
@@ -518,12 +540,19 @@ test.describe('Browser tool execution paths', () => {
 
     await permission.check();
     await expect(unlockButton).toBeEnabled();
-    const downloadPromise = page.waitForEvent('download');
     await unlockButton.click();
-    await expect(page.getByText('PDF re-saved without its existing permission metadata.')).toBeVisible({ timeout: 15000 });
-    await page.getByRole('button', { name: 'Download PDF', exact: true }).click();
-    const download = await downloadPromise;
+    await expect(page.getByText('This PDF was already password-free. A new copy is ready.')).toBeVisible({ timeout: 15000 });
+    const [download] = await Promise.all([
+      page.waitForEvent('download'),
+      page.getByRole('button', { name: 'Download PDF', exact: true }).click(),
+    ]);
     expect(download.suggestedFilename()).toMatch(/^unlock-sample_unlocked\.pdf$/i);
+
+    const outputPath = testInfo.outputPath('unlocked-sample.pdf');
+    await download.saveAs(outputPath);
+    const output = await PDFDocument.load(await readFile(outputPath));
+    expect(output.getPageCount()).toBe(2);
+    expect(output.isEncrypted).toBe(false);
 
     await page.getByRole('button', { name: 'Clear', exact: true }).click();
     await expect(page.getByText('Click or drag a PDF to unlock', { exact: true })).toBeVisible();
