@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { ReactElement } from 'react';
+import data from '@/lib/utility-design/fixtures/dictionary-eloquent.json';
 
 const hooks = vi.hoisted(() => ({ slots: [] as any[], index: 0, effects: [] as (() => void | (() => void))[], dirty: false }));
 vi.mock('react', async original => ({
@@ -54,8 +55,7 @@ function mount() {
     unmount() { cleanups.forEach(cleanup => cleanup()); },
   };
 }
-const data = [{ word: 'eloquent', phonetics: [], meanings: [{ partOfSpeech: 'adjective', definitions: [{ definition: 'Fluent and persuasive.', synonyms: [], antonyms: [] }], synonyms: [], antonyms: [] }] }];
-const response = () => ({ ok: true, status: 200, json: async () => data });
+const response = () => new Response(JSON.stringify(data), { headers: { 'content-type': 'application/json' } });
 function delayedFetch(milliseconds: number) {
   let signal!: AbortSignal;
   vi.stubGlobal('fetch', vi.fn((_url: string, options: RequestInit) => new Promise((resolve, reject) => {
@@ -76,7 +76,7 @@ describe('dictionary bounded requests', () => {
     await vi.advanceTimersByTimeAsync(15001); view.flush();
     expect(signal().aborted).toBe(false); expect(view.busy()).toBe(true);
     await vi.advanceTimersByTimeAsync(5089); await pending; view.flush();
-    expect(view.output()).toContain('Fluent and persuasive.');
+    expect(view.output()).toContain('Fluently persuasive and articulate.');
     expect(view.output()).not.toContain('timed out'); expect(view.busy()).toBe(false);
     expect(vi.getTimerCount()).toBe(0);
   });
@@ -103,17 +103,24 @@ describe('dictionary bounded requests', () => {
     const pending = view.lookup(); await vi.advanceTimersByTimeAsync(4000);
     view.change('different'); await pending; view.flush();
     expect(signal().aborted).toBe(true); expect(view.word()).toBe('different'); expect(view.busy()).toBe(false);
-    expect(view.output()).not.toContain('Fluent and persuasive.'); expect(view.output()).not.toContain('unavailable');
+    expect(view.output()).not.toContain('Fluently persuasive and articulate.'); expect(view.output()).not.toContain('unavailable');
     expect(vi.getTimerCount()).toBe(0);
   });
   it('ignores a response body that finishes after Clear', async () => {
-    let finish!: (value: typeof data) => void;
-    const json = vi.fn(() => new Promise<typeof data>(resolve => { finish = resolve; }));
-    vi.stubGlobal('fetch', vi.fn(async () => ({ ok: true, status: 200, json })));
+    let finish!: () => void;
+    // Deliberately ignore transport abort: even a body that finishes later must
+    // not publish stale definitions or errors after Clear.
+    const body = new ReadableStream<Uint8Array>({
+      start(controller) {
+        finish = () => { controller.enqueue(new TextEncoder().encode(JSON.stringify(data))); controller.close(); };
+      },
+    });
+    vi.stubGlobal('fetch', vi.fn(async () => new Response(body)));
     const view = mount(); view.change('eloquent'); const pending = view.lookup();
-    await vi.advanceTimersByTimeAsync(0); expect(json).toHaveBeenCalledOnce();
-    view.clear(); finish(data); await pending; view.flush();
-    expect(view.output()).toContain('Look up a word'); expect(view.output()).not.toContain('Fluent and persuasive.');
+    await vi.advanceTimersByTimeAsync(0); expect(body.locked).toBe(true);
+    view.clear(); finish(); await pending; view.flush();
+    expect(body.locked).toBe(false);
+    expect(view.output()).toContain('Look up a word'); expect(view.output()).not.toContain('Fluently persuasive and articulate.');
     expect(view.busy()).toBe(false); expect(vi.getTimerCount()).toBe(0);
   });
   it('unmount aborts the pending network request and clears its deadline', async () => {
