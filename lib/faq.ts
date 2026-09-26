@@ -189,6 +189,94 @@ function templateFaqs(t: Tool): FAQ[] {
 }
 
 const OVERRIDES: Record<string, FAQ[]> = {
+  'svg-to-webp': [
+    { q: "What does this tool do?", a: "Convert SVG images to WEBP and compare the measured output size." },
+    { q: "What should I know before using it?", a: "Inputs are limited to 10 MB and 16 megapixels. Output size is measured and can be larger than the input. WebP export uses a browser encoder with a local codec fallback. SVG must be self-contained and static; external resources and scripts are rejected." },
+  ],
+  'svg-to-jpg': [
+    { q: "What does this tool do?", a: "Convert SVG images to JPG and compare the measured output size." },
+    { q: "What should I know before using it?", a: "Inputs are limited to 10 MB and 16 megapixels. Output size is measured and can be larger than the input. SVG must be self-contained and static; external resources and scripts are rejected. JPEG export flattens transparency onto the chosen background and uses lossy compression." },
+  ],
+  'svg-to-png': [
+    { q: "What does this tool do?", a: "Convert SVG images to PNG and compare the measured output size." },
+    { q: "What should I know before using it?", a: "Inputs are limited to 10 MB and 16 megapixels. Output size is measured and can be larger than the input. SVG must be self-contained and static; external resources and scripts are rejected." },
+  ],
+  'markdown-table-from-json': [
+    { q: "What does this tool do?", a: "Convert JSON objects to a Markdown table with the union of their keys and escaped cell text." },
+    { q: "What should I know before using it?", a: "Columns use the union of object keys. Cell text is escaped so pipes and line breaks do not split the table structure." },
+  ],
+  'trace': [
+    { q: "What does this tool do?", a: "Trace a raster image up to one megapixel into SVG paths using selectable tracing presets." },
+    { q: "What should I know before using it?", a: "Inputs are limited to 10 MB and 16 megapixels. Output size is measured and can be larger than the input. Tracing has a stricter one-megapixel limit and creates paths, not editable text or original vector shapes." },
+  ],
+  'heic-to-png': [
+    { q: "What does this tool do?", a: "Convert the first image in supported HEIC/HEIF files to PNG using the bundled decoder. Unsupported variants report an error." },
+    { q: "What should I know before using it?", a: "Inputs are limited to 10 MB and 16 megapixels. Output size is measured and can be larger than the input. The bundled decoder exports the first image; unsupported HEIF variants report an error." },
+  ],
+  'heic-to-jpg': [
+    { q: "What does this tool do?", a: "Convert the first image in supported HEIC/HEIF files to JPEG using the bundled decoder. Unsupported variants report an error." },
+    { q: "What should I know before using it?", a: "Inputs are limited to 10 MB and 16 megapixels. Output size is measured and can be larger than the input. The bundled decoder exports the first image; unsupported HEIF variants report an error." },
+  ],
+  'gif-to-png': [
+    { q: "What does this tool do?", a: "Export a selected composited GIF frame to a static PNG." },
+    { q: "What should I know before using it?", a: "Inputs are limited to 10 MB and 16 megapixels. Output size is measured and can be larger than the input. GIF decoding is limited to 200 frames and 16 million total frame pixels." },
+  ],
+  'gif-to-jpg': [
+    { q: "What does this tool do?", a: "Export a selected composited GIF frame to JPEG with a chosen background color." },
+    { q: "What should I know before using it?", a: "Inputs are limited to 10 MB and 16 megapixels. Output size is measured and can be larger than the input. GIF decoding is limited to 200 frames and 16 million total frame pixels." },
+  ],
+  'gif-to-apng': [
+    { q: "What does this tool do?", a: "Convert composited GIF animation frames to PNG/APNG. Output size is measured and may be larger." },
+    { q: "What should I know before using it?", a: "Inputs are limited to 10 MB and 16 megapixels. Output size is measured and can be larger than the input. GIF decoding is limited to 200 frames and 16 million total frame pixels." },
+  ],
+  'add-subtitles': [
+    { q: "What does this tool do?", a: "Preview and burn plain SRT or WebVTT captions into a re-encoded WebM video with audio." },
+    { q: "What should I know before using it?", a: "The browser must support decoding the input and recording WebM with audio. Export re-encodes in real time and is limited to 60 seconds per range and 2,073,600 pixels. It doesn't preserve the original encoded stream." },
+  ],
+  'mkv-to-mp3': [
+    { q: "What does this tool do?", a: "Extract decodable audio from MKV files and encode it as MP3." },
+    { q: "What should I know before using it?", a: "MP3 uses a local LAME encoder at 128 kbps for mono or stereo audio; WAV is also available. Supported input codecs depend on the browser. A valid container doesn't guarantee decodable audio. Limits are 20 MB, 120 decoded seconds and 24 million decoded samples across all channels." },
+  ],
+  'mp4-to-mp3': [
+    { q: "What does this tool do?", a: "Extract decodable audio from MP4 files and encode it as MP3." },
+    { q: "What should I know before using it?", a: "MP3 uses a local LAME encoder at 128 kbps for mono or stereo audio; WAV is also available. Supported input codecs depend on the browser. A valid container doesn't guarantee decodable audio. Limits are 20 MB, 120 decoded seconds and 24 million decoded samples across all channels." },
+  ],
+  'extract-audio': [
+    { q: "What does this tool do?", a: "Extract browser-decodable audio from supported containers to 16-bit PCM WAV." },
+    { q: "What should I know before using it?", a: "Input is limited to 20 MB and 120 decoded seconds, with a limit of 24 million decoded samples across all channels. The browser must decode the audio codec; the file extension alone doesn't guarantee support. WAV output doesn't restore detail lost in earlier compression." },
+  ],
+  'excel-to-pdf': [
+    { q: "What does this tool do?", a: "Export XLSX cell values as wrapped, paginated PDF text. Spreadsheet styling and charts are not preserved." },
+    { q: "What should I know before using it?", a: "Choose one sheet from an XLSX workbook. Exports use displayed cell values and cached formula results, without recalculating formulas or preserving workbook styles, charts or macros. Inputs are limited to 5 MB and 50 sheets, with per-sheet row, column and cell limits. PDF uses wrapped, paginated text rather than spreadsheet layout. Characters the PDF font can't encode require CSV or XML export." },
+  ],
+  'purchase-agreement-generator': [
+    { q: "What does this tool do?", a: "Draft a purchase agreement from the details you enter, then review and edit it." },
+    { q: "What should I know before using it?", a: "The document uses editable templates, not AI or a legal review. It doesn't guarantee legal validity or compliance. Download TXT or PDF. PDF export rejects characters its font cannot encode; use TXT to preserve those characters." },
+  ],
+  'privacy-policy-generator': [
+    { q: "What does this tool do?", a: "Draft a privacy policy from the details you enter, then review and edit it." },
+    { q: "What should I know before using it?", a: "The document uses editable templates, not AI or a legal review. It doesn't guarantee legal validity or compliance. Download TXT or PDF. PDF export rejects characters its font cannot encode; use TXT to preserve those characters." },
+  ],
+  'nda-generator': [
+    { q: "What does this tool do?", a: "Draft a non-disclosure agreement from the details you enter, then review and edit it." },
+    { q: "What should I know before using it?", a: "The document uses editable templates, not AI or a legal review. It doesn't guarantee legal validity or compliance. Download TXT or PDF. PDF export rejects characters its font cannot encode; use TXT to preserve those characters." },
+  ],
+  'split-excel': [
+    { q: "What does this tool do?", a: "Split worksheet values into XLSX files using cached formula results." },
+    { q: "What should I know before using it?", a: "Formulas aren't recalculated or preserved as formulas. Cell formatting, charts and macros aren't preserved in the exported files." },
+  ],
+  'text-to-handwriting': [
+    { q: "What does this tool do?", a: "Preview text with device-installed handwriting fonts and a cursive fallback." },
+    { q: "What should I know before using it?", a: "The result depends on fonts installed on your device. Copy exports plain text, without the visual font styling." },
+  ],
+  'api-endpoint-debugger': [
+    { q: "What does this tool do?", a: "Generate request code from an endpoint, method, headers and body." },
+    { q: "What should I know before using it?", a: "This tool doesn't send the request or inspect a live API response. Review the generated code before running it in your own environment." },
+  ],
+  'screen-density-simulator': [
+    { q: "What does this tool do?", a: "Calculate physical pixel dimensions and preview a CSS viewport at a chosen pixel ratio." },
+    { q: "What should I know before using it?", a: "The preview doesn't change your browser's devicePixelRatio or emulate a real device display." },
+  ],
   'image-size-resizer': [
     { q: 'What does this tool support?', a: "Resize one image locally with an optional aspect ratio lock. Choose Auto, PNG, JPEG or WebP output. Auto keeps supported source formats and otherwise uses PNG; the download reports the actual browser-encoded format. Review the generated result before saving. Use Batch Image Resizer for multiple files." },
   ],
@@ -277,12 +365,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: "What PDF limits apply?", a: "Up to 25 MiB per input PDF, 100 pages and 2,000 points per page side. Up to 20 insert files, 100 source pages and 100 final pages." },
   ],
   'sass-to-css': [
-    { q: 'What does the Sass to CSS tool do?', a: 'It compiles SCSS or indented Sass into clean CSS in your browser. Paste your source, click convert, and copy the result when it is ready.' },
-    { q: 'Can it handle variables, nesting, and mixins?', a: 'Yes. The Sass to CSS tool supports the Sass features people use most often, including variables, mixins, and nested selectors.' },
-    { q: 'Do I need to install Sass locally?', a: 'No. The tool runs in your browser, so you can test a snippet without setting up a build step or local Sass install.' },
-    { q: 'Does it support both SCSS and indented Sass syntax?', a: 'Yes. It can compile either syntax, so you can paste whichever format your project uses.' },
-    { q: 'Is my Sass uploaded anywhere?', a: 'No. The conversion happens locally in your browser, so your code stays on your device.' },
-    { q: 'Can I use the CSS output directly in my stylesheet?', a: 'Yes. The output is standard CSS, so you can copy it into your stylesheet or hand it back to a teammate.' },
+    { q: "What does this tool do?", a: "Compile SCSS or indented Sass to CSS in a browser worker." },
+    { q: "What should I know before using it?", a: "Choose Compile to process local input. Execution is bounded; the tool reports compilation errors instead of treating invalid Sass as CSS." },
   ],
   'banner-generator': [
     { q: 'What is the Banner Generator?', a: 'The Banner Generator creates polished 1200×630 blog covers, banners, and Open Graph images in your browser. It is designed for quick social previews, blog headers, and share cards without sending your design content to a server.' },
@@ -300,12 +384,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'What do Examples and Clear do?', a: 'Examples loads a sample for the current input mode. Clear removes the active input and preview so old output cannot be downloaded by mistake.' },
   ],
   'css-to-scss': [
-    { q: 'What does the CSS to SCSS tool do?', a: 'It rewrites flat CSS into SCSS with nested selectors where that structure is obvious. That makes styles easier to read and edit.' },
-    { q: 'Can it turn repeated selectors into nesting?', a: 'Yes. The tool groups descendant selectors into nested blocks so the output looks like hand-written SCSS.' },
-    { q: 'Does it preserve properties and values?', a: 'Yes. It keeps the declarations intact and focuses on restructuring the selector tree.' },
-    { q: 'Do I need to install anything?', a: 'No. Everything runs in the browser, so you can use it on any machine without a setup step.' },
-    { q: 'Is my CSS uploaded anywhere?', a: 'No. The conversion is local to your browser, so your styles never leave the page.' },
-    { q: 'Can I use the SCSS output right away?', a: 'Yes. You can copy it into your project and then refine the nesting or variables by hand if you want.' },
+    { q: "What does this tool do?", a: "Use CSS as compatible SCSS while keeping its custom properties and var() expressions." },
+    { q: "What should I know before using it?", a: "CSS is valid SCSS. This tool doesn't turn runtime custom properties into Sass variables or infer a nested stylesheet architecture." },
   ],
   'json-formatter': [
     { q: 'What is a JSON formatter?', a: 'A JSON formatter pretty-prints raw JSON into a readable, indented structure so you can scan, debug, and share it. The Toolblip JSON Formatter also validates syntax in real time and surfaces the parser error so you can find the broken character.' },
@@ -443,12 +523,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'What makes a good GIF from MP4?', a: 'Short clips with clear motion and a tight crop usually produce the best GIFs. Keep the segment brief to balance file size and quality.' },
   ],
   'poll-generator': [
-    { q: 'What does the Poll Generator do?', a: 'It helps you create simple polls with answer options you can share on social platforms, in chats, or in audience surveys. Paste your topic, add your choices, and copy the finished poll text.' },
-    { q: 'How do I create a poll online?', a: 'Open the Poll Generator, type your question, add answer choices, and copy the output for Twitter, Instagram, or a survey form. The tool formats the poll for quick sharing.' },
-    { q: 'Can I make a Twitter poll with this tool?', a: 'Yes. The Poll Generator is useful for creating Twitter-style poll options and concise captions that are easy to post.' },
-    { q: 'Is the Poll Generator free?', a: 'Yes. The Poll Generator is free to use and does not require an account.' },
-    { q: 'Can I use it for audience surveys?', a: 'Yes. It works well for quick audience surveys, product feedback prompts, and lightweight community questions.' },
-    { q: 'Does the Poll Generator save my questions?', a: 'No. The content is only used to generate the poll text in your browser, so your draft stays on your device.' },
+    { q: "What does this tool do?", a: "Draft poll questions and options for copying into a platform of your choice." },
+    { q: "What should I know before using it?", a: "Review the destination platform's limits before posting. This tool doesn't publish polls, host voting or collect responses." },
   ],
   'text-diff': [
     { q: 'How does the Text Diff tool compare my text?', a: 'It splits both inputs into lines and runs a longest-common-subsequence diff. Lines that match are shown unchanged, lines only in the original are marked as removed (−), and lines only in the changed text are marked as added (+).' },
@@ -500,11 +576,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Is my data uploaded anywhere?', a: 'No. Conversion runs entirely in your browser.' },
   ],
   'sql-to-json': [
-    { q: 'What does the SQL to JSON tool do?', a: 'It parses SQL `INSERT INTO table (cols...) VALUES (...)` statements and emits the rows as a JSON array  -  handy when you need to load fixture data into an app, generate seed JSON from a SQL dump, or eyeball a few rows.' },
-    { q: 'Can it run SELECT queries?', a: 'No. There\'s no database in your browser, so the tool can\'t execute queries against your data. It parses INSERT statements only  -  the structured form where rows live inline in the SQL text.' },
-    { q: 'Which SQL dialects work?', a: 'Standard MySQL, PostgreSQL, and SQLite-style INSERTs all parse cleanly: backtick or double-quoted identifiers, single-quoted strings, NULL/TRUE/FALSE literals, numeric values, multiple rows per VALUES clause, and -- or /* */ comments.' },
-    { q: 'What about INSERT statements without column names?', a: 'They work  -  values are emitted as `col1`, `col2`, etc. Add an explicit column list (`INSERT INTO t (a, b) VALUES (...)`) to get meaningful keys in the JSON output.' },
-    { q: 'Is my SQL sent anywhere?', a: 'No. Parsing happens locally in your browser. Database dumps often contain PII, internal IDs, and credentials in connection strings  -  nothing leaves the page.' },
+    { q: "What does this tool do?", a: "Convert SQL INSERT VALUES literals to JSON. Unsupported expressions and unsafe integer literals are rejected." },
+    { q: "What should I know before using it?", a: "Use INSERT statements with literal VALUES. This isn't a SQL engine: expressions and integer literals outside safe numeric precision are rejected." },
   ],
   'js-minifier': [
     { q: 'What does this minifier actually do?', a: 'It strips comments, collapses runs of whitespace, and removes unnecessary spacing around operators  -  the safe rewrites that don\'t change behaviour. It does NOT rename variables or perform tree-shaking; for production use, run terser or esbuild as part of your build.' },
@@ -556,9 +629,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Does this affect my live SEO?', a: 'No  -  the SERP Preview is a visualizer. It doesn\'t crawl, modify, or submit anything to Google. Push your title/description to the live page first, then test it in Google Search Console for the real scrape.' },
   ],
   'aac-to-wav': [
-    { q: 'How does the AAC to WAV conversion work?', a: 'The tool decodes your AAC audio with the browser\'s Web Audio API, then writes the decoded samples into a standard 16-bit PCM WAV file at the same sample rate and channel count as the source.' },
-    { q: 'Is the WAV output lossless?', a: 'The step from decoded audio to 16-bit PCM WAV adds no further compression, so you get the full decoded signal. Quality lost during the original AAC encoding can\'t be recovered at this stage, since AAC is a lossy format.' },
-    { q: 'Does it handle stereo audio correctly?', a: 'Yes. The tool reads the channel count from the decoded audio buffer and writes each channel into the WAV file, so mono and stereo sources both convert correctly.' },
+    { q: "What does this tool do?", a: "Decode browser-supported AAC audio to 16-bit PCM WAV. Maximum 20 MB and 120 decoded seconds." },
+    { q: "What should I know before using it?", a: "Input is limited to 20 MB and 120 decoded seconds, with a limit of 24 million decoded samples across all channels. The browser must decode the audio codec; the file extension alone doesn't guarantee support. WAV output doesn't restore detail lost in earlier compression." },
   ],
   'accessibility-checker': [
     { q: 'What does the Accessibility Checker actually inspect?', a: 'Paste in HTML and it parses the markup to flag missing image alt text, a missing lang attribute on the html tag, a missing page title, buttons and links without accessible names, form inputs without an associated label, and missing landmark elements like header, main, nav, and footer.' },
@@ -591,9 +663,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Can I edit the transcript after speaking?', a: 'Yes. The transcript appears in an editable area as you speak, and you can copy it to your clipboard once you\'re done, or replace it entirely using the manual input box.' },
   ],
   'automation-wizard': [
-    { q: 'Does the Automation Wizard actually run my automations?', a: 'No, it\'s a builder: you assemble triggers, actions, and conditions from template blocks, and it exports the result as a JSON or YAML workflow definition. Running it requires feeding that definition into an actual automation platform.' },
-    { q: 'What kinds of triggers and actions can I add?', a: 'Triggers include webhooks, schedules, incoming email, and form submissions. Actions include HTTP requests, sending email, posting to Slack, and simple data transforms or filters.' },
-    { q: 'What format is the exported workflow in?', a: 'You can export as JSON, structured around a trigger plus an ordered list of steps, or as YAML with the same trigger/steps shape, whichever your automation runner expects.' },
+    { q: "What does this tool do?", a: "Draft a workflow specification and export JSON or YAML." },
+    { q: "What should I know before using it?", a: "Trigger and action blocks describe a plan. They don't connect accounts, run tasks or use AI. Adapt the exported specification to your chosen runner; it's not a ready-to-run integration." },
   ],
   'api-auth-header-generator': [
     { q: 'What types of auth headers can it build?', a: 'Bearer tokens, HTTP Basic auth from a username and password, and custom API-key headers with your own header name and optional prefix.' },
@@ -616,9 +687,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Is this a complete, validated OpenAPI spec?', a: 'It\'s a starting skeleton, not a full spec, since it can only infer structure from one example response. Run the output through an OpenAPI validator before relying on it for codegen or docs hosting.' },
   ],
   'all-in-one-unit-converter': [
-    { q: 'Which unit categories does it cover?', a: 'Length, weight, temperature, volume, and several other common categories, all in one converter instead of separate tools per category.' },
-    { q: 'How does it handle temperature, since that isn\'t a simple multiply?', a: 'Temperature uses a dedicated formula-based conversion between Celsius, Fahrenheit, and Kelvin, rather than the multiply-by-factor math used for length, weight, and volume.' },
-    { q: 'How accurate are the conversions?', a: 'Length, weight, and volume conversions use fixed numeric factors between units, so results are exact to floating-point precision, not rounded estimates.' },
+    { q: "What does this tool do?", a: "Convert length, weight, temperature, area, volume and speed with live validated results." },
+    { q: "What should I know before using it?", a: "Results update as you change the value and units. Invalid numbers are rejected, as are temperatures below absolute zero. Calculations use floating-point arithmetic, so displayed results can be rounded." },
   ],
   'anagram-generator': [
     { q: 'Does it only return real English words?', a: 'No. It generates every possible letter rearrangement of your input and filters by minimum length, but it doesn\'t check results against a dictionary, so nonsense letter strings show up mixed in with real words.' },
@@ -656,9 +726,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Can I go from escaped text back to plain text?', a: 'Yes. Switch to Unescape mode, or use the Swap button to flip the current output back into the input box with the mode reversed, and the same context-specific rules run in reverse.' },
   ],
   'base-number-converter': [
-    { q: 'Which number bases does it support?', a: 'Binary, octal, decimal, hexadecimal, and base-32, selectable independently as both the source and target base, so you can convert directly between any two, not just to and from decimal.' },
-    { q: 'What happens if I enter digits invalid for the selected base?', a: 'The conversion returns "Invalid input for selected base" rather than silently producing a wrong number, since JavaScript\'s parseInt would otherwise interpret out-of-range digits unpredictably.' },
-    { q: 'Can I quickly reverse the conversion?', a: 'Yes. The swap button flips the From and To bases and moves the current result into the input field, so you can convert back without retyping anything.' },
+    { q: "What does this tool do?", a: "Convert whole integers exactly between bases 2 through 36. Invalid digits and fractions are rejected." },
+    { q: "What should I know before using it?", a: "Whole integers are converted with arbitrary-precision integer arithmetic. Invalid digits and fractions are rejected; this isn't a floating-point converter." },
   ],
   'base64-file-encoder': [
     { q: 'Does this work with any file type, or just text?', a: 'Any file type. It reads the file as raw bytes via the FileReader API and Base64-encodes the binary data directly, so PDFs, images, zip archives, and executables all encode correctly, not just plain text.' },
@@ -671,9 +740,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Can I download the decoded image?', a: 'Yes. Decode mode keeps the original decoded bytes and downloads them with the matching extension. Encode mode also offers the uploaded image bytes for download. Base64 is encoding, not compression, so the text is usually larger than the image file.' },
   ],
   'base64-image-decoder': [
-    { q: 'How is this different from the Base64 Image Converter?', a: 'This tool is decode-only: paste or load a Base64 string and it reconstructs the image and gives you a download link. It doesn\'t have an encode mode for turning an image into Base64, which is what the Converter tool is for.' },
-    { q: 'Can I load Base64 data from a file instead of pasting it?', a: 'Yes. The Load from file button accepts a .txt or .b64 file containing the Base64 string, reads it as text, and decodes it the same way as pasted input.' },
-    { q: 'What happens with invalid Base64 data?', a: 'You\'ll see an "Invalid Base64 image data" message instead of a broken image, since the decode step wraps the atob call in error handling rather than letting it fail silently.' },
+    { q: "What does this tool do?", a: "Decode and validate Base64 PNG, JPEG, WebP or GIF data and download the original raster format." },
+    { q: "What should I know before using it?", a: "The decoded bytes are validated as PNG, JPEG, WebP or GIF. Download keeps the original raster format; it doesn't convert every input to PNG." },
   ],
   'base64-image-viewer': [
     { q: 'Does this tool decode the Base64 data like the Decoder does?', a: 'No. It validates that your input is a proper data:image/...;base64,... URL and then hands that string straight to an <img> tag\'s src attribute, letting the browser do the actual decoding. There\'s no atob step or downloadable file, just a live preview.' },
@@ -696,9 +764,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Can I check whether a password matches an existing hash?', a: 'Yes. The Verify Password field runs bcrypt.compareSync against the hash currently shown, and reports a clear match or no-match result.' },
   ],
   'bill-sale-generator': [
-    { q: 'What does the generated document actually cover?', a: 'Seller and buyer names and addresses, an item description, sale price with optional tax, payment method, and toggles for as-is sale versus implied warranty, formatted as a printable bill of sale with signature lines at the bottom.' },
-    { q: 'How do I save it as a PDF?', a: 'The Print / Save PDF button triggers your browser\'s print dialog, where choosing "Save as PDF" as the destination produces a PDF version of the generated document.' },
-    { q: 'Is this a legally binding contract template?', a: 'The generated document includes a disclaimer that it\'s provided for informational purposes only and isn\'t legal advice, since requirements for a valid bill of sale vary by state and item type.' },
+    { q: "What does this tool do?", a: "Draft a bill of sale from the details you enter, then review and edit it." },
+    { q: "What should I know before using it?", a: "The document uses editable templates, not AI or a legal review. It doesn't guarantee legal validity or compliance. Download TXT to keep the draft as text." },
   ],
   'bill-splitter': [
     { q: 'How are tax and tip calculated?', a: 'Both are calculated from the pre-tax subtotal. In equal mode that subtotal is divided across the group first; in custom mode each person gets tax and tip based on their own amount.' },
@@ -706,9 +773,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'What does round each share up do?', a: 'It rounds every calculated share up to the next whole dollar and shows the exact pre-rounding total so the group can see the difference.' },
   ],
   'bin-hex-dec-converter': [
-    { q: 'Do I need to convert one pair of bases at a time?', a: 'No. Pick a single input base and enter a number, and the result shows all three: binary, decimal, and hexadecimal, at once, rather than making you choose a separate output base each time.' },
-    { q: 'What does the Next Base button do?', a: 'It cycles the input base through binary, decimal, and hexadecimal in sequence and clears the current input, a quick way to switch what you\'re typing without opening a dropdown.' },
-    { q: 'Can I feed one of the results back in as new input?', a: 'Yes. Each conversion result has a "Use as input" link that loads that value, in its matching base, back into the input field so you can continue converting from there.' },
+    { q: "What does this tool do?", a: "Convert whole integers exactly between binary, decimal and hexadecimal, including values above JavaScript’s safe integer range." },
+    { q: "What should I know before using it?", a: "Whole integers are converted with arbitrary-precision integer arithmetic. Invalid digits and fractions are rejected; this isn't a floating-point converter." },
   ],
   'binary-converter': [
     { q: 'Does this convert numbers between bases like binary-to-hex?', a: 'No. This tool converts text to and from raw binary byte values (each character becomes an 8-bit ASCII code and back), not numeric base conversion. For converting a number like 255 into binary, use a base or hex converter instead.' },
@@ -716,9 +782,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'What happens if I paste invalid binary in Binary to Text mode?', a: 'You\'ll get an explicit "Invalid binary string" error if the cleaned input contains anything other than 0s and 1s, rather than a garbled or silently wrong text result.' },
   ],
   'binary-decimal-hex-converter': [
-    { q: 'How is this different from the Bin-Hex-Dec Converter?', a: 'Both convert one input base to all three bases at once, but this version presents each result in its own color-coded card (blue for binary, green for decimal, purple for hex) with a "Convert to All" button, rather than the cycling next-base swap the other tool uses.' },
-    { q: 'Can I chain conversions using a previous result?', a: 'Yes. Each result card has a "Use as input" link that loads that exact value back into the input field with the matching base already selected.' },
-    { q: 'Does it handle negative numbers?', a: 'Yes. Negative decimal input converts to a minus-signed binary and hex representation rather than using two\'s complement encoding.' },
+    { q: "What does this tool do?", a: "Convert whole integers exactly between binary, decimal and hexadecimal, including values above JavaScript’s safe integer range." },
+    { q: "What should I know before using it?", a: "Whole integers are converted with arbitrary-precision integer arithmetic. Invalid digits and fractions are rejected; this isn't a floating-point converter." },
   ],
   'binary-to-decimal': [
     { q: 'Does it only convert to decimal, or other bases too?', a: 'Despite the name, it converts your binary input to decimal, hexadecimal, and octal all at once, showing all three with individual copy buttons rather than requiring three separate lookups.' },
@@ -793,9 +858,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Will this match my printed output exactly?', a: 'It uses the standard mathematical conversion, not an ICC color profile calibrated to a specific printer or paper stock, so it is meant for approximate on-screen reference rather than exact print color matching.' },
   ],
   'code-beautifier': [
-    { q: 'Which languages can it format?', a: 'JavaScript, TypeScript, Python, HTML, CSS, and JSON each have their own dedicated formatting logic tailored to that language\'s syntax, rather than one generic formatter applied to everything.' },
-    { q: 'Can it minify code as well as beautify it?', a: 'Yes, a separate minify mode strips unnecessary whitespace and line breaks (or uses compact JSON.stringify output for JSON), producing a condensed version of the same code.' },
-    { q: 'Can I choose tabs vs spaces and the indent size?', a: 'Yes, both are configurable options that control how the beautified output is indented across all supported languages.' },
+    { q: "What does this tool do?", a: "Format JavaScript, TypeScript, JSON, CSS, HTML and Python with indentation controls." },
+    { q: "What should I know before using it?", a: "TypeScript Beautify keeps type syntax. Python formatting reindents existing blocks; HTML formatting uses conservative block boundaries. Neither is a full language-aware formatter." },
   ],
   'code-diff': [
     { q: 'What algorithm does it use to compare two code blocks?', a: 'A longest common subsequence (LCS) algorithm, the same class of algorithm behind tools like diff and git diff, which finds the actual minimal set of added and removed lines rather than just flagging any line that moved as changed.' },
@@ -803,9 +867,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Can I copy the diff output?', a: 'Yes, the result copies as plain text with +, -, and space prefixes on each line, a format you can paste elsewhere or include in notes.' },
   ],
   'code-to-diagram-generator': [
-    { q: 'Does it use AI to understand what my code does?', a: 'No, it applies a line-based heuristic, for example treating each non-empty line as a node for a flowchart, or looking for arrow-like patterns for a sequence diagram, and outputs Mermaid syntax rather than analyzing program logic.' },
-    { q: 'Which diagram types can it generate?', a: 'Flowchart, sequence, class, and generic Mermaid graph syntax, selectable based on the shape of diagram you want from your pasted code or pseudocode.' },
-    { q: 'How do I actually view the diagram it generates?', a: 'The tool outputs Mermaid syntax as text and links to mermaid.live, where you paste it to render the visual diagram, it does not render the diagram itself.' },
+    { q: "What does this tool do?", a: "Generate Mermaid source from ordered lines or simple class and sequence declarations." },
+    { q: "What should I know before using it?", a: "Copy the source into a Mermaid renderer to view it. The tool doesn't use AI, infer control flow or render diagrams itself." },
   ],
   'color-blindness-simulator': [
     { q: 'Which types of color blindness does it simulate?', a: 'Protanopia, deuteranopia, and tritanopia, each using a published color transformation matrix specific to that condition rather than a generic desaturation filter.' },
@@ -1027,9 +1090,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Does it convert pixel values to Tailwind\'s spacing scale automatically?', a: 'Yes, for padding, margin, gap, width, and height it divides pixel values by 4 to match Tailwind\'s spacing units, so 16px becomes p-4 rather than an arbitrary value.' },
   ],
   'css-validator': [
-    { q: 'What kinds of CSS errors does it catch?', a: 'Missing colons in declarations, incomplete hex colors, empty rule sets, properties with no value, incomplete calc() expressions, and var() calls missing a variable name.' },
-    { q: 'Does it check brace and bracket matching?', a: 'Yes, it tracks braces, parentheses, and brackets separately and flags unbalanced counts as errors, noting whether a closing character is missing or extra.' },
-    { q: 'Does it flag errors by line number?', a: 'Yes, most issues show the exact line number where the problem was found so you can jump straight to it in your stylesheet.' },
+    { q: "What does this tool do?", a: "Check CSS syntax and report parsing errors." },
+    { q: "What should I know before using it?", a: "Syntax checks don't confirm that property values are valid or supported by every browser." },
   ],
   'csv-generator': [
     { q: 'Does it auto-generate rows based on a number I enter?', a: 'No, rows and columns are added and edited manually with the + Row and + Column buttons and inline text inputs, there\'s no numeric row-count field that bulk-fills sample data.' },
@@ -1037,9 +1099,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Can I download the result directly?', a: 'Yes, a Download button saves the current table as generated.csv, alongside a Copy button for the raw text.' },
   ],
   'csv-to-excel': [
-    { q: 'What file format does the download actually use?', a: 'It downloads a .xls file, an HTML table wrapped in Excel\'s legacy SpreadsheetML markup, which Excel, Numbers, and Google Sheets all open correctly, rather than a true .xlsx file.' },
-    { q: 'Does it handle quoted fields with embedded commas?', a: 'Yes, the CSV parser tracks quote state character by character, so commas or line breaks inside quoted fields don\'t break the columns.' },
-    { q: 'Can I preview the data before downloading?', a: 'Yes, a table renders your parsed rows with the first row as headers, so you can check the columns lined up correctly before downloading.' },
+    { q: "What does this tool do?", a: "Convert well-formed CSV text to a real XLSX workbook while preserving cell text." },
+    { q: "What should I know before using it?", a: "Cell text stays text, including leading zeros. This creates a new XLSX workbook; it doesn't recreate spreadsheet formulas, formatting or charts from CSV." },
   ],
   'csv-to-json': [
     { q: 'Does it convert both ways?', a: 'Yes. This page redirects to the JSON-CSV Converter: paste JSON on the left or CSV on the right and the other pane updates live.' },
@@ -1063,9 +1124,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Does it require a header row?', a: 'No, it converts every line the same way, tab-delimited into comma-delimited, whether or not the first line happens to be a header.' },
   ],
   'csv-to-xml': [
-    { q: 'How are column names turned into XML tags?', a: 'Header names are sanitized into valid XML tag names, non-alphanumeric characters become underscores, and a leading underscore is added if the name would otherwise start with a digit.' },
-    { q: 'Does it handle CSV fields with embedded commas or quotes?', a: 'Yes, the CSV parser tracks quote state character by character, so quoted fields containing commas or line breaks are parsed correctly.' },
-    { q: 'What is the structure of the generated XML?', a: 'Each data row becomes a <row> element containing one child element per column, all wrapped in a root <rows> element with an XML declaration at the top.' },
+    { q: "What does this tool do?", a: "Convert CSV rows to XML fields with column names preserved as attributes." },
+    { q: "What should I know before using it?", a: "Each field keeps its column name in an attribute, so headers need not be valid XML element names. XML-sensitive cell characters are escaped." },
   ],
   'curl-command-builder': [
     { q: 'What request options can I configure?', a: 'HTTP method, one or more headers, a request body (hidden automatically for GET and HEAD), basic auth credentials, and flags for following redirects, insecure mode, verbose output, and compression.' },
@@ -1088,9 +1148,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'How does it detect the request body?', a: 'It looks for a -d flag and assigns whatever follows to a data variable, passed to the requests call as data=data.' },
   ],
   'cutter': [
-    { q: 'What output format does the trimmed clip use?', a: 'WebM (VP9 or VP8), since the cut is produced by recording the video\'s playback with the browser\'s MediaRecorder API, regardless of the original file\'s format.' },
-    { q: 'How long does cutting take?', a: 'About as long as the clip itself, the tool plays the selected range in real time while capturing it rather than processing the file instantly.' },
-    { q: 'What if my browser does not support in-browser cutting?', a: 'You will see a fallback FFmpeg command (ffmpeg -ss START -to END -i input.mp4 -c copy output.mp4) to run locally instead, which cuts losslessly without re-encoding.' },
+    { q: "What does this tool do?", a: "Record a selected video range as WebM with audio. Real-time re-encoding, up to 60 seconds per export." },
+    { q: "What should I know before using it?", a: "The browser must support decoding the input and recording WebM with audio. Export re-encodes in real time and is limited to 60 seconds per range and 2,073,600 pixels. It doesn't preserve the original encoded stream." },
   ],
   'data-size-converter': [
     { q: 'Does it use binary (1024) or decimal (1000) unit sizes?', a: 'Binary only, every unit step multiplies by 1024 (1 KB = 1024 bytes). There is no toggle for decimal, 1000-based units.' },
@@ -1241,14 +1300,12 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'How are corrections shown?', a: 'Each match highlights the specific phrase in your text and offers the corrected wording to swap in.' },
   ],
   'excel-to-csv': [
-    { q: 'What Excel format does it accept?', a: '.xlsx files, read directly from the file\'s internal XML and shared-strings data in your browser, nothing is uploaded to a server.' },
-    { q: 'Does it handle workbooks with multiple sheets?', a: 'Yes, every sheet gets its own tab so you can switch between them before copying or downloading.' },
-    { q: 'Is there a row limit?', a: 'The on-screen preview shows the first 200 rows, but the downloaded CSV always includes every row in the sheet.' },
+    { q: "What does this tool do?", a: "Export cell values from a selected XLSX sheet to quoted CSV." },
+    { q: "What should I know before using it?", a: "Choose one sheet from an XLSX workbook. Exports use displayed cell values and cached formula results, without recalculating formulas or preserving workbook styles, charts or macros. Inputs are limited to 5 MB and 50 sheets, with per-sheet row, column and cell limits." },
   ],
   'excel-to-xml': [
-    { q: 'What does the generated XML look like?', a: 'Each sheet becomes a Worksheet element containing Row elements, and each Row contains Cell elements tagged with a column index.' },
-    { q: 'Does it handle workbooks with multiple sheets?', a: 'Yes, a tab switcher lets you pick which sheet to export, and the XML preview and download update to match.' },
-    { q: 'Can I copy the XML instead of downloading a file?', a: 'Yes, a Copy XML button puts the full generated markup on your clipboard.' },
+    { q: "What does this tool do?", a: "Export a selected XLSX sheet to XML fields; the first row supplies field names." },
+    { q: "What should I know before using it?", a: "Choose one sheet from an XLSX workbook. Exports use displayed cell values and cached formula results, without recalculating formulas or preserving workbook styles, charts or macros. Inputs are limited to 5 MB and 50 sheets, with per-sheet row, column and cell limits." },
   ],
   'exif-remover': [
     { q: 'What image formats does it accept?', a: 'JPEG, PNG, WebP, GIF, and SVG files up to 20 MiB. JPEG exports back to JPEG at quality 95. PNG, WebP, GIF, and SVG export as PNG, with GIF cleaned as a still frame and SVG rasterized.' },
@@ -1303,9 +1360,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'What happens with an invalid fraction?', a: 'It shows a specific error message telling you the expected format instead of a blank or broken result.' },
   ],
   'general-unit-converter': [
-    { q: 'Which categories of units does it cover?', a: 'Length, weight, temperature, area, volume, and speed, switchable from a category selector above the conversion fields.' },
-    { q: 'How does it handle temperature conversions?', a: 'Temperature uses its own formula rather than a simple multiplier, since Celsius, Fahrenheit, and Kelvin don\'t share a common zero point.' },
-    { q: 'Does the unit list change based on the category?', a: 'Yes, picking a category updates both dropdowns to only show units that belong to it.' },
+    { q: "What does this tool do?", a: "Convert length, weight, temperature, area, volume and speed with live validated results." },
+    { q: "What should I know before using it?", a: "Results update as you change the value and units. Invalid numbers are rejected, as are temperatures below absolute zero. Calculations use floating-point arithmetic, so displayed results can be rounded." },
   ],
   'grammar-checker': [
     { q: 'Where do the grammar and spelling checks come from?', a: 'A live call to the LanguageTool grammar API, not a small built-in rule list, so it can catch a much wider range of errors than simple pattern matching.' },
@@ -1408,9 +1464,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'How is extra whitespace handled?', a: 'Every run of consecutive whitespace left behind after tags are removed is collapsed into a single space.' },
   ],
   'html-validator': [
-    { q: 'What counts as a "missing tag" error?', a: 'It tracks opening and closing tags with a stack as it scans, and flags both unclosed tags left on the stack and closing tags that do not match the tag that was actually open.' },
-    { q: 'Which deprecated tags does it flag?', a: 'Old presentational tags like <center>, <font>, <marquee>, <blink>, and <strike>, with a suggestion to use CSS instead.' },
-    { q: 'What accessibility issues does it check for?', a: 'Missing alt attributes on <img> tags, plus javascript: URLs in href attributes, which are flagged as both a security and accessibility concern.' },
+    { q: "What does this tool do?", a: "Check HTML for common tag, nesting and attribute issues with basic lint rules." },
+    { q: "What should I know before using it?", a: "These checks aren't a complete HTML standards or accessibility audit. A clean result doesn't prove the page will render correctly." },
   ],
   'collage-maker': [
     { q: 'Does the preview update when I change files or settings?', a: 'Yes. The preview updates as you add, remove, reorder, or replace files and change collage settings. Drag source cards to reorder them, or use the accessible Move earlier and Move later controls.' },
@@ -1483,14 +1538,12 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Are these real, routable addresses?', a: 'No, every group is randomly generated, so they are meant for filling test data or documentation, not for addresses that exist on any real network.' },
   ],
   'jpg-to-png': [
-    { q: 'Does it accept formats other than JPEG?', a: 'Yes, the upload also accepts PNG, WebP, GIF, and BMP up to 20MB, though the tool is built around converting a JPEG source into PNG output.' },
-    { q: 'Does converting JPEG to PNG restore detail lost to JPEG compression?', a: 'No, PNG is lossless going forward, so no further quality is lost during this conversion, but any detail already discarded by the original JPEG compression cannot be recovered.' },
-    { q: 'What is actually happening during the conversion?', a: 'The uploaded image is drawn onto a canvas at its full resolution, then read back out as PNG data, which is why the output keeps the same pixel dimensions as the source file.' },
+    { q: "What does this tool do?", a: "Convert JPG images to PNG and compare the measured output size." },
+    { q: "What should I know before using it?", a: "Inputs are limited to 10 MB and 16 megapixels. Output size is measured and can be larger than the input." },
   ],
   'jpg-to-webp': [
-    { q: 'How much smaller does the WebP version end up?', a: 'It varies by image, so the tool shows the exact before-and-after file sizes plus a percentage difference after each conversion rather than a fixed number.' },
-    { q: 'Can I control the WebP compression level?', a: 'Yes, a quality slider from 1 to 100 adjusts the WebP encoding, letting you trade off file size against visual quality before downloading.' },
-    { q: 'Can I convert to a different format instead if I change my mind?', a: 'Yes, the same output format buttons also offer JPEG, PNG, and AVIF, so you can switch targets without re-uploading the image.' },
+    { q: "What does this tool do?", a: "Convert JPG images to WEBP and compare the measured output size." },
+    { q: "What should I know before using it?", a: "Inputs are limited to 10 MB and 16 megapixels. Output size is measured and can be larger than the input. WebP export uses a browser encoder with a local codec fallback." },
   ],
   'json-escape-unescape': [
     { q: 'Does it only escape for JSON, or other languages too?', a: 'JSON is the default context, but a context selector also covers JavaScript, regex, HTML, and a general backslash mode, each escaping a different set of characters like quotes, angle brackets, or regex metacharacters.' },
@@ -1564,9 +1617,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Is there a maximum word count?', a: 'The count field caps at 100 words per generation.' },
   ],
   'm4a-to-wav': [
-    { q: 'Is this a real audio conversion or just a renamed file?', a: 'A real one, the tool decodes the uploaded audio through the Web Audio API and manually writes a 16-bit PCM WAV file with a proper RIFF header, not just a file extension swap.' },
-    { q: 'What input formats does it accept?', a: 'AAC, M4A, and MP4 files, either by clicking the upload area or dragging a file directly onto it.' },
-    { q: 'Does it preserve the original number of audio channels and sample rate?', a: 'Yes, both are read from the decoded audio buffer and written into the WAV header exactly as they were in the source file, mono stays mono and the sample rate is not resampled.' },
+    { q: "What does this tool do?", a: "Decode browser-supported M4A audio to 16-bit PCM WAV. Maximum 20 MB and 120 decoded seconds." },
+    { q: "What should I know before using it?", a: "Input is limited to 20 MB and 120 decoded seconds, with a limit of 24 million decoded samples across all channels. The browser must decode the audio codec; the file extension alone doesn't guarantee support. WAV output doesn't restore detail lost in earlier compression." },
   ],
   'markdown-preview': [
     { q: 'Does the preview update as I type, or do I need to click a button?', a: 'It updates live on every keystroke, rendered with the marked library and GitHub Flavored Markdown enabled, no render or refresh button needed.' },
@@ -1620,9 +1672,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Does it tell me what service typically runs on an open port?', a: 'For about twenty well-known ports, like 22 for SSH, 443 for HTTPS, 3306 for MySQL, and 6379 for Redis, the results table shows the matching service name next to the port number.' },
   ],
   'mp4-to-wav': [
-    { q: 'Does this work on the video file directly, or do I need to extract audio first?', a: 'You upload the MP4 video directly, the tool decodes its audio track through the Web Audio API and writes it straight to a WAV file, no separate audio-extraction step needed.' },
-    { q: 'What happens to the video portion of my MP4 file?', a: 'It is discarded, only the decoded audio stream is used to build the WAV file, so the output is audio-only with no video frames.' },
-    { q: 'Will the output be stereo or mono?', a: 'Whatever the source audio track is, mono stays mono and stereo stays stereo, since the channel count is read straight from the decoded audio buffer rather than forced to one setting.' },
+    { q: "What does this tool do?", a: "Decode browser-supported MP4 audio to 16-bit PCM WAV. Files without decodable audio are rejected." },
+    { q: "What should I know before using it?", a: "Input is limited to 20 MB and 120 decoded seconds, with a limit of 24 million decoded samples across all channels. The browser must decode the audio codec; the file extension alone doesn't guarantee support. WAV output doesn't restore detail lost in earlier compression." },
   ],
   'network-port-scanner': [
     { q: "What's the default port range if I don't change anything?", a: '1 to 1000 is pre-filled in the Ports field when you open the tool, covering most common services without needing to type a range yourself.' },
@@ -1715,9 +1766,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Can the border be transparent?', a: 'No. The border control is a native color picker, so the border itself is an opaque RGB color. Any alpha inside the original image is preserved in the PNG output.' },
   ],
   'png-to-webp': [
-    { q: 'How much smaller does WebP actually end up compared to my PNG?', a: 'It varies by image, the After panel shows the converted file size next to a note like "42% smaller" or "smaller/larger", calculated directly by comparing the two file sizes after conversion.' },
-    { q: 'Is transparency preserved when converting to WebP?', a: 'Yes, unlike a JPEG conversion, WebP supports an alpha channel, so transparent areas in your source PNG stay transparent in the converted file.' },
-    { q: 'Can I fine-tune the compression instead of using a fixed setting?', a: 'Yes, a 1 to 100 quality slider controls the WebP encoding, and you can re-run the conversion at a different quality and compare the resulting file size before deciding which to download.' },
+    { q: "What does this tool do?", a: "Convert PNG images to WEBP and compare the measured output size." },
+    { q: "What should I know before using it?", a: "Inputs are limited to 10 MB and 16 megapixels. Output size is measured and can be larger than the input. WebP export uses a browser encoder with a local codec fallback." },
   ],
   'punctuation-fixer': [
     { q: 'What does the Smart Quotes option actually change?', a: 'It converts straight double and single quote characters into their curly Unicode equivalents, so plain " and \' marks come out looking like typeset quotation marks instead of typewriter-style straight ones.' },
@@ -1933,9 +1983,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'How precise is the downtime figure?', a: 'The highlighted period shows allowed downtime to 4 decimal places in minutes, while the grid cells switch to a rounded minutes or hours display depending on which is more readable for that period.' },
   ],
   'speech-to-text': [
-    { q: 'Does it need a specific browser to work?', a: "It uses the browser's built-in Web Speech API, which Chrome, Edge, and Safari support, if your browser lacks it you'll see an unsupported message instead of the microphone controls." },
-    { q: 'What happens to words while I\'m still mid-sentence?', a: "Interim results appear in square brackets at the end of the transcript and get replaced with plain finalized text once the recognition engine settles on that phrase." },
-    { q: 'Can I use it without a microphone?', a: 'Yes, a manual paste area below the microphone controls lets you type or paste a transcript directly and click "Use This Text" instead of recording anything.' },
+    { q: "What does this tool do?", a: "Transcribe live microphone input with a supported browser speech service." },
+    { q: "What should I know before using it?", a: "SpeechRecognition or webkitSpeechRecognition, microphone permission and an available speech service are required. Recognition uses en-US and may depend on a network service; offline or on-device processing isn't guaranteed. Manual transcript entry is separate and doesn't test microphone recognition. Audio-file transcription isn't supported." },
   ],
   'sql-formatter': [
     { q: "What does Uppercase keywords do?", a: "It uppercases recognized SQL keywords while preserving quoted text and comments. Turn it off to retain keyword casing." },
@@ -1963,9 +2012,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'How many decimal places does the result show?', a: 'Each of the three converted values, Celsius, Fahrenheit, and Kelvin, is displayed to 4 decimal places.' },
   ],
   'temperature-unit-converter': [
-    { q: "What's the colored badge above the three converted values?", a: 'A temperature category label ranging from "Extremely Cold" to "Extremely Hot" based on the Celsius value, each category has its own background color from dark blue through to red.' },
-    { q: 'What do the preset buttons like "Oven (High)" or "Sun Surface" do?', a: 'Each one loads a known reference temperature, converted into whichever unit you currently have selected, so you can instantly see it displayed across all three scales.' },
-    { q: 'Is there a visual way to see where my temperature falls on a scale?', a: 'Yes, a gradient bar running from -50°C to 100°C shows a white marker positioned at your converted Celsius value, and all six conversion formulas are also listed further down the page.' },
+    { q: "What does this tool do?", a: "Convert Celsius, Fahrenheit and Kelvin with live results, presets and absolute-zero validation." },
+    { q: "What should I know before using it?", a: "Results update as you change the value and units. Invalid numbers are rejected, as are temperatures below absolute zero. Calculations use floating-point arithmetic, so displayed results can be rounded." },
   ],
   'text-case-converter': [
     { q: 'How many case formats does it convert to at once?', a: 'Eight: UPPER, lower, Title Case, Sentence case, camelCase, snake_case, kebab-case, and CONSTANT_CASE, all calculated simultaneously from the same input, each with its own Copy button.' },
@@ -2083,9 +2131,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'How are query parameters displayed?', a: 'Each parameter from the URL\'s search string is listed on its own line as a separate key and value, rather than left bundled together as one raw query string.' },
   ],
   'url-redirect-checker': [
-    { q: 'How many redirect hops will it follow?', a: 'Up to 20 redirects in a chain, following each Location header in turn until it reaches a final, non-redirect response or hits that limit.' },
-    { q: 'What does it show for each hop in the chain?', a: 'A color-coded status code badge for every URL in the sequence, so you can see at a glance which hops were 301, 302, or another redirect status before landing on the final destination.' },
-    { q: 'What happens if the URLs form a redirect loop?', a: 'It tracks every URL it has already visited in the chain, and stops with a loop warning instead of following the same redirect back and forth indefinitely.' },
+    { q: "What does this tool do?", a: "Check the final URL and redirect flag exposed by a browser request." },
+    { q: "What should I know before using it?", a: "Cross-origin servers must allow CORS. The browser hides intermediate redirect URLs and status codes; requests time out after 10 seconds." },
   ],
   'user-agent-parser': [
     { q: 'What information does it extract from a User-Agent string?', a: 'The browser name, operating system, and device type (Mobile, Tablet, TV, or Desktop), determined by matching the string against known browser and OS patterns.' },
@@ -2118,14 +2165,12 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'How does the conversion actually happen?', a: 'The file bytes are checked first, then the decoded image is drawn to a canvas. Browsers that produce real WebP use the native encoder; if the native encoder returns PNG, another format, or null, the tool uses a local WebP encoder instead.' },
   ],
   'webp-to-jpg': [
-    { q: 'Which image formats can I upload as the source?', a: 'JPEG, PNG, WebP, AVIF, or GIF, the uploader checks the file\'s MIME type against that list and rejects anything else with an error message.' },
-    { q: 'Can I adjust the output quality?', a: 'Yes, a 1 to 100 quality slider controls the JPEG compression level, letting you trade off file size against image quality before converting.' },
-    { q: 'What does the before/after comparison show?', a: 'Side-by-side preview panels display the original and converted images along with each one\'s file size and the percentage difference between them, like "38% smaller".' },
+    { q: "What does this tool do?", a: "Convert WEBP images to JPG and compare the measured output size." },
+    { q: "What should I know before using it?", a: "Inputs are limited to 10 MB and 16 megapixels. Output size is measured and can be larger than the input. JPEG export flattens transparency onto the chosen background and uses lossy compression." },
   ],
   'webp-to-png': [
-    { q: 'Does converting to PNG preserve transparency?', a: 'Yes, PNG is a lossless format so the quality slider is disabled and grayed out for PNG output, since there is no compression tradeoff to make, transparency and pixel data are preserved exactly.' },
-    { q: 'Which source formats does the uploader accept?', a: 'JPEG, PNG, WebP, AVIF, or GIF, checked against the file\'s actual MIME type, with an error message if you try to upload something else.' },
-    { q: 'Can I download the converted PNG afterward?', a: 'Yes, a Download PNG button appears once the conversion finishes, saving the result with your original filename and a .png extension.' },
+    { q: "What does this tool do?", a: "Convert WEBP images to PNG and compare the measured output size." },
+    { q: "What should I know before using it?", a: "Inputs are limited to 10 MB and 16 megapixels. Output size is measured and can be larger than the input." },
   ],
   'weight-converter': [
     { q: 'Which weight units does it convert between?', a: 'Kilograms, grams, milligrams, pounds, ounces, and stone, all six shown as simultaneous results rather than one pair at a time.' },

@@ -669,5 +669,664 @@
       "exitCode": 0,
       "result": "Final run passed with no diagnostics after all copy adjustments."
     }
-  ]
+  ],
+  "followup": {
+    "baseCopyCommit": "9293ccd6",
+    "status": "copy-updated-and-static-checks-passed; final restoration reconciliation and parent rendered verification pending",
+    "inputReports": {
+      "developer-general": {
+        "field": "centralMetadataChanges",
+        "sha256": "fb253e81772aff24d62e698c708a2b5b761ca26d5f4778f8b3ebcafac588f3c5"
+      },
+      "utility-design": {
+        "field": "centralMetadataChanges",
+        "sha256": "599d1a5d7d943267d6d3ec19223f72e92ca9b7116eb2ff111ac974bc1d10ee5a"
+      },
+      "media-conversion": {
+        "field": "centralMetadataProposals",
+        "sha256": "edb85d840fb831fbbf950eb22f7ef2fab9916d99a73e9e1532b03e45b839009d"
+      }
+    },
+    "updatedSlugCount": 54,
+    "updates": [
+      {
+        "slug": "aac-to-wav",
+        "files": [
+          "data/tools.ts",
+          "data/tool-content.ts",
+          "lib/faq.ts"
+        ]
+      },
+      {
+        "slug": "add-subtitles",
+        "files": [
+          "data/tools.ts",
+          "data/tool-content.ts",
+          "lib/faq.ts"
+        ]
+      },
+      {
+        "slug": "all-in-one-unit-converter",
+        "files": [
+          "data/tools.ts",
+          "data/tool-content.ts",
+          "lib/faq.ts"
+        ]
+      },
+      {
+        "slug": "api-endpoint-debugger",
+        "files": [
+          "data/tools.ts",
+          "data/tool-content.ts",
+          "lib/faq.ts"
+        ]
+      },
+      {
+        "slug": "automation-wizard",
+        "files": [
+          "data/tools.ts",
+          "data/tool-content.ts",
+          "lib/faq.ts"
+        ]
+      },
+      {
+        "slug": "base-number-converter",
+        "files": [
+          "data/tools.ts",
+          "data/tool-content.ts",
+          "lib/faq.ts"
+        ]
+      },
+      {
+        "slug": "base64-image-decoder",
+        "files": [
+          "data/tools.ts",
+          "data/tool-content.ts",
+          "lib/faq.ts"
+        ]
+      },
+      {
+        "slug": "bill-sale-generator",
+        "files": [
+          "data/tools.ts",
+          "data/tool-content.ts",
+          "lib/faq.ts"
+        ]
+      },
+      {
+        "slug": "bin-hex-dec-converter",
+        "files": [
+          "data/tools.ts",
+          "data/tool-content.ts",
+          "lib/faq.ts"
+        ]
+      },
+      {
+        "slug": "binary-decimal-hex-converter",
+        "files": [
+          "data/tools.ts",
+          "data/tool-content.ts",
+          "lib/faq.ts"
+        ]
+      },
+      {
+        "slug": "code-beautifier",
+        "files": [
+          "data/tools.ts",
+          "data/tool-content.ts",
+          "lib/faq.ts"
+        ]
+      },
+      {
+        "slug": "code-to-diagram-generator",
+        "files": [
+          "data/tools.ts",
+          "data/tool-content.ts",
+          "lib/faq.ts"
+        ]
+      },
+      {
+        "slug": "css-to-scss",
+        "files": [
+          "data/tools.ts",
+          "data/tool-content.ts",
+          "lib/faq.ts"
+        ]
+      },
+      {
+        "slug": "css-validator",
+        "files": [
+          "data/tools.ts",
+          "data/tool-content.ts",
+          "lib/faq.ts"
+        ]
+      },
+      {
+        "slug": "csv-to-excel",
+        "files": [
+          "data/tools.ts",
+          "data/tool-content.ts",
+          "lib/faq.ts"
+        ]
+      },
+      {
+        "slug": "csv-to-xml",
+        "files": [
+          "data/tools.ts",
+          "data/tool-content.ts",
+          "lib/faq.ts"
+        ]
+      },
+      {
+        "slug": "cutter",
+        "files": [
+          "data/tools.ts",
+          "data/tool-content.ts",
+          "lib/faq.ts"
+        ]
+      },
+      {
+        "slug": "excel-to-csv",
+        "files": [
+          "data/tools.ts",
+          "data/tool-content.ts",
+          "lib/faq.ts"
+        ]
+      },
+      {
+        "slug": "excel-to-pdf",
+        "files": [
+          "data/tools.ts",
+          "data/tool-content.ts",
+          "lib/faq.ts"
+        ]
+      },
+      {
+        "slug": "excel-to-xml",
+        "files": [
+          "data/tools.ts",
+          "data/tool-content.ts",
+          "lib/faq.ts"
+        ]
+      },
+      {
+        "slug": "extract-audio",
+        "files": [
+          "data/tools.ts",
+          "data/tool-content.ts",
+          "lib/faq.ts"
+        ]
+      },
+      {
+        "slug": "general-unit-converter",
+        "files": [
+          "data/tools.ts",
+          "data/tool-content.ts",
+          "lib/faq.ts"
+        ]
+      },
+      {
+        "slug": "gif-to-apng",
+        "files": [
+          "data/tools.ts",
+          "data/tool-content.ts",
+          "lib/faq.ts"
+        ]
+      },
+      {
+        "slug": "gif-to-jpg",
+        "files": [
+          "data/tools.ts",
+          "data/tool-content.ts",
+          "lib/faq.ts"
+        ]
+      },
+      {
+        "slug": "gif-to-png",
+        "files": [
+          "data/tools.ts",
+          "data/tool-content.ts",
+          "lib/faq.ts"
+        ]
+      },
+      {
+        "slug": "heic-to-jpg",
+        "files": [
+          "data/tools.ts",
+          "data/tool-content.ts",
+          "lib/faq.ts"
+        ]
+      },
+      {
+        "slug": "heic-to-png",
+        "files": [
+          "data/tools.ts",
+          "data/tool-content.ts",
+          "lib/faq.ts"
+        ]
+      },
+      {
+        "slug": "html-validator",
+        "files": [
+          "data/tools.ts",
+          "data/tool-content.ts",
+          "lib/faq.ts"
+        ]
+      },
+      {
+        "slug": "jpg-to-png",
+        "files": [
+          "data/tools.ts",
+          "data/tool-content.ts",
+          "lib/faq.ts"
+        ]
+      },
+      {
+        "slug": "jpg-to-webp",
+        "files": [
+          "data/tools.ts",
+          "data/tool-content.ts",
+          "lib/faq.ts"
+        ]
+      },
+      {
+        "slug": "m4a-to-wav",
+        "files": [
+          "data/tools.ts",
+          "data/tool-content.ts",
+          "lib/faq.ts"
+        ]
+      },
+      {
+        "slug": "markdown-table-from-json",
+        "files": [
+          "data/tools.ts",
+          "data/tool-content.ts",
+          "lib/faq.ts"
+        ]
+      },
+      {
+        "slug": "mkv-to-mp3",
+        "files": [
+          "data/tools.ts",
+          "data/tool-content.ts",
+          "lib/faq.ts"
+        ]
+      },
+      {
+        "slug": "mp4-to-mp3",
+        "files": [
+          "data/tools.ts",
+          "data/tool-content.ts",
+          "lib/faq.ts"
+        ]
+      },
+      {
+        "slug": "mp4-to-wav",
+        "files": [
+          "data/tools.ts",
+          "data/tool-content.ts",
+          "lib/faq.ts"
+        ]
+      },
+      {
+        "slug": "nda-generator",
+        "files": [
+          "data/tools.ts",
+          "data/tool-content.ts",
+          "lib/faq.ts"
+        ]
+      },
+      {
+        "slug": "png-to-webp",
+        "files": [
+          "data/tools.ts",
+          "data/tool-content.ts",
+          "lib/faq.ts"
+        ]
+      },
+      {
+        "slug": "poll-generator",
+        "files": [
+          "data/tools.ts",
+          "data/tool-content.ts",
+          "lib/faq.ts"
+        ]
+      },
+      {
+        "slug": "privacy-policy-generator",
+        "files": [
+          "data/tools.ts",
+          "data/tool-content.ts",
+          "lib/faq.ts"
+        ]
+      },
+      {
+        "slug": "purchase-agreement-generator",
+        "files": [
+          "data/tools.ts",
+          "data/tool-content.ts",
+          "lib/faq.ts"
+        ]
+      },
+      {
+        "slug": "sass-to-css",
+        "files": [
+          "data/tools.ts",
+          "data/tool-content.ts",
+          "lib/faq.ts"
+        ]
+      },
+      {
+        "slug": "screen-density-simulator",
+        "files": [
+          "data/tools.ts",
+          "data/tool-content.ts",
+          "lib/faq.ts"
+        ]
+      },
+      {
+        "slug": "speech-to-text",
+        "files": [
+          "data/tools.ts",
+          "data/tool-content.ts",
+          "lib/faq.ts"
+        ]
+      },
+      {
+        "slug": "split-excel",
+        "files": [
+          "data/tools.ts",
+          "data/tool-content.ts",
+          "lib/faq.ts"
+        ]
+      },
+      {
+        "slug": "sql-to-json",
+        "files": [
+          "data/tools.ts",
+          "data/tool-content.ts",
+          "lib/faq.ts"
+        ]
+      },
+      {
+        "slug": "svg-to-jpg",
+        "files": [
+          "data/tools.ts",
+          "data/tool-content.ts",
+          "lib/faq.ts"
+        ]
+      },
+      {
+        "slug": "svg-to-png",
+        "files": [
+          "data/tools.ts",
+          "data/tool-content.ts",
+          "lib/faq.ts"
+        ]
+      },
+      {
+        "slug": "svg-to-webp",
+        "files": [
+          "data/tools.ts",
+          "data/tool-content.ts",
+          "lib/faq.ts"
+        ]
+      },
+      {
+        "slug": "temperature-unit-converter",
+        "files": [
+          "data/tools.ts",
+          "data/tool-content.ts",
+          "lib/faq.ts"
+        ]
+      },
+      {
+        "slug": "text-to-handwriting",
+        "files": [
+          "data/tools.ts",
+          "data/tool-content.ts",
+          "lib/faq.ts"
+        ]
+      },
+      {
+        "slug": "trace",
+        "files": [
+          "data/tools.ts",
+          "data/tool-content.ts",
+          "lib/faq.ts"
+        ]
+      },
+      {
+        "slug": "url-redirect-checker",
+        "files": [
+          "data/tools.ts",
+          "data/tool-content.ts",
+          "lib/faq.ts"
+        ]
+      },
+      {
+        "slug": "webp-to-jpg",
+        "files": [
+          "data/tools.ts",
+          "data/tool-content.ts",
+          "lib/faq.ts"
+        ]
+      },
+      {
+        "slug": "webp-to-png",
+        "files": [
+          "data/tools.ts",
+          "data/tool-content.ts",
+          "lib/faq.ts"
+        ]
+      }
+    ],
+    "scope": {
+      "catalogDescriptionsOnly": true,
+      "sourceConfigRouterPackageChanges": false,
+      "catalogRowsRemoved": 0,
+      "buildRun": false,
+      "serverStarted": false,
+      "browserRun": false,
+      "commitCreated": false,
+      "delegationUsed": false
+    },
+    "supersededReportRecommendations": [
+      "Do not describe TypeScript Beautify transpilation as a feature. The working tree now calls formatScript for type-preserving Beautify; final review commit reconciliation remains pending.",
+      "Do not apply MP3-unavailable or WAV-only proposals for mp4-to-mp3 and mkv-to-mp3. Working-tree AudioConverter calls pcmMp3 with a local LAME encoder; final review and browser acceptance remain pending."
+    ],
+    "pendingRestorationReconciliation": [
+      {
+        "slugs": [
+          "code-beautifier"
+        ],
+        "action": "After formatter review commits arrive, reconcile Beautify type preservation and the separate Minify contract. Do not present type stripping as desired Beautify behavior.",
+        "source": "components/tools/CodeBeautifierClient.tsx; lib/developer-general/format-script.ts"
+      },
+      {
+        "slugs": [
+          "mp4-to-mp3",
+          "mkv-to-mp3"
+        ],
+        "action": "Reconcile final real MP3 encoder and container/codec support after review commits. Confirm MP3 bytes and decodable output in parent rendered verification; never finalize MP3-unavailable or WAV-only copy.",
+        "source": "components/tools/media-conversion/AudioConverter.tsx; lib/media-conversion/audio.ts; lib/media-conversion/demux.ts"
+      },
+      {
+        "slugs": [
+          "json-schema-validator"
+        ],
+        "action": "Reconcile first-copy restrictions on pattern and formats with restored support after review fixes. Do not further remove those capabilities."
+      },
+      {
+        "slugs": [
+          "notebook-to-html"
+        ],
+        "action": "Reconcile first-copy rich-output restrictions with restored embedded notebook images after review fixes."
+      },
+      {
+        "slugs": [
+          "jupyter-cleaner"
+        ],
+        "action": "Reconcile first-copy metadata-cleanup limits with restored notebook metadata cleanup after review fixes."
+      },
+      {
+        "slugs": [
+          "photo-metadata-remover"
+        ],
+        "action": "Reconcile first-copy incomplete metadata-removal caveats with reviewed cleanup implementation; verify the final supported metadata and image formats."
+      },
+      {
+        "slugs": [
+          "batch-image-resizer",
+          "browser-image-resizer",
+          "image-size-resizer",
+          "image-dpi-resizer",
+          "photo-metadata-remover"
+        ],
+        "action": "Review first-copy image-format claims against final AVIF restoration and route mapping. This is a first-copy reconciliation audit list, not a claim that every listed route supports AVIF. Do not further remove AVIF claims."
+      }
+    ],
+    "remainingUncertainties": [
+      {
+        "slugs": [
+          "url-redirect-checker"
+        ],
+        "finding": "CORS, final response exposure and provider availability require parent browser review. Source only exposes final URL/redirected, not intermediate hops.",
+        "source": "components/tools/DeveloperGeneralHttpInspector.tsx"
+      },
+      {
+        "slugs": [
+          "speech-to-text"
+        ],
+        "finding": "Mapped AudioToTextClient requires SpeechRecognition/webkitSpeechRecognition, en-US, microphone permission and service availability. Manual input is not live recognition evidence; no browser-brand or offline guarantee.",
+        "source": "app/tools/[slug]/ToolUI.tsx; components/tools/AudioToTextClient.tsx"
+      },
+      {
+        "slugs": [
+          "bill-sale-generator",
+          "nda-generator",
+          "privacy-policy-generator",
+          "purchase-agreement-generator",
+          "excel-to-pdf"
+        ],
+        "finding": "Template output is a draft without legal-validity or compliance guarantees. Bill of sale is TXT; other document PDFs reject font-unsupported characters. Spreadsheet PDF uses plain wrapped values and has font limits. Parent must verify final exported artifacts.",
+        "source": "lib/utility-design/document.ts; lib/media-conversion/spreadsheet.ts; mapped document components"
+      },
+      {
+        "slugs": [
+          "split-excel",
+          "excel-to-csv",
+          "excel-to-xml",
+          "excel-to-pdf"
+        ],
+        "finding": "Values/cached results only, no formula recalculation or workbook layout/chart/macro preservation. Parent must verify exported artifacts.",
+        "source": "components/tools/SplitExcelFileClient.tsx; lib/media-conversion/spreadsheet.ts"
+      },
+      {
+        "slugs": [
+          "aac-to-wav",
+          "m4a-to-wav",
+          "mp4-to-wav",
+          "extract-audio",
+          "mp4-to-mp3",
+          "mkv-to-mp3",
+          "cutter",
+          "add-subtitles"
+        ],
+        "finding": "Input codec availability and WebM recording vary by browser. Source inspection is not media playback acceptance.",
+        "source": "lib/media-conversion/audio.ts; lib/media-conversion/video.ts"
+      },
+      {
+        "slugs": [
+          "jpg-to-webp",
+          "png-to-webp",
+          "svg-to-webp",
+          "heic-to-jpg",
+          "heic-to-png",
+          "gif-to-apng"
+        ],
+        "finding": "Local WebP fallback is present; do not imply native encoder availability is the only support path. HEIC variants and GIF/APNG artifacts need parent rendered verification.",
+        "source": "lib/media-conversion/image.ts; components/tools/media-conversion/ImageConverter.tsx"
+      },
+      {
+        "slugs": [
+          "aac-to-wav",
+          "add-subtitles",
+          "all-in-one-unit-converter",
+          "api-endpoint-debugger",
+          "automation-wizard",
+          "base-number-converter",
+          "base64-image-decoder",
+          "bill-sale-generator",
+          "bin-hex-dec-converter",
+          "binary-decimal-hex-converter",
+          "code-beautifier",
+          "code-to-diagram-generator",
+          "css-to-scss",
+          "css-validator",
+          "csv-to-excel",
+          "csv-to-xml",
+          "cutter",
+          "excel-to-csv",
+          "excel-to-pdf",
+          "excel-to-xml",
+          "extract-audio",
+          "general-unit-converter",
+          "gif-to-apng",
+          "gif-to-jpg",
+          "gif-to-png",
+          "heic-to-jpg",
+          "heic-to-png",
+          "html-validator",
+          "jpg-to-png",
+          "jpg-to-webp",
+          "m4a-to-wav",
+          "markdown-table-from-json",
+          "mkv-to-mp3",
+          "mp4-to-mp3",
+          "mp4-to-wav",
+          "nda-generator",
+          "png-to-webp",
+          "poll-generator",
+          "privacy-policy-generator",
+          "purchase-agreement-generator",
+          "sass-to-css",
+          "screen-density-simulator",
+          "speech-to-text",
+          "split-excel",
+          "sql-to-json",
+          "svg-to-jpg",
+          "svg-to-png",
+          "svg-to-webp",
+          "temperature-unit-converter",
+          "text-to-handwriting",
+          "trace",
+          "url-redirect-checker",
+          "webp-to-jpg",
+          "webp-to-png"
+        ],
+        "finding": "Concurrent review fixes may change contracts. Reconcile against final commits; component wrapper copy and shared FAQ templates were outside this edit scope."
+      }
+    ],
+    "validation": [
+      {
+        "command": "./node_modules/.bin/tsc --noEmit --incremental false",
+        "exitCode": 0,
+        "result": "Final run passed with no diagnostics after copy adjustments."
+      },
+      {
+        "command": "git diff --check",
+        "exitCode": 0
+      },
+      {
+        "command": "Catalog and scoped entry comparison against HEAD",
+        "result": "All catalog content other than descriptions is unchanged. Exactly 54 scoped tool-content and FAQ entries changed; unrelated entries unchanged."
+      },
+      {
+        "command": "Report coverage and superseded-claim check",
+        "result": "All 54 requested report slugs are recorded. Changed MP3 and TypeScript entries contain no MP3-unavailable, WAV-only or desired-transpilation claims."
+      }
+    ]
+  }
 }

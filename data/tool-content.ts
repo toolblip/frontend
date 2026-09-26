@@ -18,12 +18,37 @@ export function getToolContent(slug: string): ToolContent | undefined {
 }
 
 const TOOL_CONTENT: Record<string, ToolContent> = {
+  "svg-to-webp": {
+    description: "Convert SVG images to WEBP and compare the measured output size. Inputs are limited to 10 MB and 16 megapixels. Output size is measured and can be larger than the input. WebP export uses a browser encoder with a local codec fallback. SVG must be self-contained and static; external resources and scripts are rejected.",
+    examples: [],
+    features: ["WEBP output", "Validated output dimensions and size"]
+  },
+  "svg-to-jpg": {
+    description: "Convert SVG images to JPG and compare the measured output size. Inputs are limited to 10 MB and 16 megapixels. Output size is measured and can be larger than the input. SVG must be self-contained and static; external resources and scripts are rejected. JPEG export flattens transparency onto the chosen background and uses lossy compression.",
+    examples: [],
+    features: ["JPG output", "Validated output dimensions and size"]
+  },
+  "sass-to-css": {
+    description: "Compile SCSS or indented Sass to CSS in a browser worker. Choose Compile to process local input. Execution is bounded; the tool reports compilation errors instead of treating invalid Sass as CSS.",
+    examples: [],
+    features: ["SCSS and indented Sass", "Explicit Compile action"]
+  },
+  "poll-generator": {
+    description: "Draft poll questions and options for copying into a platform of your choice. Review the destination platform's limits before posting. This tool doesn't publish polls, host voting or collect responses.",
+    examples: [],
+    features: ["Poll question and option drafts", "Copy for manual posting"]
+  },
+  "css-to-scss": {
+    description: "Use CSS as compatible SCSS while keeping its custom properties and var() expressions. CSS is valid SCSS. This tool doesn't turn runtime custom properties into Sass variables or infer a nested stylesheet architecture.",
+    examples: [],
+    features: ["CSS-compatible SCSS output", "Runtime custom properties retained"]
+  },
   "aac-to-wav": {
-    description: `Converting a lossy AAC file to WAV doesn't restore any detail AAC's compression already discarded, that damage was done during the original encoding and no format change afterward gets it back, what actually happens is the compressed audio gets decoded into an uncompressed, universally readable container instead. This tool converts AAC into WAV, producing a file virtually any audio editor or piece of hardware can open without needing an AAC decoder installed at all. Useful for feeding an AAC recording into editing software that doesn't handle the format natively, archiving audio in a format that doesn't depend on a specific codec surviving long-term, or preparing an AAC file for a device or workflow that specifically expects uncompressed WAV input.`,
+    description: "Decode browser-supported AAC audio to 16-bit PCM WAV. Maximum 20 MB and 120 decoded seconds. Input is limited to 20 MB and 120 decoded seconds, with a limit of 24 million decoded samples across all channels. The browser must decode the audio codec; the file extension alone doesn't guarantee support. WAV output doesn't restore detail lost in earlier compression.",
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["16-bit PCM WAV output", "Browser-supported audio decoding"]
   },
   "accessibility-checker": {
     description: `Inspect pasted HTML for missing image alt text, accessible names, form labels, document language, title and landmarks. These are static markup checks, not WCAG certification. The tool does not measure rendered contrast or test runtime keyboard navigation and focus.`,
@@ -67,11 +92,11 @@ Output: contract.pdf with the signature page appended`,
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "add-subtitles": {
-    description: `SRT and VTT aren't interchangeable formats wearing different file extensions, their timestamp syntax actually differs, SRT separates milliseconds with a comma, VTT with a period, and VTT requires its own header line SRT doesn't carry at all, small enough differences that a subtitle file written for one format often fails silently when fed into software expecting the other. This tool attaches subtitles to a video and accepts either SRT or VTT directly, without requiring one format to be converted into the other first. Useful for adding captions to a video when the subtitle file already exists as SRT from one source and VTT from another, attaching subtitles without a separate conversion step beforehand, or preparing a video for a platform that specifically expects one subtitle format over the other.`,
+    description: "Preview and burn plain SRT or WebVTT captions into a re-encoded WebM video with audio. The browser must support decoding the input and recording WebM with audio. Export re-encodes in real time and is limited to 60 seconds per range and 2,073,600 pixels. It doesn't preserve the original encoded stream.",
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["WebM export with audio", "Selected range up to 60 seconds"]
   },
   "age-calculator": {
     description: `Subtracting a birth year from the current year gets the wrong answer more often than it seems like it should, if today's date falls before this year's birthday has actually happened yet, that simple subtraction overcounts by a full year, an easy mistake that only shows up as a wrong result rather than an obvious error. This tool calculates exact age in years, months, and days from a birth date, correctly accounting for whether this year's birthday has occurred yet, and also reports total days lived. Useful for getting a precise age broken into years, months, and days rather than a rounded year count, calculating exactly how many total days someone has been alive, or confirming an age calculation is correct for a date near someone's actual birthday when simple subtraction would get it wrong.`,
@@ -95,11 +120,11 @@ Output: contract.pdf with the signature page appended`,
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "all-in-one-unit-converter": {
-    description: `A single practical task, scaling a recipe, planning a road trip, working through a home improvement project, often needs more than one kind of unit conversion in the same sitting: a recipe's ounces into grams, then a room's dimensions from feet into meters, then an oven's Fahrenheit setting into Celsius, each normally living in its own separate converter tool. This one keeps length, weight, temperature, speed, and volume together in a single interface, so switching between unit types doesn't mean opening a different tool for every conversion. Pick the category, enter a value, and get the converted result without losing track of where you were in a bigger task. Useful for following a recipe from a metric cookbook that also lists oven temperature in Celsius, converting a room's measurements for a flooring project, or just avoiding five browser tabs open for five separate converters.`,
+    description: "Convert length, weight, temperature, area, volume and speed with live validated results. Results update as you change the value and units. Invalid numbers are rejected, as are temperatures below absolute zero. Calculations use floating-point arithmetic, so displayed results can be rounded.",
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["Live unit conversion", "Input validation"]
   },
   "anagram-generator": {
     description: `An anagram isn't just any rearrangement of a word's letters, it specifically has to spell another real word or phrase using exactly the same letters, which is a much narrower and more interesting target than shuffling letters randomly. This tool checks a word or phrase against a dictionary and returns only the rearrangements that land on an actual valid word, filtering out the much larger pile of letter combinations that don't spell anything. Type in "listen" and get back "silent" and "enlist," not a list of every possible letter order regardless of whether it means something. Useful for solving a crossword clue built around an anagram, building a word puzzle where the answer needs to be a real word, or discovering that a name or phrase happens to rearrange into something else entirely.`,
@@ -148,11 +173,11 @@ Output: contract-annotated.pdf`,
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "api-endpoint-debugger": {
-    description: `Testing your own API during development or poking at a third party's endpoint before writing integration code both come down to sending an actual request with the right headers, body, and authentication and seeing exactly what comes back, not assuming it works because a request went out without erroring. This tool sends a request to any API endpoint with custom headers, a custom body, and authentication included, showing the real response rather than requiring a separate script written just to test one call. Useful for confirming your own API endpoint handles a specific header or auth scheme correctly during development, poking at an unfamiliar third-party API to understand its actual behavior before writing integration code, or debugging why a request is failing by adjusting one field at a time and watching the response change.`,
+    description: "Generate request code from an endpoint, method, headers and body. This tool doesn't send the request or inspect a live API response. Review the generated code before running it in your own environment.",
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["Request-code generation", "Editable request inputs"]
   },
   "api-endpoint-documenter": {
     description: `A prose description of an endpoint tells you what it does; a parameter table tells you exactly what to send, which path parameters are required, which query parameters are optional and what they default to, what type each one expects, all laid out so someone integrating against the API doesn't have to reconstruct that information by reading example requests and guessing at what's actually required versus optional. This tool builds that structured table directly from an endpoint's definition, organizing path parameters, query parameters, and body fields into separate, clearly labeled sections alongside the usual request and response examples. Useful for documenting an endpoint with enough precision that another developer can integrate against it without needing to ask what happens when an optional parameter gets left out.`,
@@ -197,11 +222,11 @@ Output: contract-annotated.pdf`,
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "automation-wizard": {
-    description: `Connecting two apps so that one action automatically triggers another, a new form submission adding a row to a spreadsheet, a new file automatically getting a notification sent about it, is a task a lot of people assume needs writing code, when the actual logic behind most of these automations is simple: when this specific thing happens, do that specific thing in response. This tool builds that kind of trigger-and-action automation visually, connecting apps and defining what should happen automatically without writing a script or hiring someone who can. Useful for automating a repetitive manual task that currently gets done by hand every single time it comes up, connecting two apps that don't otherwise talk to each other directly, or setting up a simple automated workflow without learning to code just for one recurring task.`,
+    description: "Draft a workflow specification and export JSON or YAML. Trigger and action blocks describe a plan. They don't connect accounts, run tasks or use AI. Adapt the exported specification to your chosen runner; it's not a ready-to-run integration.",
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["Workflow specification editor", "JSON and YAML export"]
   },
   "avi-to-gif": {
     description: `Old camcorder footage, a video downloaded years ago, a clip pulled off an old hard drive, AVI shows up often enough in exactly this kind of legacy material, and turning a specific memorable moment from it into a shareable GIF means pulling that footage forward into a format actually usable today rather than leaving it stuck in an old container nobody shares directly anymore. This tool converts an AVI video into an animated GIF, built around extracting a short, shareable moment from older footage. Useful for turning a funny few seconds from an old AVI recording into a GIF worth sharing, pulling a reaction clip out of legacy camcorder footage, or converting an old downloaded AVI file into something that actually posts cleanly on a modern platform.`,
@@ -232,11 +257,11 @@ Output: contract-annotated.pdf`,
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "base-number-converter": {
-    description: `Binary, decimal, and hex get most of the attention, but octal and base-32 both still show up in specific, easy-to-forget places: Unix file permissions are written in octal, chmod 755 means something very different from the decimal number 755, and base-32 turns up in two-factor authentication secret keys and in ID formats designed to avoid visually confusing characters like 0 and O. This tool converts a number between all five systems, binary, octal, decimal, hexadecimal, and base-32, at once, so a permission value, an authentication secret, or a plain number all translate correctly regardless of which base it started in. Useful for decoding what a chmod octal value actually grants, converting a base-32 TOTP secret into a more familiar system to double-check it, or settling what an unfamiliar number actually represents across every base at once.`,
+    description: "Convert whole integers exactly between bases 2 through 36. Invalid digits and fractions are rejected. Whole integers are converted with arbitrary-precision integer arithmetic. Invalid digits and fractions are rejected; this isn't a floating-point converter.",
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["Exact whole-integer conversion", "Input digit validation"]
   },
   "base64-encoder-decoder": {
     description: `Encode and decode Base64 strings for data transmission and storage. Handle text, images, and binary data. Essential for email attachments, data URLs, and API authentication.`,
@@ -267,11 +292,11 @@ Output: Hello World!`
     features: ["Raw image format detection", "Visible invalid-image errors", "Copy and download output", "Base64 size overhead shown"]
   },
   "base64-image-decoder": {
-    description: `A base64 data URL pulled from an API response, a config file, or a browser's developer tools is just a long string of characters until it's actually turned back into a viewable image, and the real need at that point usually isn't encoding anything new, it's seeing what the string actually represents and getting a real file out of it. This tool decodes a base64 data URL back into an image file, ready to view, inspect, or download, built specifically for the decode direction rather than a bidirectional encode-and-decode tool. Useful for turning a base64 string copied from an API response into an actual downloadable image file, inspecting what a data URL embedded in a config file actually depicts before trusting it, or recovering a viewable image from base64 text found in an email or a document.`,
+    description: "Decode and validate Base64 PNG, JPEG, WebP or GIF data and download the original raster format. The decoded bytes are validated as PNG, JPEG, WebP or GIF. Download keeps the original raster format; it doesn't convert every input to PNG.",
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["Raster byte validation", "Original-format download"]
   },
   "base64-image-viewer": {
     description: `A base64 string pasted from a debugger, a log entry, or an API response doesn't show you anything on its own, it's just a long block of encoded text, and confirming what image it actually represents usually means writing a quick script or manually building a data URL just to see it rendered. This tool renders a base64-encoded image directly in the browser the moment the string is pasted in, no download or file conversion step needed, just a quick visual check of what the encoded data actually contains. Useful for confirming what an image looks like before deciding whether it's worth extracting as an actual file, quickly checking a base64 string copied from a log without writing a script just to view it, or verifying an API response's embedded image field actually contains what it's supposed to.`,
@@ -302,11 +327,11 @@ Output: Hello World!`
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "bill-sale-generator": {
-    description: `A bill of sale is a simpler document than a full purchase agreement, it doesn't negotiate contingencies or financing terms, it just confirms a sale already happened and formally transfers ownership from seller to buyer, which is exactly the document a DMV typically wants for a vehicle title transfer rather than the fuller negotiated contract a more complex sale would need. This tool generates that specific document for a vehicle or property sale, with the basic details, parties, item description, price, date, that a bill of sale actually needs to serve as valid proof of transfer. Useful for documenting a private vehicle sale in the format a DMV title transfer actually expects, formally recording a simple property sale after the terms were already agreed verbally, or having a basic, valid record of a transaction that doesn't call for a full negotiated contract.`,
+    description: "Draft a bill of sale from the details you enter, then review and edit it. The document uses editable templates, not AI or a legal review. It doesn't guarantee legal validity or compliance. Download TXT to keep the draft as text.",
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["Editable document template", "TXT download"]
   },
   "bill-splitter": {
     description: `Dividing a total by however many people showed up breaks down the moment someone ordered the appetizer and someone else just had water, and tax and tip both need calculating against the actual pre-tax subtotal specifically, not the total after tax, or the tip ends up quietly taxed along with the food. This tool splits a bill among multiple people with tax, tip, and rounding handled correctly, including an option to round each share up to a clean number since collecting exact cents from a group is genuinely more trouble than it's worth. Useful for splitting a group dinner bill where people ordered noticeably different amounts, calculating tip correctly against the pre-tax subtotal instead of the taxed total, or rounding each person's share up to a clean number before collecting payment from everyone.`,
@@ -316,11 +341,11 @@ Output: Hello World!`
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "bin-hex-dec-converter": {
-    description: `Octal comes up almost exclusively in Unix file permissions, which makes it dead weight for the conversions that actually happen constantly in everyday programming, a hex color value, a memory address, a binary flag, all of which only ever need binary, hexadecimal, and decimal, never a fourth base that rarely applies to the task at hand. This tool converts between binary, hexadecimal, and decimal instantly, focused specifically on the three bases that come up in daily coding work rather than including a fourth one that mostly just adds clutter. Useful for converting a hex color value into decimal RGB components without an unnecessary octal field in the way, checking a binary flag's decimal equivalent during a quick debugging session, or converting a memory address between hex and decimal for the bases that actually matter day to day.`,
+    description: "Convert whole integers exactly between binary, decimal and hexadecimal, including values above JavaScript’s safe integer range. Whole integers are converted with arbitrary-precision integer arithmetic. Invalid digits and fractions are rejected; this isn't a floating-point converter.",
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["Exact whole-integer conversion", "Input digit validation"]
   },
   "binary-converter": {
     description: `A negative number in binary isn't just a positive number's bit pattern with a minus sign tacked on, it's represented through two's complement, a specific encoding where flipping every bit and adding one produces the negative equivalent, which is genuinely non-obvious the first time you actually need to read or construct a negative binary value by hand. This tool converts between binary, decimal, hexadecimal, and octal with explicit support for signed integers, correctly handling the two's complement representation rather than only covering positive, unsigned values. Useful for understanding how a negative number is actually stored in binary rather than guessing at the pattern, converting a signed integer between number systems without the negative sign getting lost or misrepresented, or working through a systems programming or computer architecture problem that specifically deals with signed binary representation.`,
@@ -330,11 +355,11 @@ Output: Hello World!`
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "binary-decimal-hex-converter": {
-    description: `Debugging a memory address or a color value often means needing all four number system representations at once, glancing between a hex address, its raw binary bit pattern, and its decimal value repeatedly, rather than converting one specific pair and starting over each time a different comparison is needed. This tool converts a number entered in binary, decimal, hexadecimal, or octal into all three other bases simultaneously, displaying every representation side by side rather than one conversion at a time. Useful for entering a hex memory address once and seeing its binary and decimal equivalents together for a debugging session, checking a color value's representation across all four bases at a glance, or converting between number systems repeatedly without re-entering the value for each new comparison.`,
+    description: "Convert whole integers exactly between binary, decimal and hexadecimal, including values above JavaScript’s safe integer range. Whole integers are converted with arbitrary-precision integer arithmetic. Invalid digits and fractions are rejected; this isn't a floating-point converter.",
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["Exact whole-integer conversion", "Input digit validation"]
   },
   "binary-to-decimal": {
     description: `Each binary digit represents a specific power of two based on its position, the rightmost digit worth one, the next worth two, then four, then eight, doubling with every step left, and adding up the positions where a 1 actually appears is the entire calculation behind converting binary into decimal, straightforward once seen worked out but easy to fumble doing purely in your head. This tool converts binary to decimal and back, showing the actual positional breakdown, each bit's power of two and whether it's a 1 or a 0, rather than just returning a final number with no visible working. Useful for a student learning how positional binary notation actually represents a number for the first time, double-checking a binary-to-decimal conversion done by hand, or converting a binary value from a datasheet or a programming exercise with the calculation shown alongside the result.`,
@@ -472,11 +497,11 @@ Output: Hello World!`
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "code-beautifier": {
-    description: `Formatting JavaScript, HTML, CSS, and JSON each has its own specific rules, brace placement, tag nesting, property indentation, but working across a mixed file, or just not wanting to hunt down four separate single-language tools, is exactly the case a beautifier covering all four languages in one place is actually built for. This tool formats and indents JavaScript, HTML, CSS, and JSON code, handling all four languages in a single tool rather than requiring a different formatter for each one. Useful for cleaning up a mixed HTML file with embedded CSS and JavaScript in one pass, formatting a JSON config file without switching to a JSON-specific tool, or reformatting whichever of these four languages a specific file happens to be written in without checking first.`,
+    description: "Format JavaScript, TypeScript, JSON, CSS, HTML and Python with indentation controls. TypeScript Beautify keeps type syntax. Python formatting reindents existing blocks; HTML formatting uses conservative block boundaries. Neither is a full language-aware formatter.",
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["Type-preserving TypeScript Beautify", "Indentation controls"]
   },
   "code-diff": {
     description: `A generic text diff treats every line the same way, whitespace, indentation, a stray semicolon, all flagged with equal weight, which buries an actual logic change under formatting noise when comparing two versions of a function rather than two paragraphs of prose. This tool compares two code snippets specifically, highlighting differences with syntax-aware, line-by-line detail that understands it's looking at code rather than plain text. Useful for reviewing what actually changed between two versions of a function before merging, comparing a snippet from documentation against the version actually running in production, or spotting a subtle change buried in a large pasted block of code that would be easy to miss reading line by line manually.`,
@@ -486,11 +511,11 @@ Output: Hello World!`
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "code-to-diagram-generator": {
-    description: `Reading a function and mentally tracing every branch, loop, and call it makes is possible but slow, and explaining that same logic to someone else verbally is slower still, whereas a visual flowchart or sequence diagram shows the actual control flow and interactions at a glance in a way a written explanation has to build up sentence by sentence. This tool converts code directly into a visual flowchart or sequence diagram, mapping branches, loops, and function calls into an actual diagram rather than requiring the flow to be hand-drawn or described in prose. Useful for documenting a complex function's control flow visually before onboarding a new team member, generating a sequence diagram of how several functions or services actually interact, or turning tangled legacy code into a diagram that makes its structure visible before attempting to refactor it.`,
+    description: "Generate Mermaid source from ordered lines or simple class and sequence declarations. Copy the source into a Mermaid renderer to view it. The tool doesn't use AI, infer control flow or render diagrams itself.",
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["Mermaid source output", "Simple flowchart, sequence and class modes"]
   },
   "collage-maker": {
     description: `A single reshaped photo solves a different problem than arranging several separate images into one combined layout, a wedding album montage, a grid of vacation photos, or a nine-panel Instagram preview all need multiple images placed together with consistent borders rather than one image adjusted on its own. This tool arranges multiple photos into a chosen layout, with borders and spacing customizable between each image, building an actual combined collage rather than reshaping a single picture. Useful for building a photo grid from a vacation or an event to share as one combined image, laying out a nine-panel preview for an Instagram feed before posting each photo individually, or assembling a montage of several photos into a single shareable image with consistent borders throughout.`,
@@ -904,11 +929,11 @@ WCAG AA: Pass (large text)`
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "css-validator": {
-    description: `CSS doesn't throw an error when it hits something it doesn't understand, a misspelled property name, an invalid value, an unsupported syntax, it just silently skips that one declaration and moves on, which means a broken style rule can sit unnoticed in a stylesheet for a long time, quietly failing to apply rather than crashing the way a script error would. This tool validates CSS against W3C standards, flagging exactly which declarations are invalid, unsupported, or likely to cause an accessibility problem instead of leaving them to fail silently. Useful for catching a typo'd property name that would otherwise just get ignored without any warning, checking whether a CSS feature is actually supported before relying on it, or auditing a stylesheet for accessibility issues like insufficient contrast values baked into the CSS itself.`,
+    description: "Check CSS syntax and report parsing errors. Syntax checks don't confirm that property values are valid or supported by every browser.",
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["CSS syntax parsing", "Parse error reporting"]
   },
   "css-variable-generator": {
     description: `A design system supporting both a light and a dark theme usually needs every color token defined twice, once for each theme, and hand-writing that full set of custom properties for both a default and a dark variant doubles the work and doubles the chance one color gets missed on one side. This tool generates CSS custom properties from a color palette with light and dark theme variants included automatically, producing both sets of variables together rather than requiring the dark theme built separately afterward. Useful for setting up a design system's color tokens with dark mode support from the start, generating a consistent set of CSS variables from an existing brand palette, or adding theme support to a project that only has hardcoded color values right now.`,
@@ -925,11 +950,11 @@ WCAG AA: Pass (large text)`
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "csv-to-excel": {
-    description: `Double-clicking a CSV file open directly in Excel invites Excel's own aggressive auto-detection to guess at what each value actually is, stripping the leading zeros off a code like "007" because it decided that's a number, or silently reformatting "2024-03" into a locale-specific date nobody asked for, mangling data that was never meant to be reinterpreted at all. This tool converts CSV into a properly formatted Excel file, preserving values like leading zeros and specific text patterns instead of letting Excel's own naive auto-import guess wrong. Useful for converting a CSV of product codes into Excel without leading zeros getting silently stripped, turning CSV data into a properly formatted .xlsx file without a date-like string getting reformatted unexpectedly, or preparing a CSV export for Excel in a way that keeps every value exactly as intended.`,
+    description: "Convert well-formed CSV text to a real XLSX workbook while preserving cell text. Cell text stays text, including leading zeros. This creates a new XLSX workbook; it doesn't recreate spreadsheet formulas, formatting or charts from CSV.",
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["Real XLSX workbook", "Cell text preserved"]
   },
   "csv-to-json": {
     description: `A spreadsheet export is naturally flat, one row, one set of columns, but the JSON a script or an API actually wants often needs that same data nested, a column header written as user.name or address.city turned into an actual nested object rather than a flat key with a dot in its name, and every value still typed correctly instead of being left as a string just because CSV doesn't have real types. This tool converts CSV into JSON with automatic header detection, turns dot-notation column headers into properly nested objects, and infers whether each value should actually be a number, a boolean, or text. Useful for turning a flat CSV export into nested JSON objects a script expects, converting a spreadsheet of user records into an array ready to feed into an API, or getting numeric and boolean fields typed correctly instead of quoted as strings.`,
@@ -946,11 +971,11 @@ WCAG AA: Pass (large text)`
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "csv-to-xml": {
-    description: `A JSON key can be almost any quoted string, spaces and all, but an XML element name has real rules, it can't start with a number, can't contain a space, and can't include several special characters, which means a CSV header like "First Name" or "2024 Total" has to be sanitized into something like First_Name or Total_2024 before it can even become a valid tag, a wrinkle JSON conversion never has to deal with. This tool converts CSV into XML, automatically turning each column header into a valid XML element name and each row into a properly nested, correctly closed element structure. Useful for converting a CSV export with spaced or number-led column headers into valid XML tags automatically, turning spreadsheet rows into properly nested XML elements for a system that expects that structure, or generating XML from CSV data without manually sanitizing every column name by hand.`,
+    description: "Convert CSV rows to XML fields with column names preserved as attributes. Each field keeps its column name in an attribute, so headers need not be valid XML element names. XML-sensitive cell characters are escaped.",
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["CSV row conversion", "Column names stored as attributes"]
   },
   "curl-command-builder": {
     description: `Building a request from a blank form, picking the method, adding headers one at a time, writing the body, is a forward construction process starting from nothing, a genuinely different task from reverse-engineering a curl command out of a request that already happened somewhere else, like one captured in a browser's network tab. This tool builds a curl command from scratch with a specified method, headers, body, and authentication entered directly, rather than extracting one from an existing captured request. Useful for constructing a curl command for an API call that doesn't exist as a browser request yet, building a request from a specification or documentation rather than something already observed, or assembling a curl command's method, headers, and body manually when there's no existing request to extract it from.`,
@@ -988,11 +1013,11 @@ WCAG AA: Pass (large text)`
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "cutter": {
-    description: `Removing the first thirty seconds of dead air from a two-hour recording shouldn't take anywhere near as long as the recording itself, and it doesn't have to, since a cut made at the file's existing keyframes copies the kept footage directly rather than decoding and rebuilding the whole thing, so export time stays roughly the same whether the final clip is five minutes or ninety, rather than scaling with how much footage gets kept. This tool cuts and trims video files by copying footage directly from existing keyframes instead of re-encoding, keeping export time fast and largely independent of the result's length. Useful for trimming a long recording down to a short highlight without an export that scales with the original length, removing dead air from a stream recording in seconds, or cutting a large file down to its relevant section quickly regardless of how much ends up being kept.`,
+    description: "Record a selected video range as WebM with audio. Real-time re-encoding, up to 60 seconds per export. The browser must support decoding the input and recording WebM with audio. Export re-encodes in real time and is limited to 60 seconds per range and 2,073,600 pixels. It doesn't preserve the original encoded stream.",
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["WebM export with audio", "Selected range up to 60 seconds"]
   },
   "data-size-converter": {
     description: `A cloud storage bill listing usage in TB, a training dataset described in GB, and a data warehouse's total footprint measured in PB are all the same kind of number at wildly different scales, and converting between them by hand means multiplying or dividing by 1,024 or 1,000 several times over depending on which base a specific provider actually uses. This tool converts between bytes, KB, MB, GB, TB, and PB using either binary or decimal base, built for the scale of enterprise storage and cloud billing rather than just a single file's size. Useful for converting a cloud provider's usage report from GB into TB to match an invoice, checking how many GB a dataset's stated byte count actually comes to, or converting a data warehouse's storage footprint into PB for a capacity planning conversation.`,
@@ -1202,25 +1227,25 @@ Output: brochure-updated.pdf`,
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "excel-to-csv": {
-    description: `A workbook with several tabs, a summary sheet, a data sheet, a notes sheet, doesn't map cleanly onto CSV at all, since CSV is fundamentally a single flat table with no concept of multiple sheets, which means exporting a multi-sheet workbook means picking one sheet at a time or ending up with a separate CSV file for each, not one file somehow representing the whole structure. This tool converts an Excel spreadsheet into CSV, exporting sheet data cleanly into the single flat structure CSV actually supports. Useful for exporting one specific sheet from a multi-tab workbook without the other sheets coming along, converting Excel data into CSV for a system that only accepts a flat, single-table format, or extracting a spreadsheet's data cleanly when only one sheet's worth of information is actually needed.`,
+    description: "Export cell values from a selected XLSX sheet to quoted CSV. Choose one sheet from an XLSX workbook. Exports use displayed cell values and cached formula results, without recalculating formulas or preserving workbook styles, charts or macros. Inputs are limited to 5 MB and 50 sheets, with per-sheet row, column and cell limits.",
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["Selected-sheet export", "Values and cached formula results"]
   },
   "excel-to-pdf": {
-    description: `A spreadsheet with more columns than fit comfortably on one printed page tends to get chopped awkwardly across two PDF pages when exported naively, splitting a wide table right through the middle of a column rather than keeping it intact, which is exactly the kind of formatting problem that shows up only after the file's already been shared. This tool converts an Excel spreadsheet into PDF while actually preserving the original layout, column widths, page breaks, and formatting handled the way the source spreadsheet intended rather than an automatic export that splits a wide table wherever the page happens to end. Useful for sharing a spreadsheet as a PDF that reads correctly without a table getting awkwardly split across pages, preserving the exact formatting of a report built carefully in Excel, or converting a wide dataset into a PDF that handles page breaks sensibly instead of cutting columns in half.`,
+    description: "Export XLSX cell values as wrapped, paginated PDF text. Spreadsheet styling and charts are not preserved. Choose one sheet from an XLSX workbook. Exports use displayed cell values and cached formula results, without recalculating formulas or preserving workbook styles, charts or macros. Inputs are limited to 5 MB and 50 sheets, with per-sheet row, column and cell limits. PDF uses wrapped, paginated text rather than spreadsheet layout. Characters the PDF font can't encode require CSV or XML export.",
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["Selected-sheet export", "Values and cached formula results"]
   },
   "excel-to-xml": {
-    description: `A spreadsheet with columns for a customer's name, an order ID, and an item purchased isn't just a flat table when the actual relationships matter, it's really a customer containing orders containing items, a hierarchy CSV has no way to express but XML can represent directly by nesting elements to match how those columns actually relate to each other rather than just mirroring rows and columns flatly. This tool converts Excel data into XML, mapping cells to elements in a way that can reflect real structure between columns rather than a flat row-by-row export. Useful for converting spreadsheet data into a properly nested XML structure that reflects real relationships between columns, mapping cells to XML elements for a system that expects hierarchical rather than flat data, or exporting Excel data into XML when the relationships between columns actually matter to how it's represented.`,
+    description: "Export a selected XLSX sheet to XML fields; the first row supplies field names. Choose one sheet from an XLSX workbook. Exports use displayed cell values and cached formula results, without recalculating formulas or preserving workbook styles, charts or macros. Inputs are limited to 5 MB and 50 sheets, with per-sheet row, column and cell limits.",
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["Selected-sheet export", "Values and cached formula results"]
   },
   "exif-remover": {
     description: `A photo shared online can quietly carry its exact GPS coordinates, the camera model, and a timestamp embedded in its EXIF metadata, none of which is visible looking at the picture itself but all of it readable by anyone who knows to check. This tool removes EXIF metadata from images before they're shared, stripping that hidden data out rather than leaving it embedded in a file that looks perfectly ordinary. Useful for removing GPS coordinates from a photo before posting it somewhere public so a home address isn't accidentally revealed, stripping camera and device details from a sensitive photo before sharing it, or cleaning metadata from a batch of photos before uploading them to a public gallery.`,
@@ -1230,11 +1255,11 @@ Output: brochure-updated.pdf`,
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "extract-audio": {
-    description: `Pulling audio out of one specific format, a WebM screen recording, an MKV movie file, an MP4 phone video, each has its own dedicated single-purpose tool, but a general extraction tool that accepts virtually any video container and lets the output format be chosen, MP3 for something portable, WAV for something meant for further editing, skips needing a different tool for every source format that shows up. This tool extracts audio tracks from video files in a range of formats, saving the result as MP3, WAV, or another chosen format rather than being locked to one source-to-target pairing. Useful for pulling audio out of whatever video format happens to be on hand without hunting for a matching single-purpose tool, choosing MP3 for a portable file or WAV for further editing from the same source video, or extracting audio from an uncommon video format a dedicated single-pair tool might not support.`,
+    description: "Extract browser-decodable audio from supported containers to 16-bit PCM WAV. Input is limited to 20 MB and 120 decoded seconds, with a limit of 24 million decoded samples across all channels. The browser must decode the audio codec; the file extension alone doesn't guarantee support. WAV output doesn't restore detail lost in earlier compression.",
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["16-bit PCM WAV output", "Browser-supported audio decoding"]
   },
   "extract-images-from-pdf": {
     description: `Extract supported embedded images individually or as a ZIP. Supported DCT JPEG streams retain their original bytes; supported 8-bit raster samples are reconstructed as PNG, including supported grayscale soft masks. CMYK conversion is approximate. Unsupported codecs, predictors, decode transforms and color-key masks are skipped, so extraction is not a guarantee of exact visual fidelity. Input PDFs are limited to 25 MiB, 100 pages and 2,000 points per page side. Extraction is limited to 16 million pixels per image and 32 million cumulative image pixels.`,
@@ -1397,11 +1422,11 @@ Output: chart-page4.png`,
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "general-unit-converter": {
-    description: `Length, weight, and temperature get most of the attention from a typical unit converter, but area comes up constantly in its own right, comparing a property listing's square meters against square feet, checking a plot of land's size in acres versus hectares, and it deserves the same direct conversion the more commonly covered categories already get rather than being left out entirely. This tool covers length, weight, temperature, speed, area, and volume together in one place, so a property size, a recipe's volume measurement, and a travel speed can all be converted without switching between several separate single-purpose tools. Useful for comparing a property's size across different area units when house-hunting internationally, converting a recipe's volume measurements alongside a kitchen's temperature settings, or handling several different unit categories in the same session without losing track of a bigger task.`,
+    description: "Convert length, weight, temperature, area, volume and speed with live validated results. Results update as you change the value and units. Invalid numbers are rejected, as are temperatures below absolute zero. Calculations use floating-point arithmetic, so displayed results can be rounded.",
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["Live unit conversion", "Input validation"]
   },
   "gif-maker": {
     description: `Some GIFs start from a folder of still images, others from a short clip already recorded as video, and needing a different, format-specific converter depending on which one happens to be on hand is more friction than the actual task deserves. This tool creates an animated GIF from either multiple images or a short video clip, working from whichever starting point is actually available rather than requiring a specific source format first. Useful for building a GIF from a handful of still photos taken in sequence, turning a short video clip into a looping GIF without first figuring out which specific converter it needs, or creating a quick animation without caring whether the starting material happens to be stills or footage.`,
@@ -1411,25 +1436,25 @@ Output: chart-page4.png`,
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "gif-to-apng": {
-    description: `GIF caps out at 256 colors per frame, which is exactly why an animated GIF with any real gradient or photographic content often looks banded or noisy, colors forced into the nearest of a limited palette rather than rendered accurately, a limitation APNG doesn't share since it supports full 24-bit color and real alpha transparency per frame. This tool converts an animated GIF into APNG, keeping the same animation while removing GIF's color palette ceiling, often producing a smaller file with visibly cleaner color and transparency in the process. Useful for improving the visual quality of an animation with gradients or photographic content that GIF's limited palette handles poorly, or converting an animated GIF into a format that supports genuine transparency instead of GIF's all-or-nothing transparent pixels.`,
+    description: "Convert composited GIF animation frames to PNG/APNG. Output size is measured and may be larger. Inputs are limited to 10 MB and 16 megapixels. Output size is measured and can be larger than the input. GIF decoding is limited to 200 frames and 16 million total frame pixels.",
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["Composited GIF frames", "Measured output size"]
   },
   "gif-to-jpg": {
-    description: `The literal first frame of an animated GIF is sometimes a blank loading state or an awkward mid-transition moment rather than the frame that actually represents what the animation is about, which is exactly why a good static thumbnail sometimes needs to come from a specific, chosen frame rather than automatically whichever one happens to be first. This tool extracts a static JPG from an animated GIF, either the first frame or a specifically chosen one, flattening any transparency to a solid background since JPG has no alpha channel to preserve it. Useful for picking a genuinely representative frame from a GIF to use as a thumbnail rather than defaulting to frame one, extracting a static preview image from an animation for a context that can't display GIFs, or converting a GIF into a single JPG when only a still image is actually needed.`,
+    description: "Export a selected composited GIF frame to JPEG with a chosen background color. Inputs are limited to 10 MB and 16 megapixels. Output size is measured and can be larger than the input. GIF decoding is limited to 200 frames and 16 million total frame pixels.",
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["Composited GIF frames", "Measured output size"]
   },
   "gif-to-png": {
-    description: `Extracting a single frame from an animated GIF into a static image usually needs to preserve whatever transparency the original GIF actually had, a sticker or an icon-style animation with a see-through background, since converting to a format with no transparency support at all would force that background into a solid color the original animation never had. This tool converts a GIF into PNG specifically, keeping the transparent regions intact in the static output rather than flattening them into an opaque fill. Useful for extracting a transparent-background GIF's frame as a usable static PNG asset, pulling a still image out of an animated sticker without losing its see-through background, or converting a GIF into a format that actually supports the transparency the animation depended on.`,
+    description: "Export a selected composited GIF frame to a static PNG. Inputs are limited to 10 MB and 16 megapixels. Output size is measured and can be larger than the input. GIF decoding is limited to 200 frames and 16 million total frame pixels.",
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["Composited GIF frames", "Measured output size"]
   },
   "google-algorithm-tracker": {
     description: `Browse and filter a selected historical list of Google algorithm updates through December 2024. It is not a live tracker or an explanation of any particular traffic change. Use the linked official Google Search Status Dashboard history for current updates: https://status.search.google.com/products/rGHU1u87FJnkP6W2GwMi/history.`,
@@ -1542,18 +1567,18 @@ Output: chart-page4.png`,
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "heic-to-jpg": {
-    description: `An iPhone photo saved as HEIC needs converting before a photo printing service, an older email client, or a platform with a strict upload allowlist will actually accept it, and JPG specifically is the format nearly every one of those destinations already expects rather than a more general universally-readable format. This tool converts HEIC iPhone photos into JPG, producing the single most universally accepted photo format rather than one that merely opens in more places than HEIC does. Useful for uploading an iPhone photo to a print shop that specifically requires JPG files, sharing a photo through an older email client or platform that doesn't recognize HEIC or even PNG reliably, or getting a smaller file size than PNG would produce for an ordinary photo with no transparency to preserve.`,
+    description: "Convert the first image in supported HEIC/HEIF files to JPEG using the bundled decoder. Unsupported variants report an error. Inputs are limited to 10 MB and 16 megapixels. Output size is measured and can be larger than the input. The bundled decoder exports the first image; unsupported HEIF variants report an error.",
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["Bundled HEIC decoder", "First-image export"]
   },
   "heic-to-png": {
-    description: `An iPhone photo saved as HEIC opens without any trouble on the phone itself but often won't open at all on a Windows PC or in an older program that's never heard of the format, a mismatch that turns a perfectly normal photo into a file nobody outside Apple's ecosystem can actually view. This tool converts HEIC images into PNG, preserving both quality and transparency, producing a file format that opens reliably everywhere rather than only within Apple's own software. Useful for opening an iPhone photo on a Windows computer or an older program that doesn't recognize HEIC, uploading an iPhone photo to a website or a form that only accepts JPG or PNG, or converting a HEIC screenshot into PNG while keeping its transparency intact.`,
+    description: "Convert the first image in supported HEIC/HEIF files to PNG using the bundled decoder. Unsupported variants report an error. Inputs are limited to 10 MB and 16 megapixels. Output size is measured and can be larger than the input. The bundled decoder exports the first image; unsupported HEIF variants report an error.",
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["Bundled HEIC decoder", "First-image export"]
   },
   "hex-color-picker": {
     description: `Not every color pick needs a wheel to explore, a format to switch between after the fact, or an alpha channel factored in, sometimes the actual need is just picking a color and getting HEX, RGB, HSL, and ready-to-paste CSS all at once, the standard formats a project most commonly needs without anything more specialized layered on top. This tool picks a color visually and returns HEX, RGB, HSL, and CSS values together with a live preview swatch, built as the everyday, no-frills default rather than a picker built around one specific specialized feature. Useful for picking a color quickly and getting the four most commonly needed formats without any extra configuration, grabbing a ready-to-paste CSS value straight from a live swatch preview, or reaching for the simplest picker available when nothing more specialized is actually needed.`,
@@ -1759,11 +1784,11 @@ Output: chart-page4.png`,
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "html-validator": {
-    description: `Markup that renders fine in one browser can still be missing a closing tag, using an element deprecated a decade ago, or leaving out an alt attribute a screen reader actually depends on, none of which show up as a visible error since a browser quietly works around most broken markup instead of failing loudly. This tool validates HTML and flags a missing tag, a deprecated element, or an accessibility issue like a missing alt attribute, catching problems a browser silently tolerates rather than waiting for them to surface as an actual bug. Useful for catching a missing closing tag left over from an edit before it causes a rendering problem in a different browser, finding a deprecated element still lingering from an old redesign, or confirming images actually have alt text before a page ships to production.`,
+    description: "Check HTML for common tag, nesting and attribute issues with basic lint rules. These checks aren't a complete HTML standards or accessibility audit. A clean result doesn't prove the page will render correctly.",
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["Basic markup lint", "Issue locations where available"]
   },
   "http-headers-inspector": {
     description: `A cache-control header or a set-cookie value can look present and correct at the final destination while actually having been added, stripped, or rewritten somewhere earlier along the way, a CDN, a load balancer, an intermediate redirect hop, and inspecting only the last response hides that entirely, making a header issue look like it started somewhere it didn't. This tool views and debugs HTTP request and response headers for any URL with a timing breakdown, built around surfacing exactly what changed and where rather than just what the final response contains. Useful for tracking down where a header got added, dropped, or rewritten between the original request and the final response, debugging a caching or cookie issue that only shows up after an intermediate hop, or reviewing a URL's full request and response headers together with the timing each stage actually took.`,
@@ -2080,18 +2105,18 @@ Output: chart-page4.png`,
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "jpg-to-png": {
-    description: `A JPEG loses a little quality every single time it's opened, edited, and saved again as a JPEG, since its compression is lossy and each re-save recompresses the image from what's already a slightly degraded version, a kind of generational loss that quietly compounds over several rounds of editing. This tool converts a JPEG into PNG, a lossless format, so any further edits and saves after the conversion stop losing quality altogether rather than degrading further with each pass. Useful for converting a JPEG to PNG before a round of edits so repeated saving afterward doesn't degrade it further, preserving a photo's current quality exactly instead of letting one more JPEG re-save erode it, or converting an image into a format where saving it five more times looks identical to saving it once.`,
+    description: "Convert JPG images to PNG and compare the measured output size. Inputs are limited to 10 MB and 16 megapixels. Output size is measured and can be larger than the input.",
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["PNG output", "Validated output dimensions and size"]
   },
   "jpg-to-webp": {
-    description: `JPG is still the format nearly every photo already exists in, and WebP is the modern replacement most sites now use for actual page speed, which makes converting straight from one to the other the single most common image optimization task there is, one that doesn't need a general multi-format tool's extra options when the destination format is already decided. This tool converts JPEG images into WebP directly, producing a smaller file at excellent quality without requiring a broader converter's additional format choices. Useful for converting a batch of JPG product photos into WebP before uploading them to a website for a quick page-speed improvement, shrinking a large JPG photo down for faster mobile loading, or preparing an image specifically for a platform that already prefers WebP uploads.`,
+    description: "Convert JPG images to WEBP and compare the measured output size. Inputs are limited to 10 MB and 16 megapixels. Output size is measured and can be larger than the input. WebP export uses a browser encoder with a local codec fallback.",
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["WEBP output", "Validated output dimensions and size"]
   },
   "js-beautifier": {
     description: `A minified script pulled from a live website's source, or a file that picked up inconsistent indentation after several different contributors touched it, is technically readable but practically exhausting to actually follow, every brace and semicolon crammed together with no visual structure guiding the eye through it. This tool formats and indents JavaScript code with proper brace placement and semicolon positioning, turning a dense, uglified, or inconsistently formatted file into something that actually reads the way the logic is structured. Useful for reading a minified script's actual logic after pulling it from a website's source, cleaning up inconsistent indentation in a legacy file before a refactor, or making a machine-generated JavaScript file human-readable enough to debug.`,
@@ -2526,11 +2551,11 @@ Cause: Trailing comma`
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "m4a-to-wav": {
-    description: `An M4A file's AAC compression has already discarded some of the original audio data permanently by the time it's sitting on disk, and converting to WAV doesn't recover what's gone, but it does stop losing anything further, since a digital audio workstation editing and re-exporting a compressed file over and over compounds that loss with every pass, while uncompressed WAV editing doesn't. This tool converts M4A audio into WAV format, producing the lossless, uncompressed file most audio editing software actually expects rather than working directly with a compressed source. Useful for converting an M4A recording into WAV before importing it into a digital audio workstation for editing, avoiding repeated compression artifacts from re-exporting a compressed file multiple times during an edit, or getting audio into the uncompressed format a specific plugin or editing tool requires as input.`,
+    description: "Decode browser-supported M4A audio to 16-bit PCM WAV. Maximum 20 MB and 120 decoded seconds. Input is limited to 20 MB and 120 decoded seconds, with a limit of 24 million decoded samples across all channels. The browser must decode the audio codec; the file extension alone doesn't guarantee support. WAV output doesn't restore detail lost in earlier compression.",
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["16-bit PCM WAV output", "Browser-supported audio decoding"]
   },
   "mac-address-generator": {
     description: `Generate locally administered unicast MAC addresses using Web Crypto, with colon, hyphen or no-separator formatting. These are test values, not vendor assignments, hardware identities or guaranteed globally unique addresses.`,
@@ -2572,11 +2597,11 @@ Cause: Trailing comma`
     features: ["Live preview", "GitHub-flavored markdown", "Code syntax highlighting", "Export to HTML"]
   },
   "markdown-table-from-json": {
-    description: `A JSON key like user_id or created_at reads fine in code but looks unpolished sitting as a raw column header in a table meant for a report or a stakeholder-facing document, where a reader expects something closer to 'User ID' or 'Created At' rather than a literal camelCase or snake_case field name copied straight from the data. This tool generates Markdown tables from JSON arrays with customizable alignment and header formatting, letting a raw JSON key get renamed into a readable header rather than appearing in the table exactly as it's written in the data. Useful for turning technical JSON field names into readable headers for a table meant for a non-technical audience, choosing per-column alignment for a table headed into a formatted report, or generating a polished Markdown table from an API response without raw key names showing through into the final document.`,
+    description: "Convert JSON objects to a Markdown table with the union of their keys and escaped cell text. Columns use the union of object keys. Cell text is escaped so pipes and line breaks do not split the table structure.",
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["Union of object keys", "Escaped Markdown cells"]
   },
   "markdown-to-html": {
     description: `Seeing raw Markdown syntax next to its rendered HTML output side by side, updating live as each character gets typed, is a genuinely faster way to learn Markdown's syntax than reading a reference table, since the effect of an asterisk or a pound sign becomes immediately visible rather than something to look up separately. This tool converts Markdown into HTML with exactly that live, split-pane view, tables, code blocks, and standard formatting all rendering instantly as the Markdown is written, with the resulting HTML ready to copy out directly. Useful for learning Markdown syntax by watching it render in real time, converting a chunk of Markdown into clean HTML to paste into a CMS that doesn't accept Markdown directly, or previewing exactly how a table or a code block will actually look before committing to the raw syntax.`,
@@ -2695,11 +2720,11 @@ Output: application-packet.pdf (in that order)`,
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "mkv-to-mp3": {
-    description: `An MKV file, the dominant container for a downloaded movie or an anime episode, often bundles more than one audio track together, a dubbed language, a commentary, the original language, all inside the same file, which means extracting just the audio actually means choosing which specific track is the one worth keeping. This tool extracts audio from an MKV file and saves the selected track as an MP3, pulling out one specific soundtrack rather than assuming there's only a single audio option to begin with. Useful for extracting a movie's original-language audio track from an MKV file that also bundles a dub, pulling a specific commentary track out separately from the main audio, or saving just the soundtrack from an MKV video that bundles several different audio options together.`,
+    description: "Extract decodable audio from MKV files and encode it as MP3. MP3 uses a local LAME encoder at 128 kbps for mono or stereo audio; WAV is also available. Supported input codecs depend on the browser. A valid container doesn't guarantee decodable audio. Limits are 20 MB, 120 decoded seconds and 24 million decoded samples across all channels.",
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["MP3 encoding at 128 kbps", "Optional 16-bit PCM WAV output"]
   },
   "mkv-to-mp4": {
     description: `MKV is a genuinely capable container, multiple audio tracks, embedded subtitles, modern codecs, but plenty of current, mainstream platforms still don't actually accept it, a social media upload form, a newer smart TV's app, a video call platform's file-sharing feature, all built around MP4 specifically as the expected default rather than an older legacy format from over a decade ago. This tool converts an MKV file into MP4, targeting the format that today's mainstream devices and platforms actually expect rather than genuinely old hardware. Useful for converting an MKV file before uploading it to a platform that only accepts MP4, preparing a video for a current smart TV or streaming app that doesn't recognize MKV's container, or sharing a video with someone whose device or software simply expects MP4 as the default format.`,
@@ -2779,18 +2804,18 @@ Output: application-packet.pdf (in that order)`,
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "mp4-to-mp3": {
-    description: `A concert recording, a DJ set, a music video downloaded as MP4, in all of these the video is basically incidental, the actual thing worth keeping is the audio, and converting straight to MP3 skips carrying picture data along for content that was only ever really about the sound in the first place. This tool extracts an MP4 video's audio track and saves it as MP3, built for casual listening of musical content pulled from video rather than a lossless source meant for further editing. Useful for pulling the soundtrack out of a downloaded music video to listen to on its own, converting a concert or DJ set recording's audio into a portable MP3, or extracting a video's music without keeping the picture when only the sound was ever the point.`,
+    description: "Extract decodable audio from MP4 files and encode it as MP3. MP3 uses a local LAME encoder at 128 kbps for mono or stereo audio; WAV is also available. Supported input codecs depend on the browser. A valid container doesn't guarantee decodable audio. Limits are 20 MB, 120 decoded seconds and 24 million decoded samples across all channels.",
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["MP3 encoding at 128 kbps", "Optional 16-bit PCM WAV output"]
   },
   "mp4-to-wav": {
-    description: `Speech-to-text software and audio analysis tools frequently require WAV input specifically rather than MP3, because they need the raw, uncompressed waveform to analyze accurately, and MP3's lossy compression has already discarded some of the detail that kind of analysis actually depends on. This tool extracts audio from an MP4 video and saves it as WAV, preserving the full uncompressed audio data instead of introducing MP3's compression artifacts into a file that's about to be analyzed or transcribed. Useful for preparing a video's audio track for a transcription or speech-to-text tool that specifically expects WAV, feeding a video's audio into an analysis tool that needs uncompressed data to work accurately, or extracting audio at full quality before any further processing that would be sensitive to compression artifacts.`,
+    description: "Decode browser-supported MP4 audio to 16-bit PCM WAV. Files without decodable audio are rejected. Input is limited to 20 MB and 120 decoded seconds, with a limit of 24 million decoded samples across all channels. The browser must decode the audio codec; the file extension alone doesn't guarantee support. WAV output doesn't restore detail lost in earlier compression.",
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["16-bit PCM WAV output", "Browser-supported audio decoding"]
   },
   "mute": {
     description: `Plenty of browsers block a video from autoplaying with sound the moment a page loads, but they'll happily autoplay a video with no audio track at all, which is exactly why a background video loop on a website almost always needs to be silent regardless of whether the original clip actually had sound worth keeping. This tool removes the audio track from a video entirely, producing a genuinely silent file rather than one where the volume is just set to zero internally while an audio track still technically exists. Useful for preparing a video for a website's autoplay background loop that needs to actually be silent to play automatically, removing an unwanted audio track from a screen recording before sharing it, or creating a silent version of a clip for a context where sound would be distracting or inappropriate.`,
@@ -2800,11 +2825,11 @@ Output: application-packet.pdf (in that order)`,
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "nda-generator": {
-    description: `An NDA that doesn't actually define what counts as confidential information, or that never states how long the confidentiality obligation actually lasts, is a document that looks official but leaves the exact thing it's supposed to protect dangerously vague, which is exactly the kind of gap that matters if the agreement is ever actually tested. This tool builds a non-disclosure agreement with those specific elements addressed: what qualifies as confidential, how long the obligation extends, and the standard exceptions, information already public, independently developed, that a workable NDA needs to include. It's a solid starting document, not a replacement for legal review on an agreement protecting something genuinely high-stakes. Useful for setting up a straightforward NDA before an early business conversation, having a base agreement ready before bringing in outside legal review for something more significant, or covering a routine confidentiality need without starting from a blank page.`,
+    description: "Draft a non-disclosure agreement from the details you enter, then review and edit it. The document uses editable templates, not AI or a legal review. It doesn't guarantee legal validity or compliance. Download TXT or PDF. PDF export rejects characters its font cannot encode; use TXT to preserve those characters.",
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["Editable document template", "TXT and font-limited PDF export"]
   },
   "network-port-checker": {
     description: `Confirming a specific port is actually open usually means reaching for a command-line tool like telnet or nmap, software that has to be installed and run locally, which isn't always an option on a locked-down corporate laptop, a Chromebook, or a mobile device with no terminal access at all. This tool checks whether a specific network port is open on a remote host directly from the browser, without any local installation or command-line access required. Useful for confirming a server's firewall actually opened a specific port to the public internet after a configuration change, checking whether a service is reachable on its expected port from a device with no terminal available, or verifying port connectivity quickly without installing network diagnostic software first.`,
@@ -3117,11 +3142,11 @@ Result: 847291`
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "png-to-webp": {
-    description: `Converting a PNG to JPG to save space means giving up transparency entirely, since JPG doesn't support an alpha channel at all, but WebP was built to compress noticeably smaller than PNG while keeping that same transparent background intact, so a logo or an icon with a see-through edge doesn't have to choose between file size and staying transparent. This tool converts PNG images into WebP, keeping alpha transparency intact while cutting file size, in a format nearly every modern browser now renders natively. Useful for shrinking a transparent PNG icon for a faster-loading web page without losing its see-through background, converting a batch of PNG screenshots to a smaller format for a site that already supports WebP, or reducing image weight on a page without switching to a format that would flatten transparency to a solid color.`,
+    description: "Convert PNG images to WEBP and compare the measured output size. Inputs are limited to 10 MB and 16 megapixels. Output size is measured and can be larger than the input. WebP export uses a browser encoder with a local codec fallback.",
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["WEBP output", "Validated output dimensions and size"]
   },
   "podcast-writer": {
     description: `A podcast script has different pacing needs than a video script, since a listener is usually doing something else at the same time, driving, cooking, walking, which means they can't glance back at a visual cue to re-orient themselves the way a video viewer can pause and rewind, so a podcast script needs more verbal signposting, restating what a segment is about, recapping before a transition, than a script written to be watched rather than only heard. This tool generates a podcast script structured around that reality: a cold open or intro, clearly signposted segments, and an outro, written for a listener who's paying partial attention rather than watching a screen. Useful for structuring a new episode from a topic before recording, outlining segment transitions that make sense for someone listening passively, or getting a full script scaffold that already accounts for how differently audio gets consumed compared to video.`,
@@ -3180,11 +3205,11 @@ Result: 847291`
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "privacy-policy-generator": {
-    description: `An NDA mainly needs to define terms clearly between two known parties, but a privacy policy is a public disclosure document that has to accurately describe what a specific website actually does with visitor data, which cookies get set, which analytics or ad services run, what a contact form actually collects, since a generic template omitting an actual tracking cookie in use is legally deficient even though it reads as a complete, professional document. This tool generates a privacy policy for a website, built around the specific disclosures data protection law actually requires rather than only generic legal boilerplate. Useful for generating a starting policy that covers cookie and analytics disclosures a website is required to make, drafting a policy that can be adjusted to match exactly what a site's data practices actually are, or getting a compliant baseline document before a genuinely complex data-handling situation needs actual legal review.`,
+    description: "Draft a privacy policy from the details you enter, then review and edit it. The document uses editable templates, not AI or a legal review. It doesn't guarantee legal validity or compliance. Download TXT or PDF. PDF export rejects characters its font cannot encode; use TXT to preserve those characters.",
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["Editable document template", "TXT and font-limited PDF export"]
   },
   "profile-photo": {
     description: `Choose a circle or square crop, zoom and pan the image, then adjust brightness, contrast and saturation. Set the output size and download the current PNG preview. These are crop and color controls, not skin retouching tools.`,
@@ -3235,11 +3260,11 @@ Output: xn--85bp0auq.xn--54b7fta0cc`
     features: ["Bidirectional Unicode ↔ Punycode conversion", "Supports domains, URLs, and email addresses", "Homograph-attack warnings", "Runs entirely in your browser"]
   },
   "purchase-agreement-generator": {
-    description: `A bill of sale is the simple receipt that changes hands once a sale is already agreed on, but getting to that point usually needs something more substantial first, a negotiated contract laying out a financing contingency, an inspection period, an earnest money deposit, and the specific conditions that have to be met before the sale actually closes. This tool generates a purchase agreement covering those negotiated terms and closing conditions, built for the negotiation stage a sale goes through before it's actually final rather than the simple transfer document that follows once it is. Useful for drafting a purchase agreement with a financing or inspection contingency before a deal is finalized, laying out an earnest money deposit and the conditions attached to it, or documenting the negotiated terms both parties agreed to before closing on a sale.`,
+    description: "Draft a purchase agreement from the details you enter, then review and edit it. The document uses editable templates, not AI or a legal review. It doesn't guarantee legal validity or compliance. Download TXT or PDF. PDF export rejects characters its font cannot encode; use TXT to preserve those characters.",
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["Editable document template", "TXT and font-limited PDF export"]
   },
   "qr-code-generator": {
     description: `A URL scanned as a QR code just opens a link, but WiFi credentials need the network name, password, and encryption type encoded in a specific format a phone's camera recognizes well enough to offer connecting automatically, and a vCard needs full contact details structured so scanning it offers adding the person to contacts directly, each content type requiring its own internal format rather than plain text dumped in. This tool generates QR codes for URLs, plain text, WiFi credentials, and vCards, downloadable as PNG or SVG, encoding each content type in the specific structure a scanning app actually recognizes. Useful for generating a WiFi QR code guests can scan to connect automatically without typing a password, creating a vCard QR code that offers adding a contact directly when scanned, or producing a scalable SVG QR code for a URL that needs to print clearly at a large size.`,
@@ -3706,11 +3731,11 @@ Output: xn--85bp0auq.xn--54b7fta0cc`
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "screen-density-simulator": {
-    description: `A logo that looks perfectly crisp on a standard display can look noticeably soft or pixelated on a high-DPI screen that packs more physical pixels into the same visual space, since a low-resolution image asset simply doesn't have enough actual pixel detail to fill that denser grid cleanly, a sharpness problem that has nothing to do with how a page's layout reflows at different widths. This tool simulates how a website looks across screens with different DPI and pixel densities, testing image and asset sharpness specifically rather than layout structure at different viewport sizes. Useful for checking whether a logo or an icon actually holds up sharp on a high-DPI display before it ships, catching a low-resolution image asset that looks fine on a standard screen but pixelates on a denser one, or testing how crisp a design's fine details stay across screens with meaningfully different pixel densities.`,
+    description: "Calculate physical pixel dimensions and preview a CSS viewport at a chosen pixel ratio. The preview doesn't change your browser's devicePixelRatio or emulate a real device display.",
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["Physical pixel calculation", "CSS viewport preview"]
   },
   "screen-resolution-tester": {
     description: `Whether a navigation menu collapses into a hamburger icon at the right width, or a three-column layout properly drops to one column on a narrower screen, is a question about how a page's structure reflows across different viewport sizes, a layout and breakpoint concern that's completely separate from how sharp an individual image looks on a dense pixel grid. This tool previews any viewport size with device presets for responsive design testing, checking layout structure and breakpoint behavior specifically rather than pixel density or image sharpness. Useful for confirming a navigation menu actually collapses at the intended breakpoint before shipping a responsive layout, checking how a multi-column grid reflows across a range of device widths, or previewing a page at a specific viewport size to catch a layout that breaks somewhere between two device presets.`,
@@ -3979,11 +4004,11 @@ Output: (order changes each time)`, note: `Random order uses a Fisher-Yates shuf
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "speech-to-text": {
-    description: `Uploading a pre-recorded audio file for transcription is one workflow, but dictating directly into a microphone and watching the text appear as the words are actually spoken is a different one entirely, suited to drafting a note hands-free, capturing a thought while multitasking, or typing by voice when typing itself isn't practical in the moment. This tool transcribes speech to text using a browser's microphone with real-time output, built around live dictation as it happens rather than processing an audio file uploaded afterward. Useful for drafting a quick note hands-free while doing something else at the same time, dictating text directly instead of typing it when typing isn't practical, or capturing spoken thoughts as text in the moment rather than recording first and transcribing later.`,
+    description: "Transcribe live microphone input with a supported browser speech service. SpeechRecognition or webkitSpeechRecognition, microphone permission and an available speech service are required. Recognition uses en-US and may depend on a network service; offline or on-device processing isn't guaranteed. Manual transcript entry is separate and doesn't test microphone recognition. Audio-file transcription isn't supported.",
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["Live microphone transcription where supported", "Separate manual transcript entry and copy"]
   },
   "speed-converter": {
     description: `Kilometers per hour, miles per hour, and meters per second all convert to each other with a straightforward decimal factor, but a knot is defined as one nautical mile per hour, and a nautical mile itself comes from one minute of latitude rather than any round metric or imperial number, which is exactly why converting to or from knots trips people up in a way the other speed units don't. This tool converts between km/h, mph, m/s, knots, and feet per second, handling the maritime and aviation-specific knot conversion correctly rather than approximating it. Useful for converting a ship or aircraft's speed in knots into mph for a general audience, checking a wind speed reported in knots against a familiar km/h figure, or converting between any pair of these five units for a physics problem or a real-world comparison.`,
@@ -4014,11 +4039,11 @@ Output: (order changes each time)`, note: `Random order uses a Fisher-Yates shuf
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "split-excel": {
-    description: `A CSV file is always one flat table, so splitting it just means dividing rows into smaller chunks, but an Excel workbook can carry several sheets bundled into one file, a summary tab, a data tab, a notes tab, which means splitting it can mean pulling each sheet out into its own file just as easily as breaking one large sheet's rows into smaller pieces. This tool splits a large Excel file into smaller spreadsheets, handling the multi-sheet structure Excel actually has rather than assuming a single flat table the way a CSV splitter would. Useful for extracting each sheet from a multi-tab workbook into its own separate file, breaking a single oversized sheet's rows into smaller, more manageable spreadsheets, or splitting a large Excel file down to a size a specific system can actually import.`,
+    description: "Split worksheet values into XLSX files using cached formula results. Formulas aren't recalculated or preserved as formulas. Cell formatting, charts and macros aren't preserved in the exported files.",
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["XLSX values export", "Cached formula results"]
   },
   "sql-formatter": {
     description: `Make SQL easier to read with 2- or 4-space indentation and optional uppercase keywords. Lexical formatting preserves quoted text and comments and checks quote and parenthesis balance. It does not validate SQL grammar or database-specific semantics. The current output is plain text.`,
@@ -4035,11 +4060,11 @@ Output: (order changes each time)`, note: `Random order uses a Fisher-Yates shuf
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "sql-to-json": {
-    description: `A SQL result set carries types JSON was never designed to hold exactly, a DATETIME column, a DECIMAL value that needs to stay a decimal rather than lose precision as a floating-point number the way money values often do when converted carelessly, and a NULL that has to map cleanly onto JSON's own null rather than an empty string or a missing key. This tool converts SQL SELECT queries or their results into formatted JSON arrays, handling those type conversions deliberately rather than leaving decimal precision or null handling to chance. Useful for converting a query result containing decimal currency values into JSON without losing precision, turning a SELECT statement's output into a JSON array for an API response, or exporting database rows into JSON with NULL values mapped correctly rather than left ambiguous.`,
+    description: "Convert SQL INSERT VALUES literals to JSON. Unsupported expressions and unsafe integer literals are rejected. Use INSERT statements with literal VALUES. This isn't a SQL engine: expressions and integer literals outside safe numeric precision are rejected.",
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["INSERT VALUES literals", "Explicit unsupported-input errors"]
   },
   "sql-to-json-v2": {
     description: `SQL's NULL doesn't have one obvious JSON equivalent, some downstream code expects a missing field to actually be JSON null, while other consumers expect the key to be omitted from the object entirely rather than present with a null value, and a naive SQL-to-JSON conversion that picks one behavior without asking can quietly break whichever consumer expected the other. This tool converts a SQL query's results into a formatted JSON array with that NULL handling made explicit and configurable, rather than a fixed behavior that happens to work for some consumers and not others. Useful for converting a query result into JSON formatted the way a specific downstream API or script actually expects nulls handled, avoiding a subtle bug where a missing value shows up differently than a consuming application assumed it would, or generating JSON test fixtures from real query results with predictable, consistent null handling.`,
@@ -4112,11 +4137,11 @@ Output: (order changes each time)`, note: `Random order uses a Fisher-Yates shuf
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "svg-to-png": {
-    description: `An SVG file never has to decide its own resolution, since it's defined mathematically and scales to any size without ever looking pixelated, but a PNG is a fixed grid of pixels that has to commit to actual dimensions the moment it's rendered, and choosing too low a resolution up front is how a crisp vector graphic turns into a blurry PNG the instant it's displayed larger than that chosen size. This tool rasterizes an SVG into PNG at a specified resolution, including higher multiples for retina and high-DPI displays rather than a single fixed export size. Useful for exporting an SVG icon at 2x or 3x resolution so it stays sharp on a high-DPI screen, converting a vector logo into PNG at the exact pixel dimensions a specific platform requires, or rasterizing an SVG graphic for a context that doesn't support vector formats at all.`,
+    description: "Convert SVG images to PNG and compare the measured output size. Inputs are limited to 10 MB and 16 megapixels. Output size is measured and can be larger than the input. SVG must be self-contained and static; external resources and scripts are rejected.",
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["PNG output", "Validated output dimensions and size"]
   },
   "syllable-counter": {
     description: `Fitting a lyric to a melody's rhythm or landing a rap verse's cadence correctly depends on the exact syllable count of each line matching the beat, a count that's easy to miscount silently in your head while actually writing, especially across several candidate lines being compared against each other. This tool counts syllables in any word or phrase using vowel-group detection, giving each line's count instantly rather than requiring it tapped out by hand while writing. Useful for checking whether a lyric actually fits a melody's rhythm before recording it, comparing a few candidate lines to find the one whose syllable count actually lands on the beat, or counting syllables across a full verse to keep its rhythm consistent line to line.`,
@@ -4154,11 +4179,11 @@ Output: (order changes each time)`, note: `Random order uses a Fisher-Yates shuf
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "temperature-unit-converter": {
-    description: `Celsius, Fahrenheit, and Kelvin cover almost every everyday and scientific context, but Rankine still shows up specifically in certain US engineering and thermodynamics calculations, an absolute temperature scale like Kelvin, starting at true zero, but sized in Fahrenheit-scale degrees rather than Celsius-scale ones, which makes it a genuinely different animal from the other three rather than just another everyday unit. This tool converts between all four, Celsius, Fahrenheit, Kelvin, and Rankine, covering the rare scale most everyday converters skip entirely alongside the three that come up constantly. Useful for a thermodynamics or aerospace engineering calculation that specifically works in Rankine, converting a Rankine value from a textbook or a technical spec into a more familiar scale, or handling the full range of four scales in one place instead of needing a separate reference for the one scale most tools leave out.`,
+    description: "Convert Celsius, Fahrenheit and Kelvin with live results, presets and absolute-zero validation. Results update as you change the value and units. Invalid numbers are rejected, as are temperatures below absolute zero. Calculations use floating-point arithmetic, so displayed results can be rounded.",
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["Live unit conversion", "Input validation"]
   },
   "text-case-converter": {
     description: `A variable name written in camelCase for a JavaScript file needs to become snake_case the moment it crosses into a Python script or a database column, and a class name needs PascalCase specifically for a C# codebase, conventions that aren't just stylistic preference but the expected convention in each specific ecosystem a piece of code or data happens to move between. This tool converts text between UPPERCASE, lowercase, Title Case, camelCase, snake_case, and other case formats, built around translating an identifier's naming convention as code or data moves between different ecosystems. Useful for converting a JavaScript variable name into the snake_case a Python script or a database column expects, translating a property name into PascalCase for a C# class, or converting a batch of field names between naming conventions when porting data between systems with different expectations.`,
@@ -4334,11 +4359,11 @@ Cairo`, note: `Same list, flipped. Use this for a reverse leaderboard or log.` }
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "text-to-handwriting": {
-    description: `Typed text reads as obviously typed no matter how carefully a font is chosen, which matters for a document specifically meant to feel personal or hand-written, a greeting card message, a signature-styled note, an assignment formatted to look like it was actually written by hand rather than printed. This tool renders plain text using a handwriting-style font, cursive or a more casual print style, producing an image that reads as genuinely hand-written rather than a typed document trying to imitate one. Useful for creating a handwritten-looking note or card message without actually writing it by hand, formatting a document to have a personal, informal handwritten feel, or generating handwriting-styled text for a design project that calls for that specific look.`,
+    description: "Preview text with device-installed handwriting fonts and a cursive fallback. The result depends on fonts installed on your device. Copy exports plain text, without the visual font styling.",
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["Handwriting font preview", "Plain-text copy"]
   },
   "text-to-image": {
     description: `A styled tweet-card graphic looks great for a tweet, but a motivational quote meant for an Instagram post, a stat meant for a blog header, or an announcement meant for a presentation slide each need their own layout and aspect ratio rather than being squeezed into a format built specifically to look like a tweet. This tool turns any text into a standalone image with a chosen theme and background, built for any destination rather than one platform's specific card style. Useful for turning a quote into a square graphic sized for an Instagram post, creating a text-based header image for a blog post from a single sentence, or generating an announcement graphic for a slide deck without it looking like a repurposed tweet screenshot.`,
@@ -4453,11 +4478,11 @@ Cairo`, note: `Same list, flipped. Use this for a reverse leaderboard or log.` }
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "trace": {
-    description: `A logo pulled off an old website, a small favicon, a low-resolution scan of a business card, is sometimes the only surviving copy of a logo whose original vector source file is long gone, lost in an old hard drive or a design agency that's no longer around to ask. This tool traces that low-resolution raster copy into a clean, editable vector, rebuilding scalable paths from what might be a genuinely small, blurry source image rather than requiring a high-quality original to start from. Useful for recovering a usable, scalable version of a logo when the original design file has been lost entirely, preparing an old low-resolution logo for a use that actually needs a vector, embroidery, signage, large-format print, or rebuilding a brand mark from whatever copy happens to still exist somewhere.`,
+    description: "Trace a raster image up to one megapixel into SVG paths using selectable tracing presets. Inputs are limited to 10 MB and 16 megapixels. Output size is measured and can be larger than the input. Tracing has a stricter one-megapixel limit and creates paths, not editable text or original vector shapes.",
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["SVG path output", "Selectable tracing presets"]
   },
   "transcribe-podcast": {
     description: `A summary tells you the main points of an episode, but a full transcript is a completely different asset: every word actually spoken, searchable for one specific phrase mentioned partway through a two-hour conversation, usable as captions, and publishable alongside the episode itself so search engines can index spoken content that would otherwise be invisible to them entirely. This tool converts a podcast episode's audio into a complete text transcript rather than a condensed summary, preserving the full conversation as searchable, shareable text. Useful for publishing a transcript alongside an episode so its content becomes indexable by search engines, searching for one specific moment or quote across a long episode without scrubbing through the audio, or making an episode accessible to someone who can't or would rather not listen to the audio directly.`,
@@ -4621,11 +4646,11 @@ Cairo`, note: `Same list, flipped. Use this for a reverse leaderboard or log.` }
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "url-redirect-checker": {
-    description: `A single click can quietly pass through three or four redirects before landing on its final destination, each hop adding its own delay and each one a place where a redirect chain could loop back on itself or point somewhere unintended, none of which shows up just by checking the final status code alone. This tool follows a URL's entire redirect chain and shows the full sequence of HTTP status codes at every hop, rather than only reporting where the chain eventually ends up. Useful for diagnosing a redirect loop that never actually resolves to a final page, finding an unnecessarily long redirect chain that's quietly slowing a page down, or confirming a specific URL redirects through exactly the hops it's supposed to after a domain or a URL structure change.`,
+    description: "Check the final URL and redirect flag exposed by a browser request. Cross-origin servers must allow CORS. The browser hides intermediate redirect URLs and status codes; requests time out after 10 seconds.",
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["Final destination and redirect flag", "Browser-exposed response status and headers"]
   },
   "url-similarity-checker": {
     description: `Two URLs pointing to genuinely different pages can still look remarkably alike, a redirect chain landing somewhere subtly different than expected, a typo-squatted domain close enough to a real one to fool a quick glance, cases where the actual question isn't whether two URLs are identical, since they clearly aren't, but how similar they actually are and whether that similarity is meaningful or coincidental. This tool compares two URLs and scores how similar they actually are, rather than only checking for an exact canonical match like a www or trailing-slash variant. Useful for confirming a redirect actually lands somewhere close enough to the intended destination, checking whether a suspicious domain is similar enough to a known one to be a deliberate lookalike, or comparing two URLs that aren't identical but might represent duplicate or near-duplicate content worth investigating.`,
@@ -4828,18 +4853,18 @@ Cairo`, note: `Same list, flipped. Use this for a reverse leaderboard or log.` }
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "webp-to-jpg": {
-    description: `WebP support has gotten a lot better over the years, but plenty of destinations still flatly don't take it, an older browser, a strict upload form, a print or photo service that only accepts a handful of long-established formats. JPEG is the one format that's essentially guaranteed to work everywhere those situations come up, which is exactly the gap this tool is built to close: convert a WebP image into JPEG, trading WebP's superior compression for a format nothing will ever reject. Useful as a fallback conversion right before uploading somewhere unfamiliar, attaching a WebP image to an email client that might not render it, or submitting a photo to a service that explicitly lists JPEG as a requirement without mentioning WebP at all.`,
+    description: "Convert WEBP images to JPG and compare the measured output size. Inputs are limited to 10 MB and 16 megapixels. Output size is measured and can be larger than the input. JPEG export flattens transparency onto the chosen background and uses lossy compression.",
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["JPG output", "Validated output dimensions and size"]
   },
   "webp-to-png": {
-    description: `A stock photo marketplace, a print service, or an older CMS's upload validator often rejects a WebP file outright even though the image itself displays fine everywhere else, since their allowlist of accepted formats simply hasn't caught up to a format most modern browsers already handle by default. This tool converts WebP to PNG, preserving both transparency and quality, producing a file in the format an older upload validator will actually accept. Useful for getting a WebP image past an upload validator that only accepts traditional image formats, submitting a graphic to a print service or a stock photo site that doesn't yet support WebP, or preserving a WebP image's transparency after converting it into a more universally accepted format.`,
+    description: "Convert WEBP images to PNG and compare the measured output size. Inputs are limited to 10 MB and 16 megapixels. Output size is measured and can be larger than the input.",
     examples: [
 
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["PNG output", "Validated output dimensions and size"]
   },
   "website-age-checker": {
     description: `A site claiming years of experience is worth checking against when it actually started existing, since a domain registered eighteen months ago telling visitors it's been trusted since 2003 is a credibility red flag worth catching before working with that business or linking to it, a very different concern from simply tracking a domain's registration and renewal dates for portfolio management. This tool looks up when a domain first came online and surfaces that creation date for exactly this kind of due-diligence check. Useful for verifying an unfamiliar business's actual history before a partnership or a guest post exchange, checking whether a site's claimed founding date lines up with its domain's real age, or gauging how established a competitor's site actually is during SEO research.`,
