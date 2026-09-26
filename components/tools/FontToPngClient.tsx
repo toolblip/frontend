@@ -1,6 +1,9 @@
 'use client';
 
-import { useRef, useState, useCallback } from 'react';
+import { useRef, useState, useCallback, useEffect } from 'react';
+
+import ToolExampleClearActions from './ToolExampleClearActions';
+import {imageBounds} from '@/lib/images-qa';
 
 const DEFAULT_TEXT = 'The quick brown fox';
 
@@ -22,10 +25,16 @@ export default function FontToPngClient() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const loadedFontRef = useRef<FontFace | null>(null);
 
+  const request=useRef(0);
+  useEffect(()=>()=>{request.current++;if(loadedFontRef.current)document.fonts.delete(loadedFontRef.current);},[]);
+  const clear=()=>{request.current++;if(loadedFontRef.current)document.fonts.delete(loadedFontRef.current);loadedFontRef.current=null;setFontName('');setFontReady(false);setFontError('');setRenderError('');setPngUrl('');setText('');setLoadingFont(false);const input=document.getElementById('tb-font-upload') as HTMLInputElement|null;if(input)input.value='';};
   const handleFontUpload = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    const id=++request.current;
+    if(file.size>10*1024*1024){setFontError('Font file must be under 10 MB.');setFontReady(false);setPngUrl('');return;}
+    if(loadedFontRef.current)document.fonts.delete(loadedFontRef.current);
     setFontError('');
     setFontReady(false);
     setPngUrl('');
@@ -35,22 +44,24 @@ export default function FontToPngClient() {
       const buffer = await file.arrayBuffer();
       const font = new FontFace('TbUploadedFont', buffer);
       await font.load();
+      if(id!==request.current)return;
       document.fonts.add(font);
       loadedFontRef.current = font;
       setFontName(file.name);
       setFontReady(true);
     } catch {
+      if(id!==request.current)return;
       setFontError('Could not load this file as a font. Please upload a valid .ttf, .otf, .woff, or .woff2 file.');
       setFontReady(false);
       loadedFontRef.current = null;
     } finally {
-      setLoadingFont(false);
+      if(id===request.current)setLoadingFont(false);
     }
   }, []);
 
   const render = useCallback(() => {
     setRenderError('');
-    if (!fontReady) return;
+    if (!fontReady || !text.trim()) {setPngUrl('');return;}
 
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -60,19 +71,21 @@ export default function FontToPngClient() {
     const sampleText = text || DEFAULT_TEXT;
 
     try {
-      ctx.font = `${fontSize}px TbUploadedFont`;
+      ctx.font = `${fontSize}px TbUploadedFont, sans-serif`;
       const metrics = ctx.measureText(sampleText);
       const padding = Math.max(16, Math.round(fontSize * 0.3));
       const ascent = metrics.actualBoundingBoxAscent ?? fontSize * 0.8;
       const descent = metrics.actualBoundingBoxDescent ?? fontSize * 0.2;
-      const textWidth = Math.max(1, Math.ceil(metrics.width));
+      const left = Math.max(0, metrics.actualBoundingBoxLeft || 0);
+      const textWidth = Math.max(1, Math.ceil(Math.max(metrics.width, metrics.actualBoundingBoxRight || 0) + left));
       const textHeight = Math.max(1, Math.ceil(ascent + descent));
 
+      imageBounds(textWidth+padding*2,textHeight+padding*2);
       canvas.width = textWidth + padding * 2;
       canvas.height = textHeight + padding * 2;
 
       // Re-set font after resizing canvas (canvas resets context state).
-      ctx.font = `${fontSize}px TbUploadedFont`;
+      ctx.font = `${fontSize}px TbUploadedFont, sans-serif`;
       ctx.textBaseline = 'alphabetic';
 
       if (!transparentBg) {
@@ -83,14 +96,16 @@ export default function FontToPngClient() {
       }
 
       ctx.fillStyle = textColor;
-      ctx.fillText(sampleText, padding, padding + ascent);
+      ctx.fillText(sampleText, padding + left, padding + ascent);
 
       setPngUrl(canvas.toDataURL('image/png'));
     } catch {
       setRenderError('Something went wrong while rendering this text. Try a different font size or text.');
       setPngUrl('');
     }
-  }, [fontReady, text, fontSize, textColor, bgColor, transparentBg]);
+  }, [fontReady, fontName, text, fontSize, textColor, bgColor, transparentBg]);
+
+  useEffect(()=>{render();},[render]);
 
   const download = () => {
     if (!pngUrl) return;
@@ -101,9 +116,9 @@ export default function FontToPngClient() {
   };
 
   return (
-    <div className="tb-v2-tool-card">
+    <div className="tb-v2-tool-card"><style jsx>{`input,textarea,select {max-width:100%;min-width:0} .tb-v2-tool-card {min-width:0;max-width:100%;overflow-wrap:anywhere} .tb-v2-tool-input-head {flex-wrap:wrap;gap:8px} .tb-v2-range-row {flex-wrap:wrap} .tb-v2-range {min-width:0;flex:1}`}</style>
       <div className="tb-v2-tool-input-head">
-        <span className="tb-v2-tool-label">Font to PNG Converter</span>
+        <span className="tb-v2-tool-label">Font to PNG Converter</span><ToolExampleClearActions onExample={()=>{clear();setText(DEFAULT_TEXT);setFontName('System sans-serif example');setFontReady(true);}} onClear={clear}/>
       </div>
 
       <div className="flex flex-col gap-4">
@@ -134,7 +149,7 @@ export default function FontToPngClient() {
             Sample text
           </label>
           <input
-            id="tb-font-text"
+            id="tb-font-text" maxLength={2000}
             type="text"
             value={text}
             onChange={e => setText(e.target.value)}

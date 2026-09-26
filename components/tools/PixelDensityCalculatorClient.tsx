@@ -1,4 +1,6 @@
 'use client';
+import ToolExampleClearActions from './ToolExampleClearActions';
+import { positive } from '@/lib/images-qa';
 
 import { useState, useMemo } from 'react';
 
@@ -23,10 +25,10 @@ export default function PixelDensityCalculatorClient() {
   const [unit, setUnit] = useState<Unit>('in');
 
   const result = useMemo(() => {
-    const w = parseFloat(width);
-    const h = parseFloat(height);
-    const pw = parseFloat(printWidth);
-    const ph = parseFloat(printHeight);
+    const w = (positive(width) ?? 0);
+    const h = (positive(height) ?? 0);
+    const pw = (positive(printWidth) ?? 0);
+    const ph = (positive(printHeight) ?? 0);
     if (!(w > 0) || !(h > 0) || !(pw > 0) || !(ph > 0)) return null;
 
     const pwIn = unit === 'cm' ? pw / 2.54 : pw;
@@ -41,11 +43,11 @@ export default function PixelDensityCalculatorClient() {
     return { diagonalPPI, horizontalPPI, verticalPPI };
   }, [width, height, printWidth, printHeight, unit]);
 
-  const quality = result ? qualityNote(result.diagonalPPI) : null;
+  const quality = result ? qualityNote(Math.min(result.horizontalPPI,result.verticalPPI)) : null;
 
   return (
-    <div className="tb-v2-tool-card">
-      <div className="tb-v2-tool-input-head">
+    <div className="tb-v2-tool-card"><style jsx>{`input,textarea,select {max-width:100%;min-width:0} .tb-v2-tool-card {min-width:0;max-width:100%;overflow-wrap:anywhere} .tb-v2-tool-input-head {flex-wrap:wrap;gap:8px} .tb-v2-range-row {flex-wrap:wrap} .tb-v2-range {min-width:0;flex:1}`}</style>
+      <div className="tb-v2-tool-input-head" style={{flexWrap:"wrap"}}><ToolExampleClearActions onExample={() => {setWidth('3000');setHeight('2000');setPrintWidth('10');setPrintHeight('6.6666666667');setUnit('in');}} onClear={() => {setWidth('');setHeight('');setPrintWidth('');setPrintHeight('');}} />
         <span className="tb-v2-tool-label">Image & Print Dimensions</span>
         <div className="tb-v2-mode-tabs">
           <button type="button" className={`tb-v2-mode-tab ${unit === 'in' ? 'on' : ''}`} onClick={() => setUnit('in')}>Inches</button>
@@ -57,7 +59,7 @@ export default function PixelDensityCalculatorClient() {
           <div style={{ paddingRight: 12 }}>
             <span className="tb-v2-tool-label">Image Width (px)</span>
             <input
-              type="number"
+              aria-label="Image Width (px)" type="number"
               min={1}
               className="tb-v2-input"
               style={{ marginTop: 8, fontFamily: 'var(--f-mono)' }}
@@ -68,7 +70,7 @@ export default function PixelDensityCalculatorClient() {
           <div style={{ paddingLeft: 12 }}>
             <span className="tb-v2-tool-label">Image Height (px)</span>
             <input
-              type="number"
+              aria-label="Image Height (px)" type="number"
               min={1}
               className="tb-v2-input"
               style={{ marginTop: 8, fontFamily: 'var(--f-mono)' }}
@@ -81,7 +83,7 @@ export default function PixelDensityCalculatorClient() {
           <div style={{ paddingRight: 12 }}>
             <span className="tb-v2-tool-label">Print Width ({unit})</span>
             <input
-              type="number"
+              aria-label="Print Width" type="number"
               min={0.01}
               step="0.01"
               className="tb-v2-input"
@@ -93,7 +95,7 @@ export default function PixelDensityCalculatorClient() {
           <div style={{ paddingLeft: 12 }}>
             <span className="tb-v2-tool-label">Print Height ({unit})</span>
             <input
-              type="number"
+              aria-label="Print Height" type="number"
               min={0.01}
               step="0.01"
               className="tb-v2-input"

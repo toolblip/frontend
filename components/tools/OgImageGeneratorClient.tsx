@@ -2,6 +2,8 @@
 
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 
+import ToolExampleClearActions from './ToolExampleClearActions';
+
 const PRESETS = [
   { name: 'Teal Midnight', from: '#4CC8C8', to: '#202033', accent: '#F8FAFC' },
   { name: 'Indigo Violet', from: '#4f46e5', to: '#7c3aed', accent: '#facc15' },
@@ -257,7 +259,7 @@ function CollapsibleSection({
         className="flex w-full items-center justify-between p-5 text-left transition hover:bg-gray-50 dark:hover:bg-gray-900/60"
       >
         <span className="flex items-center gap-3 text-xs font-bold uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400">
-          <span className="text-base text-violet-500" aria-hidden="true">{icon}</span>
+          <span className="text-base text-red-500" aria-hidden="true">{icon}</span>
           <span>{title.toUpperCase()}</span>
         </span>
         <span aria-hidden="true" className={`text-xl text-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`}>⌄</span>
@@ -286,6 +288,7 @@ export default function OgImageGeneratorClient() {
   const [alignment, setAlignment] = useState<TextAlign>('left');
   const [patternOverlay, setPatternOverlay] = useState<PatternOverlay>('dots');
   const [downloadUrl, setDownloadUrl] = useState('');
+  const [renderError,setRenderError]=useState('');
   const [ratio, setRatio] = useState<RatioValue>('1200x630');
   const [resolution, setResolution] = useState<ResolutionValue>('1200x630');
   const [dimensions, setDimensions] = useState<Dimensions>(DEFAULT_SIZE);
@@ -301,6 +304,8 @@ export default function OgImageGeneratorClient() {
 
   useEffect(() => {
     let cancelled = false;
+    setDownloadUrl('');setRenderError('');
+    if(!title.trim()&&!subtitle.trim()&&!footer.trim()){const c=canvasRef.current;c?.getContext('2d')?.clearRect(0,0,c.width,c.height);return;}
 
     const drawBanner = async () => {
       if (typeof document !== 'undefined' && 'fonts' in document) {
@@ -363,7 +368,7 @@ export default function OgImageGeneratorClient() {
       const subtitleGap = 18 * scale;
       const safeContentBottom = footerY - 24 * scale;
       const titleTop = 170 * scale;
-      let titleLines = wrapText(ctx, title || 'Untitled Article', maxWidth, 3);
+      let titleLines = wrapText(ctx, title, maxWidth, 3);
       while (
         titleLines.length > 1 &&
         titleTop + titleLines.length * titleLineHeight + subtitleGap + subtitleLineHeight > safeContentBottom
@@ -383,13 +388,13 @@ export default function OgImageGeneratorClient() {
 
       ctx.fillStyle = 'rgba(255,255,255,0.78)';
       ctx.font = `600 ${Math.round(28 * scale)}px Inter, Arial, sans-serif`;
-      ctx.fillText(footer || 'toolblip.com', x, footerY);
+      ctx.fillText(footer, x, footerY);
 
       setDownloadUrl(canvas.toDataURL('image/png'));
     };
 
     const timeout = window.setTimeout(() => {
-      void drawBanner();
+      void drawBanner().catch(()=>{if(!cancelled){setDownloadUrl('');setRenderError('Could not render this banner. Try shorter text or a different size.');}});
     }, 250);
 
     return () => {
@@ -451,7 +456,7 @@ export default function OgImageGeneratorClient() {
   };
 
   return (
-    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}} data-testid="article-banner-generator">
+    <div className="tb-v2-tool-card" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}} data-testid="article-banner-generator"><style jsx>{`input,textarea,select {max-width:100%;min-width:0} .tb-v2-tool-card {min-width:0;max-width:100%;overflow-wrap:anywhere} .tb-v2-tool-input-head {flex-wrap:wrap;gap:8px} .tb-v2-range-row {flex-wrap:wrap} .tb-v2-range {min-width:0;flex:1}`}</style><div className="tb-v2-tool-input-head"><span>Banner</span>{renderError&&<p role="alert">{renderError}</p>}<ToolExampleClearActions onExample={()=>{setTitle('Build something useful');setSubtitle('A practical guide');setFooter('toolblip.com');}} onClear={()=>{setTitle('');setSubtitle('');setFooter('');setDownloadUrl('');}}/></div>
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div className="space-y-2">
           <div className="text-base font-semibold text-gray-900 dark:text-white">Customize your banner</div>
@@ -468,7 +473,7 @@ export default function OgImageGeneratorClient() {
         <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-950">
           <div className="space-y-5 border-b border-gray-100 p-5 dark:border-gray-800">
             <div className="flex items-center gap-3 text-xs font-bold uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400">
-              <span className="text-lg text-violet-500" aria-hidden="true">T</span>
+              <span className="text-lg text-red-500" aria-hidden="true">T</span>
               <span>CONTENT</span>
             </div>
 
@@ -479,7 +484,7 @@ export default function OgImageGeneratorClient() {
                   aria-label="Banner ratio"
                   value={ratio}
                   onChange={(event) => chooseRatio(event.target.value as RatioValue)}
-                  className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 shadow-sm outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+                  className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 shadow-sm outline-none focus:border-red-400 focus:ring-2 focus:ring-red-100 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
                 >
                   {RATIO_OPTIONS.map((item) => (
                     <option key={item.value} value={item.value}>
@@ -495,7 +500,7 @@ export default function OgImageGeneratorClient() {
                   aria-label="Banner resolution"
                   value={resolution}
                   onChange={(event) => chooseResolution(event.target.value as ResolutionValue)}
-                  className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 shadow-sm outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+                  className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 shadow-sm outline-none focus:border-red-400 focus:ring-2 focus:ring-red-100 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
                 >
                   {RESOLUTION_OPTIONS.map((item) => (
                     <option key={item.value} value={item.value}>
@@ -510,10 +515,10 @@ export default function OgImageGeneratorClient() {
               <span className="tb-v2-tool-label">Title</span>
               <textarea
                 aria-label="Banner title"
-                value={title}
+                maxLength={200} value={title}
                 onChange={(event) => setTitle(event.target.value)}
                 rows={2}
-                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-base font-semibold text-gray-900 shadow-sm outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-base font-semibold text-gray-900 shadow-sm outline-none focus:border-red-400 focus:ring-2 focus:ring-red-100 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
               />
             </label>
 
@@ -521,10 +526,10 @@ export default function OgImageGeneratorClient() {
               <span className="tb-v2-tool-label">Subtitle</span>
               <textarea
                 aria-label="Banner subtitle"
-                value={subtitle}
+                maxLength={400} value={subtitle}
                 onChange={(event) => setSubtitle(event.target.value)}
                 rows={2}
-                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-base text-gray-900 shadow-sm outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-base text-gray-900 shadow-sm outline-none focus:border-red-400 focus:ring-2 focus:ring-red-100 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
               />
             </label>
           </div>
@@ -561,7 +566,7 @@ export default function OgImageGeneratorClient() {
                     key={item.name}
                     type="button"
                     onClick={() => choosePreset(item)}
-                    className={`h-11 rounded-lg border transition ${presetName === item.name ? 'border-violet-500 ring-2 ring-violet-300' : 'border-gray-200 hover:border-gray-300 dark:border-gray-700'}`}
+                    className={`h-11 rounded-lg border transition ${presetName === item.name ? 'border-red-500 ring-2 ring-red-300' : 'border-gray-200 hover:border-gray-300 dark:border-gray-700'}`}
                     aria-label={item.name}
                     aria-pressed={presetName === item.name}
                     style={{ background: `linear-gradient(135deg, ${item.from}, ${item.to})` }}
@@ -586,7 +591,7 @@ export default function OgImageGeneratorClient() {
                     value={fromColor}
                     onChange={(event) => updateFromColor(event.target.value)}
                     onBlur={() => setFromColor((value) => normalizeHex(value, preset.from))}
-                    className="min-w-0 flex-1 rounded-lg border border-gray-200 bg-white px-3 text-sm font-medium text-gray-900 shadow-sm outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+                    className="min-w-0 flex-1 rounded-lg border border-gray-200 bg-white px-3 text-sm font-medium text-gray-900 shadow-sm outline-none focus:border-red-400 focus:ring-2 focus:ring-red-100 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
                   />
                 </div>
               </label>
@@ -608,7 +613,7 @@ export default function OgImageGeneratorClient() {
                     onChange={(event) => updateToColor(event.target.value)}
                     onBlur={() => setToColor((value) => normalizeHex(value, preset.to))}
                     disabled={backgroundMode === 'solid'}
-                    className="min-w-0 flex-1 rounded-lg border border-gray-200 bg-white px-3 text-sm font-medium text-gray-900 shadow-sm outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100 disabled:opacity-50 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+                    className="min-w-0 flex-1 rounded-lg border border-gray-200 bg-white px-3 text-sm font-medium text-gray-900 shadow-sm outline-none focus:border-red-400 focus:ring-2 focus:ring-red-100 disabled:opacity-50 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
                   />
                 </div>
               </label>
@@ -621,7 +626,7 @@ export default function OgImageGeneratorClient() {
                 value={direction}
                 onChange={(event) => setDirection(event.target.value as DirectionValue)}
                 disabled={backgroundMode === 'solid'}
-                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-base text-gray-900 shadow-sm outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100 disabled:opacity-50 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-base text-gray-900 shadow-sm outline-none focus:border-red-400 focus:ring-2 focus:ring-red-100 disabled:opacity-50 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
               >
                 {DIRECTIONS.map((item) => (
                   <option key={item.value} value={item.value}>
@@ -647,7 +652,7 @@ export default function OgImageGeneratorClient() {
                 max="72"
                 value={titleFontSize}
                 onChange={(event) => setTitleFontSize(Number(event.target.value))}
-                className="w-full accent-violet-600"
+                className="w-full accent-red-600"
               />
             </label>
 
@@ -660,7 +665,7 @@ export default function OgImageGeneratorClient() {
                 max="36"
                 value={subtitleFontSize}
                 onChange={(event) => setSubtitleFontSize(Number(event.target.value))}
-                className="w-full accent-violet-600"
+                className="w-full accent-red-600"
               />
             </label>
 
@@ -678,7 +683,7 @@ export default function OgImageGeneratorClient() {
                   onClick={() => setAlignment(value)}
                   className={`rounded-xl border px-4 py-3 text-lg transition ${
                     alignment === value
-                      ? 'border-violet-500 bg-violet-50 text-violet-700 dark:bg-violet-950 dark:text-violet-200'
+                      ? 'border-red-500 bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-200'
                       : 'border-gray-200 text-gray-600 hover:border-gray-300 dark:border-gray-700 dark:text-gray-300'
                   }`}
                 >
@@ -700,7 +705,7 @@ export default function OgImageGeneratorClient() {
                 aria-label="Pattern overlay"
                 value={patternOverlay}
                 onChange={(event) => setPatternOverlay(event.target.value as PatternOverlay)}
-                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-base text-gray-900 shadow-sm outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-base text-gray-900 shadow-sm outline-none focus:border-red-400 focus:ring-2 focus:ring-red-100 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
               >
                 {PATTERN_OVERLAYS.map((item) => (
                   <option key={item.value} value={item.value}>
@@ -721,9 +726,9 @@ export default function OgImageGeneratorClient() {
               <span className="tb-v2-tool-label">Footer text</span>
               <input
                 aria-label="Footer text"
-                value={footer}
+                maxLength={100} value={footer}
                 onChange={(event) => setFooter(event.target.value)}
-                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 shadow-sm outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 shadow-sm outline-none focus:border-red-400 focus:ring-2 focus:ring-red-100 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
               />
             </label>
           </CollapsibleSection>

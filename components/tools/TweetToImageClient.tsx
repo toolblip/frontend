@@ -33,6 +33,9 @@ interface PlatformPreset {
   ratios: PlatformRatio[];
 }
 
+import ToolExampleClearActions from './ToolExampleClearActions';
+import {readImage,imageBounds} from '@/lib/images-qa';
+
 const THEMES: Record<ThemeKey, ThemeSpec> = {
   light: { label: 'Light', cardBg: '#ffffff', text: '#0f1419', subtext: '#536471', border: '#eff3f4' },
   dim: { label: 'Dim', cardBg: '#15202b', text: '#f7f9f9', subtext: '#8b98a5', border: '#38444d' },
@@ -58,7 +61,7 @@ const CARD_WIDTH = 560;
 const TWEET_URL_PATTERN = /^https?:\/\/(www\.)?(twitter|x)\.com\/[A-Za-z0-9_]{1,15}\/status\/\d+/i;
 
 const INPUT_CLASS =
-  'w-full rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-900 shadow-sm outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100 dark:border-gray-700 dark:bg-gray-900 dark:text-white';
+  'w-full rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-900 shadow-sm outline-none focus:border-red-400 focus:ring-2 focus:ring-red-100 dark:border-gray-700 dark:bg-gray-900 dark:text-white';
 
 const PLATFORM_PRESETS: Record<PlatformKey, PlatformPreset> = {
   general: {
@@ -163,7 +166,7 @@ function extractHandle(authorUrl?: string): string {
 async function fetchProfileImage(handle: string): Promise<string | null> {
   try {
     const username = handle.replace('@', '');
-    const res = await fetch(`https://unavatar.io/x/${username}?json=true`);
+    const res = await fetch(`https://unavatar.io/x/${username}?json=true`,{signal:AbortSignal.timeout(10000)});
     if (res.ok) {
       const data = await res.json();
       return data.url || null;
@@ -304,8 +307,9 @@ function loadImage(src: string): Promise<HTMLImageElement> {
     if (!src.startsWith('data:')) {
       img.crossOrigin = 'anonymous';
     }
-    img.onload = () => resolve(img);
-    img.onerror = () => reject(new Error('image-load-failed'));
+    const timeout=setTimeout(()=>{img.src='';reject(new Error('Image load timed out.'));},10000);
+    img.onload = () => {clearTimeout(timeout);resolve(img);};
+    img.onerror = () => {clearTimeout(timeout);reject(new Error('image-load-failed'));};
     img.src = src;
   });
 }
@@ -481,7 +485,7 @@ function CollapsibleSection({
         className="flex w-full items-center justify-between p-4 text-left transition hover:bg-gray-50 dark:hover:bg-gray-900/60"
       >
         <span className="flex items-center gap-3 text-xs font-bold uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400">
-          <span className="text-base text-violet-500" aria-hidden="true">{icon}</span>
+          <span className="text-base text-red-500" aria-hidden="true">{icon}</span>
           <span>{title.toUpperCase()}</span>
         </span>
         <span aria-hidden="true" className={`text-xl text-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`}>⌄</span>
@@ -500,6 +504,9 @@ export default function TweetToImageClient() {
   const { tier, loading } = useSubscription();
   const isPaidUser = !loading && tier !== null && tier !== 'free';
 
+  const request=useRef(0);
+  useEffect(()=>()=>{request.current++;},[]);
+  const [isExample,setIsExample]=useState(false);
   const [mode, setMode] = useState<InputMode>('url');
 
   useEffect(() => {
@@ -533,8 +540,8 @@ export default function TweetToImageClient() {
   const [ratioKey, setRatioKey] = useState<AspectRatioKey>('card');
   const [customWidth, setCustomWidth] = useState(1200);
   const [customHeight, setCustomHeight] = useState(630);
-  const [showMetrics, setShowMetrics] = useState(true);
-  const [showVerified, setShowVerified] = useState(true);
+  const [showMetrics, setShowMetrics] = useState(false);
+  const [showVerified, setShowVerified] = useState(false);
   const [fontSize, setFontSize] = useState<FontSizeKey>('medium');
   const [downloadUrl, setDownloadUrl] = useState('');
   const [renderedSize, setRenderedSize] = useState({ width: 0, height: 0 });
@@ -563,6 +570,7 @@ export default function TweetToImageClient() {
   }, [platform, ratioKey]);
 
   const handleFetchTweet = async () => {
+    const id=++request.current;setDownloadUrl('');setIsExample(false);
     const trimmed = tweetUrl.trim();
     if (!TWEET_URL_PATTERN.test(trimmed)) {
       setFetchStatus('error');
@@ -576,9 +584,10 @@ export default function TweetToImageClient() {
 
     try {
       const endpoint = `https://publish.twitter.com/oembed?url=${encodeURIComponent(trimmed)}&omit_script=true`;
-      const res = await fetch(endpoint);
+      const res = await fetch(endpoint,{signal:AbortSignal.timeout(15000)});
       if (!res.ok) throw new Error('tweet-fetch-failed');
       const data = (await res.json()) as TweetOEmbedResponse;
+      if(id!==request.current)return;
       const parsedText = parseOEmbedHtml(data.html || '');
       const fetchedHandle = extractHandle(data.author_url) || '@unknown';
 
@@ -588,23 +597,15 @@ export default function TweetToImageClient() {
       setFetchStatus('success');
 
       const profileImage = await fetchProfileImage(fetchedHandle);
-      if (profileImage) setAvatarDataUrl(profileImage);
+      if (profileImage&&id===request.current) setAvatarDataUrl(profileImage);
     } catch {
+      if(id!==request.current)return;
       setFetchStatus('error');
       setFetchError("Couldn't load that tweet. It may be private, deleted, or the URL is invalid.");
     }
   };
 
-  const handleAvatarUpload = (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      setAvatarDataUrl(typeof reader.result === 'string' ? reader.result : null);
-    };
-    reader.readAsDataURL(file);
-    event.target.value = '';
-  };
+  const handleAvatarUpload=async(event:ChangeEvent<HTMLInputElement>)=>{const file=event.target.files?.[0];if(!file)return;const id=++request.current;event.target.value='';try{const {img}=await readImage(file);if(id!==request.current)return;const c=document.createElement('canvas');const scale=Math.min(1,512/Math.max(img.naturalWidth,img.naturalHeight));c.width=Math.max(1,Math.round(img.naturalWidth*scale));c.height=Math.max(1,Math.round(img.naturalHeight*scale));c.getContext('2d')!.drawImage(img,0,0,c.width,c.height);setAvatarDataUrl(c.toDataURL());}catch(e){if(id===request.current)setShareStatus((e as Error).message);}};
 
   const handleShare = async () => {
     const canvas = canvasRef.current;
@@ -621,6 +622,8 @@ export default function TweetToImageClient() {
 
   useEffect(() => {
     let cancelled = false;
+    setDownloadUrl('');
+    if(!tweetText.trim() || (mode==='url'&&fetchStatus!=='success')) {const c=canvasRef.current;c?.getContext('2d')?.clearRect(0,0,c.width,c.height);return;}
 
     const render = async () => {
       if (typeof document !== 'undefined' && 'fonts' in document) {
@@ -717,6 +720,7 @@ export default function TweetToImageClient() {
         cardY = Math.max(padding, (outerHeight - cardHeight) / 2);
       }
 
+      try{imageBounds(Math.round(outerWidth*RENDER_SCALE),Math.round(outerHeight*RENDER_SCALE));}catch(e){setShareStatus((e as Error).message);return;}
       canvas.width = Math.round(outerWidth * RENDER_SCALE);
       canvas.height = Math.round(outerHeight * RENDER_SCALE);
       ctx.setTransform(RENDER_SCALE, 0, 0, RENDER_SCALE, 0, 0);
@@ -831,6 +835,7 @@ export default function TweetToImageClient() {
       window.clearTimeout(timeout);
     };
   }, [
+    fetchStatus,
     authorName,
     avatarDataUrl,
     customHeight,
@@ -864,7 +869,7 @@ export default function TweetToImageClient() {
       : undefined;
 
   return (
-    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}} data-testid="tweet-to-image-generator">
+    <div className="tb-v2-tool-card" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}} data-testid="tweet-to-image-generator"><style jsx>{`input,textarea,select {max-width:100%;min-width:0} .tb-v2-tool-card {min-width:0;max-width:100%;overflow-wrap:anywhere} .tb-v2-tool-input-head {flex-wrap:wrap;gap:8px} .tb-v2-range-row {flex-wrap:wrap} .tb-v2-range {min-width:0;flex:1}`}</style><div className="tb-v2-tool-input-head"><span>Tweet image</span>{isExample&&<p>Example text, not fetched from X.</p>}<ToolExampleClearActions onExample={()=>{request.current++;setIsExample(true);setMode('url');setFetchStatus('success');setAuthorName('Example Author');setHandle('@example');setTweetText('A useful idea, captured as an image.');setShowMetrics(false);setShowVerified(false);setFetchError('');}} onClear={()=>{request.current++;setIsExample(false);setTweetUrl('');setTweetText('');setAuthorName('');setHandle('');setAvatarDataUrl(null);setDownloadUrl('');setFetchStatus('idle');setFetchError('');setShareStatus('');}}/></div>
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div className="space-y-2">
           <div className="text-base font-semibold text-gray-900 dark:text-white">Customize your tweet image</div>
@@ -894,7 +899,7 @@ export default function TweetToImageClient() {
                 <button
                   key={value}
                   type="button"
-                  onClick={() => setMode(value)}
+                  onClick={() => {request.current++;setDownloadUrl('');setMode(value);}}
                   aria-pressed={mode === value}
                   className={`rounded-lg px-4 py-2 text-sm font-semibold transition ${
                     mode === value
@@ -920,7 +925,7 @@ export default function TweetToImageClient() {
                   <input
                     aria-label="Tweet URL"
                     value={tweetUrl}
-                    onChange={(event) => setTweetUrl(event.target.value)}
+                    onChange={(event) => {request.current++;setIsExample(false);setFetchStatus('idle');setDownloadUrl('');setTweetUrl(event.target.value);}}
                     placeholder="https://x.com/user/status/1234567890"
                     className={INPUT_CLASS}
                   />
@@ -966,7 +971,7 @@ export default function TweetToImageClient() {
                   <span className="tb-v2-tool-label">Tweet text</span>
                   <textarea
                     aria-label="Tweet text"
-                    value={tweetText}
+                    maxLength={4000} value={tweetText}
                     onChange={(event) => setTweetText(event.target.value)}
                     rows={4}
                     className={INPUT_CLASS}
@@ -990,7 +995,7 @@ export default function TweetToImageClient() {
                       title="None"
                       className={`h-6 w-6 shrink-0 rounded-full border-2 transition ${
                         backgroundMode === 'transparent'
-                          ? 'border-violet-500 ring-2 ring-violet-200'
+                          ? 'border-red-500 ring-2 ring-red-200'
                           : 'border-white shadow-sm dark:border-gray-900'
                       }`}
                       style={{
@@ -1011,7 +1016,7 @@ export default function TweetToImageClient() {
                         title={preset.name}
                         className={`h-6 w-6 shrink-0 rounded-full border-2 transition ${
                           backgroundMode === 'gradient' && presetIndex === index
-                            ? 'border-violet-500 ring-2 ring-violet-200'
+                            ? 'border-red-500 ring-2 ring-red-200'
                             : 'border-white shadow-sm dark:border-gray-900'
                         }`}
                         style={{ background: `linear-gradient(135deg, ${preset.from}, ${preset.to})` }}
@@ -1080,7 +1085,7 @@ export default function TweetToImageClient() {
                   aria-pressed={themeKey === key}
                   className={`rounded-xl border px-3 py-3 text-sm font-semibold transition ${
                     themeKey === key
-                      ? 'border-violet-500 ring-2 ring-violet-300'
+                      ? 'border-red-500 ring-2 ring-red-300'
                       : 'border-gray-200 text-gray-600 hover:border-gray-300 dark:border-gray-700 dark:text-gray-300'
                   }`}
                   style={{ backgroundColor: spec.cardBg, color: themeKey === key ? spec.text : undefined }}
@@ -1121,7 +1126,7 @@ export default function TweetToImageClient() {
                     key={preset.name}
                     type="button"
                     onClick={() => setPresetIndex(index)}
-                    className={`h-11 rounded-lg border transition ${presetIndex === index ? 'border-violet-500 ring-2 ring-violet-300' : 'border-gray-200 hover:border-gray-300 dark:border-gray-700'}`}
+                    className={`h-11 rounded-lg border transition ${presetIndex === index ? 'border-red-500 ring-2 ring-red-300' : 'border-gray-200 hover:border-gray-300 dark:border-gray-700'}`}
                     aria-label={preset.name}
                     aria-pressed={presetIndex === index}
                     style={{ background: `linear-gradient(135deg, ${preset.from}, ${preset.to})` }}
@@ -1146,7 +1151,7 @@ export default function TweetToImageClient() {
                     value={solidColor}
                     onChange={(event) => setSolidColor(event.target.value.toUpperCase())}
                     onBlur={() => setSolidColor((value) => normalizeHex(value, '#1D9BF0'))}
-                    className="min-w-0 flex-1 rounded-lg border border-gray-200 bg-white px-3 text-sm font-medium text-gray-900 shadow-sm outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+                    className="min-w-0 flex-1 rounded-lg border border-gray-200 bg-white px-3 text-sm font-medium text-gray-900 shadow-sm outline-none focus:border-red-400 focus:ring-2 focus:ring-red-100 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
                   />
                 </div>
               </label>
@@ -1174,7 +1179,7 @@ export default function TweetToImageClient() {
                 max="60"
                 value={padding}
                 onChange={(event) => setPadding(Number(event.target.value))}
-                className="w-full accent-violet-600"
+                className="w-full accent-red-600"
               />
             </label>
 
@@ -1190,7 +1195,7 @@ export default function TweetToImageClient() {
                   aria-pressed={rounded === value}
                   className={`rounded-xl border px-4 py-2.5 text-sm font-semibold transition ${
                     rounded === value
-                      ? 'border-violet-500 bg-violet-50 text-violet-700 dark:bg-violet-950 dark:text-violet-200'
+                      ? 'border-red-500 bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-200'
                       : 'border-gray-200 text-gray-600 hover:border-gray-300 dark:border-gray-700 dark:text-gray-300'
                   }`}
                 >
@@ -1224,7 +1229,7 @@ export default function TweetToImageClient() {
                 role="switch"
                 aria-checked={showVerified}
                 onClick={() => setShowVerified((value) => !value)}
-                className={`relative h-6 w-11 shrink-0 rounded-full transition ${showVerified ? 'bg-violet-600' : 'bg-gray-300 dark:bg-gray-700'}`}
+                className={`relative h-6 w-11 shrink-0 rounded-full transition ${showVerified ? 'bg-red-600' : 'bg-gray-300 dark:bg-gray-700'}`}
               >
                 <span className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition ${showVerified ? 'left-5' : 'left-0.5'}`} />
               </button>
@@ -1237,7 +1242,7 @@ export default function TweetToImageClient() {
                 role="switch"
                 aria-checked={showMetrics}
                 onClick={() => setShowMetrics((value) => !value)}
-                className={`relative h-6 w-11 shrink-0 rounded-full transition ${showMetrics ? 'bg-violet-600' : 'bg-gray-300 dark:bg-gray-700'}`}
+                className={`relative h-6 w-11 shrink-0 rounded-full transition ${showMetrics ? 'bg-red-600' : 'bg-gray-300 dark:bg-gray-700'}`}
               >
                 <span className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition ${showMetrics ? 'left-5' : 'left-0.5'}`} />
               </button>
@@ -1298,7 +1303,7 @@ export default function TweetToImageClient() {
               {showShareButton && <ShareButton onShare={handleShare} placement="bottom" platformLabel={activePlatform.label} />}
             </div>
             {shareStatus && (
-              <p className="rounded-lg bg-violet-50 px-3 py-2 text-sm text-violet-700 dark:bg-violet-950 dark:text-violet-200">
+              <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700 dark:bg-red-950 dark:text-red-200">
                 {shareStatus}
               </p>
             )}
@@ -1325,7 +1330,7 @@ export default function TweetToImageClient() {
                   {showShareButton && <ShareButton onShare={handleShare} placement="bottom" platformLabel={activePlatform.label} />}
                 </div>
                 {shareStatus && (
-                  <p className="rounded-lg bg-violet-50 px-3 py-2 text-sm text-violet-700 dark:bg-violet-950 dark:text-violet-200">
+                  <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700 dark:bg-red-950 dark:text-red-200">
                     {shareStatus}
                   </p>
                 )}

@@ -1,6 +1,9 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
+
+import ToolExampleClearActions from './ToolExampleClearActions';
+import {readImage, exampleFile, canvasBlob} from '@/lib/images-qa';
 
 const TAG_NAMES: Record<number, string> = {
   0x010f: 'Make',
@@ -104,50 +107,20 @@ export default function PhotoMetadataRemoverClient() {
   const [processing, setProcessing] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const loadFile = async (file: File | undefined) => {
-    if (!file) return;
-    setError('');
-    setCleanedUrl(null);
-    setTags([]);
-    setScanned(false);
-    if (!file.type.startsWith('image/')) {
-      setError('Please choose an image file.');
-      return;
-    }
-    setProcessing(true);
-    try {
-      const buffer = await file.arrayBuffer();
-      const bytes = new Uint8Array(buffer);
-      setTags(readExifTags(bytes));
-      setScanned(true);
-      setFileName(file.name);
-      setMimeType(file.type === 'image/png' ? 'image/png' : 'image/jpeg');
-      const url = URL.createObjectURL(file);
-      setImageUrl(url);
-
-      const img = new Image();
-      const loaded: string = await new Promise((resolve, reject) => {
-        img.onload = () => {
-          // Re-drawing onto a canvas only ever preserves raw pixel data,
-          // so every EXIF/IPTC/XMP block is discarded on export.
-          const canvas = document.createElement('canvas');
-          canvas.width = img.naturalWidth;
-          canvas.height = img.naturalHeight;
-          const ctx = canvas.getContext('2d');
-          if (!ctx) { reject(new Error('Canvas not supported in this browser.')); return; }
-          ctx.drawImage(img, 0, 0);
-          const outType = file.type === 'image/png' ? 'image/png' : 'image/jpeg';
-          resolve(canvas.toDataURL(outType, 0.95));
-        };
-        img.onerror = () => reject(new Error('Could not load this image.'));
-        img.src = url;
-      });
-      setCleanedUrl(loaded);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : 'Could not process this image.');
-    } finally {
-      setProcessing(false);
-    }
+  const request=useRef(0);
+  useEffect(()=>()=>{request.current++;},[]);
+  useEffect(()=>()=>{if(imageUrl)URL.revokeObjectURL(imageUrl);},[imageUrl]);
+  useEffect(()=>()=>{if(cleanedUrl)URL.revokeObjectURL(cleanedUrl);},[cleanedUrl]);
+  const clear=()=>{request.current++;setImageUrl(null);setCleanedUrl(null);setTags([]);setScanned(false);setError('');setProcessing(false);if(fileInputRef.current)fileInputRef.current.value='';};
+  const loadFile=async(file:File|undefined)=>{
+    if(!file)return;clear();const id=request.current;setProcessing(true);
+    try{const {img,bytes,mime}=await readImage(file);if(id!==request.current)return;
+      const canvas=document.createElement('canvas');canvas.width=img.naturalWidth;canvas.height=img.naturalHeight;
+      canvas.getContext('2d')!.drawImage(img,0,0);const outType=mime==='image/jpeg'?'image/jpeg':'image/png';
+      const blob=await canvasBlob(canvas,outType);if(id!==request.current)return;
+      setTags(readExifTags(bytes));setScanned(true);setFileName(file.name);setMimeType(outType);
+      setImageUrl(URL.createObjectURL(new Blob([bytes],{type:mime})));setCleanedUrl(URL.createObjectURL(blob));
+    }catch(e){if(id===request.current)setError((e as Error).message);}finally{if(id===request.current)setProcessing(false);}
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => loadFile(e.target.files?.[0]);
@@ -167,9 +140,9 @@ export default function PhotoMetadataRemoverClient() {
   };
 
   return (
-    <div className="tb-v2-tool-card">
+    <div className="tb-v2-tool-card"><style jsx>{`input,textarea,select {max-width:100%;min-width:0} .tb-v2-tool-card {min-width:0;max-width:100%;overflow-wrap:anywhere} .tb-v2-tool-input-head {flex-wrap:wrap;gap:8px} .tb-v2-range-row {flex-wrap:wrap} .tb-v2-range {min-width:0;flex:1}`}</style>
       <div className="tb-v2-tool-input-head">
-        <span className="tb-v2-tool-label">Upload Photo</span>
+        <span className="tb-v2-tool-label">Upload Photo</span><ToolExampleClearActions onExample={()=>loadFile(exampleFile())} onClear={clear}/>
       </div>
       <div style={{ padding: 20 }}>
         <div
@@ -182,7 +155,7 @@ export default function PhotoMetadataRemoverClient() {
           <span style={{ fontSize: 28 }}>🛡️</span>
           <span className="tb-v2-dropzone-text">{processing ? 'Processing...' : 'Click or drag a photo here'}</span>
           <span className="tb-v2-dropzone-hint">Processed entirely in your browser, never uploaded</span>
-          <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFileChange} style={{ display: 'none' }} />
+          <input aria-label="Upload image" ref={fileInputRef} type="file" accept="image/*" onChange={handleFileChange} style={{ display: 'none' }} />
         </div>
       </div>
 
@@ -233,7 +206,7 @@ export default function PhotoMetadataRemoverClient() {
             </div>
             {cleanedUrl && (
               <div>
-                <div style={{ fontSize: 11, color: 'var(--fg-2)', marginBottom: 4 }}>Cleaned (metadata-free)</div>
+                <div style={{ fontSize: 11, color: 'var(--fg-2)', marginBottom: 4 }}>Re-encoded (source metadata removed)</div>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={cleanedUrl} alt="Cleaned" style={{ maxWidth: 200, maxHeight: 200, border: '1px solid var(--line)', borderRadius: 4 }} />
               </div>

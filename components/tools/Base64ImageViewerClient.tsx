@@ -1,111 +1,40 @@
 'use client';
-
-import { useState, useRef } from 'react';
-
+import { useEffect, useRef, useState } from 'react';
+import ToolExampleClearActions from './ToolExampleClearActions';
+import { readImage, exampleFile } from '@/lib/images-qa';
 export default function Base64ImageViewerClient() {
-  const [imageData, setImageData] = useState('');
-  const [error, setError] = useState('');
-  const [valid, setValid] = useState(false);
-  const fileRef = useRef<HTMLInputElement>(null);
-
-  const validate = (base64: string) => {
-    try {
-      const match = base64.match(/^data:([^;]+);base64,/);
-      if (!match) {
-        setError('Invalid data URL format. Expected: data:image/...;base64,...');
-        setValid(false);
-        return;
-      }
-      const mimeType = match[1];
-      if (!mimeType.startsWith('image/')) {
-        setError('Data URL is not an image type');
-        setValid(false);
-        return;
-      }
-      setError('');
-      setValid(true);
-    } catch {
-      setError('Invalid Base64 string');
-      setValid(false);
+    const [text, setText] = useState(''), [url, setUrl] = useState(''), [error, setError] = useState(''), [dimensions, setDimensions] = useState('');
+    const request = useRef(0), input = useRef<HTMLInputElement>(null);
+    useEffect(() => () => { request.current++; }, []);
+    useEffect(() => () => { if (url)
+        URL.revokeObjectURL(url); }, [url]);
+    const validate = async (value: string) => { const id = ++request.current; setText(value); setUrl(''); setError(''); setDimensions(''); if (!value.trim())
+        return; try {
+        if (value.length > 28000000)
+            throw Error('Use a data URL up to 28 MB.');
+        const match = value.trim().match(/^data:(image\/[\w.+-]+);base64,([A-Za-z0-9+/\s]*={0,2})$/);
+        if (!match)
+            throw Error('Enter an image Base64 data URL.');
+        const bytes = Uint8Array.from(atob(match[2].replace(/\s/g, '')), c => c.charCodeAt(0));
+        const { img, mime } = await readImage(new Blob([bytes]));
+        if (id !== request.current)
+            return;
+        if (match[1] !== mime)
+            throw Error('Declared image type does not match the file bytes.');
+        setDimensions(`${img.naturalWidth} × ${img.naturalHeight}`);
+        setUrl(URL.createObjectURL(new Blob([bytes], { type: mime })));
     }
-  };
-
-  const onTextChange = (text: string) => {
-    setImageData(text);
-    if (text.trim()) {
-      validate(text);
-    } else {
-      setError('');
-      setValid(false);
-    }
-  };
-
-  const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      const text = reader.result as string;
-      setImageData(text);
-      validate(text);
-    };
-    reader.onerror = () => setError('Failed to read file');
-    reader.readAsText(file);
-  };
-
-  const copyDataUrl = () => {
-    navigator.clipboard.writeText(imageData).catch(() => {});
-  };
-
-  return (
-    <div>
-      <div className="tb-v2-tool-input-head">
-        <span className="tb-v2-tool-label">Base64 Image Data URL</span>
-      </div>
-      <textarea
-        value={imageData}
-        onChange={(e) => onTextChange(e.target.value)}
-        placeholder="data:image/png;base64,iVBORw0KGgo..."
-        className="tb-v2-tool-textarea"
-        style={{ fontFamily: 'var(--f-mono)', minHeight: '100px' }}
-        aria-label="Base64 image data URL"
-      />
-
-      <div style={{ margin: '0.75rem 0' }}>
-        <input
-          ref={fileRef}
-          type="file"
-          accept=".txt,.b64"
-          onChange={onFileChange}
-          className="tb-v2-file-input"
-          aria-label="Load from text file"
-        />
-        <p className="tb-v2-hint" style={{ marginTop: '0.5rem' }}>
-          Load Base64 from a .txt or .b64 file
-        </p>
-      </div>
-
-      <div className="tb-v2-tool-output-head">
-        <span className="tb-v2-tool-label">Image Display</span>
-        {valid && (
-          <button type="button" onClick={copyDataUrl} className="tb-v2-copy-btn">
-            Copy Data URL
-          </button>
-        )}
-      </div>
-      <div className="tb-v2-tool-output-body" style={{ textAlign: 'center' }}>
-        {error ? (
-          <p className="tb-v2-error" role="alert">{error}</p>
-        ) : valid && imageData ? (
-          <img
-            src={imageData}
-            alt="Base64"
-            style={{ maxWidth: '100%', maxHeight: '400px', borderRadius: '0.5rem' }}
-          />
-        ) : (
-          <p className="tb-v2-hint">Enter a Base64 data URL above to display the image</p>
-        )}
-      </div>
-    </div>
-  );
+    catch (e) {
+        if (id === request.current)
+            setError((e as Error).message);
+    } };
+    return <div className="tb-v2-tool-card"><style jsx>{`input,textarea,select {max-width:100%;min-width:0} .tb-v2-tool-card {min-width:0;max-width:100%;overflow-wrap:anywhere} .tb-v2-tool-input-head {flex-wrap:wrap;gap:8px} .tb-v2-range-row {flex-wrap:wrap} .tb-v2-range {min-width:0;flex:1}`}</style><div className="tb-v2-tool-input-head"><span>Base64 image</span><ToolExampleClearActions onExample={() => { const r = new FileReader(); const id = ++request.current; r.onload = () => { if (id === request.current)
+        validate(String(r.result)); }; r.readAsDataURL(exampleFile()); }} onClear={() => { validate(''); if (input.current)
+        input.current.value = ''; }}/></div><textarea aria-label="Base64 image data URL" className="tb-v2-tool-textarea" value={text} onChange={e => validate(e.target.value)}/><input ref={input} aria-label="Load from text file" type="file" accept=".txt,.b64" onChange={async (e) => { const f = e.target.files?.[0]; if (!f)
+        return; const id = ++request.current; if (f.size > 28000000) {
+        validate('');
+        setError('Text file exceeds 28 MB.');
+        return;
+    } const t = await f.text(); if (id === request.current)
+        validate(t); }}/><div className="tb-v2-tool-output-body">{error && <p role="alert">{error}</p>}{url && <><p>{dimensions}</p><img src={url} alt="Base64" style={{ maxWidth: '100%', maxHeight: 400 }}/><button className="tb-v2-btn" onClick={() => navigator.clipboard.writeText(text).catch(() => setError('Could not copy. Select and copy the data URL manually.'))}>Copy Data URL</button></>}</div></div>;
 }
