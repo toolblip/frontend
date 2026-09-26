@@ -42,12 +42,14 @@ describe('policy decisions and audit statuses', () => {
   it('freezes the independently evaluated legacy baseline while recording explicit candidate decisions', () => {
     expect(new Set(LEGACY_ELIGIBLE_TOOL_SLUGS)).toEqual(baselineEligible);
     expect(LEGACY_ELIGIBLE_TOOL_SLUGS).toHaveLength(354);
-    expect(Object.entries(TOOL_INDEXING_DECISIONS).filter(([, d]) => d.status === 'reviewed').map(([slug]) => slug).sort()).toEqual(['html-table-generator', 'ipynb-formatter', 'json-to-python', 'json-to-typescript']);
-    for (const slug of ['ldap-filter-generator', 'time-zone-converter', 'split-csv', 'html-minifier']) {
-      expect(indexing.getToolIndexingStatus(slug)).toBe('hold');
-      expect(indexing.isToolIndexable(slug)).toBe(false);
+    expect(Object.entries(TOOL_INDEXING_DECISIONS).filter(([, d]) => d.status === 'reviewed').map(([slug]) => slug).sort()).toEqual(['html-minifier', 'html-table-generator', 'ipynb-formatter', 'json-to-python', 'json-to-typescript', 'ldap-filter-generator', 'split-csv', 'time-zone-converter']);
+    for (const slug of Object.keys(TOOL_INDEXING_DECISIONS)) {
+      expect(indexing.getToolIndexingStatus(slug)).toBe('reviewed');
+      expect(indexing.isToolIndexable(slug)).toBe(true);
     }
-    expect(tools.filter(t => indexing.isToolIndexable(t.slug))).toHaveLength(341);
+    expect(tools).toHaveLength(444);
+    expect(tools.filter(t => indexing.isToolIndexable(t.slug))).toHaveLength(345);
+    expect(tools.filter(t => !indexing.isToolIndexable(t.slug))).toHaveLength(99);
     expect(indexing.getToolIndexingStatus('lorem-ipsum-generator')).toBe('legacy-eligible-needs-review');
     expect(indexing.getToolIndexingStatus('json-to-markdown-table')).toBe('pending');
     expect(indexing.getToolIndexingStatus('unknown-future-tool')).toBe('not-in-catalog');
