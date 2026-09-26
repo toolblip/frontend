@@ -2,6 +2,9 @@ import type { Metadata } from 'next';
 import ApiDocsClient from './ApiDocsClient';
 
 export const metadata: Metadata = {
+  alternates: {
+    canonical: 'https://toolblip.com/api-docs',
+  },
   title: 'API Documentation | Toolblip',
   description: 'Toolblip REST API reference. Authenticate with Bearer tokens, query tools, and manage user accounts with copy-ready curl and JSON examples.',
   openGraph: {

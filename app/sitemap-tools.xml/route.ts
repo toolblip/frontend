@@ -3,13 +3,7 @@ import { isToolIndexable } from '@/lib/indexable-tools';
 import { sitemapXmlResponse, type SitemapUrlEntry } from '@/lib/sitemap-xml';
 import { getToolPath } from '@/lib/tool-path';
 
-// Tool pages don't carry a per-tool last-modified date, so this is a fixed
-// snapshot rather than `new Date()` recomputed on every build, which
-// previously made every tool URL report a fake "just changed" timestamp on
-// every deploy regardless of whether the page's content actually changed.
-// Bump when the tool catalog changes meaningfully (most recently: round 4
-// of the family-verification pass, 34 slugs removed/redirected, 2 added).
-const TOOL_PAGES_LAST_MODIFIED = new Date('2026-08-26T18:00:00.000Z');
+// Omit lastmod until reliable per-tool modification dates are available.
 
 // Tier-A gate: only tools with hand-written FAQ overrides are listed
 // (isToolIndexable). Others stay live with noindex,follow until they have
@@ -36,7 +30,6 @@ export async function GET(): Promise<Response> {
     .filter((tool) => !SHADOWED_BY_REDIRECT.has(tool.slug) && isToolIndexable(tool.slug))
     .map((tool) => ({
       url: `${baseUrl}${getToolPath(tool)}`,
-      lastModified: TOOL_PAGES_LAST_MODIFIED,
       changeFrequency: 'monthly',
       priority: 0.6,
     }));
