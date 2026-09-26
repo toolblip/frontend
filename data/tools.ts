@@ -8,6 +8,7 @@ export interface Tool {
 }
 
 const TOOL_SLUG_ALIASES: Record<string, string> = {
+  'unblur': 'sharpen',
   'image-border-adder': 'border',
   'add-pages': 'add-pages-to-pdf',
   'annotate': 'annotate-pdf',
@@ -1122,7 +1123,6 @@ export const tools: Tool[] = [
   { name: 'SVG to JPG Converter', slug: 'svg-to-jpg', description: 'Convert SVG vector graphics to JPEG images. Rasterize vectors for web.', emoji: '🖼️', category: 'Conversion' },
   { name: 'SVG to WebP Converter', slug: 'svg-to-webp', description: 'Convert SVG vector graphics to WebP images. Rasterize vectors for web.', emoji: '🖼️', category: 'Conversion' },
   { name: 'Logo Trace Converter', slug: 'trace', description: 'Trace bitmap logos to vector format. Convert PNG to editable SVG.', emoji: '🖼️', category: 'Conversion' },
-  { name: 'Unblur Image', slug: 'unblur', description: 'Improve mildly soft edges with an adjustable unsharp mask. Lost detail can’t be recovered.', emoji: '🖼️', category: 'Image' },
   { name: 'Unlock PDF', slug: 'unlock-pdf', description: 'Remove an opening password from PDFs you have permission to access using browser-local processing.', emoji: '🔓', category: 'PDF Tools' },
   { name: 'Add Watermark to PDF', slug: 'add-watermark-to-pdf', description: 'Add a visible text or image watermark to every page of a PDF.', emoji: '📄', category: 'PDF Tools' },
   { name: 'WebP to JPG Converter', slug: 'webp-to-jpg', description: 'Convert WebP to JPEG format. Maximum compatibility with all browsers.', emoji: '🖼️', category: 'Conversion' },

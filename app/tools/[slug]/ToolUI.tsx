@@ -657,7 +657,6 @@ import TimestampDiffCalculatorClient from '@/components/tools/TimestampDiffCalcu
 import LogoTraceConverterClient from '@/components/tools/LogoTraceConverterClient';
 import TwitterCardPreviewClient from '@/components/tools/TwitterCardPreviewClient';
 import UAParserExpressClient from '@/components/tools/UAParserExpressClient';
-import UnblurImageClient from '@/components/tools/UnblurImageClient';
 import UnicodeEscapeEncoderClient from '@/components/tools/UnicodeEscapeEncoderClient';
 import UnitConversionToolClient from '@/components/tools/UnitConversionToolClient';
 import UUIDCompareClient from '@/components/tools/UUIDCompareClient';
@@ -2980,7 +2979,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'trace': return <LogoTraceConverterClient />;
     case 'twitter-card-preview': return <TwitterCardPreviewClient />;
     case 'ua-parser-express': return <UAParserExpressClient />;
-    case 'unblur': return <UnblurImageClient />;
     case 'unicode-escape-encoder': return <UnicodeEscapeEncoderClient />;
     case 'unit-conversion-tool': return <UnitConversionToolClient />;
     case 'unlock-pdf': return <PdfPasswordRemoverClient />;

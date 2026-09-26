@@ -28,6 +28,8 @@ const nextConfig = {
   },
   async redirects() {
     return [
+      { source: '/tools/unblur', destination: '/tools/images/sharpen', permanent: true },
+      { source: '/tools/images/unblur', destination: '/tools/images/sharpen', permanent: true },
       { source: '/tools/image-border-adder', destination: '/tools/images/border', permanent: true },
       { source: '/tools/images/image-border-adder', destination: '/tools/images/border', permanent: true },
       // /advertise (the old house-ad media kit) was replaced by the
