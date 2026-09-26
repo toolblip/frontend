@@ -1,0 +1,11 @@
+{
+  "retrieved": "2026-09-26",
+  "assets": [
+    {
+      "name": "SkaleAgents",
+      "source": "https://skaleagents.com/icon.svg",
+      "file": "skaleagents.svg",
+      "sha256": "bc34ee9d4967f561fe07b9d0c40cba54bdd8ae2ba58ea4bb7cd52a4ed30a8bc3"
+    }
+  ]
+}
