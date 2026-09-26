@@ -705,7 +705,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'base64-image-converter':
       return <Base64ImageConverterClient />;
     case 'url-encode':
-    case 'url-encoder':
       return <UrlEncodeClient />;
     case 'json-formatter':
       return <JsonFormatterClient />;
@@ -1552,8 +1551,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <EncodingsRefClient />;
     case 'encodings-reference':
       return <EncodingsReferenceClient />;
-    case 'general-unit-converter':
-      return <AllInOneUnitConverterClient />;
     case 'english-collocations-checker':
       return <EnglishCollocationsCheckerClient />;
     case 'english-collocations-unique':
@@ -2075,10 +2072,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <HtmlEncoderClient />;
     case 'html-unescape':
       return <HtmlEncoderClient />;
-    case 'markdown-preview':
-      return <MarkdownToHtmlClient />;
-    case 'markdown-editor':
-      return <MarkdownToHtmlClient />;
     case 'markdown-to-markdown':
       return <MarkdownToHtmlClient />;
     case 'css-beautifier':
@@ -2106,8 +2099,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'jwt-generator':
       return <JwtDecoderClient />;
     case 'jwt-creator':
-      return <JwtDecoderClient />;
-    case 'jwt-inspector':
       return <JwtDecoderClient />;
     case 'jwt-verifier':
       return <JwtDecoderClient />;
@@ -2459,7 +2450,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'jwt-decoder-web': return <JwtDecoderClient />;
     case 'jwt-decoder-x': return <JwtDecoderClient />;
     case 'jwt-decoder-xl': return <JwtDecoderClient />;
-    case 'jwt-token-decoder': return <JwtDecoderClient />;
     case 'keyword-density-analyzer-new': return <KeywordDensityCheckerClient />; // legacy alias, redirected via next.config.mjs
     case 'keyword-density-analyzer': return <KeywordDensityCheckerClient />;
     case 'keyword-difficulty-checker': return <KeywordDensityCheckerClient />;
@@ -2507,7 +2497,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'lorem-ipsum-toolbox': return <LoremIpsumGeneratorClient />;
     case 'lorem-ipsum-ultimate': return <LoremIpsumGeneratorClient />;
     case 'lorem-ipsum-ultra': return <LoremIpsumGeneratorClient />;
-    case 'lorem-ipsum-words': return <LoremIpsumGeneratorClient />;
     case 'lorem-ipsum-x': return <LoremIpsumGeneratorClient />;
     case 'lorem-ipsum-xl': return <LoremIpsumGeneratorClient />;
     case 'm4a-to-wav': return <AacToWavClient />;
@@ -2620,9 +2609,7 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'random-color-generator': return <RandomColorGeneratorClient />;
     case 'random-id-generator': return <RandomIdGeneratorClient />; // real alphanumeric ID generator, not the fraction tool
     case 'random-mac-generator': return <MacAddressGeneratorClient />;
-    case 'random-password-generator': return <PasswordGeneratorClient />;
     case 'random-pin-generator': return <RandomPinGeneratorClient />; // real numeric PIN generator, not the fraction tool
-    case 'read-time-calculator': return <ReadingTimeCalculatorClient />;
     case 'readability-check-tool': return <ContrastCheckToolClient />;
     case 'readability-checker-pro': return <ReadabilityCheckerClient />;
     case 'readability-checker-tool': return <ReadabilityCheckerClient />;
@@ -2659,13 +2646,9 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'readability-score-v6': return <ReadabilityScoreClient />;
     case 'readability-score-x': return <ReadabilityScoreClient />;
     case 'readability-score-xl': return <ReadabilityScoreClient />;
-    case 'reading-pace-calculator': return <ReadingTimeCalculatorClient />;
-    case 'reading-time-estimator': return <ReadingTimeCalculatorClient />;
     case 'reading-time-express': return <ReadingTimeCalculatorClient />;
     case 'regex-live-tester': return <RegexTesterClient />;
-    case 'regex-match-tester': return <RegexTesterClient />;
     case 'regex-match-visualizer': return <RegexVisualizerClient />;
-    case 'regex-pattern-tester': return <RegexTesterClient />;
     case 'regex-tester-2025': return <RegexTesterClient />;
     case 'regex-tester-adv': return <RegexTesterClient />;
     case 'regex-tester-advanced': return <RegexTesterClient />;
@@ -2764,7 +2747,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'sitemap-html-generator': return <HtmlTableGeneratorClient />;
     case 'sitemap-xml-validator': return <XmlValidatorClient />;
     case 'sitemap-xml-validator-express': return <XmlValidatorClient />;
-    case 'sla-uptime-calculator': return <UptimeCalculatorClient />;
     case 'smart-text-sorter': return <TextSorterClient />;
     case 'speech-to-text': return <AudioToTextClient />;
     case 'spelling-checker-tool': return <GrammarCheckerClient />; // legacy alias, redirected via next.config.mjs
@@ -2777,7 +2759,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'table-to-markdown': return <JsonToMarkdownTableClient />;
     case 'temp-converter-express': return <TempConverterExpressClient />; // legacy alias, redirected via next.config.mjs
     case 'temp-converter': return <TempConverterExpressClient />;
-    case 'text-case-converter': return <CaseConverterClient />;
     case 'text-combinations-generator': return <FakeTextGeneratorClient />;
     case 'text-diff-checker': return <TextDiffClient />;
     case 'text-diff-express': return <TextDiffClient />;
@@ -2819,13 +2800,11 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'text-sorter-x': return <TextSorterClient />;
     case 'text-sorter-xl': return <TextSorterClient />;
     case 'text-statistics-advanced': return <TextStatisticsClient />;
-    case 'text-statistics-calculator': return <TextStatisticsClient />;
     case 'text-to-handwriting': return <TextToHandwritingClient />; // real cursive-font renderer, not the speech-to-text mic tool
     case 'text-to-image': return <AudioToTextClient />;
     case 'tiff-to-text': return <AudioToTextClient />;
     case 'time-duration-calculator': return <TimeDurationCalculatorClient />; // real time arithmetic, not a reading-speed estimator
     case 'time-zone-tool': return <TimeZoneConverterClient />;
-    case 'title-case-converter': return <CaseConverterClient />;
     case 'unit-converter-2025': return <UnitConverterClient />;
     case 'unit-converter-advanced': return <UnitConverterClient />;
     case 'unit-converter-browser': return <UnitConverterClient />;
