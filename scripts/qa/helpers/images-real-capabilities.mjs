@@ -2,6 +2,9 @@
 import {chromium,webkit} from '@playwright/test';
 import {mkdir,writeFile,readFile} from 'node:fs/promises';
 import {stripDevUpgradeCSP} from '../browser.mjs';
+const base=new URL(process.env.QA_BASE||'http://localhost:3190');
+if(!['http:','https:'].includes(base.protocol))throw Error('QA_BASE must be an HTTP(S) URL');
+const localHTTP=base.protocol==='http:'&&['localhost','127.0.0.1','[::1]'].includes(base.hostname);
 const engine=process.argv[2]||'chrome';const dir=process.argv[4];if(!dir)throw Error('Usage: node scripts/qa/helpers/images-real-capabilities.mjs chrome|webkit x|ai NEW_OUTPUT_DIRECTORY');await mkdir(dir,{recursive:false});let failed=false;
 const server=await (engine==='chrome'?chromium:webkit).launchServer({headless:true,...(engine==='chrome'?{channel:'chrome'}:{executablePath:process.env.QA_WEBKIT_EXECUTABLE})});
 const browser=await (engine==='chrome'?chromium:webkit).connect(server.wsEndpoint());
@@ -14,9 +17,9 @@ for(const mode of [process.argv[3]||'x']){
  page.on('requestfinished',r=>record({kind:'requestfinished',url:r.url(),resourceType:r.resourceType()}));
  page.on('requestfailed',r=>record({kind:'requestfailed',url:r.url(),resourceType:r.resourceType(),failure:r.failure()}));
  page.on('framenavigated',f=>{if(f===page.mainFrame())record({kind:'navigation',url:f.url()});});
- if(engine==='webkit')await page.route('**/*',route=>stripDevUpgradeCSP(route,error=>record({kind:'csp-override-error',text:error.message})));
+ if(engine==='webkit'&&localHTTP)await page.route('**/*',route=>stripDevUpgradeCSP(route,error=>record({kind:'csp-override-error',text:error.message})));
  try{
- await page.goto('http://localhost:3190/tools/images/'+(mode==='x'?'tweet-to-image-converter':'image-background-remover'),{waitUntil:'domcontentloaded'});const tool=page.locator('.tb-v2-tool-card').first();await tool.waitFor();await page.waitForFunction(()=>[...document.querySelectorAll('.tb-v2-tool-card button')].some(el=>Object.keys(el).some(k=>k.startsWith('__reactProps$')&&typeof el[k]?.onClick==='function')),{},{timeout:30000});await page.getByRole('button',{name:'Decline',exact:true}).click({timeout:1500}).catch(()=>{});
+ await page.goto(new URL('/tools/images/'+(mode==='x'?'tweet-to-image-converter':'image-background-remover'),base).href,{waitUntil:'domcontentloaded'});const tool=page.locator('.tb-v2-tool-card').first();await tool.waitFor();await page.waitForFunction(()=>[...document.querySelectorAll('.tb-v2-tool-card button')].some(el=>Object.keys(el).some(k=>k.startsWith('__reactProps$')&&typeof el[k]?.onClick==='function')),{},{timeout:30000});await page.getByRole('button',{name:'Decline',exact:true}).click({timeout:1500}).catch(()=>{});
  if(mode==='x'){await page.evaluate(()=>{window.__qaDrawnText=[];const original=CanvasRenderingContext2D.prototype.fillText;CanvasRenderingContext2D.prototype.fillText=function(text,...args){window.__qaDrawnText.push(text);return original.call(this,text,...args)}});await tool.getByLabel('Tweet URL',{exact:true}).fill('https://x.com/jack/status/20');await tool.getByRole('button',{name:'Fetch tweet',exact:true}).click();await page.waitForFunction(()=>/Tweet loaded|Couldn't load/.test(document.querySelector('.tb-v2-tool-card')?.textContent),{},{timeout:30000});const link=tool.getByRole('link',{name:'Download as PNG',exact:true}).last();await link.waitFor({timeout:30000});const [dl]=await Promise.all([page.waitForEvent('download'),link.click()]);await dl.saveAs(dir+'/x-result.png');const drawn=await page.evaluate(()=>window.__qaDrawnText);records.push({kind:'drawnText',text:drawn});if(!drawn.includes('just setting up my twttr')||drawn.some(t=>/\d{1,2}:\d{2}.*·/.test(t)))throw Error('Public post text or unverified timestamp regression');}
  else {await tool.locator('input[type=file]').first().setInputFiles('public/samples/png-to-jpg-photo.png');await tool.getByLabel('AI Remove',{exact:true}).check();await tool.getByRole('button',{name:'Remove Background',exact:true}).click();await waitForAIResult(page,tool);
  const [dl]=await Promise.all([page.waitForEvent('download'),tool.getByRole('button',{name:'Download PNG',exact:true}).click()]);await dl.saveAs(dir+'/ai-result.png');

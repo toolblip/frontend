@@ -1,26 +1,29 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
+import { createResultUrl, type ResultUrl } from '@/lib/media-conversion/result-url';
 
 export type MediaResult = { blob: Blob; name: string; detail?: string; preview?: 'image' | 'audio' | 'video' };
+export type MediaJobResult = MediaResult & Pick<ResultUrl, 'url' | 'attachPreview'>;
 export function useMediaJob() {
-  const [result, setResult] = useState<(MediaResult & { url: string }) | null>(null);
+  const [result, setResult] = useState<MediaJobResult | null>(null);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
   const [ready, setReady] = useState(false);
   useEffect(() => { setReady(true); }, []);
   const generation = useRef(0);
-  const url = useRef('');
+  const resultUrl = useRef<ResultUrl | null>(null);
   const controller = useRef<AbortController | null>(null);
   const cancel = () => {
     generation.current++;
     controller.current?.abort(); controller.current = null;
-    if (url.current) URL.revokeObjectURL(url.current);
-    url.current = ''; setResult(null); setError(''); setBusy(false);
+    resultUrl.current?.dispose();
+    resultUrl.current = null; setResult(null); setError(''); setBusy(false);
   };
   useEffect(() => () => {
     generation.current++;
     controller.current?.abort();
-    if (url.current) URL.revokeObjectURL(url.current);
+    resultUrl.current?.dispose();
+    resultUrl.current = null;
   }, []);
   const run = async (work: (signal: AbortSignal) => Promise<MediaResult | null>) => {
     cancel(); const id = generation.current; const ctrl = new AbortController(); controller.current = ctrl; setBusy(true);
@@ -35,8 +38,9 @@ export function useMediaJob() {
       ctrl.signal.throwIfAborted();
       if (generation.current !== id || !output) return;
       if (!output.blob.size) throw new Error('Conversion produced an empty file.');
-      url.current = URL.createObjectURL(output.blob);
-      setResult({ ...output, url: url.current });
+      const resource = createResultUrl(output.blob);
+      resultUrl.current = resource;
+      setResult({ ...output, url: resource.url, attachPreview: resource.attachPreview });
     } catch (e) {
       if (generation.current === id) setError(e instanceof Error ? e.message : 'Conversion failed.');
     } finally { clearTimeout(timeout); if (abortListener) ctrl.signal.removeEventListener('abort', abortListener); if (generation.current === id) setBusy(false); }
