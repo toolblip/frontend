@@ -1,0 +1,10 @@
+{
+  "repository": "toolblip/frontend",
+  "baseURL": "https://toolblip.com",
+  "environment": "toolblip / production",
+  "deploymentId": 6677246433,
+  "deployedMerge": "5556e2240964fb5dc393a740aec275aee505c7ef",
+  "source": "2b6c29142113db66a21644efb88fcc0b62c541e6",
+  "tree": "fd67dafeeb8c233d3697169d40a63d65342a0ce2",
+  "group": "developer-data"
+}
