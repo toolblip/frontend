@@ -198,6 +198,7 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
   const { user, login, loading: authLoading } = useAuth();
   const [stats, setStats] = useState<EngagementStats>(() => fallbackStats(toolSlug));
   const viewRecordedRef = useRef(false);
+  const favoriteRevisionRef = useRef(0);
   const [shareOpen, setShareOpen] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
   const [email, setEmail] = useState("");
@@ -287,6 +288,7 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
       });
       const data = await res.json();
       if (res.ok) {
+        favoriteRevisionRef.current += 1;
         setStats(data.data ?? fallbackStats(toolSlug));
         setFavoriteIntent(false);
         clearFavoriteQuery();
@@ -379,10 +381,13 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
 
 
   async function refreshStats() {
+    const favoriteRevision = favoriteRevisionRef.current;
     try {
       const res = await fetch(`/api/tools/${toolSlug}/engagement`, { credentials: "include", cache: "no-store" });
       if (!res.ok) return;
       const data = await res.json();
+      // A login refresh can contain the snapshot from before a favorite save.
+      if (favoriteRevision !== favoriteRevisionRef.current) return;
       setStats(data.data ?? fallbackStats(toolSlug));
     } catch {
       // Optional counters must not interrupt the tool when offline or unloading.
@@ -526,6 +531,7 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
       });
       const data = await res.json();
       if (res.ok) {
+        favoriteRevisionRef.current += 1;
         setStats(data.data ?? fallbackStats(toolSlug));
         setUnfavoriteOpen(false);
       }
