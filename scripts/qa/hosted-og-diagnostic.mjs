@@ -22,6 +22,8 @@ const browser = await chromium.launch({ headless: true, channel: 'chrome', timeo
 const deadline = setTimeout(() => { report.timedOut = true; void browser.close().catch(() => {}); }, 150000);
 try {
  for (const serviceWorkers of ['allow', 'block']) {
+  const artifactsDir = path.join(output, serviceWorkers);
+  await mkdir(artifactsDir);
   const scenario = { serviceWorkers, diagnosticControl: true, events: [], evidence: [] };
   report.scenarios.push(scenario);
   let phase = 'navigation';
@@ -53,7 +55,7 @@ try {
   await page.waitForFunction(() => Array.from(document.querySelectorAll('.tb-v2-tool-card button')).some(element => Object.keys(element).some(key => key.startsWith('__reactProps$') && typeof element[key]?.onClick === 'function')));
   await page.getByRole('button', { name: /^decline(?: analytics cookies)?$/i }).first().click({ timeout: 2000 }).catch(() => {});
   phase = 'exact-fixture';
-  await fixture.test({ page, tool, expect, baseURL: base, check: (passed, message) => { scenario.evidence.push({ passed, message }); if (!passed) throw Error(message); } });
+  await fixture.test({ page, tool, expect, artifactsDir, baseURL: base, check: (passed, message) => { scenario.evidence.push({ passed, message }); if (!passed) throw Error(message); } });
   phase = 'layout';
   for (const width of [1280, 390, 320]) {
     await page.setViewportSize({ width, height: 900 });
