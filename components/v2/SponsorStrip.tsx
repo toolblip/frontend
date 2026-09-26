@@ -25,6 +25,7 @@ const SUPPRESSED_PREFIXES = ['/dashboard', '/account', '/admin', '/sponsors', '/
 
 export default function SponsorStrip() {
   const pathname = usePathname();
+  const suppressed = SUPPRESSED_PREFIXES.some((p) => pathname === p || pathname?.startsWith(`${p}/`));
   const showAds = useShowAds();
   const [slots, setSlots] = useState<SponsorSlot[] | null>(() => readSponsorsTopCache()?.slots ?? null);
   const [minBidCents, setMinBidCents] = useState(() => Math.max(100, readSponsorsTopCache()?.min_bid_cents ?? 100));
@@ -36,6 +37,8 @@ export default function SponsorStrip() {
   };
 
   useEffect(() => {
+    if (suppressed) return;
+
     let cancelled = false;
     fetchSponsorsTop()
       .then((data) => {
@@ -51,9 +54,9 @@ export default function SponsorStrip() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [suppressed]);
 
-  if (SUPPRESSED_PREFIXES.some((p) => pathname === p || pathname?.startsWith(`${p}/`))) return null;
+  if (suppressed) return null;
   if (!showAds) return null;
 
   const bySlot = (rank: number): SponsorSlot | undefined => slots?.find((s) => s.rank === rank);
