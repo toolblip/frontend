@@ -28,7 +28,7 @@ add('hash-from-text sha-256-hash md5-hash-generator sha1-hash-generator sha256-h
 });
 add('url-encode url-encoder',async({tool,expect,check})=>{
  await examples(tool);await expect(pre(tool)).toHaveText('caf%C3%A9%20%26%20tea');
- await tool.getByRole('tab',{name:'Decode',exact:true}).click();await fill(tool,'Input','%F0%9F%98%80%20%2B');await expect(pre(tool)).toHaveText('😀 +');
+ const decode=tool.getByRole('tab',{name:'Decode',exact:true});await decode.click();await expect(decode).toHaveAttribute('aria-selected','true');await fill(tool,'Input','%F0%9F%98%80%20%2B');await expect(pre(tool)).toHaveText('😀 +');
  await fill(tool,'Input','%E0%A4');await expect(tool.getByRole('alert')).toBeVisible();check(true,'URI-component UTF-8 vector and malformed percent sequence');
 });
 add('base64-encoder-decoder',async({tool,expect,check})=>{
@@ -54,7 +54,7 @@ add('backslash-escape-unescape json-escape-unescape',async({tool,expect,check})=
 add('regex-escape',async({tool,expect,check})=>{
  await examples(tool);await fill(tool,'Input','a+b?.[x]');await expect(pre(tool)).toHaveText('a\\+b\\?\\.\\[x\\]');
  const escaped=await pre(tool).innerText();check(new RegExp('^'+escaped+'$').test('a+b?.[x]'),'Escaped output matches the literal with a real RegExp');
- await tool.getByRole('button',{name:'Unescape',exact:true}).click();await fill(tool,'Input',escaped);await expect(pre(tool)).toHaveText('a+b?.[x]');
+ await tool.getByRole('button',{name:'Unescape (pattern → plain text)',exact:true}).click();await fill(tool,'Input',escaped);await expect(pre(tool)).toHaveText('a+b?.[x]');
 });
 add('punycode-encoder',async({tool,expect,check})=>{
  await examples(tool);await expect(tool.getByLabel('Punycode / ASCII',{exact:true})).toHaveValue('xn--schn-7qa.de');
@@ -103,7 +103,7 @@ add('uuid-comparator uuid-compare',async({tool,expect,check})=>{
 });
 add('uuid-generator uuid-v1-generator random-uuid-v7',async({tool,expect,check,slug})=>{
  await examples(tool);const version=slug==='uuid-generator'?4:slug==='uuid-v1-generator'?1:7;
- if(version!==4){await fill(tool,'Count','3');await tool.getByRole('button',{name:/^Generate UUID/}).click();}
+ if(version!==4){await fill(tool,'Count','3');await tool.getByRole('button',{name:version===7?'Generate':/^Generate UUID/,exact:version===7}).click();}
  const pattern=new RegExp(`[0-9a-f]{8}-[0-9a-f]{4}-${version}[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}`,'ig');
  await expect.poll(async()=>((await tool.innerText()).match(pattern)||[]).length).toBeGreaterThanOrEqual(version===4?1:3);
  const values=(await tool.innerText()).match(pattern);check(new Set(values).size===values.length,'UUID outputs are distinct with the required version and variant bits');
@@ -173,9 +173,13 @@ add('ssh-key-generator',async({page,tool,expect,check,artifactsDir})=>{
 });
 
 export default Object.entries(tests).map(([slug,test])=>({slug,requiresExample:true,requiresClear:true,async test(ctx){
- const {tool,expect,check}=ctx;
+ const {page,tool,expect,check}=ctx;
+ await page.setViewportSize({width:320,height:900});
  await tool.getByRole('button',{name:'Clear',exact:true}).first().click();
  await test({...ctx,slug});
+ const layout=await tool.evaluate(root=>({client:root.clientWidth,scroll:root.scrollWidth,left:root.getBoundingClientRect().left,right:root.getBoundingClientRect().right,viewport:document.documentElement.clientWidth}));
+ check(layout.scroll<=layout.client+1&&layout.left>=-1&&layout.right<=layout.viewport+1,'Functional interactions at 320px stay within the tool and viewport');
+ await page.screenshot({path:path.join(ctx.artifactsDir,'security-functional-320.png')});
  await tool.getByRole('button',{name:'Clear',exact:true}).first().click();
  const inputs=tool.locator('textarea:not([readonly]), input[type="text"], input[type="password"], input[type="email"], input:not([type])');
  for(let i=0;i<await inputs.count();i++)await expect(inputs.nth(i)).toHaveValue('');

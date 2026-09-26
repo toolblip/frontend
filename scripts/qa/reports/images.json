@@ -1,14 +1,14 @@
 {
   "group": "images",
-  "assignedCount": 25,
+  "assignedCount": 24,
   "inventoryApprovedCount": 185,
-  "status": "implementation-and-scoped-validation-complete; browser-acceptance-pending",
+  "status": "local-browser-integration-blocked-by-shared-development-runtime",
   "scope": {
     "approvedComponentsChanged": [],
     "centralFilesChanged": [],
     "devServerStarted": false,
     "buildRun": false,
-    "browserRun": false,
+    "browserRun": true,
     "unblurOwner": "coordinator",
     "nodeModulesSymlink": "left untracked"
   },
@@ -19,7 +19,7 @@
     "typeScriptResult": "passed, exit 0",
     "browserCases": "scripts/qa/cases/images.mjs",
     "browserCaseCount": 25,
-    "browserCaseExecution": "not run: coordinator-only per contract",
+    "browserCaseExecution": "See integration.routeEvidence: 24 active routes, partial local acceptance, shared runtime blocks remaining checks",
     "coverage": [
       "signature validation and corrupt-file failure",
       "independent dimension/scale/print math",
@@ -60,25 +60,25 @@
       "slug": "crop",
       "component": "CropClient",
       "historicallyApproved": false,
-      "status": "implemented-awaiting-browser-acceptance",
+      "status": "passed-local-both-engines",
       "findingsAndFixes": "Retained freeform pointer selection; bounded decoding, clamped coordinates, live crop, PNG alpha and JPEG export, Example/Clear. Canonical cropper lacks freeform aspect ratio, so redirect is conditional.",
       "case": "scripts/qa/cases/images.mjs#crop",
-      "browserVerified": false
+      "browserVerified": true
     },
     {
       "slug": "crop-circle",
       "component": "CropCircleClient",
       "historicallyApproved": false,
-      "status": "implemented-awaiting-browser-acceptance",
+      "status": "passed-local-both-engines",
       "findingsAndFixes": "Fixed stretched rectangular source in export to match centered cover preview. Retained size, border width and border color; transparent PNG corners; bounded decoding and lifecycle cleanup.",
       "case": "scripts/qa/cases/images.mjs#crop-circle",
-      "browserVerified": false
+      "browserVerified": true
     },
     {
       "slug": "detect",
       "component": "DetectClient",
       "historicallyApproved": false,
-      "status": "implemented-awaiting-browser-acceptance",
+      "status": "partial-browser-evidence; integration-blocked",
       "findingsAndFixes": "Full signature checks plus real decode, preflight dimensions, strict bounds, MIME mismatch display, color depth inspection, cleanup, timeout, request identity, Example/Clear.",
       "case": "scripts/qa/cases/images.mjs#detect",
       "browserVerified": false
@@ -87,16 +87,16 @@
       "slug": "font-to-png",
       "component": "FontToPngClient",
       "historicallyApproved": false,
-      "status": "implemented-awaiting-browser-acceptance",
+      "status": "passed-local-both-engines",
       "findingsAndFixes": "Live renderer with real system-font example and preserved custom font upload. Font size limit, stale font cancellation, font cleanup, glyph bounds including overhang, alpha and Clear.",
       "case": "scripts/qa/cases/images.mjs#font-to-png",
-      "browserVerified": false
+      "browserVerified": true
     },
     {
       "slug": "meme-maker",
       "component": "MemeMakerClient",
       "historicallyApproved": false,
-      "status": "implemented-awaiting-browser-acceptance",
+      "status": "partial-browser-evidence; integration-blocked",
       "findingsAndFixes": "Preserved top/bottom text, font size and text/stroke colors. Bounded source decode, live pixels, text width constraint, transparent PNG, Example/Clear and cleanup.",
       "case": "scripts/qa/cases/images.mjs#meme-maker",
       "browserVerified": false
@@ -105,7 +105,7 @@
       "slug": "profile-photo",
       "component": "ProfilePhotoEditorClient",
       "historicallyApproved": false,
-      "status": "implemented-awaiting-browser-acceptance",
+      "status": "partial-browser-evidence; integration-blocked",
       "findingsAndFixes": "Preserved circle/square, zoom, pan, brightness, contrast, saturation and output-size controls. Corrected pan scaling for narrow preview; bounded loads/exports, cleanup and Example/Clear.",
       "case": "scripts/qa/cases/images.mjs#profile-photo",
       "browserVerified": false
@@ -114,7 +114,7 @@
       "slug": "resize",
       "component": "ImageResizerClient",
       "historicallyApproved": false,
-      "status": "approved-shared-read-only",
+      "status": "partial-browser-evidence; integration-blocked",
       "findingsAndFixes": "Already shares historically approved ImageResizerClient; read-only, with exact redirect proposal and old-route PNG/JPEG/alpha case.",
       "case": "scripts/qa/cases/images.mjs#resize",
       "browserVerified": false
@@ -123,7 +123,7 @@
       "slug": "rotate",
       "component": "ImageRotateToolClient",
       "historicallyApproved": false,
-      "status": "approved-shared-read-only",
+      "status": "partial-browser-evidence; integration-blocked",
       "findingsAndFixes": "Already shares approved ImageRotateToolClient/ImageTransformToolClient; read-only, exact redirect proposal and old-route quarter-turn bytes case.",
       "case": "scripts/qa/cases/images.mjs#rotate",
       "browserVerified": false
@@ -141,7 +141,7 @@
       "slug": "dpi-ppi-calculator",
       "component": "DpiPpiCalculatorClient",
       "historicallyApproved": false,
-      "status": "implemented-awaiting-browser-acceptance",
+      "status": "partial-browser-evidence; integration-blocked",
       "findingsAndFixes": "Live print and screen calculations, strict finite numeric parsing, associated input labels, Example/Clear, narrow-screen wrapping.",
       "case": "scripts/qa/cases/images.mjs#dpi-ppi-calculator",
       "browserVerified": false
@@ -150,7 +150,7 @@
       "slug": "favicon-from-emoji",
       "component": "FaviconFromEmojiClient",
       "historicallyApproved": false,
-      "status": "implemented-awaiting-browser-acceptance",
+      "status": "partial-browser-evidence; integration-blocked",
       "findingsAndFixes": "Live generation at all eight original sizes, bounded glyph width, transparency preserved, Example/Clear. Multi-size convenience retained instead of forcing a canonical redirect.",
       "case": "scripts/qa/cases/images.mjs#favicon-from-emoji",
       "browserVerified": false
@@ -159,7 +159,7 @@
       "slug": "image-scale-calculator",
       "component": "ImageScaleCalculatorClient",
       "historicallyApproved": false,
-      "status": "implemented-awaiting-browser-acceptance",
+      "status": "partial-browser-evidence; integration-blocked",
       "findingsAndFixes": "Live forward/inverse scale controls; invalid scale clears stale target values; bounded image autofill and request identity; associated labels, Example/Clear.",
       "case": "scripts/qa/cases/images.mjs#image-scale-calculator",
       "browserVerified": false
@@ -168,7 +168,7 @@
       "slug": "image-dimension-checker",
       "component": "DetectClient",
       "historicallyApproved": false,
-      "status": "implemented-awaiting-browser-acceptance",
+      "status": "partial-browser-evidence; integration-blocked",
       "findingsAndFixes": "Same DetectClient implementation and tests as detect, including independently known dimensions.",
       "case": "scripts/qa/cases/images.mjs#image-dimension-checker",
       "browserVerified": false
@@ -177,7 +177,7 @@
       "slug": "image-background-remover",
       "component": "ImageBackgroundRemoverClient",
       "historicallyApproved": false,
-      "status": "implemented-awaiting-browser-acceptance",
+      "status": "partial-browser-evidence; integration-blocked",
       "findingsAndFixes": "Retained actual @imgly/background-removal isnet_quint8 integration and local model path. No fake AI/filter substitution. Preserved floodfill and chroma algorithms, bounded predecode, upload/result cancellation identities, Example/Clear, error handling and result invalidation. Cancel discards inference output; library may continue computing.",
       "case": "scripts/qa/cases/images.mjs#image-background-remover",
       "browserVerified": false
@@ -186,7 +186,7 @@
       "slug": "pixel-density-calculator",
       "component": "PixelDensityCalculatorClient",
       "historicallyApproved": false,
-      "status": "implemented-awaiting-browser-acceptance",
+      "status": "partial-browser-evidence; integration-blocked",
       "findingsAndFixes": "Live inch/cm horizontal, vertical and diagonal density; strict parsing; quality guidance uses the lower axis rather than hiding anisotropic softness behind the diagonal.",
       "case": "scripts/qa/cases/images.mjs#pixel-density-calculator",
       "browserVerified": false
@@ -195,7 +195,7 @@
       "slug": "base64-image-viewer",
       "component": "Base64ImageViewerClient",
       "historicallyApproved": false,
-      "status": "implemented-awaiting-browser-acceptance",
+      "status": "partial-browser-evidence; integration-blocked",
       "findingsAndFixes": "Actually decodes validated Base64 and image bytes instead of accepting any image data-URL prefix. MIME match, file/text/decoded limits, clearable error, dimensions, stale-read protection and visible clipboard failure.",
       "case": "scripts/qa/cases/images.mjs#base64-image-viewer",
       "browserVerified": false
@@ -204,7 +204,7 @@
       "slug": "photo-metadata-remover",
       "component": "PhotoMetadataRemoverClient",
       "historicallyApproved": false,
-      "status": "implemented-awaiting-browser-acceptance",
+      "status": "partial-browser-evidence; integration-blocked",
       "findingsAndFixes": "Preserved informational common-EXIF scan and actual re-encode. JPEG stays JPEG; all other accepted formats use PNG to preserve alpha. Bounded decode, URL lifecycle and stale work protection, Example/Clear.",
       "case": "scripts/qa/cases/images.mjs#photo-metadata-remover",
       "browserVerified": false
@@ -213,7 +213,7 @@
       "slug": "image-size-resizer",
       "component": "ImageResizerClient",
       "historicallyApproved": false,
-      "status": "approved-shared-read-only",
+      "status": "partial-browser-evidence; integration-blocked",
       "findingsAndFixes": "Already shares historically approved ImageResizerClient; read-only, with exact redirect proposal and old-route case.",
       "case": "scripts/qa/cases/images.mjs#image-size-resizer",
       "browserVerified": false
@@ -222,7 +222,7 @@
       "slug": "banner-generator",
       "component": "OgImageGeneratorClient",
       "historicallyApproved": false,
-      "status": "implemented-awaiting-browser-acceptance",
+      "status": "partial-browser-evidence; integration-blocked",
       "findingsAndFixes": "Preserved presets, gradients, patterns, typography, alignment, resolutions and footer. Live output invalidation, real Clear, useful Example, text limits, render error and v2 accent colors.",
       "case": "scripts/qa/cases/images.mjs#banner-generator",
       "browserVerified": false
@@ -231,7 +231,7 @@
       "slug": "image-dpi-resizer",
       "component": "ImageDpiResizerClient",
       "historicallyApproved": false,
-      "status": "implemented-awaiting-browser-acceptance",
+      "status": "partial-browser-evidence; integration-blocked",
       "findingsAndFixes": "Resamples to retain user-assumed print size AND writes requested target density into PNG pHYs chunk with CRC. Bounds before canvas allocation, explicit assumed-current-DPI copy, real export bytes and cancellation.",
       "case": "scripts/qa/cases/images.mjs#image-dpi-resizer",
       "browserVerified": false
@@ -240,7 +240,7 @@
       "slug": "batch-image-resizer",
       "component": "BatchImageResizerClient",
       "historicallyApproved": false,
-      "status": "implemented-awaiting-browser-acceptance",
+      "status": "partial-browser-evidence; integration-blocked",
       "findingsAndFixes": "Preserved presets, target ratio lock, fit/letterbox and multi-download plus per-file exports. JPEG stays JPEG; other sources export alpha-preserving PNG. 20-file/100MB input and 100MP aggregate output limits, bounded source decode, stale-result invalidation, cancel, errors and URL cleanup.",
       "case": "scripts/qa/cases/images.mjs#batch-image-resizer",
       "browserVerified": false
@@ -249,7 +249,7 @@
       "slug": "browser-image-resizer",
       "component": "BrowserImageResizerClient",
       "historicallyApproved": false,
-      "status": "implemented-awaiting-browser-acceptance",
+      "status": "partial-browser-evidence; integration-blocked",
       "findingsAndFixes": "Reuses approved ImageResizerClient read-only instead of maintaining weaker duplicate; preserves browser-local resize and aspect lock, adds format choices/validation and Example/Clear.",
       "case": "scripts/qa/cases/images.mjs#browser-image-resizer",
       "browserVerified": false
@@ -258,7 +258,7 @@
       "slug": "favicon-png-maker",
       "component": "FaviconGeneratorClient",
       "historicallyApproved": false,
-      "status": "approved-shared-read-only",
+      "status": "partial-browser-evidence; integration-blocked",
       "findingsAndFixes": "Same approved FaviconGeneratorClient as favicon-generator, left read-only. Exact redirect proposal; PNG dimensions plus real ICO directory case.",
       "case": "scripts/qa/cases/images.mjs#favicon-png-maker",
       "browserVerified": false
@@ -267,7 +267,7 @@
       "slug": "favicon-icon-generator",
       "component": "FaviconGeneratorClient",
       "historicallyApproved": false,
-      "status": "approved-shared-read-only",
+      "status": "partial-browser-evidence; integration-blocked",
       "findingsAndFixes": "Same approved FaviconGeneratorClient as favicon-generator, left read-only. Exact redirect proposal; PNG and ICO byte cases.",
       "case": "scripts/qa/cases/images.mjs#favicon-icon-generator",
       "browserVerified": false
@@ -276,10 +276,10 @@
       "slug": "tweet-to-image-converter",
       "component": "TweetToImageClient",
       "historicallyApproved": false,
-      "status": "implemented-awaiting-browser-acceptance",
+      "status": "passed-local-both-engines",
       "findingsAndFixes": "Preserved URL fetching and paid custom-editor controls. Request identity/timeouts, bounded avatar upload/canvas, current-result invalidation, Example/Clear, v2 accents. Example is explicitly labeled sample text and works without paid Customize. Synthetic badge/engagement defaults disabled; actual third-party URL availability/CORS is not asserted.",
       "case": "scripts/qa/cases/images.mjs#tweet-to-image-converter",
-      "browserVerified": false
+      "browserVerified": true
     }
   ],
   "duplicateProposals": [
@@ -394,20 +394,2352 @@
   ],
   "remainingBlockers": [
     {
-      "scope": "all 25 routes",
-      "blocker": "Integrated browser cases, 320px rendered UI and production acceptance must be run by coordinator; no browser worker/devserver/build allowed here."
+      "scope": "local browser integration",
+      "blocker": "Shared page bundle truncated or scripts fail to hydrate. Browser script syntax errors, WebKit interception timeout, and hot reload failures preserve incomplete/failed status. Runner and server were not edited."
     },
     {
-      "scope": "image-background-remover AI mode",
-      "blocker": "Real model fetch/inference on supported browser remains unverified. Models/resources exist locally. Deterministic Color Key byte/alpha case supplied; do not count it as AI acceptance."
+      "scope": "WebKit AI",
+      "blocker": "Real model fetch failed with TypeError Load failed amid shared resource/hot-reload failures; no inference acceptance."
     },
     {
-      "scope": "tweet-to-image-converter URL mode",
-      "blocker": "Real public X oEmbed fetch/CORS and avatar availability require host/browser acceptance. No mocked network success supplied; local sample export case is separate."
+      "scope": "public X modes",
+      "blocker": "Short public text and avatar export verified; long posts are capped at 280 characters, media attachments/thread/private/deleted posts not accepted, publication timestamp/engagement not asserted."
     },
     {
-      "scope": "conditional duplicates",
-      "blocker": "Crop/freeform, circle/border, emoji/multi-size gaps prevent lossless unconditional redirects."
+      "scope": "production",
+      "blocker": "Deferred to parent as instructed."
     }
-  ]
+  ],
+  "integration": {
+    "status": "local integration blocked; no production acceptance",
+    "activeAssignedRoutes": 24,
+    "chromePassedSoFar": [
+      "crop",
+      "crop-circle",
+      "font-to-png",
+      "tweet-to-image-converter"
+    ],
+    "webkitPassedSoFar": [
+      "crop",
+      "crop-circle",
+      "detect",
+      "font-to-png",
+      "browser-image-resizer",
+      "favicon-png-maker",
+      "favicon-icon-generator",
+      "tweet-to-image-converter"
+    ],
+    "productFix": "Fetched X posts no longer inherit current timestamp, custom metrics, or verified badge; empty oEmbed text rejected.",
+    "fixtureFixes": [
+      "Wait for actual interactive React handlers before sending files",
+      "Await download and click together to handle timeout without crashing runner"
+    ],
+    "realCapabilities": {
+      "chromeAI": "real model resources HTTP 200 and inference exported PNG; landscape segmentation quality poor",
+      "publicX": "Real public jack/status/20 exported 1280x432 PNG in Chrome (before timestamp correction) and WebKit (after correction, actual text/avatar and no fabricated date visually verified). Post-correction Chrome rerun blocked before hydration.",
+      "webkitAI": "Two real attempts failed amid load/hot-reload errors; latest 180-second timeout produced no output. Evidence: /tmp/images-real-probe/webkit-ai-recovered/ai.json",
+      "correctedChromeX": "Latest live helper retry failed before hydration: /tmp/images-real-probe/chrome-x-recovered/x.json. Corrected WebKit export visually verified; sample route case passed Chrome."
+    },
+    "validation": {
+      "scoped": "8 files / 72 tests passed",
+      "tsc": "Initial exit 2 from concurrent media import; final tsc --noEmit --incremental false --pretty false passed exit 0",
+      "typeScriptRerun": "./node_modules/.bin/tsc --noEmit --incremental false --pretty false: passed, exit 0"
+    },
+    "sharedBlockers": [
+      "curl exit 18: shared page.js transfer closed with 35420799 bytes remaining; subsequent complete response 38369926 bytes",
+      "Browser SyntaxError Invalid or unexpected token / Unexpected EOF before hydration",
+      "WebKit stripDevUpgradeCSP route.fetch timeout/unhandled TargetClosedError; runner unchanged"
+    ],
+    "artifacts": "/tmp/images-real-probe; $TMPDIR/opencode/auto-images-*",
+    "production": "not run; parent owns",
+    "counts": {
+      "chrome": {
+        "assigned": 24,
+        "attempted": 24,
+        "observedFullPass": 4,
+        "notAccepted": 20
+      },
+      "webkit": {
+        "assigned": 24,
+        "attempted": 24,
+        "observedFullPass": 8,
+        "notAccepted": 16
+      }
+    },
+    "routeEvidence": [
+      {
+        "slug": "crop",
+        "chrome": {
+          "observedPass": true,
+          "attemptCount": 2,
+          "latestStatus": "passed",
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-hydration-3/tools/crop.json",
+          "attempts": [
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-pending-2/tools/crop.json",
+              "status": "failed",
+              "functional": "failed",
+              "startedAt": "2026-09-26T06:25:05.478Z",
+              "errors": [],
+              "functionalError": {
+                "name": "TimeoutError",
+                "message": "page.waitForEvent: Timeout 8000ms exceeded while waiting for event \"download\"\n=========================== logs ===========================\nwaiting for event \"download\"\n============================================================",
+                "stack": "page.waitForEvent: Timeout 8000ms exceeded while waiting for event \"download\"\n=========================== logs ===========================\nwaiting for event \"download\"\n============================================================\n    at download (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/cases/images.mjs:19:46)\n    at Object.test (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/cases/images.mjs:94:42)\n    at async executeFixture (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/core.mjs:47:5)\n    at async auditTool (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:122:27)\n    at async file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:81:24\n    at async main (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:77:21)"
+              },
+              "runtime": {
+                "status": "passed",
+                "pageErrors": 0,
+                "consoleErrors": 1,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": [
+                {
+                  "width": 1280,
+                  "status": "passed",
+                  "screenshot": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-pending-2/artifacts/crop/1280.png"
+                },
+                {
+                  "width": 390,
+                  "status": "passed",
+                  "screenshot": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-pending-2/artifacts/crop/390.png"
+                },
+                {
+                  "width": 320,
+                  "status": "passed",
+                  "screenshot": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-pending-2/artifacts/crop/320.png"
+                }
+              ]
+            },
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-hydration-3/tools/crop.json",
+              "status": "passed",
+              "functional": "passed",
+              "startedAt": "2026-09-26T06:27:43.046Z",
+              "errors": [],
+              "functionalError": null,
+              "runtime": {
+                "status": "passed",
+                "pageErrors": 0,
+                "consoleErrors": 1,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": [
+                {
+                  "width": 1280,
+                  "status": "passed",
+                  "screenshot": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-hydration-3/artifacts/crop/1280.png"
+                },
+                {
+                  "width": 390,
+                  "status": "passed",
+                  "screenshot": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-hydration-3/artifacts/crop/390.png"
+                },
+                {
+                  "width": 320,
+                  "status": "passed",
+                  "screenshot": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-hydration-3/artifacts/crop/320.png"
+                }
+              ]
+            }
+          ]
+        },
+        "webkit": {
+          "observedPass": true,
+          "attemptCount": 3,
+          "latestStatus": "passed",
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-recovered-4/tools/crop.json",
+          "attempts": [
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-pending-2/tools/crop.json",
+              "status": "failed",
+              "functional": "not-run",
+              "startedAt": "2026-09-26T06:28:20.764Z",
+              "errors": [
+                {
+                  "phase": "hydration",
+                  "name": "TimeoutError",
+                  "message": "page.waitForFunction: Timeout 15000ms exceeded.",
+                  "stack": "page.waitForFunction: Timeout 15000ms exceeded.\n    at auditTool (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:101:34)\n    at async file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:81:24\n    at async main (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:77:21)"
+                }
+              ],
+              "functionalError": null,
+              "runtime": {
+                "status": "failed",
+                "pageErrors": 1,
+                "consoleErrors": 0,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": []
+            },
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-individual-3/crop/tools/crop.json",
+              "status": "failed",
+              "functional": "not-run",
+              "startedAt": "2026-09-26T06:36:30.881Z",
+              "errors": [
+                {
+                  "phase": "csp-override",
+                  "name": "TimeoutError",
+                  "message": "route.fetch: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - \u2192 GET http://localhost:3190/tools/images/crop\u001b[22m\n\u001b[2m    - user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.4 Safari/605.1.15\u001b[22m\n\u001b[2m    - accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\u001b[22m\n\u001b[2m    - accept-encoding: gzip,deflate,br\u001b[22m\n\u001b[2m    - cache-control: no-cache\u001b[22m\n\u001b[2m    - pragma: no-cache\u001b[22m\n\u001b[2m    - upgrade-insecure-requests: 1\u001b[22m\n\u001b[2m    - sec-fetch-dest: document\u001b[22m\n\u001b[2m    - sec-fetch-mode: navigate\u001b[22m\n\u001b[2m    - sec-fetch-site: none\u001b[22m\n",
+                  "stack": "route.fetch: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - \u2192 GET http://localhost:3190/tools/images/crop\u001b[22m\n\u001b[2m    - user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.4 Safari/605.1.15\u001b[22m\n\u001b[2m    - accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\u001b[22m\n\u001b[2m    - accept-encoding: gzip,deflate,br\u001b[22m\n\u001b[2m    - cache-control: no-cache\u001b[22m\n\u001b[2m    - pragma: no-cache\u001b[22m\n\u001b[2m    - upgrade-insecure-requests: 1\u001b[22m\n\u001b[2m    - sec-fetch-dest: document\u001b[22m\n\u001b[2m    - sec-fetch-mode: navigate\u001b[22m\n\u001b[2m    - sec-fetch-site: none\u001b[22m\n\n    at stripDevUpgradeCSP (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:39:34)\n    at /Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:73:80"
+                },
+                {
+                  "phase": "navigation",
+                  "name": "Error",
+                  "message": "page.goto: Blocked by Web Inspector\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3190/tools/images/crop\", waiting until \"domcontentloaded\"\u001b[22m\n",
+                  "stack": "page.goto: Blocked by Web Inspector\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3190/tools/images/crop\", waiting until \"domcontentloaded\"\u001b[22m\n\n    at auditTool (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:80:33)\n    at async file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:81:24\n    at async main (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:77:21)"
+                }
+              ],
+              "functionalError": null,
+              "runtime": {
+                "status": "passed",
+                "pageErrors": 0,
+                "consoleErrors": 0,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": []
+            },
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-recovered-4/tools/crop.json",
+              "status": "passed",
+              "functional": "passed",
+              "startedAt": "2026-09-26T06:45:20.715Z",
+              "errors": [],
+              "functionalError": null,
+              "runtime": {
+                "status": "passed",
+                "pageErrors": 0,
+                "consoleErrors": 1,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": [
+                {
+                  "width": 1280,
+                  "status": "passed",
+                  "screenshot": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-recovered-4/artifacts/crop/1280.png"
+                },
+                {
+                  "width": 390,
+                  "status": "passed",
+                  "screenshot": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-recovered-4/artifacts/crop/390.png"
+                },
+                {
+                  "width": 320,
+                  "status": "passed",
+                  "screenshot": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-recovered-4/artifacts/crop/320.png"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "slug": "crop-circle",
+        "chrome": {
+          "observedPass": true,
+          "attemptCount": 2,
+          "latestStatus": "passed",
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-hydration-3/tools/crop-circle.json",
+          "attempts": [
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-pending-2/tools/crop-circle.json",
+              "status": "failed",
+              "functional": "failed",
+              "startedAt": "2026-09-26T06:25:33.766Z",
+              "errors": [],
+              "functionalError": {
+                "name": "TimeoutError",
+                "message": "locator.fill: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.tb-v2-tool-card').first().getByLabel('Size', { exact: true })\u001b[22m\n",
+                "stack": "locator.fill: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.tb-v2-tool-card').first().getByLabel('Size', { exact: true })\u001b[22m\n\n    at Object.test (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/cases/images.mjs:103:73)\n    at async executeFixture (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/core.mjs:47:5)\n    at async auditTool (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:122:27)\n    at async file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:81:24\n    at async main (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:77:21)"
+              },
+              "runtime": {
+                "status": "passed",
+                "pageErrors": 0,
+                "consoleErrors": 1,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": [
+                {
+                  "width": 1280,
+                  "status": "passed",
+                  "screenshot": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-pending-2/artifacts/crop-circle/1280.png"
+                },
+                {
+                  "width": 390,
+                  "status": "passed",
+                  "screenshot": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-pending-2/artifacts/crop-circle/390.png"
+                },
+                {
+                  "width": 320,
+                  "status": "passed",
+                  "screenshot": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-pending-2/artifacts/crop-circle/320.png"
+                }
+              ]
+            },
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-hydration-3/tools/crop-circle.json",
+              "status": "passed",
+              "functional": "passed",
+              "startedAt": "2026-09-26T06:28:03.019Z",
+              "errors": [],
+              "functionalError": null,
+              "runtime": {
+                "status": "passed",
+                "pageErrors": 0,
+                "consoleErrors": 1,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": [
+                {
+                  "width": 1280,
+                  "status": "passed",
+                  "screenshot": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-hydration-3/artifacts/crop-circle/1280.png"
+                },
+                {
+                  "width": 390,
+                  "status": "passed",
+                  "screenshot": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-hydration-3/artifacts/crop-circle/390.png"
+                },
+                {
+                  "width": 320,
+                  "status": "passed",
+                  "screenshot": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-hydration-3/artifacts/crop-circle/320.png"
+                }
+              ]
+            }
+          ]
+        },
+        "webkit": {
+          "observedPass": true,
+          "attemptCount": 1,
+          "latestStatus": "passed",
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-pending-2/tools/crop-circle.json",
+          "attempts": [
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-pending-2/tools/crop-circle.json",
+              "status": "passed",
+              "functional": "passed",
+              "startedAt": "2026-09-26T06:28:40.628Z",
+              "errors": [],
+              "functionalError": null,
+              "runtime": {
+                "status": "passed",
+                "pageErrors": 0,
+                "consoleErrors": 1,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": [
+                {
+                  "width": 1280,
+                  "status": "passed",
+                  "screenshot": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-pending-2/artifacts/crop-circle/1280.png"
+                },
+                {
+                  "width": 390,
+                  "status": "passed",
+                  "screenshot": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-pending-2/artifacts/crop-circle/390.png"
+                },
+                {
+                  "width": 320,
+                  "status": "passed",
+                  "screenshot": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-pending-2/artifacts/crop-circle/320.png"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "slug": "detect",
+        "chrome": {
+          "observedPass": false,
+          "attemptCount": 5,
+          "latestStatus": "failed",
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-recovered-6/tools/detect.json",
+          "attempts": [
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-pending-2/tools/detect.json",
+              "status": "failed",
+              "functional": "failed",
+              "startedAt": "2026-09-26T06:25:58.525Z",
+              "errors": [],
+              "functionalError": {
+                "name": "Error",
+                "message": "expect(locator).toBeVisible() failed\n\nLocator: locator('.tb-v2-tool-card').first().getByText('80 \u00d7 40', { exact: true })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"to.be.visible\" with timeout 5000ms\n  - waiting for locator('.tb-v2-tool-card').first().getByText('80 \u00d7 40', { exact: true })\n",
+                "stack": "Error: expect(locator).toBeVisible() failed\n\nLocator: locator('.tb-v2-tool-card').first().getByText('80 \u00d7 40', { exact: true })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"to.be.visible\" with timeout 5000ms\n  - waiting for locator('.tb-v2-tool-card').first().getByText('80 \u00d7 40', { exact: true })\n\n    at Proxy.<anonymous> (/Users/rayhan/Work/toolblip/frontend/node_modules/playwright/lib/matchers/expect.js:213:24)\n    at Object.test (file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/cases/images.mjs:52:87)\n    at async executeFixture (file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/core.mjs:47:5)\n    at async auditTool (file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:122:27)\n    at async file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:81:24\n    at async Promise.allSettled (index 0)\n    at async main (file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:77:21)"
+              },
+              "runtime": {
+                "status": "passed",
+                "pageErrors": 0,
+                "consoleErrors": 0,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": [
+                {
+                  "width": 1280,
+                  "status": "passed",
+                  "screenshot": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-pending-2/artifacts/detect/1280.png"
+                },
+                {
+                  "width": 390,
+                  "status": "passed",
+                  "screenshot": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-pending-2/artifacts/detect/390.png"
+                },
+                {
+                  "width": 320,
+                  "status": "passed",
+                  "screenshot": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-pending-2/artifacts/detect/320.png"
+                }
+              ]
+            },
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-hydration-3/tools/detect.json",
+              "status": "failed",
+              "functional": "not-run",
+              "startedAt": "2026-09-26T06:28:15.537Z",
+              "errors": [
+                {
+                  "phase": "hydration",
+                  "name": "TimeoutError",
+                  "message": "page.waitForFunction: Timeout 15000ms exceeded.",
+                  "stack": "page.waitForFunction: Timeout 15000ms exceeded.\n    at auditTool (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:101:34)\n    at async file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:81:24\n    at async main (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:77:21)"
+                }
+              ],
+              "functionalError": null,
+              "runtime": {
+                "status": "failed",
+                "pageErrors": 1,
+                "consoleErrors": 0,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": []
+            },
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-remaining-4/tools/detect.json",
+              "status": "failed",
+              "functional": "not-run",
+              "startedAt": "2026-09-26T06:29:10.844Z",
+              "errors": [
+                {
+                  "phase": "hydration",
+                  "name": "TimeoutError",
+                  "message": "page.waitForFunction: Timeout 15000ms exceeded.",
+                  "stack": "page.waitForFunction: Timeout 15000ms exceeded.\n    at auditTool (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:101:34)\n    at async file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:81:24\n    at async main (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:77:21)"
+                }
+              ],
+              "functionalError": null,
+              "runtime": {
+                "status": "failed",
+                "pageErrors": 1,
+                "consoleErrors": 0,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": []
+            },
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-remaining-5/tools/detect.json",
+              "status": "failed",
+              "functional": "not-run",
+              "startedAt": "2026-09-26T06:32:49.017Z",
+              "errors": [
+                {
+                  "phase": "hydration",
+                  "name": "TimeoutError",
+                  "message": "page.waitForFunction: Timeout 15000ms exceeded.",
+                  "stack": "page.waitForFunction: Timeout 15000ms exceeded.\n    at auditTool (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:101:34)\n    at async file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:81:24\n    at async main (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:77:21)"
+                }
+              ],
+              "functionalError": null,
+              "runtime": {
+                "status": "failed",
+                "pageErrors": 1,
+                "consoleErrors": 0,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": []
+            },
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-recovered-6/tools/detect.json",
+              "status": "failed",
+              "functional": "not-run",
+              "startedAt": "2026-09-26T06:44:43.016Z",
+              "errors": [
+                {
+                  "phase": "hydration",
+                  "name": "TimeoutError",
+                  "message": "page.waitForFunction: Timeout 45000ms exceeded.",
+                  "stack": "page.waitForFunction: Timeout 45000ms exceeded.\n    at auditTool (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:107:34)\n    at async file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:81:24\n    at async main (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:77:21)"
+                }
+              ],
+              "functionalError": null,
+              "runtime": {
+                "status": "failed",
+                "pageErrors": 1,
+                "consoleErrors": 0,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": []
+            }
+          ]
+        },
+        "webkit": {
+          "observedPass": true,
+          "attemptCount": 1,
+          "latestStatus": "passed",
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-pending-2/tools/detect.json",
+          "attempts": [
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-pending-2/tools/detect.json",
+              "status": "passed",
+              "functional": "passed",
+              "startedAt": "2026-09-26T06:28:56.348Z",
+              "errors": [],
+              "functionalError": null,
+              "runtime": {
+                "status": "passed",
+                "pageErrors": 0,
+                "consoleErrors": 1,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": [
+                {
+                  "width": 1280,
+                  "status": "passed",
+                  "screenshot": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-pending-2/artifacts/detect/1280.png"
+                },
+                {
+                  "width": 390,
+                  "status": "passed",
+                  "screenshot": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-pending-2/artifacts/detect/390.png"
+                },
+                {
+                  "width": 320,
+                  "status": "passed",
+                  "screenshot": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-pending-2/artifacts/detect/320.png"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "slug": "font-to-png",
+        "chrome": {
+          "observedPass": true,
+          "attemptCount": 4,
+          "latestStatus": "passed",
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-recovered-6/tools/font-to-png.json",
+          "attempts": [
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-pending-2/tools/font-to-png.json",
+              "status": "failed",
+              "functional": "failed",
+              "startedAt": "2026-09-26T06:26:21.672Z",
+              "errors": [],
+              "functionalError": {
+                "name": "TimeoutError",
+                "message": "page.waitForEvent: Timeout 8000ms exceeded while waiting for event \"download\"\n=========================== logs ===========================\nwaiting for event \"download\"\n============================================================",
+                "stack": "page.waitForEvent: Timeout 8000ms exceeded while waiting for event \"download\"\n=========================== logs ===========================\nwaiting for event \"download\"\n============================================================\n    at download (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/cases/images.mjs:19:46)\n    at Object.test (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/cases/images.mjs:122:23)\n    at async executeFixture (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/core.mjs:47:5)\n    at async auditTool (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:122:27)\n    at async file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:81:24\n    at async main (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:77:21)"
+              },
+              "runtime": {
+                "status": "passed",
+                "pageErrors": 0,
+                "consoleErrors": 1,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": [
+                {
+                  "width": 1280,
+                  "status": "passed",
+                  "screenshot": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-pending-2/artifacts/font-to-png/1280.png"
+                },
+                {
+                  "width": 390,
+                  "status": "passed",
+                  "screenshot": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-pending-2/artifacts/font-to-png/390.png"
+                },
+                {
+                  "width": 320,
+                  "status": "passed",
+                  "screenshot": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-pending-2/artifacts/font-to-png/320.png"
+                }
+              ]
+            },
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-remaining-4/tools/font-to-png.json",
+              "status": "failed",
+              "functional": "not-run",
+              "startedAt": "2026-09-26T06:29:47.183Z",
+              "errors": [
+                {
+                  "phase": "hydration",
+                  "name": "TimeoutError",
+                  "message": "page.waitForFunction: Timeout 15000ms exceeded.",
+                  "stack": "page.waitForFunction: Timeout 15000ms exceeded.\n    at auditTool (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:101:34)\n    at async file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:81:24\n    at async main (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:77:21)"
+                }
+              ],
+              "functionalError": null,
+              "runtime": {
+                "status": "passed",
+                "pageErrors": 0,
+                "consoleErrors": 1,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": []
+            },
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-remaining-5/tools/font-to-png.json",
+              "status": "failed",
+              "functional": "not-run",
+              "startedAt": "2026-09-26T06:33:09.629Z",
+              "errors": [
+                {
+                  "phase": "hydration",
+                  "name": "TimeoutError",
+                  "message": "page.waitForFunction: Timeout 15000ms exceeded.",
+                  "stack": "page.waitForFunction: Timeout 15000ms exceeded.\n    at auditTool (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:101:34)\n    at async file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:81:24\n    at async main (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:77:21)"
+                }
+              ],
+              "functionalError": null,
+              "runtime": {
+                "status": "failed",
+                "pageErrors": 1,
+                "consoleErrors": 0,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": []
+            },
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-recovered-6/tools/font-to-png.json",
+              "status": "passed",
+              "functional": "passed",
+              "startedAt": "2026-09-26T06:45:36.768Z",
+              "errors": [],
+              "functionalError": null,
+              "runtime": {
+                "status": "passed",
+                "pageErrors": 0,
+                "consoleErrors": 0,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": [
+                {
+                  "width": 1280,
+                  "status": "passed",
+                  "screenshot": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-recovered-6/artifacts/font-to-png/1280.png"
+                },
+                {
+                  "width": 390,
+                  "status": "passed",
+                  "screenshot": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-recovered-6/artifacts/font-to-png/390.png"
+                },
+                {
+                  "width": 320,
+                  "status": "passed",
+                  "screenshot": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-recovered-6/artifacts/font-to-png/320.png"
+                }
+              ]
+            }
+          ]
+        },
+        "webkit": {
+          "observedPass": true,
+          "attemptCount": 1,
+          "latestStatus": "passed",
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-pending-2/tools/font-to-png.json",
+          "attempts": [
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-pending-2/tools/font-to-png.json",
+              "status": "passed",
+              "functional": "passed",
+              "startedAt": "2026-09-26T06:29:06.106Z",
+              "errors": [],
+              "functionalError": null,
+              "runtime": {
+                "status": "passed",
+                "pageErrors": 0,
+                "consoleErrors": 1,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": [
+                {
+                  "width": 1280,
+                  "status": "passed",
+                  "screenshot": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-pending-2/artifacts/font-to-png/1280.png"
+                },
+                {
+                  "width": 390,
+                  "status": "passed",
+                  "screenshot": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-pending-2/artifacts/font-to-png/390.png"
+                },
+                {
+                  "width": 320,
+                  "status": "passed",
+                  "screenshot": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-pending-2/artifacts/font-to-png/320.png"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "slug": "meme-maker",
+        "chrome": {
+          "observedPass": false,
+          "attemptCount": 4,
+          "latestStatus": "failed",
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-recovered-6/tools/meme-maker.json",
+          "attempts": [
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-pending-2/tools/meme-maker.json",
+              "status": "failed",
+              "functional": "failed",
+              "startedAt": "2026-09-26T06:27:02.484Z",
+              "errors": [],
+              "functionalError": {
+                "name": "TimeoutError",
+                "message": "locator.fill: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.tb-v2-tool-card').first().getByLabel('Top Text', { exact: true })\u001b[22m\n",
+                "stack": "locator.fill: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.tb-v2-tool-card').first().getByLabel('Top Text', { exact: true })\u001b[22m\n\n    at Object.test (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/cases/images.mjs:114:77)\n    at async executeFixture (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/core.mjs:47:5)\n    at async auditTool (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:122:27)\n    at async file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:81:24\n    at async main (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:77:21)"
+              },
+              "runtime": {
+                "status": "passed",
+                "pageErrors": 0,
+                "consoleErrors": 1,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": [
+                {
+                  "width": 1280,
+                  "status": "passed",
+                  "screenshot": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-pending-2/artifacts/meme-maker/1280.png"
+                },
+                {
+                  "width": 390,
+                  "status": "passed",
+                  "screenshot": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-pending-2/artifacts/meme-maker/390.png"
+                },
+                {
+                  "width": 320,
+                  "status": "passed",
+                  "screenshot": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-pending-2/artifacts/meme-maker/320.png"
+                }
+              ]
+            },
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-remaining-4/tools/meme-maker.json",
+              "status": "failed",
+              "functional": "not-run",
+              "startedAt": "2026-09-26T06:30:11.539Z",
+              "errors": [
+                {
+                  "phase": "hydration",
+                  "name": "TimeoutError",
+                  "message": "page.waitForFunction: Timeout 15000ms exceeded.",
+                  "stack": "page.waitForFunction: Timeout 15000ms exceeded.\n    at auditTool (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:101:34)\n    at async file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:81:24\n    at async main (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:77:21)"
+                }
+              ],
+              "functionalError": null,
+              "runtime": {
+                "status": "failed",
+                "pageErrors": 0,
+                "consoleErrors": 1,
+                "blockingConsoleErrors": 1
+              },
+              "layouts": []
+            },
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-remaining-5/tools/meme-maker.json",
+              "status": "failed",
+              "functional": "not-run",
+              "startedAt": "2026-09-26T06:33:33.531Z",
+              "errors": [
+                {
+                  "phase": "hydration",
+                  "name": "TimeoutError",
+                  "message": "page.waitForFunction: Timeout 15000ms exceeded.",
+                  "stack": "page.waitForFunction: Timeout 15000ms exceeded.\n    at auditTool (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:101:34)\n    at async file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:81:24\n    at async main (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:77:21)"
+                }
+              ],
+              "functionalError": null,
+              "runtime": {
+                "status": "passed",
+                "pageErrors": 0,
+                "consoleErrors": 0,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": []
+            },
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-recovered-6/tools/meme-maker.json",
+              "status": "failed",
+              "functional": "not-run",
+              "startedAt": "2026-09-26T06:46:26.059Z",
+              "errors": [
+                {
+                  "phase": "navigation",
+                  "name": "Error",
+                  "message": "page.goto: Target page, context or browser has been closed",
+                  "stack": "page.goto: Target page, context or browser has been closed\n    at auditTool (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:80:33)\n    at async file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:81:24\n    at async main (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:77:21)"
+                }
+              ],
+              "functionalError": null,
+              "runtime": {
+                "status": "passed",
+                "pageErrors": 0,
+                "consoleErrors": 0,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": []
+            }
+          ]
+        },
+        "webkit": {
+          "observedPass": false,
+          "attemptCount": 2,
+          "latestStatus": "failed",
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-recovered-4/tools/meme-maker.json",
+          "attempts": [
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-individual-3/meme-maker/tools/meme-maker.json",
+              "status": "failed",
+              "functional": "not-run",
+              "startedAt": "2026-09-26T06:36:41.775Z",
+              "errors": [
+                {
+                  "phase": "hydration",
+                  "name": "TimeoutError",
+                  "message": "page.waitForFunction: Timeout 15000ms exceeded.",
+                  "stack": "page.waitForFunction: Timeout 15000ms exceeded.\n    at auditTool (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:107:34)\n    at async file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:81:24\n    at async main (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:77:21)"
+                }
+              ],
+              "functionalError": null,
+              "runtime": {
+                "status": "passed",
+                "pageErrors": 0,
+                "consoleErrors": 0,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": []
+            },
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-recovered-4/tools/meme-maker.json",
+              "status": "failed",
+              "functional": "not-run",
+              "startedAt": "2026-09-26T06:46:17.070Z",
+              "errors": [
+                {
+                  "phase": "hydration",
+                  "name": "Error",
+                  "message": "page.waitForFunction: Target page, context or browser has been closed",
+                  "stack": "page.waitForFunction: Target page, context or browser has been closed\n    at auditTool (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:107:34)\n    at async file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:81:24\n    at async main (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:77:21)"
+                }
+              ],
+              "functionalError": null,
+              "runtime": {
+                "status": "passed",
+                "pageErrors": 0,
+                "consoleErrors": 0,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": []
+            }
+          ]
+        }
+      },
+      {
+        "slug": "profile-photo",
+        "chrome": {
+          "observedPass": false,
+          "attemptCount": 3,
+          "latestStatus": "failed",
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-remaining-5/tools/profile-photo.json",
+          "attempts": [
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-pending-2/tools/profile-photo.json",
+              "status": "failed",
+              "functional": "failed",
+              "startedAt": "2026-09-26T06:27:34.468Z",
+              "errors": [],
+              "functionalError": {
+                "name": "TimeoutError",
+                "message": "page.waitForEvent: Timeout 8000ms exceeded while waiting for event \"download\"\n=========================== logs ===========================\nwaiting for event \"download\"\n============================================================",
+                "stack": "page.waitForEvent: Timeout 8000ms exceeded while waiting for event \"download\"\n=========================== logs ===========================\nwaiting for event \"download\"\n============================================================\n    at download (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/cases/images.mjs:19:46)\n    at Object.test (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/cases/images.mjs:108:42)\n    at async executeFixture (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/core.mjs:47:5)\n    at async auditTool (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:122:27)\n    at async file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:81:24\n    at async main (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:77:21)"
+              },
+              "runtime": {
+                "status": "passed",
+                "pageErrors": 0,
+                "consoleErrors": 1,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": [
+                {
+                  "width": 1280,
+                  "status": "passed",
+                  "screenshot": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-pending-2/artifacts/profile-photo/1280.png"
+                },
+                {
+                  "width": 390,
+                  "status": "passed",
+                  "screenshot": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-pending-2/artifacts/profile-photo/390.png"
+                },
+                {
+                  "width": 320,
+                  "status": "passed",
+                  "screenshot": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-pending-2/artifacts/profile-photo/320.png"
+                }
+              ]
+            },
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-remaining-4/tools/profile-photo.json",
+              "status": "failed",
+              "functional": "not-run",
+              "startedAt": "2026-09-26T06:30:32.632Z",
+              "errors": [
+                {
+                  "phase": "hydration",
+                  "name": "TimeoutError",
+                  "message": "page.waitForFunction: Timeout 15000ms exceeded.",
+                  "stack": "page.waitForFunction: Timeout 15000ms exceeded.\n    at auditTool (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:101:34)\n    at async file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:81:24\n    at async main (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:77:21)"
+                }
+              ],
+              "functionalError": null,
+              "runtime": {
+                "status": "failed",
+                "pageErrors": 1,
+                "consoleErrors": 0,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": []
+            },
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-remaining-5/tools/profile-photo.json",
+              "status": "failed",
+              "functional": "not-run",
+              "startedAt": "2026-09-26T06:33:54.744Z",
+              "errors": [
+                {
+                  "phase": "hydration",
+                  "name": "TimeoutError",
+                  "message": "page.waitForFunction: Timeout 15000ms exceeded.",
+                  "stack": "page.waitForFunction: Timeout 15000ms exceeded.\n    at auditTool (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:101:34)\n    at async file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:81:24\n    at async main (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:77:21)"
+                }
+              ],
+              "functionalError": null,
+              "runtime": {
+                "status": "failed",
+                "pageErrors": 1,
+                "consoleErrors": 0,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": []
+            }
+          ]
+        },
+        "webkit": {
+          "observedPass": false,
+          "attemptCount": 1,
+          "latestStatus": "failed",
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-individual-3/profile-photo/tools/profile-photo.json",
+          "attempts": [
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-individual-3/profile-photo/tools/profile-photo.json",
+              "status": "failed",
+              "functional": "not-run",
+              "startedAt": "2026-09-26T06:37:14.977Z",
+              "errors": [
+                {
+                  "phase": "hydration",
+                  "name": "TimeoutError",
+                  "message": "page.waitForFunction: Timeout 15000ms exceeded.",
+                  "stack": "page.waitForFunction: Timeout 15000ms exceeded.\n    at auditTool (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:107:34)\n    at async file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:81:24\n    at async main (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:77:21)"
+                }
+              ],
+              "functionalError": null,
+              "runtime": {
+                "status": "passed",
+                "pageErrors": 0,
+                "consoleErrors": 0,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": []
+            }
+          ]
+        }
+      },
+      {
+        "slug": "resize",
+        "chrome": {
+          "observedPass": false,
+          "attemptCount": 3,
+          "latestStatus": "failed",
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-remaining-5/tools/resize.json",
+          "attempts": [
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-pending-2/tools/resize.json",
+              "status": "failed",
+              "functional": "failed",
+              "startedAt": "2026-09-26T06:27:53.877Z",
+              "errors": [
+                {
+                  "phase": "layout",
+                  "name": "Error",
+                  "message": "page.screenshot: Target page, context or browser has been closed",
+                  "stack": "page.screenshot: Target page, context or browser has been closed\n    at auditTool (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:148:18)\n    at async file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:81:24\n    at async main (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:77:21)"
+                }
+              ],
+              "functionalError": {
+                "name": "TimeoutError",
+                "message": "locator.fill: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.tb-v2-tool-card').first().getByLabel('Width (px)', { exact: true })\u001b[22m\n",
+                "stack": "locator.fill: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.tb-v2-tool-card').first().getByLabel('Width (px)', { exact: true })\u001b[22m\n\n    at Object.test (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/cases/images.mjs:79:79)\n    at async executeFixture (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/core.mjs:47:5)\n    at async auditTool (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:122:27)\n    at async file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:81:24\n    at async main (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:77:21)"
+              },
+              "runtime": {
+                "status": "passed",
+                "pageErrors": 0,
+                "consoleErrors": 1,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": [
+                {
+                  "width": 1280,
+                  "status": "passed",
+                  "screenshot": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-pending-2/artifacts/resize/1280.png"
+                },
+                {
+                  "width": 390,
+                  "status": "passed",
+                  "screenshot": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-pending-2/artifacts/resize/390.png"
+                }
+              ]
+            },
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-remaining-4/tools/resize.json",
+              "status": "failed",
+              "functional": "not-run",
+              "startedAt": "2026-09-26T06:31:00.496Z",
+              "errors": [
+                {
+                  "phase": "hydration",
+                  "name": "TimeoutError",
+                  "message": "page.waitForFunction: Timeout 15000ms exceeded.",
+                  "stack": "page.waitForFunction: Timeout 15000ms exceeded.\n    at auditTool (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:101:34)\n    at async file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:81:24\n    at async main (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:77:21)"
+                }
+              ],
+              "functionalError": null,
+              "runtime": {
+                "status": "passed",
+                "pageErrors": 0,
+                "consoleErrors": 0,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": []
+            },
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-remaining-5/tools/resize.json",
+              "status": "failed",
+              "functional": "not-run",
+              "startedAt": "2026-09-26T06:34:20.849Z",
+              "errors": [
+                {
+                  "phase": "hydration",
+                  "name": "TimeoutError",
+                  "message": "page.waitForFunction: Timeout 15000ms exceeded.",
+                  "stack": "page.waitForFunction: Timeout 15000ms exceeded.\n    at auditTool (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:101:34)\n    at async file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:81:24\n    at async main (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:77:21)"
+                }
+              ],
+              "functionalError": null,
+              "runtime": {
+                "status": "passed",
+                "pageErrors": 0,
+                "consoleErrors": 0,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": []
+            }
+          ]
+        },
+        "webkit": {
+          "observedPass": false,
+          "attemptCount": 1,
+          "latestStatus": "failed",
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-individual-3/resize/tools/resize.json",
+          "attempts": [
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-individual-3/resize/tools/resize.json",
+              "status": "failed",
+              "functional": "not-run",
+              "startedAt": "2026-09-26T06:37:43.360Z",
+              "errors": [
+                {
+                  "phase": "csp-override",
+                  "name": "TimeoutError",
+                  "message": "route.fetch: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - \u2192 GET http://localhost:3190/tools/images/resize\u001b[22m\n\u001b[2m    - user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.4 Safari/605.1.15\u001b[22m\n\u001b[2m    - accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\u001b[22m\n\u001b[2m    - accept-encoding: gzip,deflate,br\u001b[22m\n\u001b[2m    - cache-control: no-cache\u001b[22m\n\u001b[2m    - pragma: no-cache\u001b[22m\n\u001b[2m    - upgrade-insecure-requests: 1\u001b[22m\n\u001b[2m    - sec-fetch-dest: document\u001b[22m\n\u001b[2m    - sec-fetch-mode: navigate\u001b[22m\n\u001b[2m    - sec-fetch-site: none\u001b[22m\n",
+                  "stack": "route.fetch: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - \u2192 GET http://localhost:3190/tools/images/resize\u001b[22m\n\u001b[2m    - user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.4 Safari/605.1.15\u001b[22m\n\u001b[2m    - accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\u001b[22m\n\u001b[2m    - accept-encoding: gzip,deflate,br\u001b[22m\n\u001b[2m    - cache-control: no-cache\u001b[22m\n\u001b[2m    - pragma: no-cache\u001b[22m\n\u001b[2m    - upgrade-insecure-requests: 1\u001b[22m\n\u001b[2m    - sec-fetch-dest: document\u001b[22m\n\u001b[2m    - sec-fetch-mode: navigate\u001b[22m\n\u001b[2m    - sec-fetch-site: none\u001b[22m\n\n    at stripDevUpgradeCSP (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:39:34)\n    at /Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:73:80"
+                },
+                {
+                  "phase": "navigation",
+                  "name": "Error",
+                  "message": "page.goto: Blocked by Web Inspector\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3190/tools/images/resize\", waiting until \"domcontentloaded\"\u001b[22m\n",
+                  "stack": "page.goto: Blocked by Web Inspector\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3190/tools/images/resize\", waiting until \"domcontentloaded\"\u001b[22m\n\n    at auditTool (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:80:33)\n    at async file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:81:24\n    at async main (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:77:21)"
+                }
+              ],
+              "functionalError": null,
+              "runtime": {
+                "status": "passed",
+                "pageErrors": 0,
+                "consoleErrors": 0,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": []
+            }
+          ]
+        }
+      },
+      {
+        "slug": "rotate",
+        "chrome": {
+          "observedPass": false,
+          "attemptCount": 2,
+          "latestStatus": "failed",
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-remaining-5/tools/rotate.json",
+          "attempts": [
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-remaining-4/tools/rotate.json",
+              "status": "failed",
+              "functional": "not-run",
+              "startedAt": "2026-09-26T06:31:26.178Z",
+              "errors": [
+                {
+                  "phase": "hydration",
+                  "name": "TimeoutError",
+                  "message": "page.waitForFunction: Timeout 15000ms exceeded.",
+                  "stack": "page.waitForFunction: Timeout 15000ms exceeded.\n    at auditTool (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:101:34)\n    at async file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:81:24\n    at async main (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:77:21)"
+                }
+              ],
+              "functionalError": null,
+              "runtime": {
+                "status": "passed",
+                "pageErrors": 0,
+                "consoleErrors": 0,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": []
+            },
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-remaining-5/tools/rotate.json",
+              "status": "failed",
+              "functional": "not-run",
+              "startedAt": "2026-09-26T06:34:44.842Z",
+              "errors": [
+                {
+                  "phase": "hydration",
+                  "name": "TimeoutError",
+                  "message": "page.waitForFunction: Timeout 15000ms exceeded.",
+                  "stack": "page.waitForFunction: Timeout 15000ms exceeded.\n    at auditTool (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:101:34)\n    at async file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:81:24\n    at async main (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:77:21)"
+                }
+              ],
+              "functionalError": null,
+              "runtime": {
+                "status": "passed",
+                "pageErrors": 0,
+                "consoleErrors": 0,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": []
+            }
+          ]
+        },
+        "webkit": {
+          "observedPass": false,
+          "attemptCount": 1,
+          "latestStatus": "failed",
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-individual-3/rotate/tools/rotate.json",
+          "attempts": [
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-individual-3/rotate/tools/rotate.json",
+              "status": "failed",
+              "functional": "not-run",
+              "startedAt": "2026-09-26T06:38:07.849Z",
+              "errors": [
+                {
+                  "phase": "csp-override",
+                  "name": "TimeoutError",
+                  "message": "route.fetch: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - \u2192 GET http://localhost:3190/tools/images/rotate\u001b[22m\n\u001b[2m    - user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.4 Safari/605.1.15\u001b[22m\n\u001b[2m    - accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\u001b[22m\n\u001b[2m    - accept-encoding: gzip,deflate,br\u001b[22m\n\u001b[2m    - cache-control: no-cache\u001b[22m\n\u001b[2m    - pragma: no-cache\u001b[22m\n\u001b[2m    - upgrade-insecure-requests: 1\u001b[22m\n\u001b[2m    - sec-fetch-dest: document\u001b[22m\n\u001b[2m    - sec-fetch-mode: navigate\u001b[22m\n\u001b[2m    - sec-fetch-site: none\u001b[22m\n",
+                  "stack": "route.fetch: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - \u2192 GET http://localhost:3190/tools/images/rotate\u001b[22m\n\u001b[2m    - user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.4 Safari/605.1.15\u001b[22m\n\u001b[2m    - accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\u001b[22m\n\u001b[2m    - accept-encoding: gzip,deflate,br\u001b[22m\n\u001b[2m    - cache-control: no-cache\u001b[22m\n\u001b[2m    - pragma: no-cache\u001b[22m\n\u001b[2m    - upgrade-insecure-requests: 1\u001b[22m\n\u001b[2m    - sec-fetch-dest: document\u001b[22m\n\u001b[2m    - sec-fetch-mode: navigate\u001b[22m\n\u001b[2m    - sec-fetch-site: none\u001b[22m\n\n    at stripDevUpgradeCSP (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:39:34)\n    at /Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:73:80"
+                },
+                {
+                  "phase": "navigation",
+                  "name": "Error",
+                  "message": "page.goto: Blocked by Web Inspector\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3190/tools/images/rotate\", waiting until \"domcontentloaded\"\u001b[22m\n",
+                  "stack": "page.goto: Blocked by Web Inspector\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3190/tools/images/rotate\", waiting until \"domcontentloaded\"\u001b[22m\n\n    at auditTool (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:80:33)\n    at async file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:81:24\n    at async main (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:77:21)"
+                }
+              ],
+              "functionalError": null,
+              "runtime": {
+                "status": "passed",
+                "pageErrors": 0,
+                "consoleErrors": 0,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": []
+            }
+          ]
+        }
+      },
+      {
+        "slug": "dpi-ppi-calculator",
+        "chrome": {
+          "observedPass": false,
+          "attemptCount": 2,
+          "latestStatus": "failed",
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-remaining-5/tools/dpi-ppi-calculator.json",
+          "attempts": [
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-remaining-4/tools/dpi-ppi-calculator.json",
+              "status": "failed",
+              "functional": "not-run",
+              "startedAt": "2026-09-26T06:31:48.555Z",
+              "errors": [
+                {
+                  "phase": "hydration",
+                  "name": "TimeoutError",
+                  "message": "page.waitForFunction: Timeout 15000ms exceeded.",
+                  "stack": "page.waitForFunction: Timeout 15000ms exceeded.\n    at auditTool (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:101:34)\n    at async file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:81:24\n    at async main (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:77:21)"
+                }
+              ],
+              "functionalError": null,
+              "runtime": {
+                "status": "passed",
+                "pageErrors": 0,
+                "consoleErrors": 0,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": []
+            },
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-remaining-5/tools/dpi-ppi-calculator.json",
+              "status": "failed",
+              "functional": "not-run",
+              "startedAt": "2026-09-26T06:35:17.008Z",
+              "errors": [
+                {
+                  "phase": "hydration",
+                  "name": "TimeoutError",
+                  "message": "page.waitForFunction: Timeout 15000ms exceeded.",
+                  "stack": "page.waitForFunction: Timeout 15000ms exceeded.\n    at auditTool (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:101:34)\n    at async file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:81:24\n    at async main (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:77:21)"
+                }
+              ],
+              "functionalError": null,
+              "runtime": {
+                "status": "passed",
+                "pageErrors": 0,
+                "consoleErrors": 0,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": []
+            }
+          ]
+        },
+        "webkit": {
+          "observedPass": false,
+          "attemptCount": 1,
+          "latestStatus": "failed",
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-individual-3/dpi-ppi-calculator/tools/dpi-ppi-calculator.json",
+          "attempts": [
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-individual-3/dpi-ppi-calculator/tools/dpi-ppi-calculator.json",
+              "status": "failed",
+              "functional": "not-run",
+              "startedAt": "2026-09-26T06:38:44.283Z",
+              "errors": [
+                {
+                  "phase": "csp-override",
+                  "name": "TimeoutError",
+                  "message": "route.fetch: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - \u2192 GET http://localhost:3190/tools/images/dpi-ppi-calculator\u001b[22m\n\u001b[2m    - user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.4 Safari/605.1.15\u001b[22m\n\u001b[2m    - accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\u001b[22m\n\u001b[2m    - accept-encoding: gzip,deflate,br\u001b[22m\n\u001b[2m    - cache-control: no-cache\u001b[22m\n\u001b[2m    - pragma: no-cache\u001b[22m\n\u001b[2m    - upgrade-insecure-requests: 1\u001b[22m\n\u001b[2m    - sec-fetch-dest: document\u001b[22m\n\u001b[2m    - sec-fetch-mode: navigate\u001b[22m\n\u001b[2m    - sec-fetch-site: none\u001b[22m\n",
+                  "stack": "route.fetch: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - \u2192 GET http://localhost:3190/tools/images/dpi-ppi-calculator\u001b[22m\n\u001b[2m    - user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.4 Safari/605.1.15\u001b[22m\n\u001b[2m    - accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\u001b[22m\n\u001b[2m    - accept-encoding: gzip,deflate,br\u001b[22m\n\u001b[2m    - cache-control: no-cache\u001b[22m\n\u001b[2m    - pragma: no-cache\u001b[22m\n\u001b[2m    - upgrade-insecure-requests: 1\u001b[22m\n\u001b[2m    - sec-fetch-dest: document\u001b[22m\n\u001b[2m    - sec-fetch-mode: navigate\u001b[22m\n\u001b[2m    - sec-fetch-site: none\u001b[22m\n\n    at stripDevUpgradeCSP (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:39:34)\n    at /Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:73:80"
+                },
+                {
+                  "phase": "navigation",
+                  "name": "Error",
+                  "message": "page.goto: Blocked by Web Inspector\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3190/tools/images/dpi-ppi-calculator\", waiting until \"domcontentloaded\"\u001b[22m\n",
+                  "stack": "page.goto: Blocked by Web Inspector\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3190/tools/images/dpi-ppi-calculator\", waiting until \"domcontentloaded\"\u001b[22m\n\n    at auditTool (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:80:33)\n    at async file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:81:24\n    at async main (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:77:21)"
+                }
+              ],
+              "functionalError": null,
+              "runtime": {
+                "status": "passed",
+                "pageErrors": 0,
+                "consoleErrors": 0,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": []
+            }
+          ]
+        }
+      },
+      {
+        "slug": "favicon-from-emoji",
+        "chrome": {
+          "observedPass": false,
+          "attemptCount": 2,
+          "latestStatus": "failed",
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-remaining-5/tools/favicon-from-emoji.json",
+          "attempts": [
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-remaining-4/tools/favicon-from-emoji.json",
+              "status": "failed",
+              "functional": "not-run",
+              "startedAt": "2026-09-26T06:32:08.192Z",
+              "errors": [
+                {
+                  "phase": "navigation",
+                  "name": "Error",
+                  "message": "page.goto: Target page, context or browser has been closed",
+                  "stack": "page.goto: Target page, context or browser has been closed\n    at auditTool (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:74:33)\n    at async file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:81:24\n    at async main (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:77:21)"
+                }
+              ],
+              "functionalError": null,
+              "runtime": {
+                "status": "passed",
+                "pageErrors": 0,
+                "consoleErrors": 0,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": []
+            },
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-remaining-5/tools/favicon-from-emoji.json",
+              "status": "failed",
+              "functional": "not-run",
+              "startedAt": "2026-09-26T06:35:40.164Z",
+              "errors": [
+                {
+                  "phase": "hydration",
+                  "name": "TimeoutError",
+                  "message": "page.waitForFunction: Timeout 15000ms exceeded.",
+                  "stack": "page.waitForFunction: Timeout 15000ms exceeded.\n    at auditTool (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:101:34)\n    at async file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:81:24\n    at async main (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:77:21)"
+                }
+              ],
+              "functionalError": null,
+              "runtime": {
+                "status": "passed",
+                "pageErrors": 0,
+                "consoleErrors": 0,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": []
+            }
+          ]
+        },
+        "webkit": {
+          "observedPass": false,
+          "attemptCount": 1,
+          "latestStatus": "failed",
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-individual-3/favicon-from-emoji/tools/favicon-from-emoji.json",
+          "attempts": [
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-individual-3/favicon-from-emoji/tools/favicon-from-emoji.json",
+              "status": "failed",
+              "functional": "not-run",
+              "startedAt": "2026-09-26T06:38:55.652Z",
+              "errors": [
+                {
+                  "phase": "csp-override",
+                  "name": "TimeoutError",
+                  "message": "route.fetch: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - \u2192 GET http://localhost:3190/tools/images/favicon-from-emoji\u001b[22m\n\u001b[2m    - user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.4 Safari/605.1.15\u001b[22m\n\u001b[2m    - accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\u001b[22m\n\u001b[2m    - accept-encoding: gzip,deflate,br\u001b[22m\n\u001b[2m    - cache-control: no-cache\u001b[22m\n\u001b[2m    - pragma: no-cache\u001b[22m\n\u001b[2m    - upgrade-insecure-requests: 1\u001b[22m\n\u001b[2m    - sec-fetch-dest: document\u001b[22m\n\u001b[2m    - sec-fetch-mode: navigate\u001b[22m\n\u001b[2m    - sec-fetch-site: none\u001b[22m\n",
+                  "stack": "route.fetch: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - \u2192 GET http://localhost:3190/tools/images/favicon-from-emoji\u001b[22m\n\u001b[2m    - user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.4 Safari/605.1.15\u001b[22m\n\u001b[2m    - accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\u001b[22m\n\u001b[2m    - accept-encoding: gzip,deflate,br\u001b[22m\n\u001b[2m    - cache-control: no-cache\u001b[22m\n\u001b[2m    - pragma: no-cache\u001b[22m\n\u001b[2m    - upgrade-insecure-requests: 1\u001b[22m\n\u001b[2m    - sec-fetch-dest: document\u001b[22m\n\u001b[2m    - sec-fetch-mode: navigate\u001b[22m\n\u001b[2m    - sec-fetch-site: none\u001b[22m\n\n    at stripDevUpgradeCSP (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:39:34)\n    at /Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:73:80"
+                },
+                {
+                  "phase": "navigation",
+                  "name": "Error",
+                  "message": "page.goto: Blocked by Web Inspector\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3190/tools/images/favicon-from-emoji\", waiting until \"domcontentloaded\"\u001b[22m\n",
+                  "stack": "page.goto: Blocked by Web Inspector\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3190/tools/images/favicon-from-emoji\", waiting until \"domcontentloaded\"\u001b[22m\n\n    at auditTool (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:80:33)\n    at async file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:81:24\n    at async main (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:77:21)"
+                }
+              ],
+              "functionalError": null,
+              "runtime": {
+                "status": "passed",
+                "pageErrors": 0,
+                "consoleErrors": 0,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": []
+            }
+          ]
+        }
+      },
+      {
+        "slug": "image-scale-calculator",
+        "chrome": {
+          "observedPass": false,
+          "attemptCount": 1,
+          "latestStatus": "failed",
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-remaining-5/tools/image-scale-calculator.json",
+          "attempts": [
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-remaining-5/tools/image-scale-calculator.json",
+              "status": "failed",
+              "functional": "not-run",
+              "startedAt": "2026-09-26T06:36:14.692Z",
+              "errors": [
+                {
+                  "phase": "hydration",
+                  "name": "TimeoutError",
+                  "message": "page.waitForFunction: Timeout 15000ms exceeded.",
+                  "stack": "page.waitForFunction: Timeout 15000ms exceeded.\n    at auditTool (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:101:34)\n    at async file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:81:24\n    at async main (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:77:21)"
+                }
+              ],
+              "functionalError": null,
+              "runtime": {
+                "status": "passed",
+                "pageErrors": 0,
+                "consoleErrors": 0,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": []
+            }
+          ]
+        },
+        "webkit": {
+          "observedPass": false,
+          "attemptCount": 1,
+          "latestStatus": "failed",
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-individual-3/image-scale-calculator/tools/image-scale-calculator.json",
+          "attempts": [
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-individual-3/image-scale-calculator/tools/image-scale-calculator.json",
+              "status": "failed",
+              "functional": "not-run",
+              "startedAt": "2026-09-26T06:39:05.384Z",
+              "errors": [
+                {
+                  "phase": "hydration",
+                  "name": "TimeoutError",
+                  "message": "page.waitForFunction: Timeout 15000ms exceeded.",
+                  "stack": "page.waitForFunction: Timeout 15000ms exceeded.\n    at auditTool (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:107:34)\n    at async file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:81:24\n    at async main (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:77:21)"
+                }
+              ],
+              "functionalError": null,
+              "runtime": {
+                "status": "passed",
+                "pageErrors": 0,
+                "consoleErrors": 0,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": []
+            }
+          ]
+        }
+      },
+      {
+        "slug": "image-dimension-checker",
+        "chrome": {
+          "observedPass": false,
+          "attemptCount": 1,
+          "latestStatus": "failed",
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-remaining-5/tools/image-dimension-checker.json",
+          "attempts": [
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-remaining-5/tools/image-dimension-checker.json",
+              "status": "failed",
+              "functional": "not-run",
+              "startedAt": "2026-09-26T06:37:06.532Z",
+              "errors": [
+                {
+                  "phase": "hydration",
+                  "name": "TimeoutError",
+                  "message": "page.waitForFunction: Timeout 15000ms exceeded.",
+                  "stack": "page.waitForFunction: Timeout 15000ms exceeded.\n    at auditTool (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:101:34)\n    at async file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:81:24\n    at async main (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:77:21)"
+                }
+              ],
+              "functionalError": null,
+              "runtime": {
+                "status": "failed",
+                "pageErrors": 1,
+                "consoleErrors": 0,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": []
+            }
+          ]
+        },
+        "webkit": {
+          "observedPass": false,
+          "attemptCount": 1,
+          "latestStatus": "failed",
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-individual-3/image-dimension-checker/tools/image-dimension-checker.json",
+          "attempts": [
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-individual-3/image-dimension-checker/tools/image-dimension-checker.json",
+              "status": "failed",
+              "functional": "not-run",
+              "startedAt": "2026-09-26T06:39:46.553Z",
+              "errors": [
+                {
+                  "phase": "hydration",
+                  "name": "TimeoutError",
+                  "message": "page.waitForFunction: Timeout 15000ms exceeded.",
+                  "stack": "page.waitForFunction: Timeout 15000ms exceeded.\n    at auditTool (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:107:34)\n    at async file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:81:24\n    at async main (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:77:21)"
+                }
+              ],
+              "functionalError": null,
+              "runtime": {
+                "status": "passed",
+                "pageErrors": 0,
+                "consoleErrors": 0,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": []
+            }
+          ]
+        }
+      },
+      {
+        "slug": "image-background-remover",
+        "chrome": {
+          "observedPass": false,
+          "attemptCount": 1,
+          "latestStatus": "failed",
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-remaining-5/tools/image-background-remover.json",
+          "attempts": [
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-remaining-5/tools/image-background-remover.json",
+              "status": "failed",
+              "functional": "not-run",
+              "startedAt": "2026-09-26T06:37:27.564Z",
+              "errors": [
+                {
+                  "phase": "hydration",
+                  "name": "TimeoutError",
+                  "message": "page.waitForFunction: Timeout 15000ms exceeded.",
+                  "stack": "page.waitForFunction: Timeout 15000ms exceeded.\n    at auditTool (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:101:34)\n    at async file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:81:24\n    at async main (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:77:21)"
+                }
+              ],
+              "functionalError": null,
+              "runtime": {
+                "status": "passed",
+                "pageErrors": 0,
+                "consoleErrors": 0,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": []
+            }
+          ]
+        },
+        "webkit": {
+          "observedPass": false,
+          "attemptCount": 1,
+          "latestStatus": "failed",
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-individual-3/image-background-remover/tools/image-background-remover.json",
+          "attempts": [
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-individual-3/image-background-remover/tools/image-background-remover.json",
+              "status": "failed",
+              "functional": "not-run",
+              "startedAt": "2026-09-26T06:40:21.056Z",
+              "errors": [
+                {
+                  "phase": "hydration",
+                  "name": "TimeoutError",
+                  "message": "page.waitForFunction: Timeout 15000ms exceeded.",
+                  "stack": "page.waitForFunction: Timeout 15000ms exceeded.\n    at auditTool (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:107:34)\n    at async file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:81:24\n    at async main (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:77:21)"
+                }
+              ],
+              "functionalError": null,
+              "runtime": {
+                "status": "passed",
+                "pageErrors": 0,
+                "consoleErrors": 0,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": []
+            }
+          ]
+        }
+      },
+      {
+        "slug": "pixel-density-calculator",
+        "chrome": {
+          "observedPass": false,
+          "attemptCount": 1,
+          "latestStatus": "failed",
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-remaining-5/tools/pixel-density-calculator.json",
+          "attempts": [
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-remaining-5/tools/pixel-density-calculator.json",
+              "status": "failed",
+              "functional": "not-run",
+              "startedAt": "2026-09-26T06:37:47.181Z",
+              "errors": [
+                {
+                  "phase": "navigation",
+                  "name": "TimeoutError",
+                  "message": "page.goto: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3190/tools/images/pixel-density-calculator\", waiting until \"domcontentloaded\"\u001b[22m\n",
+                  "stack": "page.goto: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3190/tools/images/pixel-density-calculator\", waiting until \"domcontentloaded\"\u001b[22m\n\n    at auditTool (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:74:33)\n    at async file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:81:24\n    at async main (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:77:21)"
+                }
+              ],
+              "functionalError": null,
+              "runtime": {
+                "status": "passed",
+                "pageErrors": 0,
+                "consoleErrors": 0,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": []
+            }
+          ]
+        },
+        "webkit": {
+          "observedPass": false,
+          "attemptCount": 1,
+          "latestStatus": "failed",
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-individual-3/pixel-density-calculator/tools/pixel-density-calculator.json",
+          "attempts": [
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-individual-3/pixel-density-calculator/tools/pixel-density-calculator.json",
+              "status": "failed",
+              "functional": "not-run",
+              "startedAt": "2026-09-26T06:40:48.733Z",
+              "errors": [
+                {
+                  "phase": "hydration",
+                  "name": "TimeoutError",
+                  "message": "page.waitForFunction: Timeout 15000ms exceeded.",
+                  "stack": "page.waitForFunction: Timeout 15000ms exceeded.\n    at auditTool (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:107:34)\n    at async file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:81:24\n    at async main (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:77:21)"
+                }
+              ],
+              "functionalError": null,
+              "runtime": {
+                "status": "passed",
+                "pageErrors": 0,
+                "consoleErrors": 0,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": []
+            }
+          ]
+        }
+      },
+      {
+        "slug": "base64-image-viewer",
+        "chrome": {
+          "observedPass": false,
+          "attemptCount": 1,
+          "latestStatus": "failed",
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-remaining-5/tools/base64-image-viewer.json",
+          "attempts": [
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-remaining-5/tools/base64-image-viewer.json",
+              "status": "failed",
+              "functional": "not-run",
+              "startedAt": "2026-09-26T06:38:24.482Z",
+              "errors": [
+                {
+                  "phase": "navigation",
+                  "name": "TimeoutError",
+                  "message": "page.goto: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3190/tools/images/base64-image-viewer\", waiting until \"domcontentloaded\"\u001b[22m\n",
+                  "stack": "page.goto: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3190/tools/images/base64-image-viewer\", waiting until \"domcontentloaded\"\u001b[22m\n\n    at auditTool (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:74:33)\n    at async file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:81:24\n    at async main (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:77:21)"
+                }
+              ],
+              "functionalError": null,
+              "runtime": {
+                "status": "passed",
+                "pageErrors": 0,
+                "consoleErrors": 0,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": []
+            }
+          ]
+        },
+        "webkit": {
+          "observedPass": false,
+          "attemptCount": 1,
+          "latestStatus": "failed",
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-individual-3/base64-image-viewer/tools/base64-image-viewer.json",
+          "attempts": [
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-individual-3/base64-image-viewer/tools/base64-image-viewer.json",
+              "status": "failed",
+              "functional": "not-run",
+              "startedAt": "2026-09-26T06:41:36.644Z",
+              "errors": [
+                {
+                  "phase": "csp-override",
+                  "name": "TimeoutError",
+                  "message": "route.fetch: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - \u2192 GET http://localhost:3190/tools/images/base64-image-viewer\u001b[22m\n\u001b[2m    - user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.4 Safari/605.1.15\u001b[22m\n\u001b[2m    - accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\u001b[22m\n\u001b[2m    - accept-encoding: gzip,deflate,br\u001b[22m\n\u001b[2m    - cache-control: no-cache\u001b[22m\n\u001b[2m    - pragma: no-cache\u001b[22m\n\u001b[2m    - upgrade-insecure-requests: 1\u001b[22m\n\u001b[2m    - sec-fetch-dest: document\u001b[22m\n\u001b[2m    - sec-fetch-mode: navigate\u001b[22m\n\u001b[2m    - sec-fetch-site: none\u001b[22m\n\u001b[2m  - \u2190 200 OK\u001b[22m\n\u001b[2m    - x-dns-prefetch-control: on\u001b[22m\n\u001b[2m    - strict-transport-security: max-age=63072000; includeSubDomains; preload\u001b[22m\n\u001b[2m    - x-content-type-options: nosniff\u001b[22m\n\u001b[2m    - x-frame-options: DENY\u001b[22m\n\u001b[2m    - x-xss-protection: 1; mode=block\u001b[22m\n\u001b[2m    - referrer-policy: strict-origin-when-cross-origin\u001b[22m\n\u001b[2m    - permissions-policy: camera=(), microphone=(), geolocation=(), interest-cohort=()\u001b[22m\n\u001b[2m    - content-security-policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: blob:; font-src 'self' data:; connect-src 'self' blob: https://toolblip-api-production.up.railway.app https://api.toolblip.com https://*.railway.app https://publish.twitter.com https://publish.x.com https://unavatar.io; worker-src 'self' blob:; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests\u001b[22m\n\u001b[2m    - vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding\u001b[22m\n\u001b[2m    - link: </_next/static/media/558ca1a6aa3cb55e-s.p.woff2?v=1790404902087>; rel=preload; as=\"font\"; crossorigin=\"\"; type=\"font/woff2\", </_next/static/media/af4bf8399d1aacdf-s.p.woff2?v=1790404902087>; rel=preload; as=\"font\"; crossorigin=\"\"; type=\"font/woff2\", </_next/static/media/e4af272ccee01ff0-s.p.woff2?v=1790404902087>; rel=preload; as=\"font\"; crossorigin=\"\"; type=\"font/woff2\", </_next/static/media/ee40bb094c99a29a-s.p.woff2?v=1790404902087>; rel=preload; as=\"font\"; crossorigin=\"\"; type=\"font/woff2\", </directory-badges/saascity.svg>; rel=preload; as=\"image\", </directory-badges/launchigniter.svg>; rel=preload; as=\"image\", </directory-badges/earlyhunt.svg>; rel=preload; as=\"image\", </directory-badges/indiehunt.svg>; rel=preload; as=\"image\", </directory-badges/fazier.svg>; rel=preload; as=\"image\", </directory-badges/tinylaunch.svg>; rel=preload; as=\"image\", </directory-badges/neeed-directory.svg>; rel=preload; as=\"image\", </directory-badges/findly-tools.svg>; rel=preload; as=\"image\", </directory-badges/twelve-tools.svg>; rel=preload; as=\"image\"\u001b[22m\n\u001b[2m    - cache-control: no-cache, must-revalidate\u001b[22m\n\u001b[2m    - x-nextjs-cache: HIT\u001b[22m\n\u001b[2m    - x-nextjs-prerender: 1\u001b[22m\n\u001b[2m    - x-powered-by: Next.js\u001b[22m\n\u001b[2m    - content-type: text/html; charset=utf-8\u001b[22m\n\u001b[2m    - content-encoding: gzip\u001b[22m\n\u001b[2m    - date: Sat, 26 Sep 2026 06:41:43 GMT\u001b[22m\n\u001b[2m    - connection: keep-alive\u001b[22m\n\u001b[2m    - keep-alive: timeout=5\u001b[22m\n\u001b[2m    - transfer-encoding: chunked\u001b[22m\n",
+                  "stack": "route.fetch: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - \u2192 GET http://localhost:3190/tools/images/base64-image-viewer\u001b[22m\n\u001b[2m    - user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.4 Safari/605.1.15\u001b[22m\n\u001b[2m    - accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\u001b[22m\n\u001b[2m    - accept-encoding: gzip,deflate,br\u001b[22m\n\u001b[2m    - cache-control: no-cache\u001b[22m\n\u001b[2m    - pragma: no-cache\u001b[22m\n\u001b[2m    - upgrade-insecure-requests: 1\u001b[22m\n\u001b[2m    - sec-fetch-dest: document\u001b[22m\n\u001b[2m    - sec-fetch-mode: navigate\u001b[22m\n\u001b[2m    - sec-fetch-site: none\u001b[22m\n\u001b[2m  - \u2190 200 OK\u001b[22m\n\u001b[2m    - x-dns-prefetch-control: on\u001b[22m\n\u001b[2m    - strict-transport-security: max-age=63072000; includeSubDomains; preload\u001b[22m\n\u001b[2m    - x-content-type-options: nosniff\u001b[22m\n\u001b[2m    - x-frame-options: DENY\u001b[22m\n\u001b[2m    - x-xss-protection: 1; mode=block\u001b[22m\n\u001b[2m    - referrer-policy: strict-origin-when-cross-origin\u001b[22m\n\u001b[2m    - permissions-policy: camera=(), microphone=(), geolocation=(), interest-cohort=()\u001b[22m\n\u001b[2m    - content-security-policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: blob:; font-src 'self' data:; connect-src 'self' blob: https://toolblip-api-production.up.railway.app https://api.toolblip.com https://*.railway.app https://publish.twitter.com https://publish.x.com https://unavatar.io; worker-src 'self' blob:; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests\u001b[22m\n\u001b[2m    - vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding\u001b[22m\n\u001b[2m    - link: </_next/static/media/558ca1a6aa3cb55e-s.p.woff2?v=1790404902087>; rel=preload; as=\"font\"; crossorigin=\"\"; type=\"font/woff2\", </_next/static/media/af4bf8399d1aacdf-s.p.woff2?v=1790404902087>; rel=preload; as=\"font\"; crossorigin=\"\"; type=\"font/woff2\", </_next/static/media/e4af272ccee01ff0-s.p.woff2?v=1790404902087>; rel=preload; as=\"font\"; crossorigin=\"\"; type=\"font/woff2\", </_next/static/media/ee40bb094c99a29a-s.p.woff2?v=1790404902087>; rel=preload; as=\"font\"; crossorigin=\"\"; type=\"font/woff2\", </directory-badges/saascity.svg>; rel=preload; as=\"image\", </directory-badges/launchigniter.svg>; rel=preload; as=\"image\", </directory-badges/earlyhunt.svg>; rel=preload; as=\"image\", </directory-badges/indiehunt.svg>; rel=preload; as=\"image\", </directory-badges/fazier.svg>; rel=preload; as=\"image\", </directory-badges/tinylaunch.svg>; rel=preload; as=\"image\", </directory-badges/neeed-directory.svg>; rel=preload; as=\"image\", </directory-badges/findly-tools.svg>; rel=preload; as=\"image\", </directory-badges/twelve-tools.svg>; rel=preload; as=\"image\"\u001b[22m\n\u001b[2m    - cache-control: no-cache, must-revalidate\u001b[22m\n\u001b[2m    - x-nextjs-cache: HIT\u001b[22m\n\u001b[2m    - x-nextjs-prerender: 1\u001b[22m\n\u001b[2m    - x-powered-by: Next.js\u001b[22m\n\u001b[2m    - content-type: text/html; charset=utf-8\u001b[22m\n\u001b[2m    - content-encoding: gzip\u001b[22m\n\u001b[2m    - date: Sat, 26 Sep 2026 06:41:43 GMT\u001b[22m\n\u001b[2m    - connection: keep-alive\u001b[22m\n\u001b[2m    - keep-alive: timeout=5\u001b[22m\n\u001b[2m    - transfer-encoding: chunked\u001b[22m\n\n    at stripDevUpgradeCSP (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:39:34)\n    at /Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:73:80"
+                },
+                {
+                  "phase": "navigation",
+                  "name": "Error",
+                  "message": "page.goto: Blocked by Web Inspector\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3190/tools/images/base64-image-viewer\", waiting until \"domcontentloaded\"\u001b[22m\n",
+                  "stack": "page.goto: Blocked by Web Inspector\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3190/tools/images/base64-image-viewer\", waiting until \"domcontentloaded\"\u001b[22m\n\n    at auditTool (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:80:33)\n    at async file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:81:24\n    at async main (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:77:21)"
+                }
+              ],
+              "functionalError": null,
+              "runtime": {
+                "status": "passed",
+                "pageErrors": 0,
+                "consoleErrors": 0,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": []
+            }
+          ]
+        }
+      },
+      {
+        "slug": "photo-metadata-remover",
+        "chrome": {
+          "observedPass": false,
+          "attemptCount": 1,
+          "latestStatus": "failed",
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-remaining-5/tools/photo-metadata-remover.json",
+          "attempts": [
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-remaining-5/tools/photo-metadata-remover.json",
+              "status": "failed",
+              "functional": "not-run",
+              "startedAt": "2026-09-26T06:39:07.983Z",
+              "errors": [
+                {
+                  "phase": "hydration",
+                  "name": "TimeoutError",
+                  "message": "page.waitForFunction: Timeout 15000ms exceeded.",
+                  "stack": "page.waitForFunction: Timeout 15000ms exceeded.\n    at auditTool (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:101:34)\n    at async file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:81:24\n    at async main (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:77:21)"
+                }
+              ],
+              "functionalError": null,
+              "runtime": {
+                "status": "passed",
+                "pageErrors": 0,
+                "consoleErrors": 0,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": []
+            }
+          ]
+        },
+        "webkit": {
+          "observedPass": false,
+          "attemptCount": 1,
+          "latestStatus": "failed",
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-individual-3/photo-metadata-remover/tools/photo-metadata-remover.json",
+          "attempts": [
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-individual-3/photo-metadata-remover/tools/photo-metadata-remover.json",
+              "status": "failed",
+              "functional": "not-run",
+              "startedAt": "2026-09-26T06:41:56.561Z",
+              "errors": [
+                {
+                  "phase": "csp-override",
+                  "name": "TimeoutError",
+                  "message": "route.fetch: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - \u2192 GET http://localhost:3190/tools/images/photo-metadata-remover\u001b[22m\n\u001b[2m    - user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.4 Safari/605.1.15\u001b[22m\n\u001b[2m    - accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\u001b[22m\n\u001b[2m    - accept-encoding: gzip,deflate,br\u001b[22m\n\u001b[2m    - cache-control: no-cache\u001b[22m\n\u001b[2m    - pragma: no-cache\u001b[22m\n\u001b[2m    - upgrade-insecure-requests: 1\u001b[22m\n\u001b[2m    - sec-fetch-dest: document\u001b[22m\n\u001b[2m    - sec-fetch-mode: navigate\u001b[22m\n\u001b[2m    - sec-fetch-site: none\u001b[22m\n",
+                  "stack": "route.fetch: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - \u2192 GET http://localhost:3190/tools/images/photo-metadata-remover\u001b[22m\n\u001b[2m    - user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.4 Safari/605.1.15\u001b[22m\n\u001b[2m    - accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\u001b[22m\n\u001b[2m    - accept-encoding: gzip,deflate,br\u001b[22m\n\u001b[2m    - cache-control: no-cache\u001b[22m\n\u001b[2m    - pragma: no-cache\u001b[22m\n\u001b[2m    - upgrade-insecure-requests: 1\u001b[22m\n\u001b[2m    - sec-fetch-dest: document\u001b[22m\n\u001b[2m    - sec-fetch-mode: navigate\u001b[22m\n\u001b[2m    - sec-fetch-site: none\u001b[22m\n\n    at stripDevUpgradeCSP (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:39:34)\n    at /Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:73:80"
+                },
+                {
+                  "phase": "navigation",
+                  "name": "Error",
+                  "message": "page.goto: Blocked by Web Inspector\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3190/tools/images/photo-metadata-remover\", waiting until \"domcontentloaded\"\u001b[22m\n",
+                  "stack": "page.goto: Blocked by Web Inspector\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3190/tools/images/photo-metadata-remover\", waiting until \"domcontentloaded\"\u001b[22m\n\n    at auditTool (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:80:33)\n    at async file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:81:24\n    at async main (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:77:21)"
+                }
+              ],
+              "functionalError": null,
+              "runtime": {
+                "status": "passed",
+                "pageErrors": 0,
+                "consoleErrors": 0,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": []
+            }
+          ]
+        }
+      },
+      {
+        "slug": "image-size-resizer",
+        "chrome": {
+          "observedPass": false,
+          "attemptCount": 1,
+          "latestStatus": "failed",
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-remaining-5/tools/image-size-resizer.json",
+          "attempts": [
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-remaining-5/tools/image-size-resizer.json",
+              "status": "failed",
+              "functional": "not-run",
+              "startedAt": "2026-09-26T06:39:32.953Z",
+              "errors": [
+                {
+                  "phase": "hydration",
+                  "name": "TimeoutError",
+                  "message": "page.waitForFunction: Timeout 15000ms exceeded.",
+                  "stack": "page.waitForFunction: Timeout 15000ms exceeded.\n    at auditTool (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:101:34)\n    at async file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:81:24\n    at async main (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:77:21)"
+                }
+              ],
+              "functionalError": null,
+              "runtime": {
+                "status": "passed",
+                "pageErrors": 0,
+                "consoleErrors": 0,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": []
+            }
+          ]
+        },
+        "webkit": {
+          "observedPass": false,
+          "attemptCount": 1,
+          "latestStatus": "failed",
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-individual-3/image-size-resizer/tools/image-size-resizer.json",
+          "attempts": [
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-individual-3/image-size-resizer/tools/image-size-resizer.json",
+              "status": "failed",
+              "functional": "not-run",
+              "startedAt": "2026-09-26T06:42:16.013Z",
+              "errors": [
+                {
+                  "phase": "csp-override",
+                  "name": "TimeoutError",
+                  "message": "route.fetch: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - \u2192 GET http://localhost:3190/tools/images/image-size-resizer\u001b[22m\n\u001b[2m    - user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.4 Safari/605.1.15\u001b[22m\n\u001b[2m    - accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\u001b[22m\n\u001b[2m    - accept-encoding: gzip,deflate,br\u001b[22m\n\u001b[2m    - cache-control: no-cache\u001b[22m\n\u001b[2m    - pragma: no-cache\u001b[22m\n\u001b[2m    - upgrade-insecure-requests: 1\u001b[22m\n\u001b[2m    - sec-fetch-dest: document\u001b[22m\n\u001b[2m    - sec-fetch-mode: navigate\u001b[22m\n\u001b[2m    - sec-fetch-site: none\u001b[22m\n",
+                  "stack": "route.fetch: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - \u2192 GET http://localhost:3190/tools/images/image-size-resizer\u001b[22m\n\u001b[2m    - user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.4 Safari/605.1.15\u001b[22m\n\u001b[2m    - accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\u001b[22m\n\u001b[2m    - accept-encoding: gzip,deflate,br\u001b[22m\n\u001b[2m    - cache-control: no-cache\u001b[22m\n\u001b[2m    - pragma: no-cache\u001b[22m\n\u001b[2m    - upgrade-insecure-requests: 1\u001b[22m\n\u001b[2m    - sec-fetch-dest: document\u001b[22m\n\u001b[2m    - sec-fetch-mode: navigate\u001b[22m\n\u001b[2m    - sec-fetch-site: none\u001b[22m\n\n    at stripDevUpgradeCSP (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:39:34)\n    at /Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:73:80"
+                },
+                {
+                  "phase": "navigation",
+                  "name": "Error",
+                  "message": "page.goto: Blocked by Web Inspector\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3190/tools/images/image-size-resizer\", waiting until \"domcontentloaded\"\u001b[22m\n",
+                  "stack": "page.goto: Blocked by Web Inspector\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3190/tools/images/image-size-resizer\", waiting until \"domcontentloaded\"\u001b[22m\n\n    at auditTool (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:80:33)\n    at async file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:81:24\n    at async main (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:77:21)"
+                }
+              ],
+              "functionalError": null,
+              "runtime": {
+                "status": "passed",
+                "pageErrors": 0,
+                "consoleErrors": 0,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": []
+            }
+          ]
+        }
+      },
+      {
+        "slug": "banner-generator",
+        "chrome": {
+          "observedPass": false,
+          "attemptCount": 1,
+          "latestStatus": "failed",
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-remaining-5/tools/banner-generator.json",
+          "attempts": [
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-remaining-5/tools/banner-generator.json",
+              "status": "failed",
+              "functional": "not-run",
+              "startedAt": "2026-09-26T06:40:07.968Z",
+              "errors": [
+                {
+                  "phase": "hydration",
+                  "name": "TimeoutError",
+                  "message": "page.waitForFunction: Timeout 15000ms exceeded.",
+                  "stack": "page.waitForFunction: Timeout 15000ms exceeded.\n    at auditTool (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:101:34)\n    at async file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:81:24\n    at async main (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:77:21)"
+                }
+              ],
+              "functionalError": null,
+              "runtime": {
+                "status": "passed",
+                "pageErrors": 0,
+                "consoleErrors": 0,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": []
+            }
+          ]
+        },
+        "webkit": {
+          "observedPass": false,
+          "attemptCount": 1,
+          "latestStatus": "failed",
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-individual-3/banner-generator/tools/banner-generator.json",
+          "attempts": [
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-individual-3/banner-generator/tools/banner-generator.json",
+              "status": "failed",
+              "functional": "not-run",
+              "startedAt": "2026-09-26T06:42:39.291Z",
+              "errors": [
+                {
+                  "phase": "csp-override",
+                  "name": "TimeoutError",
+                  "message": "route.fetch: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - \u2192 GET http://localhost:3190/tools/images/banner-generator\u001b[22m\n\u001b[2m    - user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.4 Safari/605.1.15\u001b[22m\n\u001b[2m    - accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\u001b[22m\n\u001b[2m    - accept-encoding: gzip,deflate,br\u001b[22m\n\u001b[2m    - cache-control: no-cache\u001b[22m\n\u001b[2m    - pragma: no-cache\u001b[22m\n\u001b[2m    - upgrade-insecure-requests: 1\u001b[22m\n\u001b[2m    - sec-fetch-dest: document\u001b[22m\n\u001b[2m    - sec-fetch-mode: navigate\u001b[22m\n\u001b[2m    - sec-fetch-site: none\u001b[22m\n",
+                  "stack": "route.fetch: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - \u2192 GET http://localhost:3190/tools/images/banner-generator\u001b[22m\n\u001b[2m    - user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.4 Safari/605.1.15\u001b[22m\n\u001b[2m    - accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\u001b[22m\n\u001b[2m    - accept-encoding: gzip,deflate,br\u001b[22m\n\u001b[2m    - cache-control: no-cache\u001b[22m\n\u001b[2m    - pragma: no-cache\u001b[22m\n\u001b[2m    - upgrade-insecure-requests: 1\u001b[22m\n\u001b[2m    - sec-fetch-dest: document\u001b[22m\n\u001b[2m    - sec-fetch-mode: navigate\u001b[22m\n\u001b[2m    - sec-fetch-site: none\u001b[22m\n\n    at stripDevUpgradeCSP (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:39:34)\n    at /Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:73:80"
+                },
+                {
+                  "phase": "navigation",
+                  "name": "Error",
+                  "message": "page.goto: Blocked by Web Inspector\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3190/tools/images/banner-generator\", waiting until \"domcontentloaded\"\u001b[22m\n",
+                  "stack": "page.goto: Blocked by Web Inspector\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3190/tools/images/banner-generator\", waiting until \"domcontentloaded\"\u001b[22m\n\n    at auditTool (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:80:33)\n    at async file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:81:24\n    at async main (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:77:21)"
+                }
+              ],
+              "functionalError": null,
+              "runtime": {
+                "status": "passed",
+                "pageErrors": 0,
+                "consoleErrors": 0,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": []
+            }
+          ]
+        }
+      },
+      {
+        "slug": "image-dpi-resizer",
+        "chrome": {
+          "observedPass": false,
+          "attemptCount": 1,
+          "latestStatus": "failed",
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-remaining-5/tools/image-dpi-resizer.json",
+          "attempts": [
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-remaining-5/tools/image-dpi-resizer.json",
+              "status": "failed",
+              "functional": "not-run",
+              "startedAt": "2026-09-26T06:40:35.737Z",
+              "errors": [
+                {
+                  "phase": "hydration",
+                  "name": "TimeoutError",
+                  "message": "page.waitForFunction: Timeout 15000ms exceeded.",
+                  "stack": "page.waitForFunction: Timeout 15000ms exceeded.\n    at auditTool (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:101:34)\n    at async file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:81:24\n    at async main (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:77:21)"
+                }
+              ],
+              "functionalError": null,
+              "runtime": {
+                "status": "passed",
+                "pageErrors": 0,
+                "consoleErrors": 0,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": []
+            }
+          ]
+        },
+        "webkit": {
+          "observedPass": false,
+          "attemptCount": 1,
+          "latestStatus": "failed",
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-individual-3/image-dpi-resizer/tools/image-dpi-resizer.json",
+          "attempts": [
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-individual-3/image-dpi-resizer/tools/image-dpi-resizer.json",
+              "status": "failed",
+              "functional": "not-run",
+              "startedAt": "2026-09-26T06:42:49.565Z",
+              "errors": [
+                {
+                  "phase": "csp-override",
+                  "name": "TimeoutError",
+                  "message": "route.fetch: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - \u2192 GET http://localhost:3190/tools/images/image-dpi-resizer\u001b[22m\n\u001b[2m    - user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.4 Safari/605.1.15\u001b[22m\n\u001b[2m    - accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\u001b[22m\n\u001b[2m    - accept-encoding: gzip,deflate,br\u001b[22m\n\u001b[2m    - cache-control: no-cache\u001b[22m\n\u001b[2m    - pragma: no-cache\u001b[22m\n\u001b[2m    - upgrade-insecure-requests: 1\u001b[22m\n\u001b[2m    - sec-fetch-dest: document\u001b[22m\n\u001b[2m    - sec-fetch-mode: navigate\u001b[22m\n\u001b[2m    - sec-fetch-site: none\u001b[22m\n",
+                  "stack": "route.fetch: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - \u2192 GET http://localhost:3190/tools/images/image-dpi-resizer\u001b[22m\n\u001b[2m    - user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.4 Safari/605.1.15\u001b[22m\n\u001b[2m    - accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\u001b[22m\n\u001b[2m    - accept-encoding: gzip,deflate,br\u001b[22m\n\u001b[2m    - cache-control: no-cache\u001b[22m\n\u001b[2m    - pragma: no-cache\u001b[22m\n\u001b[2m    - upgrade-insecure-requests: 1\u001b[22m\n\u001b[2m    - sec-fetch-dest: document\u001b[22m\n\u001b[2m    - sec-fetch-mode: navigate\u001b[22m\n\u001b[2m    - sec-fetch-site: none\u001b[22m\n\n    at stripDevUpgradeCSP (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:39:34)\n    at /Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:73:80"
+                },
+                {
+                  "phase": "navigation",
+                  "name": "Error",
+                  "message": "page.goto: Blocked by Web Inspector\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3190/tools/images/image-dpi-resizer\", waiting until \"domcontentloaded\"\u001b[22m\n",
+                  "stack": "page.goto: Blocked by Web Inspector\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3190/tools/images/image-dpi-resizer\", waiting until \"domcontentloaded\"\u001b[22m\n\n    at auditTool (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:80:33)\n    at async file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:81:24\n    at async main (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:77:21)"
+                }
+              ],
+              "functionalError": null,
+              "runtime": {
+                "status": "passed",
+                "pageErrors": 0,
+                "consoleErrors": 0,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": []
+            }
+          ]
+        }
+      },
+      {
+        "slug": "batch-image-resizer",
+        "chrome": {
+          "observedPass": false,
+          "attemptCount": 1,
+          "latestStatus": "failed",
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-remaining-5/tools/batch-image-resizer.json",
+          "attempts": [
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-remaining-5/tools/batch-image-resizer.json",
+              "status": "failed",
+              "functional": "not-run",
+              "startedAt": "2026-09-26T06:41:26.705Z",
+              "errors": [
+                {
+                  "phase": "hydration",
+                  "name": "TimeoutError",
+                  "message": "page.waitForFunction: Timeout 15000ms exceeded.",
+                  "stack": "page.waitForFunction: Timeout 15000ms exceeded.\n    at auditTool (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:101:34)\n    at async file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:81:24\n    at async main (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:77:21)"
+                }
+              ],
+              "functionalError": null,
+              "runtime": {
+                "status": "passed",
+                "pageErrors": 0,
+                "consoleErrors": 0,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": []
+            }
+          ]
+        },
+        "webkit": {
+          "observedPass": false,
+          "attemptCount": 1,
+          "latestStatus": "failed",
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-individual-3/batch-image-resizer/tools/batch-image-resizer.json",
+          "attempts": [
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-individual-3/batch-image-resizer/tools/batch-image-resizer.json",
+              "status": "failed",
+              "functional": "not-run",
+              "startedAt": "2026-09-26T06:43:00.486Z",
+              "errors": [
+                {
+                  "phase": "csp-override",
+                  "name": "TimeoutError",
+                  "message": "route.fetch: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - \u2192 GET http://localhost:3190/tools/images/batch-image-resizer\u001b[22m\n\u001b[2m    - user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.4 Safari/605.1.15\u001b[22m\n\u001b[2m    - accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\u001b[22m\n\u001b[2m    - accept-encoding: gzip,deflate,br\u001b[22m\n\u001b[2m    - cache-control: no-cache\u001b[22m\n\u001b[2m    - pragma: no-cache\u001b[22m\n\u001b[2m    - upgrade-insecure-requests: 1\u001b[22m\n\u001b[2m    - sec-fetch-dest: document\u001b[22m\n\u001b[2m    - sec-fetch-mode: navigate\u001b[22m\n\u001b[2m    - sec-fetch-site: none\u001b[22m\n",
+                  "stack": "route.fetch: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - \u2192 GET http://localhost:3190/tools/images/batch-image-resizer\u001b[22m\n\u001b[2m    - user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.4 Safari/605.1.15\u001b[22m\n\u001b[2m    - accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\u001b[22m\n\u001b[2m    - accept-encoding: gzip,deflate,br\u001b[22m\n\u001b[2m    - cache-control: no-cache\u001b[22m\n\u001b[2m    - pragma: no-cache\u001b[22m\n\u001b[2m    - upgrade-insecure-requests: 1\u001b[22m\n\u001b[2m    - sec-fetch-dest: document\u001b[22m\n\u001b[2m    - sec-fetch-mode: navigate\u001b[22m\n\u001b[2m    - sec-fetch-site: none\u001b[22m\n\n    at stripDevUpgradeCSP (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:39:34)\n    at /Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:73:80"
+                },
+                {
+                  "phase": "navigation",
+                  "name": "Error",
+                  "message": "page.goto: Blocked by Web Inspector\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3190/tools/images/batch-image-resizer\", waiting until \"domcontentloaded\"\u001b[22m\n",
+                  "stack": "page.goto: Blocked by Web Inspector\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3190/tools/images/batch-image-resizer\", waiting until \"domcontentloaded\"\u001b[22m\n\n    at auditTool (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:80:33)\n    at async file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:81:24\n    at async main (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:77:21)"
+                }
+              ],
+              "functionalError": null,
+              "runtime": {
+                "status": "passed",
+                "pageErrors": 0,
+                "consoleErrors": 0,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": []
+            }
+          ]
+        }
+      },
+      {
+        "slug": "browser-image-resizer",
+        "chrome": {
+          "observedPass": false,
+          "attemptCount": 1,
+          "latestStatus": "failed",
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-remaining-5/tools/browser-image-resizer.json",
+          "attempts": [
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-remaining-5/tools/browser-image-resizer.json",
+              "status": "failed",
+              "functional": "not-run",
+              "startedAt": "2026-09-26T06:42:07.160Z",
+              "errors": [
+                {
+                  "phase": "navigation",
+                  "name": "TimeoutError",
+                  "message": "page.goto: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3190/tools/images/browser-image-resizer\", waiting until \"domcontentloaded\"\u001b[22m\n",
+                  "stack": "page.goto: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3190/tools/images/browser-image-resizer\", waiting until \"domcontentloaded\"\u001b[22m\n\n    at auditTool (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:74:33)\n    at async file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:81:24\n    at async main (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:77:21)"
+                }
+              ],
+              "functionalError": null,
+              "runtime": {
+                "status": "passed",
+                "pageErrors": 0,
+                "consoleErrors": 0,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": []
+            }
+          ]
+        },
+        "webkit": {
+          "observedPass": true,
+          "attemptCount": 1,
+          "latestStatus": "passed",
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-individual-3/browser-image-resizer/tools/browser-image-resizer.json",
+          "attempts": [
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-individual-3/browser-image-resizer/tools/browser-image-resizer.json",
+              "status": "passed",
+              "functional": "passed",
+              "startedAt": "2026-09-26T06:43:10.976Z",
+              "errors": [],
+              "functionalError": null,
+              "runtime": {
+                "status": "passed",
+                "pageErrors": 0,
+                "consoleErrors": 1,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": [
+                {
+                  "width": 1280,
+                  "status": "passed",
+                  "screenshot": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-individual-3/browser-image-resizer/artifacts/browser-image-resizer/1280.png"
+                },
+                {
+                  "width": 390,
+                  "status": "passed",
+                  "screenshot": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-individual-3/browser-image-resizer/artifacts/browser-image-resizer/390.png"
+                },
+                {
+                  "width": 320,
+                  "status": "passed",
+                  "screenshot": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-individual-3/browser-image-resizer/artifacts/browser-image-resizer/320.png"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "slug": "favicon-png-maker",
+        "chrome": {
+          "observedPass": false,
+          "attemptCount": 1,
+          "latestStatus": "failed",
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-remaining-5/tools/favicon-png-maker.json",
+          "attempts": [
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-remaining-5/tools/favicon-png-maker.json",
+              "status": "failed",
+              "functional": "not-run",
+              "startedAt": "2026-09-26T06:42:44.554Z",
+              "errors": [
+                {
+                  "phase": "navigation",
+                  "name": "TimeoutError",
+                  "message": "page.goto: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3190/tools/images/favicon-png-maker\", waiting until \"domcontentloaded\"\u001b[22m\n",
+                  "stack": "page.goto: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3190/tools/images/favicon-png-maker\", waiting until \"domcontentloaded\"\u001b[22m\n\n    at auditTool (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:74:33)\n    at async file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:81:24\n    at async main (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:77:21)"
+                }
+              ],
+              "functionalError": null,
+              "runtime": {
+                "status": "passed",
+                "pageErrors": 0,
+                "consoleErrors": 0,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": []
+            }
+          ]
+        },
+        "webkit": {
+          "observedPass": true,
+          "attemptCount": 1,
+          "latestStatus": "passed",
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-individual-3/favicon-png-maker/tools/favicon-png-maker.json",
+          "attempts": [
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-individual-3/favicon-png-maker/tools/favicon-png-maker.json",
+              "status": "passed",
+              "functional": "passed",
+              "startedAt": "2026-09-26T06:43:46.021Z",
+              "errors": [],
+              "functionalError": null,
+              "runtime": {
+                "status": "passed",
+                "pageErrors": 0,
+                "consoleErrors": 1,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": [
+                {
+                  "width": 1280,
+                  "status": "passed",
+                  "screenshot": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-individual-3/favicon-png-maker/artifacts/favicon-png-maker/1280.png"
+                },
+                {
+                  "width": 390,
+                  "status": "passed",
+                  "screenshot": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-individual-3/favicon-png-maker/artifacts/favicon-png-maker/390.png"
+                },
+                {
+                  "width": 320,
+                  "status": "passed",
+                  "screenshot": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-individual-3/favicon-png-maker/artifacts/favicon-png-maker/320.png"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "slug": "favicon-icon-generator",
+        "chrome": {
+          "observedPass": false,
+          "attemptCount": 1,
+          "latestStatus": "failed",
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-remaining-5/tools/favicon-icon-generator.json",
+          "attempts": [
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-remaining-5/tools/favicon-icon-generator.json",
+              "status": "failed",
+              "functional": "not-run",
+              "startedAt": "2026-09-26T06:43:20.624Z",
+              "errors": [
+                {
+                  "phase": "hydration",
+                  "name": "TimeoutError",
+                  "message": "page.waitForFunction: Timeout 15000ms exceeded.",
+                  "stack": "page.waitForFunction: Timeout 15000ms exceeded.\n    at auditTool (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/browser.mjs:101:34)\n    at async file:///Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:81:24\n    at async main (/Users/rayhan/.herdr/worktrees/frontend/fix-batch45-image-measurements/scripts/qa/run.mjs:77:21)"
+                }
+              ],
+              "functionalError": null,
+              "runtime": {
+                "status": "failed",
+                "pageErrors": 1,
+                "consoleErrors": 0,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": []
+            }
+          ]
+        },
+        "webkit": {
+          "observedPass": true,
+          "attemptCount": 1,
+          "latestStatus": "passed",
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-individual-3/favicon-icon-generator/tools/favicon-icon-generator.json",
+          "attempts": [
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-individual-3/favicon-icon-generator/tools/favicon-icon-generator.json",
+              "status": "passed",
+              "functional": "passed",
+              "startedAt": "2026-09-26T06:44:04.450Z",
+              "errors": [],
+              "functionalError": null,
+              "runtime": {
+                "status": "passed",
+                "pageErrors": 0,
+                "consoleErrors": 1,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": [
+                {
+                  "width": 1280,
+                  "status": "passed",
+                  "screenshot": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-individual-3/favicon-icon-generator/artifacts/favicon-icon-generator/1280.png"
+                },
+                {
+                  "width": 390,
+                  "status": "passed",
+                  "screenshot": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-individual-3/favicon-icon-generator/artifacts/favicon-icon-generator/390.png"
+                },
+                {
+                  "width": 320,
+                  "status": "passed",
+                  "screenshot": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-individual-3/favicon-icon-generator/artifacts/favicon-icon-generator/320.png"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "slug": "tweet-to-image-converter",
+        "chrome": {
+          "observedPass": true,
+          "attemptCount": 1,
+          "latestStatus": "passed",
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-remaining-5/tools/tweet-to-image-converter.json",
+          "attempts": [
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-remaining-5/tools/tweet-to-image-converter.json",
+              "status": "passed",
+              "functional": "passed",
+              "startedAt": "2026-09-26T06:43:41.998Z",
+              "errors": [],
+              "functionalError": null,
+              "runtime": {
+                "status": "passed",
+                "pageErrors": 0,
+                "consoleErrors": 1,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": [
+                {
+                  "width": 1280,
+                  "status": "passed",
+                  "screenshot": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-remaining-5/artifacts/tweet-to-image-converter/1280.png"
+                },
+                {
+                  "width": 390,
+                  "status": "passed",
+                  "screenshot": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-remaining-5/artifacts/tweet-to-image-converter/390.png"
+                },
+                {
+                  "width": 320,
+                  "status": "passed",
+                  "screenshot": "/private/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-chrome-remaining-5/artifacts/tweet-to-image-converter/320.png"
+                }
+              ]
+            }
+          ]
+        },
+        "webkit": {
+          "observedPass": true,
+          "attemptCount": 1,
+          "latestStatus": "passed",
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-individual-3/tweet-to-image-converter/tools/tweet-to-image-converter.json",
+          "attempts": [
+            {
+              "report": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-individual-3/tweet-to-image-converter/tools/tweet-to-image-converter.json",
+              "status": "passed",
+              "functional": "passed",
+              "startedAt": "2026-09-26T06:44:24.126Z",
+              "errors": [],
+              "functionalError": null,
+              "runtime": {
+                "status": "passed",
+                "pageErrors": 0,
+                "consoleErrors": 1,
+                "blockingConsoleErrors": 0
+              },
+              "layouts": [
+                {
+                  "width": 1280,
+                  "status": "passed",
+                  "screenshot": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-individual-3/tweet-to-image-converter/artifacts/tweet-to-image-converter/1280.png"
+                },
+                {
+                  "width": 390,
+                  "status": "passed",
+                  "screenshot": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-individual-3/tweet-to-image-converter/artifacts/tweet-to-image-converter/390.png"
+                },
+                {
+                  "width": 320,
+                  "status": "passed",
+                  "screenshot": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-images-webkit-individual-3/tweet-to-image-converter/artifacts/tweet-to-image-converter/320.png"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ],
+    "stoppedRetries": [
+      "Chrome recovered-6 and WebKit recovered-4 stopped after renewed pre-hydration failures; new font/crop passes preserved."
+    ],
+    "changedFiles": [
+      "components/tools/TweetToImageClient.tsx",
+      "scripts/qa/cases/images.mjs",
+      "scripts/qa/helpers/images-real-capabilities.mjs",
+      "scripts/qa/reports/images.json",
+      "scripts/qa/reports/images-integration.md"
+    ]
+  }
 }

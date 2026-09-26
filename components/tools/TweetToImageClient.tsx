@@ -593,7 +593,13 @@ export default function TweetToImageClient() {
 
       setAuthorName(data.author_name || 'Unknown');
       setHandle(fetchedHandle);
-      setTweetText((parsedText || '').slice(0, 280));
+      if (!parsedText) throw new Error('tweet-text-unavailable');
+      setTweetText(parsedText.slice(0, 280));
+      // oEmbed does not provide a verified publication time or engagement counts.
+      // Never attach the editor's current date or custom metrics to a fetched post.
+      setTimestampLabel('');
+      setShowMetrics(false);
+      setShowVerified(false);
       setFetchStatus('success');
 
       const profileImage = await fetchProfileImage(fetchedHandle);

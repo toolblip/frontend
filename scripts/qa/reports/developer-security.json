@@ -1,7 +1,7 @@
 {
   "group": "developer-security",
   "branch": "fix/auto-qa-developer-security",
-  "status": "implementation_complete_pending_parent_browser_and_central_copy",
+  "status": "browser_integration_partial_environment_blocked",
   "assignedRouteCount": 44,
   "browserCaseCount": 44,
   "inspectedComponentCount": 36,
@@ -81,9 +81,9 @@
       "exitCode": 0
     },
     "browser": {
-      "status": "not_run_worker_contract",
-      "owner": "parent",
-      "caseFile": "scripts/qa/cases/developer-security.mjs"
+      "status": "partial_environment_blocked",
+      "caseFile": "scripts/qa/cases/developer-security.mjs",
+      "details": "See integrationBrowser for exact per-run counts. Full Chrome and WebKit runs both exited 3; corrected selectors Chrome 2/2 passed."
     },
     "build": {
       "status": "not_run_worker_contract"
@@ -141,8 +141,24 @@
         "components/tools/HashFromTextClient.tsx"
       ],
       "browserCase": "hash-from-text",
-      "browserStatus": "pending_parent",
-      "implementationBlockers": []
+      "browserStatus": "integration_attempted_partial",
+      "implementationBlockers": [],
+      "browserEvidence": {
+        "chrome": {
+          "startedAt": "2026-09-26T06:45:58.566Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-chrome-3/tools/hash-from-text.json"
+        },
+        "webkit": {
+          "startedAt": "2026-09-26T06:39:19.017Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-webkit-4/tools/hash-from-text.json"
+        }
+      }
     },
     {
       "slug": "url-encode",
@@ -156,8 +172,24 @@
         "components/tools/UrlEncodeClient.tsx"
       ],
       "browserCase": "url-encode",
-      "browserStatus": "pending_parent",
-      "implementationBlockers": []
+      "browserStatus": "integration_attempted_partial",
+      "implementationBlockers": [],
+      "browserEvidence": {
+        "chrome": {
+          "startedAt": "2026-09-26T06:46:54.497Z",
+          "status": "passed",
+          "functional": "passed",
+          "verified320": true,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-chrome-3/tools/url-encode.json"
+        },
+        "webkit": {
+          "startedAt": "2026-09-26T06:51:25.757Z",
+          "status": "failed",
+          "functional": "passed",
+          "verified320": true,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-url-webkit-1/tools/url-encode.json"
+        }
+      }
     },
     {
       "slug": "uuid-generator",
@@ -171,8 +203,24 @@
         "components/tools/UuidGeneratorClient.tsx"
       ],
       "browserCase": "uuid-generator",
-      "browserStatus": "pending_parent",
-      "implementationBlockers": []
+      "browserStatus": "integration_attempted_partial",
+      "implementationBlockers": [],
+      "browserEvidence": {
+        "chrome": {
+          "startedAt": "2026-09-26T06:47:18.101Z",
+          "status": "passed",
+          "functional": "passed",
+          "verified320": true,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-chrome-3/tools/uuid-generator.json"
+        },
+        "webkit": {
+          "startedAt": "2026-09-26T06:39:50.737Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-webkit-4/tools/uuid-generator.json"
+        }
+      }
     },
     {
       "slug": "sha-256-hash",
@@ -186,8 +234,24 @@
         "components/tools/Sha256HashClient.tsx"
       ],
       "browserCase": "sha-256-hash",
-      "browserStatus": "pending_parent",
-      "implementationBlockers": []
+      "browserStatus": "integration_attempted_partial",
+      "implementationBlockers": [],
+      "browserEvidence": {
+        "chrome": {
+          "startedAt": "2026-09-26T06:47:38.469Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-chrome-3/tools/sha-256-hash.json"
+        },
+        "webkit": {
+          "startedAt": "2026-09-26T06:40:16.028Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-webkit-4/tools/sha-256-hash.json"
+        }
+      }
     },
     {
       "slug": "jwt-decoder",
@@ -201,8 +265,24 @@
         "components/tools/JwtDecoderClient.tsx"
       ],
       "browserCase": "jwt-decoder",
-      "browserStatus": "pending_parent",
-      "implementationBlockers": []
+      "browserStatus": "integration_attempted_partial",
+      "implementationBlockers": [],
+      "browserEvidence": {
+        "chrome": {
+          "startedAt": "2026-09-26T06:26:58.440Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-chrome-2/tools/jwt-decoder.json"
+        },
+        "webkit": {
+          "startedAt": "2026-09-26T06:40:24.512Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-webkit-4/tools/jwt-decoder.json"
+        }
+      }
     },
     {
       "slug": "password-generator",
@@ -216,8 +296,24 @@
         "components/tools/PasswordGeneratorClient.tsx"
       ],
       "browserCase": "password-generator",
-      "browserStatus": "pending_parent",
-      "implementationBlockers": []
+      "browserStatus": "integration_attempted_partial",
+      "implementationBlockers": [],
+      "browserEvidence": {
+        "chrome": {
+          "startedAt": "2026-09-26T06:27:26.047Z",
+          "status": "passed",
+          "functional": "passed",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-chrome-2/tools/password-generator.json"
+        },
+        "webkit": {
+          "startedAt": "2026-09-26T06:40:47.761Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-webkit-4/tools/password-generator.json"
+        }
+      }
     },
     {
       "slug": "password-strength-checker",
@@ -231,8 +327,24 @@
         "components/tools/PasswordStrengthCheckerClient.tsx"
       ],
       "browserCase": "password-strength-checker",
-      "browserStatus": "pending_parent",
-      "implementationBlockers": []
+      "browserStatus": "integration_attempted_partial",
+      "implementationBlockers": [],
+      "browserEvidence": {
+        "chrome": {
+          "startedAt": "2026-09-26T06:27:46.559Z",
+          "status": "passed",
+          "functional": "passed",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-chrome-2/tools/password-strength-checker.json"
+        },
+        "webkit": {
+          "startedAt": "2026-09-26T06:41:22.539Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-webkit-4/tools/password-strength-checker.json"
+        }
+      }
     },
     {
       "slug": "hash-identifier",
@@ -246,8 +358,24 @@
         "components/tools/HashIdentifierClient.tsx"
       ],
       "browserCase": "hash-identifier",
-      "browserStatus": "pending_parent",
-      "implementationBlockers": []
+      "browserStatus": "integration_attempted_partial",
+      "implementationBlockers": [],
+      "browserEvidence": {
+        "chrome": {
+          "startedAt": "2026-09-26T06:28:01.398Z",
+          "status": "passed",
+          "functional": "passed",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-chrome-2/tools/hash-identifier.json"
+        },
+        "webkit": {
+          "startedAt": "2026-09-26T06:41:34.815Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-webkit-4/tools/hash-identifier.json"
+        }
+      }
     },
     {
       "slug": "email-validator",
@@ -261,8 +389,24 @@
         "components/tools/EmailValidatorClient.tsx"
       ],
       "browserCase": "email-validator",
-      "browserStatus": "pending_parent",
-      "implementationBlockers": []
+      "browserStatus": "integration_attempted_partial",
+      "implementationBlockers": [],
+      "browserEvidence": {
+        "chrome": {
+          "startedAt": "2026-09-26T06:28:14.674Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-chrome-2/tools/email-validator.json"
+        },
+        "webkit": {
+          "startedAt": "2026-09-26T06:41:43.932Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-webkit-4/tools/email-validator.json"
+        }
+      }
     },
     {
       "slug": "credit-card-validator",
@@ -276,8 +420,24 @@
         "components/tools/CreditCardValidatorClient.tsx"
       ],
       "browserCase": "credit-card-validator",
-      "browserStatus": "pending_parent",
-      "implementationBlockers": []
+      "browserStatus": "integration_attempted_partial",
+      "implementationBlockers": [],
+      "browserEvidence": {
+        "chrome": {
+          "startedAt": "2026-09-26T06:28:34.548Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-chrome-2/tools/credit-card-validator.json"
+        },
+        "webkit": {
+          "startedAt": "2026-09-26T06:41:53.187Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-webkit-4/tools/credit-card-validator.json"
+        }
+      }
     },
     {
       "slug": "random-uuid-v7",
@@ -291,8 +451,24 @@
         "components/tools/RandomUuidV7Client.tsx"
       ],
       "browserCase": "random-uuid-v7",
-      "browserStatus": "pending_parent",
-      "implementationBlockers": []
+      "browserStatus": "integration_attempted_partial",
+      "implementationBlockers": [],
+      "browserEvidence": {
+        "chrome": {
+          "startedAt": "2026-09-26T06:47:54.332Z",
+          "status": "passed",
+          "functional": "passed",
+          "verified320": true,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-selectors-chrome-1/tools/random-uuid-v7.json"
+        },
+        "webkit": {
+          "startedAt": "2026-09-26T06:49:43.852Z",
+          "status": "passed",
+          "functional": "passed",
+          "verified320": true,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-selectors-webkit-1/tools/random-uuid-v7.json"
+        }
+      }
     },
     {
       "slug": "hash-collision-finder",
@@ -306,8 +482,24 @@
         "components/tools/HashCollisionFinderClient.tsx"
       ],
       "browserCase": "hash-collision-finder",
-      "browserStatus": "pending_parent",
-      "implementationBlockers": []
+      "browserStatus": "integration_attempted_partial",
+      "implementationBlockers": [],
+      "browserEvidence": {
+        "chrome": {
+          "startedAt": "2026-09-26T06:29:11.273Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-chrome-2/tools/hash-collision-finder.json"
+        },
+        "webkit": {
+          "startedAt": "2026-09-26T06:42:10.652Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-webkit-4/tools/hash-collision-finder.json"
+        }
+      }
     },
     {
       "slug": "url-encoder",
@@ -321,8 +513,24 @@
         "components/tools/UrlEncodeClient.tsx"
       ],
       "browserCase": "url-encoder",
-      "browserStatus": "pending_parent",
-      "implementationBlockers": []
+      "browserStatus": "integration_attempted_partial",
+      "implementationBlockers": [],
+      "browserEvidence": {
+        "chrome": {
+          "startedAt": "2026-09-26T06:29:31.209Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-chrome-2/tools/url-encoder.json"
+        },
+        "webkit": {
+          "startedAt": "2026-09-26T06:42:19.542Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-webkit-4/tools/url-encoder.json"
+        }
+      }
     },
     {
       "slug": "encodings-reference",
@@ -336,8 +544,24 @@
         "components/tools/EncodingsReferenceClient.tsx"
       ],
       "browserCase": "encodings-reference",
-      "browserStatus": "pending_parent",
-      "implementationBlockers": []
+      "browserStatus": "integration_attempted_partial",
+      "implementationBlockers": [],
+      "browserEvidence": {
+        "chrome": {
+          "startedAt": "2026-09-26T06:29:50.344Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-chrome-2/tools/encodings-reference.json"
+        },
+        "webkit": {
+          "startedAt": "2026-09-26T06:42:27.995Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-webkit-4/tools/encodings-reference.json"
+        }
+      }
     },
     {
       "slug": "md5-hash-generator",
@@ -351,8 +575,24 @@
         "components/tools/HashGeneratorClient.tsx"
       ],
       "browserCase": "md5-hash-generator",
-      "browserStatus": "pending_parent",
-      "implementationBlockers": []
+      "browserStatus": "integration_attempted_partial",
+      "implementationBlockers": [],
+      "browserEvidence": {
+        "chrome": {
+          "startedAt": "2026-09-26T06:30:12.163Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-chrome-2/tools/md5-hash-generator.json"
+        },
+        "webkit": {
+          "startedAt": "2026-09-26T06:42:36.503Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-webkit-4/tools/md5-hash-generator.json"
+        }
+      }
     },
     {
       "slug": "sha1-hash-generator",
@@ -366,8 +606,24 @@
         "components/tools/HashGeneratorClient.tsx"
       ],
       "browserCase": "sha1-hash-generator",
-      "browserStatus": "pending_parent",
-      "implementationBlockers": []
+      "browserStatus": "integration_attempted_partial",
+      "implementationBlockers": [],
+      "browserEvidence": {
+        "chrome": {
+          "startedAt": "2026-09-26T06:30:32.776Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-chrome-2/tools/sha1-hash-generator.json"
+        },
+        "webkit": {
+          "startedAt": "2026-09-26T06:42:44.865Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-webkit-4/tools/sha1-hash-generator.json"
+        }
+      }
     },
     {
       "slug": "sha256-hash-generator",
@@ -381,8 +637,24 @@
         "components/tools/HashGeneratorClient.tsx"
       ],
       "browserCase": "sha256-hash-generator",
-      "browserStatus": "pending_parent",
-      "implementationBlockers": []
+      "browserStatus": "integration_attempted_partial",
+      "implementationBlockers": [],
+      "browserEvidence": {
+        "chrome": {
+          "startedAt": "2026-09-26T06:31:00.425Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-chrome-2/tools/sha256-hash-generator.json"
+        },
+        "webkit": {
+          "startedAt": "2026-09-26T06:42:53.362Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-webkit-4/tools/sha256-hash-generator.json"
+        }
+      }
     },
     {
       "slug": "bcrypt-hash-generator",
@@ -396,8 +668,24 @@
         "components/tools/BcryptHashGeneratorClient.tsx"
       ],
       "browserCase": "bcrypt-hash-generator",
-      "browserStatus": "pending_parent",
-      "implementationBlockers": []
+      "browserStatus": "integration_attempted_partial",
+      "implementationBlockers": [],
+      "browserEvidence": {
+        "chrome": {
+          "startedAt": "2026-09-26T06:31:26.989Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-chrome-2/tools/bcrypt-hash-generator.json"
+        },
+        "webkit": {
+          "startedAt": "2026-09-26T06:43:01.784Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-webkit-4/tools/bcrypt-hash-generator.json"
+        }
+      }
     },
     {
       "slug": "hash-diff-checker",
@@ -411,8 +699,24 @@
         "components/tools/HashDiffCheckerClient.tsx"
       ],
       "browserCase": "hash-diff-checker",
-      "browserStatus": "pending_parent",
-      "implementationBlockers": []
+      "browserStatus": "integration_attempted_partial",
+      "implementationBlockers": [],
+      "browserEvidence": {
+        "chrome": {
+          "startedAt": "2026-09-26T06:31:49.743Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-chrome-2/tools/hash-diff-checker.json"
+        },
+        "webkit": {
+          "startedAt": "2026-09-26T06:43:10.091Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-webkit-4/tools/hash-diff-checker.json"
+        }
+      }
     },
     {
       "slug": "uuid-v1-generator",
@@ -426,8 +730,24 @@
         "components/tools/UuidV1GeneratorClient.tsx"
       ],
       "browserCase": "uuid-v1-generator",
-      "browserStatus": "pending_parent",
-      "implementationBlockers": []
+      "browserStatus": "integration_attempted_partial",
+      "implementationBlockers": [],
+      "browserEvidence": {
+        "chrome": {
+          "startedAt": "2026-09-26T06:32:08.482Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-chrome-2/tools/uuid-v1-generator.json"
+        },
+        "webkit": {
+          "startedAt": "2026-09-26T06:43:18.420Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-webkit-4/tools/uuid-v1-generator.json"
+        }
+      }
     },
     {
       "slug": "data-uri-generator",
@@ -441,8 +761,24 @@
         "components/tools/DataUriGeneratorClient.tsx"
       ],
       "browserCase": "data-uri-generator",
-      "browserStatus": "pending_parent",
-      "implementationBlockers": []
+      "browserStatus": "integration_attempted_partial",
+      "implementationBlockers": [],
+      "browserEvidence": {
+        "chrome": {
+          "startedAt": "2026-09-26T06:32:46.983Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-chrome-2/tools/data-uri-generator.json"
+        },
+        "webkit": {
+          "startedAt": "2026-09-26T06:43:40.067Z",
+          "status": "passed",
+          "functional": "passed",
+          "verified320": true,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-webkit-4/tools/data-uri-generator.json"
+        }
+      }
     },
     {
       "slug": "ssh-key-generator",
@@ -456,8 +792,24 @@
         "components/tools/SSHKeyGeneratorClient.tsx"
       ],
       "browserCase": "ssh-key-generator",
-      "browserStatus": "pending_parent",
-      "implementationBlockers": []
+      "browserStatus": "integration_attempted_partial",
+      "implementationBlockers": [],
+      "browserEvidence": {
+        "chrome": {
+          "startedAt": "2026-09-26T06:33:07.950Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-chrome-2/tools/ssh-key-generator.json"
+        },
+        "webkit": {
+          "startedAt": "2026-09-26T06:43:57.875Z",
+          "status": "passed",
+          "functional": "passed",
+          "verified320": true,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-webkit-4/tools/ssh-key-generator.json"
+        }
+      }
     },
     {
       "slug": "jwt-tester",
@@ -471,8 +823,24 @@
         "components/tools/JwtTokenTesterClient.tsx"
       ],
       "browserCase": "jwt-tester",
-      "browserStatus": "pending_parent",
-      "implementationBlockers": []
+      "browserStatus": "integration_attempted_partial",
+      "implementationBlockers": [],
+      "browserEvidence": {
+        "chrome": {
+          "startedAt": "2026-09-26T06:33:33.158Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-chrome-2/tools/jwt-tester.json"
+        },
+        "webkit": {
+          "startedAt": "2026-09-26T06:44:13.595Z",
+          "status": "passed",
+          "functional": "passed",
+          "verified320": true,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-webkit-4/tools/jwt-tester.json"
+        }
+      }
     },
     {
       "slug": "jwt-token-tester",
@@ -486,8 +854,24 @@
         "components/tools/JwtTokenTesterClient.tsx"
       ],
       "browserCase": "jwt-token-tester",
-      "browserStatus": "pending_parent",
-      "implementationBlockers": []
+      "browserStatus": "integration_attempted_partial",
+      "implementationBlockers": [],
+      "browserEvidence": {
+        "chrome": {
+          "startedAt": "2026-09-26T06:33:55.950Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-chrome-2/tools/jwt-token-tester.json"
+        },
+        "webkit": {
+          "startedAt": "2026-09-26T06:44:29.650Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-webkit-4/tools/jwt-token-tester.json"
+        }
+      }
     },
     {
       "slug": "uuid-validator",
@@ -501,8 +885,24 @@
         "components/tools/UuidValidatorClient.tsx"
       ],
       "browserCase": "uuid-validator",
-      "browserStatus": "pending_parent",
-      "implementationBlockers": []
+      "browserStatus": "integration_attempted_partial",
+      "implementationBlockers": [],
+      "browserEvidence": {
+        "chrome": {
+          "startedAt": "2026-09-26T06:34:20.949Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-chrome-2/tools/uuid-validator.json"
+        },
+        "webkit": {
+          "startedAt": "2026-09-26T06:44:38.011Z",
+          "status": "passed",
+          "functional": "passed",
+          "verified320": true,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-webkit-4/tools/uuid-validator.json"
+        }
+      }
     },
     {
       "slug": "jwt-inspector",
@@ -516,8 +916,24 @@
         "components/tools/JwtDecoderClient.tsx"
       ],
       "browserCase": "jwt-inspector",
-      "browserStatus": "pending_parent",
-      "implementationBlockers": []
+      "browserStatus": "integration_attempted_partial",
+      "implementationBlockers": [],
+      "browserEvidence": {
+        "chrome": {
+          "startedAt": "2026-09-26T06:34:46.207Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-chrome-2/tools/jwt-inspector.json"
+        },
+        "webkit": {
+          "startedAt": "2026-09-26T06:45:02.585Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-webkit-4/tools/jwt-inspector.json"
+        }
+      }
     },
     {
       "slug": "jwt-token-decoder",
@@ -531,8 +947,24 @@
         "components/tools/JwtDecoderClient.tsx"
       ],
       "browserCase": "jwt-token-decoder",
-      "browserStatus": "pending_parent",
-      "implementationBlockers": []
+      "browserStatus": "integration_attempted_partial",
+      "implementationBlockers": [],
+      "browserEvidence": {
+        "chrome": {
+          "startedAt": "2026-09-26T06:35:17.359Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-chrome-2/tools/jwt-token-decoder.json"
+        },
+        "webkit": {
+          "startedAt": "2026-09-26T06:45:30.084Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-webkit-4/tools/jwt-token-decoder.json"
+        }
+      }
     },
     {
       "slug": "uuid-normalizer",
@@ -546,8 +978,24 @@
         "components/tools/UUIDNormalizerClient.tsx"
       ],
       "browserCase": "uuid-normalizer",
-      "browserStatus": "pending_parent",
-      "implementationBlockers": []
+      "browserStatus": "integration_attempted_partial",
+      "implementationBlockers": [],
+      "browserEvidence": {
+        "chrome": {
+          "startedAt": "2026-09-26T06:35:39.638Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-chrome-2/tools/uuid-normalizer.json"
+        },
+        "webkit": {
+          "startedAt": "2026-09-26T06:45:38.579Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-webkit-4/tools/uuid-normalizer.json"
+        }
+      }
     },
     {
       "slug": "random-password-generator",
@@ -561,8 +1009,24 @@
         "components/tools/PasswordGeneratorClient.tsx"
       ],
       "browserCase": "random-password-generator",
-      "browserStatus": "pending_parent",
-      "implementationBlockers": []
+      "browserStatus": "integration_attempted_partial",
+      "implementationBlockers": [],
+      "browserEvidence": {
+        "chrome": {
+          "startedAt": "2026-09-26T06:36:14.239Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-chrome-2/tools/random-password-generator.json"
+        },
+        "webkit": {
+          "startedAt": "2026-09-26T06:45:46.888Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-webkit-4/tools/random-password-generator.json"
+        }
+      }
     },
     {
       "slug": "base64-encoder-decoder",
@@ -576,8 +1040,24 @@
         "components/tools/Base64EncoderDecoderClient.tsx"
       ],
       "browserCase": "base64-encoder-decoder",
-      "browserStatus": "pending_parent",
-      "implementationBlockers": []
+      "browserStatus": "integration_attempted_partial",
+      "implementationBlockers": [],
+      "browserEvidence": {
+        "chrome": {
+          "startedAt": "2026-09-26T06:37:06.584Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-chrome-2/tools/base64-encoder-decoder.json"
+        },
+        "webkit": {
+          "startedAt": "2026-09-26T06:45:55.197Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-webkit-4/tools/base64-encoder-decoder.json"
+        }
+      }
     },
     {
       "slug": "html-encoder-decoder",
@@ -591,8 +1071,24 @@
         "components/tools/HtmlEncoderDecoderClient.tsx"
       ],
       "browserCase": "html-encoder-decoder",
-      "browserStatus": "pending_parent",
-      "implementationBlockers": []
+      "browserStatus": "integration_attempted_partial",
+      "implementationBlockers": [],
+      "browserEvidence": {
+        "chrome": {
+          "startedAt": "2026-09-26T06:37:27.614Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-chrome-2/tools/html-encoder-decoder.json"
+        },
+        "webkit": {
+          "startedAt": "2026-09-26T06:46:03.569Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-webkit-4/tools/html-encoder-decoder.json"
+        }
+      }
     },
     {
       "slug": "binary-converter",
@@ -606,8 +1102,24 @@
         "components/tools/BinaryConverterClient.tsx"
       ],
       "browserCase": "binary-converter",
-      "browserStatus": "pending_parent",
-      "implementationBlockers": []
+      "browserStatus": "integration_attempted_partial",
+      "implementationBlockers": [],
+      "browserEvidence": {
+        "chrome": {
+          "startedAt": "2026-09-26T06:37:46.776Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-chrome-2/tools/binary-converter.json"
+        },
+        "webkit": {
+          "startedAt": "2026-09-26T06:46:30.970Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-webkit-4/tools/binary-converter.json"
+        }
+      }
     },
     {
       "slug": "backslash-escape-unescape",
@@ -621,8 +1133,24 @@
         "components/tools/BackslashEscapeUnescapeClient.tsx"
       ],
       "browserCase": "backslash-escape-unescape",
-      "browserStatus": "pending_parent",
-      "implementationBlockers": []
+      "browserStatus": "integration_attempted_partial",
+      "implementationBlockers": [],
+      "browserEvidence": {
+        "chrome": {
+          "startedAt": "2026-09-26T06:38:23.386Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-chrome-2/tools/backslash-escape-unescape.json"
+        },
+        "webkit": {
+          "startedAt": "2026-09-26T06:46:39.404Z",
+          "status": "passed",
+          "functional": "passed",
+          "verified320": true,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-webkit-4/tools/backslash-escape-unescape.json"
+        }
+      }
     },
     {
       "slug": "punycode-encoder",
@@ -636,8 +1164,24 @@
         "components/tools/PunycodeEncoderClient.tsx"
       ],
       "browserCase": "punycode-encoder",
-      "browserStatus": "pending_parent",
-      "implementationBlockers": []
+      "browserStatus": "integration_attempted_partial",
+      "implementationBlockers": [],
+      "browserEvidence": {
+        "chrome": {
+          "startedAt": "2026-09-26T06:39:32.508Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-chrome-2/tools/punycode-encoder.json"
+        },
+        "webkit": {
+          "startedAt": "2026-09-26T06:47:25.861Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-webkit-4/tools/punycode-encoder.json"
+        }
+      }
     },
     {
       "slug": "ulid-generator",
@@ -651,8 +1195,24 @@
         "components/tools/UlidGeneratorClient.tsx"
       ],
       "browserCase": "ulid-generator",
-      "browserStatus": "pending_parent",
-      "implementationBlockers": []
+      "browserStatus": "integration_attempted_partial",
+      "implementationBlockers": [],
+      "browserEvidence": {
+        "chrome": {
+          "startedAt": "2026-09-26T06:40:09.331Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-chrome-2/tools/ulid-generator.json"
+        },
+        "webkit": {
+          "startedAt": "2026-09-26T06:49:58.541Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-selectors-webkit-1/tools/ulid-generator.json"
+        }
+      }
     },
     {
       "slug": "hmac-generator",
@@ -666,8 +1226,24 @@
         "components/tools/HmacGeneratorClient.tsx"
       ],
       "browserCase": "hmac-generator",
-      "browserStatus": "pending_parent",
-      "implementationBlockers": []
+      "browserStatus": "integration_attempted_partial",
+      "implementationBlockers": [],
+      "browserEvidence": {
+        "chrome": {
+          "startedAt": "2026-09-26T06:40:38.665Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-chrome-2/tools/hmac-generator.json"
+        },
+        "webkit": {
+          "startedAt": "2026-09-26T06:48:14.635Z",
+          "status": "passed",
+          "functional": "passed",
+          "verified320": true,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-webkit-4/tools/hmac-generator.json"
+        }
+      }
     },
     {
       "slug": "secure-random-generator",
@@ -681,8 +1257,24 @@
         "components/tools/SecureRandomGeneratorClient.tsx"
       ],
       "browserCase": "secure-random-generator",
-      "browserStatus": "pending_parent",
-      "implementationBlockers": []
+      "browserStatus": "integration_attempted_partial",
+      "implementationBlockers": [],
+      "browserEvidence": {
+        "chrome": {
+          "startedAt": "2026-09-26T06:41:26.479Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-chrome-2/tools/secure-random-generator.json"
+        },
+        "webkit": {
+          "startedAt": "2026-09-26T06:48:28.444Z",
+          "status": "passed",
+          "functional": "passed",
+          "verified320": true,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-webkit-4/tools/secure-random-generator.json"
+        }
+      }
     },
     {
       "slug": "json-escape-unescape",
@@ -696,8 +1288,24 @@
         "components/tools/BackslashEscapeUnescapeClient.tsx"
       ],
       "browserCase": "json-escape-unescape",
-      "browserStatus": "pending_parent",
-      "implementationBlockers": []
+      "browserStatus": "integration_attempted_partial",
+      "implementationBlockers": [],
+      "browserEvidence": {
+        "chrome": {
+          "startedAt": "2026-09-26T06:42:04.060Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-chrome-2/tools/json-escape-unescape.json"
+        },
+        "webkit": {
+          "startedAt": "2026-09-26T06:48:40.998Z",
+          "status": "passed",
+          "functional": "passed",
+          "verified320": true,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-webkit-4/tools/json-escape-unescape.json"
+        }
+      }
     },
     {
       "slug": "uuid-comparator",
@@ -711,8 +1319,24 @@
         "components/tools/UUIDComparatorClient.tsx"
       ],
       "browserCase": "uuid-comparator",
-      "browserStatus": "pending_parent",
-      "implementationBlockers": []
+      "browserStatus": "integration_attempted_partial",
+      "implementationBlockers": [],
+      "browserEvidence": {
+        "chrome": {
+          "startedAt": "2026-09-26T06:42:42.010Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-chrome-2/tools/uuid-comparator.json"
+        },
+        "webkit": {
+          "startedAt": "2026-09-26T06:48:56.139Z",
+          "status": "passed",
+          "functional": "passed",
+          "verified320": true,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-webkit-4/tools/uuid-comparator.json"
+        }
+      }
     },
     {
       "slug": "token-builder",
@@ -726,8 +1350,24 @@
         "components/tools/TokenBuilderClient.tsx"
       ],
       "browserCase": "token-builder",
-      "browserStatus": "pending_parent",
-      "implementationBlockers": []
+      "browserStatus": "integration_attempted_partial",
+      "implementationBlockers": [],
+      "browserEvidence": {
+        "chrome": {
+          "startedAt": "2026-09-26T06:43:17.972Z",
+          "status": "passed",
+          "functional": "passed",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-chrome-2/tools/token-builder.json"
+        },
+        "webkit": {
+          "startedAt": "2026-09-26T06:49:06.174Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-webkit-4/tools/token-builder.json"
+        }
+      }
     },
     {
       "slug": "uuid-compare",
@@ -741,8 +1381,24 @@
         "components/tools/UUIDCompareClient.tsx"
       ],
       "browserCase": "uuid-compare",
-      "browserStatus": "pending_parent",
-      "implementationBlockers": []
+      "browserStatus": "integration_attempted_partial",
+      "implementationBlockers": [],
+      "browserEvidence": {
+        "chrome": {
+          "startedAt": "2026-09-26T06:43:42.415Z",
+          "status": "passed",
+          "functional": "passed",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-chrome-2/tools/uuid-compare.json"
+        },
+        "webkit": {
+          "startedAt": "2026-09-26T06:49:14.670Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-webkit-4/tools/uuid-compare.json"
+        }
+      }
     },
     {
       "slug": "html-attribute-encoder",
@@ -756,8 +1412,24 @@
         "components/tools/HtmlAttributeEncoderClient.tsx"
       ],
       "browserCase": "html-attribute-encoder",
-      "browserStatus": "pending_parent",
-      "implementationBlockers": []
+      "browserStatus": "integration_attempted_partial",
+      "implementationBlockers": [],
+      "browserEvidence": {
+        "chrome": {
+          "startedAt": "2026-09-26T06:43:57.827Z",
+          "status": "passed",
+          "functional": "passed",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-chrome-2/tools/html-attribute-encoder.json"
+        },
+        "webkit": {
+          "startedAt": "2026-09-26T06:49:39.766Z",
+          "status": "passed",
+          "functional": "passed",
+          "verified320": true,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-webkit-4/tools/html-attribute-encoder.json"
+        }
+      }
     },
     {
       "slug": "regex-escape",
@@ -771,8 +1443,24 @@
         "components/tools/RegexEscapeClient.tsx"
       ],
       "browserCase": "regex-escape",
-      "browserStatus": "pending_parent",
-      "implementationBlockers": []
+      "browserStatus": "integration_attempted_partial",
+      "implementationBlockers": [],
+      "browserEvidence": {
+        "chrome": {
+          "startedAt": "2026-09-26T06:48:25.657Z",
+          "status": "passed",
+          "functional": "passed",
+          "verified320": true,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-selectors-chrome-1/tools/regex-escape.json"
+        },
+        "webkit": {
+          "startedAt": "2026-09-26T06:50:46.473Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-selectors-webkit-1/tools/regex-escape.json"
+        }
+      }
     },
     {
       "slug": "jwt-token-inspector",
@@ -786,8 +1474,24 @@
         "components/tools/JwtTokenInspectorClient.tsx"
       ],
       "browserCase": "jwt-token-inspector",
-      "browserStatus": "pending_parent",
-      "implementationBlockers": []
+      "browserStatus": "integration_attempted_partial",
+      "implementationBlockers": [],
+      "browserEvidence": {
+        "chrome": {
+          "startedAt": "2026-09-26T06:44:39.790Z",
+          "status": "passed",
+          "functional": "passed",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-chrome-2/tools/jwt-token-inspector.json"
+        },
+        "webkit": {
+          "startedAt": "2026-09-26T06:50:15.979Z",
+          "status": "failed",
+          "functional": "not-run",
+          "verified320": false,
+          "evidence": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-webkit-4/tools/jwt-token-inspector.json"
+        }
+      }
     }
   ],
   "duplicateProposals": [
@@ -913,7 +1617,7 @@
     {
       "owner": "parent",
       "kind": "integrated_browser",
-      "detail": "Run all 44 cases in the integrated app and inspect 320px layout. No browser pass is claimed."
+      "detail": "Full Chrome and WebKit sweeps completed, both exit 3 with incomplete functional coverage from navigation/hydration/runtime failures; targeted selector fixes verified as detailed in integrationBrowser. Full acceptance still requires a stable integrated environment."
     },
     {
       "owner": "coordinator",
@@ -933,5 +1637,264 @@
     "https://www.rfc-editor.org/rfc/rfc7519.html",
     "https://www.rfc-editor.org/rfc/rfc4231.html"
   ],
-  "integration": "Commit contains only assigned components, new developer-security helpers/frame/tests and the group case/report files. Dependency symlink remains untracked. No push, merge, build or dev server."
+  "integration": "Only scripts/qa/cases/developer-security.mjs and scripts/qa/reports/developer-security.json changed in this integration follow-up. No source crypto fallback, other group, shared runner, central metadata, build, server start, commit or delegation.",
+  "integrationBrowser": {
+    "status": "completed_sweeps_partial_acceptance",
+    "base": "http://localhost:3190",
+    "changedFiles": [
+      "scripts/qa/cases/developer-security.mjs"
+    ],
+    "changes": [
+      "UUID v7 fixture uses the actual Generate button, preserving independent version, variant, uniqueness and timestamp assertions.",
+      "Regex Escape fixture uses the actual Unescape (pattern → plain text) button, preserving exact escaped text and independent RegExp assertions.",
+      "All 44 functional fixtures execute at 320px, assert pre-Clear containment, and save security-functional-320.png before validating Clear.",
+      "URL Decode fixture explicitly asserts selected Decode tab before entering the independent UTF-8 vector; mismatch remains a failure."
+    ],
+    "harnessIssues": [
+      "Inventory group selects 45 routes; original assigned fixture set is 44. unicode-escape-encoder has no fixture and is not claimed passed.",
+      "WebKit CSP override route.fetch uses context 8000ms timeout; unhandled TimeoutError or TargetClosedError terminates run before aggregate is written. Shared runner left untouched.",
+      "Intermittent browser SyntaxError Unexpected EOF / Invalid or unexpected token in shared layout.js and tools/[slug]/page.js; direct fetched chunks subsequently pass node --check.",
+      "Repeated 15000ms hydration timeouts prevent functional cases from running.",
+      "Integration owner updated browser.mjs CSP handler; auto-security-webkit-4 uses the revision that catches route errors and continues."
+    ],
+    "scopedTests": {
+      "command": "./node_modules/.bin/vitest run lib/developer-security lib/punycode.test.ts",
+      "exitCode": 0,
+      "filesPassed": 4,
+      "testsPassed": 45
+    },
+    "typescript": {
+      "command": "./node_modules/.bin/tsc --noEmit --pretty false --incremental false",
+      "exitCode": 0,
+      "intermediateFailure": "Prior run exited 2 on lib/media-conversion/demux.test.ts:9 ArrayBuffer input; media owner corrected to Uint8Array. No security edit to that file."
+    },
+    "artifactRoot": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode",
+    "production": "pending parent release verification",
+    "attempts": [
+      {
+        "name": "auto-security-chrome-1",
+        "engine": "chrome",
+        "artifactDir": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-chrome-1",
+        "aggregateWritten": true,
+        "summary": {
+          "total": 0,
+          "passed": 0,
+          "failed": 0,
+          "needsFixture": 1,
+          "smokeOnly": 0,
+          "exitCode": 3
+        },
+        "fatal": {
+          "name": "Error",
+          "message": "Protocol error (Browser.getVersion): Internal server error, session closed. Failed to launch browser."
+        },
+        "completed": 0,
+        "functionalPassed": 0,
+        "functionalFailed": []
+      },
+      {
+        "name": "auto-security-chrome-2",
+        "engine": "chrome",
+        "artifactDir": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-chrome-2",
+        "aggregateWritten": true,
+        "summary": {
+          "total": 45,
+          "passed": 10,
+          "failed": 35,
+          "needsFixture": 1,
+          "smokeOnly": 32,
+          "exitCode": 3
+        },
+        "fatal": {
+          "name": "Error",
+          "message": "Browser server close timeout after 5000ms"
+        },
+        "completed": 45,
+        "functionalPassed": 10,
+        "functionalFailed": [
+          {
+            "slug": "random-uuid-v7",
+            "message": "locator.click: Timeout 8000ms exceeded."
+          },
+          {
+            "slug": "regex-escape",
+            "message": "locator.click: Timeout 8000ms exceeded."
+          }
+        ]
+      },
+      {
+        "name": "auto-security-chrome-3",
+        "engine": "chrome",
+        "artifactDir": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-chrome-3",
+        "aggregateWritten": false,
+        "summary": null,
+        "fatal": null,
+        "completed": 4,
+        "functionalPassed": 2,
+        "functionalFailed": [],
+        "note": "Intentionally stopped after repeated infrastructure failures; focused selector checks followed."
+      },
+      {
+        "name": "auto-security-webkit-1",
+        "engine": "webkit",
+        "artifactDir": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-webkit-1",
+        "aggregateWritten": false,
+        "summary": null,
+        "fatal": null,
+        "completed": 2,
+        "functionalPassed": 2,
+        "functionalFailed": []
+      },
+      {
+        "name": "auto-security-webkit-2",
+        "engine": "webkit",
+        "artifactDir": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-webkit-2",
+        "aggregateWritten": false,
+        "summary": null,
+        "fatal": null,
+        "completed": 3,
+        "functionalPassed": 1,
+        "functionalFailed": [
+          {
+            "slug": "url-encode",
+            "message": "expect(locator).toHaveText(expected) failed"
+          }
+        ]
+      },
+      {
+        "name": "auto-security-webkit-3",
+        "engine": "webkit",
+        "artifactDir": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-webkit-3",
+        "aggregateWritten": false,
+        "summary": null,
+        "fatal": null,
+        "completed": 0,
+        "functionalPassed": 0,
+        "functionalFailed": []
+      },
+      {
+        "name": "auto-security-webkit-4",
+        "engine": "webkit",
+        "artifactDir": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-webkit-4",
+        "aggregateWritten": true,
+        "summary": {
+          "total": 45,
+          "passed": 10,
+          "failed": 34,
+          "needsFixture": 1,
+          "smokeOnly": 33,
+          "exitCode": 3
+        },
+        "fatal": null,
+        "completed": 45,
+        "functionalPassed": 10,
+        "functionalFailed": [
+          {
+            "slug": "ulid-generator",
+            "message": "page.screenshot: Timeout 8000ms exceeded."
+          }
+        ]
+      },
+      {
+        "name": "auto-security-v7-chrome-1",
+        "engine": "chrome",
+        "artifactDir": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-v7-chrome-1",
+        "aggregateWritten": true,
+        "summary": {
+          "total": 1,
+          "passed": 0,
+          "failed": 1,
+          "needsFixture": 0,
+          "smokeOnly": 1,
+          "exitCode": 3
+        },
+        "fatal": {
+          "name": "Error",
+          "message": "Browser server close timeout after 5000ms"
+        },
+        "completed": 1,
+        "functionalPassed": 0,
+        "functionalFailed": []
+      },
+      {
+        "name": "auto-security-selectors-chrome-1",
+        "engine": "chrome",
+        "artifactDir": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-selectors-chrome-1",
+        "aggregateWritten": true,
+        "summary": {
+          "total": 2,
+          "passed": 2,
+          "failed": 0,
+          "needsFixture": 0,
+          "smokeOnly": 0,
+          "exitCode": 0
+        },
+        "fatal": null,
+        "completed": 2,
+        "functionalPassed": 2,
+        "functionalFailed": []
+      },
+      {
+        "name": "auto-security-selectors-webkit-1",
+        "engine": "webkit",
+        "artifactDir": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-selectors-webkit-1",
+        "aggregateWritten": true,
+        "summary": {
+          "total": 3,
+          "passed": 1,
+          "failed": 2,
+          "needsFixture": 0,
+          "smokeOnly": 2,
+          "exitCode": 3
+        },
+        "fatal": null,
+        "completed": 3,
+        "functionalPassed": 1,
+        "functionalFailed": []
+      },
+      {
+        "name": "auto-security-url-webkit-1",
+        "engine": "webkit",
+        "artifactDir": "/var/folders/j0/vpq48k1j0dsbwdkv6lpsqzvc0000gn/T/opencode/auto-security-url-webkit-1",
+        "aggregateWritten": true,
+        "summary": {
+          "total": 1,
+          "passed": 0,
+          "failed": 1,
+          "needsFixture": 0,
+          "smokeOnly": 0,
+          "exitCode": 1
+        },
+        "completed": 1,
+        "functionalPassed": 1,
+        "functionalFailed": [],
+        "overallBlockers": [
+          "Shared app/layout.js Unexpected EOF",
+          "React state-update-before-mount console error"
+        ]
+      }
+    ],
+    "extendedV7Diagnostic": {
+      "slug": "random-uuid-v7",
+      "diagnostic": true,
+      "hydrationTimeout": 120000,
+      "evidence": [],
+      "status": "failed",
+      "error": "TimeoutError: page.goto: Timeout 120000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3190/tools/random-uuid-v7\", waiting until \"networkidle\"\u001b[22m\n"
+    },
+    "noSourceCryptoChanges": true,
+    "inventoryMismatch": {
+      "selected": 45,
+      "assigned": 44,
+      "extraMissingFixture": "unicode-escape-encoder",
+      "action": "No fixture added or false pass claimed for unassigned historical route."
+    },
+    "remainingAcceptance": [
+      "Most routes still stop before functionality due to local navigation/hydration/CSP fetch failures; no all-44 browser acceptance claimed.",
+      "WebKit URL Decode selected-tab/UTF-8/malformed-input/Clear/320px assertions pass in focused retry; overall route remains failed on shared layout Unexpected EOF and React mount-state error.",
+      "ULID WebKit attempt 4 passed value/320px checks then screenshot font-wait timed out before Clear; focused retry stopped before functionality.",
+      "Production checks remain owned by parent after release."
+    ],
+    "finishedAt": "2026-09-26T06:52:57.142Z"
+  }
 }

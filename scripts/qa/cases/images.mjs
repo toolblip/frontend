@@ -16,7 +16,7 @@ async function upload(ctx, jpeg = false) {
   await ctx.tool.locator('input[type=file]').first().setInputFiles(await fixture(ctx.page, jpeg));
 }
 async function download(ctx, locator, name) {
-  const event = ctx.page.waitForEvent('download'); await locator.click(); const item = await event;
+  const [item] = await Promise.all([ctx.page.waitForEvent('download'), locator.click()]);
   await mkdir(ctx.artifactsDir, { recursive: true });
   const file = path.join(ctx.artifactsDir, `${name}-${item.suggestedFilename()}`);
   await item.saveAs(file); const bytes = await readFile(file);
@@ -47,7 +47,13 @@ async function invalidUpload(ctx) {
   ctx.check(true, 'Corrupt image bytes produce an explicit error');
 }
 const cases = [];
-const add = (slugs, test) => slugs.forEach(slug => cases.push({ slug, test }));
+const add = (slugs, test) => slugs.forEach(slug => cases.push({ slug, test: async ctx => {
+  // A framework script can load before this tool's interactive props attach.
+  // File uploads during that gap never reach the component's onChange handler.
+  await ctx.page.waitForFunction(() => [...document.querySelectorAll('.tb-v2-tool-card button')].some(el =>
+    Object.keys(el).some(key => key.startsWith('__reactProps$') && typeof el[key]?.onClick === 'function')));
+  await test(ctx);
+} }));
 add(['detect', 'image-dimension-checker'], async ctx => {
   await upload(ctx); await ctx.expect(ctx.tool.getByText('80 × 40', { exact: true })).toBeVisible();
   ctx.check(await ctx.tool.getByText('PNG', { exact: true }).count() === 1, 'PNG signature and independently known 80 × 40 dimensions');
