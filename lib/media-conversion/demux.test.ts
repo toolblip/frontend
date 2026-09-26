@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { demuxAac } from './demux';
-import { applyAacTimeline, decodeAudio } from './audio';
+import { decodeAudio } from './audio';
 describe('AAC container fallback', () => {
   it.each(['mkv', 'm4a', 'mp4'])('extracts AAC from %s byte-for-byte equal to the independent ADTS fixture', ext => {
     const bytes = new Uint8Array(readFileSync(`public/samples/media-conversion/example.${ext}`));
@@ -61,33 +61,17 @@ function pcm(length: number, sampleRate=44100) {
   const channels=[Float32Array.from({length},(_,i)=>i),Float32Array.from({length},(_,i)=>-i)];
   return {length,sampleRate,numberOfChannels:2,getChannelData:(channel:number)=>channels[channel],copyToChannel:(source:Float32Array,channel:number)=>channels[channel].set(source)} as unknown as AudioBuffer;
 }
-describe('decoded AAC presentation',()=>{
-  const context={createBuffer:(_channels:number,length:number,rate:number)=>pcm(length,rate)} as Pick<AudioContext,'createBuffer'>;
-  it('trims encoder priming and padding on every channel',()=>{
-    const plan=demuxAac(craftedMp4({start:1024,duration:1024}),'mp4');
-    const result=applyAacTimeline(pcm(3072),plan,context);
-    expect(result.length).toBe(1024);expect(result.getChannelData(0)[0]).toBe(1024);expect(result.getChannelData(1)[1023]).toBe(-2047);
-  });
-  it('applies trims in the decoded sample rate and rejects truncated PCM',()=>{
-    const plan=demuxAac(craftedMp4({start:1024,duration:1024}),'mp4');
-    const result=applyAacTimeline(pcm(4096,48000),plan,context);
-    expect(result.length).toBe(Math.round(1024*48000/44100));expect(result.getChannelData(0)[0]).toBe(Math.round(1024*48000/44100));
-    expect(()=>applyAacTimeline(pcm(1024),plan,context)).toThrow();
-  });
-});
-
-it('fallback decoding exposes trimmed PCM and closes its audio context',async()=>{
-  const closed=vi.fn();
+it('native decoding returns its presentation without a second trim and closes the context',async()=>{
+  const closed=vi.fn(), decoded=pcm(1024);
   class Context {
-    state='running';calls=0;
-    async decodeAudioData(bytes:ArrayBuffer) { if (++this.calls===1) throw new Error('Native container unsupported');expect(new Uint8Array(bytes)[0]).toBe(255);return pcm(3072); }
-    createBuffer(_channels:number,length:number,rate:number) {return pcm(length,rate);}
+    state='running';
+    async decodeAudioData() { return decoded; }
     async close(){this.state='closed';closed();}
   }
   vi.stubGlobal('AudioContext',Context);
   try {
     const file=new File([new Uint8Array(craftedMp4({start:1024,duration:1024}))],'trimmed.m4a');
-    const result=await decodeAudio(file,new AbortController().signal,'mp4');
-    expect(result.length).toBe(1024);expect(result.getChannelData(0)[0]).toBe(1024);expect(closed).toHaveBeenCalledOnce();
+    expect(await decodeAudio(file,new AbortController().signal,'mp4')).toBe(decoded);
+    expect(closed).toHaveBeenCalledOnce();
   } finally {vi.unstubAllGlobals();}
 });

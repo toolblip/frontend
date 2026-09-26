@@ -1,21 +1,38 @@
 /** Dedicated safety regression; passing this does NOT mean successful export QA passed.
- * node scripts/qa/probes/video-timing.mjs [--headed] [--force-drift | --scenes]
- * Uses the existing development server. Normal mode runs strict export fixtures.
+ * node scripts/qa/probes/video-timing.mjs [--webkit] [--headed] [--force-drift | --scenes]
+ * QA_BASE selects the server; QA_OUT must be a new directory. Otherwise output is unique.
+ * QA_WEBKIT_EXECUTABLE optionally selects WebKit. Normal mode runs strict export fixtures.
  */
-import { chromium, expect } from '@playwright/test';
-import { mkdir, writeFile } from 'node:fs/promises';
+import { chromium, webkit, expect } from '@playwright/test';
+import { mkdir, mkdtemp, writeFile } from 'node:fs/promises';
 import { execFileSync } from 'node:child_process';
+import path from 'node:path';
+import { tmpdir } from 'node:os';
 import { auditTool } from '../browser.mjs';
 import cases from '../cases/media-conversion.mjs';
 
 const forced = process.argv.includes('--force-drift');
 const headed = process.argv.includes('--headed');
 const scenes = process.argv.includes('--scenes');
-const output = `/private/tmp/toolblip-video-${forced ? 'drift' : scenes ? 'scenes' : 'export'}-${headed ? 'headed' : 'headless'}`;
-await mkdir(output, { recursive: true });
+const engine = process.argv.includes('--webkit') ? 'webkit' : 'chrome';
+const base = process.env.QA_BASE ?? 'http://localhost:3190';
+const baseURL = new URL(base);
+// Only loopback HTTP development needs this override. Production CSP is untouched.
+const stripDevUpgradeCsp = baseURL.protocol === 'http:' && ['localhost', '127.0.0.1', '[::1]'].includes(baseURL.hostname);
+let output;
+if (process.env.QA_OUT) {
+  output = path.resolve(process.env.QA_OUT);
+  await mkdir(path.dirname(output), { recursive: true });
+  await mkdir(output); // EEXIST deliberately protects prior evidence, even an empty directory.
+} else {
+  output = await mkdtemp(path.join(tmpdir(), `toolblip-video-${engine}-${forced ? 'drift' : scenes ? 'scenes' : 'export'}-${headed ? 'headed' : 'headless'}-`));
+}
 if (scenes) execFileSync('ffmpeg', ['-v', 'error', '-y', '-f', 'lavfi', '-i', "color=c=red:s=64x48:r=30:d=2,drawbox=c=lime:t=fill:enable='between(t,0.5,0.999)',drawbox=c=blue:t=fill:enable='between(t,1,1.499)',drawbox=c=yellow:t=fill:enable='gte(t,1.5)'", '-f', 'lavfi', '-i', 'sine=frequency=440:sample_rate=48000:duration=2', '-c:v', 'libvpx', '-c:a', 'libopus', '-shortest', `${output}/scenes.webm`]);
-const server = await chromium.launchServer({ channel: 'chrome', headless: !headed });
-const browser = await chromium.connect(server.wsEndpoint());
+const browserType = engine === 'webkit' ? webkit : chromium;
+const server = await browserType.launchServer({ headless: !headed,
+  ...(engine === 'chrome' ? { channel: 'chrome' } : process.env.QA_WEBKIT_EXECUTABLE ? { executablePath: process.env.QA_WEBKIT_EXECUTABLE } : {}),
+});
+const browser = await browserType.connect(server.wsEndpoint());
 const results = [];
 try {
   const instrumented = { async newContext(options) {
@@ -41,6 +58,8 @@ try {
     return context;
   } };
   for (const slug of ['cutter', 'add-subtitles']) {
+    const artifactsDir = path.join(output, 'artifacts', slug);
+    await mkdir(artifactsDir, { recursive: true });
     const fixture = forced ? { slug, async test({ tool, page, check }) {
       await tool.getByRole('button', { name: /^Examples?$/ }).click();
       await expect(tool.getByRole('button', { name: 'Convert', exact: true })).toBeEnabled();
@@ -77,7 +96,7 @@ try {
       const downloaded = page.waitForEvent('download');
       await tool.getByRole('link', { name: /^Download WEBM/ }).click();
       const download = await downloaded;
-      const file = `${output}/${slug}-scenes.webm`;
+      const file = path.join(artifactsDir, `${slug}-scenes.webm`);
       await download.saveAs(file);
       const pixel = time => [...execFileSync('ffmpeg', ['-v', 'error', '-ss', String(time), '-i', file, '-frames:v', '1', '-vf', 'format=rgb24,crop=1:1:2:2', '-f', 'rawvideo', 'pipe:1'])];
       const early = pixel(0.1), late = pixel(0.85);
@@ -87,10 +106,11 @@ try {
       const duration = Number(packets.at(-1).pts_time);
       check(Math.abs(duration - 1) < 0.15, `Independent video packet timestamps cover the one-second selection (${duration}s).`);
     } } : cases.find(c => c.slug === slug);
-    const result = await auditTool({ browser: instrumented, entry: { slug, category: 'Video' }, fixture, options: { base: process.env.QA_BASE ?? 'http://localhost:3190', engine: 'chrome', 'strip-dev-upgrade-csp': true }, expect, artifactsDir: output });
-    results.push({ slug, functional: result.functional });
+    const result = await auditTool({ browser: instrumented, entry: { slug, category: 'Video' }, fixture, options: { base, engine, 'strip-dev-upgrade-csp': stripDevUpgradeCsp }, expect, artifactsDir });
+    results.push(result);
+    await writeFile(path.join(artifactsDir, 'audit.json'), JSON.stringify(result, null, 2), { flag: 'wx' });
   }
 } finally { await browser.close(); await server.close(); }
-await writeFile(`${output}/results.json`, JSON.stringify(results, null, 2));
-console.log(JSON.stringify({ output, results }, null, 2));
-if (results.some(result => result.functional.status !== 'passed')) process.exitCode = 1;
+await writeFile(`${output}/results.json`, JSON.stringify(results, null, 2), { flag: 'wx' });
+console.log(JSON.stringify({ output, base, engine, stripDevUpgradeCsp, results }, null, 2));
+if (results.some(result => result.status !== 'passed' || result.functional.status !== 'passed')) process.exitCode = 1;

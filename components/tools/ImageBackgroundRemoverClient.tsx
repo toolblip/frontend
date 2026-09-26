@@ -447,7 +447,7 @@ export default function ImageBackgroundRemoverClient() {
 
           {method === 'ai' && !isProcessing && (
             <p className="text-sm text-gray-500">
-              Uses an AI segmentation model to cut out the subject, even against busy or uneven backgrounds.
+              Uses AI segmentation to estimate the subject. Results vary, especially around fine edges and complex backgrounds.
             </p>
           )}
 
@@ -549,7 +549,7 @@ export default function ImageBackgroundRemoverClient() {
           </div>
 
           {aiError && (
-            <div className="p-4 bg-red-100 text-red-700 rounded-lg">{aiError}</div>
+            <div role="alert" className="p-4 bg-red-100 text-red-700 rounded-lg">{aiError}</div>
           )}
         </>
       )}
@@ -615,7 +615,7 @@ export default function ImageBackgroundRemoverClient() {
       <div className="text-sm text-gray-500 mt-4">
         <p className="font-medium">Tips:</p>
         <ul className="list-disc pl-5">
-          <li><strong>AI Remove:</strong> AI segmentation model - best for photos, works on any background</li>
+          <li><strong>AI Remove:</strong> Best suited to photos with a clear foreground subject. Review the edges before downloading.</li>
           <li><strong>Auto Detect:</strong> Samples corners to identify and remove background color</li>
           <li><strong>Color Key:</strong> Removes a specific color (e.g., green screen)</li>
           <li>Auto Detect and Color Key both use the Tolerance slider - raise it for more color variation</li>

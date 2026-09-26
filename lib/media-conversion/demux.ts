@@ -1,6 +1,6 @@
 /** Bounded AAC-LC demux fallback; never interprets arbitrary container bytes as PCM. */
 const invalid = (): never => { throw new Error('Unsupported or malformed AAC container. Fallback supports unencrypted AAC-LC in nonfragmented MP4 and unlaced MKV.'); };
-export type AacTimeline = { data: ArrayBuffer; sampleRate: number; startSample: number; endSample: number };
+export type AacTimeline = { data: ArrayBuffer; description: Uint8Array; packets: Uint8Array[]; numberOfChannels: number; sampleRate: number; startSample: number; endSample: number };
 const timingError = (): never => { throw new Error('Unsupported AAC presentation timing: edits, gaps or delays cannot be represented safely.'); };
 function aacRate(config: Uint8Array) {
   const rates = [96000,88200,64000,48000,44100,32000,24000,22050,16000,12000,11025,8000,7350];
@@ -16,7 +16,7 @@ function exactSamples(ticks: number, scale: number, rate: number) {
 }
 function timeline(config: Uint8Array, packets: Uint8Array[], startSample: number, endSample: number): AacTimeline {
   if (!Number.isSafeInteger(startSample) || !Number.isSafeInteger(endSample) || startSample < 0 || endSample <= startSample || endSample > packets.length * 1024) return timingError();
-  return { data: adts(config, packets), sampleRate: aacRate(config), startSample, endSample };
+  return { data: adts(config, packets), description: config.slice(), packets, numberOfChannels: (config[1] >> 3) & 15, sampleRate: aacRate(config), startSample, endSample };
 }
 type Element = { id: number; start: number; end: number };
 function adts(config: Uint8Array, packets: Uint8Array[]): ArrayBuffer {

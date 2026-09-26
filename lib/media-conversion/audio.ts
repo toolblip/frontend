@@ -35,9 +35,7 @@ export async function decodeAudio(file: File, signal: AbortSignal, expected?: 'a
       if (kind !== 'mp4' && kind !== 'mkv') throw new Error('This browser cannot decode the audio in this container, or the file has no decodable audio. No converted file was created.');
       const aac = demuxAac(new Uint8Array(bytes), kind);
       signal.throwIfAborted();
-      try { decoded = await context.decodeAudioData(aac.data); } catch { throw new Error('This browser cannot decode the extracted AAC audio. No converted file was created.'); }
-      signal.throwIfAborted();
-      decoded = applyAacTimeline(decoded, aac, context);
+      decoded = await decodeAacPackets(aac, context, signal);
     }
     signal.throwIfAborted();
     if (decoded.duration > 120 || decoded.length * decoded.numberOfChannels > 24_000_000 || decoded.numberOfChannels > 8) throw new Error('Decoded audio exceeds 120 seconds or the PCM memory limit.');
@@ -71,14 +69,78 @@ export async function pcmMp3(channels: Float32Array[], sampleRate: number, signa
   return new Blob(chunks, { type: 'audio/mpeg' });
 }
 
-/** ADTS has no edit-list metadata: apply container trims to decoded PCM explicitly. */
-export function applyAacTimeline(decoded: AudioBuffer, timeline: AacTimeline, context: Pick<AudioContext, 'createBuffer'>): AudioBuffer {
-  const ratio = decoded.sampleRate / timeline.sampleRate;
-  const start = Math.round(timeline.startSample * ratio);
-  const length = Math.round((timeline.endSample - timeline.startSample) * ratio);
-  if (!Number.isSafeInteger(start) || !Number.isSafeInteger(length) || start < 0 || length < 1 || start + length > decoded.length) throw new Error('Decoded AAC does not cover the container presentation range.');
-  if (length / decoded.sampleRate > 120 || length * decoded.numberOfChannels > 24_000_000 || decoded.numberOfChannels > 8) throw new Error('Decoded audio exceeds 120 seconds or the PCM memory limit.');
-  const output = context.createBuffer(decoded.numberOfChannels, length, decoded.sampleRate);
-  for (let channel = 0; channel < decoded.numberOfChannels; channel++) output.copyToChannel(decoded.getChannelData(channel).subarray(start, start + length), channel);
-  return output;
+// TypeScript 5.5's DOM declarations omit the WebCodecs audio interfaces.
+type AacFrame = { numberOfFrames: number; numberOfChannels: number; sampleRate: number; timestamp: number;
+  copyTo(destination: Float32Array, options: { planeIndex: number; format: 'f32-planar' }): void; close(): void };
+type AacConfig = { codec: string; sampleRate: number; numberOfChannels: number; description: Uint8Array };
+type AacDecoder = EventTarget & { state: string; decodeQueueSize: number; configure(config: AacConfig): void; decode(chunk: unknown): void; flush(): Promise<void>; close(): void };
+type AudioCodecs = {
+  AudioDecoder?: { new(init: { output(frame: AacFrame): void; error(error: DOMException): void }): AacDecoder; isConfigSupported(config: AacConfig): Promise<{ supported?: boolean }> };
+  EncodedAudioChunk?: new(init: { type: 'key'; timestamp: number; data: Uint8Array }) => unknown;
+};
+/** Raw AAC + AudioSpecificConfig bypasses decodeAudioData's implicit ADTS priming trim.
+ * See https://www.w3.org/TR/webcodecs-aac-codec-registration/ .
+ */
+export async function decodeAacPackets(timeline: AacTimeline, context: Pick<AudioContext, 'createBuffer'>, signal: AbortSignal): Promise<AudioBuffer> {
+  signal.throwIfAborted();
+  const { AudioDecoder: Decoder, EncodedAudioChunk: Chunk } = globalThis as unknown as AudioCodecs;
+  if (!Decoder || !Chunk) throw new Error('This browser cannot decode this AAC container with exact timing. Use a browser with WebCodecs audio decoding.');
+  const { sampleRate, numberOfChannels, packets, startSample, endSample } = timeline;
+  const totalFrames = packets.length * 1024, length = endSample - startSample;
+  if (!Number.isSafeInteger(totalFrames) || totalFrames * numberOfChannels > 24_000_000 || numberOfChannels < 1 || numberOfChannels > 2 || length / sampleRate > 120) throw new Error('Decoded audio exceeds 120 seconds or the PCM memory limit.');
+  if (!Number.isSafeInteger(startSample) || !Number.isSafeInteger(endSample) || startSample < 0 || length < 1 || endSample > totalFrames) throw new Error('Invalid AAC presentation range.');
+  const config = { codec: 'mp4a.40.2', sampleRate, numberOfChannels, description: timeline.description };
+  if (!(await Decoder.isConfigSupported(config)).supported) throw new Error('This browser does not support exact AAC-LC packet decoding.');
+  signal.throwIfAborted();
+  const output = context.createBuffer(numberOfChannels, length, sampleRate);
+  let decodedFrames = 0, failure: Error | undefined, decoder: AacDecoder | undefined;
+  let rejectDrain: ((error: Error) => void) | undefined;
+  const close = () => { if (decoder && decoder.state !== 'closed') decoder.close(); };
+  const fail = (error: Error) => { failure ??= error; rejectDrain?.(failure); close(); };
+  const abort = () => fail(signal.reason instanceof Error ? signal.reason : new Error('Audio decoding cancelled.'));
+  try {
+    decoder = new Decoder({
+      error: fail,
+      output: frame => {
+        try {
+          if (failure || signal.aborted) return;
+          const count = frame.numberOfFrames;
+          if (frame.sampleRate !== sampleRate || frame.numberOfChannels !== numberOfChannels || !Number.isSafeInteger(count) || count < 1 || decodedFrames + count > totalFrames || Math.round(frame.timestamp * sampleRate / 1e6) !== decodedFrames) throw new Error('AAC decoder changed packet timing or output dimensions.');
+          const from = Math.max(startSample, decodedFrames), to = Math.min(endSample, decodedFrames + count);
+          if (to > from) for (let channel = 0; channel < numberOfChannels; channel++) {
+            const samples = new Float32Array(count);
+            frame.copyTo(samples, { planeIndex: channel, format: 'f32-planar' });
+            output.getChannelData(channel).set(samples.subarray(from - decodedFrames, to - decodedFrames), from - startSample);
+          }
+          decodedFrames += count;
+        } catch (error) { fail(error instanceof Error ? error : new Error('AAC sample copy failed.')); }
+        finally { frame.close(); }
+      },
+    });
+    signal.addEventListener('abort', abort, { once: true });
+    decoder.configure(config);
+    for (let index = 0; index < packets.length; index++) {
+      signal.throwIfAborted(); if (failure) throw failure;
+      decoder.decode(new Chunk({ type: 'key', timestamp: Math.round(index * 1024 * 1e6 / sampleRate), data: packets[index] }));
+      if (decoder.decodeQueueSize > 16) await new Promise<void>((resolve, reject) => {
+        const cleanup = () => { decoder!.removeEventListener('dequeue', check); rejectDrain = undefined; };
+        const rejectWait = (error: Error) => { cleanup(); reject(error); };
+        const check = () => {
+          if (failure) rejectWait(failure);
+          else if (decoder!.decodeQueueSize <= 16) { cleanup(); resolve(); }
+        };
+        rejectDrain = rejectWait;
+        decoder!.addEventListener('dequeue', check);
+        check();
+      });
+      // Yield even when a decoder consumes synchronously, so Cancel remains usable.
+      if (index % 16 === 0) await new Promise(resolve => setTimeout(resolve, 0));
+    }
+    signal.throwIfAborted(); if (failure) throw failure;
+    await decoder.flush();
+    signal.throwIfAborted(); if (failure) throw failure;
+    if (decodedFrames !== totalFrames) throw new Error('AAC decoder omitted samples; no converted file was created.');
+    return output;
+  } catch (error) { throw failure ?? error; }
+  finally { signal.removeEventListener('abort', abort); close(); }
 }
