@@ -17,9 +17,32 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
-      - uses: actions/checkout@v7
+      - name: Fetch tracker files at workflow commit
+        uses: actions/github-script@v9
         with:
-          persist-credentials: false
+          retries: 3
+          script: |
+            const { mkdir, writeFile } = require('node:fs/promises');
+            const { dirname } = require('node:path');
+            // Fetch directly to avoid checkout cleanup of the legacy malformed api gitlink.
+            for (const path of ['scripts/gsc-recovery.mjs', 'data/gsc-recovery-cohort.json']) {
+              const { data } = await github.rest.repos.getContent({
+                ...context.repo,
+                path,
+                ref: context.sha,
+              });
+              if (data.type !== 'file' || data.encoding !== 'base64' ||
+                  typeof data.content !== 'string' || !data.content.trim()) {
+                throw new Error(`Invalid file response for ${path}`);
+              }
+              const content = data.content.replace(/\s/g, '');
+              const decoded = Buffer.from(content, 'base64');
+              if (decoded.toString('base64') !== content) {
+                throw new Error(`Invalid base64 content for ${path}`);
+              }
+              await mkdir(dirname(path), { recursive: true });
+              await writeFile(path, decoded);
+            }
       - uses: actions/setup-node@v7
         with:
           node-version: '24'
