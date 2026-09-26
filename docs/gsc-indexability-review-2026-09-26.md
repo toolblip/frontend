@@ -1,6 +1,6 @@
 # Tool indexing review, 2026-09-26
 
-Follow-up: [fresh candidate QA and decisions](gsc-candidate-review-2026-09-26.md) supersede the eight pending recommendations below. Four have explicit reviewed decisions; four local repairs remain held for postdeploy public verification. This document and its JSON inventory retain the original audit snapshot.
+Follow-up: [fresh candidate QA and decisions](gsc-candidate-review-2026-09-26.md) supersede the eight pending recommendations below. All eight now have explicit reviewed decisions after stage-1 public verification passed 34/34 checks (exit 0). Final policy totals are 345 eligible and 99 excluded; deployment of the four additional promotions remains with the parent. This document and its JSON inventory retain the original audit snapshot.
 
 ## Snapshot and scope
 
