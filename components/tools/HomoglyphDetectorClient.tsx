@@ -1,5 +1,7 @@
 'use client';
+import DeveloperGeneralFrame from './DeveloperGeneralFrame';
 
+import ToolExampleClearActions from './ToolExampleClearActions';
 import React, { useState, useEffect } from 'react';
 
 interface HomoglyphInfo {
@@ -47,7 +49,7 @@ const HOMOGLYPHS: Record<string, string[]> = {
 
 const getCharCategory = (char: string): 'Latin' | 'Cyrillic' | 'Greek' | 'Digit' | 'Other' => {
   const code = char.charCodeAt(0);
-  if ((code >= 0x0041 && code <= 0x007A) || (code >= 0x0030 && code <= 0x0039)) return 'Latin';
+  if ((code >= 0x0041 && code <= 0x005A) || (code >= 0x0061 && code <= 0x007A)) return 'Latin';
   if ((code >= 0x0410 && code <= 0x044F) || (code >= 0x0400 && code <= 0x04FF)) return 'Cyrillic';
   if ((code >= 0x0370 && code <= 0x03FF) || (code >= 0x1F00 && code <= 0x1FFF)) return 'Greek';
   if (code >= 0x0030 && code <= 0x0039) return 'Digit';
@@ -56,7 +58,7 @@ const getCharCategory = (char: string): 'Latin' | 'Cyrillic' | 'Greek' | 'Digit'
 
 const getRiskLevel = (info: HomoglyphInfo): 'high' | 'medium' | 'low' => {
   if (info.similar.length === 0) return 'low';
-  if (info.category === 'Latin' && info.similar.some(s => getCharCategory(s) !== 'Latin')) return 'high';
+  if (info.category === 'Cyrillic' || info.category === 'Greek') return 'high';
   return 'medium';
 };
 
@@ -69,7 +71,7 @@ export default function HomoglyphDetectorClient() {
     const chars: HomoglyphInfo[] = [];
     for (let i = 0; i < input.length; i++) {
       const char = input[i];
-      const similar = HOMOGLYPHS[char.toLowerCase()] || HOMOGLYPHS[char] || [];
+      const similar = ['Cyrillic','Greek'].includes(getCharCategory(char)) ? Object.entries(HOMOGLYPHS).filter(([,v])=>v.includes(char)||v.includes(char.toLowerCase())).map(([k])=>k) : [];
       const info: HomoglyphInfo = {
         char,
         position: i,
@@ -128,17 +130,18 @@ export default function HomoglyphDetectorClient() {
   };
 
   return (
-    <div className="tb-v2-card">
+    <DeveloperGeneralFrame><div className="tb-v2-card">
+      <ToolExampleClearActions onExample={() => {setInput('pаypal.com');}} onClear={() => {setInput('');setResults([]);setUrlAnalysis([]);}} />
       <div className="tb-v2-card-header">
         <h2 className="tb-v2-card-title">Homoglyph Detector</h2>
         <p className="tb-v2-card-description">
-          Detect look-alike characters that can be used for phishing and spoofing attacks
+          Checks a limited table of Greek and Cyrillic look-alikes. A clean result does not establish that a URL is safe.
         </p>
       </div>
 
       <div className="tb-v2-form-group">
         <label className="tb-v2-label">Input Text or URL</label>
-        <textarea
+        <textarea aria-label="Input" maxLength={100000}
           value={input}
           onChange={(e) => setInput(e.target.value)}
           className="tb-v2-input font-mono min-h-[100px]"
@@ -266,20 +269,20 @@ export default function HomoglyphDetectorClient() {
         <div className="tb-v2-label">Security Advisory</div>
         <div className="tb-v2-card p-4 text-sm space-y-2">
           <p>
-            <strong>Homoglyph attacks</strong> (also called IDN homograph attacks) exploit visual 
+            <strong>Homoglyph attacks</strong> (also called IDN homograph attacks) exploit visual
             similarity between characters from different scripts to create deceptive domain names.
           </p>
           <p className="text-gray-600">
-            Attackers may register domains like "pаypal.com" (with Cyrillic 'а') that look identical 
+            Attackers may register domains like "pаypal.com" (with Cyrillic 'а') that look identical
             to "paypal.com" in browsers, tricking users into visiting malicious sites.
           </p>
           <p className="text-gray-600">
-            <strong>Protection:</strong> Always verify URLs carefully, enable punycode display in 
-            your browser, use security tools that detect homoglyph domains, and implement URL 
+            <strong>Protection:</strong> Always verify URLs carefully, enable punycode display in
+            your browser, use security tools that detect homoglyph domains, and implement URL
             validation in your applications.
           </p>
         </div>
       </div>
-    </div>
+    </div></DeveloperGeneralFrame>
   );
 }

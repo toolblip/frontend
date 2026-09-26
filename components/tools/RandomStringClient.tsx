@@ -1,14 +1,13 @@
 'use client';
+import DeveloperGeneralFrame from './DeveloperGeneralFrame';
 
+import ToolExampleClearActions from './ToolExampleClearActions';
 import { useState, useCallback } from 'react';
 
 function generateRandomString(length: number, charset: string): string {
   let result = '';
-  const array = new Uint32Array(length);
-  crypto.getRandomValues(array);
-  for (let i = 0; i < length; i++) {
-    result += charset[array[i] % charset.length];
-  }
+  const limit = Math.floor(0x100000000 / charset.length) * charset.length;
+  while(result.length < length){const array=new Uint32Array(Math.min(1024,length-result.length));crypto.getRandomValues(array);for(const n of array)if(n<limit)result+=charset[n%charset.length];}
   return result;
 }
 
@@ -53,7 +52,8 @@ export default function RandomStringClient() {
   ];
 
   return (
-    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
+    <DeveloperGeneralFrame><div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
+      <ToolExampleClearActions onExample={() => {setLength(16);setCount(1);setCharsetKey('alphanumeric');setStrings([]);}} onClear={() => {setStrings([]);setCopied(null);}} />
       {/* Presets */}
       <div className="tb-v2-mode-tabs">
         {presets.map((preset) => (
@@ -63,13 +63,7 @@ export default function RandomStringClient() {
               setLength(preset.length);
               setCharsetKey(preset.charset as keyof typeof CHARSETS);
               setCount(preset.count);
-              setTimeout(() => {
-                const results: string[] = [];
-                for (let i = 0; i < preset.count; i++) {
-                  results.push(preset.format(generateRandomString(preset.length, CHARSETS[preset.charset as keyof typeof CHARSETS])));
-                }
-                setStrings(results);
-              }, 0);
+              setStrings([preset.label === 'UUID' ? crypto.randomUUID() : generateRandomString(preset.length, CHARSETS[preset.charset as keyof typeof CHARSETS])]);
             }}
             className="px-3 py-1.5 text-sm bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg transition-colors border border-gray-200 dark:border-gray-700"
           >
@@ -82,18 +76,18 @@ export default function RandomStringClient() {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className="space-y-2">
           <label className="tb-v2-tool-label">Length</label>
-          <input
+          <input aria-label="Length"
             type="number"
             min={1}
             max={1024}
             value={length}
-            onChange={(e) => setLength(parseInt(e.target.value) || 1)}
+            onChange={(e) => setLength(Math.min(1024, Math.max(1,parseInt(e.target.value)||1)))}
             className="w-full px-4 py-3 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white font-mono text-sm focus:outline-none focus:border-red-500"
           />
         </div>
         <div className="space-y-2">
           <label className="tb-v2-tool-label">Character Set</label>
-          <select
+          <select aria-label="Charset Key"
             value={charsetKey}
             onChange={(e) => setCharsetKey(e.target.value as keyof typeof CHARSETS)}
             className="w-full px-4 py-3 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white text-sm focus:outline-none focus:border-red-500"
@@ -104,17 +98,17 @@ export default function RandomStringClient() {
             <option value="lowercase">Lowercase Only (a-z)</option>
             <option value="numbers">Numbers Only (0-9)</option>
             <option value="hex">Hexadecimal (0-9, A-F)</option>
-            <option value="ascii">Full ASCII (punctuation + symbols)</option>
+            <option value="ascii">Punctuation and symbols</option>
           </select>
         </div>
         <div className="space-y-2">
           <label className="tb-v2-tool-label">Count</label>
-          <input
+          <input aria-label="Count"
             type="number"
             min={1}
             max={100}
             value={count}
-            onChange={(e) => setCount(parseInt(e.target.value) || 1)}
+            onChange={(e) => setCount(Math.min(100, Math.max(1,parseInt(e.target.value)||1)))}
             className="w-full px-4 py-3 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white font-mono text-sm focus:outline-none focus:border-red-500"
           />
         </div>
@@ -151,6 +145,6 @@ export default function RandomStringClient() {
           </div>
         </div>
       )}
-    </div>
+    </div></DeveloperGeneralFrame>
   );
 }

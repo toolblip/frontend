@@ -1,10 +1,12 @@
 'use client';
+import DeveloperGeneralFrame from './DeveloperGeneralFrame';
 
+import ToolExampleClearActions from './ToolExampleClearActions';
 import { useState } from 'react';
 
 const FIRST = ['James', 'Mary', 'John', 'Patricia', 'Robert', 'Jennifer', 'Michael', 'Linda', 'William', 'Elizabeth', 'David', 'Barbara', 'Richard', 'Susan', 'Joseph', 'Jessica', 'Thomas', 'Sarah', 'Charles', 'Karen'];
 const LAST = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez', 'Hernandez', 'Lopez', 'Gonzalez', 'Wilson', 'Anderson', 'Taylor', 'Moore', 'Jackson', 'Martin'];
-const DOMAINS = ['example.com', 'mail.com', 'test.org', 'demo.net'];
+const DOMAINS = ['example.com', 'example.org', 'example.net'];
 const STREETS = ['Main St', 'Oak Ave', 'Maple Dr', 'Cedar Ln', 'Pine Rd', 'Elm St', 'Washington Blvd', 'Park Ave'];
 const CITIES = ['New York', 'Los Angeles', 'Chicago', 'Houston', 'Phoenix', 'Philadelphia', 'San Antonio', 'San Diego', 'Dallas', 'San Jose'];
 const ST = ['NY', 'CA', 'IL', 'TX', 'AZ', 'PA', 'CA'];
@@ -26,7 +28,7 @@ export default function FakeDataGeneratorClient() {
   const [data, setData] = useState<Record<string, string>[]>([]);
 
   const generate = () => {
-    const items = Array.from({ length: count }, () => {
+    const items = Array.from({ length: Math.min(100, Math.max(1, count)) }, () => {
       const p = gen();
       if (type === 'person') return p;
       if (type === 'email') return { email: p.email };
@@ -39,11 +41,12 @@ export default function FakeDataGeneratorClient() {
   const keys = data[0] ? Object.keys(data[0]) : [];
 
   return (
-    <div>
+    <DeveloperGeneralFrame><div>
+      <ToolExampleClearActions onExample={() => {setCount(5);setType('person');setData([]);}} onClear={() => {setData([]);setCount(5);}} />
       <div className="tb-v2-tool-input-head"><span className="tb-v2-tool-label">Options</span></div>
       <div className="tb-v2-tool-output-body" style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
         <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
-          <input type="number" value={count} onChange={e => setCount(Math.max(1, parseInt(e.target.value) || 1))} className="tb-v2-tool-textarea" style={{ width: 64, minHeight: 32, resize: 'none', textAlign: 'center' }} min={1} max={100} />
+          <input aria-label="Count" type="number" value={count} onChange={e => setCount(Math.min(100, Math.max(1, parseInt(e.target.value) || 1)))} className="tb-v2-tool-textarea" style={{ width: 64, minHeight: 32, resize: 'none', textAlign: 'center' }} min={1} max={100} />
           <div className="tb-v2-mode-tabs" role="group">
             {(['person', 'email', 'address', 'username'] as T[]).map(t => (
               <button key={t} type="button" onClick={() => setType(t)} className={`tb-v2-mode-tab ${type === t ? 'on' : ''}`}>{t}</button>
@@ -54,7 +57,7 @@ export default function FakeDataGeneratorClient() {
       <button onClick={generate} className="tb-v2-btn-primary" style={{ marginTop: 12 }}>Generate</button>
       <div className="tb-v2-tool-output-head">
         <span className="tb-v2-tool-label">Generated Data</span>
-        {data.length > 0 && <button type="button" onClick={() => navigator.clipboard.writeText(data.map(r => Object.values(r).join(',')).join('\n')).catch(() => {})} className="tb-v2-copy-btn">Copy CSV</button>}
+        {data.length > 0 && <button type="button" onClick={() => navigator.clipboard.writeText(data.map(r => Object.values(r).map(v => '"' + v.replace(/"/g, '""') + '"').join(',')).join('\n')).catch(() => {})} className="tb-v2-copy-btn">Copy CSV</button>}
       </div>
       <div className="tb-v2-tool-output-body">
         {data.length > 0 ? (
@@ -66,6 +69,6 @@ export default function FakeDataGeneratorClient() {
           </div>
         ) : <div style={{ color: 'var(--tb-text-secondary)', fontSize: 14 }}>Click Generate to create fake data</div>}
       </div>
-    </div>
+    </div></DeveloperGeneralFrame>
   );
 }

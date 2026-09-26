@@ -1,5 +1,7 @@
 'use client';
+import DeveloperGeneralFrame from './DeveloperGeneralFrame';
 
+import ToolExampleClearActions from './ToolExampleClearActions';
 import { useState } from 'react';
 
 interface ValidationIssue {
@@ -16,28 +18,29 @@ export default function HtmlValidatorClient() {
 
   const validateHtml = (html: string) => {
     const newIssues: ValidationIssue[] = [];
-    
+
     if (!html.trim()) {
       setIssues([]);
       setIsValid(null);
       return;
     }
 
+    html = html.replace(/<!--[\s\S]*?-->/g, m => m.replace(/[^\n]/g,' ')).replace(/(<(script|style|textarea)\b[^>]*>)[\s\S]*?(<\/\2\s*>)/gi, (_,a,b,c)=>a+c);
     const lines = html.split('\n');
     const tagStack: { tag: string; line: number }[] = [];
-    
+
     // Self-closing tags
     const selfClosing = ['br', 'hr', 'img', 'input', 'meta', 'link', 'area', 'base', 'col', 'embed', 'param', 'source', 'track', 'wbr'];
-    
+
     // Block-level elements
     const blockTags = ['div', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'li', 'table', 'tr', 'td', 'th', 'thead', 'tbody', 'form', 'header', 'footer', 'nav', 'section', 'article', 'main', 'aside'];
-    
+
     // Inline elements
     const inlineTags = ['span', 'a', 'strong', 'em', 'b', 'i', 'u', 'small', 'mark', 'sub', 'sup', 'code', 'pre'];
-    
+
     // Deprecated tags
     const deprecatedTags = ['center', 'font', 'marquee', 'blink', 'strike', 'tt', 'big', 'applet', 'basefont', 'dir', 'embed', 'isindex', 'listing', 'xmp', 'plaintext'];
-    
+
     // Tags that shouldn't be nested in specific parents
     const invalidNesting: Record<string, string[]> = {
       'p': ['p', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'li'],
@@ -49,18 +52,18 @@ export default function HtmlValidatorClient() {
 
     // Track open tags for inline/block analysis
     const openTags: string[] = [];
-    
+
     // regex to find HTML tags
-    const tagRegex = /<\/?([a-zA-Z][a-zA-Z0-9]*)(?:\s+[^>]*)?>/g;
-    
-    let match;
+    const tagRegex = /<\/?([a-zA-Z][a-zA-Z0-9:-]*)(?:\s+(?:[^>"']|"[^"]*"|'[^']*')*)?\s*\/?>/g;
+
+    let match;let lineNumber=1,previousOffset=0;
     while ((match = tagRegex.exec(html)) !== null) {
       const fullMatch = match[0];
       const tagName = match[1].toLowerCase();
       const isClosing = fullMatch.startsWith('</');
       const isSelfClosing = selfClosing.includes(tagName);
-      const lineNum = html.substring(0, match.index).split('\n').length;
-      
+      lineNumber += (html.slice(previousOffset,match.index).match(/\n/g)||[]).length;previousOffset=match.index;const lineNum=lineNumber;
+
       // Check for deprecated tags
       if (deprecatedTags.includes(tagName)) {
         newIssues.push({
@@ -69,7 +72,7 @@ export default function HtmlValidatorClient() {
           severity: 'warning' as const,
         });
       }
-      
+
       // Check for uppercase tags
       if (/<[A-Z]/.test(fullMatch)) {
         newIssues.push({
@@ -78,9 +81,10 @@ export default function HtmlValidatorClient() {
           severity: 'info' as const,
         });
       }
-      
+
       if (isClosing) {
         const lastOpen = tagStack.pop();
+        if (!lastOpen) newIssues.push({line:lineNum,message:`Unexpected closing tag: </${tagName}>`,severity:'error'});
         if (lastOpen && lastOpen.tag !== tagName) {
           newIssues.push({
             line: lineNum,
@@ -103,10 +107,10 @@ export default function HtmlValidatorClient() {
         }
         tagStack.push({ tag: tagName, line: lineNum });
       }
-      
+
       openTags.push(tagName);
     }
-    
+
     // Check for unclosed tags
     while (tagStack.length > 0) {
       const unclosed = tagStack.pop()!;
@@ -116,11 +120,11 @@ export default function HtmlValidatorClient() {
         severity: 'error' as const,
       });
     }
-    
+
     // Check for common issues in lines
     lines.forEach((line, index) => {
       const lineNum = index + 1;
-      
+
       // Check for inline elements containing block elements
       const inlineInBlock = /<(span|a|strong|em|b|i|u)>[^<]*<(div|p|h[1-6]|ul|ol|li|table)/gi;
       let inlineMatch;
@@ -131,7 +135,7 @@ export default function HtmlValidatorClient() {
           severity: 'warning' as const,
         });
       }
-      
+
       // Check for missing quotes in attributes
       if (/=[^"\s>]+(?=\s|>)/.test(line)) {
         newIssues.push({
@@ -140,7 +144,7 @@ export default function HtmlValidatorClient() {
           severity: 'info' as const,
         });
       }
-      
+
       // Check for missing alt in img
       const imgWithoutAlt = /<img(?![^>]*alt=)[^>]*>/gi;
       let imgMatch;
@@ -151,7 +155,7 @@ export default function HtmlValidatorClient() {
           severity: 'warning' as const,
         });
       }
-      
+
       // Check for href with javascript:
       const jsHref = /href\s*=\s*["']javascript:[^"']*["']/gi;
       let jsMatch;
@@ -169,12 +173,13 @@ export default function HtmlValidatorClient() {
   };
 
   return (
-    <div className="flex flex-col h-full">
+    <DeveloperGeneralFrame><div className="flex flex-col h-full">
+      <ToolExampleClearActions onExample={() => {setInput('<p>Hello</p>');validateHtml('<p>Hello</p>');}} onClear={() => {setInput('');setIssues([]);setIsValid(null);}} />
       <div className="mb-4">
         <label className="tb-v2-tool-label" style={{marginBottom:8}}>
           HTML Input
         </label>
-        <textarea
+        <textarea aria-label="Input" maxLength={100000}
           value={input}
           onChange={(e) => {
             setInput(e.target.value);
@@ -233,6 +238,6 @@ export default function HtmlValidatorClient() {
           <p className="text-gray-500 text-sm">No issues detected. Your HTML looks good!</p>
         </div>
       )}
-    </div>
+    </div></DeveloperGeneralFrame>
   );
 }

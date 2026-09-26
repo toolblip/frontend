@@ -1,6 +1,9 @@
 'use client';
+import DeveloperGeneralFrame from './DeveloperGeneralFrame';
 
-import { useState } from 'react';
+import ToolExampleClearActions from './ToolExampleClearActions';
+import { httpUrl, boundedText } from '@/lib/developer-general/network';
+import { useState, useEffect, useRef } from 'react';
 
 interface HistoryEntry {
   endpoint: string;
@@ -22,8 +25,11 @@ export default function GraphqlPlaygroundClient() {
   const [copied, setCopied] = useState(false);
   const [history, setHistory] = useState<HistoryEntry[]>([]);
 
+  const pending = useRef<AbortController | null>(null);
+  const cancel = () => {pending.current?.abort();pending.current=null;setLoading(false);};
+  useEffect(() => () => pending.current?.abort(), []);
   const runQuery = async () => {
-    setError('');
+    cancel();setError('');
     setResponse('');
 
     if (!endpoint.trim()) {
@@ -40,22 +46,28 @@ export default function GraphqlPlaygroundClient() {
     if (variables.trim()) {
       try {
         parsedVariables = JSON.parse(variables);
+        if (!parsedVariables || typeof parsedVariables !== 'object' || Array.isArray(parsedVariables)) throw new Error('Expected a JSON object');
       } catch (e) {
         setError('Variables is not valid JSON: ' + (e as Error).message);
         return;
       }
     }
 
+    let target: string;try {target=httpUrl(endpoint);}catch(e){setError((e as Error).message);return;}
+    const controller=new AbortController();pending.current=controller;
+    const timeout=setTimeout(()=>controller.abort(),10000);
     setLoading(true);
 
     try {
-      const res = await fetch(endpoint.trim(), {
+      const res = await fetch(target, {
+        signal:controller.signal, credentials:'omit',
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ query, variables: parsedVariables }),
       });
 
-      const text = await res.text();
+      const text = await boundedText(res,controller.signal);
+      if(pending.current!==controller)return;
       let parsed: unknown;
       try {
         parsed = JSON.parse(text);
@@ -81,15 +93,14 @@ export default function GraphqlPlaygroundClient() {
       const entry: HistoryEntry = { endpoint: endpoint.trim(), query, variables };
       setHistory((prev) => [entry, ...prev.filter((h) => !(h.endpoint === entry.endpoint && h.query === entry.query))].slice(0, 10));
     } catch (e) {
+      if(pending.current!==controller)return;
       // A thrown fetch error here almost always means a network failure or
       // the endpoint blocking cross-origin browser requests (CORS). Say so
       // plainly rather than fabricating a response.
       setError(
         `Request failed: ${(e as Error).message}. This is often caused by the endpoint not allowing cross-origin (CORS) requests from the browser, or the endpoint being unreachable.`
       );
-    }
-
-    setLoading(false);
+    } finally {clearTimeout(timeout);if(pending.current===controller){pending.current=null;setLoading(false);}}
   };
 
   const copyResponse = () => {
@@ -100,6 +111,7 @@ export default function GraphqlPlaygroundClient() {
   };
 
   const loadHistoryEntry = (entry: HistoryEntry) => {
+    cancel();
     setEndpoint(entry.endpoint);
     setQuery(entry.query);
     setVariables(entry.variables);
@@ -108,15 +120,17 @@ export default function GraphqlPlaygroundClient() {
   };
 
   return (
-    <div className="tb-v2-tool-card flex flex-col gap-4">
+    <DeveloperGeneralFrame><div className="tb-v2-tool-card flex flex-col gap-4">
+      <ToolExampleClearActions onExample={()=>{cancel();setEndpoint('https://countries.trevorblades.com/');setQuery('query { country(code: "BD") { name capital } }');setVariables('');setResponse('');setError('');}} onClear={()=>{cancel();setEndpoint('');setQuery('');setVariables('');setResponse('');setError('');setHistory([]);setCopied(false);}}/>
+      {loading && <button className="tb-v2-btn" onClick={()=>{cancel();setError('Request cancelled.');}}>Cancel</button>}
       <div>
         <div className="tb-v2-tool-input-head">
           <span className="tb-v2-tool-label">Endpoint URL</span>
         </div>
-        <input
+        <input aria-label="Endpoint" maxLength={8000}
           type="text"
           value={endpoint}
-          onChange={(e) => setEndpoint(e.target.value)}
+          onChange={(e) => {cancel();setResponse('');setError('');setEndpoint(e.target.value);}}
           placeholder="https://api.example.com/graphql"
           className="tb-v2-input font-mono"
         />
@@ -126,9 +140,9 @@ export default function GraphqlPlaygroundClient() {
         <div className="tb-v2-tool-input-head">
           <span className="tb-v2-tool-label">Query</span>
         </div>
-        <textarea
+        <textarea aria-label="Query" maxLength={100000}
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={(e) => {cancel();setResponse('');setError('');setQuery(e.target.value);}}
           className="tb-v2-input font-mono"
           rows={10}
           spellCheck={false}
@@ -140,9 +154,9 @@ export default function GraphqlPlaygroundClient() {
         <div className="tb-v2-tool-input-head">
           <span className="tb-v2-tool-label">Variables (JSON, optional)</span>
         </div>
-        <textarea
+        <textarea aria-label="Variables" maxLength={100000}
           value={variables}
-          onChange={(e) => setVariables(e.target.value)}
+          onChange={(e) => {cancel();setResponse('');setError('');setVariables(e.target.value);}}
           className="tb-v2-input font-mono"
           rows={4}
           spellCheck={false}
@@ -204,6 +218,6 @@ export default function GraphqlPlaygroundClient() {
           </div>
         </div>
       )}
-    </div>
+    </div></DeveloperGeneralFrame>
   );
 }

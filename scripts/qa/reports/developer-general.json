@@ -1,0 +1,1020 @@
+{
+  "group": "developer-general",
+  "assignedCount": 61,
+  "inspectedCount": 61,
+  "browserCaseCount": 61,
+  "historicalApprovalImpact": "Full inventory relationships checked; no assigned shared component serves a historically approved route.",
+  "status": "ready_for_parent_integrated_validation",
+  "validation": {
+    "scopedTests": {
+      "command": "node_modules/.bin/vitest run lib/developer-general/developer-general.test.ts",
+      "result": "58 tests passed"
+    },
+    "typescript": {
+      "command": "node_modules/.bin/tsc --noEmit --pretty false",
+      "result": "passed"
+    },
+    "caseCoverage": {
+      "command": "Node import compares case slugs with assignment",
+      "result": "61 unique cases match all 61 assigned routes"
+    },
+    "browser": "Not run per worker contract",
+    "build": "Not run per worker contract",
+    "devServer": "Not started per worker contract"
+  },
+  "fixedFiles": [
+    "components/tools/AlgorithmVisualizerClient.tsx",
+    "components/tools/ApiAuthHeaderGeneratorClient.tsx",
+    "components/tools/ApiDocGeneratorClient.tsx",
+    "components/tools/ApiEndpointDebuggerClient.tsx",
+    "components/tools/ApiEndpointDocumenterClient.tsx",
+    "components/tools/ApiSpecGeneratorClient.tsx",
+    "components/tools/BashCommandGeneratorClient.tsx",
+    "components/tools/CodeBeautifierClient.tsx",
+    "components/tools/CodeToDiagramGeneratorClient.tsx",
+    "components/tools/CorsHeaderGeneratorClient.tsx",
+    "components/tools/CronGeneratorClient.tsx",
+    "components/tools/CronGeneratorCompleteClient.tsx",
+    "components/tools/CronHumanReadableClient.tsx",
+    "components/tools/CronParserClient.tsx",
+    "components/tools/CronScheduleExplainerClient.tsx",
+    "components/tools/CronScheduleGeneratorClient.tsx",
+    "components/tools/CronScheduleValidatorClient.tsx",
+    "components/tools/CronValidatorClient.tsx",
+    "components/tools/CssClassGeneratorClient.tsx",
+    "components/tools/CssMinifierClient.tsx",
+    "components/tools/CssToScssConverterClient.tsx",
+    "components/tools/CssToStyledComponentsClient.tsx",
+    "components/tools/CssToTailwindClient.tsx",
+    "components/tools/CssValidatorClient.tsx",
+    "components/tools/CurlCommandBuilderClient.tsx",
+    "components/tools/CurlGenExpressClient.tsx",
+    "components/tools/CurlToJavascriptClient.tsx",
+    "components/tools/CurlToPythonClient.tsx",
+    "components/tools/DeveloperGeneralCurlConverter.tsx",
+    "components/tools/DeveloperGeneralFrame.tsx",
+    "components/tools/DeveloperGeneralHttpInspector.tsx",
+    "components/tools/DockerCommandGeneratorClient.tsx",
+    "components/tools/EmailGeneratorClient.tsx",
+    "components/tools/EnvParserClient.tsx",
+    "components/tools/FakeDataGeneratorClient.tsx",
+    "components/tools/GraphqlPlaygroundClient.tsx",
+    "components/tools/HomoglyphDetectorClient.tsx",
+    "components/tools/HtmlLivePreviewClient.tsx",
+    "components/tools/HtmlMinifierClient.tsx",
+    "components/tools/HtmlTableGeneratorClient.tsx",
+    "components/tools/HtmlValidatorClient.tsx",
+    "components/tools/HttpHeadersInspectorClient.tsx",
+    "components/tools/HttpStatusCheckerClient.tsx",
+    "components/tools/JsMinifierClient.tsx",
+    "components/tools/LdapFilterGeneratorClient.tsx",
+    "components/tools/MIMETypesReferenceClient.tsx",
+    "components/tools/RandomStringClient.tsx",
+    "components/tools/RegexDescriptionGeneratorClient.tsx",
+    "components/tools/RegexExplainerClient.tsx",
+    "components/tools/RegexPatternBuilderClient.tsx",
+    "components/tools/RegexPatternGeneratorClient.tsx",
+    "components/tools/RegexTesterClient.tsx",
+    "components/tools/RegexVisualizerClient.tsx",
+    "components/tools/ScreenDensitySimulatorClient.tsx",
+    "components/tools/ScreenResolutionTesterClient.tsx",
+    "components/tools/SemverCheckerClient.tsx",
+    "components/tools/ShellCommandReferenceClient.tsx",
+    "components/tools/UrlParamsClient.tsx",
+    "components/tools/UrlParserClient.tsx",
+    "components/tools/UrlRedirectCheckerClient.tsx",
+    "components/tools/UserAgentParserClient.tsx",
+    "components/tools/WebSocketTesterClient.tsx",
+    "lib/developer-general/code.ts",
+    "lib/developer-general/cors.ts",
+    "lib/developer-general/cron.ts",
+    "lib/developer-general/curl.ts",
+    "lib/developer-general/data.ts",
+    "lib/developer-general/developer-general.test.ts",
+    "lib/developer-general/esbuild-browser.ts",
+    "lib/developer-general/network.ts",
+    "lib/developer-general/regex.ts",
+    "lib/developer-general/semver.ts",
+    "lib/developer-general/use-safe-regex.ts",
+    "scripts/qa/cases/developer-general.mjs",
+    "scripts/qa/reports/developer-general.json"
+  ],
+  "duplicateRedirectProposals": [
+    {
+      "from": "regex-pattern-tester",
+      "to": "regex-tester",
+      "permanent": true,
+      "evidence": "Already shares identical RegexTesterClient implementation"
+    },
+    {
+      "from": "regex-match-tester",
+      "to": "regex-tester",
+      "permanent": true,
+      "evidence": "Already shares identical RegexTesterClient implementation"
+    },
+    {
+      "from": "cron-human-readable",
+      "to": "cron-parser",
+      "permanent": true,
+      "evidence": "Original five freeform/preset/next-run implementations were duplicated with heading/export-name differences; corrected implementation is now shared."
+    },
+    {
+      "from": "cron-schedule-generator",
+      "to": "cron-parser",
+      "permanent": true,
+      "evidence": "Original five freeform/preset/next-run implementations were duplicated with heading/export-name differences; corrected implementation is now shared."
+    },
+    {
+      "from": "cron-schedule-validator",
+      "to": "cron-parser",
+      "permanent": true,
+      "evidence": "Original five freeform/preset/next-run implementations were duplicated with heading/export-name differences; corrected implementation is now shared."
+    },
+    {
+      "from": "cron-generator-dg",
+      "to": "cron-parser",
+      "permanent": true,
+      "evidence": "Original five freeform/preset/next-run implementations were duplicated with heading/export-name differences; corrected implementation is now shared."
+    },
+    {
+      "from": "cron-schedule-explainer",
+      "to": "cron-parser",
+      "permanent": true,
+      "evidence": "Original five freeform/preset/next-run implementations were duplicated with heading/export-name differences; corrected implementation is now shared."
+    }
+  ],
+  "centralMetadataChanges": [
+    {
+      "slugs": [
+        "url-redirect-checker"
+      ],
+      "change": "Describe final redirect destination/flag; remove promises of full intermediate chain."
+    },
+    {
+      "slugs": [
+        "screen-density-simulator"
+      ],
+      "change": "Describe physical-pixel calculation/CSS viewport preview, not true devicePixelRatio emulation."
+    },
+    {
+      "slugs": [
+        "api-endpoint-debugger"
+      ],
+      "change": "Name/describe as request-code generator; no live request execution."
+    },
+    {
+      "slugs": [
+        "html-validator",
+        "css-validator"
+      ],
+      "change": "Limit validation claims to basic HTML lint / CSS syntax."
+    },
+    {
+      "slugs": [
+        "css-to-scss"
+      ],
+      "change": "Describe CSS-compatible SCSS output, preserving runtime variables."
+    },
+    {
+      "slugs": [
+        "code-to-diagram-generator"
+      ],
+      "change": "Describe Mermaid-source generation from lines/simple declarations, not AI code analysis or rendered diagrams."
+    },
+    {
+      "slugs": [
+        "code-beautifier"
+      ],
+      "change": "Disclose TypeScript transpilation and conservative Python/HTML formatting."
+    }
+  ],
+  "routes": [
+    {
+      "slug": "css-class-generator",
+      "componentPath": "components/tools/CssClassGeneratorClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_pending_integrated_validation",
+      "findingsAndFixes": [
+        "Unique indexed class names; invalid prefixes/declaration delimiters cannot produce copied markup.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": []
+    },
+    {
+      "slug": "url-parameter-extractor",
+      "componentPath": "components/tools/UrlParamsClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_pending_integrated_validation",
+      "findingsAndFixes": [
+        "Preserve raw percent/plus encodings and duplicate order; catch malformed fragments; safe parameter dictionary.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": []
+    },
+    {
+      "slug": "cron-parser",
+      "componentPath": "components/tools/CronParserClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_pending_integrated_validation",
+      "findingsAndFixes": [
+        "Strict bounded field parser, named months/weekdays, Sunday 7, steps/ranges, accurate restricted schedules and calendar runs.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": []
+    },
+    {
+      "slug": "cors-header-generator",
+      "componentPath": "components/tools/CorsHeaderGeneratorClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_with_disclosed_limits_pending_integration",
+      "findingsAndFixes": [
+        "Reject wildcard credentials and malformed origins/headers; one allow-origin; allowlist-aware frameworks; valid Python booleans.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": [
+        "Raw/Nginx/Apache snippets use first origin. Dynamic framework snippets use allowlists. Existing Vary values must be merged when integrating."
+      ]
+    },
+    {
+      "slug": "screen-resolution-tester",
+      "componentPath": "components/tools/ScreenResolutionTesterClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_with_disclosed_limits_pending_integration",
+      "findingsAndFixes": [
+        "Bounded dimensions, explicit scaled-preview claim, real window.open button, Examples/Clear and responsive containment.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": [
+        "Window geometry is a browser request and is not guaranteed; Clear resets dimensions to 1\u00d71."
+      ]
+    },
+    {
+      "slug": "regex-tester",
+      "componentPath": "components/tools/RegexTesterClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_pending_integrated_validation",
+      "findingsAndFixes": [
+        "Worker-isolated matching with 500 ms cancellation, global semantics, zero-width Unicode advancement, capture offsets and token hints.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": []
+    },
+    {
+      "slug": "cron-generator",
+      "componentPath": "components/tools/CronGeneratorClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_pending_integrated_validation",
+      "findingsAndFixes": [
+        "Reuse tested cron engine while preserving field-selection builder and presets.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": []
+    },
+    {
+      "slug": "js-minifier",
+      "componentPath": "components/tools/JsMinifierClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_with_disclosed_limits_pending_integration",
+      "findingsAndFixes": [
+        "Replace corrupting handwritten scanner with existing esbuild-wasm parser; preserve program semantics; syntax errors and stale-result invalidation.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": [
+        "Existing esbuild-wasm asset is resolved with new URL from node_modules; parent must verify its integrated asset bundling/loading. No worker build/browser was allowed."
+      ]
+    },
+    {
+      "slug": "fake-data-generator",
+      "componentPath": "components/tools/FakeDataGeneratorClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_pending_integrated_validation",
+      "findingsAndFixes": [
+        "Bound record count, reserved sample domains and properly quoted CSV; reset generated data.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": []
+    },
+    {
+      "slug": "random-string-generator",
+      "componentPath": "components/tools/RandomStringClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_pending_integrated_validation",
+      "findingsAndFixes": [
+        "Bound lengths/counts; unbiased rejection sampling; real crypto.randomUUID; remove pending preset timer.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": []
+    },
+    {
+      "slug": "url-parser",
+      "componentPath": "components/tools/UrlParserClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_pending_integrated_validation",
+      "findingsAndFixes": [
+        "Live parsing, explicit invalid URLs, duplicate query preservation, safe dictionary and stale-output clearing.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": []
+    },
+    {
+      "slug": "css-validator",
+      "componentPath": "components/tools/CssValidatorClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_pending_integrated_validation",
+      "findingsAndFixes": [
+        "PostCSS syntax parsing replaces false hex/brace heuristics; explicitly limit claims to syntax.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": []
+    },
+    {
+      "slug": "html-validator",
+      "componentPath": "components/tools/HtmlValidatorClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_with_disclosed_limits_pending_integration",
+      "findingsAndFixes": [
+        "Ignore comment/raw-text pseudo-tags, quoted attribute > characters, identify unexpected closing tags, bound scans and disclose lint scope.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": [
+        "Basic tag-balance lint, not full WHATWG conformance. Optional closing tags and embedded syntax can require manual review; UI discloses limitation."
+      ]
+    },
+    {
+      "slug": "email-generator",
+      "componentPath": "components/tools/EmailGeneratorClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_pending_integrated_validation",
+      "findingsAndFixes": [
+        "Validate domains and local parts, bound digit-pattern expansion/counts, reserved default domain, visible errors and reset.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": []
+    },
+    {
+      "slug": "semver-checker",
+      "componentPath": "components/tools/SemverCheckerClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_pending_integrated_validation",
+      "findingsAndFixes": [
+        "Correct release/prerelease precedence, numeric identifier ordering, leading-zero rejection and build-metadata equality; live comparison.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": []
+    },
+    {
+      "slug": "html-table-generator",
+      "componentPath": "components/tools/HtmlTableGeneratorClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_pending_integrated_validation",
+      "findingsAndFixes": [
+        "Real quoted CSV parsing, headerless cells, escaped markup, functioning stripe style, live output and malformed CSV error.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": []
+    },
+    {
+      "slug": "homoglyph-detector",
+      "componentPath": "components/tools/HomoglyphDetectorClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_with_disclosed_limits_pending_integration",
+      "findingsAndFixes": [
+        "Detect reverse Greek/Cyrillic lookalikes instead of flagging plain ASCII; digit category corrected; disclose limited confusables table.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": [
+        "Uses a limited confusables table; not a comprehensive Unicode security assessment."
+      ]
+    },
+    {
+      "slug": "shell-command-reference",
+      "componentPath": "components/tools/ShellCommandReferenceClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_pending_integrated_validation",
+      "findingsAndFixes": [
+        "Preserve reference/search/category workflow; Example searches pwd, Clear restores reference inventory.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": []
+    },
+    {
+      "slug": "user-agent-parser",
+      "componentPath": "components/tools/UserAgentParserClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_pending_integrated_validation",
+      "findingsAndFixes": [
+        "Prioritize Edge/Opera/Samsung before Chrome; Safari Version token; iPad/tablet, macOS, Android and Chrome OS.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": []
+    },
+    {
+      "slug": "graphql-playground",
+      "componentPath": "components/tools/GraphqlPlaygroundClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_with_disclosed_limits_pending_integration",
+      "findingsAndFixes": [
+        "Validate URL and variables object, 10-second abort, 1 MB streamed response bound, cancel/clear/edit invalidation and read-only country example.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": [
+        "Positive fixture depends on public read-only countries.trevorblades.com endpoint and its CORS availability."
+      ]
+    },
+    {
+      "slug": "websocket-tester",
+      "componentPath": "components/tools/WebSocketTesterClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_with_disclosed_limits_pending_integration",
+      "findingsAndFixes": [
+        "10-second connection bound, old-socket event guards, bounded logs/messages, send failures, disconnect cleanup and Clear cancellation.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": [
+        "Positive fixture depends on public echo.websocket.org availability; parent must verify the real echo round trip."
+      ]
+    },
+    {
+      "slug": "ldap-filter-generator",
+      "componentPath": "components/tools/LdapFilterGeneratorClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_pending_integrated_validation",
+      "findingsAndFixes": [
+        "Escape parentheses/backslash/NUL, validate attribute identifiers, preserve intentional wildcard searches, refuse invalid copy.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": []
+    },
+    {
+      "slug": "regex-pattern-generator",
+      "componentPath": "components/tools/RegexPatternGeneratorClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_pending_integrated_validation",
+      "findingsAndFixes": [
+        "Reuse cancellable regex worker, correct nonempty preset, useful valid example and reset selected output.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": []
+    },
+    {
+      "slug": "css-to-scss",
+      "componentPath": "components/tools/CssToScssConverterClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_with_disclosed_limits_pending_integration",
+      "findingsAndFixes": [
+        "Preserve valid CSS-as-SCSS instead of incorrectly moving runtime variables into incompatible Sass scopes.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": [
+        "Valid CSS is emitted unchanged as valid SCSS. Runtime custom properties are intentionally not rewritten into Sass variables."
+      ]
+    },
+    {
+      "slug": "env-parser",
+      "componentPath": "components/tools/EnvParserClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_with_disclosed_limits_pending_integration",
+      "findingsAndFixes": [
+        "Reject unclosed quoted values, retain export/duplicate diagnostics, safe output dictionary, Examples/Clear.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": [
+        "Multiline quoted environment values are explicitly unsupported."
+      ]
+    },
+    {
+      "slug": "mime-types-reference",
+      "componentPath": "components/tools/MIMETypesReferenceClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_pending_integrated_validation",
+      "findingsAndFixes": [
+        "Preserve full reference and filtering; useful JSON example and reset filters.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": []
+    },
+    {
+      "slug": "docker-command-generator",
+      "componentPath": "components/tools/DockerCommandGeneratorClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_pending_integrated_validation",
+      "findingsAndFixes": [
+        "Quote user-controlled shell arguments; preserve all command variants and presets; bound labelled fields.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": []
+    },
+    {
+      "slug": "html-live-preview",
+      "componentPath": "components/tools/HtmlLivePreviewClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_pending_integrated_validation",
+      "findingsAndFixes": [
+        "Live sandboxed preview with restrictive document CSP, bounded input and reset.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": []
+    },
+    {
+      "slug": "code-beautifier",
+      "componentPath": "components/tools/CodeBeautifierClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_with_disclosed_limits_pending_integration",
+      "findingsAndFixes": [
+        "Parser-backed JavaScript, JSON and CSS; Python indentation preservation; conservative HTML blocks; replace unsafe minify path and invalidate pending output.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": [
+        "TypeScript mode uses esbuild and removes type syntax; explicitly disclosed in UI. Python reindents existing structure only; HTML is conservative block formatting. esbuild WASM asset loading requires integrated build/browser verification."
+      ]
+    },
+    {
+      "slug": "css-to-tailwind",
+      "componentPath": "components/tools/CssToTailwindClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_with_disclosed_limits_pending_integration",
+      "findingsAndFixes": [
+        "Parse declarations with PostCSS, reject nested/multiple rules, preserve arbitrary values with spaces and negative values, visible errors.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": [
+        "One rule/declaration block at a time; theme-dependent utility mappings assume standard Tailwind defaults."
+      ]
+    },
+    {
+      "slug": "css-to-styled-components",
+      "componentPath": "components/tools/CssToStyledComponentsClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_with_disclosed_limits_pending_integration",
+      "findingsAndFixes": [
+        "Parse CSS; emit imported styled factory with valid names and escaped templates; reject unsupported complex/duplicate selectors.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": [
+        "Complex selectors/at-rules and duplicate derived component names are rejected explicitly rather than silently corrupted."
+      ]
+    },
+    {
+      "slug": "url-redirect-checker",
+      "componentPath": "components/tools/UrlRedirectCheckerClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_with_disclosed_limits_pending_integration",
+      "findingsAndFixes": [
+        "Real CORS fetch reports final URL and redirected flag; remove fabricated intermediate chain; timeout/cancel/history.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": [
+        "Browsers hide intermediate redirect hops; full-chain verification remains unavailable without a coordinator-owned server endpoint. Fixture verifies actual final HTTP response, not a fabricated redirect chain."
+      ]
+    },
+    {
+      "slug": "api-spec-generator",
+      "componentPath": "components/tools/ApiSpecGeneratorClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_pending_integrated_validation",
+      "findingsAndFixes": [
+        "Emit parsed/serialized valid YAML, merge methods under a path, preserve schema types and validate input shapes.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": []
+    },
+    {
+      "slug": "regex-description-generator",
+      "componentPath": "components/tools/RegexDescriptionGeneratorClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_pending_integrated_validation",
+      "findingsAndFixes": [
+        "Reuse richer token explainer and cancellable test matching instead of duplicate explanation logic.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": []
+    },
+    {
+      "slug": "regex-match-visualizer",
+      "componentPath": "components/tools/RegexVisualizerClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_pending_integrated_validation",
+      "findingsAndFixes": [
+        "Reuse matcher with captures, highlighted spans, flags and token hints; eliminate infinite empty-match loop/render-time state update.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": []
+    },
+    {
+      "slug": "cron-human-readable",
+      "componentPath": "components/tools/CronHumanReadableClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_pending_integrated_validation",
+      "findingsAndFixes": [
+        "Reuse corrected canonical parser rather than misleading duplicated schedule descriptions.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": []
+    },
+    {
+      "slug": "curl-gen",
+      "componentPath": "components/tools/CurlGenExpressClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_pending_integrated_validation",
+      "findingsAndFixes": [
+        "Validate raw HTTP request line, Host and headers; preserve method/path/body and POSIX shell quoting.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": []
+    },
+    {
+      "slug": "regex-pattern-tester",
+      "componentPath": "components/tools/RegexTesterClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_pending_integrated_validation",
+      "findingsAndFixes": [
+        "Same owned RegexTesterClient as regex-tester; regression coverage shared.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": []
+    },
+    {
+      "slug": "cron-schedule-generator",
+      "componentPath": "components/tools/CronScheduleGeneratorClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_pending_integrated_validation",
+      "findingsAndFixes": [
+        "Replace exact duplicated freeform schedule implementation with corrected canonical parser; preserve presets and next runs.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": []
+    },
+    {
+      "slug": "regex-explainer",
+      "componentPath": "components/tools/RegexExplainerClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_with_disclosed_limits_pending_integration",
+      "findingsAndFixes": [
+        "Retain token reference with bounded input and worker-isolated live matching; no main-thread catastrophic backtracking.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": [
+        "Token hints are not a complete semantic parse of every nested regex construct."
+      ]
+    },
+    {
+      "slug": "cron-schedule-validator",
+      "componentPath": "components/tools/CronScheduleValidatorClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_pending_integrated_validation",
+      "findingsAndFixes": [
+        "Reuse corrected canonical parser for syntax, descriptions and next runs.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": []
+    },
+    {
+      "slug": "api-auth-header-generator",
+      "componentPath": "components/tools/ApiAuthHeaderGeneratorClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_pending_integrated_validation",
+      "findingsAndFixes": [
+        "Correct API-key header name/value; UTF-8 Basic credentials; prevent line-break/username-colon errors; quote cURL header.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": []
+    },
+    {
+      "slug": "cron-validator",
+      "componentPath": "components/tools/CronValidatorClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_pending_integrated_validation",
+      "findingsAndFixes": [
+        "Reuse corrected parser and retain original up-to-10-run view.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": []
+    },
+    {
+      "slug": "css-minifier",
+      "componentPath": "components/tools/CssMinifierClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_pending_integrated_validation",
+      "findingsAndFixes": [
+        "PostCSS removes comment/formatting trivia without corrupting descendant selectors, calc spacing or string literals.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": []
+    },
+    {
+      "slug": "html-minifier",
+      "componentPath": "components/tools/HtmlMinifierClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_pending_integrated_validation",
+      "findingsAndFixes": [
+        "Conservative comment removal preserves closing script tags, raw elements, attribute content and significant inline whitespace.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": []
+    },
+    {
+      "slug": "code-to-diagram-generator",
+      "componentPath": "components/tools/CodeToDiagramGeneratorClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_with_disclosed_limits_pending_integration",
+      "findingsAndFixes": [
+        "Fix sequence parsing/directions and quoted Mermaid labels; explicitly describe generated source and limited structural inference.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": [
+        "Outputs Mermaid source only. It does not infer control-flow semantics or render diagrams."
+      ]
+    },
+    {
+      "slug": "algorithm-visualizer",
+      "componentPath": "components/tools/AlgorithmVisualizerClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_pending_integrated_validation",
+      "findingsAndFixes": [
+        "Retain three sort algorithms; bounded numeric input, errors, negative-value bars and timer-safe Example/Clear.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": []
+    },
+    {
+      "slug": "http-headers-inspector",
+      "componentPath": "components/tools/HttpHeadersInspectorClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_pending_integrated_validation",
+      "findingsAndFixes": [
+        "Real CORS-visible headers/status, abort/timeout, history and explicit measured header latency; remove opaque fake inspection.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": []
+    },
+    {
+      "slug": "api-doc-generator",
+      "componentPath": "components/tools/ApiDocGeneratorClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_pending_integrated_validation",
+      "findingsAndFixes": [
+        "Correct null types; preserve JSON example; explicitly label inferred endpoint/method/field semantics as draft.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": []
+    },
+    {
+      "slug": "api-endpoint-debugger",
+      "componentPath": "components/tools/ApiEndpointDebuggerClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_with_disclosed_limits_pending_integration",
+      "findingsAndFixes": [
+        "Preserve cURL/fetch/Axios code modes; safely quote URLs/headers/raw bodies; correct Axios config call; disclose no network execution.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": [
+        "This route generates request code; it does not execute requests. Central naming should make that explicit."
+      ]
+    },
+    {
+      "slug": "screen-density-simulator",
+      "componentPath": "components/tools/ScreenDensitySimulatorClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_with_disclosed_limits_pending_integration",
+      "findingsAndFixes": [
+        "Correct physical-pixel multiplication; keep CSS viewport unchanged by DPR; disclose browser DPR is not emulated; sandbox embedded page.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": [
+        "CSS cannot set browser devicePixelRatio; this is a physical-pixel calculator and CSS viewport preview."
+      ]
+    },
+    {
+      "slug": "cron-generator-dg",
+      "componentPath": "components/tools/CronGeneratorCompleteClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_pending_integrated_validation",
+      "findingsAndFixes": [
+        "Replace exact duplicated freeform schedule implementation with corrected canonical parser.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": []
+    },
+    {
+      "slug": "regex-pattern-builder",
+      "componentPath": "components/tools/RegexPatternBuilderClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_pending_integrated_validation",
+      "findingsAndFixes": [
+        "Retain token rows, anchors, presets and quantifiers; shared worker isolation and Clear.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": []
+    },
+    {
+      "slug": "cron-schedule-explainer",
+      "componentPath": "components/tools/CronScheduleExplainerClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_pending_integrated_validation",
+      "findingsAndFixes": [
+        "Replace exact duplicated freeform schedule implementation with corrected canonical parser.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": []
+    },
+    {
+      "slug": "curl-to-python",
+      "componentPath": "components/tools/CurlToPythonClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_pending_integrated_validation",
+      "findingsAndFixes": [
+        "Bounded POSIX tokenizer, reject unsupported options/files, infer POST for data, valid requests.request and quoted JSON body.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": []
+    },
+    {
+      "slug": "curl-to-javascript",
+      "componentPath": "components/tools/CurlToJavascriptClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_pending_integrated_validation",
+      "findingsAndFixes": [
+        "Reuse same cURL parser; exact URL, method, escaped headers/body, readable text response and unsupported-option errors.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": []
+    },
+    {
+      "slug": "http-status-checker",
+      "componentPath": "components/tools/HttpStatusCheckerClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_pending_integrated_validation",
+      "findingsAndFixes": [
+        "Real HTTP status and exposed headers via CORS; timeout/cancel/current-result history; no no-cors status-0 success.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": []
+    },
+    {
+      "slug": "shell-command-generator",
+      "componentPath": "components/tools/BashCommandGeneratorClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_pending_integrated_validation",
+      "findingsAndFixes": [
+        "Quote shell arguments; reject invalid numeric PID/count instead of generating dangerous silent defaults.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": []
+    },
+    {
+      "slug": "api-endpoint-documenter",
+      "componentPath": "components/tools/ApiEndpointDocumenterClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_pending_integrated_validation",
+      "findingsAndFixes": [
+        "Preserve multiple endpoint/body/response Markdown workflow; reset/invalidate stale generated output and label controls.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": []
+    },
+    {
+      "slug": "curl-command-builder",
+      "componentPath": "components/tools/CurlCommandBuilderClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_pending_integrated_validation",
+      "findingsAndFixes": [
+        "Preserve HTTP methods/auth/options/multiline; validate URLs/header syntax and retain POSIX shell escaping.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": []
+    },
+    {
+      "slug": "regex-match-tester",
+      "componentPath": "components/tools/RegexTesterClient.tsx",
+      "historicallyApproved": false,
+      "status": "implemented_pending_integrated_validation",
+      "findingsAndFixes": [
+        "Same owned RegexTesterClient as regex-tester; regression coverage shared.",
+        "Group-local responsive containment, bounded labelled inputs, v2 Examples/Clear."
+      ],
+      "caseFile": "scripts/qa/cases/developer-general.mjs",
+      "caseStatus": "authored_not_browser_executed",
+      "limitsOrBlockers": []
+    }
+  ]
+}

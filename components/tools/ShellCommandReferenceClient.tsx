@@ -1,5 +1,7 @@
 'use client';
+import DeveloperGeneralFrame from './DeveloperGeneralFrame';
 
+import ToolExampleClearActions from './ToolExampleClearActions';
 import { useMemo, useState } from 'react';
 
 type Category = 'File Ops' | 'Text' | 'Process' | 'Network' | 'Git' | 'Archive' | 'Disk';
@@ -112,11 +114,12 @@ export default function ShellCommandReferenceClient() {
   }, [search, category]);
 
   return (
-    <div className="tb-v2-tool-card">
+    <DeveloperGeneralFrame><div className="tb-v2-tool-card">
+      <ToolExampleClearActions onExample={() => {setSearch('pwd');setCategory('All');}} onClear={() => {setSearch('');setCategory('All');}} />
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Search commands</span>
       </div>
-      <input
+      <input aria-label="Search" maxLength={8000}
         type="text"
         value={search}
         onChange={e => setSearch(e.target.value)}
@@ -156,6 +159,6 @@ export default function ShellCommandReferenceClient() {
           ))
         )}
       </div>
-    </div>
+    </div></DeveloperGeneralFrame>
   );
 }

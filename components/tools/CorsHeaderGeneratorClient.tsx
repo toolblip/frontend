@@ -1,5 +1,8 @@
 'use client';
+import DeveloperGeneralFrame from './DeveloperGeneralFrame';
 
+import { corsError, corsHeaders, corsSnippet } from '@/lib/developer-general/cors';
+import ToolExampleClearActions from './ToolExampleClearActions';
 import { useState } from 'react';
 
 type CorsScenario =
@@ -48,10 +51,10 @@ const COMMON_HEADERS = [
 ];
 
 export default function CorsHeaderGeneratorClient() {
-  const [scenario, setScenario] = useState<CorsScenario>('public');
+  const [scenario, setScenario] = useState<CorsScenario>('restricted');
   const [copiedCode, setCopiedCode] = useState('');
 
-  const [config, setConfig] = useState<CorsConfig>({
+  const [config, updateConfig] = useState<CorsConfig>({
     allowedOrigins: ['https://example.com'],
     allowedMethods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
@@ -61,6 +64,8 @@ export default function CorsHeaderGeneratorClient() {
     wildcard: false,
   });
 
+  const [cleared,setCleared]=useState(false);
+  const setConfig=(value:CorsConfig)=>{setCleared(false);updateConfig(value);};
   const [newOrigin, setNewOrigin] = useState('');
   const [newExposedHeader, setNewExposedHeader] = useState('');
 
@@ -114,13 +119,13 @@ export default function CorsHeaderGeneratorClient() {
         break;
       case 'wordpress':
         setConfig({
-          allowedOrigins: [],
+          allowedOrigins: ['https://example.com'],
           allowedMethods: ['GET', 'POST'],
           allowedHeaders: ['Content-Type', 'Authorization', 'X-WP-Nonce'],
           exposedHeaders: ['X-WP-Total', 'X-WP-TotalPages'],
           maxAge: 86400,
           credentials: true,
-          wildcard: true,
+          wildcard: false,
         });
         break;
       case 'nextjs':
@@ -215,324 +220,22 @@ export default function CorsHeaderGeneratorClient() {
     });
   };
 
-  const generateHeaders = (): Record<string, string> => {
-    const headers: Record<string, string> = {};
-
-    if (config.wildcard || config.allowedOrigins.includes('*')) {
-      headers['Access-Control-Allow-Origin'] = '*';
-    } else {
-      headers['Access-Control-Allow-Origin'] = config.allowedOrigins.join(', ');
-    }
-
-    if (config.credentials) {
-      headers['Access-Control-Allow-Credentials'] = 'true';
-    }
-
-    headers['Access-Control-Allow-Methods'] = config.allowedMethods.join(', ');
-
-    if (config.allowedHeaders.includes('*')) {
-      headers['Access-Control-Allow-Headers'] = '*';
-    } else {
-      headers['Access-Control-Allow-Headers'] = config.allowedHeaders.join(', ');
-    }
-
-    if (config.exposedHeaders.length > 0) {
-      headers['Access-Control-Expose-Headers'] = config.exposedHeaders.join(', ');
-    }
-
-    if (config.maxAge > 0) {
-      headers['Access-Control-Max-Age'] = config.maxAge.toString();
-    }
-
-    return headers;
-  };
-
-  const generateRawHeaders = () => {
-    const headers = generateHeaders();
-    let output = '# CORS Headers\n\n';
-    Object.entries(headers).forEach(([name, value]) => {
-      output += `${name}: ${value}\n`;
-    });
-    return output;
-  };
-
-  const generateNginx = () => {
-    const headers = generateHeaders();
-    let output = '# Nginx CORS Configuration\n\n';
-    output += 'location / {\n';
-
-    Object.entries(headers).forEach(([name, value]) => {
-      const nginxName = name.replace(/-/g, '_').replace(/[A-Z]/g, (m) => m.toLowerCase());
-      if (name === 'Access-Control-Allow-Origin' && value === '*') {
-        output += `    add_header ${name} "$${nginxName}" always;\n`;
-        output += `    set $${nginxName} "*";\n`;
-      } else if (name === 'Access-Control-Allow-Origin') {
-        output += `    set $${nginxName} "${value}";\n`;
-        output += `    add_header ${name} "$${nginxName}" always;\n`;
-      } else {
-        output += `    add_header ${name} "${value}" always;\n`;
-      }
-    });
-
-    output += '\n    # Handle preflight requests\n';
-    output += '    if ($request_method = OPTIONS) {\n';
-    Object.entries(headers).forEach(([name, value]) => {
-      const nginxName = name.replace(/-/g, '_').replace(/[A-Z]/g, (m) => m.toLowerCase());
-      if (name === 'Access-Control-Allow-Origin') {
-        output += `        add_header ${name} "$${nginxName}" always;\n`;
-      } else if (name !== 'Access-Control-Allow-Credentials') {
-        output += `        add_header ${name} "${value}" always;\n`;
-      }
-    });
-    output += '        add_header Access-Control-Allow-Credentials "true" always;\n';
-    output += '        add_header Content-Length 0;\n';
-    output += '        add_header Content-Type text/plain;\n';
-    output += '        return 204;\n';
-    output += '    }\n';
-    output += '}\n';
-
-    return output;
-  };
-
-  const generateApache = () => {
-    const headers = generateHeaders();
-    let output = '# Apache CORS Configuration\n\n';
-    output += '<IfModule mod_headers.c>\n';
-    output += '    # CORS Headers\n';
-
-    Object.entries(headers).forEach(([name, value]) => {
-      output += `    Header set ${name} "${value}"\n`;
-    });
-
-    output += '\n    # Handle preflight requests\n';
-    output += '    RewriteEngine On\n';
-    output += '    RewriteCond %{REQUEST_METHOD} OPTIONS\n';
-    output += '    RewriteRule ^(.*)$ $1 [R=200,L]\n';
-    output += '</IfModule>\n';
-
-    return output;
-  };
-
-  const generateExpress = () => {
-    const origins = config.wildcard
-      ? "'*'"
-      : config.allowedOrigins.length > 0
-        ? config.allowedOrigins.map((o) => `'${o}'`).join(', ')
-        : "'http://localhost:3000'";
-
-    return `// Express.js CORS Middleware Configuration
-
-const cors = require('cors');
-
-const corsOptions = {
-  origin: [${origins}],
-  methods: ${JSON.stringify(config.allowedMethods)},
-  allowedHeaders: ${JSON.stringify(config.allowedHeaders)},
-  exposedHeaders: ${JSON.stringify(config.exposedHeaders)},
-  credentials: ${config.credentials},
-  maxAge: ${config.maxAge},
-};
-
-app.use(cors(corsOptions));
-
-// Or with more control:
-app.use((req, res, next) => {
-  const origin = req.headers.origin;
-  if (${config.wildcard ? 'true' : `config.allowedOrigins.includes(origin)`}) {
-    res.setHeader('Access-Control-Allow-Origin', ${config.wildcard ? "'*'" : 'origin'});
-  }
-  if (${config.credentials}) {
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
-  }
-  res.setHeader('Access-Control-Allow-Methods', '${config.allowedMethods.join(', ')}');
-  res.setHeader('Access-Control-Allow-Headers', '${config.allowedHeaders.join(', ')}');
-  ${
-    config.exposedHeaders.length > 0
-      ? `res.setHeader('Access-Control-Expose-Headers', '${config.exposedHeaders.join(', ')}');`
-      : ''
-  }
-  ${
-    config.maxAge > 0
-      ? `res.setHeader('Access-Control-Max-Age', '${config.maxAge}');`
-      : ''
-  }
-
-  if (req.method === 'OPTIONS') {
-    return res.status(204).end();
-  }
-  next();
-});`;
-  };
-
-  const generateNextjs = () => {
-    const origins = config.wildcard
-      ? "'*'"
-      : config.allowedOrigins.map((o) => `'${o}'`).join(', ');
-
-    return `// Next.js API Route CORS Configuration
-
-import { NextResponse } from 'next/server';
-
-const corsOptions = {
-  origin: [${origins}],
-  methods: ${JSON.stringify(config.allowedMethods)},
-  allowedHeaders: ${JSON.stringify(config.allowedHeaders)},
-  exposedHeaders: ${JSON.stringify(config.exposedHeaders)},
-  credentials: ${config.credentials},
-};
-
-export function middleware(request: Request) {
-  const response = NextResponse.next();
-
-  // CORS headers
-  response.headers.set('Access-Control-Allow-Origin', ${config.wildcard ? "'*'" : `request.headers.get('origin') || ''`});
-  ${
-    config.credentials
-      ? "response.headers.set('Access-Control-Allow-Credentials', 'true');"
-      : ''
-  }
-  response.headers.set('Access-Control-Allow-Methods', '${config.allowedMethods.join(', ')}');
-  response.headers.set('Access-Control-Allow-Headers', '${config.allowedHeaders.join(', ')}');
-  ${
-    config.exposedHeaders.length > 0
-      ? `response.headers.set('Access-Control-Expose-Headers', '${config.exposedHeaders.join(', ')}');`
-      : ''
-  }
-  ${
-    config.maxAge > 0
-      ? `response.headers.set('Access-Control-Max-Age', '${config.maxAge}');`
-      : ''
-  }
-
-  return response;
-}
-
-export const config = {
-  matcher: '/api/:path*',
-};`;
-  };
-
-  const generateDjango = () => {
-    const origins = config.wildcard ? "'*'" : config.allowedOrigins.map((o) => `'${o}'`).join(', ');
-
-    return `# Django CORS Configuration
-
-# Install: pip install django-cors-headers
-
-# settings.py
-INSTALLED_APPS = [
-    ...
-    'corsheaders',
-    ...
-]
-
-MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
-    ...
-]
-
-CORS_ALLOW_ALL_ORIGINS = ${config.wildcard}
-CORS_ALLOWED_ORIGINS = ${config.wildcard ? '[]' : `[${origins}]`}
-CORS_ALLOW_METHODS = ${JSON.stringify(config.allowedMethods.map(m => m.toUpperCase()))}
-CORS_ALLOW_HEADERS = ${JSON.stringify(config.allowedHeaders.map(h => h.toLowerCase()))}
-CORS_EXPOSE_HEADERS = ${JSON.stringify(config.exposedHeaders)}
-CORS_ALLOW_CREDENTIALS = ${config.credentials}
-CORS_PREFLIGHT_MAX_AGE = ${config.maxAge}
-
-# Or in middleware.py for more control:
-from django.http import JsonResponse
-
-class CorsMiddleware:
-    def __init__(self, get_response):
-        self.get_response = get_response
-
-    def __call__(self, request):
-        origin = request.headers.get('Origin')
-        if ${config.wildcard ? 'True' : `origin in [${origins}]`}:
-            response = self.get_response(request)
-            response['Access-Control-Allow-Origin'] = ${config.wildcard ? "'*'" : 'origin'}
-            ${
-              config.credentials
-                ? "response['Access-Control-Allow-Credentials'] = 'true'"
-                : ''
-            }
-            response['Access-Control-Allow-Methods'] = '${config.allowedMethods.join(', ')}'
-            response['Access-Control-Allow-Headers'] = '${config.allowedHeaders.join(', ')}'
-            ${
-              config.exposedHeaders.length > 0
-                ? `response['Access-Control-Expose-Headers'] = '${config.exposedHeaders.join(', ')}'`
-                : ''
-            }
-            return response
-        return self.get_response(request)`;
-  };
-
-  const generateFlask = () => {
-    const origins = config.wildcard ? "'*'" : config.allowedOrigins.map((o) => `'${o}'`).join(', ');
-
-    return `# Flask CORS Configuration
-
-# Install: pip install flask-cors
-
-from flask import Flask
-from flask_cors import CORS, cross_origin
-
-app = Flask(__name__)
-CORS(app, resources={
-    r"/api/*": {
-        "origins": ${origins},
-        "methods": ${JSON.stringify(config.allowedMethods)},
-        "allow_headers": ${JSON.stringify(config.allowedHeaders)},
-        "expose_headers": ${JSON.stringify(config.exposedHeaders)},
-        "supports_credentials": ${config.credentials},
-        "max_age": ${config.maxAge},
-    }
-})
-
-# Or manual configuration:
-@app.after_request
-def add_cors_headers(response):
-    origin = request.headers.get('Origin')
-    if ${config.wildcard ? 'True' : `origin in [${origins}]`}:
-        response.headers['Access-Control-Allow-Origin'] = ${config.wildcard ? "'*'" : 'origin'}
-    ${
-      config.credentials
-        ? "response.headers['Access-Control-Allow-Credentials'] = 'true'"
-        : ''
-    }
-    response.headers['Access-Control-Allow-Methods'] = '${config.allowedMethods.join(', ')}'
-    response.headers['Access-Control-Allow-Headers'] = '${config.allowedHeaders.join(', ')}'
-    ${
-      config.exposedHeaders.length > 0
-        ? `response.headers['Access-Control-Expose-Headers'] = '${config.exposedHeaders.join(', ')}'`
-        : ''
-    }
-    ${
-      config.maxAge > 0
-        ? `response.headers['Access-Control-Max-Age'] = '${config.maxAge}'`
-        : ''
-    }
-    return response`;
-  };
-
-  const rawHeaders = generateRawHeaders();
-  const nginxConfig = generateNginx();
-  const apacheConfig = generateApache();
-  const expressConfig = generateExpress();
-  const nextjsConfig = generateNextjs();
-  const djangoConfig = generateDjango();
-  const flaskConfig = generateFlask();
-
+  const error = cleared ? '' : corsError(config);
+  const snippet=(format:string)=>cleared?'':corsSnippet(config,format);
+  const rawHeaders=snippet('raw'),nginxConfig=snippet('nginx'),apacheConfig=snippet('apache'),expressConfig=snippet('express'),nextjsConfig=snippet('nextjs'),djangoConfig=snippet('django'),flaskConfig=snippet('flask');
   const copy = (text: string, type: string) => {
     navigator.clipboard.writeText(text).catch(() => {});
     setCopiedCode(type);
     setTimeout(() => setCopiedCode(''), 1500);
   };
 
-  const headers = generateHeaders();
+  const headers = cleared ? {} : corsHeaders(config);
 
   return (
-    <div>
+    <DeveloperGeneralFrame><div>
+      <ToolExampleClearActions onExample={()=>applyScenario('restricted')} onClear={()=>{updateConfig({allowedOrigins:[],allowedMethods:[],allowedHeaders:[],exposedHeaders:[],maxAge:0,credentials:false,wildcard:false});setCleared(true);setNewOrigin('');setNewExposedHeader('');setCopiedCode('');}}/>
+      {error && <p role="alert" className="tb-v2-error">{error}</p>}
+      <p>Raw, Nginx and Apache snippets use the first allowed origin. Framework snippets match the request origin against the allowlist. Merge Vary with any existing response values.</p>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Scenario</span>
       </div>
@@ -581,7 +284,7 @@ def add_cors_headers(response):
             ))}
           </div>
           <div style={{ display: 'flex', gap: '8px' }}>
-            <input
+            <input aria-label="New Origin" maxLength={8000}
               type="text"
               value={newOrigin}
               onChange={(e) => setNewOrigin(e.target.value)}
@@ -677,7 +380,7 @@ def add_cors_headers(response):
             ))}
           </div>
           <div style={{ display: 'flex', gap: '8px' }}>
-            <input
+            <input aria-label="New Exposed Header" maxLength={8000}
               type="text"
               value={newExposedHeader}
               onChange={(e) => setNewExposedHeader(e.target.value)}
@@ -701,7 +404,7 @@ def add_cors_headers(response):
           <div className="tb-v2-tool-label" style={{ marginBottom: '8px' }}>
             Preflight Max Age (seconds)
           </div>
-          <input
+          <input aria-label="Config.max Age"
             type="number"
             value={config.maxAge}
             onChange={(e) => setConfig({ ...config, maxAge: parseInt(e.target.value) || 0 })}
@@ -965,6 +668,6 @@ def add_cors_headers(response):
           <li>For production, specify exact origins instead of wildcards</li>
         </ul>
       </div>
-    </div>
+    </div></DeveloperGeneralFrame>
   );
 }

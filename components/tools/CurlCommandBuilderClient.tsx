@@ -1,5 +1,7 @@
 'use client';
+import DeveloperGeneralFrame from './DeveloperGeneralFrame';
 
+import ToolExampleClearActions from './ToolExampleClearActions';
 import { useState, useMemo } from 'react';
 
 const METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'];
@@ -26,6 +28,8 @@ function buildCurl(opts: {
 }): string {
   if (!opts.url.trim()) return '';
 
+  const parsed=new URL(opts.url);if(!['http:','https:'].includes(parsed.protocol))throw new Error('Use an HTTP(S) URL');
+  if(opts.headers.split('\n').filter(h=>h.trim()).some(h=>!/^[-!#$%&'*+.^_`|~\da-zA-Z]+:\s*[^\r\n]*$/.test(h)))throw new Error('Invalid header; use Name: value');
   const parts: string[] = ['curl'];
   if (opts.method !== 'GET') parts.push(`-X ${opts.method}`);
 
@@ -65,8 +69,8 @@ export default function CurlCommandBuilderClient() {
   const [multiline, setMultiline] = useState(true);
   const [copied, setCopied] = useState(false);
 
-  const output = useMemo(
-    () => buildCurl({ url, method, headers, body, user, insecure, followRedirects, verbose, compressed, multiline }),
+  const {output,error} = useMemo(
+    () => {try{return {output:buildCurl({ url, method, headers, body, user, insecure, followRedirects, verbose, compressed, multiline }),error:''};}catch(e){return {output:'',error:(e as Error).message};}},
     [url, method, headers, body, user, insecure, followRedirects, verbose, compressed, multiline]
   );
 
@@ -85,17 +89,18 @@ export default function CurlCommandBuilderClient() {
   };
 
   return (
-    <div className="tb-v2-tool-card">
+    <DeveloperGeneralFrame><div className="tb-v2-tool-card">
+      <ToolExampleClearActions onExample={() => {loadExample();}} onClear={() => {setUrl('');setBody('');setHeaders('');setUser('');setCopied(false);}} />
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Request</span>
-        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">Load Example</button>
+
       </div>
       <div style={{ padding: 20 }} className="flex flex-col gap-4">
         <div className="flex gap-3">
-          <select value={method} onChange={e => setMethod(e.target.value)} className="tb-v2-input" style={{ maxWidth: 140 }}>
+          <select aria-label="Method" value={method} onChange={e => setMethod(e.target.value)} className="tb-v2-input" style={{ maxWidth: 140 }}>
             {METHODS.map(m => <option key={m} value={m}>{m}</option>)}
           </select>
-          <input
+          <input aria-label="Url" maxLength={8000}
             type="text"
             value={url}
             onChange={e => setUrl(e.target.value)}
@@ -107,7 +112,7 @@ export default function CurlCommandBuilderClient() {
 
         <div className="flex flex-col gap-1">
           <label className="tb-v2-tool-label">Headers (one per line)</label>
-          <textarea
+          <textarea aria-label="Headers" maxLength={100000}
             value={headers}
             onChange={e => setHeaders(e.target.value)}
             placeholder={'Content-Type: application/json\nAuthorization: Bearer token'}
@@ -119,7 +124,7 @@ export default function CurlCommandBuilderClient() {
         {method !== 'GET' && method !== 'HEAD' && (
           <div className="flex flex-col gap-1">
             <label className="tb-v2-tool-label">Body</label>
-            <textarea
+            <textarea aria-label="Body" maxLength={100000}
               value={body}
               onChange={e => setBody(e.target.value)}
               placeholder='{"key":"value"}'
@@ -131,7 +136,7 @@ export default function CurlCommandBuilderClient() {
 
         <div className="flex flex-col gap-1">
           <label className="tb-v2-tool-label">Basic auth (user:pass, optional)</label>
-          <input
+          <input aria-label="User" maxLength={8000}
             type="text"
             value={user}
             onChange={e => setUser(e.target.value)}
@@ -165,6 +170,7 @@ export default function CurlCommandBuilderClient() {
         </div>
       </div>
 
+      {error&&<p role="alert" className="tb-v2-error">{error}</p>}
       <div className="tb-v2-tool-output-head">
         <span className="tb-v2-tool-label">curl Command</span>
         <button type="button" onClick={copy} disabled={!output} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}>
@@ -178,6 +184,6 @@ export default function CurlCommandBuilderClient() {
           <p className="tb-v2-empty">Enter a URL above to build a curl command.</p>
         )}
       </div>
-    </div>
+    </div></DeveloperGeneralFrame>
   );
 }

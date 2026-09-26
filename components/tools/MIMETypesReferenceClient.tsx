@@ -1,5 +1,7 @@
 'use client';
+import DeveloperGeneralFrame from './DeveloperGeneralFrame';
 
+import ToolExampleClearActions from './ToolExampleClearActions';
 import { useMemo, useState } from 'react';
 
 type Category = 'Image' | 'Video' | 'Audio' | 'Document' | 'Font' | 'Archive' | 'Text' | 'Application';
@@ -161,11 +163,12 @@ export default function MIMETypesReferenceClient() {
   };
 
   return (
-    <div className="tb-v2-tool-card">
+    <DeveloperGeneralFrame><div className="tb-v2-tool-card">
+      <ToolExampleClearActions onExample={() => {setSearch('json');setCategory('All');}} onClear={() => {setSearch('');setCategory('All');setCopiedIdx(null);}} />
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Search by extension or MIME type</span>
       </div>
-      <input
+      <input aria-label="Search" maxLength={8000}
         type="text"
         value={search}
         onChange={e => setSearch(e.target.value)}
@@ -216,6 +219,6 @@ export default function MIMETypesReferenceClient() {
           </table>
         )}
       </div>
-    </div>
+    </div></DeveloperGeneralFrame>
   );
 }

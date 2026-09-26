@@ -1,6 +1,8 @@
 'use client';
+import DeveloperGeneralFrame from './DeveloperGeneralFrame';
 
-import { useState } from 'react';
+import ToolExampleClearActions from './ToolExampleClearActions';
+import { useState, useEffect } from 'react';
 
 interface ParsedUrl {
   href: string;
@@ -14,7 +16,7 @@ interface ParsedUrl {
   origin: string;
   username: string;
   password: string;
-  searchParams: Record<string, string>;
+  searchParams: Record<string, string | string[]>;
 }
 
 export default function UrlParserClient() {
@@ -25,7 +27,7 @@ export default function UrlParserClient() {
   const parseUrl = () => {
     setError('');
     setParsed(null);
-    
+
     if (!input.trim()) {
       setError('Please enter a URL to parse');
       return;
@@ -33,10 +35,10 @@ export default function UrlParserClient() {
 
     try {
       const url = new URL(input);
-      
-      const searchParams: Record<string, string> = {};
+
+      const searchParams: Record<string, string | string[]> = Object.create(null);
       url.searchParams.forEach((value, key) => {
-        searchParams[key] = value;
+        const previous=searchParams[key];searchParams[key]=previous===undefined?value:Array.isArray(previous)?[...previous,value]:[previous,value];
       });
 
       setParsed({
@@ -58,7 +60,7 @@ export default function UrlParserClient() {
     }
   };
 
-  const renderField = (label: string, value: string | Record<string, string>) => {
+  const renderField = (label: string, value: string | Record<string, string | string[]>) => {
     if (typeof value === 'object') {
       return (
         <div className="mb-3">
@@ -70,7 +72,7 @@ export default function UrlParserClient() {
               Object.entries(value).map(([k, v]) => (
                 <div key={k} className="flex">
                   <span className="text-blue-600">{k}:</span>
-                  <span className="ml-2">{v}</span>
+                  <span className="ml-2">{Array.isArray(v) ? JSON.stringify(v) : v}</span>
                 </div>
               ))
             )}
@@ -87,13 +89,15 @@ export default function UrlParserClient() {
     );
   };
 
+  useEffect(() => { if(input.trim()) parseUrl(); else {setParsed(null);setError('');} }, [input]);
   return (
-    <div className="flex flex-col h-full">
+    <DeveloperGeneralFrame><div className="flex flex-col h-full">
+      <ToolExampleClearActions onExample={() => {setInput('https://example.com:8443/a?q=hello#part');setParsed(null);setError('');}} onClear={() => {setInput('');setParsed(null);setError('');}} />
       <div className="mb-4">
         <label className="tb-v2-tool-label" style={{marginBottom:8}}>
           URL Input
         </label>
-        <input
+        <input aria-label="Input" maxLength={8000}
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
@@ -118,7 +122,7 @@ export default function UrlParserClient() {
       {parsed && (
         <div className="flex-1 overflow-auto">
           <h3 className="text-sm font-medium text-gray-700 mb-3">Parsed Components</h3>
-          
+
           {renderField('Full URL (href)', parsed.href)}
           {renderField('Origin', parsed.origin)}
           {renderField('Protocol', parsed.protocol)}
@@ -142,6 +146,6 @@ export default function UrlParserClient() {
           )}
         </div>
       )}
-    </div>
+    </div></DeveloperGeneralFrame>
   );
 }

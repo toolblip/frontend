@@ -1,12 +1,15 @@
 'use client';
+import DeveloperGeneralFrame from './DeveloperGeneralFrame';
 
+import { shellQuote } from '@/lib/developer-general/curl';
+import ToolExampleClearActions from './ToolExampleClearActions';
 import { useState } from 'react';
 
 interface Cmd { label: string; template: string; args?: string[]; }
 
 const COMMANDS: Cmd[] = [
   { label: 'List Files', template: 'ls -la {path}', args: ['path'] },
-  { label: 'Find File', template: 'find {path} -name "{pattern}"', args: ['path', 'pattern'] },
+  { label: 'Find File', template: 'find {path} -name {pattern}', args: ['path', 'pattern'] },
   { label: 'Kill Process', template: 'kill -9 {pid}', args: ['pid'] },
   { label: 'Git Status', template: 'git status' },
   { label: 'Git Log', template: 'git log --oneline -{n}', args: ['n'] },
@@ -14,7 +17,7 @@ const COMMANDS: Cmd[] = [
   { label: 'Docker Logs', template: 'docker logs -f {container}', args: ['container'] },
   { label: 'NPM Install', template: 'npm install {package}', args: ['package'] },
   { label: 'Git Diff', template: 'git diff {file}', args: ['file'] },
-  { label: 'Grep', template: 'grep -rn "{pattern}" {path}', args: ['pattern', 'path'] },
+  { label: 'Grep', template: 'grep -rn {pattern} {path}', args: ['pattern', 'path'] },
   { label: 'Tar Archive', template: 'tar -czvf {output}.tar.gz {path}', args: ['output', 'path'] },
   { label: 'Curl Headers', template: 'curl -I {url}', args: ['url'] },
 ];
@@ -26,8 +29,9 @@ export default function BashCommandGeneratorClient() {
 
   const generate = () => {
     if (!selected) return '';
+    if(selected.args?.some(a=>(a==='pid'||a==='n')&&!/^[1-9]\d*$/.test(args[a]||'')))return 'Error: Enter a positive integer';
     let cmd = selected.template;
-    (selected.args || []).forEach(a => { cmd = cmd.replace(`{${a}}`, args[a] || ''); });
+    (selected.args || []).forEach(a => { cmd = cmd.replace(`{${a}}`, a === 'pid' || a === 'n' ? (/^\d+$/.test(args[a] || '') ? args[a] : '1') : shellQuote(args[a] || '.')); });
     return cmd;
   };
 
@@ -41,7 +45,8 @@ export default function BashCommandGeneratorClient() {
   };
 
   return (
-    <div>
+    <DeveloperGeneralFrame><div>
+      <ToolExampleClearActions onExample={() => {setSelected(COMMANDS[0]);setArgs({});}} onClear={() => {setSelected(null);setArgs({});setCopied(false);}} />
       <div className="tb-v2-tool-input-head"><span className="tb-v2-tool-label">Select Command</span></div>
       <div className="tb-v2-tool-output-body" style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
         {COMMANDS.map((cmd, i) => (
@@ -55,7 +60,7 @@ export default function BashCommandGeneratorClient() {
           {selected.args.map(arg => (
             <label key={arg} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <span style={{ fontSize: 13, color: 'var(--tb-text-secondary)' }}>{arg}</span>
-              <input
+              <input aria-label="Args arg" maxLength={8000}
                 type="text"
                 value={args[arg] || ''}
                 onChange={e => setArgs({ ...args, [arg]: e.target.value })}
@@ -87,6 +92,6 @@ export default function BashCommandGeneratorClient() {
           </div>
         </>
       )}
-    </div>
+    </div></DeveloperGeneralFrame>
   );
 }

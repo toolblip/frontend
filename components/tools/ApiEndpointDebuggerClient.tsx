@@ -1,5 +1,8 @@
 'use client';
+import DeveloperGeneralFrame from './DeveloperGeneralFrame';
 
+import { shellQuote } from '@/lib/developer-general/curl';
+import ToolExampleClearActions from './ToolExampleClearActions';
 import { useState } from 'react';
 
 interface Header {
@@ -20,10 +23,10 @@ export default function ApiEndpointDebuggerClient() {
 
   const generateCurl = (): string => {
     let cmd = `curl -X ${method}`;
-    
+
     headers.forEach(h => {
       if (h.key.trim()) {
-        cmd += ` \\\n  -H '${h.key}: ${h.value}'`;
+        cmd += ` \\\n  -H ${shellQuote(h.key + ': ' + h.value)}`;
       }
     });
 
@@ -32,7 +35,7 @@ export default function ApiEndpointDebuggerClient() {
       cmd += ` \\\n  -d '${escapedBody}'`;
     }
 
-    cmd += ` \\\n  '${url}'`;
+    cmd += ` \\\n  ${shellQuote(url)}`;
 
     return cmd;
   };
@@ -45,17 +48,17 @@ export default function ApiEndpointDebuggerClient() {
       return acc;
     }, {} as Record<string, string>);
 
-    let code = `const response = await fetch('${url}', {\n`;
+    let code = `const response = await fetch(${JSON.stringify(url)}, {\n`;
     code += `  method: '${method}',\n`;
-    
+
     if (Object.keys(headerObj).length > 0) {
       code += `  headers: ${JSON.stringify(headerObj, null, 2)},\n`;
     }
-    
+
     if (includeBody && body.trim() && ['POST', 'PUT', 'PATCH'].includes(method)) {
-      code += `  body: JSON.stringify(${body.trim()}),\n`;
+      code += `  body: ${JSON.stringify(body)},\n`;
     }
-    
+
     code += `});\n\n`;
     code += `const data = await response.json();\n`;
     code += `console.log(data);`;
@@ -71,24 +74,15 @@ export default function ApiEndpointDebuggerClient() {
       return acc;
     }, {} as Record<string, string>);
 
-    let code = `const response = await axios.${method.toLowerCase()}(\n`;
-    code += `  '${url}',\n`;
-    
-    if (includeBody && body.trim() && ['POST', 'PUT', 'PATCH'].includes(method)) {
-      code += `  ${body.trim()},\n`;
-    }
-    
-    if (Object.keys(headerObj).length > 0) {
-      code += `  {\n    headers: ${JSON.stringify(headerObj, null, 4)}\n  }\n`;
-    }
-    
-    code += `);\n\n`;
-    code += `console.log(response.data);`;
+    const code = `const response = await axios(${JSON.stringify({url,method,headers:headerObj,...(includeBody && !['GET','HEAD'].includes(method) && body ? {data:body} : {})},null,2)});\nconsole.log(response.data);`;
 
     return code;
   };
 
   const getOutput = (): string => {
+    if(!url.trim())return '';
+    try{const u=new URL(url);if(!['http:','https:'].includes(u.protocol))return 'Error: Use HTTP(S)';}catch{return 'Error: Invalid URL';}
+    if(headers.some(h=>/[\r\n]/.test(h.key+h.value)))return 'Error: Header line breaks are invalid';
     switch (format) {
       case 'curl':
         return generateCurl();
@@ -124,11 +118,12 @@ export default function ApiEndpointDebuggerClient() {
   };
 
   return (
-    <div>
+    <DeveloperGeneralFrame><div>
+      <ToolExampleClearActions onExample={() => {setMethod('GET');setUrl('https://example.com/users');setHeaders([]);setBody('');}} onClear={() => {setUrl('');setHeaders([]);setBody('');setCopied(false);}} />
       <div style={{ display: 'grid', gridTemplateColumns: '100px 1fr', gap: 8, marginBottom: 12 }}>
         <div>
           <label className="tb-v2-tool-label" style={{ fontSize: 12, marginBottom: 4 }}>Method</label>
-          <select
+          <select aria-label="Method"
             value={method}
             onChange={(e) => setMethod(e.target.value as HttpMethod)}
             className="tb-v2-input"
@@ -144,7 +139,7 @@ export default function ApiEndpointDebuggerClient() {
         </div>
         <div>
           <label className="tb-v2-tool-label" style={{ fontSize: 12, marginBottom: 4 }}>URL</label>
-          <input
+          <input aria-label="Url" maxLength={8000}
             type="text"
             value={url}
             onChange={(e) => setUrl(e.target.value)}
@@ -163,7 +158,7 @@ export default function ApiEndpointDebuggerClient() {
         </div>
         {headers.map((header, index) => (
           <div key={index} style={{ display: 'flex', gap: 8, marginBottom: 8 }}>
-            <input
+            <input aria-label="Header.key" maxLength={8000}
               type="text"
               value={header.key}
               onChange={(e) => updateHeader(index, 'key', e.target.value)}
@@ -171,7 +166,7 @@ export default function ApiEndpointDebuggerClient() {
               className="tb-v2-input"
               style={{ flex: 1 }}
             />
-            <input
+            <input aria-label="Header.value" maxLength={8000}
               type="text"
               value={header.value}
               onChange={(e) => updateHeader(index, 'value', e.target.value)}
@@ -205,7 +200,7 @@ export default function ApiEndpointDebuggerClient() {
               Include
             </label>
           </div>
-          <textarea
+          <textarea aria-label="Body" maxLength={100000}
             value={body}
             onChange={(e) => setBody(e.target.value)}
             placeholder='{"key": "value"}'
@@ -217,7 +212,8 @@ export default function ApiEndpointDebuggerClient() {
 
       <div style={{ marginTop: 12 }}>
         <label className="tb-v2-tool-label" style={{ fontSize: 12, marginBottom: 4 }}>Output Format</label>
-        <div className="tb-v2-mode-tabs">
+        <p>Generates request code only. No request is sent.</p>
+      <div className="tb-v2-mode-tabs">
           {(['curl', 'fetch', 'axios'] as const).map((f) => (
             <button
               key={f}
@@ -240,6 +236,6 @@ export default function ApiEndpointDebuggerClient() {
       <div className="tb-v2-tool-output-body">
         <pre className="tb-v2-tool-pre">{getOutput()}</pre>
       </div>
-    </div>
+    </div></DeveloperGeneralFrame>
   );
 }

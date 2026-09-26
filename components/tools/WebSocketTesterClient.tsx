@@ -1,5 +1,7 @@
 'use client';
+import DeveloperGeneralFrame from './DeveloperGeneralFrame';
 
+import ToolExampleClearActions from './ToolExampleClearActions';
 import { useEffect, useRef, useState } from 'react';
 
 type Status = 'disconnected' | 'connecting' | 'connected' | 'error';
@@ -47,14 +49,15 @@ export default function WebSocketTesterClient() {
   const [status, setStatus] = useState<Status>('disconnected');
   const [message, setMessage] = useState('Hello from Toolblip!');
   const [log, setLog] = useState<LogEntry[]>([]);
+  const timeoutRef=useRef<ReturnType<typeof setTimeout> | null>(null);
   const wsRef = useRef<WebSocket | null>(null);
 
   const appendLog = (type: LogType, text: string) => {
-    setLog(cur => [...cur, { id: nextLogId++, type, text, time: new Date().toLocaleTimeString() }]);
+    setLog(cur => [...cur.slice(-199), { id: nextLogId++, type, text: text.slice(0, 50000), time: new Date().toLocaleTimeString() }]);
   };
 
   const connect = () => {
-    if (!url.trim()) return;
+    if (!/^wss?:\/\//i.test(url)) {setStatus('error');appendLog('error','Enter a ws:// or wss:// URL');return;}
     if (wsRef.current) {
       wsRef.current.close();
       wsRef.current = null;
@@ -64,18 +67,25 @@ export default function WebSocketTesterClient() {
     try {
       const ws = new WebSocket(url);
       wsRef.current = ws;
+      if(timeoutRef.current)clearTimeout(timeoutRef.current);
+      timeoutRef.current=setTimeout(()=>{if(wsRef.current===ws && ws.readyState!==WebSocket.OPEN){wsRef.current=null;ws.close();setStatus('error');appendLog('error','Connection timed out after 10 seconds');}},10000);
       ws.onopen = () => {
+        if(wsRef.current !== ws)return;
+        if(timeoutRef.current)clearTimeout(timeoutRef.current);
         setStatus('connected');
         appendLog('system', 'Connection established.');
       };
       ws.onmessage = (ev: MessageEvent) => {
+        if(wsRef.current !== ws)return;
         appendLog('received', typeof ev.data === 'string' ? ev.data : '[binary data]');
       };
       ws.onerror = () => {
+        if(wsRef.current !== ws)return;
         setStatus('error');
         appendLog('error', 'A WebSocket error occurred.');
       };
       ws.onclose = (ev: CloseEvent) => {
+        if(wsRef.current !== ws)return;
         setStatus('disconnected');
         appendLog('system', `Connection closed${ev.code ? ` (code ${ev.code})` : ''}.`);
         wsRef.current = null;
@@ -87,32 +97,36 @@ export default function WebSocketTesterClient() {
   };
 
   const disconnect = () => {
-    wsRef.current?.close();
+    if(timeoutRef.current)clearTimeout(timeoutRef.current);
+    const ws=wsRef.current;wsRef.current=null;ws?.close();setStatus('disconnected');
   };
 
   const send = () => {
     const ws = wsRef.current;
     if (!ws || ws.readyState !== WebSocket.OPEN || !message.trim()) return;
-    ws.send(message);
+    if(message.length>50000){appendLog('error','Message limit: 50,000 characters');return;}
+    try {ws.send(message);}catch(e){appendLog('error',(e as Error).message);return;}
     appendLog('sent', message);
     setMessage('');
   };
 
   useEffect(() => {
     return () => {
-      wsRef.current?.close();
+      if(timeoutRef.current)clearTimeout(timeoutRef.current);
+      const ws=wsRef.current;wsRef.current=null;ws?.close();
     };
   }, []);
 
   const clearLog = () => setLog([]);
 
   return (
-    <div className="tb-v2-tool-card">
+    <DeveloperGeneralFrame><div className="tb-v2-tool-card">
+      <ToolExampleClearActions onExample={()=>{disconnect();setUrl('wss://echo.websocket.org');setMessage('Hello from Toolblip!');setLog([]);}} onClear={()=>{disconnect();setUrl('');setMessage('');setLog([]);}}/>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">WebSocket URL</span>
       </div>
       <div className="tb-v2-grid-2">
-        <input
+        <input aria-label="Url" maxLength={8000}
           type="text"
           value={url}
           onChange={e => setUrl(e.target.value)}
@@ -150,7 +164,7 @@ export default function WebSocketTesterClient() {
         <span className="tb-v2-tool-label">Message</span>
       </div>
       <div className="tb-v2-grid-2">
-        <textarea
+        <textarea aria-label="Message" maxLength={100000}
           value={message}
           onChange={e => setMessage(e.target.value)}
           placeholder="Type a message to send..."
@@ -171,7 +185,7 @@ export default function WebSocketTesterClient() {
       <div className="tb-v2-tool-output-head" style={{ marginTop: 16 }}>
         <span className="tb-v2-tool-label">Message log</span>
         <button type="button" onClick={clearLog} disabled={log.length === 0} className="tb-v2-copy-btn">
-          Clear
+          Clear log
         </button>
       </div>
       <div className="tb-v2-tool-output-body" style={{ maxHeight: 320, overflowY: 'auto', fontFamily: 'var(--f-mono)', fontSize: 12 }}>
@@ -189,6 +203,6 @@ export default function WebSocketTesterClient() {
           </div>
         )}
       </div>
-    </div>
+    </div></DeveloperGeneralFrame>
   );
 }

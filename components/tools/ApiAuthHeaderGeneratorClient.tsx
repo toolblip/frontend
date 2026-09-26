@@ -1,5 +1,8 @@
 'use client';
+import DeveloperGeneralFrame from './DeveloperGeneralFrame';
 
+import { shellQuote } from '@/lib/developer-general/curl';
+import ToolExampleClearActions from './ToolExampleClearActions';
 import { useState } from 'react';
 
 type AuthType = 'bearer' | 'basic' | 'api-key';
@@ -15,15 +18,18 @@ export default function ApiAuthHeaderGeneratorClient() {
   const [copied, setCopied] = useState(false);
 
   const generateHeader = (): string => {
+    if ([token, username, password, apiKey, apiKeyName, prefix].some(x => /[\r\n]/.test(x))) return '';
+    if (authType === 'basic' && username.includes(':')) return '';
+    if (authType === 'api-key' && !/^[!#$%&'*+.^_`|~0-9A-Za-z-]+$/.test(apiKeyName)) return '';
     switch (authType) {
       case 'bearer':
         return token ? `Authorization: Bearer ${token}` : '';
       case 'basic':
-        const encoded = btoa(`${username}:${password}`);
+        const encoded = btoa(Array.from(new TextEncoder().encode(`${username}:${password}`), b => String.fromCharCode(b)).join(''));
         return username || password ? `Authorization: Basic ${encoded}` : '';
       case 'api-key':
         const keyHeader = apiKeyName || 'X-API-Key';
-        return apiKey ? `Authorization: ${prefix ? prefix + ' ' : ''}${keyHeader} ${apiKey}` : '';
+        return apiKey ? `${keyHeader}: ${prefix ? prefix + ' ' : ''}${apiKey}` : '';
       default:
         return '';
     }
@@ -38,10 +44,13 @@ export default function ApiAuthHeaderGeneratorClient() {
   };
 
   const header = generateHeader();
-  const curlExample = header ? `curl -H "${header}" https://api.example.com/v1/resource` : '';
+  const curlExample = header ? `curl -H ${shellQuote(header)} https://api.example.com/v1/resource` : '';
 
   return (
-    <div className="flex flex-col gap-4">
+    <DeveloperGeneralFrame><div className="flex flex-col gap-4">
+      <ToolExampleClearActions onExample={() => {setAuthType('basic');setUsername('Aladdin');setPassword('open sesame');}} onClear={() => {setToken('');setUsername('');setPassword('');setApiKey('');setPrefix('');setCopied(false);}} />
+      {!header && [token,username,password,apiKey].some(Boolean) && <p role="alert" className="tb-v2-error">Invalid header name, line break or colon in Basic username.</p>}
+      <p>Basic authentication uses UTF-8. Header values cannot contain line breaks; Basic usernames cannot contain a colon.</p>
       <div className="tb-v2-mode-tabs">
         <button type="button" onClick={() => setAuthType('bearer')} className={`tb-v2-mode-tab ${authType === 'bearer' ? 'on' : ''}`}>
           Bearer Token
@@ -62,7 +71,7 @@ export default function ApiAuthHeaderGeneratorClient() {
               Load Example
             </button>
           </div>
-          <textarea
+          <textarea aria-label="Token" maxLength={100000}
             value={token}
             onChange={(e) => setToken(e.target.value)}
             placeholder="Enter your bearer token..."
@@ -78,7 +87,7 @@ export default function ApiAuthHeaderGeneratorClient() {
             <div className="tb-v2-tool-input-head">
               <span className="tb-v2-tool-label">Username</span>
             </div>
-            <input
+            <input aria-label="Username" maxLength={8000}
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
@@ -90,7 +99,7 @@ export default function ApiAuthHeaderGeneratorClient() {
             <div className="tb-v2-tool-input-head">
               <span className="tb-v2-tool-label">Password</span>
             </div>
-            <input
+            <input aria-label="Password" maxLength={8000}
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -107,7 +116,7 @@ export default function ApiAuthHeaderGeneratorClient() {
             <div className="tb-v2-tool-input-head">
               <span className="tb-v2-tool-label">API Key Header Name</span>
             </div>
-            <input
+            <input aria-label="Api Key Name" maxLength={8000}
               type="text"
               value={apiKeyName}
               onChange={(e) => setApiKeyName(e.target.value)}
@@ -119,7 +128,7 @@ export default function ApiAuthHeaderGeneratorClient() {
             <div className="tb-v2-tool-input-head">
               <span className="tb-v2-tool-label">API Key Prefix (optional)</span>
             </div>
-            <input
+            <input aria-label="Prefix" maxLength={8000}
               type="text"
               value={prefix}
               onChange={(e) => setPrefix(e.target.value)}
@@ -131,7 +140,7 @@ export default function ApiAuthHeaderGeneratorClient() {
             <div className="tb-v2-tool-input-head">
               <span className="tb-v2-tool-label">API Key</span>
             </div>
-            <textarea
+            <textarea aria-label="Api Key" maxLength={100000}
               value={apiKey}
               onChange={(e) => setApiKey(e.target.value)}
               placeholder="your-api-key-here"
@@ -161,6 +170,6 @@ export default function ApiAuthHeaderGeneratorClient() {
       ) : (
         <p className="tb-v2-empty">Fill in the fields above to generate the Authorization header.</p>
       )}
-    </div>
+    </div></DeveloperGeneralFrame>
   );
 }

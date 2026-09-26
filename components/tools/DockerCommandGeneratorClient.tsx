@@ -1,5 +1,8 @@
 'use client';
+import DeveloperGeneralFrame from './DeveloperGeneralFrame';
 
+import { shellQuote } from '@/lib/developer-general/curl';
+import ToolExampleClearActions from './ToolExampleClearActions';
 import { useState } from 'react';
 
 type CommandType = 'run' | 'build' | 'exec' | 'ps' | 'images' | 'pull' | 'push' | 'logs' | 'stop' | 'rm' | 'rmi';
@@ -27,28 +30,28 @@ export default function DockerCommandGeneratorClient() {
         if (detach) cmd += ' -d';
         if (rm) cmd += ' --rm';
         if (it) cmd += ' -it';
-        if (containerName) cmd += ` --name ${containerName}`;
-        if (port) cmd += ` -p ${port}`;
+        if (containerName) cmd += ` --name ${shellQuote(containerName)}`;
+        if (port) cmd += ` -p ${shellQuote(port)}`;
         if (envVars) {
           envVars.split('\n').forEach(env => {
-            if (env.trim()) cmd += ` -e "${env.trim()}"`;
+            if (env.trim()) cmd += ` -e ${shellQuote(env.trim())}`;
           });
         }
         if (volumes) {
           volumes.split('\n').forEach(vol => {
-            if (vol.trim()) cmd += ` -v "${vol.trim()}"`;
+            if (vol.trim()) cmd += ` -v ${shellQuote(vol.trim())}`;
           });
         }
         if (network === 'custom') {
-          if (customNetwork.trim()) cmd += ` --network ${customNetwork.trim()}`;
+          if (customNetwork.trim()) cmd += ` --network ${shellQuote(customNetwork.trim())}`;
         } else if (network !== 'bridge') {
-          cmd += ` --network ${network}`;
+          cmd += ` --network ${shellQuote(network)}`;
         }
-        cmd += ` ${image}`;
+        cmd += ` ${shellQuote(image)}`;
         break;
 
       case 'build':
-        cmd = `docker build -t ${image} .`;
+        cmd = `docker build -t ${shellQuote(image)} .`;
         break;
 
       case 'exec':
@@ -64,11 +67,11 @@ export default function DockerCommandGeneratorClient() {
         break;
 
       case 'pull':
-        cmd = `docker pull ${image}`;
+        cmd = `docker pull ${shellQuote(image)}`;
         break;
 
       case 'push':
-        cmd = `docker push ${image}`;
+        cmd = `docker push ${shellQuote(image)}`;
         break;
 
       case 'logs':
@@ -84,7 +87,7 @@ export default function DockerCommandGeneratorClient() {
         break;
 
       case 'rmi':
-        cmd = `docker rmi ${image}`;
+        cmd = `docker rmi ${shellQuote(image)}`;
         break;
 
       default:
@@ -114,13 +117,14 @@ export default function DockerCommandGeneratorClient() {
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <DeveloperGeneralFrame><div className="flex flex-col gap-4">
+      <ToolExampleClearActions onExample={() => {loadExample();}} onClear={() => {setImage('');setContainerName('');setPort('');setEnvVars('');setVolumes('');setCustomNetwork('');setCopied(false);}} />
       <div className="flex justify-end">
-        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">Load Example</button>
+
       </div>
       <div>
         <label className="tb-v2-tool-label">Command</label>
-        <select
+        <select aria-label="Command Type"
           value={commandType}
           onChange={(e) => setCommandType(e.target.value as CommandType)}
           className="tb-v2-input"
@@ -142,7 +146,7 @@ export default function DockerCommandGeneratorClient() {
       {(commandType === 'run' || commandType === 'build' || commandType === 'pull' || commandType === 'push' || commandType === 'rmi') && (
         <div>
           <label className="tb-v2-tool-label">Image</label>
-          <input
+          <input aria-label="Image" maxLength={8000}
             type="text"
             value={image}
             onChange={(e) => setImage(e.target.value)}
@@ -156,7 +160,7 @@ export default function DockerCommandGeneratorClient() {
         <>
           <div>
             <label className="tb-v2-tool-label">Container Name</label>
-            <input
+            <input aria-label="Container Name" maxLength={8000}
               type="text"
               value={containerName}
               onChange={(e) => setContainerName(e.target.value)}
@@ -167,7 +171,7 @@ export default function DockerCommandGeneratorClient() {
 
           <div>
             <label className="tb-v2-tool-label">Port Mapping (-p)</label>
-            <input
+            <input aria-label="Port" maxLength={8000}
               type="text"
               value={port}
               onChange={(e) => setPort(e.target.value)}
@@ -178,7 +182,7 @@ export default function DockerCommandGeneratorClient() {
 
           <div>
             <label className="tb-v2-tool-label">Environment Variables (-e)</label>
-            <textarea
+            <textarea aria-label="Env Vars" maxLength={100000}
               value={envVars}
               onChange={(e) => setEnvVars(e.target.value)}
               placeholder="PORT=3000&#10;NODE_ENV=production"
@@ -189,7 +193,7 @@ export default function DockerCommandGeneratorClient() {
 
           <div>
             <label className="tb-v2-tool-label">Volumes (-v)</label>
-            <textarea
+            <textarea aria-label="Volumes" maxLength={100000}
               value={volumes}
               onChange={(e) => setVolumes(e.target.value)}
               placeholder="/data:/data"
@@ -200,7 +204,7 @@ export default function DockerCommandGeneratorClient() {
 
           <div>
             <label className="tb-v2-tool-label">Network</label>
-            <select
+            <select aria-label="Network"
               value={network}
               onChange={(e) => setNetwork(e.target.value)}
               className="tb-v2-input"
@@ -215,7 +219,7 @@ export default function DockerCommandGeneratorClient() {
           {network === 'custom' && (
             <div>
               <label className="tb-v2-tool-label">Custom Network Name</label>
-              <input
+              <input aria-label="Custom Network" maxLength={8000}
                 type="text"
                 value={customNetwork}
                 onChange={(e) => setCustomNetwork(e.target.value)}
@@ -260,7 +264,7 @@ export default function DockerCommandGeneratorClient() {
       {(commandType === 'exec' || commandType === 'logs' || commandType === 'stop' || commandType === 'rm') && (
         <div>
           <label className="tb-v2-tool-label">Container Name / ID</label>
-          <input
+          <input aria-label="Container Name" maxLength={8000}
             type="text"
             value={containerName}
             onChange={(e) => setContainerName(e.target.value)}
@@ -283,6 +287,6 @@ export default function DockerCommandGeneratorClient() {
       <div className="tb-v2-tool-output-body">
         <pre className="tb-v2-tool-pre whitespace-pre-wrap">{generateCommand()}</pre>
       </div>
-    </div>
+    </div></DeveloperGeneralFrame>
   );
 }

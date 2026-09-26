@@ -1,5 +1,7 @@
 'use client';
+import DeveloperGeneralFrame from './DeveloperGeneralFrame';
 
+import ToolExampleClearActions from './ToolExampleClearActions';
 import { useState, useEffect } from 'react';
 
 type Algorithm = 'bubble' | 'selection' | 'insertion';
@@ -23,6 +25,7 @@ const ALGO_INFO: Record<Algorithm, { name: string; desc: string; complexity: str
 };
 
 export default function AlgorithmVisualizerClient() {
+  const [inputError,setInputError]=useState('');
   const [array, setArray] = useState([64, 34, 25, 12, 22, 11, 90]);
   const [algorithm, setAlgorithm] = useState<Algorithm>('bubble');
   const [steps, setSteps] = useState<number[][]>([]);
@@ -118,10 +121,11 @@ export default function AlgorithmVisualizerClient() {
   }, [isPlaying, currentStep, steps.length, speed]);
 
   const displayArray = steps.length > 0 ? steps[currentStep] : array;
-  const maxValue = Math.max(...displayArray);
+  const maxValue = Math.max(1,...displayArray);
 
   return (
-    <div className="flex flex-col gap-4">
+    <DeveloperGeneralFrame><div className="flex flex-col gap-4">
+      <ToolExampleClearActions onExample={() => {setInputError('');setIsPlaying(false);setArray([3,1,2]);setSteps([]);setCurrentStep(0);}} onClear={() => {setInputError('');setIsPlaying(false);setArray([]);setSteps([]);setCurrentStep(0);}} />
       <div className="tb-v2-mode-tabs">
         {(Object.keys(ALGO_INFO) as Algorithm[]).map((key) => (
           <button
@@ -138,18 +142,19 @@ export default function AlgorithmVisualizerClient() {
 
       <div>
         <label className="tb-v2-tool-label">Array Values (comma-separated)</label>
-        <input
+        <input aria-label="Array.join" maxLength={500}
           type="text"
           value={array.join(', ')}
-          onChange={(e) => setArray(e.target.value.split(',').map(n => parseInt(n.trim()) || 0))}
+          onChange={(e) => {reset();const parts=e.target.value.split(',');if(parts.length>50||parts.some(n=>!/^[-+]?\d+(?:\.\d+)?$/.test(n.trim())||Math.abs(Number(n))>10000)){setInputError('Enter up to 50 numbers between -10000 and 10000.');return;}setInputError('');setArray(parts.map(Number));}}
           disabled={isPlaying}
           className="tb-v2-input"
           placeholder="64, 34, 25, 12, 22, 11, 90"
         />
       </div>
 
+      {inputError && <p role="alert" className="tb-v2-error">{inputError}</p>}
       <div className="flex gap-2 flex-wrap">
-        <button type="button" onClick={startSort} disabled={isPlaying} className="tb-v2-btn tb-v2-btn-primary">
+        <button type="button" onClick={startSort} disabled={isPlaying || !!inputError || !array.length} className="tb-v2-btn tb-v2-btn-primary">
           Start {ALGO_INFO[algorithm].name}
         </button>
         <button type="button" onClick={reset} className="tb-v2-btn-sm">
@@ -157,7 +162,7 @@ export default function AlgorithmVisualizerClient() {
         </button>
         <div className="flex items-center gap-2 ml-auto">
           <label className="text-sm text-gray-600 dark:text-gray-400">Speed:</label>
-          <select
+          <select aria-label="Speed"
             value={speed}
             onChange={(e) => setSpeed(Number(e.target.value))}
             className="tb-v2-input w-auto"
@@ -180,7 +185,7 @@ export default function AlgorithmVisualizerClient() {
 
         <div className="flex items-end justify-center gap-1 h-48">
           {displayArray.map((value, index) => {
-            const height = (value / maxValue) * 100;
+            const height = (Math.abs(value) / Math.max(1,...displayArray.map(Math.abs))) * 100;
             const isDone = steps.length > 0 && currentStep === steps.length - 1;
             const isSwapping = !isDone && steps.length > 0 && currentStep < steps.length - 1 &&
               steps[currentStep + 1]?.[index] !== value;
@@ -230,6 +235,6 @@ export default function AlgorithmVisualizerClient() {
           <p>{ALGO_INFO[algorithm].complexity}</p>
         </div>
       </div>
-    </div>
+    </div></DeveloperGeneralFrame>
   );
 }

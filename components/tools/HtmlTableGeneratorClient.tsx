@@ -1,8 +1,12 @@
 'use client';
+import DeveloperGeneralFrame from './DeveloperGeneralFrame';
 
-import { useState } from 'react';
+import { parseCsv } from '@/lib/developer-general/data';
+import ToolExampleClearActions from './ToolExampleClearActions';
+import { useState, useEffect } from 'react';
 
 export default function HtmlTableGeneratorClient() {
+  const [error,setError]=useState('');
   const [input, setInput] = useState('');
   const [output, setOutput] = useState('');
   const [headers, setHeaders] = useState('Name,Age,City');
@@ -11,16 +15,17 @@ export default function HtmlTableGeneratorClient() {
   const [copied, setCopied] = useState(false);
 
   const generateTable = () => {
+    setError('');setOutput('');try {
     if (!input.trim() && !headers.trim()) {
       setOutput('');
       return;
     }
 
-    const headerList = headers.split(',').map(h => h.trim()).filter(Boolean);
-    const rows = input.split('\n').filter(row => row.trim());
-    
+    const headerList = parseCsv(headers)[0] ?? [];
+    const rows = parseCsv(input);
+
     let html = '<table>\n';
-    
+
     if (headerList.length > 0) {
       html += '  <thead>\n    <tr>\n';
       headerList.forEach(h => {
@@ -28,13 +33,13 @@ export default function HtmlTableGeneratorClient() {
       });
       html += '    </tr>\n  </thead>\n';
     }
-    
+
     html += '  <tbody>\n';
     rows.forEach((row, rowIndex) => {
-      const cells = row.split(',').map(c => c.trim());
-      const rowClass = striped && rowIndex % 2 === 1 ? ' class="striped"' : '';
+      const cells = row;
+      const rowClass = striped && rowIndex % 2 === 1 ? ' style="background-color: #f2f2f2"' : '';
       html += `    <tr${rowClass}>\n`;
-      headerList.forEach((_, colIndex) => {
+      (headerList.length ? headerList : cells).forEach((_, colIndex) => {
         const cell = cells[colIndex] || '';
         html += `      <td>${escapeHtml(cell)}</td>\n`;
       });
@@ -47,6 +52,7 @@ export default function HtmlTableGeneratorClient() {
     }
 
     setOutput(html);
+    } catch(e){setError((e as Error).message);}
   };
 
   const escapeHtml = (text: string): string => {
@@ -69,15 +75,18 @@ export default function HtmlTableGeneratorClient() {
     return { __html: output };
   };
 
+  useEffect(() => { if(input.trim()) generateTable(); else {setOutput('');setError('');} }, [input, headers, bordered, striped]);
   return (
-    <div>
+    <DeveloperGeneralFrame><div>
+      <ToolExampleClearActions onExample={() => {setHeaders('Name,Age');setInput('Ada,36');setOutput('');}} onClear={() => {setError('');setInput('');setHeaders('');setOutput('');setCopied(false);}} />
+      {error && <p role="alert" className="tb-v2-error">{error}</p>}
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">CSV Data</span>
         <span className="tb-v2-hash-stats">One row per line, comma-separated</span>
       </div>
-      <textarea
+      <textarea maxLength={100000}
         value={input}
-        onChange={(e) => setInput(e.target.value)}
+        onChange={(e) => {setOutput('');setInput(e.target.value);}}
         placeholder="John,30,New York&#10;Jane,25,Los Angeles&#10;Bob,35,Chicago"
         className="tb-v2-tool-textarea"
         style={{ fontFamily: 'var(--f-mono)' }}
@@ -87,10 +96,10 @@ export default function HtmlTableGeneratorClient() {
       <div className="tb-v2-tool-input-head" style={{ marginTop: '12px' }}>
         <span className="tb-v2-tool-label">Headers</span>
       </div>
-      <input
+      <input maxLength={8000}
         type="text"
         value={headers}
-        onChange={(e) => setHeaders(e.target.value)}
+        onChange={(e) => {setOutput('');setHeaders(e.target.value);}}
         placeholder="Name,Age,City"
         className="tb-v2-tool-input"
         aria-label="Table headers"
@@ -101,7 +110,7 @@ export default function HtmlTableGeneratorClient() {
           <input
             type="checkbox"
             checked={bordered}
-            onChange={(e) => setBordered(e.target.checked)}
+            onChange={(e) => {setOutput('');setBordered(e.target.checked);}}
           />
           Bordered
         </label>
@@ -109,7 +118,7 @@ export default function HtmlTableGeneratorClient() {
           <input
             type="checkbox"
             checked={striped}
-            onChange={(e) => setStriped(e.target.checked)}
+            onChange={(e) => {setOutput('');setStriped(e.target.checked);}}
           />
           Striped rows
         </label>
@@ -129,7 +138,7 @@ export default function HtmlTableGeneratorClient() {
           </button>
         )}
       </div>
-      <textarea
+      <textarea maxLength={100000}
         value={output}
         readOnly
         placeholder="HTML table code will appear here..."
@@ -150,6 +159,6 @@ export default function HtmlTableGeneratorClient() {
           />
         </>
       )}
-    </div>
+    </div></DeveloperGeneralFrame>
   );
 }

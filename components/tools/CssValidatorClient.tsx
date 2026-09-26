@@ -1,5 +1,8 @@
 'use client';
+import DeveloperGeneralFrame from './DeveloperGeneralFrame';
 
+import ToolExampleClearActions from './ToolExampleClearActions';
+import { cssSyntax } from '@/lib/developer-general/code';
 import { useState } from 'react';
 
 interface ValidationIssue {
@@ -22,74 +25,17 @@ export default function CssValidatorClient() {
       return;
     }
 
-    const lines = css.split('\n');
-    let braceCount = 0;
-    let parenCount = 0;
-    let bracketCount = 0;
-
-    lines.forEach((line, index) => {
-      const lineNum = index + 1;
-
-      for (const char of line) {
-        if (char === '{') braceCount++;
-        if (char === '}') braceCount--;
-        if (char === '(') parenCount++;
-        if (char === ')') parenCount--;
-        if (char === '[') bracketCount++;
-        if (char === ']') bracketCount--;
-      }
-
-      // Missing colon in declaration
-      if (/^\s*[a-z-]+\s+[a-z#]/.test(line) && !line.includes(':') && !line.includes('/*')) {
-        newIssues.push({ line: lineNum, message: 'Declaration missing colon separator', severity: 'error' });
-      }
-
-      // Empty rule
-      if (/\{\s*\}/.test(line)) {
-        newIssues.push({ line: lineNum, message: 'Empty rule set', severity: 'warning' });
-      }
-
-      // Incomplete hex color
-      const hexMatches = line.match(/#[0-9a-fA-F]{1,5}(?![0-9a-fA-F])/g);
-      if (hexMatches) {
-        newIssues.push({ line: lineNum, message: `Incomplete hex color: ${hexMatches[0]}`, severity: 'error' });
-      }
-
-      // Property with no value
-      if (/: \s*;/.test(line)) {
-        newIssues.push({ line: lineNum, message: 'Property has no value', severity: 'warning' });
-      }
-
-      // Incomplete calc
-      if (/calc\([^)]*$/.test(line)) {
-        newIssues.push({ line: lineNum, message: 'Incomplete calc() expression', severity: 'error' });
-      }
-
-      // var() without name
-      if (/var\(\s*\)/.test(line)) {
-        newIssues.push({ line: lineNum, message: 'var() requires a variable name', severity: 'error' });
-      }
-    });
-
-    if (braceCount !== 0) {
-      newIssues.push({ message: `Unbalanced braces: ${braceCount > 0 ? 'missing' : 'extra'} closing brace`, severity: 'error' });
-    }
-    if (parenCount !== 0) {
-      newIssues.push({ message: `Unbalanced parentheses: ${parenCount > 0 ? 'missing' : 'extra'} closing paren`, severity: 'error' });
-    }
-    if (bracketCount !== 0) {
-      newIssues.push({ message: `Unbalanced brackets: ${bracketCount > 0 ? 'missing' : 'extra'} closing bracket`, severity: 'error' });
-    }
-
+    try { cssSyntax(css); } catch(e) {newIssues.push({message:(e as Error).message,severity:'error'});}
     setIssues(newIssues);
     setIsValid(newIssues.filter(i => i.severity === 'error').length === 0);
   };
 
   return (
-    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
+    <DeveloperGeneralFrame><div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
+      <ToolExampleClearActions onExample={() => {setInput('.card { color: #fff; }');validateCss('.card { color: #fff; }');}} onClear={() => {setInput('');setIssues([]);setIsValid(null);}} />
       <div>
         <label className="tb-v2-tool-label" style={{marginBottom:8}}>CSS Input</label>
-        <textarea
+        <textarea aria-label="Input" maxLength={100000}
           value={input}
           onChange={e => { setInput(e.target.value); validateCss(e.target.value); }}
           placeholder=".container { display: flex; gap: 1rem; }"
@@ -103,7 +49,7 @@ export default function CssValidatorClient() {
           <div className="flex items-center gap-2">
             <span className={`w-3 h-3 rounded-full ${isValid ? 'bg-green-500' : 'bg-red-500'}`}></span>
             <span className={`font-medium text-sm ${isValid ? 'text-green-700' : 'text-red-700'}`}>
-              {isValid ? 'CSS appears valid' : `CSS has ${issues.length} issue${issues.length !== 1 ? 's' : ''}`}
+              {isValid ? 'CSS syntax is valid' : `CSS has ${issues.length} issue${issues.length !== 1 ? 's' : ''}`}
             </span>
           </div>
         </div>
@@ -132,8 +78,8 @@ export default function CssValidatorClient() {
       )}
 
       {isValid === true && issues.length === 0 && input && (
-        <p className="text-center text-sm text-gray-500 dark:text-gray-400">No issues detected. Your CSS looks good!</p>
+        <p className="text-center text-sm text-gray-500 dark:text-gray-400">Syntax check only. Browser support and property values are not fully validated.</p>
       )}
-    </div>
+    </div></DeveloperGeneralFrame>
   );
 }

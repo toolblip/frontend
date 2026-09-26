@@ -1,6 +1,10 @@
 'use client';
+import DeveloperGeneralFrame from './DeveloperGeneralFrame';
 
-import { useState } from 'react';
+import ToolExampleClearActions from './ToolExampleClearActions';
+import { formatCss, formatPython, formatHtml, minifyCss, minifyHtml } from '@/lib/developer-general/code';
+import { transformJavaScript } from '@/lib/developer-general/esbuild-browser';
+import { useState, useRef } from 'react';
 
 type Language = 'javascript' | 'typescript' | 'python' | 'html' | 'css' | 'json';
 
@@ -13,6 +17,8 @@ interface BeautifierOptions {
 }
 
 export default function CodeBeautifierClient() {
+  const generation = useRef(0);
+  const [busy,setBusy] = useState(false);
   const [code, setCode] = useState('');
   const [language, setLanguage] = useState<Language>('javascript');
   const [beautifiedCode, setBeautifiedCode] = useState('');
@@ -31,256 +37,34 @@ export default function CodeBeautifierClient() {
     setBeautifiedCode('');
   };
 
-  const beautifyCode = () => {
+  const beautifyCode = async () => {
+    const id = ++generation.current; setBusy(true);
     let result = code;
 
     try {
       switch (language) {
         case 'javascript':
         case 'typescript':
-          result = beautifyJs(code, options);
+          result = await transformJavaScript(code, false, language === 'typescript');
           break;
         case 'python':
-          result = beautifyPython(code, options);
+          result = formatPython(code, options.useTabs ? '\t' : ' '.repeat(options.indentSize));
           break;
         case 'html':
-          result = beautifyHtml(code, options);
+          result = formatHtml(code, options.useTabs ? '\t' : ' '.repeat(options.indentSize));
           break;
         case 'css':
-          result = beautifyCss(code, options);
+          result = formatCss(code, options.useTabs ? '\t' : ' '.repeat(options.indentSize));
           break;
         case 'json':
           result = beautifyJson(code, options);
           break;
       }
 
-      setBeautifiedCode(result);
+      if (id === generation.current) setBeautifiedCode(result);
     } catch (error) {
-      setBeautifiedCode(`Error: ${error instanceof Error ? error.message : 'Failed to beautify code'}`);
-    }
-  };
-
-  const beautifyJs = (code: string, opts: BeautifierOptions): string => {
-    const indent = options.useTabs ? '\t' : ' '.repeat(options.indentSize);
-
-    let formatted = '';
-    let indentLevel = 0;
-    let inString = false;
-    let stringChar = '';
-    let inComment = false;
-    let inMultiComment = false;
-    let needsNewline = false;
-    let previousChar = '';
-
-    for (let i = 0; i < code.length; i++) {
-      const char = code[i];
-      const nextChar = code[i + 1];
-
-      if (inMultiComment) {
-        formatted += char;
-        if (char === '*' && nextChar === '/') {
-          inMultiComment = false;
-          formatted += nextChar;
-          i++;
-        }
-        continue;
-      }
-
-      if (inComment) {
-        formatted += char;
-        if (char === '\n') {
-          inComment = false;
-          needsNewline = true;
-        }
-        continue;
-      }
-
-      if (!inString) {
-        if (char === '"' || char === "'" || char === '`') {
-          inString = true;
-          stringChar = char;
-        } else if (char === '/' && nextChar === '/') {
-          inComment = true;
-          continue;
-        } else if (char === '/' && nextChar === '*') {
-          inMultiComment = true;
-          formatted += char;
-          continue;
-        }
-      } else {
-        if (char === stringChar && previousChar !== '\\') {
-          inString = false;
-        }
-        formatted += char;
-        continue;
-      }
-
-      if (needsNewline && char !== '\n' && char !== ' ' && char !== '\t') {
-        if (formatted.endsWith('\n')) {
-          // already has newline
-        } else {
-          formatted += '\n';
-        }
-        needsNewline = false;
-      }
-
-      if (char === '{') {
-        formatted += '{\n';
-        indentLevel++;
-        formatted += indent.repeat(indentLevel);
-        continue;
-      }
-
-      if (char === '}') {
-        indentLevel = Math.max(0, indentLevel - 1);
-        if (formatted.endsWith('\n')) {
-          // remove trailing whitespace
-          formatted = formatted.trimEnd();
-        }
-        formatted += '\n';
-        formatted += indent.repeat(indentLevel);
-        formatted += '}';
-        formatted += '\n';
-        formatted += indent.repeat(indentLevel);
-        continue;
-      }
-
-      if (char === ';') {
-        formatted += options.semicolons ? ';' : '';
-        if (nextChar !== '\n') {
-          formatted += '\n';
-          formatted += indent.repeat(indentLevel);
-        }
-        continue;
-      }
-
-      if (char === '\n') {
-        needsNewline = true;
-        continue;
-      }
-
-      if (char === ' ' && formatted.endsWith(' ')) {
-        continue;
-      }
-
-      formatted += char;
-      previousChar = char;
-    }
-
-    return formatted.trim();
-  };
-
-  const beautifyPython = (code: string, opts: BeautifierOptions): string => {
-    const indent = options.useTabs ? '\t' : ' '.repeat(options.indentSize);
-    const lines = code.split('\n');
-    let result: string[] = [];
-    let indentLevel = 0;
-
-    for (let line of lines) {
-      const trimmed = line.trim();
-      if (!trimmed) continue;
-
-      if (trimmed.startsWith('def ') || trimmed.startsWith('class ') || trimmed.startsWith('if ') ||
-          trimmed.startsWith('elif ') || trimmed.startsWith('else') || trimmed.startsWith('for ') ||
-          trimmed.startsWith('while ') || trimmed.startsWith('try') || trimmed.startsWith('except') ||
-          trimmed.startsWith('finally') || trimmed.startsWith('with ')) {
-        if (result.length > 0) {
-          result.push('');
-        }
-      }
-
-      let newIndentLevel = indentLevel;
-      if (trimmed.endsWith(':')) {
-        result.push(indent.repeat(newIndentLevel) + trimmed);
-        newIndentLevel++;
-      } else {
-        result.push(indent.repeat(newIndentLevel) + trimmed);
-      }
-
-      indentLevel = newIndentLevel;
-    }
-
-    return result.join('\n');
-  };
-
-  const beautifyHtml = (code: string, opts: BeautifierOptions): string => {
-    const indent = options.useTabs ? '\t' : ' '.repeat(options.indentSize);
-    let formatted = '';
-    let indentLevel = 0;
-    const tags: string[] = [];
-
-    const parts = code.split(/(<[^>]+>)/g);
-
-    for (let part of parts) {
-      if (!part.trim()) continue;
-
-      if (part.startsWith('<')) {
-        const isClosing = part.startsWith('</');
-        const isSelfClosing = part.endsWith('/>') || ['br', 'hr', 'img', 'input', 'meta', 'link'].some(
-          tag => part.toLowerCase().includes(`<${tag}`)
-        );
-
-        if (isClosing) {
-          indentLevel = Math.max(0, indentLevel - 1);
-        }
-
-        formatted += '\n' + indent.repeat(indentLevel) + part.trim();
-
-        if (!isClosing && !isSelfClosing) {
-          const tagName = part.match(/<(\w+)/)?.[1] || '';
-          if (tagName && !['br', 'hr', 'img', 'input', 'meta', 'link'].includes(tagName.toLowerCase())) {
-            tags.push(tagName);
-            indentLevel++;
-          }
-        } else if (isSelfClosing) {
-          // no indent change
-        }
-      } else {
-        const text = part.trim();
-        if (text) {
-          formatted += '\n' + indent.repeat(indentLevel) + text;
-        }
-      }
-    }
-
-    return formatted.trim();
-  };
-
-  const beautifyCss = (code: string, opts: BeautifierOptions): string => {
-    const indent = options.useTabs ? '\t' : ' '.repeat(options.indentSize);
-    let formatted = '';
-    let indentLevel = 0;
-
-    const blocks = code.split(/([^{}]+\s*{[^}]*})/g);
-
-    for (let block of blocks) {
-      const trimmed = block.trim();
-      if (!trimmed) continue;
-
-      if (trimmed.includes('{')) {
-        const parts = trimmed.split('{');
-        const selector = parts[0].trim();
-        const properties = parts[1]?.replace('}', '').trim() || '';
-
-        formatted += '\n' + indent.repeat(indentLevel) + selector + ' {';
-        indentLevel++;
-
-        if (properties) {
-          const props = properties.split(';').filter(p => p.trim());
-          for (let prop of props) {
-            const [name, value] = prop.split(':').map(p => p.trim());
-            if (name && value) {
-              formatted += '\n' + indent.repeat(indentLevel) + name + ': ' + value + ';';
-            }
-          }
-        }
-
-        indentLevel = Math.max(0, indentLevel - 1);
-        formatted += '\n' + indent.repeat(indentLevel) + '}';
-      }
-    }
-
-    return formatted.trim();
+      if (id === generation.current) setBeautifiedCode(`Error: ${error instanceof Error ? error.message : 'Failed to beautify code'}`);
+    } finally { if (id === generation.current) setBusy(false); }
   };
 
   const beautifyJson = (code: string, opts: BeautifierOptions): string => {
@@ -288,31 +72,16 @@ export default function CodeBeautifierClient() {
     return JSON.stringify(parsed, null, options.useTabs ? '\t' : options.indentSize);
   };
 
-  const minifyCode = () => {
-    if (!beautifiedCode) return;
-
-    let result = beautifiedCode;
-
-    if (language === 'json') {
-      try {
-        const parsed = JSON.parse(result);
-        result = JSON.stringify(parsed);
-      } catch {
-        // keep as is
-      }
-    } else {
-      result = result
-        .replace(/\n/g, '')
-        .replace(/\s+/g, ' ')
-        .replace(/\s*([{};,:])\s*/g, '$1')
-        .trim();
-    }
-
-    setBeautifiedCode(result);
+  const minifyCode = async () => {
+    if(!beautifiedCode || beautifiedCode.startsWith('Error:'))return;
+    const id=++generation.current;setBusy(true);
+    try {const result=language==='json'?JSON.stringify(JSON.parse(beautifiedCode)):language==='css'?minifyCss(beautifiedCode):language==='html'?minifyHtml(beautifiedCode):language==='python'?beautifiedCode:await transformJavaScript(beautifiedCode,true);
+      if(id===generation.current)setBeautifiedCode(result);
+    }catch(e){if(id===generation.current)setBeautifiedCode('Error: '+(e as Error).message);}finally{if(id===generation.current)setBusy(false);}
   };
 
   const copyToClipboard = () => {
-    if (!beautifiedCode) return;
+    if (!beautifiedCode || beautifiedCode.startsWith('Error:')) return;
     navigator.clipboard.writeText(beautifiedCode).catch(() => {});
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
@@ -338,16 +107,16 @@ export default function CodeBeautifierClient() {
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <DeveloperGeneralFrame><div className="flex flex-col gap-4">
+      <ToolExampleClearActions onExample={() => {generation.current++;setBusy(false);loadExample();}} onClear={() => {generation.current++;setBusy(false);setCode('');setBeautifiedCode('');setCopied(false);}} />
+      <p>JavaScript/TypeScript uses esbuild (TypeScript types are removed). JSON and CSS support indentation. Python reindents existing blocks without inferring structure. HTML formats block boundaries conservatively; it is not a conformance validator.</p>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Language</span>
-        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">
-          Load Example
-        </button>
+
       </div>
-      <select
+      <select aria-label="Language"
         value={language}
-        onChange={(e) => setLanguage(e.target.value as Language)}
+        onChange={(e) => {generation.current++;setBusy(false);setBeautifiedCode('');setLanguage(e.target.value as Language);}}
         className="tb-v2-select"
       >
         <option value="javascript">JavaScript</option>
@@ -361,9 +130,9 @@ export default function CodeBeautifierClient() {
       <div className="grid md:grid-cols-2 gap-4">
         <div>
           <label className="tb-v2-tool-label" style={{ marginBottom: 8, display: 'block' }}>Input Code</label>
-          <textarea
+          <textarea aria-label="Code" maxLength={100000}
             value={code}
-            onChange={(e) => setCode(e.target.value)}
+            onChange={(e) => {generation.current++;setBusy(false);setCode(e.target.value);setBeautifiedCode('');}}
             className="tb-v2-tool-textarea"
             style={{ height: 256, fontFamily: 'var(--f-mono)' }}
             placeholder="Paste your code here..."
@@ -373,7 +142,7 @@ export default function CodeBeautifierClient() {
         <div>
           <label className="tb-v2-tool-label" style={{ marginBottom: 8, display: 'block' }}>Output</label>
           {beautifiedCode ? (
-            <textarea
+            <textarea aria-label="Beautified Code" maxLength={100000}
               value={beautifiedCode}
               readOnly
               className="tb-v2-tool-textarea"
@@ -388,7 +157,7 @@ export default function CodeBeautifierClient() {
       </div>
 
       <div className="tb-v2-section" style={{ padding: '16px 20px' }}>
-        <h3 className="tb-v2-section-title" style={{ marginBottom: 12 }}>Options</h3>
+        <h3 className="tb-v2-section-title" style={{ marginBottom: 12 }}>Indentation (JSON, CSS, Python and HTML)</h3>
         <div className="flex flex-wrap gap-6">
           <label className="flex items-center gap-2">
             <input
@@ -402,7 +171,7 @@ export default function CodeBeautifierClient() {
           {!options.useTabs && (
             <label className="flex items-center gap-2">
               <span>Indent Size:</span>
-              <select
+              <select aria-label="Options.indent Size"
                 value={options.indentSize}
                 onChange={(e) => setOptions({ ...options, indentSize: Number(e.target.value) })}
                 className="tb-v2-select"
@@ -414,45 +183,23 @@ export default function CodeBeautifierClient() {
             </label>
           )}
 
-          <label className="flex items-center gap-2">
-            <span>Print Width:</span>
-            <input
-              type="number"
-              value={options.printWidth}
-              onChange={(e) => setOptions({ ...options, printWidth: Number(e.target.value) })}
-              className="tb-v2-input"
-              style={{ width: 72 }}
-              min="40"
-              max="200"
-            />
-          </label>
 
-          {(language === 'javascript' || language === 'typescript') && (
-            <label className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                checked={options.semicolons}
-                onChange={(e) => setOptions({ ...options, semicolons: e.target.checked })}
-              />
-              <span>Semicolons</span>
-            </label>
-          )}
         </div>
       </div>
 
       <div className="tb-v2-option-group">
-        <button type="button" onClick={beautifyCode} className="tb-v2-btn tb-v2-btn-primary">
+        <button type="button" disabled={busy || !code.trim()} onClick={beautifyCode} className="tb-v2-btn tb-v2-btn-primary">
           Beautify
         </button>
 
-        <button type="button" onClick={minifyCode} className="tb-v2-btn">
+        <button type="button" disabled={busy || language === 'python'} onClick={minifyCode} className="tb-v2-btn">
           Minify
         </button>
 
         <button
           type="button"
           onClick={copyToClipboard}
-          disabled={!beautifiedCode}
+          disabled={!beautifiedCode || beautifiedCode.startsWith('Error:')}
           className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}
         >
           {copied ? 'Copied' : 'Copy to Clipboard'}
@@ -461,12 +208,12 @@ export default function CodeBeautifierClient() {
         <button
           type="button"
           onClick={downloadCode}
-          disabled={!beautifiedCode}
+          disabled={!beautifiedCode || beautifiedCode.startsWith('Error:')}
           className="tb-v2-btn"
         >
           Download
         </button>
       </div>
-    </div>
+    </div></DeveloperGeneralFrame>
   );
 }

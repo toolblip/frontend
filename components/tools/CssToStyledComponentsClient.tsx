@@ -1,5 +1,8 @@
 'use client';
+import DeveloperGeneralFrame from './DeveloperGeneralFrame';
 
+import { cssSyntax } from '@/lib/developer-general/code';
+import ToolExampleClearActions from './ToolExampleClearActions';
 import { useState, useMemo } from 'react';
 
 const EXAMPLE = `.card {
@@ -50,28 +53,25 @@ function selectorToTag(selector: string): string {
   return /^[a-zA-Z][\w-]*$/.test(first) ? first : 'div';
 }
 
-function cssToStyledComponents(css: string): string {
-  const rules = parseRules(css);
-  return rules
-    .map(r => {
-      const tag = selectorToTag(r.selector);
-      const name = selectorToComponentName(r.selector);
-      const decls = r.body
-        .split(';')
-        .map(s => s.trim())
-        .filter(Boolean)
-        .map(decl => `  ${decl};`)
-        .join('\n');
-      return `const ${name} = styled.${tag}\`\n${decls}\n\`;`;
-    })
-    .join('\n\n');
+export function cssToStyledComponents(css: string): string {
+ if(!css.trim())return '';
+ const root=cssSyntax(css);const seen=new Set<string>();const output:string[]=[];
+ root.each(rule=>{
+  if(rule.type==='comment')return;
+  if(rule.type!=='rule'||! /^[.#]?[a-zA-Z][\w-]*$/.test(rule.selector))throw new Error('Use simple single class, ID or element selectors. Complex selectors and at-rules require manual conversion.');
+  const name=selectorToComponentName(rule.selector);if(seen.has(name))throw new Error('Selectors produce duplicate component names');seen.add(name);
+  const tag=selectorToTag(rule.selector);
+  const body=rule.nodes.map(n=>n.toString()).join(';\n').replace(/\\/g,'\\\\').replace(/`/g,'\\`').replace(/\$\{/g,'\\${');
+  output.push(`const ${name} = styled(${JSON.stringify(tag)})\`\n${body}\n\`;`);
+ });
+ return 'import styled from "styled-components";\n\n'+output.join('\n\n');
 }
 
 export default function CssToStyledComponentsClient() {
   const [input, setInput] = useState(EXAMPLE);
   const [copied, setCopied] = useState(false);
 
-  const result = useMemo(() => cssToStyledComponents(input), [input]);
+  const {result,error} = useMemo(() => {try{return {result:cssToStyledComponents(input),error:''};}catch(e){return {result:'',error:(e as Error).message};}}, [input]);
 
   const loadExample = () => setInput(EXAMPLE);
 
@@ -82,12 +82,13 @@ export default function CssToStyledComponentsClient() {
   };
 
   return (
-    <div>
+    <DeveloperGeneralFrame><div>
+      <ToolExampleClearActions onExample={() => {loadExample();}} onClear={() => {setInput('');setCopied(false);}} />
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">CSS Input</span>
-        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">Load Example</button>
+
       </div>
-      <textarea
+      <textarea aria-label="Input" maxLength={100000}
         value={input}
         onChange={e => setInput(e.target.value)}
         spellCheck={false}
@@ -101,8 +102,8 @@ export default function CssToStyledComponentsClient() {
         </button>
       </div>
       <div className="tb-v2-tool-output-body">
-        <pre style={{ margin: 0, whiteSpace: 'pre-wrap', fontFamily: 'var(--f-mono)', fontSize: 13 }}>{result || ' - '}</pre>
+        <p role="alert" className="tb-v2-error">{error}</p><pre style={{ margin: 0, whiteSpace: 'pre-wrap', fontFamily: 'var(--f-mono)', fontSize: 13 }}>{result || ' - '}</pre>
       </div>
-    </div>
+    </div></DeveloperGeneralFrame>
   );
 }

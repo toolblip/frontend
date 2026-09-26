@@ -1,5 +1,7 @@
 'use client';
+import DeveloperGeneralFrame from './DeveloperGeneralFrame';
 
+import ToolExampleClearActions from './ToolExampleClearActions';
 import { useMemo, useState } from 'react';
 
 const RATIOS = [1, 1.5, 2, 3, 4] as const;
@@ -17,9 +19,7 @@ export default function ScreenDensitySimulatorClient() {
 
   const preset = WIDTHS[presetIndex];
 
-  // The iframe is rendered at devicePixelRatio-scaled physical resolution,
-  // then visually scaled back down by 1/ratio so it occupies the same CSS-pixel
-  // footprint while the content inside renders as if the device had that DPR.
+  // Physical pixel calculation only; CSS cannot change the browser devicePixelRatio.
   const physicalWidth = Math.round(preset.width * ratio);
   const physicalHeight = Math.round(preset.height * ratio);
 
@@ -31,11 +31,12 @@ export default function ScreenDensitySimulatorClient() {
   }, [url]);
 
   return (
-    <div>
+    <DeveloperGeneralFrame><div>
+      <ToolExampleClearActions onExample={() => {setUrl('');setRatio(2);setPresetIndex(0);}} onClear={() => {setUrl('');setRatio(1);setPresetIndex(0);}} />
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">URL to Preview</span>
       </div>
-      <input
+      <input aria-label="Url" maxLength={8000}
         type="text"
         value={url}
         onChange={(e) => setUrl(e.target.value)}
@@ -78,18 +79,18 @@ export default function ScreenDensitySimulatorClient() {
       </div>
 
       <div className="tb-v2-banner tb-v2-banner-warn" style={{ margin: '16px 20px' }}>
-        Some sites block embedding — if the preview is blank, that site doesn&apos;t allow iframes.
+        DPR changes the physical pixel calculation only; it does not emulate browser density. Some sites block embedding — if the preview is blank, that site doesn&apos;t allow iframes.
       </div>
 
       <div className="tb-v2-tool-output-head">
-        <span className="tb-v2-tool-label">Simulated Preview</span>
+        <span className="tb-v2-tool-label">CSS viewport preview</span>
         <span className="tb-v2-tool-label" style={{ fontWeight: 400 }}>
           CSS pixels: {preset.width}×{preset.height} @ {ratio}x DPR (physical {physicalWidth}×{physicalHeight})
         </span>
       </div>
       <div className="tb-v2-tool-output-body">
         {!loadUrl ? (
-          <p className="tb-v2-empty">Enter a URL above to preview it at the selected screen density.</p>
+          <p className="tb-v2-empty">Enter a URL to preview the selected CSS viewport.</p>
         ) : (
           <div
             style={{
@@ -103,16 +104,16 @@ export default function ScreenDensitySimulatorClient() {
           >
             <div
               style={{
-                width: physicalWidth,
-                height: physicalHeight,
-                transform: `scale(${1 / ratio})`,
+                width: preset.width,
+                height: preset.height,
+
                 transformOrigin: 'top left',
               }}
             >
               <iframe
-                src={loadUrl}
-                width={physicalWidth}
-                height={physicalHeight}
+                sandbox="allow-scripts" referrerPolicy="no-referrer" src={loadUrl}
+                width={preset.width}
+                height={preset.height}
                 style={{ border: 'none', display: 'block' }}
                 title="Screen density preview"
               />
@@ -120,6 +121,6 @@ export default function ScreenDensitySimulatorClient() {
           </div>
         )}
       </div>
-    </div>
+    </div></DeveloperGeneralFrame>
   );
 }
