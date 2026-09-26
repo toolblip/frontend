@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
-import { verifyDeployment, assertSource, childEnvironment, verifyAggregate, selectGroup, waitForAudit, main } from './run.mjs';
+import { verifyDeployment, assertSource, childEnvironment, verifyAggregate, selectGroup, waitForAudit, assertHostedRunner, main } from './run.mjs';
 const reviewed = JSON.parse(await readFile(new URL('./pilot.json', import.meta.url)));
 const config = { ...reviewed, group: 'developer-data' };
 const deployment = { id: config.deploymentId, sha: config.deployedMerge, environment: config.environment };
@@ -22,7 +22,7 @@ test('browser child receives no API/action credentials', () => {
   assert.deepEqual(childEnvironment({ PATH:'/bin', GH_TOKEN:'test', GITHUB_TOKEN:'test', ACTIONS_RUNTIME_TOKEN:'test', ACTIONS_ID_TOKEN_REQUEST_URL:'test', SECRET_KEY:'test' }), { PATH:'/bin' });
 });
 test('local launch is rejected before browser imports', async () => {
-  if (process.env.GITHUB_ACTIONS !== 'true') await assert.rejects(main(), /only on a GitHub-hosted Linux runner/);
+  if (process.env.GITHUB_ACTIONS !== 'true') await assert.rejects(main(), /requires a GitHub-hosted Linux runner/);
 });
 test('sanitized inventory includes the complete pilot and valid canonical targets', async () => {
   const { tools } = JSON.parse(await readFile(new URL('./inventory.json', import.meta.url)));
@@ -89,4 +89,26 @@ test('normal child completion preserves its failure code without a timeout', asy
   const pending = waitForAudit(child, 1000, () => assert.fail('unexpected timeout'));
   child.emit('exit',2);
   assert.equal(await pending,2);
+});
+
+test('hosted macOS is restricted to WebKit media and never enables a local launch', () => {
+  const mac = {GITHUB_ACTIONS:'true',RUNNER_ENVIRONMENT:'github-hosted',RUNNER_OS:'macOS'};
+  assert.doesNotThrow(() => assertHostedRunner(mac,'webkit','media-conversion'));
+  assert.throws(() => assertHostedRunner(mac,'chrome','media-conversion'));
+  assert.throws(() => assertHostedRunner(mac,'webkit','images'));
+  assert.throws(() => assertHostedRunner({...mac,RUNNER_ENVIRONMENT:'self-hosted'},'webkit','media-conversion'));
+  assert.throws(() => assertHostedRunner({...mac,GITHUB_ACTIONS:'false'},'webkit','media-conversion'));
+  assert.doesNotThrow(() => assertHostedRunner({...mac,RUNNER_OS:'Linux'},'chrome','images'));
+  assert.throws(() => assertHostedRunner({...mac,RUNNER_OS:'Windows'},'webkit','media-conversion'));
+});
+test('macOS workflow runs only the complete production WebKit media group', async () => {
+  const {default:yaml} = await import('js-yaml');
+  const workflow = yaml.load(await readFile(new URL('../../../.github/workflows/tool-qa-macos.yml',import.meta.url),'utf8'));
+  const job = workflow.jobs['production-media'];
+  assert.equal(job['runs-on'],'macos-15-intel');
+  assert.equal(job.env.QA_ENGINE,'webkit'); assert.equal(job.env.QA_GROUP,'media-conversion');
+  assert.deepEqual(workflow.permissions,{contents:'read',deployments:'read'});
+  assert.equal(job.steps.find(s=>s.id==='artifact').with.name,'production-media-conversion-webkit-${{ github.run_id }}-${{ github.run_attempt }}');
+  const inventory = JSON.parse(await readFile(new URL('./inventory.json',import.meta.url)));
+  assert.equal(selectGroup(reviewed,inventory,job.env.QA_GROUP).selectedSlugs.length,35);
 });

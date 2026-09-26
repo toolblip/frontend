@@ -61,10 +61,16 @@ async function fileHashes(root, relative = '') {
   }
   return result;
 }
+export function assertHostedRunner(env, engine, group) {
+  const linux = env.RUNNER_OS === 'Linux';
+  const macMedia = env.RUNNER_OS === 'macOS' && engine === 'webkit' && group === 'media-conversion';
+  if (env.GITHUB_ACTIONS !== 'true' || env.RUNNER_ENVIRONMENT !== 'github-hosted' || !(linux || macMedia))
+    throw Error('Cloud QA requires a GitHub-hosted Linux runner, or hosted macOS for WebKit media-conversion only.');
+}
 export async function main() {
-  // This guard makes accidental local invocation fail before importing any browser code.
-  if (process.env.GITHUB_ACTIONS !== 'true' || process.env.RUNNER_OS !== 'Linux' || process.env.RUNNER_ENVIRONMENT !== 'github-hosted') throw Error('Cloud QA may run only on a GitHub-hosted Linux runner.');
   const [source, out, engine, group] = process.argv.slice(2);
+  // Reject accidental local invocation before importing any browser code.
+  assertHostedRunner(process.env, engine, group);
   if (!source || !out || !['chrome', 'webkit'].includes(engine) || !group) throw Error('Usage: run.mjs SOURCE OUT chrome|webkit GROUP');
   const directory = path.dirname(fileURLToPath(import.meta.url));
   const inventoryText = await readFile(path.join(directory, 'inventory.json'), 'utf8');
@@ -75,7 +81,7 @@ export async function main() {
   const save = (name, value) => writeFile(path.join(output, name), JSON.stringify(value, null, 2) + '\n');
   const git = (...args) => execFileSync('git', args, { cwd: checkout, encoding: 'utf8' }).trim();
   const sourceState = () => ({ sha: git('rev-parse', 'HEAD'), tree: git('rev-parse', 'HEAD^{tree}'), status: git('status', '--porcelain', '--untracked-files=no') });
-  const provenance = { config, group, engine, selectedSlugs, workflowRevision: process.env.QA_WORKFLOW_REVISION, runId: process.env.GITHUB_RUN_ID,
+  const provenance = { config, group, engine, selectedSlugs, runner: { os: process.env.RUNNER_OS, environment: process.env.RUNNER_ENVIRONMENT, arch: process.env.RUNNER_ARCH }, workflowRevision: process.env.QA_WORKFLOW_REVISION, runId: process.env.GITHUB_RUN_ID,
     runAttempt: process.env.GITHUB_RUN_ATTEMPT, runURL: `https://github.com/${config.repository}/actions/runs/${process.env.GITHUB_RUN_ID}`,
     inventorySha256: hash(await readFile(path.join(directory, 'inventory.json'))), startedAt: new Date().toISOString(), sourceBefore: sourceState(), deployedTree: git('rev-parse', `${config.deployedMerge}^{tree}`) };
   const api = async route => {
