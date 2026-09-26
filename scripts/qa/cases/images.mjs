@@ -82,12 +82,22 @@ add(['image-scale-calculator'], async ctx => {
   await ctx.tool.getByLabel('Scale (%)').fill('0'); await ctx.expect(ctx.tool.getByText('480px', { exact: true })).toHaveCount(0); await clear(ctx);
 });
 add(['resize', 'image-size-resizer', 'browser-image-resizer'], async ctx => {
-  await upload(ctx); await ctx.tool.getByLabel('Width (px)', { exact: true }).fill('40');
+  await upload(ctx);
+  // setInputFiles resolves before decoding; wait for the source dimensions
+  // before changing them so the upload callback cannot overwrite the input.
+  await ctx.expect(ctx.tool.getByLabel('Width (px)', { exact: true })).toHaveValue('80');
+  await ctx.expect(ctx.tool.getByLabel('Height (px)', { exact: true })).toHaveValue('40');
+  await ctx.tool.getByLabel('Width (px)', { exact: true }).fill('40');
   await ctx.expect(ctx.tool.getByLabel('Height (px)', { exact: true })).toHaveValue('20');
   await ctx.tool.getByRole('button', { name: 'Resize image', exact: true }).click();
   const bytes = await download(ctx, ctx.tool.getByRole('link', { name: 'Download resized image' }), 'resize-png'); png(ctx, bytes);
   const p = await pixels(ctx, bytes); ctx.check(p.width === 40 && p.height === 20 && p.corner[3] === 0, '80 × 40 becomes 40 × 20 with transparent corner');
-  await upload(ctx, true); await ctx.tool.getByLabel('Width (px)', { exact: true }).fill('40'); await ctx.tool.getByRole('button', { name: 'Resize image', exact: true }).click();
+  await upload(ctx, true);
+  await ctx.expect(ctx.tool.getByLabel('Width (px)', { exact: true })).toHaveValue('80');
+  await ctx.expect(ctx.tool.getByLabel('Height (px)', { exact: true })).toHaveValue('40');
+  await ctx.tool.getByLabel('Width (px)', { exact: true }).fill('40');
+  await ctx.expect(ctx.tool.getByLabel('Height (px)', { exact: true })).toHaveValue('20');
+  await ctx.tool.getByRole('button', { name: 'Resize image', exact: true }).click();
   const jpg = await download(ctx, ctx.tool.getByRole('link', { name: 'Download resized image' }), 'resize-jpeg'); ctx.check(jpg[0] === 255 && jpg[1] === 216, 'JPEG source stays JPEG');
   await clear(ctx);
 });

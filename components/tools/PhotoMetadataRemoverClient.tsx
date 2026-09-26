@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 
 import ToolExampleClearActions from './ToolExampleClearActions';
 import {readImage, exampleFile, canvasBlob} from '@/lib/images-qa';
+import { stripImageMetadata } from '@/lib/image-metadata-strip';
 
 const TAG_NAMES: Record<number, string> = {
   0x010f: 'Make',
@@ -117,7 +118,12 @@ export default function PhotoMetadataRemoverClient() {
     try{const {img,bytes,mime}=await readImage(file);if(id!==request.current)return;
       const canvas=document.createElement('canvas');canvas.width=img.naturalWidth;canvas.height=img.naturalHeight;
       canvas.getContext('2d')!.drawImage(img,0,0);const outType=mime==='image/jpeg'?'image/jpeg':'image/png';
-      const blob=await canvasBlob(canvas,outType);if(id!==request.current)return;
+      const encoded=await canvasBlob(canvas,outType);
+      // WebKit's canvas encoder can add its own EXIF chunk. Strip the final
+      // encoded bytes as well as re-encoding away the source metadata.
+      const cleanedBytes=stripImageMetadata(new Uint8Array(await encoded.arrayBuffer()),outType);
+      if(id!==request.current)return;
+      const blob=new Blob([cleanedBytes],{type:outType});
       setTags(readExifTags(bytes));setScanned(true);setFileName(file.name);setMimeType(outType);
       setImageUrl(URL.createObjectURL(new Blob([bytes],{type:mime})));setCleanedUrl(URL.createObjectURL(blob));
     }catch(e){if(id===request.current)setError((e as Error).message);}finally{if(id===request.current)setProcessing(false);}

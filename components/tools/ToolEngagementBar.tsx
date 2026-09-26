@@ -379,19 +379,28 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
 
 
   async function refreshStats() {
-    const res = await fetch(`/api/tools/${toolSlug}/engagement`, { credentials: "include", cache: "no-store" });
-    if (!res.ok) return;
-    const data = await res.json();
-    setStats(data.data ?? fallbackStats(toolSlug));
+    try {
+      const res = await fetch(`/api/tools/${toolSlug}/engagement`, { credentials: "include", cache: "no-store" });
+      if (!res.ok) return;
+      const data = await res.json();
+      setStats(data.data ?? fallbackStats(toolSlug));
+    } catch {
+      // Optional counters must not interrupt the tool when offline or unloading.
+      // Keep the last known stats if the response is unavailable or malformed.
+    }
   }
 
   async function recordViewOnce() {
     if (viewRecordedRef.current) return;
     viewRecordedRef.current = true;
-    const res = await fetch(`/api/tools/${toolSlug}/view`, { method: "POST", credentials: "include" });
-    if (!res.ok) return;
-    const data = await res.json();
-    setStats(data.data ?? fallbackStats(toolSlug));
+    try {
+      const res = await fetch(`/api/tools/${toolSlug}/view`, { method: "POST", credentials: "include" });
+      if (!res.ok) return;
+      const data = await res.json();
+      setStats(data.data ?? fallbackStats(toolSlug));
+    } catch {
+      // Do not retry a view POST: the server may have counted it before disconnect.
+    }
   }
 
   useEffect(() => {
