@@ -12,25 +12,25 @@ async function mobile({ page, tool, check }, state) {
 }
 
 async function jsonTable({ page, tool, expect, check }) {
-  const input = tool.getByRole('textbox', { name: 'JSON input', exact: true });
-  const output = tool.locator('pre');
+  const input = tool.getByRole('textbox', { name: 'Input', exact: true });
+  const output = tool.locator('pre[aria-label="Result"]');
   await example(tool);
-  await expect(output).toHaveText('| name | role |\n| --- | --- |\n| Ada | Engineer |\n| Alan | Scientist |\n');
+  await expect(output).toHaveText('| name | role |\n| --- | --- |\n| Ada | Engineer |\n| Alan | Scientist |');
   await input.fill('[{"name":"Ada","score":0,"active":false,"note":null},{"name":"A|B","score":12,"active":true,"note":"ok"}]');
-  const expected = '| name | score | active | note |\n| --- | --- | --- | --- |\n| Ada | 0 | false |  |\n| A\\|B | 12 | true | ok |\n';
+  const expected = '| name | score | active | note |\n| --- | --- | --- | --- |\n| Ada | 0 | false |  |\n| A\\|B | 12 | true | ok |';
   await expect(output).toHaveText(expected);
   check(await output.textContent() === expected, 'Exact Markdown preserves zero, false, null and escapes a cell pipe');
   await input.fill('{');
-  await expect(tool).toContainText('Invalid JSON');
+  await expect(tool.getByRole('alert')).toBeVisible();
   await input.fill('[]');
-  await expect(tool).toContainText('JSON array is empty');
+  await expect(tool.getByRole('alert')).toContainText('nonempty array of objects');
   await clear(tool);
   await expect(input).toHaveValue('');
-  await expect(output).toHaveCount(0);
+  await expect(output).toBeEmpty();
   await expect(tool.getByRole('button', { name: 'Copy', exact: true })).toBeDisabled();
   check(true, 'Malformed/empty JSON errors and Clear verified');
   await input.fill('{"name":"Ada","score":0}');
-  const singleExpected = '| name | score |\n| --- | --- |\n| Ada | 0 |\n';
+  const singleExpected = '| name | score |\n| --- | --- |\n| Ada | 0 |';
   await expect(output).toHaveText(singleExpected);
   check(await output.textContent() === singleExpected, 'Exact single-object Markdown matches the independent table, including trailing newline');
   // The approved workflow is output + Copy, with no download requirement.
@@ -68,7 +68,7 @@ async function jsonTable({ page, tool, expect, check }) {
   });
   try {
     await copy.click();
-    await expect(tool.getByRole('button', { name: 'Copied', exact: true })).toBeVisible();
+    await expect(tool.getByRole('status')).toHaveText('Copied');
     await expect.poll(() => page.evaluate(() => window.__jsonTableCopy.calls))
       .toEqual([{ text: singleExpected, status: 'fulfilled' }]);
     check(true, 'Copy submits the independent exact table to native clipboard.writeText, which fulfills; Copied feedback appears');
