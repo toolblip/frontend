@@ -528,6 +528,17 @@ test.describe('Browser tool execution paths', () => {
     await page.getByRole('button', { name: 'Download signed PDF', exact: true }).click();
     const download = await downloadPromise;
     expect(download.suggestedFilename()).toMatch(/^signed-sign-sample\.pdf$/i);
+
+    await page.getByRole('tab', { name: 'Upload', exact: true }).click();
+    await page.getByLabel('Image file', { exact: true }).setInputFiles({
+      name: 'signature.png', mimeType: 'image/png', buffer: await readFile('public/samples/tool-sample.png'),
+    });
+    await expect(page.getByAltText('Uploaded signature')).toBeVisible();
+    await page.locator('.tb-sign-action').click();
+    await expect(page.getByRole('status')).toContainText('Signed PDF ready to download!', { timeout: 15000 });
+    const uploadedDownload = page.waitForEvent('download');
+    await page.getByRole('button', { name: 'Download signed PDF', exact: true }).click();
+    expect((await uploadedDownload).suggestedFilename()).toMatch(/^signed-sign-sample\.pdf$/i);
   });
 
   test('pdf-password-remover requires permission acknowledgment before processing', async ({ page }, testInfo) => {
