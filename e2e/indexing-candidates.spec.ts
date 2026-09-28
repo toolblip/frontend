@@ -21,14 +21,23 @@ async function open(page: Page, slug: string) {
   }));
 }
 async function copy(page: Page, expected: string, button?: Locator) {
-  await (button ?? page.getByRole('button', { name: 'Copy', exact: true }).last()).click();
+  await clickInView(button ?? page.getByRole('button', { name: 'Copy', exact: true }).last());
   await expect.poll(() => page.evaluate(() => (window as any).__copied)).toBe(expected);
+}
+async function clickInView(button: Locator) {
+  await button.evaluate(element => {
+    element.scrollIntoView({block:'center'});
+    const navBottom = document.querySelector('.tb-v2-nav')?.getBoundingClientRect().bottom ?? 0;
+    const buttonTop = element.getBoundingClientRect().top;
+    if (buttonTop < navBottom) window.scrollBy(0, buttonTop - navBottom - 12);
+  });
+  await button.click();
 }
 async function fits(page: Page) {
   await page.screenshot({ path: test.info().outputPath('populated.png') });
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(await page.evaluate(() => innerWidth));
 }
-async function clear(page: Page) { await page.getByRole('button', { name: 'Clear', exact: true }).click(); }
+async function clear(page: Page) { await clickInView(page.getByRole('button', { name: 'Clear', exact: true })); }
 const notebook = {
   nbformat: 4, nbformat_minor: 5, metadata: { custom: { keep: true }, kernelspec: { name: 'python3', display_name: 'Python 3' } },
   cells: [{ id: 'code1', cell_type: 'code', metadata: { tags: ['keep'], custom: 42 }, source: ['print("hi")\n'], execution_count: 2, outputs: [{ output_type: 'stream', name: 'stdout', text: ['hi\n'] }] },
@@ -89,7 +98,7 @@ for (const width of [1440, 375]) {
       await open(page, 'html-table-generator');
       await page.getByLabel('Table headers').fill('Name,Note');
       await page.getByLabel('CSV input').fill('"Ada, Lovelace","<script>& hi"');
-      await page.getByRole('button', { name: 'Generate Table' }).click();
+      await clickInView(page.getByRole('button', { name: 'Generate Table' }));
       const output = page.getByLabel('HTML output');
       await expect(output).toHaveValue(/<td>Ada, Lovelace<\/td>/);
       await expect(output).toHaveValue(/&lt;script&gt;&amp; hi/);
@@ -97,7 +106,7 @@ for (const width of [1440, 375]) {
       await copy(page, await output.inputValue());
       await fits(page);
       await page.getByLabel('CSV input').fill('"unclosed');
-      await page.getByRole('button', { name: 'Generate Table' }).click();
+      await clickInView(page.getByRole('button', { name: 'Generate Table' }));
       await expect(page.locator('[role="alert"]:not(#__next-route-announcer__)')).toBeVisible();
       await expect(output).toHaveValue('');
       await clear(page);
@@ -141,7 +150,7 @@ for (const width of [1440, 375]) {
       await page.getByLabel('Rows Per File').fill('1');
       const downloads: import('@playwright/test').Download[] = [];
       page.on('download', d => downloads.push(d));
-      await page.getByRole('button', { name: 'Download 2 CSV Files' }).click();
+      await clickInView(page.getByRole('button', { name: 'Download 2 CSV Files' }));
       await expect.poll(() => downloads.length).toBe(2);
       expect(await readFile((await downloads[0].path())!, 'utf8')).toBe('name,note\n"Ada, L","line 1\nline ""2"""');
       expect(await readFile((await downloads[1].path())!, 'utf8')).toBe('name,note\nLin,ok');
