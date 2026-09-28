@@ -25,7 +25,7 @@ jobs:
             const { mkdir, writeFile } = require('node:fs/promises');
             const { dirname } = require('node:path');
             // Fetch directly to avoid checkout cleanup of the legacy malformed api gitlink.
-            for (const path of ['scripts/gsc-recovery.mjs', 'data/gsc-recovery-cohort.json']) {
+            for (const path of ['scripts/gsc-recovery.mjs', 'scripts/gsc-site-performance.mjs', 'data/gsc-recovery-cohort.json']) {
               const { data } = await github.rest.repos.getContent({
                 ...context.repo,
                 path,
@@ -52,6 +52,12 @@ jobs:
           GSC_SERVICE_ACCOUNT: ${{ secrets.GSC_SERVICE_ACCOUNT }}
           GSC_SITE_URL: ${{ vars.GSC_SITE_URL || 'sc-domain:toolblip.com' }}
         run: node scripts/gsc-recovery.mjs
+      - name: Collect sitewide performance report
+        if: always()
+        env:
+          GSC_SERVICE_ACCOUNT: ${{ secrets.GSC_SERVICE_ACCOUNT }}
+          GSC_SITEWIDE_URL: ${{ vars.GSC_SITEWIDE_URL || 'sc-domain:toolblip.com' }}
+        run: node scripts/gsc-site-performance.mjs
       - name: Add report to run summary
         if: always()
         shell: bash
@@ -61,6 +67,12 @@ jobs:
           else
             echo 'GSC recovery report unavailable; check the failed setup or collection step.' >> "$GITHUB_STEP_SUMMARY"
           fi
+          if [[ -f test-results/gsc-site-performance/report.md ]]; then
+            printf '\n' >> "$GITHUB_STEP_SUMMARY"
+            cat test-results/gsc-site-performance/report.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo 'GSC sitewide performance report unavailable; check the failed setup or collection step.' >> "$GITHUB_STEP_SUMMARY"
+          fi
       - name: Preserve reports, including partial failures
         if: always()
         uses: actions/upload-artifact@v7
@@ -69,5 +81,7 @@ jobs:
           path: |
             test-results/gsc-recovery/report.json
             test-results/gsc-recovery/report.md
+            test-results/gsc-site-performance/report.json
+            test-results/gsc-site-performance/report.md
           retention-days: 90
           if-no-files-found: error
