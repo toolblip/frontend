@@ -57,7 +57,7 @@ export function parseCredential(raw) {
   } catch { fail('Invalid GSC_SERVICE_ACCOUNT'); }
 }
 
-export async function requestJson(url, init, { transport = fetch, sleep = ms => new Promise(r => setTimeout(r, ms)), timeoutMs = 15000 } = {}) {
+export async function requestJson(url, init, { transport = fetch, sleep = ms => new Promise(r => setTimeout(r, ms)), timeoutMs = 15000, retry429 = true } = {}) {
   for (let attempt = 0; attempt < 3; attempt++) {
     const controller = new AbortController();
     let timer;
@@ -83,7 +83,7 @@ export async function requestJson(url, init, { transport = fetch, sleep = ms => 
       fail('REQUEST_FAILED');
     } finally { clearTimeout(timer); }
     if (response.status >= 200 && response.status < 300) return response.body;
-    if ((response.status === 429 || (response.status >= 500 && response.status <= 599)) && attempt < 2) {
+    if (((response.status === 429 && retry429) || (response.status >= 500 && response.status <= 599)) && attempt < 2) {
       await sleep(1000 * 2 ** attempt);
       continue;
     }

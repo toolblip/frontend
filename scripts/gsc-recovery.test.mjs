@@ -70,9 +70,14 @@ test('bounded retry handles 429/5xx, rejects 403, and never returns raw errors',
   const delays = [];
   assert.deepEqual(await requestJson('https://example.invalid', {}, { transport: async () => reply(calls++ < 2 ? { error: 'secret' } : {}, calls <= 2 ? 429 : 200), sleep: async ms => delays.push(ms) }), {});
   assert.deepEqual(delays, [1000, 2000]);
+  calls = 0;
+  delays.length = 0;
+  await assert.rejects(requestJson('https://example.invalid', {}, { retry429: false, transport: async () => { calls++; return reply({ error: 'secret' }, 429); }, sleep: async ms => delays.push(ms) }), { message: 'HTTP_429' });
+  assert.equal(calls, 1);
+  assert.deepEqual(delays, []);
   await assert.rejects(requestJson('https://example.invalid', {}, { transport: async () => reply({ error: 'private-key' }, 403) }), { message: 'HTTP_403' });
   calls = 0;
-  await assert.rejects(requestJson('https://example.invalid', {}, { transport: async () => { calls++; return reply({}, 503); }, sleep: async () => {} }), { message: 'HTTP_503' });
+  await assert.rejects(requestJson('https://example.invalid', {}, { retry429: false, transport: async () => { calls++; return reply({}, 503); }, sleep: async () => {} }), { message: 'HTTP_503' });
   assert.equal(calls, 3);
   await assert.rejects(requestJson('https://example.invalid', {}, { transport: async () => { throw new Error('Authorization: secret'); } }), { message: 'REQUEST_FAILED' });
   await assert.rejects(requestJson('https://example.invalid', {}, { timeoutMs: 5, transport: () => new Promise(() => {}) }), { message: 'REQUEST_TIMEOUT' });
