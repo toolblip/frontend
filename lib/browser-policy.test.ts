@@ -118,7 +118,7 @@ describe('per-tool browser policy', () => {
     }
     const redirects = await config.redirects!();
     for (const [alias, target] of [['audio-to-text', '/tools/speech-to-text'], ['favicon-checker', '/tools/batch-favicon-downloader']]) {
-      expect(redirects.find(rule => rule.source === `/tools/${alias}`)?.destination).toBe(target);
+      expect(redirects.find(rule => rule.source === `/tools/${alias}`)).toBeUndefined();
       expect(await headers(`/tools/${alias}`)).toEqual(base);
       expect(changed.has(target)).toBe(true);
     }

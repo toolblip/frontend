@@ -1,8 +1,8 @@
 ---
 title: "How to Generate JSON Schema From Data Automatically"
 description: >-
-  Learn how to generate JSON Schema from data with type inference, required
-  fields, and nullable handling. Try the free online schema generator right now.
+  Learn how to draft JSON Schema from sample data, then review inferred types,
+  required fields, and nullable values before validating real responses.
 slug: 2026-07-30-generate-json-schema-from-data
 date: "2026-07-30T00:00:00.000Z"
 category: Developer Tools
@@ -41,7 +41,7 @@ The inferred schema looks like this:
 
 ```json
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
   "properties": {
     "id": { "type": "integer" },
@@ -116,15 +116,13 @@ Enums are similar. A `status` field holding `"active"` in your sample infers as 
 
 Before feeding a payload to any generator, pretty-print it so you can actually see its structure. The [JSON Formatter](https://toolblip.com/tools/json-formatter) validates the JSON and catches a malformed response, which saves you from debugging a schema built from broken input.
 
-## Working With a JSON Schema Generator Online
+## Drafting a Schema From a Sample
 
 Doing inference by hand for a nested payload means walking every branch and writing out each level, which is exactly the mechanical work worth handing off.
 
-The [JSON Schema Generator](https://toolblip.com/tools/json-schema-generator) infers a schema from sample JSON with adjustable strictness and configurable required fields. Paste the payload, set how strict you want the output, copy the schema.
+Use a generator that accepts sample JSON, or write the draft yourself. Check its output before relying on it: a sample can't reveal whether a missing field is optional or whether a null field also accepts strings.
 
-Everything runs locally. To confirm that rather than take it on faith, open DevTools, switch to the Network tab, clear the request list, then paste your JSON and generate. No request appears.
-
-That matters when the sample response contains internal IDs, customer email addresses, or auth tokens. A client side generator means the payload you are describing never leaves your machine.
+If the payload contains internal IDs, customer email addresses, or tokens, check how the generator handles input before pasting it. You can also work from a scrubbed sample. Toolblip doesn't currently offer a JSON Schema generator.
 
 ## JSON Schema Generator vs Validator
 
@@ -132,9 +130,9 @@ The two tools solve opposite halves of the same problem, and mixing them up wast
 
 A generator takes data and produces a schema. You use it once, at the start, to get a draft description of a payload shape.
 
-A validator takes data plus a schema and reports whether they match. You use it repeatedly, in tests and in CI, to catch payloads that drift from the contract.
+A validator takes data plus a schema and reports whether they match. Use it against several real responses to catch assumptions that don't hold.
 
-The workflow runs generator first, then validator. Generate the draft schema from a sample, correct the nullable and optional fields by hand, then run the [JSON Schema Validator](https://toolblip.com/tools/json-schema-validator) against several real responses to confirm the corrected schema actually accepts them.
+Draft the schema from a sample, correct the nullable and optional fields by hand, then run the [JSON Schema Validator](https://toolblip.com/tools/json-schema-validator) against several real responses. It checks a supported subset of Draft 7; it does not generate schemas or support every JSON Schema keyword.
 
 That second step catches the inference mistakes. A schema that rejects a valid production payload tells you exactly which assumption was wrong.
 
@@ -164,5 +162,4 @@ Getting required fields right takes either multiple samples or manual pruning. A
 
 Review those four cases and an inferred schema goes from a rough draft to something you can validate against.
 
-Paste your next API response into the [JSON Schema Generator](https://toolblip.com/tools/json-schema-generator), set your strictness, and start from a schema instead of a blank file.
-
+Once you have a Draft 7 schema, check it against real responses in the [JSON Schema Validator](https://toolblip.com/tools/json-schema-validator). Review the tool's supported keywords before relying on a passing result.
