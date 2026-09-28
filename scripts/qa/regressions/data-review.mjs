@@ -10,6 +10,26 @@ async function download(ctx, name, filename) {
     await file.saveAs(path);
     return readFile(path, 'utf8');
 }
+export async function checkNotebookPreview(ctx, kind, expected) {
+    const preview = ctx.tool.locator('iframe[title="Notebook preview"]');
+    await ctx.expect(preview).toHaveAttribute('sandbox', '');
+    const handle = await preview.elementHandle();
+    if (!handle) throw Error('Notebook preview is missing');
+    try {
+        const frame = await handle.contentFrame();
+        if (!frame) throw Error('Notebook preview frame is missing');
+        await ctx.expect.poll(() => frame.evaluate(({ kind, expected }) => {
+            if (kind === 'heading') {
+                return [...document.querySelectorAll('h1,h2,h3,h4,h5,h6')].some(element =>
+                    element.textContent?.trim() === expected &&
+                    element.getClientRects().length > 0 &&
+                    getComputedStyle(element).visibility !== 'hidden');
+            }
+            const image = document.querySelector('img[alt="plot"]');
+            return !!image && image.getAttribute('src') === expected && image.complete && image.naturalWidth > 0;
+        }, { kind, expected })).toBe(true);
+    } finally { await handle.dispose(); }
+}
 export async function schemaReview(ctx) {
     const { tool, expect } = ctx;
     const input = tool.getByLabel('JSON input', { exact: true });
@@ -61,9 +81,7 @@ export async function notebookImageReview(ctx) {
     const { tool, expect } = ctx;
     const n = { nbformat: 4, nbformat_minor: 4, metadata: {}, cells: [{ cell_type: 'markdown', metadata: {}, source: `![plot](${png})\n\n<img src="data:image/svg+xml;base64,PHN2Zz48L3N2Zz4=" onerror="alert(1)">` }] };
     await nbInput(tool).fill(JSON.stringify(n));
-    const plot = tool.frameLocator('iframe[title="Notebook preview"]').getByRole('img', { name: 'plot', exact: true });
-    await expect(plot).toHaveAttribute('src', png);
-    await expect.poll(() => plot.evaluate(img => img.complete && img.naturalWidth > 0)).toBe(true);
+    await checkNotebookPreview(ctx, 'image', png);
     const html = await download(ctx, 'Download HTML', 'review-notebook-image.html');
     expect(html).toContain(png);
     expect(html).not.toContain('image/svg+xml');
