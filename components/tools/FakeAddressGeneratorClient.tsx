@@ -284,13 +284,13 @@ export default function FakeAddressGeneratorClient() {
         <div className="tb-v2-mode-tabs">
           <button
             onClick={() => copyToClipboard(allAddresses.map((a) => a.fullAddress).join('\n'))}
-            className="tb-v2-button tb-v2-button-secondary flex-1"
+            className="tb-v2-button tb-v2-button-secondary w-full min-w-0 sm:w-auto sm:flex-1"
           >
             Copy All as Text
           </button>
           <button
             onClick={() => copyToClipboard(JSON.stringify(allAddresses, null, 2))}
-            className="tb-v2-button tb-v2-button-secondary flex-1"
+            className="tb-v2-button tb-v2-button-secondary w-full min-w-0 sm:w-auto sm:flex-1"
           >
             Copy All as JSON
           </button>
