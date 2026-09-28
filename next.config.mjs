@@ -101,17 +101,8 @@ const nextConfig = {
       // pay-to-rank Sponsors leaderboard. Never listed in a sitemap, so
       // no other reference needs updating.
       { source: '/advertise', destination: '/sponsors', permanent: true },
-      // Family-verification pass (docs/gsc-recovery-plan.md): all three of
-      // these render HttpHeadersViewerClient (fetch a URL, show its
-      // response headers) but the tool description promises a static HTTP
-      // status code reference table - a genuinely different kind of tool
-      // this repo never built. http-status-checker is a real, distinct
-      // implementation (bulk status checking for a list of URLs) that's at
-      // least topically adjacent, so redirecting there rather than to the
-      // header viewer or to a generic hub.
-      { source: '/tools/http-status-codes', destination: '/tools/http-status-checker', permanent: true },
-      { source: '/tools/http-status-code-lookup', destination: '/tools/http-status-checker', permanent: true },
-      { source: '/tools/http-status-ref', destination: '/tools/http-status-checker', permanent: true },
+      // Retired HTTP status reference URLs have no equivalent here:
+      // http-status-checker checks URLs, not status-code definitions.
 
       { source: '/tools/image-orientation-fixer', destination: '/tools/images/image-rotate', permanent: true },
       // "Text to Image Generator" promised social-graphic creation from
@@ -119,26 +110,16 @@ const nextConfig = {
       // banner-generator does what was actually promised (text -> a real
       // downloadable social/OG image).
       { source: '/tools/text-to-image', destination: '/tools/images/banner-generator', permanent: true },
-      // "Audio to Text Converter" promised transcribing an uploaded MP3/WAV
-      // file; the page rendered a live-microphone-only speech recognizer,
-      // which can't process an uploaded file (no server-side transcription
-      // exists here). speech-to-text is the same underlying capability,
-      // just honestly scoped to live mic input rather than file upload.
-      { source: '/tools/audio-to-text', destination: '/tools/speech-to-text', permanent: true },
+      // The retired audio-to-text page promised uploaded-file transcription;
+      // speech-to-text only accepts live microphone input.
 
       // Second family-verification pass (docs/gsc-recovery-plan.md): these
-      // slugs all render a component that doesn't do what the slug's own
-      // description promises, and in each case a real, different tool
-      // elsewhere in the catalog does. json-schema-generator and
-      // json-patch-generator both actually render JsonLdGeneratorClient -
-      // a byte-for-byte duplicate of the live json-ld-generator page, not a
-      // schema/patch tool at all - so both point straight at json-ld-generator
-      // rather than at json-schema-validator/json-diff (self-review caught
-      // this: an earlier version of this comment sourced its component
-      // claims from an orphaned, unimported file instead of the live
-      // ToolUI.tsx routing table). json-schema-viewer and json-schema-editor
-      // do render the real JsonSchemaValidatorClient, so those two keep
-      // json-schema-validator as their target. ImageMetadataRemoverClient
+      // slugs rendered components that did not match their descriptions.
+      // json-schema-generator and json-patch-generator rendered JSON-LD
+      // markup; neither JSON-LD nor the validator can generate a JSON Schema
+      // or JSON Patch. json-schema-viewer and json-schema-editor do render
+      // the real JsonSchemaValidatorClient, so those redirects remain.
+      // ImageMetadataRemoverClient
       // just re-downloads the uploaded image unchanged (no EXIF stripping);
       // exif-remover is the real implementation of the exact same feature.
       // TextDifferenceCheckerClient, TextFluencyCheckerClient, and
@@ -151,20 +132,14 @@ const nextConfig = {
       // mismatch predates this PR and is flagged as follow-up in the docs,
       // not fixed here). text-fluency-checker and word-complexity-analyzer
       // go to readability-score, the real, topically closest tool.
-      // favicon-checker promises checking 6 platforms (favicon.ico, Apple
-      // Touch, Google SERP, Android manifest, Open Graph) but has no
-      // dedicated component at all - it silently fell back to
-      // BatchFaviconDownloaderClient; favicon-grabber is the closest real
-      // function that component actually has.
-      { source: '/tools/json-schema-generator', destination: '/tools/json-ld-generator', permanent: true },
+      // favicon-checker promised checks across six platforms; downloading
+      // favicon files does not perform those checks.
       { source: '/tools/json-schema-viewer', destination: '/tools/json-schema-validator', permanent: true },
       { source: '/tools/json-schema-editor', destination: '/tools/json-schema-validator', permanent: true },
-      { source: '/tools/json-patch-generator', destination: '/tools/json-ld-generator', permanent: true },
       { source: '/tools/image-metadata-remover', destination: '/tools/images/exif-remover', permanent: true },
       { source: '/tools/text-difference-checker', destination: '/tools/code-diff', permanent: true },
       { source: '/tools/text-fluency-checker', destination: '/tools/readability-score', permanent: true },
       { source: '/tools/word-complexity-analyzer', destination: '/tools/readability-score', permanent: true },
-      { source: '/tools/favicon-checker', destination: '/tools/batch-favicon-downloader', permanent: true },
       { source: '/tools/sitemap-xml-validator', destination: '/tools/xml-validator', permanent: true },
 
       // Same pass, more real-destination redirects: FakeTextGeneratorClient
@@ -177,9 +152,8 @@ const nextConfig = {
       // the source - neither has an rgbToHex function), so the two
       // "rgb-to-hex-*" aliases pointing at them never worked; rgb-to-hex is
       // the real, dedicated RgbToHexClient. AudioToTextClient is a live-
-      // microphone recognizer with no video/URL input path - same as the
-      // audio-to-text fix above, redirecting to speech-to-text rather than
-      // to a YouTube-transcription feature nothing in the catalog has.
+      // microphone recognizer with no video/URL input path. The retired
+      // youtube-to-text URL has no matching destination.
       { source: '/tools/text-combinations-generator', destination: '/tools/word-combinations-generator', permanent: true },
       { source: '/tools/length-weight-converter', destination: '/tools/all-in-one-unit-converter', permanent: true },
       // Color format family → one hub (color-format-converter). Pairwise
@@ -208,7 +182,6 @@ const nextConfig = {
       { source: '/tools/hex-color-picker', destination: '/tools/color-format-converter', permanent: true },
       { source: '/tools/rgba-color-picker', destination: '/tools/color-format-converter', permanent: true },
       { source: '/tools/hex-rgb-hsl-color-picker', destination: '/tools/color-format-converter', permanent: true },
-      { source: '/tools/youtube-to-text', destination: '/tools/speech-to-text', permanent: true },
 
       // Verified functionally broken (family-verification pass): the
       // rendered UI only accepts a file type that doesn't match the slug -
@@ -301,28 +274,9 @@ const nextConfig = {
       { source: '/tools/regex-pattern-generator-v2', destination: '/tools/regex-pattern-generator', permanent: true },
       { source: '/tools/text-statistics-advanced', destination: '/tools/text-statistics', permanent: true },
 
-      // Verified functionally broken: the rendered UI only accepts a file
-      // type that doesn't match what the slug promises (e.g. an EPS
-      // uploader on a Visio-to-JPG page). No real implementation exists for
-      // these formats yet - redirecting to the closest genuine equivalent
-      // per the "fix it or remove it, never fabricate" rule already used
-      // elsewhere in this file, rather than leaving a mislabeled tool live.
-      { source: '/tools/vsd-to-jpg', destination: '/tools/images/image-format-converter', permanent: true },
-      { source: '/tools/vsdx-to-jpg', destination: '/tools/images/image-format-converter', permanent: true },
-      { source: '/tools/vsd-to-pdf', destination: '/tools/excel-to-pdf', permanent: true },
-      { source: '/tools/vsdx-to-pdf', destination: '/tools/excel-to-pdf', permanent: true },
-      { source: '/tools/webp-to-gif', destination: '/tools/images/image-format-converter', permanent: true },
-
-      // Removed stubs without a comparable tool have no redirect and 404.
-      // Keep direct redirects only where a working equivalent exists.
-      { source: '/tools/gif-to-avif', destination: '/tools/gif-to-png', permanent: true },
-      { source: '/tools/gif-to-mov', destination: '/tools/gif-to-png', permanent: true },
-      { source: '/tools/gif-to-webm', destination: '/tools/gif-to-png', permanent: true },
-      { source: '/tools/gif-to-mp4', destination: '/tools/gif-to-png', permanent: true },
-      { source: '/tools/heic-to-avif', destination: '/tools/heic-to-jpg', permanent: true },
-      { source: '/tools/google-rank-checker', destination: '/tools/serp-preview', permanent: true },
-      { source: '/tools/serp-rank-tracker', destination: '/tools/serp-preview', permanent: true },
-      { source: '/tools/keyword-position-checker', destination: '/tools/serp-preview', permanent: true },
+      // Retired Visio, GIF/video, HEIC/AVIF, and rank-tracking URLs have
+      // no destinations that can perform the named conversions or checks.
+      // webp-to-gif also has no match: image-format-converter cannot emit GIF.
       // These two old names match live tools: background removal and domain
       // registration age. The remaining retired names have no close match.
       { source: '/tools/make-background-transparent', destination: '/tools/images/image-background-remover', permanent: true },
@@ -366,11 +320,8 @@ const nextConfig = {
       // mad-libs sentences with zero actual Latin lorem ipsum text, despite
       // the slug's own description explicitly promising "lorem ipsum text".
       { source: '/tools/random-paragraph-generator', destination: '/tools/lorem-ipsum-generator', permanent: true },
-      // SeoMetaTagAnalyzerClient only fetches a URL and scores its existing
-      // tags - no generation UI at all, despite "Analyze and generate...
-      // with preview" promising one; meta-tag-generator is the real,
-      // separate tool that actually does what this slug claims.
-      { source: '/tools/seo-tag-analyzer', destination: '/tools/meta-tag-generator', permanent: true },
+      // SeoMetaTagAnalyzerClient inspected a URL's existing tags.
+      // meta-tag-generator creates tags, so it cannot replace that analysis.
 
     ];
   },

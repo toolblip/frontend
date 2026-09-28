@@ -282,4 +282,4 @@ Related tools for working with HTTP requests and API testing:
 - [JSON Formatter](/tools/json-formatter)  -  prettify and validate JSON responses
 - [JWT Decoder](/tools/jwt-decoder)  -  inspect tokens from API responses
 - [Base64 Encoder](/tools/base64)  -  encode credentials and payloads
-- [HTTP Status Codes](/tools/http-status-codes)  -  quick reference for response codes
+- [HTTP Status Checker](/tools/http-status-checker)  -  check the status code a URL returns
