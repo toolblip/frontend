@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { loginViaApi, resetMockBackend, VALID_USER } from '../fixtures/users';
+import { expectAuthenticatedUser, loginViaApi, resetMockBackend, VALID_USER } from '../fixtures/users';
 
 test.describe('Session BDD regression', () => {
   test.beforeEach(async ({ request }) => {
@@ -10,8 +10,13 @@ test.describe('Session BDD regression', () => {
     await loginViaApi(page, VALID_USER);
 
     await page.goto('/dashboard');
-    await expect(page.getByText(VALID_USER.name).first()).toBeVisible();
-    await expect(page.locator('#main-content').getByText(VALID_USER.email).first()).toBeVisible();
+    await expectAuthenticatedUser(page, VALID_USER);
+    await page.goto('/dashboard/profile');
+    await page.reload();
+    await expectAuthenticatedUser(page, VALID_USER);
+    await expect(page.locator('#main-content').getByText(VALID_USER.name, { exact: true })).toBeVisible();
+    await expect(page.locator('#main-content').getByText(VALID_USER.email, { exact: true })).toBeVisible();
+    await page.getByRole('link', { name: 'Subscription', exact: true }).click();
     await expect(page.getByRole('heading', { name: 'Free plan' })).toBeVisible();
     await expect(page.getByText('All tools available')).toBeVisible();
     await expect(page.getByText('1 member')).toBeVisible();

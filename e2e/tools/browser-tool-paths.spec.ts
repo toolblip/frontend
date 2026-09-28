@@ -18,7 +18,7 @@ async function dismissCookies(page: Page) {
   const slug = new URL(page.url()).pathname.split('/').pop();
   if (slug && ['add-pages-to-pdf', 'annotate-pdf', 'edit-pdf', 'extract-images-from-pdf',
     'merge-pdfs', 'pdf-rearrange', 'delete-pages-from-pdf', 'sign-pdf',
-    'unlock-pdf', 'add-watermark-to-pdf'].includes(slug)) {
+    'pdf-password-remover', 'add-watermark-to-pdf'].includes(slug)) {
     await waitForToolHandler(page.getByRole('button', { name: 'Example', exact: true }), 'onClick');
   }
 }
@@ -34,7 +34,8 @@ test.describe('Browser tool execution paths', () => {
       ['rearrange', 'pdf-rearrange'],
       ['delete-pages', 'delete-pages-from-pdf'],
       ['sign', 'sign-pdf'],
-      ['unlock', 'unlock-pdf'],
+      ['unlock', 'pdf-password-remover'],
+      ['unlock-pdf', 'pdf-password-remover'],
       ['watermark', 'add-watermark-to-pdf'],
     ] as const;
 
@@ -63,7 +64,7 @@ test.describe('Browser tool execution paths', () => {
       await expect(page.getByRole('button', { name: 'Clear', exact: true })).toBeVisible();
     }
 
-    for (const canonicalSlug of ['sign-pdf', 'unlock-pdf', 'add-watermark-to-pdf']) {
+    for (const canonicalSlug of ['sign-pdf', 'pdf-password-remover', 'add-watermark-to-pdf']) {
       const response = await request.get(`/tools/${canonicalSlug}`);
       expect(response.status()).toBe(200);
     }
@@ -311,13 +312,16 @@ test.describe('Browser tool execution paths', () => {
     await page.goto('/tools/base64-encoder-decoder');
     await dismissCookies(page);
 
-    await page.getByPlaceholder('Enter text to Base64 encode...').fill('hello');
-    await page.getByRole('button', { name: 'Encode → Base64' }).click();
+    const input = page.getByLabel('Input', { exact: true });
+    await waitForToolHandler(input, 'onChange');
+    await input.fill('hello');
+    await expect(input).toHaveValue('hello');
+    await page.getByRole('button', { name: 'Encode to Base64' }).click();
     await expect(page.getByText('aGVsbG8=', { exact: true })).toBeVisible();
 
-    await page.getByRole('button', { name: 'Decode', exact: true }).click();
+    await page.getByRole('tab', { name: 'Decode', exact: true }).click();
     await page.getByPlaceholder('Enter Base64 string to decode...').fill('aGVsbG8=');
-    await page.getByRole('button', { name: 'Decode ← Base64' }).click();
+    await page.getByRole('button', { name: 'Decode from Base64' }).click();
     await expect(page.getByText('hello', { exact: true })).toBeVisible();
   });
 
@@ -339,10 +343,11 @@ test.describe('Browser tool execution paths', () => {
     await page.goto('/tools/hex-to-rgb');
     await dismissCookies(page);
 
-    // Seeded default converts immediately.
-    await expect(page.getByText('rgb(239, 68, 68)', { exact: true })).toBeVisible();
+    await expect(page).toHaveURL(/\/tools\/color-format-converter$/);
+    await expect(page.getByText('rgb(52, 152, 219)', { exact: true })).toBeVisible();
 
-    const hex = page.getByPlaceholder('#EF4444');
+    const hex = page.getByPlaceholder('#3498db');
+    await waitForToolHandler(hex, 'onChange');
     await hex.fill('#ffffff');
     await expect(page.getByText('rgb(255, 255, 255)', { exact: true })).toBeVisible();
   });
@@ -525,8 +530,8 @@ test.describe('Browser tool execution paths', () => {
     expect(download.suggestedFilename()).toMatch(/^signed-sign-sample\.pdf$/i);
   });
 
-  test('unlock-pdf requires permission acknowledgment before processing', async ({ page }, testInfo) => {
-    await page.goto('/tools/unlock-pdf');
+  test('pdf-password-remover requires permission acknowledgment before processing', async ({ page }, testInfo) => {
+    await page.goto('/tools/pdf-password-remover');
     await dismissCookies(page);
 
     const example = page.getByRole('button', { name: 'Example', exact: true });

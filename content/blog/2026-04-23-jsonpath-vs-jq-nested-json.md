@@ -34,7 +34,7 @@ Use **jq** when you want to:
 - Run the same extraction in CI, scripts, or cron jobs
 - Convert JSON into lines, CSV-like output, or shell-friendly text
 
-For quick browser-based exploration, try Toolblip's [JSON Path Tester](/tools/json-path-tester), [JSON Path Evaluator](/tools/json-path-evaluator), or [JSON Tree View](/tools/json-tree-view). For cleanup before querying, use the [JSON Formatter](/tools/json-formatter). If you are comparing two responses first, start with [JSON Diff](/tools/json-diff).
+For quick browser-based exploration, try Toolblip's [JSON Path Tester](/tools/json-path-tester), [JSON Path Evaluator](/tools/json-path-tester), or [JSON Tree View](/tools/json-tree-view). For cleanup before querying, use the [JSON Formatter](/tools/json-formatter). If you are comparing two responses first, start with [JSON Diff](/tools/json-diff).
 
 ## Example JSON: A Nested API Response
 
@@ -313,7 +313,7 @@ The main mental model: JSONPath is a selector language; jq is a programming lang
 
 A lot of JSON contains things you should not upload casually: access tokens, user records, billing metadata, internal service names, webhook secrets, and logs. That is why local-first tooling matters.
 
-Toolblip's JSON tools run in your browser. Use the [JSON Path Tester](/tools/json-path-tester), [JSON Path Evaluator](/tools/json-path-evaluator), [JSON Formatter](/tools/json-formatter), and [JSON Diff](/tools/json-diff) without sending the pasted JSON to a server. That makes them safer for quick debugging than random paste-and-pray tools.
+Toolblip's JSON tools run in your browser. Use the [JSON Path Tester](/tools/json-path-tester), [JSON Path Evaluator](/tools/json-path-tester), [JSON Formatter](/tools/json-formatter), and [JSON Diff](/tools/json-diff) without sending the pasted JSON to a server. That makes them safer for quick debugging than random paste-and-pray tools.
 
 jq is also local when you run it on your machine. The privacy question is less JSONPath vs jq and more: **where is the data processed?** Browser-local and terminal-local are both good answers. Unknown hosted tools are the risky answer.
 

@@ -1,0 +1,6 @@
+/* Preserve the next/font/google fallback metrics from the successful build. */
+@font-face{font-family:"Inter Fallback";src:local("Arial");ascent-override:90.44%;descent-override:22.52%;line-gap-override:0.0%;size-adjust:107.12%}
+@font-face{font-family:"Fraunces Fallback";src:local("Times New Roman");ascent-override:84.71%;descent-override:22.09%;line-gap-override:0.0%;size-adjust:115.45%}
+@font-face{font-family:"Nunito Fallback";src:local("Arial");ascent-override:99.71%;descent-override:34.82%;line-gap-override:0.0%;size-adjust:101.39%}
+@font-face{font-family:"JetBrains Mono Fallback";src:local("Arial");ascent-override:75.79%;descent-override:22.29%;line-gap-override:0.0%;size-adjust:134.59%}
+@font-face{font-family:"Noto Sans Bengali Fallback";src:local("Arial");ascent-override:86.24%;descent-override:38.37%;line-gap-override:0.0%;size-adjust:106.33%}

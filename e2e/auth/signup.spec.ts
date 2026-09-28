@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { expectLoggedInCookie, makeUser, resetMockBackend, signupByForm, TAKEN_EMAIL } from '../fixtures/users';
+import { expectAuthenticatedUser, expectLoggedInCookie, makeUser, resetMockBackend, signupByForm, TAKEN_EMAIL } from '../fixtures/users';
 
 test.describe('Signup BDD regression', () => {
   test.beforeEach(async ({ request }) => {
@@ -12,7 +12,7 @@ test.describe('Signup BDD regression', () => {
     await signupByForm(page, user);
 
     await expect(page).toHaveURL(/\/dashboard$/);
-    await expect(page.getByText(user.email).first()).toBeVisible();
+    await expectAuthenticatedUser(page, user);
     await expectLoggedInCookie(page);
   });
 

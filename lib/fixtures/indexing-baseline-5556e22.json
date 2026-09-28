@@ -1,0 +1,1897 @@
+{
+  "revision": "5556e22",
+  "tools": [
+    {
+      "slug": "lorem-ipsum-generator",
+      "indexable": true
+    },
+    {
+      "slug": "punctuation-fixer",
+      "indexable": true
+    },
+    {
+      "slug": "text-statistics",
+      "indexable": true
+    },
+    {
+      "slug": "json-to-markdown-table",
+      "indexable": false
+    },
+    {
+      "slug": "css-class-generator",
+      "indexable": true
+    },
+    {
+      "slug": "robots-txt-generator",
+      "indexable": true
+    },
+    {
+      "slug": "security-headers-generator",
+      "indexable": true
+    },
+    {
+      "slug": "xml-sitemap-generator",
+      "indexable": true
+    },
+    {
+      "slug": "color-palette-generator",
+      "indexable": true
+    },
+    {
+      "slug": "image-aspect-ratio-calculator",
+      "indexable": false
+    },
+    {
+      "slug": "hash-from-text",
+      "indexable": false
+    },
+    {
+      "slug": "url-parameter-extractor",
+      "indexable": true
+    },
+    {
+      "slug": "word-counter",
+      "indexable": true
+    },
+    {
+      "slug": "character-counter",
+      "indexable": true
+    },
+    {
+      "slug": "remove-duplicate-lines",
+      "indexable": true
+    },
+    {
+      "slug": "case-converter",
+      "indexable": true
+    },
+    {
+      "slug": "grammar-checker",
+      "indexable": true
+    },
+    {
+      "slug": "readability-score",
+      "indexable": true
+    },
+    {
+      "slug": "json-formatter",
+      "indexable": true
+    },
+    {
+      "slug": "json-ld-generator",
+      "indexable": true
+    },
+    {
+      "slug": "url-encode",
+      "indexable": true
+    },
+    {
+      "slug": "image-cropper",
+      "indexable": true
+    },
+    {
+      "slug": "image-trimmer",
+      "indexable": false
+    },
+    {
+      "slug": "erase-color",
+      "indexable": false
+    },
+    {
+      "slug": "square-crop",
+      "indexable": false
+    },
+    {
+      "slug": "circle-crop",
+      "indexable": true
+    },
+    {
+      "slug": "image-format-converter",
+      "indexable": true
+    },
+    {
+      "slug": "favicon-generator",
+      "indexable": true
+    },
+    {
+      "slug": "image-resizer",
+      "indexable": true
+    },
+    {
+      "slug": "uuid-generator",
+      "indexable": true
+    },
+    {
+      "slug": "markdown-to-html",
+      "indexable": true
+    },
+    {
+      "slug": "json-yaml-converter",
+      "indexable": true
+    },
+    {
+      "slug": "html-encoder",
+      "indexable": true
+    },
+    {
+      "slug": "cron-parser",
+      "indexable": true
+    },
+    {
+      "slug": "cors-header-generator",
+      "indexable": true
+    },
+    {
+      "slug": "sha-256-hash",
+      "indexable": true
+    },
+    {
+      "slug": "screen-resolution-tester",
+      "indexable": true
+    },
+    {
+      "slug": "url-slug-generator",
+      "indexable": true
+    },
+    {
+      "slug": "regex-tester",
+      "indexable": true
+    },
+    {
+      "slug": "jwt-decoder",
+      "indexable": true
+    },
+    {
+      "slug": "cron-generator",
+      "indexable": true
+    },
+    {
+      "slug": "htaccess-redirect-generator",
+      "indexable": false
+    },
+    {
+      "slug": "meta-tag-generator",
+      "indexable": true
+    },
+    {
+      "slug": "serp-preview",
+      "indexable": true
+    },
+    {
+      "slug": "color-picker",
+      "indexable": true
+    },
+    {
+      "slug": "contrast-checker",
+      "indexable": true
+    },
+    {
+      "slug": "unit-converter",
+      "indexable": true
+    },
+    {
+      "slug": "number-base-converter",
+      "indexable": true
+    },
+    {
+      "slug": "percentage-calculator",
+      "indexable": false
+    },
+    {
+      "slug": "css-border-radius-generator",
+      "indexable": true
+    },
+    {
+      "slug": "sass-to-css",
+      "indexable": true
+    },
+    {
+      "slug": "css-gradient-generator",
+      "indexable": true
+    },
+    {
+      "slug": "xml-formatter",
+      "indexable": true
+    },
+    {
+      "slug": "sql-prettifier",
+      "indexable": true
+    },
+    {
+      "slug": "js-minifier",
+      "indexable": true
+    },
+    {
+      "slug": "color-mixer",
+      "indexable": true
+    },
+    {
+      "slug": "gradient-generator",
+      "indexable": false
+    },
+    {
+      "slug": "qr-code-generator",
+      "indexable": true
+    },
+    {
+      "slug": "image-compressor",
+      "indexable": true
+    },
+    {
+      "slug": "password-generator",
+      "indexable": true
+    },
+    {
+      "slug": "password-strength-checker",
+      "indexable": true
+    },
+    {
+      "slug": "random-number-generator",
+      "indexable": true
+    },
+    {
+      "slug": "list-randomizer",
+      "indexable": true
+    },
+    {
+      "slug": "fake-data-generator",
+      "indexable": true
+    },
+    {
+      "slug": "hash-identifier",
+      "indexable": true
+    },
+    {
+      "slug": "uptime-calculator",
+      "indexable": true
+    },
+    {
+      "slug": "json-to-typescript",
+      "indexable": false
+    },
+    {
+      "slug": "random-string-generator",
+      "indexable": true
+    },
+    {
+      "slug": "url-parser",
+      "indexable": true
+    },
+    {
+      "slug": "text-to-slug",
+      "indexable": true
+    },
+    {
+      "slug": "binary-to-text",
+      "indexable": true
+    },
+    {
+      "slug": "percentage-difference",
+      "indexable": true
+    },
+    {
+      "slug": "age-calculator",
+      "indexable": true
+    },
+    {
+      "slug": "countdown-timer",
+      "indexable": true
+    },
+    {
+      "slug": "color-blindness-simulator",
+      "indexable": true
+    },
+    {
+      "slug": "html-to-markdown",
+      "indexable": true
+    },
+    {
+      "slug": "json-path-tester",
+      "indexable": true
+    },
+    {
+      "slug": "json-xml-converter",
+      "indexable": true
+    },
+    {
+      "slug": "css-validator",
+      "indexable": true
+    },
+    {
+      "slug": "html-validator",
+      "indexable": true
+    },
+    {
+      "slug": "text-to-handwriting",
+      "indexable": true
+    },
+    {
+      "slug": "email-validator",
+      "indexable": true
+    },
+    {
+      "slug": "credit-card-validator",
+      "indexable": true
+    },
+    {
+      "slug": "random-uuid-v7",
+      "indexable": true
+    },
+    {
+      "slug": "random-ip-address",
+      "indexable": true
+    },
+    {
+      "slug": "json-schema-validator",
+      "indexable": true
+    },
+    {
+      "slug": "slug-permalink-checker",
+      "indexable": false
+    },
+    {
+      "slug": "keyword-density-checker",
+      "indexable": true
+    },
+    {
+      "slug": "slideshow-generator",
+      "indexable": false
+    },
+    {
+      "slug": "plain-text-counter",
+      "indexable": true
+    },
+    {
+      "slug": "anagram-generator",
+      "indexable": true
+    },
+    {
+      "slug": "quote-of-the-day",
+      "indexable": false
+    },
+    {
+      "slug": "morse-code-translator",
+      "indexable": false
+    },
+    {
+      "slug": "unix-timestamp-converter",
+      "indexable": true
+    },
+    {
+      "slug": "email-generator",
+      "indexable": true
+    },
+    {
+      "slug": "time-zone-converter",
+      "indexable": false
+    },
+    {
+      "slug": "random-fraction-generator",
+      "indexable": true
+    },
+    {
+      "slug": "rot47-cipher",
+      "indexable": true
+    },
+    {
+      "slug": "hash-collision-finder",
+      "indexable": true
+    },
+    {
+      "slug": "semver-checker",
+      "indexable": true
+    },
+    {
+      "slug": "ipv6-generator",
+      "indexable": true
+    },
+    {
+      "slug": "mac-address-generator",
+      "indexable": true
+    },
+    {
+      "slug": "html-table-generator",
+      "indexable": false
+    },
+    {
+      "slug": "base64-image-converter",
+      "indexable": true
+    },
+    {
+      "slug": "color-harmony-generator",
+      "indexable": true
+    },
+    {
+      "slug": "open-graph-preview",
+      "indexable": true
+    },
+    {
+      "slug": "twitter-card-preview",
+      "indexable": false
+    },
+    {
+      "slug": "unicode-character-inspector",
+      "indexable": true
+    },
+    {
+      "slug": "homoglyph-detector",
+      "indexable": true
+    },
+    {
+      "slug": "shell-command-reference",
+      "indexable": false
+    },
+    {
+      "slug": "user-agent-parser",
+      "indexable": true
+    },
+    {
+      "slug": "physics-constants-reference",
+      "indexable": false
+    },
+    {
+      "slug": "text-sorter",
+      "indexable": false
+    },
+    {
+      "slug": "emoji-finder",
+      "indexable": true
+    },
+    {
+      "slug": "slug-generator",
+      "indexable": false
+    },
+    {
+      "slug": "json-csv-converter",
+      "indexable": true
+    },
+    {
+      "slug": "timestamp-converter",
+      "indexable": true
+    },
+    {
+      "slug": "word-density-analyzer",
+      "indexable": true
+    },
+    {
+      "slug": "graphql-playground",
+      "indexable": false
+    },
+    {
+      "slug": "websocket-tester",
+      "indexable": false
+    },
+    {
+      "slug": "ping-test",
+      "indexable": true
+    },
+    {
+      "slug": "ldap-filter-generator",
+      "indexable": false
+    },
+    {
+      "slug": "speech-to-text",
+      "indexable": true
+    },
+    {
+      "slug": "csv-tsv-converter",
+      "indexable": true
+    },
+    {
+      "slug": "english-grammar-checker",
+      "indexable": true
+    },
+    {
+      "slug": "typo-checker",
+      "indexable": true
+    },
+    {
+      "slug": "regex-pattern-generator",
+      "indexable": false
+    },
+    {
+      "slug": "css-to-scss",
+      "indexable": true
+    },
+    {
+      "slug": "robots-txt-analyzer",
+      "indexable": true
+    },
+    {
+      "slug": "roman-numeral-converter",
+      "indexable": true
+    },
+    {
+      "slug": "fraction-to-decimal",
+      "indexable": true
+    },
+    {
+      "slug": "word-frequency-counter",
+      "indexable": true
+    },
+    {
+      "slug": "palindrome-checker",
+      "indexable": true
+    },
+    {
+      "slug": "reading-time-calculator",
+      "indexable": true
+    },
+    {
+      "slug": "syllable-counter",
+      "indexable": true
+    },
+    {
+      "slug": "image-to-base64",
+      "indexable": false
+    },
+    {
+      "slug": "keyword-extractor",
+      "indexable": true
+    },
+    {
+      "slug": "length-converter",
+      "indexable": true
+    },
+    {
+      "slug": "weight-converter",
+      "indexable": true
+    },
+    {
+      "slug": "sticky-notes",
+      "indexable": true
+    },
+    {
+      "slug": "fake-text-generator",
+      "indexable": true
+    },
+    {
+      "slug": "duplicate-line-finder",
+      "indexable": true
+    },
+    {
+      "slug": "env-parser",
+      "indexable": true
+    },
+    {
+      "slug": "json-to-typescript-interface",
+      "indexable": false
+    },
+    {
+      "slug": "image-optimizer",
+      "indexable": true
+    },
+    {
+      "slug": "broken-link-checker",
+      "indexable": true
+    },
+    {
+      "slug": "google-algorithm-tracker",
+      "indexable": true
+    },
+    {
+      "slug": "color-name-finder",
+      "indexable": true
+    },
+    {
+      "slug": "currency-converter",
+      "indexable": false
+    },
+    {
+      "slug": "ascii-art-generator",
+      "indexable": true
+    },
+    {
+      "slug": "encodings-reference",
+      "indexable": true
+    },
+    {
+      "slug": "mime-types-reference",
+      "indexable": false
+    },
+    {
+      "slug": "css-grid-generator",
+      "indexable": true
+    },
+    {
+      "slug": "css-flexbox-generator",
+      "indexable": true
+    },
+    {
+      "slug": "json-editor",
+      "indexable": false
+    },
+    {
+      "slug": "json-toml-converter",
+      "indexable": true
+    },
+    {
+      "slug": "docker-command-generator",
+      "indexable": true
+    },
+    {
+      "slug": "code-diff",
+      "indexable": true
+    },
+    {
+      "slug": "json-tree-view",
+      "indexable": false
+    },
+    {
+      "slug": "html-entity-encoder",
+      "indexable": false
+    },
+    {
+      "slug": "md5-hash-generator",
+      "indexable": false
+    },
+    {
+      "slug": "sha1-hash-generator",
+      "indexable": true
+    },
+    {
+      "slug": "sha256-hash-generator",
+      "indexable": true
+    },
+    {
+      "slug": "bcrypt-hash-generator",
+      "indexable": true
+    },
+    {
+      "slug": "text-permutation-generator",
+      "indexable": true
+    },
+    {
+      "slug": "hash-diff-checker",
+      "indexable": false
+    },
+    {
+      "slug": "uuid-v1-generator",
+      "indexable": true
+    },
+    {
+      "slug": "broken-image-checker",
+      "indexable": true
+    },
+    {
+      "slug": "color-tint-generator",
+      "indexable": true
+    },
+    {
+      "slug": "number-to-words",
+      "indexable": true
+    },
+    {
+      "slug": "html-live-preview",
+      "indexable": true
+    },
+    {
+      "slug": "color-palette-extractor",
+      "indexable": true
+    },
+    {
+      "slug": "lorem-ipsum-detector",
+      "indexable": false
+    },
+    {
+      "slug": "meta-description-checker",
+      "indexable": true
+    },
+    {
+      "slug": "word-cloud-generator",
+      "indexable": false
+    },
+    {
+      "slug": "text-redundancy-checker",
+      "indexable": true
+    },
+    {
+      "slug": "line-counter",
+      "indexable": true
+    },
+    {
+      "slug": "english-dictionary",
+      "indexable": true
+    },
+    {
+      "slug": "json-to-python",
+      "indexable": false
+    },
+    {
+      "slug": "code-beautifier",
+      "indexable": true
+    },
+    {
+      "slug": "xml-validator",
+      "indexable": true
+    },
+    {
+      "slug": "css-to-tailwind",
+      "indexable": true
+    },
+    {
+      "slug": "sql-to-json",
+      "indexable": true
+    },
+    {
+      "slug": "domain-age-checker",
+      "indexable": true
+    },
+    {
+      "slug": "color-tone-generator",
+      "indexable": true
+    },
+    {
+      "slug": "data-uri-generator",
+      "indexable": true
+    },
+    {
+      "slug": "accessibility-checker",
+      "indexable": true
+    },
+    {
+      "slug": "sitemap-analyzer",
+      "indexable": true
+    },
+    {
+      "slug": "webp-converter",
+      "indexable": true
+    },
+    {
+      "slug": "png-to-jpg",
+      "indexable": true
+    },
+    {
+      "slug": "text-highlighter",
+      "indexable": false
+    },
+    {
+      "slug": "word-combinations-generator",
+      "indexable": false
+    },
+    {
+      "slug": "sentiment-analyzer",
+      "indexable": false
+    },
+    {
+      "slug": "english-collocations-checker",
+      "indexable": true
+    },
+    {
+      "slug": "article-title-generator",
+      "indexable": true
+    },
+    {
+      "slug": "html-to-jsx",
+      "indexable": true
+    },
+    {
+      "slug": "css-to-styled-components",
+      "indexable": true
+    },
+    {
+      "slug": "url-redirect-checker",
+      "indexable": true
+    },
+    {
+      "slug": "open-graph-generator",
+      "indexable": true
+    },
+    {
+      "slug": "dominant-color-extractor",
+      "indexable": true
+    },
+    {
+      "slug": "hex-named-color-converter",
+      "indexable": false
+    },
+    {
+      "slug": "grammar-checker-v2",
+      "indexable": false
+    },
+    {
+      "slug": "dns-lookup",
+      "indexable": true
+    },
+    {
+      "slug": "api-spec-generator",
+      "indexable": true
+    },
+    {
+      "slug": "ssh-key-generator",
+      "indexable": true
+    },
+    {
+      "slug": "json-validator",
+      "indexable": false
+    },
+    {
+      "slug": "text-reverser",
+      "indexable": true
+    },
+    {
+      "slug": "character-frequency-counter",
+      "indexable": true
+    },
+    {
+      "slug": "word-alphabetizer",
+      "indexable": false
+    },
+    {
+      "slug": "random-sentence-generator",
+      "indexable": true
+    },
+    {
+      "slug": "jwt-tester",
+      "indexable": false
+    },
+    {
+      "slug": "photo-resize",
+      "indexable": true
+    },
+    {
+      "slug": "serp-snippet-preview",
+      "indexable": true
+    },
+    {
+      "slug": "color-contrast-auditor",
+      "indexable": true
+    },
+    {
+      "slug": "metric-imperial-converter",
+      "indexable": false
+    },
+    {
+      "slug": "binary-decimal-hex-converter",
+      "indexable": true
+    },
+    {
+      "slug": "sentence-counter",
+      "indexable": true
+    },
+    {
+      "slug": "jwt-token-tester",
+      "indexable": false
+    },
+    {
+      "slug": "seo-meta-tag-analyzer",
+      "indexable": true
+    },
+    {
+      "slug": "text-to-speech",
+      "indexable": true
+    },
+    {
+      "slug": "exif-remover",
+      "indexable": true
+    },
+    {
+      "slug": "uuid-validator",
+      "indexable": true
+    },
+    {
+      "slug": "cidr-calculator",
+      "indexable": true
+    },
+    {
+      "slug": "ip-range-calculator",
+      "indexable": true
+    },
+    {
+      "slug": "color-saturation-adjuster",
+      "indexable": true
+    },
+    {
+      "slug": "grammar-score-checker",
+      "indexable": false
+    },
+    {
+      "slug": "regex-description-generator",
+      "indexable": false
+    },
+    {
+      "slug": "color-shade-tints",
+      "indexable": true
+    },
+    {
+      "slug": "grammar-checker-pro",
+      "indexable": false
+    },
+    {
+      "slug": "dummy-text-detector",
+      "indexable": true
+    },
+    {
+      "slug": "reading-level-estimator",
+      "indexable": false
+    },
+    {
+      "slug": "robots-txt-validator",
+      "indexable": true
+    },
+    {
+      "slug": "image-square-fit",
+      "indexable": true
+    },
+    {
+      "slug": "hreflang-tag-generator",
+      "indexable": true
+    },
+    {
+      "slug": "data-size-converter",
+      "indexable": true
+    },
+    {
+      "slug": "decimal-to-binary",
+      "indexable": true
+    },
+    {
+      "slug": "color-format-converter",
+      "indexable": false
+    },
+    {
+      "slug": "wcag-contrast-checker",
+      "indexable": true
+    },
+    {
+      "slug": "temperature-unit-converter",
+      "indexable": true
+    },
+    {
+      "slug": "base-number-converter",
+      "indexable": true
+    },
+    {
+      "slug": "regex-match-visualizer",
+      "indexable": true
+    },
+    {
+      "slug": "cron-human-readable",
+      "indexable": true
+    },
+    {
+      "slug": "google-serp-preview",
+      "indexable": false
+    },
+    {
+      "slug": "keyword-generator",
+      "indexable": true
+    },
+    {
+      "slug": "json-path-evaluator",
+      "indexable": true
+    },
+    {
+      "slug": "curl-gen",
+      "indexable": false
+    },
+    {
+      "slug": "temp-converter",
+      "indexable": false
+    },
+    {
+      "slug": "word-freq",
+      "indexable": false
+    },
+    {
+      "slug": "rot13-express",
+      "indexable": true
+    },
+    {
+      "slug": "cron-schedule-generator",
+      "indexable": true
+    },
+    {
+      "slug": "regex-explainer",
+      "indexable": false
+    },
+    {
+      "slug": "cron-schedule-validator",
+      "indexable": true
+    },
+    {
+      "slug": "passive-voice-detector",
+      "indexable": false
+    },
+    {
+      "slug": "word-frequency-table",
+      "indexable": true
+    },
+    {
+      "slug": "api-auth-header-generator",
+      "indexable": true
+    },
+    {
+      "slug": "image-rotate",
+      "indexable": true
+    },
+    {
+      "slug": "image-flip",
+      "indexable": true
+    },
+    {
+      "slug": "heading-tag-analyzer",
+      "indexable": true
+    },
+    {
+      "slug": "color-luminance-checker",
+      "indexable": true
+    },
+    {
+      "slug": "color-temperature-adjuster",
+      "indexable": true
+    },
+    {
+      "slug": "angle-unit-converter",
+      "indexable": true
+    },
+    {
+      "slug": "word-scramble-generator",
+      "indexable": false
+    },
+    {
+      "slug": "collocations-checker",
+      "indexable": true
+    },
+    {
+      "slug": "paragraph-counter",
+      "indexable": true
+    },
+    {
+      "slug": "csv-generator",
+      "indexable": true
+    },
+    {
+      "slug": "cron-validator",
+      "indexable": true
+    },
+    {
+      "slug": "uuid-normalizer",
+      "indexable": false
+    },
+    {
+      "slug": "page-title-checker",
+      "indexable": true
+    },
+    {
+      "slug": "pressure-converter",
+      "indexable": false
+    },
+    {
+      "slug": "energy-converter",
+      "indexable": false
+    },
+    {
+      "slug": "sitemap-extractor",
+      "indexable": true
+    },
+    {
+      "slug": "markdown-to-pdf",
+      "indexable": true
+    },
+    {
+      "slug": "pdf-password-remover",
+      "indexable": true
+    },
+    {
+      "slug": "base64-encoder-decoder",
+      "indexable": true
+    },
+    {
+      "slug": "html-encoder-decoder",
+      "indexable": true
+    },
+    {
+      "slug": "css-minifier",
+      "indexable": true
+    },
+    {
+      "slug": "binary-converter",
+      "indexable": true
+    },
+    {
+      "slug": "tip-calculator",
+      "indexable": true
+    },
+    {
+      "slug": "backslash-escape-unescape",
+      "indexable": true
+    },
+    {
+      "slug": "sql-formatter",
+      "indexable": true
+    },
+    {
+      "slug": "aac-to-wav",
+      "indexable": true
+    },
+    {
+      "slug": "add-pages-to-pdf",
+      "indexable": true
+    },
+    {
+      "slug": "add-subtitles",
+      "indexable": true
+    },
+    {
+      "slug": "annotate-pdf",
+      "indexable": true
+    },
+    {
+      "slug": "automation-wizard",
+      "indexable": true
+    },
+    {
+      "slug": "bill-sale-generator",
+      "indexable": true
+    },
+    {
+      "slug": "border",
+      "indexable": true
+    },
+    {
+      "slug": "business-plan-generator",
+      "indexable": false
+    },
+    {
+      "slug": "chart-maker",
+      "indexable": true
+    },
+    {
+      "slug": "collage-maker",
+      "indexable": true
+    },
+    {
+      "slug": "combine-images",
+      "indexable": true
+    },
+    {
+      "slug": "crop",
+      "indexable": true
+    },
+    {
+      "slug": "crop-circle",
+      "indexable": true
+    },
+    {
+      "slug": "csv-to-excel",
+      "indexable": true
+    },
+    {
+      "slug": "csv-to-xml",
+      "indexable": true
+    },
+    {
+      "slug": "cutter",
+      "indexable": true
+    },
+    {
+      "slug": "detect",
+      "indexable": true
+    },
+    {
+      "slug": "edit-pdf",
+      "indexable": true
+    },
+    {
+      "slug": "excel-to-csv",
+      "indexable": true
+    },
+    {
+      "slug": "excel-to-pdf",
+      "indexable": true
+    },
+    {
+      "slug": "excel-to-xml",
+      "indexable": true
+    },
+    {
+      "slug": "extract-audio",
+      "indexable": true
+    },
+    {
+      "slug": "extract-images-from-pdf",
+      "indexable": true
+    },
+    {
+      "slug": "font-to-png",
+      "indexable": false
+    },
+    {
+      "slug": "gif-to-apng",
+      "indexable": true
+    },
+    {
+      "slug": "gif-to-jpg",
+      "indexable": true
+    },
+    {
+      "slug": "gif-to-png",
+      "indexable": true
+    },
+    {
+      "slug": "grayscale",
+      "indexable": true
+    },
+    {
+      "slug": "heic-to-jpg",
+      "indexable": true
+    },
+    {
+      "slug": "heic-to-png",
+      "indexable": true
+    },
+    {
+      "slug": "jpg-to-png",
+      "indexable": true
+    },
+    {
+      "slug": "jpg-to-webp",
+      "indexable": true
+    },
+    {
+      "slug": "m4a-to-wav",
+      "indexable": true
+    },
+    {
+      "slug": "meme-maker",
+      "indexable": true
+    },
+    {
+      "slug": "merge-pdfs",
+      "indexable": true
+    },
+    {
+      "slug": "mkv-to-mp3",
+      "indexable": true
+    },
+    {
+      "slug": "mp4-to-mp3",
+      "indexable": true
+    },
+    {
+      "slug": "mp4-to-wav",
+      "indexable": true
+    },
+    {
+      "slug": "nda-generator",
+      "indexable": true
+    },
+    {
+      "slug": "pixelate",
+      "indexable": true
+    },
+    {
+      "slug": "png-to-webp",
+      "indexable": true
+    },
+    {
+      "slug": "poll-generator",
+      "indexable": true
+    },
+    {
+      "slug": "press-release-generator",
+      "indexable": false
+    },
+    {
+      "slug": "privacy-policy-generator",
+      "indexable": true
+    },
+    {
+      "slug": "profile-photo",
+      "indexable": true
+    },
+    {
+      "slug": "purchase-agreement-generator",
+      "indexable": true
+    },
+    {
+      "slug": "pdf-rearrange",
+      "indexable": true
+    },
+    {
+      "slug": "delete-pages-from-pdf",
+      "indexable": true
+    },
+    {
+      "slug": "resize",
+      "indexable": true
+    },
+    {
+      "slug": "rotate",
+      "indexable": true
+    },
+    {
+      "slug": "sharpen",
+      "indexable": true
+    },
+    {
+      "slug": "sign-pdf",
+      "indexable": true
+    },
+    {
+      "slug": "split-csv",
+      "indexable": false
+    },
+    {
+      "slug": "split-excel",
+      "indexable": true
+    },
+    {
+      "slug": "svg-to-png",
+      "indexable": true
+    },
+    {
+      "slug": "svg-to-jpg",
+      "indexable": true
+    },
+    {
+      "slug": "svg-to-webp",
+      "indexable": true
+    },
+    {
+      "slug": "trace",
+      "indexable": true
+    },
+    {
+      "slug": "unlock-pdf",
+      "indexable": true
+    },
+    {
+      "slug": "add-watermark-to-pdf",
+      "indexable": true
+    },
+    {
+      "slug": "webp-to-jpg",
+      "indexable": true
+    },
+    {
+      "slug": "webp-to-png",
+      "indexable": true
+    },
+    {
+      "slug": "zip",
+      "indexable": true
+    },
+    {
+      "slug": "unicode-escape-encoder",
+      "indexable": false
+    },
+    {
+      "slug": "punycode-encoder",
+      "indexable": true
+    },
+    {
+      "slug": "remove-extra-spaces",
+      "indexable": false
+    },
+    {
+      "slug": "dpi-ppi-calculator",
+      "indexable": true
+    },
+    {
+      "slug": "random-choice-wheel",
+      "indexable": false
+    },
+    {
+      "slug": "ulid-generator",
+      "indexable": true
+    },
+    {
+      "slug": "image-shadow-generator",
+      "indexable": false
+    },
+    {
+      "slug": "favicon-from-emoji",
+      "indexable": true
+    },
+    {
+      "slug": "batch-favicon-downloader",
+      "indexable": true
+    },
+    {
+      "slug": "hmac-generator",
+      "indexable": false
+    },
+    {
+      "slug": "secure-random-generator",
+      "indexable": false
+    },
+    {
+      "slug": "json-escape-unescape",
+      "indexable": true
+    },
+    {
+      "slug": "css-naming-convention",
+      "indexable": false
+    },
+    {
+      "slug": "html-minifier",
+      "indexable": false
+    },
+    {
+      "slug": "random-pin-generator",
+      "indexable": false
+    },
+    {
+      "slug": "docker-compose-generator",
+      "indexable": true
+    },
+    {
+      "slug": "uuid-comparator",
+      "indexable": false
+    },
+    {
+      "slug": "text-uniqueness-checker",
+      "indexable": true
+    },
+    {
+      "slug": "duplicate-phrase-detector",
+      "indexable": true
+    },
+    {
+      "slug": "filler-word-counter",
+      "indexable": true
+    },
+    {
+      "slug": "token-builder",
+      "indexable": false
+    },
+    {
+      "slug": "code-to-diagram-generator",
+      "indexable": true
+    },
+    {
+      "slug": "algorithm-visualizer",
+      "indexable": true
+    },
+    {
+      "slug": "image-scale-calculator",
+      "indexable": false
+    },
+    {
+      "slug": "robots-txt-editor",
+      "indexable": true
+    },
+    {
+      "slug": "color-opacity-generator",
+      "indexable": true
+    },
+    {
+      "slug": "base64-image-decoder",
+      "indexable": true
+    },
+    {
+      "slug": "http-headers-inspector",
+      "indexable": false
+    },
+    {
+      "slug": "headline-analyzer",
+      "indexable": false
+    },
+    {
+      "slug": "text-structure-validator",
+      "indexable": false
+    },
+    {
+      "slug": "character-variety-checker",
+      "indexable": true
+    },
+    {
+      "slug": "api-doc-generator",
+      "indexable": true
+    },
+    {
+      "slug": "db-query-formatter",
+      "indexable": true
+    },
+    {
+      "slug": "uuid-compare",
+      "indexable": false
+    },
+    {
+      "slug": "image-dimension-checker",
+      "indexable": true
+    },
+    {
+      "slug": "og-tag-debugger",
+      "indexable": true
+    },
+    {
+      "slug": "canonical-url-generator",
+      "indexable": true
+    },
+    {
+      "slug": "image-background-remover",
+      "indexable": true
+    },
+    {
+      "slug": "byte-converter",
+      "indexable": true
+    },
+    {
+      "slug": "area-converter",
+      "indexable": true
+    },
+    {
+      "slug": "frequency-converter",
+      "indexable": false
+    },
+    {
+      "slug": "force-converter",
+      "indexable": false
+    },
+    {
+      "slug": "random-color-generator",
+      "indexable": false
+    },
+    {
+      "slug": "time-duration-calculator",
+      "indexable": false
+    },
+    {
+      "slug": "timestamp-diff-calculator",
+      "indexable": false
+    },
+    {
+      "slug": "pixel-density-calculator",
+      "indexable": false
+    },
+    {
+      "slug": "html-to-plain-text",
+      "indexable": false
+    },
+    {
+      "slug": "fake-address-generator",
+      "indexable": true
+    },
+    {
+      "slug": "random-mac-generator",
+      "indexable": true
+    },
+    {
+      "slug": "spelling-checker",
+      "indexable": false
+    },
+    {
+      "slug": "text-complexity-analyzer",
+      "indexable": false
+    },
+    {
+      "slug": "text-deduplicator",
+      "indexable": false
+    },
+    {
+      "slug": "api-endpoint-debugger",
+      "indexable": true
+    },
+    {
+      "slug": "html-attribute-encoder",
+      "indexable": true
+    },
+    {
+      "slug": "base64-image-viewer",
+      "indexable": true
+    },
+    {
+      "slug": "photo-metadata-remover",
+      "indexable": true
+    },
+    {
+      "slug": "seo-title-analyzer",
+      "indexable": true
+    },
+    {
+      "slug": "serp-simulator",
+      "indexable": true
+    },
+    {
+      "slug": "robots-txt-checker",
+      "indexable": true
+    },
+    {
+      "slug": "color-luminance-calculator",
+      "indexable": true
+    },
+    {
+      "slug": "all-in-one-unit-converter",
+      "indexable": true
+    },
+    {
+      "slug": "octal-to-decimal",
+      "indexable": true
+    },
+    {
+      "slug": "slug-health-checker",
+      "indexable": false
+    },
+    {
+      "slug": "duplicate-url-detector",
+      "indexable": true
+    },
+    {
+      "slug": "screen-density-simulator",
+      "indexable": true
+    },
+    {
+      "slug": "html-table-to-json",
+      "indexable": true
+    },
+    {
+      "slug": "text-sentence-shuffler",
+      "indexable": false
+    },
+    {
+      "slug": "text-line-sorter",
+      "indexable": true
+    },
+    {
+      "slug": "image-size-resizer",
+      "indexable": true
+    },
+    {
+      "slug": "cron-generator-dg",
+      "indexable": true
+    },
+    {
+      "slug": "flesch-kincaid-calculator",
+      "indexable": true
+    },
+    {
+      "slug": "regex-pattern-builder",
+      "indexable": false
+    },
+    {
+      "slug": "cron-schedule-explainer",
+      "indexable": true
+    },
+    {
+      "slug": "banner-generator",
+      "indexable": true
+    },
+    {
+      "slug": "color-contrast-matrix",
+      "indexable": true
+    },
+    {
+      "slug": "binary-to-decimal",
+      "indexable": true
+    },
+    {
+      "slug": "css-animation-generator",
+      "indexable": false
+    },
+    {
+      "slug": "scientific-notation-converter",
+      "indexable": false
+    },
+    {
+      "slug": "curl-to-python",
+      "indexable": true
+    },
+    {
+      "slug": "curl-to-javascript",
+      "indexable": true
+    },
+    {
+      "slug": "image-dpi-resizer",
+      "indexable": true
+    },
+    {
+      "slug": "css-cursor-generator",
+      "indexable": false
+    },
+    {
+      "slug": "markdown-table-from-json",
+      "indexable": true
+    },
+    {
+      "slug": "http-status-checker",
+      "indexable": false
+    },
+    {
+      "slug": "color-shade-gen",
+      "indexable": true
+    },
+    {
+      "slug": "batch-image-resizer",
+      "indexable": true
+    },
+    {
+      "slug": "keyword-density-analyzer",
+      "indexable": false
+    },
+    {
+      "slug": "percentage-change-calc",
+      "indexable": true
+    },
+    {
+      "slug": "browser-image-resizer",
+      "indexable": true
+    },
+    {
+      "slug": "random-choice-picker",
+      "indexable": false
+    },
+    {
+      "slug": "discount-calculator",
+      "indexable": true
+    },
+    {
+      "slug": "list-difference-finder",
+      "indexable": false
+    },
+    {
+      "slug": "word-combinations",
+      "indexable": false
+    },
+    {
+      "slug": "regex-escape",
+      "indexable": false
+    },
+    {
+      "slug": "base64-file-encoder",
+      "indexable": true
+    },
+    {
+      "slug": "what-if-scenario-calculator",
+      "indexable": false
+    },
+    {
+      "slug": "bill-splitter",
+      "indexable": true
+    },
+    {
+      "slug": "word-finder",
+      "indexable": false
+    },
+    {
+      "slug": "shell-command-generator",
+      "indexable": false
+    },
+    {
+      "slug": "favicon-grabber",
+      "indexable": true
+    },
+    {
+      "slug": "bmi-calculator",
+      "indexable": true
+    },
+    {
+      "slug": "sentence-extractor",
+      "indexable": false
+    },
+    {
+      "slug": "homophone-checker",
+      "indexable": true
+    },
+    {
+      "slug": "api-endpoint-documenter",
+      "indexable": true
+    },
+    {
+      "slug": "json-to-typescript-types",
+      "indexable": false
+    },
+    {
+      "slug": "favicon-png-maker",
+      "indexable": false
+    },
+    {
+      "slug": "color-palette-from-image",
+      "indexable": true
+    },
+    {
+      "slug": "cooking-unit-converter",
+      "indexable": true
+    },
+    {
+      "slug": "hex-to-decimal-converter",
+      "indexable": false
+    },
+    {
+      "slug": "decimal-to-hex-converter",
+      "indexable": true
+    },
+    {
+      "slug": "paragraph-generator",
+      "indexable": false
+    },
+    {
+      "slug": "curl-command-builder",
+      "indexable": true
+    },
+    {
+      "slug": "dns-lookup-tool",
+      "indexable": true
+    },
+    {
+      "slug": "fraction-calculator",
+      "indexable": true
+    },
+    {
+      "slug": "random-id-generator",
+      "indexable": false
+    },
+    {
+      "slug": "readability-score-calculator",
+      "indexable": false
+    },
+    {
+      "slug": "favicon-icon-generator",
+      "indexable": false
+    },
+    {
+      "slug": "google-serp-simulator",
+      "indexable": false
+    },
+    {
+      "slug": "color-contrast-ratio-checker",
+      "indexable": true
+    },
+    {
+      "slug": "smart-text-sorter",
+      "indexable": false
+    },
+    {
+      "slug": "jwt-token-inspector",
+      "indexable": false
+    },
+    {
+      "slug": "tweet-to-image-converter",
+      "indexable": true
+    },
+    {
+      "slug": "color-picker-wheel",
+      "indexable": true
+    },
+    {
+      "slug": "wcag-contrast-auditor",
+      "indexable": true
+    },
+    {
+      "slug": "bin-hex-dec-converter",
+      "indexable": true
+    },
+    {
+      "slug": "notebook-to-html",
+      "indexable": true
+    },
+    {
+      "slug": "ipynb-formatter",
+      "indexable": false
+    },
+    {
+      "slug": "jupyter-cleaner",
+      "indexable": true
+    },
+    {
+      "slug": "oxford-comma",
+      "indexable": true
+    },
+    {
+      "slug": "json-graph-visualizer",
+      "indexable": true
+    }
+  ]
+}

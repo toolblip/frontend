@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { dismissDashboardOnboarding, loginByForm, resetMockBackend, VALID_USER } from '../fixtures/users';
+import { expectAuthenticatedUser, dismissDashboardOnboarding, loginByForm, resetMockBackend, VALID_USER } from '../fixtures/users';
 
 test.describe('Logout BDD regression', () => {
   test.beforeEach(async ({ request }) => {
@@ -10,9 +10,13 @@ test.describe('Logout BDD regression', () => {
     await loginByForm(page, VALID_USER);
     await expect(page).toHaveURL(/\/dashboard/);
     await dismissDashboardOnboarding(page);
-    await expect(page.getByText(VALID_USER.email).first()).toBeVisible();
+    await expectAuthenticatedUser(page, VALID_USER);
 
+    await page.getByRole('button', { name: 'Account menu' }).click();
+    await expect(page.getByRole('paragraph').filter({ hasText: VALID_USER.email })).toBeVisible();
     await page.getByRole('button', { name: 'Sign out' }).click();
+    await expect(page).toHaveURL('/');
+    await page.goto('/dashboard');
 
     await expect(page).toHaveURL(/\/login\?next=%2Fdashboard$/);
     const cookies = await page.context().cookies();

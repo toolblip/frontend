@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useRef, useState, useMemo } from 'react';
 import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 const EXAMPLE =
@@ -8,6 +8,8 @@ const EXAMPLE =
 
 export default function WordCounterClient() {
   const [input, setInput] = useState('');
+  const [copyError, setCopyError] = useState('');
+  const copyAttempt = useRef(0);
   const [copied, setCopied] = useState(false);
 
   const stats = useMemo(() => {
@@ -26,7 +28,7 @@ export default function WordCounterClient() {
     return { chars, charsNoSpaces, words, sentences, paragraphs, lines, readingTime, speakingTime };
   }, [input]);
 
-  const copyStats = () => {
+  const copyStats = async () => {
     if (!stats) return;
     const text = `Words: ${stats.words}
 Characters: ${stats.chars}
@@ -36,13 +38,22 @@ Paragraphs: ${stats.paragraphs}
 Lines: ${stats.lines}
 Reading time: ${stats.readingTime} min
 Speaking time: ${stats.speakingTime} min`;
-    navigator.clipboard.writeText(text);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
+    const attempt = ++copyAttempt.current;
+    setCopyError('');
+    setCopied(false);
+    try {
+      await navigator.clipboard.writeText(text);
+      if (attempt !== copyAttempt.current) return;
+      setCopied(true);
+      setTimeout(() => { if (attempt === copyAttempt.current) setCopied(false); }, 1500);
+    } catch {
+      if (attempt === copyAttempt.current) setCopyError('Clipboard access failed. Select and copy manually.');
+    }
   };
 
   return (
     <div>
+      {copyError && <p role="alert">{copyError}</p>}
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Text</span>
         <ToolExampleClearActions

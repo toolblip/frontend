@@ -197,8 +197,8 @@ function SharePopover({
 export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰" }: ToolEngagementBarProps) {
   const { user, login, loading: authLoading } = useAuth();
   const [stats, setStats] = useState<EngagementStats>(() => fallbackStats(toolSlug));
-  const favoriteMutationEpoch = useRef(0);
   const viewRecordedRef = useRef(false);
+  const favoriteRevisionRef = useRef(0);
   const [shareOpen, setShareOpen] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
   const [email, setEmail] = useState("");
@@ -279,7 +279,6 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
   }
 
   async function favoriteTool() {
-    favoriteMutationEpoch.current++;
     setFavoriteLoading(true);
     try {
       const res = await fetch(`/api/tools/${toolSlug}/favorite`, {
@@ -289,6 +288,7 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
       });
       const data = await res.json();
       if (res.ok) {
+        favoriteRevisionRef.current += 1;
         setStats(data.data ?? fallbackStats(toolSlug));
         setFavoriteIntent(false);
         clearFavoriteQuery();
@@ -296,7 +296,6 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
         setLoginOpen(true);
       }
     } finally {
-      favoriteMutationEpoch.current++;
       setFavoriteLoading(false);
     }
   }
@@ -382,12 +381,14 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
 
 
   async function refreshStats() {
-    const epoch = favoriteMutationEpoch.current;
+    const favoriteRevision = favoriteRevisionRef.current;
     try {
       const res = await fetch(`/api/tools/${toolSlug}/engagement`, { credentials: "include", cache: "no-store" });
       if (!res.ok) return;
       const data = await res.json();
-      if (epoch === favoriteMutationEpoch.current) setStats(data.data ?? fallbackStats(toolSlug));
+      // A login refresh can contain the snapshot from before a favorite save.
+      if (favoriteRevision !== favoriteRevisionRef.current) return;
+      setStats(data.data ?? fallbackStats(toolSlug));
     } catch {
       // Optional counters must not interrupt the tool when offline or unloading.
       // Keep the last known stats if the response is unavailable or malformed.
@@ -397,12 +398,11 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
   async function recordViewOnce() {
     if (viewRecordedRef.current) return;
     viewRecordedRef.current = true;
-    const epoch = favoriteMutationEpoch.current;
     try {
       const res = await fetch(`/api/tools/${toolSlug}/view`, { method: "POST", credentials: "include" });
       if (!res.ok) return;
       const data = await res.json();
-      if (epoch === favoriteMutationEpoch.current) setStats(data.data ?? fallbackStats(toolSlug));
+      setStats(data.data ?? fallbackStats(toolSlug));
     } catch {
       // Do not retry a view POST: the server may have counted it before disconnect.
     }
@@ -422,7 +422,6 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
   }, [user?.id]);
 
   async function recordShare(channel: string) {
-    const epoch = favoriteMutationEpoch.current;
     setStats((current) => ({ ...current, shares: current.shares + 1 }));
 
     const res = await fetch(`/api/tools/${toolSlug}/share`, {
@@ -434,7 +433,7 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
     });
     if (!res.ok) return;
     const data = await res.json();
-    if (epoch === favoriteMutationEpoch.current) setStats(data.data ?? fallbackStats(toolSlug));
+    setStats(data.data ?? fallbackStats(toolSlug));
   }
 
   async function copyLink() {
@@ -523,7 +522,6 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
   }
 
   async function confirmUnfavorite() {
-    favoriteMutationEpoch.current++;
     setFavoriteLoading(true);
     try {
       const res = await fetch(`/api/tools/${toolSlug}/favorite`, {
@@ -533,11 +531,11 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
       });
       const data = await res.json();
       if (res.ok) {
+        favoriteRevisionRef.current += 1;
         setStats(data.data ?? fallbackStats(toolSlug));
         setUnfavoriteOpen(false);
       }
     } finally {
-      favoriteMutationEpoch.current++;
       setFavoriteLoading(false);
     }
   }

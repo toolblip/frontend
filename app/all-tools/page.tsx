@@ -1,3 +1,4 @@
+import { reviewedToolSlugs } from '@/data/reviewed-tools';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { tools } from '@/data/tools';
@@ -34,7 +35,7 @@ export default function AllToolsPage() {
 
   const toolsByCategory = Object.keys(counts)
     .sort((a, b) => counts[b] - counts[a])
-    .map((name) => ({ name, tools: tools.filter((t) => t.category === name) }));
+    .map((name) => ({ name, tools: tools.filter((t) => t.category === name).sort((a, b) => Number((reviewedToolSlugs as readonly string[]).includes(b.slug)) - Number((reviewedToolSlugs as readonly string[]).includes(a.slug))) }));
 
   return (
     <main className="tb-v2-blog">

@@ -743,8 +743,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <UnixTimestampConverterClient />;
     case 'unit-converter':
       return <UnitConverterClient />;
-    case 'text-sorter':
-      return <TextSorterClient />;
     case 'text-diff':
       return <TextDiffClient />;
     case 'square-crop':
@@ -1871,8 +1869,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <PixelateClient />;
     case 'readability-checker':
       return <ReadabilityCheckerClient />;
-    case 'robots-txt-editor':
-      return <RobotsTxtEditorClient />;
     case 'sentence-counter':
       return <SentenceCounterClient />;
     case 'sharpen':
@@ -1921,8 +1917,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <ImageCropperClient />;
     case 'image-brightness-adjuster':
       return <ImageCropperClient />;
-    case 'image-dimension-checker':
-      return <DetectClient />;
     case 'image-dpi-resizer':
       return <ImageDpiResizerClient />;
     case 'image-enlarger':
@@ -2161,8 +2155,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <GrammarCheckerClient />;
     case 'spell-check':
       return <GrammarCheckerClient />;
-    case 'spelling-checker':
-      return <GrammarCheckerClient />;
     case 'speller':
       return <GrammarCheckerClient />;
     case 'typo-finder':
@@ -2307,8 +2299,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <MetaTagGeneratorClient />;
     case 'serp-preview-v2':
       return <SerpPreviewClient />;
-    case 'serp-simulator':
-      return <SerpPreviewClient />;
     case 'screen-resolution':
       return <ScreenResolutionTesterClient />;
     case 'viewport-tester':
@@ -2324,8 +2314,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'robots-txt-create':
       return <RobotsTxtEditorClient />;
     case 'robots-txt-checker':
-      return <RobotsTxtEditorClient />;
-    case 'robots-txt-validator':
       return <RobotsTxtEditorClient />;
     case 'sitemap-xml':
       return <XmlSitemapGeneratorClient />;
@@ -2394,19 +2382,16 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'image-resizer-tool': return <ImageResizerClient />;
     case 'image-resizer-ultimate': return <ImageResizerClient />;
     case 'image-resizer-ultra': return <ImageResizerClient />;
-    case 'image-size-resizer': return <ImageResizerClient />;
     case 'ip-address-info': return <RandomIpAddressClient />;
     case 'ip-address-info-express': return <RandomIpAddressClient />; // legacy alias, redirected via next.config.mjs
     case 'ip-address-info': return <RandomIpAddressClient />;
     case 'ip-address-info-v2': return <RandomIpAddressClient />;
     case 'json-csv-express': return <JsonCsvExpressClient />;
-    case 'json-escape-unescape': return <BackslashEscapeUnescapeClient />;
     case 'json-patch-generator': return <JsonLdGeneratorClient />;
     // 'json-path-evaluator' renders JsonPathTesterClient, not
     // JsonPathEvaluatorExpressClient below — the "express" component just
     // pretty-prints JSON, it doesn't evaluate a JSONPath expression at all,
     // which is what the tool's own description promises.
-    case 'json-path-evaluator': return <JsonPathTesterClient />;
     case 'json-path-evaluator-express': return <JsonPathEvaluatorExpressClient />; // legacy alias, redirected via next.config.mjs
     case 'json-path-tester-new': return <JsonPathTesterClient />;
     case 'json-schema-editor': return <JsonSchemaValidatorClient />;
@@ -2415,8 +2400,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'json-schema-viewer': return <JsonSchemaValidatorClient />;
     case 'json-to-go-struct': return <CsvToJsonClient />;
     case 'json-to-php-array': return <CsvToJsonClient />;
-    case 'json-to-typescript-interface': return <JsonToTypescriptClient />;
-    case 'json-to-typescript-types': return <JsonToTypescriptClient />;
     case 'json-to-url-encoded': return <CsvToJsonClient />;
     case 'jwt-decode-tool': return <DecodeToolClient />;
     case 'jwt-decoder-2025': return <JwtDecoderClient />;
@@ -2454,7 +2437,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'jwt-decoder-x': return <JwtDecoderClient />;
     case 'jwt-decoder-xl': return <JwtDecoderClient />;
     case 'keyword-density-analyzer-new': return <KeywordDensityCheckerClient />; // legacy alias, redirected via next.config.mjs
-    case 'keyword-density-analyzer': return <KeywordDensityCheckerClient />;
     case 'keyword-difficulty-checker': return <KeywordDensityCheckerClient />;
     case 'keyword-generator-express': return <KeywordGeneratorExpressClient />; // legacy alias, redirected via next.config.mjs
     case 'keyword-generator': return <KeywordGeneratorExpressClient />;
@@ -2503,7 +2485,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'lorem-ipsum-x': return <LoremIpsumGeneratorClient />;
     case 'lorem-ipsum-xl': return <LoremIpsumGeneratorClient />;
     case 'm4a-to-wav': return <AacToWavClient />;
-    case 'markdown-table-from-json': return <MediaConversionMarkdownClient />;
     case 'md5-hash-generator': return <HashGeneratorClient />;
     case 'meta-gen-toolblip': return <MetaGenToolblipClient />;
     case 'meta-tag-browser': return <MetaTagGeneratorClient />;
@@ -2611,7 +2592,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'qr-code': return <QrCodeGeneratorClient />;
     case 'random-color-generator': return <RandomColorGeneratorClient />;
     case 'random-id-generator': return <RandomIdGeneratorClient />; // real alphanumeric ID generator, not the fraction tool
-    case 'random-mac-generator': return <MacAddressGeneratorClient />;
     case 'random-pin-generator': return <RandomPinGeneratorClient />; // real numeric PIN generator, not the fraction tool
     case 'readability-check-tool': return <ContrastCheckToolClient />;
     case 'readability-checker-pro': return <ReadabilityCheckerClient />;
@@ -2621,7 +2601,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'readability-score-advanced': return <ReadabilityScoreClient />;
     case 'readability-score-api': return <ReadabilityScoreClient />;
     case 'readability-score-browser': return <ReadabilityScoreClient />;
-    case 'readability-score-calculator': return <ReadabilityScoreClient />;
     case 'readability-score-checker': return <ReadabilityCheckerClient />;
     case 'readability-score-classic': return <ReadabilityScoreClient />;
     case 'readability-score-complete': return <ReadabilityScoreClient />;
@@ -2692,7 +2671,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'rgba-color-picker': return <ColorPicker2025Client />;
     case 'rgba-to-hex': return <HexToRgbaClient />;
     case 'rgba-to-hsl': return <RgbaToHslConverterClient />;
-    case 'robots-txt-analyzer': return <RobotsTxtEditorClient />;
     case 'robots-txt-builder': return <RobotsTxtEditorClient />;
     case 'robots-txt-simulator': return <RobotsTxtEditorClient />;
     case 'robots-txt-tester': return <RobotsTxtEditorClient />;
@@ -2740,7 +2718,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'serp-preview-x': return <SerpPreviewClient />;
     case 'serp-preview-xl': return <SerpPreviewClient />;
     case 'serp-result-preview': return <SerpPreviewClient />;
-    case 'serp-snippet-preview': return <SerpPreviewClient />;
     case 'sha1-hash-generator': return <HashGeneratorClient />;
     case 'sha256-hash-generator': return <HashGeneratorClient />;
     case 'shell-command-gen-express': return <ShellCommandGenExpressClient />;
@@ -2750,10 +2727,8 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'sitemap-html-generator': return <HtmlTableGeneratorClient />;
     case 'sitemap-xml-validator': return <XmlValidatorClient />;
     case 'sitemap-xml-validator-express': return <XmlValidatorClient />;
-    case 'smart-text-sorter': return <TextSorterClient />;
     case 'speech-to-text': return <AudioToTextClient />;
     case 'spelling-checker-tool': return <GrammarCheckerClient />; // legacy alias, redirected via next.config.mjs
-    case 'spelling-checker': return <GrammarCheckerClient />;
     case 'srt-to-json': return <CsvToJsonClient />;
     case 'srt-to-json-v2': return <CsvToJsonClient />;
     case 'summarizer': return <ContentSummarizerClient />;
@@ -2853,7 +2828,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'weight-converter-express': return <WeightConverterClient />;
     case 'wifi-qr-code-generator': return <QrCodeGeneratorClient />;
     case 'word-complexity-analyzer': return <WordFrequencyAnalyzerClient />;
-    case 'word-density-analyzer': return <WordFrequencyAnalyzerClient />;
     case 'word-frequency-table': return <WordFrequencyAnalyzerClient />;
     case 'xml-sitemap-parser': return <XmlSitemapGeneratorClient />;
     case 'xml-to-excel': return <ExcelToXmlClient />;
@@ -2877,7 +2851,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'rot13-express': return <Rot13CipherClient />;
     case 'serp-browser': return <SerpPreviewClient />;
     case 'serp-fresh': return <SerpPreviewClient />;
-    case 'sitemap-extractor': return <SitemapAnalyzerClient />;
     case 'ssh-key-gen': return <SSHKeyGeneratorClient />;
     case 'text-sorting-tool': return <TextSorterClient />;
     case 'unit-convert-toolblip': return <UnitConverterClient />;
@@ -2887,7 +2860,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'vsd-to-docx': return <VsdxToDocxClient />;
     case 'image-scale-calculator': return <ImageScaleCalculatorClient />;
     case 'image-square-fit': return <ImageSquareFitClient />;
-    case 'image-to-base64': return <Base64ImageConverterClient />;
     case 'ipynb-formatter': return <IPynbFormatterClient />;
     case 'jupyter-cleaner': return <JupyterCleanerClient />;
     case 'json-editor': return <JsonEditorClient />;
@@ -2929,9 +2901,7 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'regex-pattern-generator': return <RegexPatternGeneratorClient />;
     case 'regex-pattern-generator-v2': return <RegexPatternGeneratorClient />;
     case 'remove-extra-spaces': return <RemoveExtraSpacesClient />;
-    case 'resize': return <ImageResizerClient />;
     case 'rot13-cipher-v2': return <Rot13CipherClient />;
-    case 'rotate': return <ImageRotateToolClient />;
     case 'screen-density-simulator': return <ScreenDensitySimulatorClient />;
     case 'scientific-notation-converter': return <ScientificNotationConverterClient />;
     case 'search-console-insights': return <SearchConsoleInsightsClient />;
@@ -2963,7 +2933,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'ua-parser-express': return <UAParserExpressClient />;
     case 'unicode-escape-encoder': return <UnicodeEscapeEncoderClient />;
     case 'unit-conversion-tool': return <UnitConversionToolClient />;
-    case 'unlock-pdf': return <PdfPasswordRemoverClient />;
     case 'uuid-compare': return <UUIDCompareClient />;
     case 'uuid-comparator': return <UUIDComparatorClient />;
     case 'uuid-normalizer': return <UUIDNormalizerClient />;
@@ -2976,7 +2945,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'websocket-tester': return <WebSocketTesterClient />;
     case 'what-if-scenario-calculator': return <WhatIfScenarioCalculatorClient />;
     case 'word-alphabetizer': return <WordAlphabetizerClient />;
-    case 'word-combinations': return <WordCombinationsGeneratorClient />;
     case 'word-finder': return <WordFinderClient />;
     case 'word-freq-express': return <WordFreqExpressClient />; // legacy alias, redirected via next.config.mjs
     case 'word-freq': return <WordFreqExpressClient />;
@@ -2992,7 +2960,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'word-combinations-generator': return <WordCombinationsGeneratorClient />;
     case 'json-to-url-encoded-v2': return <JSONToURLEncodedV2Client />;
     case 'ssh-key-generator': return <SSHKeyGeneratorClient />;
-    case 'jwt-tester': return <JwtTokenTesterClient />;
     case 'press-release-generator': return <PressReleaseGeneratorClient />;
     case 'privacy-policy-generator': return <PrivacyPolicyGeneratorClient />;
     case 'token-builder': return <TokenBuilderClient />;
@@ -3014,9 +2981,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'cron-schedule-explainer': return <CronScheduleExplainerClient />;
     case 'css-animation-generator': return <CssAnimationGeneratorClient />;
     case 'css-cursor-generator': return <CssCursorGeneratorClient />;
-    case 'favicon-grabber': return <BatchFaviconDownloaderClient />;
-    case 'favicon-png-maker': return <FaviconGeneratorClient />;
-    case 'favicon-icon-generator': return <FaviconGeneratorClient />;
     case 'favicon-png-creator': return <IconFaviconCreatorClient />;
     case 'favicon-checker': return <BatchFaviconDownloaderClient />;
 

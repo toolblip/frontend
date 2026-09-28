@@ -150,14 +150,14 @@ export default function TimeZoneConverterClient() {
                   <div className="font-medium">{result.zone.label}</div>
 
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex flex-wrap items-center gap-3">
                   <span className="text-2xl font-mono font-bold">{result.time}</span>
                   {result.dayIndicator && (
                     <span className="text-sm text-blue-500">{result.dayIndicator}</span>
                   )}
                   <button
                     onClick={() => handleCopy(result.time)}
-                    className="text-blue-500 hover:text-blue-600"
+                    className="shrink-0 whitespace-nowrap text-blue-500 hover:text-blue-600"
                   >
                     Copy
                   </button>

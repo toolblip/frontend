@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 interface Issue {
@@ -18,18 +18,23 @@ const EXAMPLE_TEXT =
   "Their going to the store tomorrow, but there not sure if it's open. Me and him was hoping to buy some supplies for the party.";
 
 export default function GrammarCheckerClient() {
+  const requestVersion = useRef(0);
   const [text, setText] = useState('');
   const [issues, setIssues] = useState<Issue[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   const resetResults = () => {
+    requestVersion.current++;
+    setLoading(false);
     setIssues([]);
     setError('');
   };
 
   const checkGrammar = async () => {
     if (!text.trim()) return;
+    const version = ++requestVersion.current;
+    setIssues([]);
     setLoading(true);
     setError('');
     try {
@@ -40,20 +45,21 @@ export default function GrammarCheckerClient() {
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error || 'Grammar API unavailable');
-      setIssues(data.matches || []);
+      if (version === requestVersion.current) setIssues(data.matches || []);
     } catch {
+      if (version !== requestVersion.current) return;
       setError('Could not reach grammar service. Try again in a moment.');
       setIssues([]);
     } finally {
-      setLoading(false);
+      if (version === requestVersion.current) setLoading(false);
     }
   };
 
-  const applyFix = (issue: Issue) => {
+  const applyFix = (issue: Issue, replacement: string) => {
     if (!issue.replacements.length) return;
-    const fixed = text.slice(0, issue.offset) + issue.replacements[0].value + text.slice(issue.offset + issue.length);
+    const fixed = text.slice(0, issue.offset) + replacement + text.slice(issue.offset + issue.length);
     setText(fixed);
-    setIssues((prev) => prev.filter((i) => i !== issue));
+    resetResults();
   };
 
   return (
@@ -119,7 +125,7 @@ export default function GrammarCheckerClient() {
                   <div style={{ marginTop: 8, display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
                     <span style={{ fontSize: 11, color: 'var(--tb-text-secondary)' }}>Fix:</span>
                     {issue.replacements.slice(0, 3).map((r, j) => (
-                      <button key={j} type="button" onClick={() => applyFix(issue)} className="tb-v2-copy-btn">
+                      <button key={j} type="button" onClick={() => applyFix(issue, r.value)} className="tb-v2-copy-btn">
                         {r.value}
                       </button>
                     ))}

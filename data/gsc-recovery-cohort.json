@@ -1,0 +1,23 @@
+{
+  "version": "2026-09-26",
+  "createdAt": "2026-09-26T00:00:00Z",
+  "timestampNote": "Cohort adoption date at UTC midnight, not a collection timestamp.",
+  "sourceRevision": "5556e22",
+  "origin": "https://toolblip.com",
+  "rationale": "Twelve explicitly selected priority tools form a fixed recovery baseline across developer, text, encoder and image use cases. Preserve this cohort even when results are poor; a changed selection requires a new version.",
+  "routeVerification": "Verified against data/tools.ts and lib/tool-path.ts getToolPath/getToolAbsoluteUrl at 5556e22. No getToolHref symbol exists in this revision. Image category uses /tools/images/; the other eleven tools use /tools/.",
+  "urls": [
+    "https://toolblip.com/tools/jwt-decoder",
+    "https://toolblip.com/tools/json-formatter",
+    "https://toolblip.com/tools/regex-tester",
+    "https://toolblip.com/tools/url-encode",
+    "https://toolblip.com/tools/base64-encoder-decoder",
+    "https://toolblip.com/tools/password-generator",
+    "https://toolblip.com/tools/uuid-generator",
+    "https://toolblip.com/tools/markdown-to-html",
+    "https://toolblip.com/tools/case-converter",
+    "https://toolblip.com/tools/word-counter",
+    "https://toolblip.com/tools/reading-time-calculator",
+    "https://toolblip.com/tools/images/image-resizer"
+  ]
+}

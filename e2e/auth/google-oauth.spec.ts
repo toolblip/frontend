@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { expectLoggedInCookie, resetMockBackend } from '../fixtures/users';
+import { expectAuthenticatedUser, expectLoggedInCookie, resetMockBackend } from '../fixtures/users';
 
 test.describe('Google OAuth BDD regression', () => {
   test.beforeEach(async ({ request }) => {
@@ -12,17 +12,17 @@ test.describe('Google OAuth BDD regression', () => {
     await page.getByRole('link', { name: 'Continue with Google' }).click();
 
     await expect(page).toHaveURL(/\/dashboard$/);
-    await expect(page.locator('#main-content').getByText('google-oauth@toolblip.test').first()).toBeVisible();
+    await expectAuthenticatedUser(page, { name: 'Google OAuth User', email: 'google-oauth@toolblip.test' });
     await expectLoggedInCookie(page);
   });
 
   test('Given a protected next URL, When Google OAuth completes, Then the user lands on the requested path', async ({ page }) => {
-    await page.goto('/login?next=/dashboard');
+    await page.goto('/login?next=/dashboard/profile');
 
     await page.getByRole('link', { name: 'Continue with Google' }).click();
 
-    await expect(page).toHaveURL(/\/dashboard$/);
-    await expect(page.locator('#main-content').getByText('google-oauth@toolblip.test').first()).toBeVisible();
+    await expect(page).toHaveURL(/\/dashboard\/profile$/);
+    await expectAuthenticatedUser(page, { name: 'Google OAuth User', email: 'google-oauth@toolblip.test' });
     await expectLoggedInCookie(page);
   });
 
@@ -38,17 +38,27 @@ test.describe('Google OAuth BDD regression', () => {
     await page.getByRole('link', { name: 'Continue with Google' }).click();
 
     await expect(page).toHaveURL(/\/dashboard$/);
-    await expect(page.getByRole('dialog', { name: 'Complete your dashboard setup' })).toBeVisible();
+    const legalSetup = page.getByRole('dialog', { name: 'Complete your dashboard setup' });
+    await expect(legalSetup).toBeVisible();
     await expect(page.getByText('Accept the Terms and Conditions and Privacy Policy to continue.')).toBeVisible();
-    await expect(page.getByRole('link', { name: 'Terms and Conditions' })).toHaveAttribute('href', '/terms');
-    await expect(page.getByRole('link', { name: 'Privacy Policy' })).toHaveAttribute('href', '/privacy');
-    await expect(page.getByRole('button', { name: 'Continue to subscription options' })).toBeDisabled();
+    await expect(legalSetup.getByRole('link', { name: 'Terms and Conditions' })).toHaveAttribute('href', '/terms');
+    await expect(legalSetup.getByRole('link', { name: 'Privacy Policy' })).toHaveAttribute('href', '/privacy');
+    await expect(legalSetup.getByRole('button', { name: 'Continue to subscription options' })).toBeDisabled();
 
-    await page.getByLabel(/I agree to the Terms and Conditions and Privacy Policy/i).check();
-    await page.getByRole('button', { name: 'Continue to subscription options' }).click();
+    await legalSetup.getByLabel(/I agree to the Terms and Conditions and Privacy Policy/i).check();
+    await legalSetup.getByRole('button', { name: 'Continue to subscription options' }).click();
 
     await expect(page.getByRole('dialog', { name: 'Complete your dashboard setup' })).toBeHidden();
-    await expect(page.getByText('Free plan')).toBeVisible();
+    const workspaceSetup = page.locator('[role="dialog"][aria-labelledby="plan-onboarding-title"]');
+    await expect(workspaceSetup.getByLabel('Team name')).toHaveValue("Google's team");
+    await workspaceSetup.getByRole('button', { name: 'Next', exact: true }).click();
+    await expect(workspaceSetup.getByRole('heading', { name: 'Simple, transparent pricing' })).toBeVisible();
+    await workspaceSetup.getByRole('button', { name: 'Keep free plan' }).click();
+    await expect(workspaceSetup).toHaveCount(0);
+    await page.getByRole('link', { name: 'Subscription', exact: true }).click();
+    await expect(page.getByRole('heading', { name: 'Free plan' })).toBeVisible();
+    const me = await page.request.get('/api/auth/me');
+    expect((await me.json()).user.requires_terms_acceptance).toBe(false);
   });
 
   test('Given login and signup pages, Then the Google OAuth button looks like an official Google sign-in button', async ({ page }) => {

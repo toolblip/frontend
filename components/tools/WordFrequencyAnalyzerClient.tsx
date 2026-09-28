@@ -35,14 +35,11 @@ export default function WordFrequencyAnalyzerClient() {
   const wordCounts = useMemo<WordCount[]>(() => {
     if (!text.trim()) return [];
 
-    const words = text
-      .toLowerCase()
-      .replace(/[^a-zA-Z\s]/g, '')
-      .split(/\s+/)
+    const words = (text.normalize('NFC').toLowerCase().match(/\p{L}[\p{L}\p{M}]*/gu) ?? [])
       .filter((w) => w.length >= minLength)
       .filter((w) => !excludeCommon || !COMMON_WORDS.has(w));
 
-    const counts: Record<string, number> = {};
+    const counts: Record<string, number> = Object.create(null);
     words.forEach((word) => {
       counts[word] = (counts[word] || 0) + 1;
     });
@@ -127,6 +124,7 @@ export default function WordFrequencyAnalyzerClient() {
         </label>
       </div>
 
+      <p>Percentages use words remaining after the length and common-word filters. Punctuation separates words; letter runs are counted without language-specific segmentation.</p>
       <div className="tb-v2-tool-output-head">
         <span className="tb-v2-tool-label">
           {wordCounts.length > 0

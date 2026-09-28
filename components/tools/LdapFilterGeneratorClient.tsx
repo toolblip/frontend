@@ -30,7 +30,7 @@ function newRow(): Row {
 function rowToFilter(row: Row): string {
   const attr = row.attribute.trim() || 'attr';
   if (row.operator === 'present') return `(${attr}=*)`;
-  return `(${attr}${row.operator}${row.value.replace(/[\\()\0]/g, c => '\\' + c.charCodeAt(0).toString(16).padStart(2,'0'))})`;
+  return `(${attr}${row.operator}${row.value.replace(/[\\()\0*]/g, c => '\\' + c.charCodeAt(0).toString(16).padStart(2,'0'))})`;
 }
 
 function buildFilter(rows: Row[], combinator: Combinator, negate: boolean): string {
@@ -135,7 +135,7 @@ export default function LdapFilterGeneratorClient() {
 
       <div className="tb-v2-tool-output-head" style={{ marginTop: 16 }}>
         <span className="tb-v2-tool-label">Generated LDAP filter</span>
-        <button type="button" onClick={copyFilter} disabled={!filter} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}>
+        <button type="button" onClick={copyFilter} disabled={!filter || !validation.valid} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}>
           {copied ? 'Copied' : 'Copy'}
         </button>
       </div>

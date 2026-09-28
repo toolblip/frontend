@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { expectLoggedInCookie, loginByForm, resetMockBackend, VALID_USER } from '../fixtures/users';
+import { expectAuthenticatedUser, expectLoggedInCookie, loginByForm, resetMockBackend, VALID_USER } from '../fixtures/users';
 
 test.describe('Login BDD regression', () => {
   test.beforeEach(async ({ request }) => {
@@ -10,18 +10,18 @@ test.describe('Login BDD regression', () => {
     await loginByForm(page, VALID_USER);
 
     await expect(page).toHaveURL(/\/dashboard$/);
-    await expect(page.getByText(VALID_USER.email).first()).toBeVisible();
+    await expectAuthenticatedUser(page, VALID_USER);
     await expectLoggedInCookie(page);
   });
 
   test('Given valid credentials with a next URL, When the user logs in, Then they land on the requested path', async ({ page }) => {
-    await page.goto('/login?next=/dashboard');
+    await page.goto('/login?next=/dashboard/profile');
     await page.getByLabel('Email').fill(VALID_USER.email);
     await page.getByLabel('Password').fill(VALID_USER.password);
     await page.getByRole('button', { name: 'Sign in' }).click();
 
-    await expect(page).toHaveURL(/\/dashboard$/);
-    await expect(page.getByText(VALID_USER.email).first()).toBeVisible();
+    await expect(page).toHaveURL(/\/dashboard\/profile$/);
+    await expectAuthenticatedUser(page, VALID_USER);
     await expectLoggedInCookie(page);
   });
 

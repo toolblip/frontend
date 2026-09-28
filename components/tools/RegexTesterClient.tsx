@@ -62,7 +62,7 @@ export default function RegexTesterClient() {
       </div>
       <div className="tb-v2-rgx-pattern">
         <span className="tb-v2-rgx-slash">/</span>
-        <input maxLength={8000}
+        <input maxLength={2000}
           value={pattern}
           onChange={(e) => setPattern(e.target.value)}
           spellCheck={false}
@@ -99,7 +99,7 @@ export default function RegexTesterClient() {
       <div className="tb-v2-tool-input-head" style={{ marginTop: 16 }}>
         <span className="tb-v2-tool-label">Test string</span>
       </div>
-      <textarea maxLength={100000}
+      <textarea maxLength={50000}
         value={sample}
         onChange={(e) => setSample(e.target.value)}
         placeholder="Paste text to test the pattern against…"
