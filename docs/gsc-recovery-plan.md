@@ -1,5 +1,26 @@
 # GSC index-recovery — status and follow-up
 
+## Weekly sitemap URL Inspection report
+
+The `GSC recovery tracking` workflow now runs a separate read-only URL
+Inspection report for the URLs in the live public
+`https://toolblip.com/sitemap-tools.xml`. It validates the sitemap before
+using Google Search Console's URL Inspection API. The service account comes
+from `GSC_SERVICE_ACCOUNT`; the property comes from `GSC_SITEWIDE_URL`,
+defaulting to `sc-domain:toolblip.com`. The workflow runs weekly and can also
+be started manually. Its run summary and artifact contain separate JSON and
+Markdown files under `test-results/gsc-sitemap-inspection/`.
+
+The report counts `verdict` and `coverageState` and lists each URL's stored
+index fields, request error, or skipped state. It makes at most five
+inspection requests per second, stops after quota or authorization errors,
+and caps other failures at 20. A failed or malformed sitemap produces a
+failure artifact instead of inspecting an untrusted list. This is **Google's
+stored index view**, not a live test or an indexing request. Search Console
+may lag a recrawl; use later reports to assess whether Google's indexed
+corpus changed. The fixed cohort and existing sitewide reports remain
+independent.
+
 toolblip.com: 44 pages indexed, 1,710 not, per Search Console's Page Indexing
 report (checked 2026-08-19). No manual action — this is Google crawling the
 site, reading it, and choosing not to index it (`Crawled - currently not
