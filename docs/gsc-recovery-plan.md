@@ -12,11 +12,16 @@ be started manually. Its run summary and artifact contain separate JSON and
 Markdown files under `test-results/gsc-sitemap-inspection/`.
 
 The report counts `verdict` and `coverageState` and lists each URL's stored
-index fields, request error, or skipped state. It makes at most five
-inspection requests per second, stops after quota or authorization errors,
-and caps other failures at 20. A failed or malformed sitemap produces a
-failure artifact instead of inspecting an untrusted list. This is **Google's
-stored index view**, not a live test or an indexing request. Search Console
+index fields, request error, or skipped state. It starts at most five URL
+inspections per second, with no more than four in flight. The workflow job
+has a 60-minute timeout. CLI progress logs show counts every 25 completed
+URLs and at the end, without URLs or credentials. Results retain sitemap
+order even when responses arrive out of order. On quota or authorization
+errors, or after 20 other failures, it stops starting new inspections, lets
+in-flight inspections settle, and marks the rest skipped. A failed or
+malformed sitemap produces a failure artifact instead of inspecting an
+untrusted list. This is **Google's stored index view**, not a live test or an
+indexing request. Search Console
 may lag a recrawl; use later reports to assess whether Google's indexed
 corpus changed. The fixed cohort and existing sitewide reports remain
 independent.

@@ -9,6 +9,8 @@ const INSPECT_URL = 'https://searchconsole.googleapis.com/v1/urlInspection/index
 const SITE = 'sc-domain:toolblip.com';
 const MAX_BYTES = 1024 * 1024;
 const MAX_ERRORS = 20;
+const MAX_IN_FLIGHT = 4;
+const START_INTERVAL_MS = 200;
 const STORED_FIELDS = ['verdict', 'coverageState', 'indexingState', 'robotsTxtState', 'pageFetchState', 'lastCrawlTime', 'userCanonical', 'googleCanonical'];
 const safeError = error => /^(HTTP_\d{3}|REQUEST_FAILED|REQUEST_TIMEOUT|INVALID_JSON_RESPONSE|INVALID_INSPECTION_RESPONSE|INVALID_TOKEN_RESPONSE|AUTH_SIGNING_FAILED|Missing GSC_SERVICE_ACCOUNT|Invalid GSC_SERVICE_ACCOUNT|INVALID_SITEMAP|SITEMAP_TOO_LARGE|INVALID_SITE_URL)$/.test(error?.message ?? '') ? error.message : 'OPERATION_FAILED';
 const fail = code => { throw new Error(code); };
@@ -87,12 +89,12 @@ export function groupResults(results) {
   return counts;
 }
 
-export async function collect({ env = process.env, now = new Date(), transport = fetch, sleep = delay, getToken = getAccessToken } = {}) {
+export async function collect({ env = process.env, now = new Date(), transport = fetch, sleep = delay, getToken = getAccessToken, onProgress = () => {} } = {}) {
   const report = { schemaVersion: 1, generatedAt: now.toISOString(), status: 'complete', sitemap: { url: SITEMAP_URL, count: 0, error: null },
     siteUrl: SITE, inspectionMeaning: "Google's stored index view; not a live test or indexing request.", results: [] };
   let urls;
   try { urls = await fetchSitemap({ transport }); report.sitemap.count = urls.length; }
-  catch (error) { report.sitemap.error = safeError(error); report.status = 'partial-failure'; report.counts = groupResults(report.results); return report; }
+  catch (error) { report.sitemap.error = safeError(error); report.status = 'partial-failure'; report.counts = groupResults(report.results); onProgress({ completed: 0, total: 0, inspected: 0, errors: 0, skipped: 0 }); return report; }
   try { report.siteUrl = siteUrl(env.GSC_SITEWIDE_URL || SITE); }
   catch (error) { report.stopReason = safeError(error); }
   let token;
@@ -101,21 +103,40 @@ export async function collect({ env = process.env, now = new Date(), transport =
     catch (error) { report.stopReason = safeError(error); }
   }
   let errors = 0;
-  for (const [index, url] of urls.entries()) {
-    if (report.stopReason) { report.results.push({ url, inspection: { data: null, error: null, skipped: 'stopped' } }); continue; }
-    if (index > 0) await sleep(200);
+  let completed = 0;
+  let inspected = 0;
+  const results = Array(urls.length);
+  const inFlight = new Set();
+  const inspect = async (index, url) => {
     try {
       const body = await requestJson(INSPECT_URL, { method: 'POST', headers: { authorization: `Bearer ${token}`, 'content-type': 'application/json' }, body: JSON.stringify({ inspectionUrl: url, siteUrl: report.siteUrl, languageCode: 'en-US' }) }, { transport, sleep });
       const parsed = parseInspection(body);
-      report.results.push({ url, inspection: { data: Object.fromEntries(['view', ...STORED_FIELDS].map(field => [field, parsed[field]])), error: null } });
+      results[index] = { url, inspection: { data: Object.fromEntries(['view', ...STORED_FIELDS].map(field => [field, parsed[field]])), error: null } };
+      inspected++;
     } catch (error) {
       const code = safeError(error);
-      report.results.push({ url, inspection: { data: null, error: code } });
+      results[index] = { url, inspection: { data: null, error: code } };
       errors++;
-      if (['HTTP_401', 'HTTP_403', 'HTTP_429'].includes(code) || errors >= MAX_ERRORS) report.stopReason = errors >= MAX_ERRORS && !['HTTP_401', 'HTTP_403', 'HTTP_429'].includes(code) ? 'ERROR_LIMIT' : code;
+      if (!report.stopReason && (['HTTP_401', 'HTTP_403', 'HTTP_429'].includes(code) || errors >= MAX_ERRORS)) report.stopReason = errors >= MAX_ERRORS && !['HTTP_401', 'HTTP_403', 'HTTP_429'].includes(code) ? 'ERROR_LIMIT' : code;
+    } finally {
+      completed++;
+      if (completed % 25 === 0) onProgress({ completed, total: urls.length, inspected, errors, skipped: 0 });
     }
+  };
+  for (const [index, url] of urls.entries()) {
+    if (report.stopReason) break;
+    if (index > 0) await sleep(START_INTERVAL_MS);
+    if (report.stopReason) break;
+    if (inFlight.size >= MAX_IN_FLIGHT) await Promise.race(inFlight);
+    if (report.stopReason) break;
+    const task = inspect(index, url);
+    inFlight.add(task);
+    task.then(() => inFlight.delete(task));
   }
+  await Promise.all(inFlight);
+  report.results = urls.map((url, index) => results[index] ?? { url, inspection: { data: null, error: null, skipped: 'stopped' } });
   report.counts = groupResults(report.results);
+  onProgress({ completed: urls.length, total: urls.length, inspected: report.counts.inspected, errors: report.counts.errors, skipped: report.counts.skipped });
   if (report.counts.errors || report.counts.skipped) report.status = 'partial-failure';
   return report;
 }
@@ -146,7 +167,10 @@ export async function main(args = process.argv.slice(2), options = {}) {
       if (args[i] === '--output' && args[i + 1] && !args[i + 1].startsWith('--')) output = args[++i];
       else fail('Usage: node scripts/gsc-sitemap-inspection.mjs [--output DIR]');
     }
-    const report = await collect(options);
+    const report = await collect({ ...options, onProgress: counts => {
+      console.log(`GSC sitemap inspection progress: ${counts.completed}/${counts.total} completed, ${counts.inspected} inspected, ${counts.errors} errors, ${counts.skipped} skipped.`);
+      options.onProgress?.(counts);
+    } });
     await mkdir(resolve(output), { recursive: true });
     await writeFile(join(resolve(output), 'report.json'), `${JSON.stringify(report, null, 2)}\n`);
     await writeFile(join(resolve(output), 'report.md'), markdown(report));

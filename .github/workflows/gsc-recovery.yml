@@ -15,7 +15,7 @@ concurrency:
 jobs:
   track:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 60
     steps:
       - name: Fetch tracker files at workflow commit
         uses: actions/github-script@v9
