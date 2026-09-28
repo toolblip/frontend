@@ -73,6 +73,7 @@ jobs:
             -addext 'basicConstraints=critical,CA:TRUE'
           sudo install -m 644 "$RUNNER_TEMP/toolblip-origin.crt" /usr/local/share/ca-certificates/toolblip-candidate.crt
           sudo update-ca-certificates
+          sudo sysctl -w net.ipv4.ip_unprivileged_port_start=0
           echo '127.0.0.1 toolblip.com' | sudo tee -a /etc/hosts >/dev/null
           echo "QA_ORIGIN_CERT=$RUNNER_TEMP/toolblip-origin.crt" >> "$GITHUB_ENV"
           echo "QA_ORIGIN_KEY=$RUNNER_TEMP/toolblip-origin.key" >> "$GITHUB_ENV"
