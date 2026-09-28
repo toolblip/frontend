@@ -1,4 +1,4 @@
-import { beforeAll, expect, it } from 'vitest';
+import { beforeAll, expect, it, vi } from 'vitest';
 import { Worker as NodeWorker } from 'node:worker_threads';
 import { bundleWorkers } from '../../scripts/build-browser-workers.mjs';
 let bundledSource = '';
@@ -29,6 +29,26 @@ it('returns pattern results from the actual schema worker', async () => {
     const result = await new Promise<SchemaResult>(resolve => runSchemaWorker(w.adapter, '"ABC"', '{"pattern":"^[A-Z]+$"}', resolve));
     expect(result).toEqual({ output: 'Valid against the supported schema.', error: '' });
     expect(w.terminated()).toBe(true);
+});
+it('accepts a valid result after a slow worker startup', async () => {
+    vi.useFakeTimers();
+    let terminated = false;
+    const adapter = {
+        onmessage: null as ((event: { data: SchemaResult }) => void) | null,
+        onerror: null as (() => void) | null,
+        onmessageerror: null as (() => void) | null,
+        postMessage: () => setTimeout(() => adapter.onmessage?.({ data: { output: 'Valid against the supported schema.', error: '' } }), 1500),
+        terminate: () => { terminated = true; },
+    };
+    try {
+        let result: SchemaResult | undefined;
+        runSchemaWorker(adapter as unknown as Worker, '"OK"', '{}', value => { result = value; });
+        await vi.advanceTimersByTimeAsync(1500);
+        expect(result).toEqual({ output: 'Valid against the supported schema.', error: '' });
+        expect(terminated).toBe(true);
+    } finally {
+        vi.useRealTimers();
+    }
 });
 it('terminates catastrophic backtracking and allows a subsequent validation', async () => {
     const w = worker();
