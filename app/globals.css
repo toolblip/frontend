@@ -51,8 +51,8 @@
   --c-mcp-bg:  #e4dcff; --c-mcp:  #4a2fcc;
   --c-aiml-bg: #dcf4ff; --c-aiml: #0c5790;
 
-  --f-sans:    var(--tb-font-inter, "Inter"), -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, "Segoe UI", Roboto, Helvetica, sans-serif;
-  --f-display: var(--tb-font-inter, "Inter"), -apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif;
+  --f-sans:    var(--tb-font-inter, "Inter"), var(--tb-font-inter-extended, "Inter"), -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, "Segoe UI", Roboto, Helvetica, sans-serif;
+  --f-display: var(--tb-font-inter, "Inter"), var(--tb-font-inter-extended, "Inter"), -apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif;
   --f-mono:    var(--tb-font-mono, "JetBrains Mono"), ui-monospace, "SF Mono", Menlo, monospace;
 
   --radius: 14px;
@@ -105,7 +105,7 @@
 [data-density="comfy"]   { --dens: 24px; --density-scale: 1;    }
 :root { --density-scale: 1; }
 
-[data-fontswap="sans"]    { --f-display: var(--tb-font-inter, "Inter"), -apple-system, BlinkMacSystemFont, system-ui, sans-serif; }
+[data-fontswap="sans"]    { --f-display: var(--tb-font-inter, "Inter"), var(--tb-font-inter-extended, "Inter"), -apple-system, BlinkMacSystemFont, system-ui, sans-serif; }
 [data-fontswap="serif"]   { --f-display: var(--tb-font-fraunces, "Fraunces"), "Source Serif 4", Georgia, serif; letter-spacing: -0.015em; }
 [data-fontswap="rounded"] { --f-display: var(--tb-font-nunito, "Nunito"), "SF Pro Rounded", -apple-system, system-ui, sans-serif; }
 [data-fontswap="mono"]    { --f-display: var(--tb-font-mono, "JetBrains Mono"), ui-monospace, "SF Mono", Menlo, monospace; letter-spacing: -0.02em; }
