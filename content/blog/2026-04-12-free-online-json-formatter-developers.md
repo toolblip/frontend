@@ -144,8 +144,4 @@ The practical benefits:
 
 The only analytics on Toolblip are cookieless Cloudflare stats, and optional Google Analytics that only loads after you give consent.
 
-## What's Coming
-
-More tools are being added regularly. There's also an MCP server package (`@toolblip/mcp`) in development - once published, AI coding assistants like Claude Code will be able to use every Toolblip tool directly through the MCP protocol, without you ever opening a browser tab.
-
 Browse the full directory at [toolblip.com/tools](/tools).

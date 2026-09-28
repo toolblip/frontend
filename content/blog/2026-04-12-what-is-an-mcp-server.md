@@ -1,8 +1,8 @@
 ---
 title: What is an MCP Server? A Practical Guide for Developers
 description: >-
-  Learn what Model Context Protocol servers are, why they matter for AI-powered
-  development, and how to start using them today.
+  Learn how MCP servers expose tools and data to AI applications, how to connect
+  one, and what to check before giving it access.
 slug: what-is-an-mcp-server
 date: 2026-04-12T00:00:00.000Z
 category: Guide
@@ -12,171 +12,49 @@ tags:
   - Developer Tools
   - Claude
 author: Toolblip Team
-readingTime: 8 min
+readingTime: 5 min
 coverImage: /images/blog/mcp-server-guide-cover.png
 featuredImage: 'https://toolblip.com/api/og?title=What%20is%20an%20MCP%20Server%3F%20A%20Practical%20Guide%20for%20Developers&category=Guide&date=2026-04-12'
 ---
 
 # What is an MCP Server? A Practical Guide for Developers
 
-If you've been using Claude Code, Cursor, or other AI coding tools and wondering how to give them access to your own tools, data, or services - MCP is the answer.
+An AI coding tool can work with the files and services you give it access to. To connect another system, such as an issue tracker or internal API, you can use a Model Context Protocol (MCP) server.
 
-## The Problem AI Tools Have
+## What an MCP server does
 
-Large language models are powerful, but they're isolated. Out of the box, Claude Code can't read your GitHub issues, can't query your database, and can't call your internal APIs. It's limited to what's in its context window.
+MCP is an open protocol for connecting AI applications to external tools and data. An MCP server exposes capabilities that a compatible client can discover and use:
 
-Developers have worked around this with:
-- **Clipboard access** - copy/paste code and files (clunky)
-- **Shell commands** - running scripts to get information (fragile)
-- **Custom integrations** - building one-off bridges per tool (重复)
+- **Tools** let the client request an action, such as searching issues or running a query.
+- **Resources** provide data the client can read, such as a document or file.
+- **Prompts** provide reusable templates that a client can offer to users.
 
-None of these scale. Every new tool you want to connect requires custom glue code.
+The AI application is the MCP client. The server sits between that client and the system it connects to. For example, a GitHub MCP server might offer an issue search tool. The client sends a request to the server and receives a result it can use in the conversation.
 
-## What is MCP?
+The protocol gives clients and servers a common way to exchange these requests. It doesn't guarantee that every client supports every server feature or that a server will work without configuration. Check the client's supported transports, the server's setup instructions, and any required credentials.
 
-**Model Context Protocol (MCP)** is an open standard that lets AI applications connect to external data sources and tools in a standardized way. Think of it as "USB for AI tools" - one protocol, many possibilities.
+## How the connection works
 
-Instead of building a custom integration for every AI ↔ tool pairing, developers build **MCP servers** (plugins that expose tools and data via the MCP spec). Any **MCP-compatible AI client** can then discover and use those servers automatically.
+A local server can run as a process that communicates with the client over **stdio**. A remote server can use **Streamable HTTP**. The older HTTP+SSE transport is deprecated and remains relevant mainly for existing integrations. See the [MCP transport specification](https://modelcontextprotocol.io/specification/2026-07-28/basic/transports) for the current protocol details.
 
-```
-┌─────────────────┐         MCP          ┌──────────────────┐
-│  AI Coding Tool │ ◄───────────────►   │   MCP Server     │
-│  (Claude Code,  │  (standard protocol) │  (your tool or   │
-│   Cursor, etc.) │                    │   data source)   │
-└─────────────────┘                    └──────────────────┘
-```
+MCP messages use JSON-RPC. After connecting, a client can list the server's available capabilities and request a tool call or resource. What the AI application does with the result depends on that client and its permissions.
 
-MCP servers can expose:
+## Connect an existing server
 
-- **Tools** - functions the AI can call (e.g., `search_github_issues`, `query_database`)
-- **Resources** - data the AI can read (e.g., file contents, API responses)
-- **Prompts** - reusable prompt templates
+Start with a server you trust and follow its own setup instructions. For Claude Code, the [official MCP connection guide](https://code.claude.com/docs/en/mcp) covers local stdio servers, remote HTTP servers, authentication, and checking connection status. For servers published to the [official MCP Registry](https://registry.modelcontextprotocol.io/), check the listing and the maintainer's documentation before installing or connecting.
 
-## Why MCP Matters for Developers
+Don't assume every server is an npm package. Its setup might use a remote URL, a local executable, credentials, or a client-specific configuration file. Once connected, inspect the tools it exposes and try a read-only request before granting broader access.
 
-### 1. Your Tools Become AI-Native
+## Build your own server
 
-Build an MCP server for your internal API, and suddenly every MCP-compatible AI can use it. No per-client integration work.
+If you need to expose an internal API, define the smallest useful set of tools or resources. Give tools clear names and input schemas, validate arguments, and decide which operations need authentication or user approval. Choose stdio for a locally launched process or Streamable HTTP for a remote endpoint.
 
-### 2. Security and Control
+For a runnable TypeScript example and current SDK imports, use the [official TypeScript server tutorial](https://ts.sdk.modelcontextprotocol.io/v2/get-started/first-server). The SDK and protocol evolve, so copy the example for the version you're installing rather than relying on an old snippet.
 
-MCP servers run locally or on your infrastructure. The AI gets access to your data through your server - you control what's exposed and what's not. No sensitive data sent to third parties unnecessarily.
+## Check the data path before connecting
 
-### 3. A Growing Ecosystem
+Where data goes depends on the server, the client, and the model provider. A local server can still call external APIs, and a remote server receives the requests sent to it. Tool results can also enter the AI application's context. Review the server's permissions and data handling, use narrow credentials, and avoid exposing secrets through tools or resources.
 
-The MCP ecosystem is growing fast. There are MCP servers for:
-- **GitHub** - issues, PRs, code search
-- **Filesystem** - read/write files
-- **Databases** - PostgreSQL, SQLite, MongoDB
-- **Browser automation** - Puppeteer, Playwright
-- **Slack / Discord** - messaging
-- **Search** - Brave Search, Google
+MCP gives you a standard connection, not a privacy guarantee. Test what a server can read or change before using it with sensitive data.
 
-And you can build your own for any internal system.
-
-## How MCP Works (The Short Version)
-
-An MCP server is a process that implements the MCP specification. It runs alongside your AI tool (or as a remote service) and communicates over stdio or HTTP+SSE.
-
-The AI client (e.g., Claude Code) connects to an MCP server and:
-
-1. **Discovers** what tools and resources are available
-2. **Requests** to call a tool with specific arguments
-3. **Receives** the result and incorporates it into its context
-
-The protocol is JSON-RPC based, so it's straightforward to implement in any language.
-
-## Getting Started: Use an MCP Server Today
-
-You don't need to build your own to benefit from MCP. Here's how to connect Claude Code to existing servers:
-
-### Step 1: Install the MCP Server
-
-Most MCP servers are npm packages. For example, to add GitHub:
-
-```bash
-npm install -g @modelcontextprotocol/server-github
-```
-
-### Step 2: Configure Claude Code
-
-Add the server to your Claude Code configuration:
-
-```json
-{
-  "mcpServers": {
-    "github": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-github"]
-    }
-  }
-}
-```
-
-### Step 3: Start Using It
-
-In Claude Code, you can now say things like:
-- "Search my GitHub issues for bugs in the auth module"
-- "List the open PRs in the toolblip repo"
-- "Create a new issue labeled 'bug' for the login timeout bug"
-
-Claude Code will automatically discover the available tools and use them as needed.
-
-## Building Your Own MCP Server
-
-When you're ready to expose your own tools, the [MCP SDK](https://github.com/model-context-protocol) makes it straightforward.
-
-Here's a minimal example in TypeScript:
-
-```typescript
-import { McpServer } from '@modelcontextprotocol/sdk/server';
-import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio';
-
-const server = new McpServer({
-  name: 'my-toolblip-server',
-  version: '1.0.0',
-});
-
-server.tool(
-  'generate_uuid',
-  'Generate a UUID v4',
-  { input: { type: 'string', description: 'Optional seed' } },
-  async ({ input }) => {
-    const uuid = crypto.randomUUID();
-    return { uuid };
-  }
-);
-
-const transport = new StdioServerTransport();
-server.run(transport);
-```
-
-That's it - a working MCP server that exposes a UUID generation tool to any MCP-compatible AI client.
-
-## The MCP Toolblip Package
-
-We're building an official `toolblip-mcp` package that exposes Toolblip's developer tools as MCP tools. Once published, AI agents will be able to use every Toolblip tool - JSON formatter, Base64 encoder, regex tester, and more - directly through the MCP protocol.
-
-This means: instead of copying JSON into a web tool, an AI agent can call our JSON formatter tool directly as part of its workflow. The tool runs client-side, nothing is sent to a server, and the AI gets a properly formatted result.
-
-## Where MCP is Headed
-
-MCP is still young, but the direction is clear:
-
-- **More servers** - every SaaS tool, internal service, and data source will have an MCP server
-- **Discovery** - directories like Toolblip will emerge to catalog available MCP servers
-- **Remote servers** - today's local MCP servers will increasingly run as hosted services
-- **Standards** - expect MCP to become as ubiquitous for AI tool integration as OAuth is for authentication
-
-## TL;DR
-
-- MCP = Model Context Protocol - a standard for connecting AI tools to external data and services
-- MCP servers expose tools, resources, and prompts to AI clients
-- It means your tools become reusable across every MCP-compatible AI without custom integration work
-- You can start using it today with existing servers, or build your own in minutes
-
----
-
-*Want to explore the MCP server registry? [Browse Toolblip's directory →](/directory)*
-
-*Have a tool or data source you want MCP access to? [Submit it for the registry →](/directory/submit)*
+Toolblip's [directory](/directory) lists browser-based developer tools, not MCP servers. If you built a browser tool that belongs there, use the [tool submission page](/submit-tool). To find MCP servers, use the [official MCP Registry](https://registry.modelcontextprotocol.io/).
