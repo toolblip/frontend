@@ -26,7 +26,7 @@ function fisherYatesShuffle<T>(arr: T[]): T[] {
 function shuffleText(text: string, mode: Mode): string {
   if (mode === 'whole') {
     const sentences = splitSentences(text);
-    return fisherYatesShuffle(sentences).join('').trim();
+    return fisherYatesShuffle(sentences).map(sentence => sentence.trim()).join(' ');
   }
 
   const paragraphs = text.split(/\n\s*\n/);
@@ -34,7 +34,7 @@ function shuffleText(text: string, mode: Mode): string {
     .map(paragraph => {
       const sentences = splitSentences(paragraph);
       if (sentences.length === 0) return paragraph;
-      return fisherYatesShuffle(sentences).join('').trim();
+      return fisherYatesShuffle(sentences).map(sentence => sentence.trim()).join(' ');
     })
     .join('\n\n');
 }

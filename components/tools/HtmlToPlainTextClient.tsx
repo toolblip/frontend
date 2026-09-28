@@ -13,7 +13,12 @@ function htmlToPlainText(html: string): string {
     return html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
   }
   const doc = new DOMParser().parseFromString(html, 'text/html');
-  return (doc.body.textContent || '').replace(/\n{3,}/g, '\n\n').trim();
+  doc.querySelectorAll('script, style, template, noscript').forEach(node => node.remove());
+  doc.querySelectorAll('br').forEach(node => node.replaceWith(doc.createTextNode('\n')));
+  // Preserve common block boundaries without treating markup source as prose.
+  doc.querySelectorAll('p, div, section, article, header, footer, h1, h2, h3, h4, h5, h6, li, tr, blockquote, pre')
+    .forEach(node => { node.prepend(doc.createTextNode('\n')); node.append(doc.createTextNode('\n')); });
+  return (doc.body.textContent || '').replace(/[ \t]*\n[ \t]*/g, '\n').replace(/\n+/g, '\n').trim();
 }
 
 export default function HtmlToPlainTextClient() {

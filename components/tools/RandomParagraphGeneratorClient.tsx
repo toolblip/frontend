@@ -20,9 +20,9 @@ const nouns = ['workflow', 'productivity', 'code', 'system', 'process', 'platfor
 
 function generateSentence(): string {
   let sentence = sentenceTemplates[Math.floor(Math.random() * sentenceTemplates.length)];
-  sentence = sentence.replace('{adj}', adjectives[Math.floor(Math.random() * adjectives.length)]);
-  sentence = sentence.replace('{verb}', verbs[Math.floor(Math.random() * verbs.length)]);
-  sentence = sentence.replace('{noun}', nouns[Math.floor(Math.random() * nouns.length)]);
+  sentence = sentence.replaceAll('{adj}', adjectives[Math.floor(Math.random() * adjectives.length)]);
+  sentence = sentence.replaceAll('{verb}', verbs[Math.floor(Math.random() * verbs.length)]);
+  sentence = sentence.replaceAll('{noun}', nouns[Math.floor(Math.random() * nouns.length)]);
   return sentence;
 }
 

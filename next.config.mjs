@@ -31,6 +31,11 @@ const nextConfig = {
   async redirects() {
     return [
       { source: '/tools/markdown-table-from-json', destination: '/tools/json-to-markdown-table', permanent: true },
+      // Stage-1 exact shared-engine consolidations; query parameters are preserved.
+      { source: '/tools/hash-from-text', destination: '/tools/sha256-hash-generator', permanent: true },
+      { source: '/tools/regex-description-generator', destination: '/tools/regex-explainer', permanent: true },
+      { source: '/tools/google-serp-preview', destination: '/tools/serp-preview', permanent: true },
+      { source: '/tools/google-serp-simulator', destination: '/tools/serp-preview', permanent: true },
       // Reviewed same-behavior aliases (2026-09-26); Next preserves query parameters.
       { source: '/tools/image-to-base64', destination: '/tools/images/base64-image-converter', permanent: true },
       { source: '/tools/images/image-to-base64', destination: '/tools/images/base64-image-converter', permanent: true },
@@ -361,12 +366,12 @@ const nextConfig = {
       { source: '/tools/gif-to-webm', destination: '/tools/gif-to-png', permanent: true },
       { source: '/tools/gif-to-mp4', destination: '/tools/gif-to-png', permanent: true },
       { source: '/tools/heic-to-avif', destination: '/tools/heic-to-jpg', permanent: true },
-      { source: '/tools/google-rank-checker', destination: '/tools/google-serp-simulator', permanent: true },
+      { source: '/tools/google-rank-checker', destination: '/tools/serp-preview', permanent: true },
       { source: '/tools/whois-lookup', destination: '/tools', permanent: true },
       { source: '/tools/whois-lookup-v2', destination: '/tools', permanent: true },
       { source: '/tools/backlink-analyzer', destination: '/tools', permanent: true },
-      { source: '/tools/serp-rank-tracker', destination: '/tools/google-serp-simulator', permanent: true },
-      { source: '/tools/keyword-position-checker', destination: '/tools/google-serp-simulator', permanent: true },
+      { source: '/tools/serp-rank-tracker', destination: '/tools/serp-preview', permanent: true },
+      { source: '/tools/keyword-position-checker', destination: '/tools/serp-preview', permanent: true },
       { source: '/tools/compress-avi', destination: '/tools', permanent: true },
       { source: '/tools/compress-mkv', destination: '/tools', permanent: true },
       { source: '/tools/compress-mov', destination: '/tools', permanent: true },
