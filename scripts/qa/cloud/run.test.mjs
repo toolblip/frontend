@@ -33,6 +33,20 @@ test('sanitized inventory includes the complete pilot and valid canonical target
     if (tool.canonicalAlias) assert(tools.some(t => t.slug === tool.canonicalAlias));
   }
 });
+test('pending tool aliases follow the production redirect table', async () => {
+  const { tools } = JSON.parse(await readFile(new URL('./inventory.json', import.meta.url)));
+  const configText = await readFile(new URL('../../../next.config.mjs', import.meta.url), 'utf8');
+  const redirects = new Map([...configText.matchAll(/\{ source: '\/tools\/([^']+)', destination: '\/tools\/([^']+)', permanent: true \}/g)]
+    .map(match => [match[1], match[2]]));
+  for (const tool of tools.filter(entry => !entry.historicallyApproved)) {
+    const route = tool.url.split('/tools/')[1];
+    const redirectedTo = redirects.get(route);
+    if (!redirectedTo) continue;
+    const destination = tools.find(entry => entry.url === `https://toolblip.com/tools/${redirectedTo}`);
+    assert(destination, `Missing redirect destination for ${tool.slug}`);
+    assert.equal(tool.canonicalAlias, destination.slug, `${tool.slug} must follow its real canonical redirect`);
+  }
+});
 
 test('aggregate cannot silently omit results or approve human-review failures', () => {
   const good = { metadata: { revision:config.source,engine:'chrome',workingDiffHash:'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855',options:{group:config.group,'pending-only':true},selectedSlugs:['one'] }, summary:{exitCode:0}, results:[{slug:'one',status:'passed',functional:{status:'passed'}}],incompleteSlugs:[] };
