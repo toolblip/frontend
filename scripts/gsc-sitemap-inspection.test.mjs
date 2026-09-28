@@ -60,6 +60,61 @@ test('collection paces inspection starts, records partial failures, and never ex
   assert.ok(!JSON.stringify(report).includes('secret-body'));
 });
 
+test('transient inspection failure succeeds on one retry without an extra progress result', async () => {
+  let attempts = 0;
+  const sleeps = [];
+  const updates = [];
+  const report = await collect({ getToken: async () => 'fixture-token', sleep: async ms => sleeps.push(ms), onProgress: update => updates.push(update), transport: async url => {
+    if (url.includes('sitemap-tools')) return response(xml([urls[0]]));
+    attempts++;
+    if (attempts === 1) throw Error('private-url-and-token');
+    return response(stored('PASS', 'Indexed'));
+  } });
+  assert.equal(attempts, 2);
+  assert.deepEqual(sleeps, [1000, 200]);
+  assert.equal(report.status, 'complete');
+  assert.deepEqual(report.counts, { verdict: { PASS: 1 }, coverageState: { Indexed: 1 }, inspected: 1, errors: 0, skipped: 0 });
+  assert.deepEqual(updates, [{ completed: 1, total: 1, inspected: 1, errors: 0, skipped: 0 }]);
+  assert.ok(!JSON.stringify(report).includes('private-url-and-token'));
+});
+
+test('persistent transient inspection failures stop after the second attempt and record one safe error', async () => {
+  for (const [failure, code] of [[() => { throw Error('private-url-and-token'); }, 'REQUEST_FAILED'], [() => new Promise(() => {}), 'REQUEST_TIMEOUT']]) {
+    let attempts = 0;
+    const sleeps = [];
+    const updates = [];
+    const report = await collect({ getToken: async () => 'fixture-token', sleep: async ms => sleeps.push(ms), onProgress: update => updates.push(update), transport: async url => {
+      if (url.includes('sitemap-tools')) return response(xml([urls[0]]));
+      attempts++;
+      return failure();
+    } });
+    assert.equal(attempts, 2);
+    assert.deepEqual(sleeps, [1000, 200]);
+    assert.equal(report.status, 'partial-failure');
+    assert.equal(report.results[0].inspection.error, code);
+    assert.deepEqual(report.counts, { verdict: {}, coverageState: {}, inspected: 0, errors: 1, skipped: 0 });
+    assert.deepEqual(updates, [{ completed: 1, total: 1, inspected: 0, errors: 1, skipped: 0 }]);
+    assert.ok(!JSON.stringify(report).includes('private-url-and-token'));
+  }
+});
+
+test('HTTP 4xx and invalid inspection responses do not trigger the transient retry', async () => {
+  for (const [body, status, code] of [[{ error: 'private-body' }, 400, 'HTTP_400'], [{ inspectionResult: {} }, 200, 'INVALID_INSPECTION_RESPONSE']]) {
+    let attempts = 0;
+    const sleeps = [];
+    const report = await collect({ getToken: async () => 'fixture-token', sleep: async ms => sleeps.push(ms), transport: async url => {
+      if (url.includes('sitemap-tools')) return response(xml([urls[0]]));
+      attempts++;
+      return response(body, status);
+    } });
+    assert.equal(attempts, 1);
+    assert.deepEqual(sleeps, []);
+    assert.equal(report.results[0].inspection.error, code);
+    assert.equal(report.counts.errors, 1);
+    assert.ok(!JSON.stringify(report).includes('private-body'));
+  }
+});
+
 test('collection keeps at most four inspections in flight and reports sitemap order', async () => {
   const many = Array.from({ length: 6 }, (_, i) => `https://toolblip.com/tools/tool-${i}`);
   const releases = [];

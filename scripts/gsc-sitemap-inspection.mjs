@@ -107,9 +107,31 @@ export async function collect({ env = process.env, now = new Date(), transport =
   let inspected = 0;
   const results = Array(urls.length);
   const inFlight = new Set();
+  let startQueue = Promise.resolve();
+  let hasStarted = false;
+  const paceStart = () => {
+    const turn = startQueue.then(async () => {
+      if (hasStarted) await sleep(START_INTERVAL_MS);
+      hasStarted = true;
+    });
+    startQueue = turn;
+    return turn;
+  };
   const inspect = async (index, url) => {
     try {
-      const body = await requestJson(INSPECT_URL, { method: 'POST', headers: { authorization: `Bearer ${token}`, 'content-type': 'application/json' }, body: JSON.stringify({ inspectionUrl: url, siteUrl: report.siteUrl, languageCode: 'en-US' }) }, { transport, sleep });
+      const request = { method: 'POST', headers: { authorization: `Bearer ${token}`, 'content-type': 'application/json' }, body: JSON.stringify({ inspectionUrl: url, siteUrl: report.siteUrl, languageCode: 'en-US' }) };
+      let body;
+      for (let attempt = 0; attempt < 2; attempt++) {
+        await paceStart();
+        if (report.stopReason) return;
+        try {
+          body = await requestJson(INSPECT_URL, request, { transport, sleep });
+          break;
+        } catch (error) {
+          if (attempt || !['REQUEST_FAILED', 'REQUEST_TIMEOUT'].includes(safeError(error)) || report.stopReason) throw error;
+          await sleep(1000);
+        }
+      }
       const parsed = parseInspection(body);
       results[index] = { url, inspection: { data: Object.fromEntries(['view', ...STORED_FIELDS].map(field => [field, parsed[field]])), error: null } };
       inspected++;
@@ -124,8 +146,6 @@ export async function collect({ env = process.env, now = new Date(), transport =
     }
   };
   for (const [index, url] of urls.entries()) {
-    if (report.stopReason) break;
-    if (index > 0) await sleep(START_INTERVAL_MS);
     if (report.stopReason) break;
     if (inFlight.size >= MAX_IN_FLIGHT) await Promise.race(inFlight);
     if (report.stopReason) break;
