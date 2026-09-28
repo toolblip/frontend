@@ -163,7 +163,7 @@ export default function FakeAddressGeneratorClient() {
   }
 
   return (<UtilityDesignLayout>
-    <div className="tb-v2-card">
+    <div className="tb-v2-card min-w-0 max-w-full break-words">
       <ToolExampleClearActions onExample={() => { generate(); }} onClear={() => { setAddress(null); setAllAddresses([]); setShowAll(false); setCount(1); }}/>
       <div className="tb-v2-card-header">
         <h2 className="tb-v2-card-title">Fake Address Generator</h2>
@@ -187,18 +187,18 @@ export default function FakeAddressGeneratorClient() {
           </div>
           <button
             onClick={generateMultiple}
-            className="tb-v2-button tb-v2-button-primary flex-1 md:flex-none"
+            className="tb-v2-button tb-v2-button-primary w-full min-w-0 sm:w-auto sm:flex-1 md:flex-none"
           >
             Generate Address{count > 1 ? 'es' : ''}
           </button>
         </div>
       </div>
 
-      <div className="tb-v2-card p-6 mb-6">
+      <div className="tb-v2-card min-w-0 max-w-full p-6 mb-6">
         {address ? (
           <>
-            <div className="flex justify-between items-start mb-4">
-              <div>
+            <div className="flex flex-wrap justify-between items-start gap-2 mb-4">
+              <div className="min-w-0 break-words">
                 <p className="text-sm text-gray-500 mb-1">Full Address</p>
                 <p className="font-medium">{address.fullAddress}</p>
               </div>
@@ -240,7 +240,7 @@ export default function FakeAddressGeneratorClient() {
 
             <div className="border-t pt-4 mt-4">
               <p className="text-xs text-gray-500 mb-1">Formatted</p>
-              <pre className="text-sm bg-gray-50 p-3 rounded font-mono whitespace-pre-wrap">
+              <pre className="min-w-0 text-sm bg-gray-50 p-3 rounded font-mono whitespace-pre-wrap break-words">
                 {address.formattedAddress}
               </pre>
             </div>
@@ -252,7 +252,7 @@ export default function FakeAddressGeneratorClient() {
 
       {allAddresses.length > 1 && (
         <div className="tb-v2-form-group">
-          <div className="flex justify-between items-center mb-2">
+          <div className="flex flex-wrap justify-between items-center gap-2 mb-2">
             <div className="tb-v2-label mb-0">All Generated Addresses ({allAddresses.length})</div>
             <button
               onClick={() => setShowAll(!showAll)}
@@ -264,8 +264,8 @@ export default function FakeAddressGeneratorClient() {
           {showAll && (
             <div className="space-y-2 max-h-64 overflow-y-auto">
               {allAddresses.map((addr, index) => (
-                <div key={index} className="tb-v2-card p-3 flex justify-between items-center">
-                  <span className="text-sm">{addr.fullAddress}</span>
+                <div key={index} className="tb-v2-card min-w-0 p-3 flex flex-wrap justify-between items-center gap-2">
+                  <span className="min-w-0 break-words text-sm">{addr.fullAddress}</span>
                   <button
                     onClick={() => copyToClipboard(addr.fullAddress)}
                     className="tb-v2-button tb-v2-button-secondary text-xs py-1 px-2"
@@ -284,13 +284,13 @@ export default function FakeAddressGeneratorClient() {
         <div className="tb-v2-mode-tabs">
           <button
             onClick={() => copyToClipboard(allAddresses.map((a) => a.fullAddress).join('\n'))}
-            className="tb-v2-button tb-v2-button-secondary flex-1"
+            className="tb-v2-button tb-v2-button-secondary w-full min-w-0 sm:w-auto sm:flex-1"
           >
             Copy All as Text
           </button>
           <button
             onClick={() => copyToClipboard(JSON.stringify(allAddresses, null, 2))}
-            className="tb-v2-button tb-v2-button-secondary flex-1"
+            className="tb-v2-button tb-v2-button-secondary w-full min-w-0 sm:w-auto sm:flex-1"
           >
             Copy All as JSON
           </button>
