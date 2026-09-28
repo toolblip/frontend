@@ -378,7 +378,7 @@ test.describe('Browser tool execution paths', () => {
     await expect(page.getByRole('button', { name: 'Clear', exact: true })).toBeDisabled();
   });
 
-  test('merge-pdfs loads two sample files, preserves order, and downloads the merged PDF', async ({ page }) => {
+  test('merge-pdfs loads two sample files, reorders with controls, and downloads the merged PDF', async ({ page }) => {
     await page.goto('/tools/merge-pdfs');
     await dismissCookies(page);
 
@@ -388,7 +388,7 @@ test.describe('Browser tool execution paths', () => {
     await expect(page.getByText('sample-1.pdf', { exact: true })).toBeVisible();
     await expect(page.getByText('sample-2.pdf', { exact: true })).toBeVisible();
     const cards = page.locator('.tb-pdf-merge-file');
-    await cards.nth(1).dragTo(cards.nth(0));
+    await page.getByRole('button', { name: 'Move sample-2.pdf up' }).click();
     await expect(cards.nth(0)).toContainText('sample-2.pdf');
 
     const downloadPromise = page.waitForEvent('download');

@@ -3,8 +3,14 @@ name: E2E Auth Regression
 on:
   pull_request:
     branches: [main]
+    paths-ignore:
+      - 'scripts/qa/**'
+      - '.github/workflows/tool-qa*.yml'
   push:
     branches: [main]
+    paths-ignore:
+      - 'scripts/qa/**'
+      - '.github/workflows/tool-qa*.yml'
 
 jobs:
   auth-e2e:
