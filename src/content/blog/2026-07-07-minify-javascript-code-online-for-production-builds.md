@@ -114,5 +114,4 @@ No. Minifying optimizes for size and happens to make code less readable as a sid
 
 Shipping unminified JavaScript means every visitor downloads bytes that do nothing for them. When you minify JavaScript code online for production builds, you strip the comments, whitespace, and long names your source needs but the browser does not - and hand users a smaller, faster file that runs exactly the same.
 
-Ready to shrink your script? Open the free [JavaScript Minifier on Toolblip](/tools/js-minifier), paste your code, and copy the production-ready output instantly - all in your browser. Need to read a minified file later? The [JavaScript Beautifier](/tools/js-beautifier) expands it back into readable code for debugging.
-
+Ready to shrink your script? Open the free [JavaScript Minifier on Toolblip](/tools/js-minifier), paste your code, and copy the production-ready output instantly - all in your browser. Need to read a minified file later? Select JavaScript in the [Code Beautifier](/tools/code-beautifier) to format it for debugging.
