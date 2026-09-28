@@ -2003,46 +2003,6 @@ export const blogPosts: BlogManifestEntry[] = [
     "content": "\n# Cron 表达式速查表：5分钟掌握定时任务调度\n\nCron 表达式是控制定时任务的核心工具。每个开发者都应该掌握它的格式和用法。\n\n## 标准格式（5段式）\n\n```\n┌───────────── 分钟 (0-59)\n│ ┌─────────── 小时 (0-23)\n│ │ ┌───────── 日 (1-31)\n│ │ │ ┌─────── 月 (1-12)\n│ │ │ │ ┌───── 星期 (0-6, 0=周日)\n│ │ │ │ │\n* * * * *\n```\n\n## 特殊字符含义\n\n| 字符 | 含义 | 示例 |\n|------|------|------|\n| `*` | 任意值 | `* * * * *` = 每分钟 |\n| `,` | 列表 | `1,15,30 * * * *` = 每小时1/15/30分 |\n| `-` | 范围 | `0 9-17 * * *` = 上午9点到下午5点每小时 |\n| `/` | 间隔 | `*/15 * * * *` = 每15分钟 |\n| `?` | 任意（仅用于日/星期） | 无冲突时替代 `*` |\n\n## 常用示例\n\n### 基础\n| 表达式 | 含义 |\n|--------|------|\n| `0 * * * *` | 每小时整点 |\n| `0 0 * * *` | 每天午夜 |\n| `0 0 * * 0` | 每周日午夜 |\n| `0 0 1 * *` | 每月1日午夜 |\n| `*/5 * * * *` | 每5分钟 |\n\n### 实用组合\n| 表达式 | 含义 |\n|--------|------|\n| `0 9 * * 1-5` | 工作日早上9点 |\n| `30 18 * * *` | 每天下午6:30 |\n| `0 0 1,15 * *` | 每月1号和15号午夜 |\n| `*/15 9-17 * * 1-5` | 工作日上班时间每15分钟 |\n| `0 22 * * 1-5` | 工作日晚上10点 |\n| `0 0 * * 0,6` | 周末午夜 |\n\n## 为什么 cron 有两个 \"日\" 字段？\n\n`日 (day-of-month)` 和 `星期 (day-of-week)` 可以同时指定。Crontab 默认是 **OR 逻辑** - 任一条件满足即执行。\n\n```bash\n# 每月1号 AND 周五都会跑（可能重复）\n0 0 1 * *       # 每月1号\n0 0 * * 5       # 每周五\n# 这两个会同时生效\n```\n\n### 解决方案：问号 `?`\n```bash\n# 仅当月日指定，不关心星期\n0 0 1 * ?\n```\n\n## 常见错误\n\n### ❌ 忘记星期从0开始\n```bash\n# 周日 = 0，不是 7\n0 0 * * 7       # 这个永远不会跑！\n0 0 * * 0       # 正确\n```\n\n### ❌ 月份从1开始，不是0\n```bash\n# ❌ 错误\n0 0 * 0 *       # 0月不存在\n# ✅ 正确\n0 0 * 1 *       # 1月\n```\n\n### ❌ 日和星期同时用 `*`\n```bash\n# ⚠️ 高风险：可能一天跑多次\n0 0 * * *       # 日=任意 AND 星期=任意 = 每天\n```\n\n## 快速验证\n\n👉 **[Cron 解析器 - 输入表达式查看下次运行时间 →](/tools/cron-parser)**\n\n输入任何 cron 表达式，自动解析为人类可读描述，并显示接下来5次的计划执行时间。\n\n## 工具推荐\n\n| 工具 | 用途 |\n|------|------|\n| [Crontab.guru](https://crontab.guru) | 在线 cron 表达式编辑器 |\n| [Cron Parser](/tools/cron-parser) | 验证 + 显示下次运行 |\n| [Cron job monitor](https://healthcheck.io) | 监控定时任务是否执行 |\n\n## Python / JavaScript / PHP 解析\n\n```python\n# Python\nfrom croniter import croniter\ncron = croniter('0 9 * * 1-5', datetime.now())\nprint(cron.get_next(datetime))\n```\n\n```javascript\n// JavaScript\nimport { parseCron } from '@toolblip/mcp';\nparseCron('0 9 * * 1-5');\n```\n\n```php\n// PHP\n$cron = Cron\\CronExpression('0 9 * * 1-5', new DateTime());\necho $cron->getNextRunDate()->format('Y-m-d H:i');\n```\n\n---\n\n掌握 cron 表达式，让定时任务调度变得简单。记住 5 个字段，多练习 - 30分钟内你就能熟练运用。\n"
   },
   {
-    "slug": "optimize-images-without-uploading",
-    "title": "How to Optimize Images Without Uploading",
-    "description": "Crop, resize, and convert image formats entirely in your browser. No servers, no uploads, no waiting  -  just faster, lighter images saved straight to your disk.",
-    "date": "2026-04-15T00:00:00.000Z",
-    "category": "Developer Tools",
-    "tags": [
-      "Images",
-      "Optimization",
-      "Performance",
-      "Web Development",
-      "Browser Tools"
-    ],
-    "author": "Toolblip Team",
-    "readingTime": "4 min",
-    "emoji": "📸",
-    "featuredImage": "https://toolblip.com/api/og?title=How%20to%20Optimize%20Images%20Without%20Uploading&category=Developer%20Tools&date=2026-04-15",
-    "content": "\n# How to Optimize Images Without Uploading\n\nImage optimization used to mean one of two things: uploading to a third-party service and waiting, or installing heavy desktop software with a clunky UI. Neither is necessary anymore.\n\nModern browser APIs have made it entirely possible to crop, resize, and convert images without a single byte leaving your machine. No server, no waiting, no privacy concerns.\n\n## Why \"No Upload\" Matters\n\nWhen you upload an image to an online service for processing, you're trusting them with your data. For a profile picture, maybe that's fine. For screenshots of internal dashboards, mockups, or anything sensitive  -  it's a risk you don't need to take.\n\nBrowser-based image processing runs entirely in a Web Worker or main thread in your current tab. The image is processed locally and the result is delivered directly to your download folder. No intermediaries.\n\n## Cropping Without the Friction\n\nTraditional image cropping often means opening Photoshop, snipping to your clipboard, pasting into another app  -  a whole workflow just to remove some borders. A browser-based image cropper lets you open a file, drag your crop handles, and download the result. No app switching, no clipboard pollution, no quality loss from repeated compression.\n\n## Format Conversion on the Fly\n\nJPEG to PNG, PNG to WebP, HEIC to JPEG  -  the web supports a surprising number of formats through the Canvas API. Need a PNG with a transparent background? Want to convert a photo to JPEG for a smaller file size? You can do all of this in-browser without installing ffmpeg or hunting for a converter site that isn't trying to upsell you.\n\n## Compression Without Artifacts\n\nImage compression is a tradeoff. Compress too hard and you get banding, blockiness, and artifacts. A good browser-based compressor gives you a live preview of quality vs. file size so you can find the sweet spot for your use case  -  blog hero image, social media thumbnail, document scan.\n\nFor most image tasks  -  crop, resize, convert, compress  -  you don't need a desktop app or an online service. You need a browser tab and about thirty seconds.\n\n👉 **[Try image tools on Toolblip →](/tools)** All processing happens locally in your browser. Your images never leave your device.\n"
-  },
-  {
-    "slug": "top-5-developer-tools-should-bookmark",
-    "title": "Top 5 Developer Tools You Should Bookmark",
-    "description": "From JSON formatters to cron parsers, these five browser-based tools will save you time on the daily. Here's why each one deserves a spot in your bookmarks bar.",
-    "date": "2026-04-15T00:00:00.000Z",
-    "category": "Developer Tools",
-    "tags": [
-      "JSON",
-      "Base64",
-      "Regex",
-      "Cron",
-      "Hashing",
-      "Productivity",
-      "Bookmarks"
-    ],
-    "author": "Toolblip Team",
-    "readingTime": "4 min",
-    "emoji": "🔧",
-    "featuredImage": "https://toolblip.com/api/og?title=Top%205%20Developer%20Tools%20You%20Should%20Bookmark&category=Developer%20Tools&date=2026-04-15",
-    "content": "\n# Top 5 Developer Tools You Should Bookmark\n\nEvery developer has that drawer of half-written scripts and one-off terminal commands they use once a month and forget immediately. Stop that. These five tools do the job better, in your browser, without you needing to remember anything.\n\n## 1. JSON Formatter & Validator\n\nDebugging minified JSON is a nightmare. A good JSON formatter takes ugly, one-line JSON and spits out readable, indented output  -  with validation so you know exactly which character broke your API response. Pasting malformed JSON and getting an instant, clear error beats staring at a blank \"SyntaxError\" line any day.\n\n👉 **[JSON Formatter & Validator →](/tools/json-formatter)**\n\n## 2. Base64 Encoder / Decoder\n\nEncoding images as data URIs, working with APIs that return Base64 strings, decoding configuration values  -  Base64 comes up constantly. Having a fast, reliable encoder/decoder that handles text and files alike is essential. Some days I use this tool five times before lunch.\n\n👉 **[Base64 Encoder / Decoder →](/tools/base64-encoder-decoder)**\n\n## 3. Regex Tester\n\nWriting regex without testing it is a gamble. A good regex tester shows you matches in real-time, explains capture groups, and highlights exactly what's matching and what isn't. It's the difference between guessing and knowing  -  and saves you from that moment when a broken regex slips into production.\n\n👉 **[Regex Tester →](/tools/regex-tester)**\n\n## 4. Cron Expression Parser\n\nCron syntax is notoriously hard to read. `*/15 9-17 * * 1-5`  -  is that every 15 minutes during business hours on weekdays, or something else? A parser that translates cron into human-readable descriptions and shows upcoming run times is invaluable when you're debugging why your scheduled job ran at 3 AM instead of noon.\n\n👉 **[Cron Parser →](/tools/cron-parser)**\n\n## 5. Hash Generator\n\nMD5, SHA-1, SHA-256  -  you need hashes for API signatures, file integrity checks, and more. Having a tool that handles text input and file drops, with instant output across multiple algorithms, saves constantly switching to a terminal.\n\n👉 **[Hash Generator →](/tools/md5-hash-generator)**\n\nBookmark these five categories and you'll handle the vast majority of small developer tasks without leaving your browser. No installs, no sign-up, no tracked data. Just open the tab and go.\n\n👉 **[Browse all Toolblip tools →](/tools)**\n"
-  },
-  {
     "slug": "why-browser-based-tools-are-the-future",
     "title": "Why Browser-Based Tools Are the Future",
     "description": "Discover why browser-based developer tools are taking over  -  from better privacy and zero-install convenience to instant speed and cross-device sync.",

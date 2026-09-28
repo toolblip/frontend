@@ -69,6 +69,35 @@ describe('sitemap routes', () => {
     }
   });
 
+  it('lists the retained articles without their retired duplicate URLs', async () => {
+    const xml = await (await blog()).text();
+    for (const slug of [
+      'how-to-optimize-images-without-uploading',
+      'top-5-developer-tools-you-should-bookmark',
+    ]) {
+      expect(xml).toContain(`<loc>https://toolblip.com/blog/${slug}</loc>`);
+    }
+    for (const slug of [
+      'optimize-images-without-uploading',
+      'top-5-developer-tools-should-bookmark',
+    ]) {
+      expect(xml).not.toContain(`<loc>https://toolblip.com/blog/${slug}</loc>`);
+    }
+  });
+
+  it('redirects each retired blog URL directly to its retained article', async () => {
+    const { default: config } = await import('../../next.config.mjs');
+    const redirects = await config.redirects!();
+    for (const [source, destination] of [
+      ['/blog/optimize-images-without-uploading', '/blog/how-to-optimize-images-without-uploading'],
+      ['/blog/top-5-developer-tools-should-bookmark', '/blog/top-5-developer-tools-you-should-bookmark'],
+    ]) {
+      expect(redirects.filter((redirect) => redirect.source === source)).toEqual([
+        { source, destination, permanent: true },
+      ]);
+    }
+  });
+
   it('does not invent dates for blog posts with missing or invalid dates', async () => {
     const post = blogData.getBlogPosts()[0];
     vi.spyOn(blogData, 'getBlogPosts').mockReturnValue([

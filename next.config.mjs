@@ -30,6 +30,9 @@ const nextConfig = {
   },
   async redirects() {
     return [
+      // Consolidate older articles that cover the same topic under one URL.
+      { source: '/blog/optimize-images-without-uploading', destination: '/blog/how-to-optimize-images-without-uploading', permanent: true },
+      { source: '/blog/top-5-developer-tools-should-bookmark', destination: '/blog/top-5-developer-tools-you-should-bookmark', permanent: true },
       { source: '/tools/markdown-table-from-json', destination: '/tools/json-to-markdown-table', permanent: true },
       // Stage-1 exact shared-engine consolidations; query parameters are preserved.
       { source: '/tools/hash-from-text', destination: '/tools/sha256-hash-generator', permanent: true },
