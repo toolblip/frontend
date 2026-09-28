@@ -23,13 +23,9 @@ const REVERSE_MORSE: Record<string, string> = Object.fromEntries(
 
 function textToMorse(text: string): string {
   if (!text) return '';
-  return text
-    .toUpperCase()
-    .split('')
-    .map((c) => (c === ' ' ? ' ' : MORSE_CODE[c] ?? ''))
-    .join(' ')
-    .replace(/ +/g, ' ')
-    .trim();
+  return text.toUpperCase().trim().split(/\s+/)
+    .map(word => [...word].map(c => MORSE_CODE[c] ?? '').filter(Boolean).join(' '))
+    .filter(Boolean).join(' / ');
 }
 
 function morseToText(morse: string): { text: string; error: string } {
@@ -38,15 +34,12 @@ function morseToText(morse: string): { text: string; error: string } {
   if (!/^[.\-\s/]+$/.test(trimmed)) {
     return { text: '', error: 'Morse uses dots, dashes, and spaces only' };
   }
-  const words = trimmed.split(/\s{2,}/);
-  const text = words
-    .map((word) =>
-      word
-        .split(' ')
-        .map((token) => REVERSE_MORSE[token] ?? '')
-        .join('')
-    )
-    .join(' ');
+  const words = trimmed.split(/\s*\/\s*|\s{2,}/);
+  const groups = words.map(word => word.trim().split(/\s+/));
+  if (groups.some(tokens => tokens.some(token => !REVERSE_MORSE[token]))) {
+    return { text: '', error: 'Unknown Morse code group. Separate letters with spaces and words with /.' };
+  }
+  const text = groups.map(tokens => tokens.map(token => REVERSE_MORSE[token]).join('')).join(' ');
   return { text, error: '' };
 }
 
@@ -78,6 +71,7 @@ export default function MorseCodeTranslatorClient() {
     const { text: converted, error } = morseToText(raw);
     if (error) {
       setMorseError(error);
+      setText('');
       return;
     }
     setText(converted);

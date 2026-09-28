@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 interface Issue {
@@ -26,12 +26,15 @@ function highlightContext(issue: Issue) {
 
 export default function GrammarCheckerV2Client() {
   const [text, setText] = useState('');
+  const requestVersion = useRef(0);
   const [issues, setIssues] = useState<Issue[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [checked, setChecked] = useState(false);
 
   const resetResults = () => {
+    requestVersion.current++;
+    setLoading(false);
     setChecked(false);
     setIssues([]);
     setError('');
@@ -39,6 +42,7 @@ export default function GrammarCheckerV2Client() {
 
   const checkGrammar = async () => {
     if (!text.trim()) return;
+    const version = ++requestVersion.current;
     setLoading(true);
     setError('');
     try {
@@ -48,22 +52,24 @@ export default function GrammarCheckerV2Client() {
         body: JSON.stringify({ text, language: 'en-US' }),
       });
       const data = await res.json().catch(() => ({}));
+      if (version !== requestVersion.current) return;
       if (!res.ok) throw new Error(data.error || 'Grammar API unavailable');
       setIssues(data.matches || []);
       setChecked(true);
     } catch {
+      if (version !== requestVersion.current) return;
       setError('Could not reach grammar service. Try again in a moment.');
       setIssues([]);
     } finally {
-      setLoading(false);
+      if (version === requestVersion.current) setLoading(false);
     }
   };
 
-  const applyFix = (issue: Issue) => {
+  const applyFix = (issue: Issue, replacement: string) => {
     if (!issue.replacements.length) return;
-    const fixed = text.slice(0, issue.offset) + issue.replacements[0].value + text.slice(issue.offset + issue.length);
+    const fixed = text.slice(0, issue.offset) + replacement + text.slice(issue.offset + issue.length);
     setText(fixed);
-    setIssues((prev) => prev.filter((i) => i !== issue));
+    resetResults();
   };
 
   const groups = issues.reduce<Record<string, Issue[]>>((acc, issue) => {
@@ -170,7 +176,7 @@ export default function GrammarCheckerV2Client() {
                               <div style={{ marginTop: 10, display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
                                 <span style={{ fontSize: 11.5, color: 'var(--fg-3)' }}>Fix:</span>
                                 {issue.replacements.slice(0, 3).map((r, j) => (
-                                  <button key={j} type="button" onClick={() => applyFix(issue)} className="tb-v2-copy-btn">
+                                  <button key={j} type="button" onClick={() => applyFix(issue, r.value)} className="tb-v2-copy-btn">
                                     {r.value || '(remove)'}
                                   </button>
                                 ))}

@@ -17,7 +17,7 @@ const FEATURED_GRID_SLUGS = [
   'image-compressor',
   'color-palette-generator',
   'image-aspect-ratio-calculator',
-  'hash-from-text',
+  'sha256-hash-generator',
   'url-parameter-extractor',
   'word-counter',
   'character-counter',

@@ -40,7 +40,7 @@ export default function PressureConverterClient() {
   const result = inputValue.trim() === '' || isNaN(parseFloat(inputValue)) ? null : convert();
 
   const swap = () => {
-    const next = result === null ? inputValue : formatResult(result);
+    const next = result === null ? inputValue : String(result);
     setFromUnit(toUnit);
     setToUnit(fromUnit);
     setInputValue(next);

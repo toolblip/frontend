@@ -97,7 +97,7 @@
       "category": "Developer",
       "url": "https://toolblip.com/tools/hash-from-text",
       "historicallyApproved": false,
-      "canonicalAlias": null,
+      "canonicalAlias": "sha256-hash-generator",
       "group": "developer-security"
     },
     {
@@ -2041,7 +2041,7 @@
       "category": "Developer",
       "url": "https://toolblip.com/tools/regex-description-generator",
       "historicallyApproved": false,
-      "canonicalAlias": null,
+      "canonicalAlias": "regex-explainer",
       "group": "developer-general"
     },
     {
@@ -2185,7 +2185,7 @@
       "category": "SEO",
       "url": "https://toolblip.com/tools/google-serp-preview",
       "historicallyApproved": false,
-      "canonicalAlias": null,
+      "canonicalAlias": "serp-preview",
       "group": "seo-network"
     },
     {
@@ -4147,7 +4147,7 @@
       "category": "SEO",
       "url": "https://toolblip.com/tools/google-serp-simulator",
       "historicallyApproved": false,
-      "canonicalAlias": null,
+      "canonicalAlias": "serp-preview",
       "group": "seo-network"
     },
     {

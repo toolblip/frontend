@@ -21,7 +21,6 @@ export const PWA_PRECACHE_TOOL_SLUGS = [
   'regex-explainer',
   'uuid-generator',
   'sha256-hash-generator',
-  'hash-from-text',
   'password-generator',
   'word-counter',
   'character-counter',

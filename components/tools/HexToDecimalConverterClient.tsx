@@ -28,7 +28,7 @@ export default function HexToDecimalConverterClient() {
       setHexError('Use hex digits 0–9 and A–F.');
       return;
     }
-    const n = parseInt(cleaned, 16);
+    const n = BigInt('0x' + cleaned);
     if (Number.isNaN(n)) {
       setHexError('Invalid hex value.');
       return;
@@ -52,7 +52,7 @@ export default function HexToDecimalConverterClient() {
       setDecimalError('Enter a non-negative whole number.');
       return;
     }
-    const n = parseInt(raw.trim(), 10);
+    const n = BigInt(raw.trim());
     if (Number.isNaN(n)) {
       setDecimalError('Invalid decimal value.');
       return;
