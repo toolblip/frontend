@@ -1,4 +1,4 @@
-import { webkit } from '@playwright/test';
+import { expect, webkit } from '@playwright/test';
 
 const browser = await webkit.launch({ headless: true });
 try {
@@ -14,5 +14,16 @@ try {
       }), url);
       console.log(JSON.stringify({ url, attempt, result }));
     }
+  }
+  for (let attempt = 1; attempt <= 5; attempt++) {
+    await page.goto('https://toolblip.com/tools/websocket-tester', { waitUntil: 'domcontentloaded' });
+    const tool = page.locator('.tb-v2-tool-card').first();
+    await tool.getByRole('button', { name: /^Examples?$/ }).click();
+    await expect(tool.getByLabel('Url', { exact: true })).toHaveValue('wss://echo.websocket.org');
+    await tool.getByRole('button', { name: 'Connect', exact: true }).click();
+    const send = tool.getByRole('button', { name: 'Send', exact: true });
+    const connected = await expect(send).toBeEnabled({ timeout: 15000 }).then(() => true).catch(() => false);
+    console.log(JSON.stringify({ kind: 'tool-ui', attempt, connected, log: (await tool.innerText()).slice(-500) }));
+    await tool.getByRole('button', { name: 'Disconnect', exact: true }).click();
   }
 } finally { await browser.close(); }
