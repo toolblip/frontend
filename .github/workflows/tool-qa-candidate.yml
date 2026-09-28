@@ -80,6 +80,7 @@ jobs:
           echo "NODE_EXTRA_CA_CERTS=$RUNNER_TEMP/toolblip-origin.crt" >> "$GITHUB_ENV"
           origin_spki=$(openssl x509 -in "$RUNNER_TEMP/toolblip-origin.crt" -pubkey -noout | openssl pkey -pubin -outform DER | openssl dgst -sha256 -binary | openssl base64 -A)
           echo "QA_ORIGIN_SPKI=$origin_spki" >> "$GITHUB_ENV"
+          node -e "const f=require('fs'),t=require('tls');t.createSecureContext({cert:f.readFileSync(process.env.RUNNER_TEMP+'/toolblip-origin.crt'),key:f.readFileSync(process.env.RUNNER_TEMP+'/toolblip-origin.key')});console.log('Candidate PEM pair parses before audit')"
       - name: Audit affected candidate tools in both engines
         if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         env:
