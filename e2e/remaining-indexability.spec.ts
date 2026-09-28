@@ -12,7 +12,8 @@ const registryPath = path.resolve('node_modules/.cache/remaining-cases.cjs');
 buildSync({stdin:{contents: "import a from './scripts/qa/cases/developer-security.mjs'; import b from './scripts/qa/cases/developer-general.mjs'; import c from './scripts/qa/cases/developer-data.mjs'; import d from './scripts/qa/cases/utility-design.mjs'; import e from './scripts/qa/cases/seo-network.mjs'; import f from './scripts/qa/cases/historical-regressions.mjs'; import g from './scripts/qa/cases/images.mjs'; export default [...a,...b,...c,...d,...e,...f,...g];",resolveDir:process.cwd()},bundle:true,platform:'node',format:'cjs',packages:'external',outfile:registryPath});
 const registry = [...bespoke, ...require(registryPath).default] as {slug:string; test:(ctx:any)=>Promise<void>}[];
 const original = require('../docs/gsc-remaining-review-2026-09-26.json').rows as {slug:string}[];
-const cohort = process.env.REMAINING_TARGETS ? process.env.REMAINING_TARGETS.split(',').map(slug=>({slug})) : original;
+const retired = new Set(['hash-from-text', 'regex-description-generator', 'google-serp-preview', 'google-serp-simulator']);
+const cohort = process.env.REMAINING_TARGETS ? process.env.REMAINING_TARGETS.split(',').map(slug=>({slug})) : original.filter(entry => !retired.has(entry.slug));
 const selected = process.env.REMAINING_SET;
 for (const width of [1440, 375]) for (const entry of cohort) {
   if (selected === 'bespoke' && !bespoke.some(t=>t.slug===entry.slug)) continue;
@@ -30,7 +31,7 @@ for (const width of [1440, 375]) for (const entry of cohort) {
       return root && Array.from(root.querySelectorAll('button,input,textarea,select')).some(el => Object.keys(el).some(k => k.startsWith('__reactProps$')));
     }, undefined, {timeout:30000});
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', `https://toolblip.com${getToolPathBySlug(entry.slug)}`);
-    await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', process.env.REMAINING_TARGETS && isToolIndexable(entry.slug) ? /^index, follow$/ : /noindex/);
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', isToolIndexable(entry.slug) ? /^index, follow$/ : /noindex/);
     const artifactsDir = test.info().outputPath('case');
     await mkdir(artifactsDir, {recursive:true});
     const assertions: string[] = [];
