@@ -62,8 +62,25 @@ jobs:
           npx --no-install playwright install --with-deps chrome webkit
           sudo apt-get update
           sudo apt-get install -y ffmpeg poppler-utils
+      - name: Map the candidate to the production origin on this runner
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        run: |
+          openssl req -x509 -newkey rsa:2048 -nodes -days 1 \
+            -keyout "$RUNNER_TEMP/toolblip-origin.key" \
+            -out "$RUNNER_TEMP/toolblip-origin.crt" \
+            -subj '/CN=toolblip.com' \
+            -addext 'subjectAltName=DNS:toolblip.com' \
+            -addext 'basicConstraints=critical,CA:TRUE'
+          sudo install -m 644 "$RUNNER_TEMP/toolblip-origin.crt" /usr/local/share/ca-certificates/toolblip-candidate.crt
+          sudo update-ca-certificates
+          echo '127.0.0.1 toolblip.com' | sudo tee -a /etc/hosts >/dev/null
+          echo "QA_ORIGIN_CERT=$RUNNER_TEMP/toolblip-origin.crt" >> "$GITHUB_ENV"
+          echo "QA_ORIGIN_KEY=$RUNNER_TEMP/toolblip-origin.key" >> "$GITHUB_ENV"
+          echo "NODE_EXTRA_CA_CERTS=$RUNNER_TEMP/toolblip-origin.crt" >> "$GITHUB_ENV"
       - name: Audit affected candidate tools in both engines
         if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        env:
+          QA_CANDIDATE_ORIGIN: https://toolblip.com
         run: node scripts/qa/hosted-candidate.mjs "$RUNNER_TEMP/candidate-tool-qa/audit"
       - name: Upload candidate evidence (never production approval)
         if: always()

@@ -25,10 +25,12 @@ export async function stickyPersistence({page, tool, expect}) {
   const notes = Array.from({length:101}, (_, i) => ({ id:String(i), content:`Review note ${i}`, color:'bg-yellow-200', createdAt:123, position:{x:0,y:0}, legacy:{pinned:true} }));
   try {
     await page.evaluate(notes => localStorage.setItem('sticky-notes', JSON.stringify(notes)), notes);
+    await page.waitForLoadState('networkidle');
     await page.reload();
     await expect(tool.getByText('Review note 100', {exact:true})).toHaveCount(1);
     expect(await page.evaluate(() => JSON.parse(localStorage.getItem('sticky-notes')))).toEqual(notes);
     await expect(tool.getByRole('button', {name:'Add Note',exact:true})).toBeDisabled();
+    await page.waitForLoadState('networkidle');
     await page.reload();
     expect(await page.evaluate(() => JSON.parse(localStorage.getItem('sticky-notes')))).toEqual(notes);
     // Overlapping legacy positions are intentional; delete the last rendered card.
@@ -36,6 +38,7 @@ export async function stickyPersistence({page, tool, expect}) {
     await expect.poll(() => page.evaluate(() => JSON.parse(localStorage.getItem('sticky-notes')))).toEqual(notes.slice(0,100));
   } finally {
     await page.evaluate(previous => previous === null ? localStorage.removeItem('sticky-notes') : localStorage.setItem('sticky-notes',previous), previous);
+    await page.waitForLoadState('networkidle');
     await page.reload();
   }
 }

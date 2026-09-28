@@ -16,8 +16,10 @@ if (git('rev-parse', 'HEAD') !== process.env.QA_REVIEWED_HEAD || git('status', '
 const env = { ...process.env };
 for (const key of Object.keys(env)) if (/TOKEN|SECRET|PASSWORD|CREDENTIAL/i.test(key) || key.startsWith('ACTIONS_')) delete env[key];
 const slugs = ['english-dictionary', 'shell-command-reference', 'notebook-to-html', 'base64-encoder-decoder', 'binary-converter', 'markdown-to-pdf', 'json-schema-validator', 'favicon-grabber', 'batch-favicon-downloader', 'sass-to-css', 'automation-wizard', 'sticky-notes', 'purchase-agreement-generator', 'url-redirect-checker', 'random-number-generator', 'chart-maker'];
-const report = { purpose: 'candidate-only-not-production-approval', source: git('rev-parse', 'HEAD'), sourceTree: git('rev-parse', 'HEAD^{tree}'), reviewedHead: process.env.QA_REVIEWED_HEAD, startedAt: new Date().toISOString(), baseURL: 'http://127.0.0.1:3190', slugs, csp: 'Only upgrade-insecure-requests removed by existing explicit local-HTTP QA option; all other CSP directives retained.', engines: [] };
-const sourceFiles = ['scripts/qa/hosted-candidate.mjs', 'scripts/qa/hosted-notebook-scroll.mjs', 'scripts/qa/hosted-redirect-diagnostic.mjs', 'scripts/qa/hosted-sticky-diagnostic.mjs', 'scripts/qa/hosted-og-diagnostic.mjs', 'scripts/qa/run.mjs', 'scripts/qa/browser.mjs', 'scripts/qa/runtime.mjs', 'scripts/qa/cases/developer-data.mjs', 'scripts/qa/cases/developer-general.mjs', 'scripts/qa/cases/developer-security.mjs', 'scripts/qa/cases/utility-design.mjs', 'scripts/qa/cases/seo-network.mjs', 'lib/blog.ts', 'lib/utility-design/dictionary.ts', 'lib/developer-data/use-schema-validation.ts', 'components/tools/EnglishDictionaryClient.tsx', 'components/tools/ShellCommandReferenceClient.tsx'];
+const baseURL = process.env.QA_CANDIDATE_ORIGIN;
+if (baseURL !== 'https://toolblip.com' || !process.env.QA_ORIGIN_CERT || !process.env.QA_ORIGIN_KEY) throw Error('Hosted candidate requires the trusted production-origin mapping.');
+const report = { purpose: 'candidate-only-not-production-approval', source: git('rev-parse', 'HEAD'), sourceTree: git('rev-parse', 'HEAD^{tree}'), reviewedHead: process.env.QA_REVIEWED_HEAD, startedAt: new Date().toISOString(), baseURL, slugs, csp: 'Full production HTTPS CSP; no local-HTTP override.', engines: [] };
+const sourceFiles = ['scripts/qa/hosted-candidate.mjs', 'scripts/qa/hosted-origin-proxy.mjs', 'scripts/qa/hosted-notebook-scroll.mjs', 'scripts/qa/hosted-redirect-diagnostic.mjs', 'scripts/qa/hosted-sticky-diagnostic.mjs', 'scripts/qa/hosted-og-diagnostic.mjs', 'scripts/qa/run.mjs', 'scripts/qa/browser.mjs', 'scripts/qa/runtime.mjs', 'scripts/qa/cases/developer-data.mjs', 'scripts/qa/cases/developer-general.mjs', 'scripts/qa/cases/developer-security.mjs', 'scripts/qa/cases/utility-design.mjs', 'scripts/qa/cases/seo-network.mjs', 'lib/blog.ts', 'lib/utility-design/dictionary.ts', 'lib/developer-data/use-schema-validation.ts', 'components/tools/EnglishDictionaryClient.tsx', 'components/tools/ShellCommandReferenceClient.tsx'];
 const hashSources = async () => Object.fromEntries(await Promise.all(sourceFiles.map(async file => [file, createHash('sha256').update(await readFile(file)).digest('hex')])));
 report.sourceFilesBefore = await hashSources();
 const save = () => writeFile(path.join(output, 'candidate.json'), JSON.stringify(report, null, 2) + '\n');
@@ -33,22 +35,32 @@ function run(command, args, timeout, log) {
 }
 const serverLog = await open(path.join(output, 'server.log'), 'wx');
 const server = spawn(process.execPath, ['node_modules/next/dist/bin/next', 'start', '--hostname', '127.0.0.1', '--port', '3190'], { env, detached: true, stdio: ['ignore', serverLog.fd, serverLog.fd] });
+const proxyLog = await open(path.join(output, 'origin-proxy.log'), 'wx');
+let proxy;
 let serverError;
 server.on('error', error => { serverError = error; });
 try {
   let ready = false;
   const deadline = Date.now() + 60000;
   while (Date.now() < deadline && server.exitCode === null && !serverError) {
-    try { const response = await fetch(report.baseURL, { signal: AbortSignal.timeout(2000) }); await response.body?.cancel(); if (response.ok) { ready = true; break; } } catch {}
+    try { const response = await fetch('http://127.0.0.1:3190', { signal: AbortSignal.timeout(2000) }); await response.body?.cancel(); if (response.ok) { ready = true; break; } } catch {}
     await new Promise(resolve => setTimeout(resolve, 500));
   }
   if (!ready) throw serverError ?? Error('Candidate production server did not become ready within 60 seconds.');
+  proxy = spawn(process.execPath, ['scripts/qa/hosted-origin-proxy.mjs', process.env.QA_ORIGIN_CERT, process.env.QA_ORIGIN_KEY], { env, detached: true, stdio: ['ignore', proxyLog.fd, proxyLog.fd] });
+  let originReady = false;
+  const originDeadline = Date.now() + 30000;
+  while (Date.now() < originDeadline && proxy.exitCode === null) {
+    try { const response = await fetch(baseURL, { signal: AbortSignal.timeout(2000) }); await response.body?.cancel(); if (response.ok) { originReady = true; break; } } catch {}
+    await new Promise(resolve => setTimeout(resolve, 500));
+  }
+  if (!originReady) throw Error('Trusted candidate origin did not become ready within 30 seconds.');
   for (const engine of ['chrome', 'webkit']) {
     const log = await open(path.join(output, `${engine}.log`), 'wx');
     const entry = { engine, startedAt: new Date().toISOString() };
     report.engines.push(entry);
     try {
-      entry.exitCode = await run(process.execPath, ['scripts/qa/run.mjs', '--inventory', 'scripts/qa/cloud/inventory.json', '--base', report.baseURL, '--slugs', slugs.join(','), '--engine', engine, '--concurrency', '1', '--strip-dev-upgrade-csp', '--out', path.join(output, engine)], 12 * 60 * 1000, log.fd);
+      entry.exitCode = await run(process.execPath, ['scripts/qa/run.mjs', '--inventory', 'scripts/qa/cloud/inventory.json', '--base', report.baseURL, '--slugs', slugs.join(','), '--engine', engine, '--concurrency', '1', '--out', path.join(output, engine)], 12 * 60 * 1000, log.fd);
       const aggregate = JSON.parse(await readFile(path.join(output, engine, 'aggregate.json'), 'utf8'));
       entry.summary = aggregate.summary;
       entry.failures = aggregate.results.filter(result => result.status !== 'passed').map(result => ({ slug: result.slug, functional: result.functional, runtime: result.runtime, route: result.route, layouts: result.layouts, errors: result.errors }));
@@ -83,7 +95,9 @@ try {
   }
 } catch (error) { report.error = String(error.stack ?? error); process.exitCode = 1; }
 finally {
+  if (proxy) try { process.kill(-proxy.pid, 'SIGKILL'); } catch {}
   try { process.kill(-server.pid, 'SIGKILL'); } catch {}
+  await proxyLog.close();
   await serverLog.close();
   report.finishedAt = new Date().toISOString();
   report.sourceFilesAfter = await hashSources();
