@@ -87,6 +87,15 @@ test('domain property accepts canonical HTTP, apex, www, and subdomain URLs with
   ]);
 });
 
+test('listing roots and blog root keep their types without changing tool detail pages', () => {
+  assert.deepEqual(parsePageRows({ rows: [
+    page('https://toolblip.com/blog', 1, 10, 2),
+    page('https://toolblip.com/tools', 2, 20, 3),
+    page('https://toolblip.com/tools/images', 3, 30, 4),
+    page('https://toolblip.com/tools/images/crop', 4, 40, 5),
+  ] }).map(row => row.type), ['blog', 'directory', 'directory', 'tool']);
+});
+
 test('URL-prefix property accepts only canonical URLs under its HTTPS prefix', () => {
   assert.deepEqual(parsePageRows({ rows: [rows[0]] }, 'https://toolblip.com/'), [
     { url: rows[0].keys[0], type: 'tool', clicks: 6, impressions: 60, ctr: 0.1, position: 3 },
@@ -97,12 +106,31 @@ test('URL-prefix property accepts only canonical URLs under its HTTPS prefix', (
 });
 
 test('collection enforces the selected URL-prefix property', async () => {
-  const report = await collectSitePerformance({ now, env: { ...env, GSC_SITE_URL: 'https://toolblip.com/' },
+  const report = await collectSitePerformance({ now, env: { ...env, GSC_SITEWIDE_URL: 'https://toolblip.com/' },
     transport: async url => reply(url.includes('oauth2')
       ? { access_token: 'fixture-token', token_type: 'Bearer', expires_in: 3600 }
       : { rows: [page('http://toolblip.com/tools/x', 1, 10, 2)] }) });
   assert.equal(report.status, 'failed');
   assert.equal(report.error, 'INVALID_ANALYTICS_RESPONSE');
+});
+
+test('sitewide property is independent of a cohort URL prefix', async () => {
+  const requested = [];
+  const transport = async url => {
+    requested.push(url);
+    return reply(url.includes('oauth2')
+      ? { access_token: 'fixture-token', token_type: 'Bearer', expires_in: 3600 }
+      : { rows: [page('https://toolblip.com/blog/example', 1, 10, 2)] });
+  };
+  const defaultReport = await collectSitePerformance({ now, env: { ...env, GSC_SITE_URL: 'https://toolblip.com/tools/' }, transport });
+  assert.equal(defaultReport.status, 'complete');
+  assert.equal(defaultReport.siteUrl, 'sc-domain:toolblip.com');
+  assert.ok(requested.includes('https://www.googleapis.com/webmasters/v3/sites/sc-domain%3Atoolblip.com/searchAnalytics/query'));
+
+  const explicitReport = await collectSitePerformance({ now, env: { ...env, GSC_SITE_URL: 'https://toolblip.com/tools/', GSC_SITEWIDE_URL: 'https://toolblip.com/' }, transport });
+  assert.equal(explicitReport.status, 'complete');
+  assert.equal(explicitReport.siteUrl, 'https://toolblip.com/');
+  assert.ok(requested.includes('https://www.googleapis.com/webmasters/v3/sites/https%3A%2F%2Ftoolblip.com%2F/searchAnalytics/query'));
 });
 
 test('malformed, duplicate, and off-domain rows are rejected without carrying upstream fields into reports', () => {

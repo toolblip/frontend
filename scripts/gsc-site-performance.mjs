@@ -14,7 +14,7 @@ const safeError = error => {
   const message = error?.message;
   return ['Missing GSC_SERVICE_ACCOUNT', 'Invalid GSC_SERVICE_ACCOUNT', 'INVALID_TOKEN_RESPONSE',
     'AUTH_SIGNING_FAILED', 'INVALID_JSON_RESPONSE', 'REQUEST_TIMEOUT', 'REQUEST_FAILED',
-    'INVALID_ANALYTICS_RESPONSE', 'Invalid GSC_SITE_URL'].includes(message) || /^HTTP_(?:[1-5]\d\d|INVALID)$/.test(message)
+    'INVALID_ANALYTICS_RESPONSE', 'Invalid GSC_SITEWIDE_URL'].includes(message) || /^HTTP_(?:[1-5]\d\d|INVALID)$/.test(message)
     ? message : 'OPERATION_FAILED';
 };
 
@@ -26,12 +26,14 @@ export function siteDateWindow(now = new Date()) {
 
 function siteProperty(value) {
   if (value === DEFAULT_SITE || value === 'https://toolblip.com/') return value;
-  throw new Error('Invalid GSC_SITE_URL');
+  throw new Error('Invalid GSC_SITEWIDE_URL');
 }
 
 function pageType(url) {
   const path = new URL(url).pathname;
   if (path === '/') return 'home';
+  if (path === '/blog') return 'blog';
+  if (path === '/tools' || path === '/tools/images') return 'directory';
   if (path.startsWith('/tools/')) return 'tool';
   if (path.startsWith('/blog/')) return 'blog';
   if (path === '/directory' || path === '/all-tools') return 'directory';
@@ -82,7 +84,7 @@ export async function collectSitePerformance({ now = new Date(), env = process.e
     totals: null, byType: [], pages: [],
   };
   try {
-    report.siteUrl = siteProperty(env.GSC_SITE_URL || DEFAULT_SITE);
+    report.siteUrl = siteProperty(env.GSC_SITEWIDE_URL || DEFAULT_SITE);
     const token = await getAccessToken(env.GSC_SERVICE_ACCOUNT, { now, ...options });
     const body = await requestJson(`https://www.googleapis.com/webmasters/v3/sites/${encodeURIComponent(report.siteUrl)}/searchAnalytics/query`, {
       method: 'POST',

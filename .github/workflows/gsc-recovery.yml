@@ -56,7 +56,7 @@ jobs:
         if: always()
         env:
           GSC_SERVICE_ACCOUNT: ${{ secrets.GSC_SERVICE_ACCOUNT }}
-          GSC_SITE_URL: ${{ vars.GSC_SITE_URL || 'sc-domain:toolblip.com' }}
+          GSC_SITEWIDE_URL: ${{ vars.GSC_SITEWIDE_URL || 'sc-domain:toolblip.com' }}
         run: node scripts/gsc-site-performance.mjs
       - name: Add report to run summary
         if: always()

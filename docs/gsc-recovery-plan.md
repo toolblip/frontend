@@ -22,8 +22,11 @@ evidence that the sitewide indexing count changed.
 The weekly GSC workflow now writes a separate 28-finalized-day, sitewide
 Search Analytics report to `test-results/gsc-site-performance/`. It uses the
 same `GSC_SERVICE_ACCOUNT` read-only credential and the configured
-`GSC_SITE_URL`. The window ends three PT calendar days before collection.
-Run `node scripts/gsc-site-performance.mjs` locally with those variables to
+`GSC_SITEWIDE_URL`, which defaults to `sc-domain:toolblip.com` and also accepts
+the root HTTPS prefix `https://toolblip.com/`. This is independent of the
+cohort report's `GSC_SITE_URL`, which may be a `/tools/` URL prefix. The window
+ends three PT calendar days before collection. Run
+`node scripts/gsc-site-performance.mjs` locally with those variables to
 write `report.json` and `report.md` there. The existing cohort report stays
 at `test-results/gsc-recovery/`.
 
