@@ -116,19 +116,13 @@ Cron 表达式是控制定时任务的核心工具。每个开发者都应该掌
 | [Cron Parser](/tools/cron-parser) | 验证 + 显示下次运行 |
 | [Cron job monitor](https://healthcheck.io) | 监控定时任务是否执行 |
 
-## Python / JavaScript / PHP 解析
+## Python / PHP 解析
 
 ```python
 # Python
 from croniter import croniter
 cron = croniter('0 9 * * 1-5', datetime.now())
 print(cron.get_next(datetime))
-```
-
-```javascript
-// JavaScript
-import { parseCron } from '@toolblip/mcp';
-parseCron('0 9 * * 1-5');
 ```
 
 ```php

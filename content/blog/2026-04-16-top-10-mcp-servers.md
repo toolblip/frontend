@@ -33,8 +33,7 @@ The most fundamental MCP server. Gives AI read/write access to your filesystem w
 ```json
 {
   "command": "npx",
-  "args": ["-y", "@modelcontextprotocol/server-filesystem"],
-  "args": ["/path/to/allowed/directory"]
+  "args": ["-y", "@modelcontextprotocol/server-filesystem", "/path/to/allowed/directory"]
 }
 ```
 
@@ -49,7 +48,6 @@ Git integration lets Claude query repository history, read file contents at any 
 **Use it for:** Understanding when and why code changed, reviewing git history without leaving the AI conversation, automating commit messages.
 
 **Popular servers:**
-- `@modelcontextprotocol/server-git` - read-only git history
 - GitHub MCP server - full GitHub API access
 
 ---
@@ -74,9 +72,7 @@ The Slack MCP server lets Claude read channels and send messages.
 
 **Use it for:** Setting up AI-powered incident alerts, posting deployment notifications, summarizing channel activity.
 
-```
-/invite @Claude-Bot  # in your Slack workspace
-```
+Check your Slack integration's installation and permission steps before granting workspace access.
 
 ---
 
@@ -90,18 +86,13 @@ Requires OAuth setup. Worth it for teams heavily invested in Google Workspace.
 
 ---
 
-## 6. @toolblip/mcp - Developer Tools
+## 6. Figma MCP Server - Design Context
 
-Exposes 17 useful developer tools directly to Claude Code: JSON formatting, hash generation, UUID creation, cron parsing, SQL formatting, JWT decoding, color conversion, and more.
+The [Figma MCP server](https://developers.figma.com/docs/figma-mcp-server/) gives AI coding tools access to design context from Figma files, including frames, components, variables, and layout data.
 
-**Use it for:** Quick dev tasks without leaving the AI conversation.
+**Use it for:** Building an interface from a Figma design while checking its layout and components in your coding tool.
 
-```bash
-# Claude Code
-/mcp add toolblip npx -y @toolblip/mcp
-```
-
-All tools run locally in Node.js - no data leaves your machine.
+Figma documents both remote and desktop server setup. Follow its [official setup guide](https://developers.figma.com/docs/figma-mcp-server/) for your client.
 
 ---
 
@@ -154,9 +145,8 @@ The Memory MCP server gives Claude persistent memory across sessions. It stores 
 ## Quick Start: Add MCP to Claude Code
 
 ```bash
-# See available servers at modelcontextprotocol.io
-# Or just add one:
-/mcp add filesystem npx -y @modelcontextprotocol/server-filesystem ~/Projects
+# Add a local server from your terminal:
+claude mcp add --transport stdio filesystem -- npx -y @modelcontextprotocol/server-filesystem ~/Projects
 
 # Then use it naturally in conversation:
 # "Read all the TypeScript files in src/ and explain the architecture"
@@ -169,7 +159,7 @@ The Memory MCP server gives Claude persistent memory across sessions. It stores 
 | AI that reads your code | File System + Git |
 | AI-assisted database work | Database connector (read-only!) |
 | Web search from AI | Brave Search |
-| Dev tools in AI | @toolblip/mcp |
+| Design context in AI | [Figma MCP server](https://developers.figma.com/docs/figma-mcp-server/) |
 | Persistent AI memory | Memory server |
 
 MCP is changing how we interact with AI assistants. The ability to give Claude Code real tools - not just words - is a fundamental shift in what's possible. Start with one server, see how it changes your workflow.
