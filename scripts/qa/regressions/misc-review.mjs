@@ -21,26 +21,29 @@ async function downloaded({ page, artifactsDir, slug }, action) {
 }
 
 export async function stickyPersistence({page, expect}) {
-  const previous = await page.evaluate(() => localStorage.getItem('sticky-notes'));
   const notes = Array.from({length:101}, (_, i) => ({ id:String(i), content:`Review note ${i}`, color:'bg-yellow-200', createdAt:123, position:{x:0,y:0}, legacy:{pinned:true} }));
-  const opened = [];
+  const browser = page.context().browser();
+  if (!browser) throw new Error('Sticky Notes persistence check requires a browser context');
+  const context = await browser.newContext({
+    serviceWorkers:'block',
+    storageState:{cookies:[],origins:[{origin:new URL(page.url()).origin,localStorage:[{name:'sticky-notes',value:JSON.stringify(notes)}]}]},
+  });
   try {
-    await page.evaluate(notes => localStorage.setItem('sticky-notes', JSON.stringify(notes)), notes);
     for (let visit=0; visit<2; visit++) {
-      const freshPage=await page.context().newPage();
-      opened.push(freshPage);
+      const freshPage=await context.newPage();
       await freshPage.goto(page.url(), {waitUntil:'domcontentloaded'});
       const freshTool=freshPage.locator('.tb-v2-tool-card').first();
       await expect(freshTool.getByText('Review note 100', {exact:true})).toHaveCount(1);
       expect(await freshPage.evaluate(() => JSON.parse(localStorage.getItem('sticky-notes')))).toEqual(notes);
       await expect(freshTool.getByRole('button', {name:'Add Note',exact:true})).toBeDisabled();
+      if (visit===0) await freshPage.close();
     }
     // Overlapping legacy positions are intentional; delete the last rendered card.
-    await opened.at(-1).locator('.tb-v2-tool-card').first().getByRole('button', {name:'✕',exact:true}).last().click();
-    await expect.poll(() => page.evaluate(() => JSON.parse(localStorage.getItem('sticky-notes')))).toEqual(notes.slice(0,100));
+    const finalPage=context.pages().at(-1);
+    await finalPage.locator('.tb-v2-tool-card').first().getByRole('button', {name:'✕',exact:true}).last().click();
+    await expect.poll(() => finalPage.evaluate(() => JSON.parse(localStorage.getItem('sticky-notes')))).toEqual(notes.slice(0,100));
   } finally {
-    await page.evaluate(previous => previous === null ? localStorage.removeItem('sticky-notes') : localStorage.setItem('sticky-notes',previous), previous);
-    await Promise.all(opened.map(freshPage => freshPage.close()));
+    await context.close();
   }
 }
 
