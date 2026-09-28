@@ -371,7 +371,7 @@ export default function SignPDFClient() {
     a.href = url;
     a.download = `signed-${file.name}`;
     a.click();
-    URL.revokeObjectURL(url);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
   };
 
   const clearAll = () => {
