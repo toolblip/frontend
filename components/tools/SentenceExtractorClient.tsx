@@ -66,7 +66,7 @@ export default function SentenceExtractorClient() {
     a.href = url;
     a.download = 'sentences.txt';
     a.click();
-    URL.revokeObjectURL(url);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
   };
 
   return (
