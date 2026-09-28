@@ -81,6 +81,24 @@ jobs:
           QA_ENGINE: ${{ matrix.engine }}
           QA_GROUP: ${{ matrix.group }}
         run: node "$RUNNER_TEMP/tool-qa/cloud/run.mjs" "$GITHUB_WORKSPACE" "$RUNNER_TEMP/tool-qa" "$QA_ENGINE" "$QA_GROUP"
+      - name: Package review reports
+        if: always()
+        run: |
+          if [ -f "$RUNNER_TEMP/tool-qa/audit/aggregate.json" ]; then
+            mkdir -p "$RUNNER_TEMP/tool-qa-review/audit"
+            cp "$RUNNER_TEMP/tool-qa/audit/"*.json "$RUNNER_TEMP/tool-qa-review/audit/"
+            cp -R "$RUNNER_TEMP/tool-qa/audit/tools" "$RUNNER_TEMP/tool-qa-review/audit/"
+            cp "$RUNNER_TEMP/tool-qa/provenance.json" "$RUNNER_TEMP/tool-qa-review/"
+            cp "$RUNNER_TEMP/tool-qa/deployment-"*.json "$RUNNER_TEMP/tool-qa-review/"
+          fi
+      - name: Upload compact review reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: review-${{ matrix.group }}-${{ matrix.engine }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/tool-qa-review/
+          if-no-files-found: warn
+          retention-days: 14
       - name: Upload all provenance, reports, downloads and screenshots
         if: always()
         id: artifact
