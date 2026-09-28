@@ -75,13 +75,49 @@ test('valid no-row response reports zero observed pages without treating it as a
   assert.match(markdown(report), /omitted rows do not prove no indexing/i);
 });
 
-test('malformed, duplicate, and off-origin rows are rejected without carrying upstream fields into reports', () => {
+test('domain property accepts canonical HTTP, apex, www, and subdomain URLs with original types', () => {
+  assert.deepEqual(parsePageRows({ rows: [
+    page('http://toolblip.com/', 1, 10, 2),
+    page('https://www.toolblip.com/tools/json-formatter', 2, 20, 3),
+    page('http://docs.toolblip.com/blog/guide?source=gsc', 3, 30, 4),
+  ] }), [
+    { url: 'http://toolblip.com/', type: 'home', clicks: 1, impressions: 10, ctr: 0.1, position: 2 },
+    { url: 'https://www.toolblip.com/tools/json-formatter', type: 'tool', clicks: 2, impressions: 20, ctr: 0.1, position: 3 },
+    { url: 'http://docs.toolblip.com/blog/guide?source=gsc', type: 'blog', clicks: 3, impressions: 30, ctr: 0.1, position: 4 },
+  ]);
+});
+
+test('URL-prefix property accepts only canonical URLs under its HTTPS prefix', () => {
+  assert.deepEqual(parsePageRows({ rows: [rows[0]] }, 'https://toolblip.com/'), [
+    { url: rows[0].keys[0], type: 'tool', clicks: 6, impressions: 60, ctr: 0.1, position: 3 },
+  ]);
+  for (const url of ['http://toolblip.com/tools/x', 'https://www.toolblip.com/tools/x', 'https://docs.toolblip.com/tools/x']) {
+    assert.throws(() => parsePageRows({ rows: [page(url, 1, 10, 2)] }, 'https://toolblip.com/'), { message: 'INVALID_ANALYTICS_RESPONSE' });
+  }
+});
+
+test('collection enforces the selected URL-prefix property', async () => {
+  const report = await collectSitePerformance({ now, env: { ...env, GSC_SITE_URL: 'https://toolblip.com/' },
+    transport: async url => reply(url.includes('oauth2')
+      ? { access_token: 'fixture-token', token_type: 'Bearer', expires_in: 3600 }
+      : { rows: [page('http://toolblip.com/tools/x', 1, 10, 2)] }) });
+  assert.equal(report.status, 'failed');
+  assert.equal(report.error, 'INVALID_ANALYTICS_RESPONSE');
+});
+
+test('malformed, duplicate, and off-domain rows are rejected without carrying upstream fields into reports', () => {
   const invalid = [
     null, { error: { message: 'upstream-private-body' } }, { rows: null },
     { rows: [page('https://evil.invalid/tools/x', 1, 10, 2)] },
     { rows: [page('https://toolblip.com.evil.invalid/x', 1, 10, 2)] },
-    { rows: [page('http://toolblip.com/tools/x', 1, 10, 2)] },
+    { rows: [page('https://eviltoolblip.com/tools/x', 1, 10, 2)] },
+    { rows: [page('http://toolblip.com.evil.invalid/tools/x', 1, 10, 2)] },
+    { rows: [page('https://foo..toolblip.com/tools/x', 1, 10, 2)] },
     { rows: [page('https://user:pass@toolblip.com/tools/x', 1, 10, 2)] },
+    { rows: [page('https://toolblip.com/tools/x#fragment', 1, 10, 2)] },
+    { rows: [page('not-a-url', 1, 10, 2)] },
+    { rows: [page('https://TOOLBLIP.com/tools/x', 1, 10, 2)] },
+    { rows: [page('https://toolblip.com:443/tools/x', 1, 10, 2)] },
     { rows: [{ ...rows[0], keys: [] }] },
     { rows: [{ ...rows[0], keys: [rows[0].keys[0], 'extra'] }] },
     { rows: [{ ...rows[0], clicks: '6' }] },

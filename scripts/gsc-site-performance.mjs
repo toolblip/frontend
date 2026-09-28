@@ -38,7 +38,7 @@ function pageType(url) {
   return 'other';
 }
 
-export function parsePageRows(body) {
+export function parsePageRows(body, siteUrl = DEFAULT_SITE) {
   if (!object(body) || 'error' in body ||
       Object.keys(body).some(key => !['rows', 'responseAggregationType', 'metadata'].includes(key)) ||
       (body.responseAggregationType !== undefined && body.responseAggregationType !== 'byPage') ||
@@ -52,7 +52,11 @@ export function parsePageRows(body) {
     const url = row.keys[0];
     let parsed;
     try { parsed = new URL(url); } catch { invalid(); }
-    if (parsed.origin !== 'https://toolblip.com' || parsed.href !== url || parsed.username || parsed.password || parsed.hash || seen.has(url)) invalid();
+    const inProperty = siteUrl === DEFAULT_SITE
+      ? ['http:', 'https:'].includes(parsed.protocol) &&
+        (parsed.hostname === 'toolblip.com' || /^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+toolblip\.com$/.test(parsed.hostname))
+      : parsed.href.startsWith('https://toolblip.com/');
+    if (!inProperty || parsed.href !== url || parsed.username || parsed.password || parsed.hash || seen.has(url)) invalid();
     seen.add(url);
     if (!Number.isSafeInteger(row.clicks) || row.clicks < 0 || !Number.isSafeInteger(row.impressions) || row.impressions < 0 ||
         row.clicks > row.impressions || typeof row.ctr !== 'number' || !Number.isFinite(row.ctr) || row.ctr < 0 || row.ctr > 1 ||
@@ -86,7 +90,7 @@ export async function collectSitePerformance({ now = new Date(), env = process.e
       body: JSON.stringify({ startDate: report.dateWindow.startDate, endDate: report.dateWindow.endDate,
         dimensions: ['page'], type: 'web', dataState: 'final', aggregationType: 'byPage', rowLimit: ROW_LIMIT }),
     }, options);
-    report.pages = parsePageRows(body);
+    report.pages = parsePageRows(body, report.siteUrl);
     report.observedPages = report.pages.length;
     report.rowLimitReached = report.observedPages === ROW_LIMIT;
     report.totals = metrics(report.pages);
