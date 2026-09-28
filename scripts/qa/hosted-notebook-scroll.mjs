@@ -14,7 +14,7 @@ const require = createRequire(path.join(root, 'package.json'));
 const { chromium, webkit, expect } = require('@playwright/test');
 const fixture = (await import(pathToFileURL(path.join(root, 'scripts/qa/cases/developer-data.mjs')).href)).default.find(f => f.slug === 'notebook-to-html');
 const { stripDevUpgradeCSP } = await import(pathToFileURL(path.join(root, 'scripts/qa/browser.mjs')).href);
-const browser = await (engine === 'chrome' ? chromium : webkit).launch({ headless: true, ...(engine === 'chrome' ? { channel: 'chrome' } : {}) });
+const browser = await (engine === 'chrome' ? chromium : webkit).launch({ headless: true, ...(engine === 'chrome' ? { channel: 'chrome', args: (await import('./helpers/candidate-chrome.mjs')).candidateChromeArgs() } : {}) });
 const report = { purpose: 'scroll-diagnosis-only', engine, base, startedAt: new Date().toISOString(), scenarios: [] };
 const saveReport = async () => {
   await writeFile(path.join(output, 'diagnostic.json.tmp'), JSON.stringify(report, null, 2) + '\n');

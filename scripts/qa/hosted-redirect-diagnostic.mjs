@@ -14,7 +14,7 @@ const { chromium, webkit, expect } = require('@playwright/test');
 const fixture = (await import(pathToFileURL(path.join(root, 'scripts/qa/cases/developer-general.mjs')).href)).default.find(f => f.slug === 'url-redirect-checker');
 const { stripDevUpgradeCSP } = await import(pathToFileURL(path.join(root, 'scripts/qa/browser.mjs')).href);
 const report = { purpose: 'redirect-diagnosis-only', engine, base, startedAt: new Date().toISOString(), scenarios: [] };
-const browser = await (engine === 'chrome' ? chromium : webkit).launch({ headless: true, ...(engine === 'chrome' ? { channel: 'chrome' } : {}) });
+const browser = await (engine === 'chrome' ? chromium : webkit).launch({ headless: true, ...(engine === 'chrome' ? { channel: 'chrome', args: (await import('./helpers/candidate-chrome.mjs')).candidateChromeArgs() } : {}) });
 try {
   for (let attempt = 1; attempt <= 3; attempt++) {
     const result = { attempt, events: [], evidence: [] }; report.scenarios.push(result);

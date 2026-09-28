@@ -194,8 +194,26 @@ async function favicon(ctx) {
   check(await image.evaluate(img => img.complete && img.naturalWidth > 0), 'Downloaded image decodes in the browser.');
   await clear(ctx); await expect(image).toHaveCount(0);
   await tool.getByLabel('URLs input', { exact: true }).fill('bad host'); await tool.getByRole('button', { name: 'Fetch Favicons', exact: true }).click(); await expect(tool.getByRole('alert')).toBeVisible();
-  await page.route('**/api/favicon?*', route => ctx.abortExpectedRequest(route, 'Controlled favicon network failure verifies that no download or success image is exposed'));
-  try { await example(ctx); await tool.getByRole('button', { name: 'Fetch Favicons', exact: true }).click(); await expect(tool.getByLabel('Result', { exact: true })).toContainText('google.com:'); await expect(button).toHaveCount(0); check(true, '[controlled-error] Favicon failure exposes no download or success image.'); } finally { await page.unroute('**/api/favicon?*'); }
+  // Service-worker-owned requests bypass page.route. Use a fresh context with
+  // workers blocked solely for this controlled failure; the live success above
+  // still exercises the normal worker-enabled browser context.
+  const browser = page.context().browser(); if (!browser) throw Error('Browser is unavailable');
+  const failureContext = await browser.newContext({ serviceWorkers: 'block' });
+  let intercepted = false;
+  try {
+    await failureContext.route('**/api/favicon?*', route => { intercepted = true; return route.abort('failed'); });
+    const failurePage = await failureContext.newPage();
+    await failurePage.goto(page.url());
+    const failureTool = failurePage.locator('.tb-v2-tool-card').first();
+    const examples = failureTool.getByRole('button', { name: /^Examples?$/ });
+    await expect.poll(() => examples.evaluate(element => Object.keys(element).some(key => key.startsWith('__reactProps$') && typeof element[key]?.onClick === 'function'))).toBe(true);
+    await examples.click();
+    await failureTool.getByRole('button', { name: 'Fetch Favicons', exact: true }).click();
+    await expect(failureTool.getByLabel('Result', { exact: true })).toContainText('google.com:');
+    await expect(failureTool.getByRole('button', { name: 'Download google.com', exact: true })).toHaveCount(0);
+    check(intercepted, '[controlled-error] Favicon request was blocked in the isolated failure context.');
+    check(true, '[controlled-error] Favicon failure exposes no download or success image.');
+  } finally { await failureContext.close(); }
   await clear(ctx);
 }
 async function robotGenerator(ctx) {

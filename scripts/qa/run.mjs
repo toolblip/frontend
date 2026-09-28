@@ -71,7 +71,7 @@ export async function main(argv = process.argv.slice(2)) {
   try {
     const browserType = options.engine === 'chrome' ? chromium : webkit;
     server = await browserType.launchServer({headless:true,timeout:30_000,
-      ...(options.engine === 'chrome' ? {channel:'chrome'} : process.env.QA_WEBKIT_EXECUTABLE ? {executablePath:process.env.QA_WEBKIT_EXECUTABLE} : {})});
+      ...(options.engine === 'chrome' ? {channel:'chrome',args:(await import('./helpers/candidate-chrome.mjs')).candidateChromeArgs()} : process.env.QA_WEBKIT_EXECUTABLE ? {executablePath:process.env.QA_WEBKIT_EXECUTABLE} : {})});
     browser = await browserType.connect(server.wsEndpoint(),{timeout:30_000});
     let cursor = 0;
     const workers = await Promise.allSettled(Array.from({length:Math.min(options.concurrency,selected.length)},async()=>{

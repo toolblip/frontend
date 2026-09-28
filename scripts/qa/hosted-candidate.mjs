@@ -19,7 +19,7 @@ const slugs = ['english-dictionary', 'shell-command-reference', 'notebook-to-htm
 const baseURL = process.env.QA_CANDIDATE_ORIGIN;
 if (baseURL !== 'https://toolblip.com' || !process.env.QA_ORIGIN_CERT || !process.env.QA_ORIGIN_KEY) throw Error('Hosted candidate requires the trusted production-origin mapping.');
 const report = { purpose: 'candidate-only-not-production-approval', source: git('rev-parse', 'HEAD'), sourceTree: git('rev-parse', 'HEAD^{tree}'), reviewedHead: process.env.QA_REVIEWED_HEAD, startedAt: new Date().toISOString(), baseURL, slugs, csp: 'Full production HTTPS CSP; no local-HTTP override.', engines: [] };
-const sourceFiles = ['scripts/qa/hosted-candidate.mjs', 'scripts/qa/hosted-origin-proxy.mjs', 'scripts/qa/hosted-notebook-scroll.mjs', 'scripts/qa/hosted-redirect-diagnostic.mjs', 'scripts/qa/hosted-sticky-diagnostic.mjs', 'scripts/qa/hosted-og-diagnostic.mjs', 'scripts/qa/run.mjs', 'scripts/qa/browser.mjs', 'scripts/qa/runtime.mjs', 'scripts/qa/cases/developer-data.mjs', 'scripts/qa/cases/developer-general.mjs', 'scripts/qa/cases/developer-security.mjs', 'scripts/qa/cases/utility-design.mjs', 'scripts/qa/cases/seo-network.mjs', 'lib/blog.ts', 'lib/utility-design/dictionary.ts', 'lib/developer-data/use-schema-validation.ts', 'components/tools/EnglishDictionaryClient.tsx', 'components/tools/ShellCommandReferenceClient.tsx'];
+const sourceFiles = ['scripts/qa/hosted-candidate.mjs', 'scripts/qa/hosted-origin-proxy.mjs', 'scripts/qa/helpers/candidate-chrome.mjs', 'scripts/qa/hosted-notebook-scroll.mjs', 'scripts/qa/hosted-redirect-diagnostic.mjs', 'scripts/qa/hosted-sticky-diagnostic.mjs', 'scripts/qa/hosted-og-diagnostic.mjs', 'scripts/qa/run.mjs', 'scripts/qa/browser.mjs', 'scripts/qa/runtime.mjs', 'scripts/qa/cases/developer-data.mjs', 'scripts/qa/cases/developer-general.mjs', 'scripts/qa/cases/developer-security.mjs', 'scripts/qa/cases/utility-design.mjs', 'scripts/qa/cases/seo-network.mjs', 'lib/blog.ts', 'lib/utility-design/dictionary.ts', 'lib/developer-data/use-schema-validation.ts', 'components/tools/EnglishDictionaryClient.tsx', 'components/tools/ShellCommandReferenceClient.tsx'];
 const hashSources = async () => Object.fromEntries(await Promise.all(sourceFiles.map(async file => [file, createHash('sha256').update(await readFile(file)).digest('hex')])));
 report.sourceFilesBefore = await hashSources();
 const save = () => writeFile(path.join(output, 'candidate.json'), JSON.stringify(report, null, 2) + '\n');
@@ -47,7 +47,7 @@ try {
     await new Promise(resolve => setTimeout(resolve, 500));
   }
   if (!ready) throw serverError ?? Error('Candidate production server did not become ready within 60 seconds.');
-  proxy = spawn(process.execPath, ['scripts/qa/hosted-origin-proxy.mjs', process.env.QA_ORIGIN_CERT, process.env.QA_ORIGIN_KEY], { env, detached: true, stdio: ['ignore', proxyLog.fd, proxyLog.fd] });
+  proxy = spawn(process.execPath, ['scripts/qa/hosted-origin-proxy.mjs', 'scripts/qa/helpers/candidate-chrome.mjs', process.env.QA_ORIGIN_CERT, process.env.QA_ORIGIN_KEY], { env, detached: true, stdio: ['ignore', proxyLog.fd, proxyLog.fd] });
   let originReady = false;
   const originDeadline = Date.now() + 30000;
   while (Date.now() < originDeadline && proxy.exitCode === null) {

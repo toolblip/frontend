@@ -18,7 +18,7 @@ const target = 'https://toolblip.com/api/og?title=Toolblip%20vs.%20VS%20Code%20E
 report.target = target;
 const allowedHeaders = new Set(['content-type', 'content-length', 'cache-control', 'age', 'location', 'cross-origin-resource-policy', 'cross-origin-embedder-policy', 'access-control-allow-origin', 'access-control-allow-credentials', 'content-security-policy', 'cf-cache-status', 'server', 'x-content-type-options']);
 const headers = values => Object.fromEntries(Object.entries(values ?? {}).filter(([name]) => allowedHeaders.has(name.toLowerCase())));
-const browser = await chromium.launch({ headless: true, channel: 'chrome', timeout: 30000 });
+const browser = await chromium.launch({ headless: true, channel: 'chrome', timeout: 30000, args: (await import('./helpers/candidate-chrome.mjs')).candidateChromeArgs() });
 const deadline = setTimeout(() => { report.timedOut = true; void browser.close().catch(() => {}); }, 150000);
 try {
  for (const serviceWorkers of ['allow', 'block']) {
