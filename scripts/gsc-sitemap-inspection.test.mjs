@@ -163,28 +163,33 @@ test('inspection starts are globally spaced by at least 200 ms', async () => {
   assert.ok(starts.every((start, index) => index === 0 || start - starts[index - 1] >= 200));
 });
 
-test('quota stop leaves in-flight inspections to settle and skips unstarted URLs', async () => {
-  const many = Array.from({ length: 8 }, (_, i) => `https://toolblip.com/tools/tool-${i}`);
-  const releases = [];
-  let started = 0;
-  const collecting = collect({ getToken: async () => 'fixture-token', sleep: async () => {}, transport: async url => {
-    if (url.includes('sitemap-tools')) return response(xml(many));
-    const index = started++;
-    await new Promise(resolve => { releases[index] = resolve; });
-    return response(index === 0 ? { error: 'private' } : stored('PASS', 'Indexed'), index === 0 ? 403 : 200);
-  } });
-  await new Promise(resolve => setImmediate(resolve));
-  assert.equal(started, 4);
-  releases[0]();
-  await new Promise(resolve => setImmediate(resolve));
-  assert.equal(started, 4);
-  releases[1](); releases[2](); releases[3]();
-  const report = await collecting;
-  assert.equal(report.stopReason, 'HTTP_403');
-  assert.equal(report.counts.inspected, 3);
-  assert.equal(report.counts.errors, 1);
-  assert.equal(report.counts.skipped, 4);
-  assert.deepEqual(report.results.map(row => row.url), many);
+test('auth and quota stops leave only initial in-flight inspections to settle and skip unstarted URLs', async () => {
+  for (const status of [403, 429]) {
+    const many = Array.from({ length: 8 }, (_, i) => `https://toolblip.com/tools/tool-${i}`);
+    const releases = [];
+    const sleeps = [];
+    let started = 0;
+    const collecting = collect({ getToken: async () => 'fixture-token', sleep: async ms => { sleeps.push(ms); }, transport: async url => {
+      if (url.includes('sitemap-tools')) return response(xml(many));
+      const index = started++;
+      await new Promise(resolve => { releases[index] = resolve; });
+      return response(index === 0 ? { error: 'private' } : stored('PASS', 'Indexed'), index === 0 ? status : 200);
+    } });
+    await new Promise(resolve => setImmediate(resolve));
+    assert.equal(started, 4);
+    releases[0]();
+    await new Promise(resolve => setImmediate(resolve));
+    assert.equal(started, 4);
+    releases[1](); releases[2](); releases[3]();
+    const report = await collecting;
+    assert.equal(started, 4);
+    assert.deepEqual(sleeps, [200, 200, 200]);
+    assert.equal(report.stopReason, `HTTP_${status}`);
+    assert.equal(report.counts.inspected, 3);
+    assert.equal(report.counts.errors, 1);
+    assert.equal(report.counts.skipped, 4);
+    assert.deepEqual(report.results.map(row => row.url), many);
+  }
 });
 
 test('progress callback reports counts at 25 completions and at the end', async () => {
@@ -202,7 +207,7 @@ test('quota and auth errors stop subsequent inspection requests', async () => {
   for (const status of [401, 403, 429]) {
     let calls = 0;
     const report = await collect({ getToken: async () => 'fixture-token', sleep: async () => {}, transport: async url => url.includes('sitemap-tools') ? response(xml(urls)) : (calls++, response({ error: 'secret' }, status)) });
-    assert.ok(calls >= (status === 429 ? 3 : 1) && calls <= (status === 429 ? 12 : 4));
+    assert.ok(calls >= 1 && calls <= 4);
     assert.equal(report.counts.skipped + report.counts.errors, urls.length);
     assert.equal(report.stopReason, `HTTP_${status}`);
   }

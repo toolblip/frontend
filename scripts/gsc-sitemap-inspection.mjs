@@ -125,7 +125,7 @@ export async function collect({ env = process.env, now = new Date(), transport =
         await paceStart();
         if (report.stopReason) return;
         try {
-          body = await requestJson(INSPECT_URL, request, { transport, sleep });
+          body = await requestJson(INSPECT_URL, request, { transport, sleep, retry429: false });
           break;
         } catch (error) {
           if (attempt || !['REQUEST_FAILED', 'REQUEST_TIMEOUT'].includes(safeError(error)) || report.stopReason) throw error;
