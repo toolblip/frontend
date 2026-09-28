@@ -47,7 +47,7 @@ try {
     await new Promise(resolve => setTimeout(resolve, 500));
   }
   if (!ready) throw serverError ?? Error('Candidate production server did not become ready within 60 seconds.');
-  proxy = spawn(process.execPath, ['scripts/qa/hosted-origin-proxy.mjs', 'scripts/qa/helpers/candidate-chrome.mjs', process.env.QA_ORIGIN_CERT, process.env.QA_ORIGIN_KEY], { env, detached: true, stdio: ['ignore', proxyLog.fd, proxyLog.fd] });
+  proxy = spawn(process.execPath, ['scripts/qa/hosted-origin-proxy.mjs', process.env.QA_ORIGIN_CERT, process.env.QA_ORIGIN_KEY], { env, detached: true, stdio: ['ignore', proxyLog.fd, proxyLog.fd] });
   let originReady = false;
   const originDeadline = Date.now() + 30000;
   while (Date.now() < originDeadline && proxy.exitCode === null) {
