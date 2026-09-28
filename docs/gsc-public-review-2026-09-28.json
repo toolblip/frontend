@@ -1,0 +1,2036 @@
+{
+  "reviewDate": "2026-09-28",
+  "stage1Deployment": "d6e526056511bc2383780d46ca9880577429c875",
+  "audit": "docs/gsc-remaining-review-2026-09-26.json",
+  "sourceEvidence": {
+    "full": "/tmp/tb-stage1-public-full.json",
+    "scopedFinal": "/tmp/tb-public-fixture-targeted-final.json",
+    "randomIdRepeat": "/tmp/tb-public-random-id-webkit-repeat.json"
+  },
+  "caseOrder": [
+    "chrome-1440",
+    "chrome-375",
+    "webkit-1440",
+    "webkit-375"
+  ],
+  "counts": {
+    "originalAudit": 99,
+    "retiredAliases": 4,
+    "retained": 95,
+    "reviewed": 92,
+    "held": 3,
+    "fullPassed": 371,
+    "fullFailed": 9,
+    "scopedFinalPassed": 12,
+    "randomIdAdditionalWebkitDesktopPassed": 5
+  },
+  "rows": [
+    {
+      "slug": "json-to-markdown-table",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/JsonToMarkdownTableClient.tsx",
+      "sourceSha256": "c919d0bc4a1498a4aae9acf7ddcc4bef0761aebf0aed74e709e5f1614c0726fa",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "image-aspect-ratio-calculator",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/ImageAspectRatioCalculatorClient.tsx",
+      "sourceSha256": "7e4d0ca5963207845646ab324c3400ed325784732a84139742f971de09ddb45c",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "image-trimmer",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/ImageTrimmerClient.tsx",
+      "sourceSha256": "d53cb07e66261b6966aca423c8b5b913c73d11264d2ad4ae454c6d9a37cc0b4a",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "erase-color",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/EraseColorClient.tsx",
+      "sourceSha256": "fb47ed344837cddbf0cea63367f0159d998ce1659ccdd83c9c78172188304369",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "square-crop",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/SquareCropClient.tsx",
+      "sourceSha256": "0b605c8c2accce20cdeaf5510bddefbb14f4f477eb5e00b6c81e9f52d42f3414",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "htaccess-redirect-generator",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/HtaccessRedirectGeneratorClient.tsx",
+      "sourceSha256": "9fc746b1ca816c51400a155c1b0fe80cced981e6f40ac92476509887731fe2d8",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "percentage-calculator",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/PercentageCalculatorClient.tsx",
+      "sourceSha256": "3705d7ead12279df8b4ab0bc763443ef64c91e296ebe68b242bad2ebf47c796d",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "gradient-generator",
+      "decision": "hold",
+      "rationale": "Overlaps css-gradient-generator; control and output differences require a separate consolidation decision.",
+      "source": "components/tools/GradientGeneratorClient.tsx",
+      "sourceSha256": "a24da12cb7053e65137bf5e00d703435870c0f99c6bf6ac493b56822c6173574",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "slug-permalink-checker",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/SlugPermalinkCheckerClient.tsx",
+      "sourceSha256": "1426fef00066275b83dedcd5fcfb04232101f260f4db965a500c792656462e6a",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "slideshow-generator",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/SlideshowGeneratorClient.tsx",
+      "sourceSha256": "d9c94c52469a268053def2f86e52d69331c02e6e69c428c3e57562eaa0a38651",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "quote-of-the-day",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/QuoteOfTheDayClient.tsx",
+      "sourceSha256": "4ea8d573934c40f8eb645d1d9abf7c9236812c4678b7ca1aeba405d48f020fbe",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "morse-code-translator",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/MorseCodeTranslatorClient.tsx",
+      "sourceSha256": "9ef8e32a42531c49043fad0637b4feade022977d5b85a5fa4b5cc5f4e9f17ac4",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "twitter-card-preview",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/TwitterCardPreviewClient.tsx",
+      "sourceSha256": "050095d022c94b77ac34a39d6d5afcbc2334c76e9ecb8215f8333cc8f9f7a88e",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "shell-command-reference",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/ShellCommandReferenceClient.tsx",
+      "sourceSha256": "f87ff7d7bf1609ddcd87a1addf23e2255a08e748f8cda48d990d3eb643bbe85b",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "physics-constants-reference",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/PhysicsConstantsReferenceClient.tsx",
+      "sourceSha256": "4f676ea0c6cc72557ce3c2f11617cd0126756bf22b940fa47bc109c855e10068",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "slug-generator",
+      "decision": "hold",
+      "rationale": "Overlaps url-slug-generator; transliteration and controls differ, so consolidation requires a separate decision.",
+      "source": "components/tools/SlugGeneratorClient.tsx",
+      "sourceSha256": "3d23185ca4d180e95fa273975435d55a2d21969822f796dca0e1e44cdc2ef1d4",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "graphql-playground",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/GraphqlPlaygroundClient.tsx",
+      "sourceSha256": "2fa535da8a8904c7f562bdb90414a7b2598812c5886329d069b8e15226035436",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "websocket-tester",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/WebSocketTesterClient.tsx",
+      "sourceSha256": "7ecef990851da99e1eece947d0be4e91466d944a6e052d7c5fd68c81a6b5841b",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "regex-pattern-generator",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/RegexPatternGeneratorClient.tsx",
+      "sourceSha256": "03d2999e0637ac3505b2628bee4a9bc5d4ae4b33bd2204709697b3766675dfd8",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "currency-converter",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/CurrencyConverterClient.tsx",
+      "sourceSha256": "063e4ce942ae0ba180abe0886871f7705562809a2825bcf1518f96dbb5dedaba",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "mime-types-reference",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/MIMETypesReferenceClient.tsx",
+      "sourceSha256": "26b55a81b8dba57a66c39e0f0c86e407f5aea588780accac7379adf303c58acc",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "json-editor",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/JsonEditorClient.tsx",
+      "sourceSha256": "574fa88ea8a3fb93acbd5b10e6e2e20a52be6d07a5cfc3e4ab4ca38922882e42",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "json-tree-view",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/JsonTreeViewClient.tsx",
+      "sourceSha256": "c9456377cfc00fa69fff35eead34e00f4d28c9c77df4708b1fa925a7a4f4af7b",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "html-entity-encoder",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/HtmlEntityEncoderClient.tsx",
+      "sourceSha256": "c4035dca581755441c33f0776b1c6687717614a7608f4a95a14da03dba319d5f",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "md5-hash-generator",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/HashGeneratorClient.tsx",
+      "sourceSha256": "c83725df788dc2dc481fbf5531eeca8400e0a34ea0f936b190496438f89b7fa1",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "hash-diff-checker",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/HashDiffCheckerClient.tsx",
+      "sourceSha256": "8e39072768e03a63ca91ea91adad3d74e57ac2e9412a5c7e7fe865a083013225",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "lorem-ipsum-detector",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/LoremIpsumDetectorClient.tsx",
+      "sourceSha256": "b1b8671e987ca57c50fc137d1a01f52c1e13cd0bb76715b885b5d5182c6319f4",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "word-cloud-generator",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/WordCloudGeneratorClient.tsx",
+      "sourceSha256": "83d09e46abf45cd74506ded2ff925746c8638b7419cefcb3462d2393f5420d8c",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "text-highlighter",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/TextHighlighterClient.tsx",
+      "sourceSha256": "8400696323af9f26ae64104195b2615d5dd441f786206a7891912e310a908713",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "word-combinations-generator",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/WordCombinationsGeneratorClient.tsx",
+      "sourceSha256": "8fe30110361503a9af6956878855c03550fb7ade67736c409a927daaef31befd",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "sentiment-analyzer",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/SentimentAnalyzerClient.tsx",
+      "sourceSha256": "1c0a3d088e37c7aa0a825ab8775708b7c739cbdf5d63312c669982bdf728070b",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "hex-named-color-converter",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/HexToNamedColorClient.tsx",
+      "sourceSha256": "b79d9e75f450de38bf9d99ebcedd5edec8096d61d0ab12d77da515b893f57320",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "grammar-checker-v2",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/GrammarCheckerV2Client.tsx",
+      "sourceSha256": "9e59e823d0efd1ad7de055701e240eed47a3014f7cf8bfca5761be17ce604463",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "json-validator",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/JsonValidatorClient.tsx",
+      "sourceSha256": "d8caa3c42c85c4e7744a59318a18479e4ba59b2ceb1f97a583b26ec3cbf97709",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "word-alphabetizer",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/WordAlphabetizerClient.tsx",
+      "sourceSha256": "22863450d2569bf5eae8ad39c5ab0c60d2891a110eea038855f8e6ccc7e64870",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "metric-imperial-converter",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/MetricImperialConverterClient.tsx",
+      "sourceSha256": "9aa8c995893f40b59598c4ca0413609c51426c2e45ff39b5cc7bf46a87c38ca6",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "jwt-token-tester",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/JwtTokenTesterClient.tsx",
+      "sourceSha256": "8a0154e77569963834ed8bd3d291b17abe43e3d9c34702a8ab4904626bbbafa6",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "grammar-score-checker",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/GrammarScoreCheckerClient.tsx",
+      "sourceSha256": "be3751b21cc79f97879aafc5294bed97e278f53a68ca8334faf1e198b702cdb5",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "grammar-checker-pro",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/GrammarCheckerProClient.tsx",
+      "sourceSha256": "c0ab3643f274a56f1f6030abb0ba0d02f0cdc8260f2c50a2c61063d9b64c4fad",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "reading-level-estimator",
+      "decision": "hold",
+      "rationale": "Overlaps readability-score; scoring presentation differs, so consolidation requires a separate decision.",
+      "source": "components/tools/ReadingLevelEstimatorClient.tsx",
+      "sourceSha256": "77e3525d9668f105eff3aa7136c4c5e181b93afa732c823dbf7ee37f2d64ee6a",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "color-format-converter",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/ColorFormatConverterV2Client.tsx",
+      "sourceSha256": "cae8936caa1bef2013e1099507ef8c95b1438f432199932f231d7e2935febdd5",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "curl-gen",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/CurlGenExpressClient.tsx",
+      "sourceSha256": "20cdaa4c21ee61a15725be8adece709a38d0fd3ff44f882291d014e9c8313228",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "temp-converter",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/TempConverterExpressClient.tsx",
+      "sourceSha256": "2b31bb1fbc28b88a0f04c564621a408798231063e3b1504571a5c1a4ac10eb75",
+      "cases": {
+        "chrome-1440": {
+          "full": "failed",
+          "scopedFinal": "passed"
+        },
+        "chrome-375": {
+          "full": "failed",
+          "scopedFinal": "passed"
+        },
+        "webkit-1440": {
+          "full": "failed",
+          "scopedFinal": "passed"
+        },
+        "webkit-375": {
+          "full": "failed",
+          "scopedFinal": "passed"
+        }
+      }
+    },
+    {
+      "slug": "word-freq",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/WordFreqExpressClient.tsx",
+      "sourceSha256": "0d13599c703752b8ad84d736a44ac441167902c4a7e9c26ce7d06f5b5eab910d",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "regex-explainer",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/RegexExplainerClient.tsx",
+      "sourceSha256": "0115d616762376c984e1967498cf394a3124dfa1954c2deb635f5b1093033552",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "passive-voice-detector",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/PassiveVoiceDetectorClient.tsx",
+      "sourceSha256": "3bf5e2f46f79a36b09d7fcf8dcd8df9ba0bd59594719bb987fa296fd61ffbdf1",
+      "cases": {
+        "chrome-1440": {
+          "full": "failed",
+          "scopedFinal": "passed"
+        },
+        "chrome-375": {
+          "full": "failed",
+          "scopedFinal": "passed"
+        },
+        "webkit-1440": {
+          "full": "failed",
+          "scopedFinal": "passed"
+        },
+        "webkit-375": {
+          "full": "failed",
+          "scopedFinal": "passed"
+        }
+      }
+    },
+    {
+      "slug": "word-scramble-generator",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/WordScrambleGeneratorClient.tsx",
+      "sourceSha256": "d7699dd867b2c78776fe1497b68d2feca28133c1039f82c8ae45f5eb774b9a17",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "uuid-normalizer",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/UUIDNormalizerClient.tsx",
+      "sourceSha256": "c4f23b472e1b15eeb769f1064237e60e8e36ab85e51933850b9aea97645662fc",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "pressure-converter",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/PressureConverterClient.tsx",
+      "sourceSha256": "021252bbdba2b2e9187305657f0c8f0bc4cc85ee9177ee58c9533c8b8ce30470",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "energy-converter",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/EnergyConverterClient.tsx",
+      "sourceSha256": "4299ed405039f62a38d2a0abd1c49320de2b0481389079d00197cce5df1f0605",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "business-plan-generator",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/BusinessPlanGeneratorClient.tsx",
+      "sourceSha256": "a25e831178651b2cdd0e26fa64a84b29fe4d9c8cdb6c71e12d4df2a96f7b02c4",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "font-to-png",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/FontToPngClient.tsx",
+      "sourceSha256": "cf01c8b3bb1b691a846afd3fac9365c2bffe66dc029bc5e890e37e77c12614ca",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "press-release-generator",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/PressReleaseGeneratorClient.tsx",
+      "sourceSha256": "a26ed83244b8a83cdcf2afd2f48825e2737af04e0fc0472b90ff5fd4214c6f04",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "unicode-escape-encoder",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/UnicodeEscapeEncoderClient.tsx",
+      "sourceSha256": "f7536956f4be1badf07a6e44b142fecf55a7832cea31a039b606216d68533d84",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "remove-extra-spaces",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/RemoveExtraSpacesClient.tsx",
+      "sourceSha256": "0a244d346df7c86fb8f6d2da7af0e10ee812614731bfab43518cdc2d15811550",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "random-choice-wheel",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/RandomChoiceWheelClient.tsx",
+      "sourceSha256": "28887b1c28f77cf638f3b4dba36f4cba5945f9180fc71c7ad493e7e75581c4e2",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "image-shadow-generator",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/ImageShadowGeneratorClient.tsx",
+      "sourceSha256": "7b320dc0edec7127194a16b8b3c1ec0fe666995786074f6dbf3f356232e99664",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "hmac-generator",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/HmacGeneratorClient.tsx",
+      "sourceSha256": "3ec583d8b34b8d27fb0d2fdfb50c7f9c177b29c3b64e83e0469b821120a64df5",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "secure-random-generator",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/SecureRandomGeneratorClient.tsx",
+      "sourceSha256": "eac5eb78ce94e37ec442c8fdfa9a0d2b1fde45c49e2654aa0bb08afc438c6feb",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "css-naming-convention",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/CssNamingConventionClient.tsx",
+      "sourceSha256": "babec1e895980e8d28296d02bdf6cbb7a71ce2cfc5e8ad88846e39e2043550c8",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "random-pin-generator",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/RandomPinGeneratorClient.tsx",
+      "sourceSha256": "a7156180ed402c2bfdd8f3f6a109b16c82f031a888efe3b9faf7cd948abeac33",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "uuid-comparator",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/UUIDComparatorClient.tsx",
+      "sourceSha256": "58436da9b868f4332094365146b2cc4b9e81dba2d4e146d75a97872d722216ca",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "token-builder",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/TokenBuilderClient.tsx",
+      "sourceSha256": "85dc8c145d938128375f466f7cde3834407bc55f1d95be9b9214b7d058846148",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "image-scale-calculator",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/ImageScaleCalculatorClient.tsx",
+      "sourceSha256": "fd9be0d314d561dbad3d3ffb48cb905b7c634b7fb0d073f564cf7d96d1632113",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "http-headers-inspector",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/HttpHeadersInspectorClient.tsx",
+      "sourceSha256": "ac8f19a82e72f3a9a15a66a9f39c1baf6176f9f34b4bfb8dc505b72ebbcdb868",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "headline-analyzer",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/HeadlineAnalyzerClient.tsx",
+      "sourceSha256": "c12a73389fcfb9598b7a234af7d4a23ec1b3cda9fc4b399628d2d287d4396fd6",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "text-structure-validator",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/TextStructureValidatorClient.tsx",
+      "sourceSha256": "9a0d217f15786cc0d4fcd280525c22fdeb5ad1e557956e2e033090db7bb38fd1",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "uuid-compare",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/UUIDCompareClient.tsx",
+      "sourceSha256": "f783d6d872749adccc702213b36a640afd647e54b86506f3d937beeefd179ce6",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "frequency-converter",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/FrequencyConverterClient.tsx",
+      "sourceSha256": "259fa6fe4b7482da71e51d1ac967a937a75200bfe54f155fcef94d8d7927fef2",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "force-converter",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/ForceConverterClient.tsx",
+      "sourceSha256": "725ad17217eb0afe47b05ca04c2157ecc4b257b950b9ba7d6a0a10b62287a494",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "random-color-generator",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/RandomColorGeneratorClient.tsx",
+      "sourceSha256": "b04031b9d8e2349a3e299b42f620418ffe0c93d3af0cff9c7451e1fe54af6e72",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "time-duration-calculator",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/TimeDurationCalculatorClient.tsx",
+      "sourceSha256": "fe86b3e58c23e74515b106d8122eb6174c16c8be319d2b8d2c0555203bc90c8f",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "timestamp-diff-calculator",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/TimestampDiffCalculatorClient.tsx",
+      "sourceSha256": "01e1328a513701aad268c045f0fe4d9276bfa52cd8c9d0d1fac56bc75edd66f6",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "pixel-density-calculator",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/PixelDensityCalculatorClient.tsx",
+      "sourceSha256": "8d606528b27a22c0acd9bb6c46bcf8e1500b5761998f63b8d81822e7e24bc7a3",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "html-to-plain-text",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/HtmlToPlainTextClient.tsx",
+      "sourceSha256": "4fa6f3fdc3c4323a9ab1876df82ecfd516df1eaea875d56ad64c8ceecaa7c236",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "text-complexity-analyzer",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/TextComplexityAnalyzerClient.tsx",
+      "sourceSha256": "f2a5a3cf0aa1f2fb32cd8440d2ae5fe8dcebfee803ec6d72c0fad7e78a9a85de",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "text-deduplicator",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/TextDeduplicatorClient.tsx",
+      "sourceSha256": "c662f8ef9ac1a41eaee523c5202ebfee9c50335da7611ecc00b59a051e1ec3ba",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "slug-health-checker",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/SlugHealthCheckerClient.tsx",
+      "sourceSha256": "589de81592f788bed3f016159a6eb995735b29904aaf07269529d3840a36830a",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "text-sentence-shuffler",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/TextSentenceShufflerClient.tsx",
+      "sourceSha256": "fcc7412df4fb34b1141e9ee0db820cc148f73656d563feef6db4d6d6b5593786",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "regex-pattern-builder",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/RegexPatternBuilderClient.tsx",
+      "sourceSha256": "8481580b9c3288ae3d6eb7dd4089dc5fb2ce53f4752db978173ea5465fef98a2",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "css-animation-generator",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/CssAnimationGeneratorClient.tsx",
+      "sourceSha256": "d26eaf6bc98a23953b4f01e942ed7573d1275ac523582eaebb680bfc2739807c",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "scientific-notation-converter",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/ScientificNotationConverterClient.tsx",
+      "sourceSha256": "0ec9039bcb3d05b85aa667048bf08a6bf12af850bdfbe618646fe34678dbcd96",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "css-cursor-generator",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/CssCursorGeneratorClient.tsx",
+      "sourceSha256": "3139823d783ee5bd11fdccd147d0d63b1efd91f1f5fdfb52fb0bd8fd922d87e5",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "http-status-checker",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/HttpStatusCheckerClient.tsx",
+      "sourceSha256": "c10ac3397139b8e5424a17aadb0e3c736ba4ff8637feec16618fb6d595822802",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "random-choice-picker",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/RandomChoicePickerClient.tsx",
+      "sourceSha256": "63673fc9c06e6441a81f38027f604061ce80ce3458c584d86c1f3fa6aa5bb721",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "list-difference-finder",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/ListDifferenceFinderClient.tsx",
+      "sourceSha256": "f4471b617f5ef3df4052159324d9bbe168aa3682d676cfea18014c2c048d068b",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "regex-escape",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/RegexEscapeClient.tsx",
+      "sourceSha256": "34f79d30eb4436c2f0f38638c2ed79fb91e16a8ed4865d36774f0f1dd6ec21dd",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "what-if-scenario-calculator",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/WhatIfScenarioCalculatorClient.tsx",
+      "sourceSha256": "8191251ec1e046584d09a7d12b44323011c8b63333c2efdb8613d4986dc5274b",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "word-finder",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/WordFinderClient.tsx",
+      "sourceSha256": "acdac67f6859e254ac92f126c6653bf078b2f39bf60f86b6c2b41c90854afb2a",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "shell-command-generator",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/BashCommandGeneratorClient.tsx",
+      "sourceSha256": "f5b87cc1fba774169542cf9e7c5c2725d376f39cfd7e85e48d9f3c1086910777",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "sentence-extractor",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/SentenceExtractorClient.tsx",
+      "sourceSha256": "73a0d5deed718bcd2ca6555c366a5915b5b22c3e9fb84cdc37be094633af189f",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "hex-to-decimal-converter",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/HexToDecimalConverterClient.tsx",
+      "sourceSha256": "6cf219861879956e09da6db470dac00114ff830d7db2081dc46b0ef8cbd05d91",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "paragraph-generator",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/RandomParagraphGeneratorClient.tsx",
+      "sourceSha256": "f9dac908091128e84a8b2c6e97e4d56339c30d0c2f7e013915e280bfc17e92c8",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    },
+    {
+      "slug": "random-id-generator",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/RandomIdGeneratorClient.tsx",
+      "sourceSha256": "a0ecaa9e2e2fd390c7c72abc97019c49b3faed1eed45bb2a01df38155fb407bb",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed",
+          "scopedFinal": "passed"
+        },
+        "chrome-375": {
+          "full": "passed",
+          "scopedFinal": "passed"
+        },
+        "webkit-1440": {
+          "full": "failed",
+          "scopedFinal": "passed"
+        },
+        "webkit-375": {
+          "full": "passed",
+          "scopedFinal": "passed"
+        }
+      }
+    },
+    {
+      "slug": "jwt-token-inspector",
+      "decision": "reviewed",
+      "rationale": "Four public cases passed; Stage 1 source and content audit records a distinct task, worked example and limitation.",
+      "source": "components/tools/JwtTokenInspectorClient.tsx",
+      "sourceSha256": "91a967bebebea7f2326a955dde1d25df7a89325dde9aabdbb3e06907253873c7",
+      "cases": {
+        "chrome-1440": {
+          "full": "passed"
+        },
+        "chrome-375": {
+          "full": "passed"
+        },
+        "webkit-1440": {
+          "full": "passed"
+        },
+        "webkit-375": {
+          "full": "passed"
+        }
+      }
+    }
+  ]
+}
