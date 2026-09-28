@@ -1,3 +1,4 @@
+import { clickWhenSettled } from '../helpers/settled-click.mjs';
 import { base64RoundTrips, binaryRoundTrips } from '../regressions/misc-review.mjs';
 import { createHash, createHmac, createPrivateKey, createPublicKey } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
@@ -34,7 +35,7 @@ add('url-encode url-encoder',async({tool,expect,check})=>{
 });
 add('base64-encoder-decoder',async({tool,expect,check})=>{
  await examples(tool);await expect(pre(tool)).toHaveText('w6nwn5iA');
- await tool.getByRole('tab',{name:'Decode',exact:true}).click();await fill(tool,'Input','w6nwn5iA');await expect(pre(tool)).toHaveText('é😀');
+ await clickWhenSettled(tool.getByRole('tab',{name:'Decode',exact:true}));await fill(tool,'Input','w6nwn5iA');await expect(pre(tool)).toHaveText('é😀');
  await fill(tool,'Input','/w==');await expect(tool.getByRole('alert')).toBeVisible();check(true,'Base64 known UTF-8 vector and invalid UTF-8 rejection');
 });
 add('html-encoder-decoder html-attribute-encoder',async({tool,expect,check})=>{

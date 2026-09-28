@@ -265,7 +265,7 @@ export default function ChartMakerClient() {
     link.click();
   };
 
-  return (<UtilityDesignLayout>
+  return (<UtilityDesignLayout inset>
     <div>
       {error && <p role="alert">{error}</p>}
       <p>Charts support non-negative values; a pie needs a positive total.</p>

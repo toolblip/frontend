@@ -4,45 +4,43 @@ import ToolExampleClearActions from './ToolExampleClearActions';
 
 import { useState, useRef, useEffect } from 'react';
 
-interface Definition { definition: string; example?: string; synonyms: string[]; antonyms: string[]; }
-interface Meaning { partOfSpeech: string; definitions: Definition[]; synonyms: string[]; antonyms: string[]; }
-interface Phonetic { text?: string; audio?: string; }
-interface Entry { word: string; phonetic?: string; phonetics: Phonetic[]; meanings: Meaning[]; }
+import { fetchDictionary, DICTIONARY_PROVIDER, DICTIONARY_LICENSE, type DictionaryResult } from '@/lib/utility-design/dictionary';
 
 const EXAMPLE = 'eloquent';
 
+export function DictionaryAttribution({ sourceUrl }: { sourceUrl?: string }) {
+  return (
+      <p style={{ fontSize: 12, marginTop: 10 }}>
+        Definitions from <a href={DICTIONARY_PROVIDER} target="_blank" rel="noopener noreferrer">FreeDictionaryAPI.com</a> and Wiktionary,
+        {' '}licensed under <a href={DICTIONARY_LICENSE} target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a>. Pronunciation is shown as IPA; audio is not provided.
+        {sourceUrl && <> <a href={sourceUrl} target="_blank" rel="noopener noreferrer">Original Wiktionary entry</a>.</>}
+      </p>
+  );
+}
+
 export default function EnglishDictionaryClient() {
   const request = useRef<AbortController|null>(null);
-  useEffect(() => () => request.current?.abort(), []);
+  useEffect(() => () => { request.current?.abort(); request.current = null; }, []);
   const [word, setWord] = useState('');
-  const [entries, setEntries] = useState<Entry[] | null>(null);
+  const [result, setResult] = useState<DictionaryResult | null>(null);
+  const entries = result?.entries;
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   const lookup = async (target?: string) => {
     const q = (target ?? word).trim();
-    request.current?.abort();
-    if (!q || q.length > 100) { setEntries(null); setError('Enter a word up to 100 characters.'); return; }
+    request.current?.abort(); request.current = null;
+    if (!q || q.length > 100) { setLoading(false); setResult(null); setError('Enter a word up to 100 characters.'); return; }
     const controller = new AbortController(); request.current = controller;
     const timeout = setTimeout(() => controller.abort(), 30000);
     setLoading(true);
     setError('');
-    setEntries(null);
+    setResult(null);
     try {
-      const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(q)}`, { signal: controller.signal });
-      if(request.current !== controller) return;
-      if (res.status === 404) {
-        setError(`No definitions found for "${q}".`);
-        return;
-      }
-      if (!res.ok) {
-        setError('Lookup failed. Please try again.');
-        return;
-      }
-      const data = await res.json();
-      if(request.current !== controller) return;
-      if(!Array.isArray(data) || !data.every(e => Array.isArray(e.meanings) && Array.isArray(e.phonetics))) throw new Error('Invalid dictionary response');
-      setEntries(data as Entry[]);
+      const data = await fetchDictionary(q, controller.signal);
+      if (request.current !== controller || controller.signal.aborted) return;
+      if (!data) { setError(`No definitions found for "${q}".`); return; }
+      setResult(data);
     } catch {
       if(request.current === controller) setError('Lookup unavailable or timed out. Try again.');
     } finally {
@@ -56,24 +54,18 @@ export default function EnglishDictionaryClient() {
     lookup(EXAMPLE);
   };
 
-  const playAudio = (url: string) => {
-    if (!url) return;
-    const audioUrl = url.startsWith('http') ? url : `https:${url}`;
-    new Audio(audioUrl).play().catch(() => {});
-  };
-
   return (<UtilityDesignLayout>
     <div>
-      <ToolExampleClearActions onExample={() => { loadExample(); }} onClear={() => { request.current?.abort(); request.current=null; setWord(''); setEntries(null); setLoading(false); setError(''); }}/>
+      <ToolExampleClearActions onExample={() => { loadExample(); }} onClear={() => { request.current?.abort(); request.current=null; setWord(''); setResult(null); setLoading(false); setError(''); }}/>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Word</span>
 
       </div>
       <div style={{ display: 'flex', gap: 8 }}>
-        <input maxLength={100000} aria-label="Word"
+        <input maxLength={100} aria-label="Word"
           type="text"
           value={word}
-          onChange={e => { request.current?.abort(); request.current=null; setLoading(false); setEntries(null); setError(''); setWord(e.target.value); }}
+          onChange={e => { request.current?.abort(); request.current=null; setLoading(false); setResult(null); setError(''); setWord(e.target.value); }}
           onKeyDown={e => { if (e.key === 'Enter') lookup(); }}
           placeholder="Type a word to look up..."
           className="tb-v2-input"
@@ -83,22 +75,21 @@ export default function EnglishDictionaryClient() {
         </button>
       </div>
 
+      <DictionaryAttribution sourceUrl={result?.sourceUrl} />
+
       <div className="tb-v2-tool-output-head">
         <span className="tb-v2-tool-label">Definition</span>
       </div>
       <div className="tb-v2-tool-output-body">
         {error && <div className="tb-v2-banner-err">{error}</div>}
         {!error && !entries && !loading && (
-          <p className="tb-v2-empty">Look up a word to see its definitions, synonyms, and pronunciation.</p>
+          <p className="tb-v2-empty">Look up a word to see its definitions, synonyms, and IPA pronunciation.</p>
         )}
         {entries && entries.map((entry, ei) => (
           <div key={ei} style={{ marginBottom: 16 }}>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, flexWrap: 'wrap' }}>
               <span style={{ fontSize: 20, fontWeight: 700 }}>{entry.word}</span>
-              {entry.phonetic && <span style={{ fontFamily: 'var(--f-mono)', color: 'var(--fg-2)' }}>{entry.phonetic}</span>}
-              {entry.phonetics.filter(p => p.audio).slice(0, 1).map((p, pi) => (
-                <button key={pi} type="button" onClick={() => playAudio(p.audio as string)} className="tb-v2-btn-sm">Play</button>
-              ))}
+              {entry.phonetics.length > 0 && <span aria-label="IPA pronunciation" style={{ fontFamily: 'var(--f-mono)', color: 'var(--fg-2)' }}>{entry.phonetics.join(' · ')}</span>}
             </div>
             {entry.meanings.map((m, mi) => (
               <div key={mi} style={{ marginTop: 10 }}>

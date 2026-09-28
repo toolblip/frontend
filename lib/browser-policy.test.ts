@@ -68,10 +68,10 @@ describe('per-tool browser policy', () => {
       .toEqual({ ...base, 'connect-src': `${base['connect-src']} wss:` });
   });
 
-  it('allows dictionary definitions and pronunciation audio only on the dictionary route', async () => {
+  it('allows the dictionary provider only on the dictionary route without remote audio', async () => {
     const base = directives((await headers('/'))['Content-Security-Policy']);
     expect(directives((await headers('/tools/english-dictionary'))['Content-Security-Policy']))
-      .toEqual({ ...base, 'connect-src': `${base['connect-src']} https://api.dictionaryapi.dev`, 'media-src': "'self' https://api.dictionaryapi.dev" });
+      .toEqual({ ...base, 'connect-src': `${base['connect-src']} https://freedictionaryapi.com` });
   });
 
   it('allows decoded blob audio/video only on media-processing routes', async () => {

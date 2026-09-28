@@ -1,19 +1,18 @@
-import { expect, it } from 'vitest';
+import { beforeAll, expect, it } from 'vitest';
 import { Worker as NodeWorker } from 'node:worker_threads';
-import { readFileSync } from 'node:fs';
-import ts from 'typescript';
+import { bundleWorkers } from '../../scripts/build-browser-workers.mjs';
+let bundledSource = '';
+beforeAll(async () => { bundledSource = (await bundleWorkers(['schema']))[0].contents; });
 import { runSchemaWorker, type SchemaResult } from './schema-worker-client';
 
 // Execute the production worker handler in a real isolated thread without a browser/server.
 function worker() {
-    const source = ['core.ts', 'schema.ts', 'schema.worker.ts'].map(file =>
-        readFileSync(new URL(file, import.meta.url), 'utf8').replace(/^import .*;\n/gm, '').replace(/^export /gm, '')
-    ).join('\n');
-    const js = ts.transpileModule(source, { compilerOptions: { target: ts.ScriptTarget.ES2020, module: ts.ModuleKind.CommonJS } }).outputText;
     const thread = new NodeWorker(`const {parentPort} = require('node:worker_threads');
-        const self = {postMessage: data => parentPort.postMessage(data)};
-        ${js}
-        parentPort.on('message', data => self.onmessage({data}));`, { eval: true });
+        const vm = require('node:vm');
+        const scope = {console, TextEncoder, TextDecoder, URL};
+        scope.self = scope; scope.postMessage = data => parentPort.postMessage(data);
+        vm.runInNewContext(${JSON.stringify(bundledSource)}, scope);
+        parentPort.on('message', data => scope.onmessage({data}));`, { eval: true });
     let terminated = false;
     const adapter = {
         onmessage: null as ((event: { data: SchemaResult }) => void) | null,

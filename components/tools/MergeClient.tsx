@@ -44,6 +44,7 @@ export default function MergeClient() {
   const [isDragging, setIsDragging] = useState(false);
   const [loading, setLoading] = useState(false);
   const [draggingIndex, setDraggingIndex] = useState<number | null>(null);
+  const draggingIndexRef = useRef<number | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const loadVersionRef = useRef(0);
 
@@ -151,8 +152,10 @@ export default function MergeClient() {
   };
 
   const handleDropOnFile = (targetIndex: number) => {
-    if (draggingIndex === null || draggingIndex === targetIndex) return;
-    moveFile(draggingIndex, targetIndex);
+    const sourceIndex = draggingIndexRef.current;
+    if (sourceIndex === null || sourceIndex === targetIndex) return;
+    moveFile(sourceIndex, targetIndex);
+    draggingIndexRef.current = null;
     setDraggingIndex(null);
   };
 
@@ -223,7 +226,7 @@ export default function MergeClient() {
           <p className="tb-pdf-merge-instruction">Drag and drop the cards to set the merge order.</p>
           <div className="tb-pdf-merge-file-list">
             {files.map((entry, index) => (
-              <div className={`tb-pdf-merge-file ${draggingIndex === index ? 'dragging' : ''}`} key={`${entry.file.name}-${index}`} draggable onDragStart={() => setDraggingIndex(index)} onDragOver={event => event.preventDefault()} onDrop={() => handleDropOnFile(index)} onDragEnd={() => setDraggingIndex(null)}>
+              <div className={`tb-pdf-merge-file ${draggingIndex === index ? 'dragging' : ''}`} key={`${entry.file.name}-${index}`} draggable onDragStart={() => { draggingIndexRef.current = index; setDraggingIndex(index); }} onDragOver={event => event.preventDefault()} onDrop={event => { event.preventDefault(); handleDropOnFile(index); }} onDragEnd={() => { draggingIndexRef.current = null; setDraggingIndex(null); }}>
                 <span className="tb-pdf-merge-drag-handle" aria-hidden="true">⠿</span>
                 <span className="tb-pdf-merge-order">{index + 1}</span>
                 <div className="tb-pdf-merge-thumbnail">

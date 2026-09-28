@@ -1,0 +1,88 @@
+name: Hosted macOS production media QA
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/tool-qa-macos.yml'
+      - 'scripts/qa/cloud/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  deployments: read
+
+concurrency:
+  group: hosted-macos-media-qa-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  production-media:
+    runs-on: macos-15-intel
+    timeout-minutes: 35
+    env:
+      QA_ENGINE: webkit
+      QA_GROUP: media-conversion
+    steps:
+      # actions/checkout credential cleanup runs submodule foreach, which fails
+      # on this repository's preexisting api/mcp gitlinks without .gitmodules.
+      # The repository is public: anonymous fetch needs no checkout credentials.
+      - name: Checkout reviewed workflow without submodule traversal
+        env:
+          QA_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/tool-qa"
+          printf '{"runId":"%s","attempt":"%s","reviewedHead":"%s"}\n' "$GITHUB_RUN_ID" "$GITHUB_RUN_ATTEMPT" "$QA_HEAD" > "$RUNNER_TEMP/tool-qa/bootstrap.json"
+          git init .
+          git remote add origin https://github.com/toolblip/frontend.git
+          GIT_TERMINAL_PROMPT=0 GIT_CONFIG_NOSYSTEM=1 GIT_CONFIG_GLOBAL=/dev/null git fetch --no-tags origin "$QA_HEAD"
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$QA_HEAD"
+          if git config --local --name-only --get-regexp 'extraheader|credential|sshcommand'; then
+            echo 'Unexpected persisted authentication configuration' >&2
+            exit 1
+          fi
+      - name: Preserve cloud launcher and inventory outside source checkout
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/tool-qa/cloud"
+          cp scripts/qa/cloud/* "$RUNNER_TEMP/tool-qa/cloud/"
+          cp .github/workflows/tool-qa-macos.yml "$RUNNER_TEMP/tool-qa/workflow.yml"
+          echo "QA_WORKFLOW_REVISION=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+          SOURCE=$(node -p "require('./scripts/qa/cloud/pilot.json').source")
+          git checkout --detach "$SOURCE"
+          test -z "$(git status --porcelain --untracked-files=no)"
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install pinned source dependencies
+        run: npm ci
+      - name: Install official WebKit and output inspection tools
+        run: |
+          npx --no-install playwright install webkit
+          command -v ffmpeg >/dev/null || brew install ffmpeg
+          command -v pdfinfo >/dev/null || brew install poppler
+      - name: Audit production with deployment checks before and after
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node "$RUNNER_TEMP/tool-qa/cloud/run.mjs" "$GITHUB_WORKSPACE" "$RUNNER_TEMP/tool-qa" "$QA_ENGINE" "$QA_GROUP"
+      - name: Upload all provenance, reports, downloads and screenshots
+        if: always()
+        id: artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: production-media-conversion-webkit-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/tool-qa/
+          if-no-files-found: error
+          retention-days: 14
+      - name: Record immutable artifact identity
+        if: always() && steps.artifact.outcome == 'success'
+        env:
+          ARTIFACT_ID: ${{ steps.artifact.outputs.artifact-id }}
+          ARTIFACT_DIGEST: ${{ steps.artifact.outputs.artifact-digest }}
+          ARTIFACT_URL: ${{ steps.artifact.outputs.artifact-url }}
+        run: |
+          printf 'Artifact ID: %s\nDigest: %s\nURL: %s\n' "$ARTIFACT_ID" "$ARTIFACT_DIGEST" "$ARTIFACT_URL" >> "$GITHUB_STEP_SUMMARY"

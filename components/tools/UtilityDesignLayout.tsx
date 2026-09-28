@@ -1,8 +1,8 @@
 'use client';
 import type { ReactNode } from 'react';
 /** Group-local responsive rules; shared primitives and other groups are untouched. */
-export default function UtilityDesignLayout({ children }: { children: ReactNode }) {
-  return <div className="utility-design-layout">{children}<style>{`
+export default function UtilityDesignLayout({ children, inset = false }: { children: ReactNode; inset?: boolean }) {
+  return <div className="utility-design-layout" style={inset ? { padding: 16 } : undefined}>{children}<style>{`
     .utility-design-layout { min-width:0; max-width:100%; overflow-wrap:anywhere; }
     .utility-design-layout * { box-sizing:border-box; min-width:0; }
     .utility-design-layout input:not([type=checkbox]):not([type=radio]), .utility-design-layout select, .utility-design-layout textarea { max-width:100%; }

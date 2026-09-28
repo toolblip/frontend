@@ -74,14 +74,28 @@ add('speech-to-text',async c=>{const {tool:t,page,expect,check}=c;
  } finally { await fixturePage.close(); }
  check(false,'Human review required: speak known words into a real microphone and verify the actual recognized transcript; mocked lifecycle events do not establish recognition accuracy.');
 });
-add('sticky-notes',async({tool:t,page,expect,check})=>{await example(t);await expect(t.getByText('Example: review the project checklist.',{exact:true})).toBeVisible();await page.reload();await expect(t.getByText('Example: review the project checklist.',{exact:true})).toBeVisible();await clear(t);await page.reload();await expect(t.getByText('Example: review the project checklist.',{exact:true})).toHaveCount(0);check(true,'Notes persist across reload and Clear removes persisted content');});
+add('sticky-notes',async({tool:t,page,expect,check})=>{
+ await example(t);
+ await expect(t.getByText('Example: review the project checklist.',{exact:true})).toBeVisible();
+ await page.waitForFunction(() => JSON.parse(localStorage.getItem('sticky-notes') || '[]').some(note => note.content === 'Example: review the project checklist.'));
+ const freshPage=await page.context().newPage();
+ try {
+  await freshPage.goto(page.url(),{waitUntil:'domcontentloaded'});
+  const freshTool=freshPage.locator('.tb-v2-tool-card').first();
+  await expect(freshTool.getByText('Example: review the project checklist.',{exact:true})).toBeVisible();
+  await clear(freshTool);
+  await expect(freshTool.getByText('Example: review the project checklist.',{exact:true})).toHaveCount(0);
+  await freshPage.waitForFunction(() => JSON.parse(localStorage.getItem('sticky-notes') || '[]').length === 0);
+ } finally { await freshPage.close(); }
+ check(true,'Notes persist in a fresh page and Clear removes persisted content');
+});
 add('css-grid-generator',async({tool:t,expect,check})=>{await click(t,'Card Grid');await expect(t.locator('pre').first()).toContainText('grid-template-rows: auto;');await fill(t,'Columns','2');await fill(t,'Rows','3');await expect(t.locator('pre').first()).toContainText('grid-template-columns: repeat(2, 1fr);');await expect(t.locator('pre').last()).toContainText('Item 6');await clear(t);await expect(t.locator('pre').first()).toContainText('gap: 0px;');check(true,'Auto row preset and 2×3 CSS/HTML output agree');});
 add('css-flexbox-generator',async({tool:t,expect,check})=>{await example(t);await expect(t.locator('pre')).toContainText('justify-content: space-between;');await t.getByLabel('Direction').selectOption('column');await expect(t.locator('pre')).toContainText('flex-direction: column;');await clear(t);await expect(t.locator('pre')).toContainText('gap: 0px;');check(true,'Flexbox direction, spacing and reset reach exported CSS');});
 add('word-cloud-generator',async c=>{const {tool:t,expect,check}=c;await fill(t,'Input','apple apple banana');await click(t,'Generate Word Cloud');const vals=await t.locator('.tb-v2-stat-pill-val').allTextContents();check(vals[0]==='3'&&vals[1]==='2','Word cloud counts three filtered words and two unique words');await png(c,'Download PNG',[760,440]);await fill(t,'Input','pear');await expect(t.getByRole('button',{name:'Download PNG'})).toBeDisabled();await clear(t);await expect(t.getByLabel('Input')).toHaveValue('');});
 add('english-dictionary',async c=>{const {page,tool:t,expect,check}=c;
  // Only a controlled failure is intercepted. Live definitions are not fabricated.
- let intercepted=false;await page.route('https://api.dictionaryapi.dev/**',r=>{intercepted=true;return c.abortExpectedRequest(r, 'Intentional dictionary lookup failure verifies error and recovery');});await fill(t,'Word','hello');await click(t,/Look Up|Search|Lookup/i);await expect(t.getByText('Lookup unavailable or timed out. Try again.')).toBeVisible();await clear(t);await expect(t.getByLabel('Word')).toHaveValue('');check(true,`Lookup failure is visible and Clear resets it; network interception observed=${intercepted} (false means browser policy/network blocked before interception)`);await page.unroute('https://api.dictionaryapi.dev/**');
- await example(t);await expect(t.getByText('eloquent',{exact:true}).first()).toBeVisible({timeout:35000});check(true,'Live dictionary endpoint returned the requested word; no mocked success');
+ let intercepted=false;await page.route('https://freedictionaryapi.com/api/v1/entries/en/**',r=>{intercepted=true;return c.abortExpectedRequest(r, 'Intentional dictionary lookup failure verifies error and recovery');});await fill(t,'Word','hello');await click(t,/Look Up|Search|Lookup/i);await expect(t.getByText('Lookup unavailable or timed out. Try again.')).toBeVisible();await clear(t);await expect(t.getByLabel('Word')).toHaveValue('');check(intercepted,'The intended dictionary provider request was aborted; the visible failure and Clear recovery both passed');await page.unroute('https://freedictionaryapi.com/api/v1/entries/en/**');
+ await example(t);await expect(t.getByText('eloquent',{exact:true}).first()).toBeVisible({timeout:35000});await expect.poll(()=>t.locator('ol li').first().evaluate(element=>Array.from(element.childNodes).filter(node=>node.nodeType===Node.TEXT_NODE).map(node=>node.textContent).join('').trim())).toBe('Fluently persuasive and articulate.');await expect(t.getByLabel('IPA pronunciation')).toContainText('kw');await expect(t.getByText('well-spoken',{exact:true})).toBeVisible();await expect(t.getByRole('link',{name:'FreeDictionaryAPI.com',exact:true})).toHaveAttribute('href','https://freedictionaryapi.com');await expect(t.getByRole('link',{name:'Original Wiktionary entry',exact:true})).toHaveAttribute('href','https://en.wiktionary.org/wiki/eloquent');await expect(t.getByRole('link',{name:'CC BY-SA 4.0',exact:true})).toHaveAttribute('href','https://creativecommons.org/licenses/by-sa/4.0/');await expect(t.getByRole('button',{name:'Play',exact:true})).toHaveCount(0);check(true,'Live dictionary returns the exact eloquent definition, IPA and synonym, with original-source/provider/license attribution and no fabricated audio');
 });
 add('text-to-speech',async c=>{const {page,tool:t,expect,check}=c;const native=await probeNativeSpeech(c,'synthesis');const available=native.supported;if(!available)await expect(t.getByRole('status')).toContainText('not supported');check(true,available?'Synthesis API present; audible output remains unverified':'Observed unsupported synthesis state');
  const fixturePage=await page.context().newPage(); const fixtureTool=fixturePage.locator('.tb-v2-tool-card').first();
@@ -91,7 +105,38 @@ add('text-to-speech',async c=>{const {page,tool:t,expect,check}=c;const native=a
  check(false,'Human review required: listen to actual synthesized audio and verify it matches the entered text; mocked lifecycle events do not establish audible output.');
 });
 add('collocations-checker',async({tool:t,expect,check})=>{await fill(t,'Text','make a decision and take into account');await click(t,'Check Collocations');await expect(output(t)).toContainText('make a decision');await expect(output(t)).toContainText('take into account');await fill(t,'Text','make');await click(t,'Check Collocations');await expect(t.getByText('make a decision',{exact:true})).toHaveCount(0);await clear(t);check(true,'Complete phrase matching supports four words and does not invent a phrase for make');});
-add('automation-wizard',async({tool:t,page,expect,check})=>{await page.context().grantPermissions(page.context().browser()?.browserType().name()==='webkit'?['clipboard-read']:['clipboard-read','clipboard-write']);await example(t);await click(t,'Copy YAML');await expect.poll(()=>page.evaluate(()=>navigator.clipboard.readText())).toContain('Daily report');const parsed=yamlLoad(await page.evaluate(()=>navigator.clipboard.readText()));check(parsed.trigger.name==='Daily report'&&parsed.trigger.config.interval==='daily'&&parsed.trigger.config.time==='09:00','YAML retains workflow name and all configured schedule fields');await clear(t);await expect(t.getByRole('button',{name:'Copy YAML'})).toHaveCount(0);});
+add('automation-wizard',async({tool:t,page,expect,check})=>{
+ const webkit=page.context().browser()?.browserType().name()==='webkit';
+ if(!webkit){
+  const capabilities=()=>page.evaluate(async()=>{
+   const state={origin:location.origin,secureContext:isSecureContext,focused:document.hasFocus(),permissions:{},policy:{}};
+   for(const name of ['clipboard-read','clipboard-write']){
+    try{state.permissions[name]=(await navigator.permissions.query({name})).state;}catch(error){state.permissions[name]=`unavailable: ${error.name}`;}
+    try{state.policy[name]=(document.permissionsPolicy||document.featurePolicy)?.allowsFeature(name)??null;}catch{state.policy[name]=null;}
+   }
+   return state;
+  });
+  const before=await capabilities();
+  await page.context().grantPermissions(['clipboard-read','clipboard-write'],{origin:new URL(page.url()).origin});
+  const after=await capabilities();
+  check(true,`[diagnostic] Clipboard capability state before/after exact-origin grant: ${JSON.stringify({before,after})}`);
+ }
+ await example(t);await click(t,'Copy YAML');let copied;
+ if(webkit){
+  // Exercise the real clipboard through a user paste; WebKit's readText API can
+  // reject permission even after a successful user-triggered write.
+  const probe=await page.evaluateHandle(()=>{const element=document.createElement('textarea');element.setAttribute('aria-label','QA clipboard paste target');document.body.append(element);element.focus();return element;});
+  try{
+   await page.keyboard.press(process.platform==='darwin'?'Meta+V':'Control+V');
+   await expect.poll(()=>probe.evaluate(element=>element.value)).toContain('Daily report');
+   copied=await probe.evaluate(element=>element.value);
+  }finally{await probe.evaluate(element=>element.remove());await probe.dispose();}
+ }else{
+  await expect.poll(()=>page.evaluate(()=>navigator.clipboard.readText())).toContain('Daily report');
+  copied=await page.evaluate(()=>navigator.clipboard.readText());
+ }
+ const parsed=yamlLoad(copied);check(parsed.trigger.name==='Daily report'&&parsed.trigger.config.interval==='daily'&&parsed.trigger.config.time==='09:00','YAML retains workflow name and all configured schedule fields');await clear(t);await expect(t.getByRole('button',{name:'Copy YAML'})).toHaveCount(0);
+});
 add('bill-sale-generator',async c=>{await example(c.tool);await click(c.tool,'Generate Bill of Sale');const b=await download(c,'Download TXT');const txt=b.toString();c.check(txt.includes('Alex Seller')&&txt.includes('Sam Buyer')&&txt.includes('B-101')&&txt.includes('210.00'),'Bill of sale download includes supplied parties, item and price plus tax');await fill(c.tool,'Sale Price ($)','-1');await click(c.tool,'Generate Bill of Sale');await c.expect(c.tool.getByRole('alert')).toBeVisible();await clear(c.tool);await c.expect(c.tool.getByRole('button',{name:'Download TXT'})).toHaveCount(0);});
 add('business-plan-generator',async({tool:t,expect,check,page})=>{await fill(t,'Business idea','Bicycle repair studio');await fill(t,'Target market','local commuters');await t.getByLabel('Budget level').selectOption('low');await click(t,'Generate Business Plan');await expect(output(t)).toContainText('Bicycle repair studio');await expect(output(t)).toContainText('local commuters');await expect(output(t)).toContainText('low budget');await expect(output(t)).not.toContainText('50% revenue increase');await page.evaluate(()=>Object.defineProperty(navigator.clipboard,'writeText',{configurable:true,value:async value=>{window.__businessPlanCopy=value;}}));await click(t,'Copy All');await expect.poll(()=>page.evaluate(()=>window.__businessPlanCopy)).toContain('Bicycle repair studio');check((await page.evaluate(()=>window.__businessPlanCopy)).includes('local commuters'),'Copy All puts the generated idea and target market on the clipboard');await clear(t);await expect(t.getByLabel('Business idea')).toHaveValue('');check(true,'Outline reflects all supplied inputs and does not fabricate financial projections');});
 add('chart-maker',async c=>{await example(c.tool);await click(c.tool,'Pie');await png(c,'Download Chart');await c.expect(c.tool.getByText('Q1: 10',{exact:true})).toBeVisible();await c.expect(c.tool.getByText('Q2: 20',{exact:true})).toBeVisible();await clear(c.tool);await c.expect(c.tool.getByLabel('Chart title')).toHaveValue('');c.check(true,'Pie PNG decodes and current data labels are present; Clear removes dataset');});

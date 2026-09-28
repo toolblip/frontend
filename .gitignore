@@ -67,3 +67,7 @@ api/
 # Secrets (never commit)
 .secrets/
 .env
+
+# Generated direct browser-worker bundles and typed URL map
+/public/generated-workers/
+/lib/generated/browser-worker-urls.ts

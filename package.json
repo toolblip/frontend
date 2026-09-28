@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "prebuild": "node scripts/generate-blog-manifest.mjs",
+    "prebuild": "node scripts/generate-blog-manifest.mjs && node scripts/build-browser-workers.mjs",
     "start": "next start",
     "lint": "next lint",
     "pwa:verify": "node scripts/verify-pwa-assets.mjs",
@@ -15,7 +15,9 @@
     "test:e2e:debug": "playwright test --debug",
     "test:e2e:install": "playwright install --with-deps chromium",
     "seo:bing:health": "python3 scripts/bing-nightly-health.py",
-    "seo:bing:submit": "python3 scripts/bing-nightly-submit.py"
+    "seo:bing:submit": "python3 scripts/bing-nightly-submit.py",
+    "predev": "node scripts/build-browser-workers.mjs",
+    "pretest": "node scripts/build-browser-workers.mjs"
   },
   "dependencies": {
     "@breezystack/lamejs": "1.2.7",

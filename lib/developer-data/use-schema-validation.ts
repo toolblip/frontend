@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
+import { browserWorkerURLs } from '../generated/browser-worker-urls';
 import { runSchemaWorker, type SchemaResult } from './schema-worker-client';
 export function useSchemaValidation(input: string, schema: string): SchemaResult {
     const key = JSON.stringify([input, schema]);
@@ -7,7 +8,7 @@ export function useSchemaValidation(input: string, schema: string): SchemaResult
     useEffect(() => {
         if (!input.trim() || !schema.trim()) return;
         try {
-            const worker = new Worker(new URL('./schema.worker.ts', import.meta.url), { type: 'module' });
+            const worker = new Worker(browserWorkerURLs.schema);
             return runSchemaWorker(worker, input, schema, result => setState({ key, result }));
         } catch {
             setState({ key, result: { output: '', error: 'Schema validation worker unavailable.' } });

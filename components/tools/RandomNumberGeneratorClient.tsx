@@ -28,7 +28,7 @@ export default function RandomNumberGeneratorClient() {
     setTimeout(() => setCopied(false), 1500);
   };
 
-  return (<UtilityDesignLayout>
+  return (<UtilityDesignLayout inset>
     <div onChangeCapture={() => { setNumbers([]); setError(''); }}>
       <ToolExampleClearActions onExample={() => { setMin('1'); setMax('10'); setCount('5'); setUnique(true); setNumbers([]); setError(''); }} onClear={() => { setMin(''); setMax(''); setCount('1'); setUnique(false); setNumbers([]); setCopied(false); setError(''); }}/>
       {error && <p role="alert">{error}</p>}

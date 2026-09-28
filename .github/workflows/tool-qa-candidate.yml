@@ -1,0 +1,96 @@
+name: Hosted candidate tool QA
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/tool-qa-candidate.yml'
+      - 'scripts/qa/hosted-candidate.mjs'
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash
+
+permissions:
+  contents: read
+
+concurrency:
+  group: candidate-tool-qa-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  candidate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      QA_REVIEWED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Fetch exact candidate without submodule traversal or credentials
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/candidate-tool-qa"
+          git init .
+          git remote add origin https://github.com/toolblip/frontend.git
+          GIT_TERMINAL_PROMPT=0 GIT_CONFIG_NOSYSTEM=1 GIT_CONFIG_GLOBAL=/dev/null git fetch --no-tags origin "$QA_REVIEWED_HEAD"
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$QA_REVIEWED_HEAD"
+          test -z "$(git status --porcelain --untracked-files=no)"
+          if git config --local --name-only --get-regexp 'extraheader|credential|sshcommand'; then
+            echo 'Unexpected persisted authentication configuration' >&2
+            exit 1
+          fi
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+        id: dependencies
+      - name: Unit tests
+        id: unit
+        run: npm test -- --maxWorkers=1 2>&1 | tee "$RUNNER_TEMP/candidate-tool-qa/unit.log"
+      - name: Default production build (Turbopack)
+        id: build
+        if: ${{ !cancelled() && steps.dependencies.outcome == 'success' }}
+        run: npm run build 2>&1 | tee "$RUNNER_TEMP/candidate-tool-qa/build.log"
+      - name: TypeScript after production type generation
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        run: npx --no-install tsc --noEmit 2>&1 | tee "$RUNNER_TEMP/candidate-tool-qa/typescript.log"
+      - name: Install official engines and output inspection tools
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        run: |
+          npx --no-install playwright install --with-deps chrome webkit
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg poppler-utils
+      - name: Map the candidate to the production origin on this runner
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        run: |
+          openssl req -x509 -newkey rsa:2048 -nodes -days 1 \
+            -keyout "$RUNNER_TEMP/toolblip-origin.key" \
+            -out "$RUNNER_TEMP/toolblip-origin.crt" \
+            -subj '/CN=toolblip.com' \
+            -addext 'subjectAltName=DNS:toolblip.com' \
+            -addext 'basicConstraints=critical,CA:TRUE'
+          sudo install -m 644 "$RUNNER_TEMP/toolblip-origin.crt" /usr/local/share/ca-certificates/toolblip-candidate.crt
+          sudo update-ca-certificates
+          sudo sysctl -w net.ipv4.ip_unprivileged_port_start=0
+          echo '127.0.0.1 toolblip.com' | sudo tee -a /etc/hosts >/dev/null
+          echo "QA_ORIGIN_CERT=$RUNNER_TEMP/toolblip-origin.crt" >> "$GITHUB_ENV"
+          echo "QA_ORIGIN_KEY=$RUNNER_TEMP/toolblip-origin.key" >> "$GITHUB_ENV"
+          echo "NODE_EXTRA_CA_CERTS=$RUNNER_TEMP/toolblip-origin.crt" >> "$GITHUB_ENV"
+          origin_spki=$(openssl x509 -in "$RUNNER_TEMP/toolblip-origin.crt" -pubkey -noout | openssl pkey -pubin -outform DER | openssl dgst -sha256 -binary | openssl base64 -A)
+          echo "QA_ORIGIN_SPKI=$origin_spki" >> "$GITHUB_ENV"
+          node -e "const f=require('fs'),t=require('tls');t.createSecureContext({cert:f.readFileSync(process.env.RUNNER_TEMP+'/toolblip-origin.crt'),key:f.readFileSync(process.env.RUNNER_TEMP+'/toolblip-origin.key')});console.log('Candidate PEM pair parses before audit')"
+      - name: Audit affected candidate tools in both engines
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        env:
+          QA_CANDIDATE_ORIGIN: https://toolblip.com
+        run: node scripts/qa/hosted-candidate.mjs "$RUNNER_TEMP/candidate-tool-qa/audit"
+      - name: Upload candidate evidence (never production approval)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: candidate-tools-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/candidate-tool-qa/
+          if-no-files-found: warn
+          retention-days: 14
