@@ -51,6 +51,29 @@ it('retired tools without a close replacement have no redirect or static route',
   }
 });
 
+it('does not send any tool URL to the homepage', async () => {
+  const redirects = await context.redirects();
+  expect(redirects.filter(({ source, destination }) =>
+    (source === '/tools' || source.startsWith('/tools/')) && destination === '/'
+  )).toEqual([]);
+});
+
+it('named deleted tools have no redirect, catalog entry, or alias route', async () => {
+  const redirects = await context.redirects();
+  const catalog = readFileSync(new URL('../data/tools.ts', import.meta.url), 'utf8');
+  const aliases = catalog.split('const TOOL_SLUG_ALIASES:')[1].split('export const tools:')[0];
+  const toolRows = catalog.split('export const tools: Tool[] = [')[1].split('];')[0];
+  const page = readFileSync(new URL('../app/tools/[slug]/page.tsx', import.meta.url), 'utf8');
+  const pageAliases = page.split('const REDIRECTS: Record<string, string> = {')[1].split('\n};')[0];
+
+  for (const slug of ['http-request-builder', 'image-clipper', 'ai-detector', 'http-headers-2025']) {
+    expect(redirects.some(({ source }) => source === `/tools/${slug}`), `redirect remains for ${slug}`).toBe(false);
+    expect(new RegExp(`\\bslug: ['"]${slug}['"]`).test(toolRows), `catalog row remains for ${slug}`).toBe(false);
+    expect(new RegExp(`['"]${slug}['"]\\s*:`).test(aliases), `catalog alias remains for ${slug}`).toBe(false);
+    expect(new RegExp(`['"]${slug}['"]\\s*:`).test(pageAliases), `page alias remains for ${slug}`).toBe(false);
+  }
+});
+
 it('matching retired URLs redirect directly to their working replacements', async () => {
   const redirects = await context.redirects();
   for (const [source, destination] of [

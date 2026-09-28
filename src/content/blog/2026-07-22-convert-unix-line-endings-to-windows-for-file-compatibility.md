@@ -49,11 +49,11 @@ Diff tools mark every single line as changed, since one file uses LF and the oth
 
 That last one is the tell. When a diff lights up entirely red and green but the words look the same, you are looking at a line ending mismatch, not a real edit.
 
-## Convert Unix Line Endings to Windows in the Browser
+## Clean Up Pasted Text Before Converting Line Endings
 
-The fastest fix for a single file needs no install and no command line. Paste the text, get CRLF-terminated output, copy it back.
+If pasted text has extra spaces or blank lines, clean those up before converting the file's line endings.
 
-For a quick cleanup pass, the [Plain Text Formatter](https://toolblip.com/tools/plain-text-formatter) and [Remove Extra Spaces](https://toolblip.com/tools/remove-extra-spaces) tools normalize stray whitespace and line breaks in copy-pasted content, which clears up the most common "why does this paste look wrong" cases before they reach a fussy Windows importer. Everything runs in your browser, so the file never leaves your machine.
+The [Remove Extra Spaces](https://toolblip.com/tools/remove-extra-spaces) tool handles repeated spaces and blank lines in pasted text. It does not convert LF to CRLF; use a line-ending conversion command for that.
 
 Prefer to see the raw bytes change? A one-line sed command converts LF to CRLF in place:
 
@@ -148,5 +148,4 @@ That single commit rewrites the stored endings to match your rules, and the phan
 
 Convert Unix line endings to Windows for file compatibility whenever a `.txt`, `.csv`, or script that looks fine on Linux arrives broken on Windows. Detect the current format with `file` or `cat -A`, convert with `unix2dos` or a binary-mode Python pass, and pin the outcome in `.gitattributes` so it never regresses.
 
-For a quick browser cleanup of pasted text with tangled spaces and line breaks, reach for the free [Plain Text Formatter](https://toolblip.com/tools/plain-text-formatter). Working with structured data instead? The [JSON Formatter](https://toolblip.com/tools/json-formatter) validates and pretty-prints in your browser, no upload and no signup, so a stray carriage return never silently breaks your next import.
-
+For pasted text with repeated spaces or blank lines, use [Remove Extra Spaces](https://toolblip.com/tools/remove-extra-spaces) before converting the file's line endings. For structured data, the [JSON Formatter](https://toolblip.com/tools/json-formatter) can validate and format JSON, but it won't convert a file from LF to CRLF.

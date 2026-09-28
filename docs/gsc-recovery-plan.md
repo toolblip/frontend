@@ -12,6 +12,20 @@ low-value doorway pages at scale.
 This file tracks what's been fixed in this repo and what's still open, so
 the next pass (mine or someone else's) doesn't have to re-derive it.
 
+## 2026-09-28 redirect follow-up
+
+Removed 220 explicit `/tools/*` to `/` redirects from `next.config.mjs`.
+Deleted tool URLs with no working equivalent should now use the existing
+missing-tool route behavior; redirects to actual replacement tools remain.
+The focused local Vitest check covers the whole redirect list and named
+deleted URLs, but it cannot prove production responses.
+
+After deployment, check a sample of these URLs on toolblip.com for a direct
+404 and confirm a few replacement redirects still reach working tools.
+Then watch Search Console's soft-404 and Page Indexing reports after Google
+recrawls them. Neither the local test nor a deployed 404 proves that Google
+has processed the URLs or improved indexing.
+
 ## What this pass fixed
 
 - **Absorbed two long-stuck PRs** (`fix/sitemap-lastmod` #134, open since

@@ -155,5 +155,4 @@ The math is simple enough to do in your head for round numbers, but a converter 
 
 If you are handling color values that arrive base64 encoded inside a data URI or a config blob, decode them first with a [base64 tool](https://toolblip.com/tools/base64) so you are converting the actual color string and not the encoding.
 
-To convert rgba to hex with alpha instantly, with a live preview and correct byte rounding on the alpha channel, use the [RGBA to HEX Converter](https://toolblip.com/tools/rgba-to-hex) on Toolblip. Paste any rgba value and copy the 8 digit hex code straight into your stylesheet.
-
+To convert an RGBA value to 8-digit HEX, use the [Color Format Converter](https://toolblip.com/tools/color-format-converter) on Toolblip. Enter the RGBA value and copy the HEX8 result into your stylesheet.

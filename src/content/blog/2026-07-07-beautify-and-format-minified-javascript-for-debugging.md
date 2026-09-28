@@ -86,7 +86,7 @@ Toolblip's beautifier runs entirely in your browser. Parsing and formatting happ
 
 You can verify this yourself in ten seconds:
 
-1. Open the [JavaScript Beautifier](/tools/js-beautifier) tool.
+1. Open the [Code Beautifier](/tools/code-beautifier) and select JavaScript.
 2. Open your browser DevTools and switch to the **Network** tab.
 3. Paste a minified script and run the format.
 4. Watch the request list - no upload fires. The formatted output appears with zero network calls carrying your code.
@@ -119,5 +119,4 @@ Because it runs in your browser, the limit is your machine's memory, not an uplo
 
 Minifiers build code for machines, not for the person debugging it at 2 a.m. When a one-line bundle stands between you and a fix, beautify and format the minified JavaScript for debugging first - restore the line breaks, indentation, and spacing, then read the logic and set your breakpoint like normal.
 
-Ready to make that bundle readable? Open the free [JavaScript Beautifier on Toolblip](/tools/js-beautifier), paste your minified code, and get clean, indented output instantly - all in your browser. Working across languages? The [Code Beautifier](/tools/code-beautifier) formats HTML, CSS, and JSON the same way.
-
+Ready to make that bundle readable? Open the [Code Beautifier on Toolblip](/tools/code-beautifier), select JavaScript, and format your minified code into readable lines. It also supports HTML, CSS, and JSON.
