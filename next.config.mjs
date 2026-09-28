@@ -112,23 +112,7 @@ const nextConfig = {
       { source: '/tools/http-status-codes', destination: '/tools/http-status-checker', permanent: true },
       { source: '/tools/http-status-code-lookup', destination: '/tools/http-status-checker', permanent: true },
       { source: '/tools/http-status-ref', destination: '/tools/http-status-checker', permanent: true },
-      // Same family, same root cause: both promise sending a real request
-      // with a chosen method/body/auth; HttpHeadersViewerClient hardcodes a
-      // HEAD fetch with no body or method control. No real request-builder
-      // implementation exists elsewhere in the catalog to redirect to.
-      // http-headers-viewer itself was later removed in the 2026-08-21
-      // functional audit pass below, so these now go straight to the
-      // homepage instead of chaining through a since-removed tool.
-      { source: '/tools/http-request-builder', destination: '/', permanent: true },
-      { source: '/tools/http-method-tester', destination: '/', permanent: true },
 
-      // "Image Clipper" promised background removal, "Image Orientation
-      // Fixer" promised rotate/flip - both rendered the plain image
-      // cropper instead. remove-bg was itself removed in the 2026-08-21
-      // functional audit pass below (a fake corner-color heuristic
-      // duplicating the real image-background-remover tool), so
-      // image-clipper now goes straight to the homepage.
-      { source: '/tools/image-clipper', destination: '/', permanent: true },
       { source: '/tools/image-orientation-fixer', destination: '/tools/images/image-rotate', permanent: true },
       // "Text to Image Generator" promised social-graphic creation from
       // text; the page rendered the live-microphone speech-to-text tool.
@@ -182,12 +166,6 @@ const nextConfig = {
       { source: '/tools/word-complexity-analyzer', destination: '/tools/readability-score', permanent: true },
       { source: '/tools/favicon-checker', destination: '/tools/batch-favicon-downloader', permanent: true },
       { source: '/tools/sitemap-xml-validator', destination: '/tools/xml-validator', permanent: true },
-      // MOBI to AZW3 needed a .mobi upload; Azw3ToMobiClient only accepts
-      // .azw3 (it only ever did the reverse direction). azw3-to-mobi was
-      // itself removed in the 2026-08-21 functional audit pass below (no
-      // ebook encoder library exists in this codebase), so this now goes
-      // straight to the homepage instead of chaining through it.
-      { source: '/tools/mobi-to-azw3', destination: '/', permanent: true },
 
       // Same pass, more real-destination redirects: FakeTextGeneratorClient
       // has no word-combination logic (word-combinations does, and is a
@@ -264,12 +242,6 @@ const nextConfig = {
       { source: '/tools/json-path-evaluator-express', destination: '/tools/json-path-tester', permanent: true },
       { source: '/tools/curl-gen-express', destination: '/tools/curl-gen', permanent: true },
       { source: '/tools/temp-converter-express', destination: '/tools/temp-converter', permanent: true },
-      // ip-address-info itself is gone (family-verification pass -
-      // RandomIpAddressClient generates addresses, it doesn't look up real
-      // geolocation/ISP data, which would need a paid API this project
-      // deliberately hasn't integrated). No real lookup tool to redirect
-      // to, so this 404s directly instead of chaining through a removed
-      // slug.
       { source: '/tools/word-freq-express', destination: '/tools/word-freq', permanent: true },
       { source: '/tools/html-plaintext-express', destination: '/tools/html-to-plain-text', permanent: true },
       { source: '/tools/html-plaintext', destination: '/tools/html-to-plain-text', permanent: true },
@@ -314,16 +286,7 @@ const nextConfig = {
       { source: '/tools/image-flip-tool', destination: '/tools/images/image-flip', permanent: true },
       { source: '/tools/html-to-plain-text-tool', destination: '/tools/html-to-plain-text', permanent: true },
       { source: '/tools/spelling-checker-tool', destination: '/tools/grammar-checker', permanent: true },
-      // No longer redirected to /tools/favicon-preview: the family-
-      // verification pass below removed that slug too (no real ICO/favicon
-      // preview implementation exists), so this now 404s directly instead
-      // of redirecting into another 404.
-      { source: '/tools/jsonpath-query-tool', destination: '/', permanent: true },
       { source: '/tools/keyword-density-analyzer-new', destination: '/tools/keyword-density-checker', permanent: true },
-      // css-units-converter itself is gone (family-verification pass -
-      // CssValidatorClient validates syntax, it has no px/rem/em unit
-      // conversion at all despite the slug's own description promising
-      // it, and no real unit-converting component exists to redirect to).
       { source: '/tools/shell-command-generator-new', destination: '/tools/shell-command-generator', permanent: true },
       // image-compression itself is gone (family-verification pass -
       // ImageFlipToolClient flips images, it doesn't compress); redirecting
@@ -348,13 +311,7 @@ const nextConfig = {
       { source: '/tools/vsdx-to-jpg', destination: '/tools/images/image-format-converter', permanent: true },
       { source: '/tools/vsd-to-pdf', destination: '/tools/excel-to-pdf', permanent: true },
       { source: '/tools/vsdx-to-pdf', destination: '/tools/excel-to-pdf', permanent: true },
-      // avi-to-mov, this line's original destination, was itself removed
-      // in the 2026-08-21 functional audit pass below (no real transcoding
-      // - it just relabeled the uploaded bytes), so this now goes straight
-      // to the homepage.
-      { source: '/tools/mp4-to-avi', destination: '/', permanent: true },
       { source: '/tools/webp-to-gif', destination: '/tools/images/image-format-converter', permanent: true },
-
 
       // Removed stubs without a comparable tool have no redirect and 404.
       // Keep direct redirects only where a working equivalent exists.
@@ -415,271 +372,6 @@ const nextConfig = {
       // separate tool that actually does what this slug claims.
       { source: '/tools/seo-tag-analyzer', destination: '/tools/meta-tag-generator', permanent: true },
 
-      // Round 4: verified functionally broken, no real alternative anywhere
-      // in the catalog - originally left as bare 404s. Follow-up (2026-08-25):
-      // send these dead URLs to the homepage instead so bookmarks/search
-      // hits land somewhere useful. Still not in data/tools.ts.
-      // CsvToJsonClient only ever does CSV->JSON regardless of slug; the
-      // orphaned candidates for each of these (JsonToGoStructClient,
-      // SrtToJsonClient, JsonToPhpArrayClient, JSONToURLEncodedV2Client)
-      // were all individually checked and are themselves JSON.parse ->
-      // pretty-print stubs, not real implementations.
-      // MarkupCalculatorClient/ScryptHashGeneratorClient/
-      // WifiQrCodeGeneratorClient/VcardQrGeneratorClient/
-      // RegexCheatsheetClient: same pattern, orphaned stub with no real
-      // logic for the promised feature (markup pricing math, Scrypt KDF,
-      // structured WiFi/vCard payload encoding, static reference content).
-      // RobotsTxtEditorClient has no per-URL "is this allowed for Googlebot"
-      // testing logic at all - robots-txt-tester and robots-txt-simulator
-      // both promise it, nothing in the catalog implements it.
-      // AviToGifClient/GifMakerClient: no real animated-GIF encoder exists
-      // anywhere in this codebase - GifMakerClient's own canvas.toDataURL(
-      // 'image/gif') call is a spec no-op that silently falls back to PNG
-      // (the Canvas spec only guarantees image/png support), so even the
-      // one dedicated "GIF Maker" tool never actually produced a GIF.
-      // AiRephraserClient (ai-rephraser, humanizer-ai) is a hardcoded
-      // ~80-word synonym-substitution table with zero API calls anywhere in
-      // the codebase - no tone change, no rewriting, and "bypass AI
-      // detection" is a flatly false claim, not just an overclaim.
-      // ContentSummarizerClient (content-summarizer, summarizer) is
-      // trimmed.slice(0, limit) character truncation behind a fake 1s
-      // loading spinner - no key-point extraction of any kind.
-      // VsdxToDocxClient/VsdxToPptxClient: handleProcess is setOutput(
-      // input) - a literal unchanged echo - behind an unfilled placeholder
-      // template and a dead "// Visio to Word conversion logic here"
-      // comment; no real Visio parser exists anywhere in the codebase.
-      { source: '/tools/ai-rephraser', destination: '/', permanent: true },
-      { source: '/tools/avi-to-gif', destination: '/', permanent: true },
-      { source: '/tools/content-summarizer', destination: '/', permanent: true },
-      { source: '/tools/css-filter-generator', destination: '/', permanent: true },
-      { source: '/tools/css-preview', destination: '/', permanent: true },
-      { source: '/tools/css-units-converter-new', destination: '/', permanent: true },
-      { source: '/tools/css-variable-generator', destination: '/', permanent: true },
-      { source: '/tools/favicon-maker', destination: '/', permanent: true },
-      { source: '/tools/favicon-png-creator', destination: '/', permanent: true },
-      { source: '/tools/favicon-preview-tool', destination: '/', permanent: true },
-      { source: '/tools/gif-maker', destination: '/', permanent: true },
-      { source: '/tools/humanizer-ai', destination: '/', permanent: true },
-      { source: '/tools/ico-file-generator', destination: '/', permanent: true },
-      { source: '/tools/icon-favicon-creator', destination: '/', permanent: true },
-      { source: '/tools/image-blur-hash-generator', destination: '/', permanent: true },
-      { source: '/tools/image-brightness-adjuster', destination: '/', permanent: true },
-      { source: '/tools/image-enlarger', destination: '/', permanent: true },
-      { source: '/tools/ip-address-info-express', destination: '/', permanent: true },
-      { source: '/tools/js-beautifier', destination: '/', permanent: true },
-      { source: '/tools/json-to-go-struct', destination: '/', permanent: true },
-      { source: '/tools/json-to-php-array', destination: '/', permanent: true },
-      { source: '/tools/json-to-url-encoded', destination: '/', permanent: true },
-      { source: '/tools/keyword-difficulty-checker', destination: '/', permanent: true },
-      { source: '/tools/markup-calculator', destination: '/', permanent: true },
-      { source: '/tools/meta-description-generator', destination: '/', permanent: true },
-      { source: '/tools/mkv-to-gif', destination: '/', permanent: true },
-      { source: '/tools/mock-api-generator', destination: '/', permanent: true },
-      { source: '/tools/mov-to-avi', destination: '/', permanent: true },
-      { source: '/tools/mov-to-mp3', destination: '/', permanent: true },
-      { source: '/tools/mov-to-mp4', destination: '/', permanent: true },
-      { source: '/tools/mov-to-wav', destination: '/', permanent: true },
-      { source: '/tools/mp4-to-gif', destination: '/', permanent: true },
-      { source: '/tools/mp4-to-mov', destination: '/', permanent: true },
-      { source: '/tools/ogg-to-wav', destination: '/', permanent: true },
-      { source: '/tools/placeholder-image-generator', destination: '/', permanent: true },
-      { source: '/tools/plain-text-formatter', destination: '/', permanent: true },
-      { source: '/tools/png-to-ico', destination: '/', permanent: true },
-      { source: '/tools/port-scanner', destination: '/', permanent: true },
-      { source: '/tools/regex-cheatsheet', destination: '/', permanent: true },
-      { source: '/tools/rgba-to-hex', destination: '/', permanent: true },
-      { source: '/tools/robots-txt-simulator', destination: '/', permanent: true },
-      { source: '/tools/robots-txt-tester', destination: '/', permanent: true },
-      { source: '/tools/scrypt-hash-generator', destination: '/', permanent: true },
-      { source: '/tools/seo-title-tag-generator', destination: '/', permanent: true },
-      { source: '/tools/sitemap-html-generator', destination: '/', permanent: true },
-      { source: '/tools/split', destination: '/', permanent: true },
-      { source: '/tools/srt-to-json', destination: '/', permanent: true },
-      { source: '/tools/summarizer', destination: '/', permanent: true },
-      { source: '/tools/svg-compressor', destination: '/', permanent: true },
-      { source: '/tools/table-to-markdown', destination: '/', permanent: true },
-      { source: '/tools/tiff-to-text', destination: '/', permanent: true },
-      { source: '/tools/url-encoder-decoder', destination: '/', permanent: true },
-      { source: '/tools/url-similarity-checker', destination: '/', permanent: true },
-      { source: '/tools/vcard-qr-generator', destination: '/', permanent: true },
-      { source: '/tools/vsd-to-docx', destination: '/', permanent: true },
-      { source: '/tools/vsd-to-pptx', destination: '/', permanent: true },
-      { source: '/tools/vsdx-to-docx', destination: '/', permanent: true },
-      { source: '/tools/vsdx-to-pptx', destination: '/', permanent: true },
-      { source: '/tools/webm-to-mov', destination: '/', permanent: true },
-      { source: '/tools/wifi-qr-code-generator', destination: '/', permanent: true },
-      { source: '/tools/xml-sitemap-parser', destination: '/', permanent: true },
-      { source: '/tools/xml-to-excel', destination: '/', permanent: true },
-      { source: '/tools/yaml-to-toml', destination: '/', permanent: true },
-
-      // Functional audit pass (2026-08-21): each of these tool pages
-      // rendered a component that was fake or non-functional under real
-      // use - blob-relabeling with no real transcoding (video/audio/ebook
-      // container conversions this codebase has no encoder library for),
-      // canned/templated output presented as AI-generated content (no LLM
-      // API exists here), generic textarea-echo stubs wired to an image or
-      // file-conversion slug, or a component whose real logic is entirely
-      // unrelated to what the slug promises. Removed from data/tools.ts and
-      // redirected to the homepage per explicit instruction, along with
-      // every legacy alias slug that pointed at one of these.
-      { source: '/tools/aac-to-flac', destination: '/', permanent: true },
-      { source: '/tools/aac-to-m4r', destination: '/', permanent: true },
-      { source: '/tools/aac-to-mp3', destination: '/', permanent: true },
-      { source: '/tools/aac-to-mp4', destination: '/', permanent: true },
-      { source: '/tools/add-images', destination: '/', permanent: true },
-      { source: '/tools/add-text', destination: '/', permanent: true },
-      { source: '/tools/ai-twitter-generator', destination: '/', permanent: true },
-      { source: '/tools/api-endpoint-tester', destination: '/', permanent: true },
-      { source: '/tools/argon2-hash-generator', destination: '/', permanent: true },
-      { source: '/tools/article-generator', destination: '/', permanent: true },
-      { source: '/tools/article-writer', destination: '/', permanent: true },
-      { source: '/tools/avi-to-mkv', destination: '/', permanent: true },
-      { source: '/tools/avi-to-mov', destination: '/', permanent: true },
-      { source: '/tools/avi-to-mp3', destination: '/', permanent: true },
-      { source: '/tools/avi-to-mp4', destination: '/', permanent: true },
-      { source: '/tools/azw3-to-epub', destination: '/', permanent: true },
-      { source: '/tools/azw3-to-mobi', destination: '/', permanent: true },
-      { source: '/tools/barcode-generator', destination: '/', permanent: true },
-      { source: '/tools/barcode-scanner', destination: '/', permanent: true },
-      { source: '/tools/blur-background', destination: '/', permanent: true },
-      { source: '/tools/business-name-generator', destination: '/', permanent: true },
-      { source: '/tools/canonical-tag-checker', destination: '/', permanent: true },
-      { source: '/tools/change-bg-photo', destination: '/', permanent: true },
-      { source: '/tools/citation-generator', destination: '/', permanent: true },
-      { source: '/tools/cleanup-picture', destination: '/', permanent: true },
-      { source: '/tools/cold-email-writer', destination: '/', permanent: true },
-      { source: '/tools/color-picker-v2', destination: '/', permanent: true },
-      { source: '/tools/colorize-photo', destination: '/', permanent: true },
-      { source: '/tools/compress', destination: '/', permanent: true },
-      { source: '/tools/content-brief-generator', destination: '/', permanent: true },
-      { source: '/tools/content-improver', destination: '/', permanent: true },
-      { source: '/tools/content-planner', destination: '/', permanent: true },
-      { source: '/tools/counter', destination: '/', permanent: true },
-      { source: '/tools/eps-to-jpg', destination: '/', permanent: true },
-      { source: '/tools/eps-to-png', destination: '/', permanent: true },
-      { source: '/tools/eps-to-svg', destination: '/', permanent: true },
-      { source: '/tools/epub-to-azw3', destination: '/', permanent: true },
-      { source: '/tools/epub-to-mobi', destination: '/', permanent: true },
-      { source: '/tools/essay-writer', destination: '/', permanent: true },
-      { source: '/tools/extract-text', destination: '/', permanent: true },
-      { source: '/tools/flip', destination: '/', permanent: true },
-      { source: '/tools/html-entities-reference', destination: '/', permanent: true },
-      { source: '/tools/http-headers-viewer', destination: '/', permanent: true },
-      { source: '/tools/http-request-headers-inspector', destination: '/', permanent: true },
-      { source: '/tools/http-response-headers', destination: '/', permanent: true },
-      { source: '/tools/image-alt-text-generator', destination: '/', permanent: true },
-      { source: '/tools/image-color-picker', destination: '/', permanent: true },
-      { source: '/tools/image-to-svg', destination: '/', permanent: true },
-      { source: '/tools/jpg-to-avif', destination: '/', permanent: true },
-      { source: '/tools/jpg-to-gif', destination: '/', permanent: true },
-      { source: '/tools/jpg-to-svg', destination: '/', permanent: true },
-      { source: '/tools/jpg-to-tiff', destination: '/', permanent: true },
-      { source: '/tools/jsonpath-query', destination: '/', permanent: true },
-      { source: '/tools/jsonpath-query-tester', destination: '/', permanent: true },
-      { source: '/tools/kubernetes-yaml-generator', destination: '/', permanent: true },
-      { source: '/tools/m4a-to-mp3', destination: '/', permanent: true },
-      { source: '/tools/m4a-to-mp4', destination: '/', permanent: true },
-      { source: '/tools/mobi-to-epub', destination: '/', permanent: true },
-      { source: '/tools/mov-to-gif', destination: '/', permanent: true },
-      { source: '/tools/mp4-to-ogg', destination: '/', permanent: true },
-      { source: '/tools/mp4-to-webm', destination: '/', permanent: true },
-      { source: '/tools/ogg-to-mp3', destination: '/', permanent: true },
-      { source: '/tools/paragraph-rewriter', destination: '/', permanent: true },
-      { source: '/tools/png-compressor', destination: '/', permanent: true },
-      { source: '/tools/png-to-avif', destination: '/', permanent: true },
-      { source: '/tools/png-to-eps', destination: '/', permanent: true },
-      { source: '/tools/png-to-gif', destination: '/', permanent: true },
-      { source: '/tools/png-to-svg', destination: '/', permanent: true },
-      { source: '/tools/png-to-tiff', destination: '/', permanent: true },
-      { source: '/tools/psd-to-ai', destination: '/', permanent: true },
-      { source: '/tools/psd-to-jpg', destination: '/', permanent: true },
-      { source: '/tools/psd-to-pdf', destination: '/', permanent: true },
-      { source: '/tools/psd-to-png', destination: '/', permanent: true },
-      { source: '/tools/psd-to-svg', destination: '/', permanent: true },
-      { source: '/tools/qr-code-scanner', destination: '/', permanent: true },
-      { source: '/tools/regex-visual-builder', destination: '/', permanent: true },
-      { source: '/tools/remove-bg', destination: '/', permanent: true },
-      { source: '/tools/sentence-rewriter', destination: '/', permanent: true },
-      { source: '/tools/sitemap-urls-extractor', destination: '/', permanent: true },
-      { source: '/tools/sleep-duration-calculator', destination: '/', permanent: true },
-      { source: '/tools/ssl-certificate-checker', destination: '/', permanent: true },
-      { source: '/tools/svg-favicon-generator', destination: '/', permanent: true },
-      { source: '/tools/svg-minifier', destination: '/', permanent: true },
-      { source: '/tools/svg-optimizer', destination: '/', permanent: true },
-      { source: '/tools/tiff-to-jpg', destination: '/', permanent: true },
-      { source: '/tools/tiff-to-png', destination: '/', permanent: true },
-      { source: '/tools/tiff-to-svg', destination: '/', permanent: true },
-      { source: '/tools/translate', destination: '/', permanent: true },
-      { source: '/tools/webm-to-mp3', destination: '/', permanent: true },
-      { source: '/tools/webm-to-mp4', destination: '/', permanent: true },
-      { source: '/tools/webp-to-avif', destination: '/', permanent: true },
-      { source: '/tools/word-association', destination: '/', permanent: true },
-      { source: '/tools/word-count-from-url', destination: '/', permanent: true },
-      { source: '/tools/xml-to-csv', destination: '/', permanent: true },
-      { source: '/tools/yaml-pretty-print', destination: '/', permanent: true },
-      { source: '/tools/yaml-validator', destination: '/', permanent: true },
-
-      // 2026-08-26: AI Tools category removed — these pages were template /
-      // heuristic stubs (fake detector score, synonym swap, mad-libs), not
-      // model-backed tools. Send leftover URLs home.
-      { source: '/tools/ai-detector', destination: '/', permanent: true },
-      { source: '/tools/paraphrasing', destination: '/', permanent: true },
-      { source: '/tools/article-rewriter', destination: '/', permanent: true },
-      { source: '/tools/faq-generator', destination: '/', permanent: true },
-      { source: '/tools/blog-outline', destination: '/', permanent: true },
-      { source: '/tools/business-slogan-generator', destination: '/', permanent: true },
-      { source: '/tools/shorten-content', destination: '/', permanent: true },
-      { source: '/tools/explain-like-five', destination: '/', permanent: true },
-      { source: '/tools/facebook-ad-headlines', destination: '/', permanent: true },
-      { source: '/tools/bulk-generator', destination: '/', permanent: true },
-
-      // Legacy alias slugs (data/tools.ts TOOL_SLUG_ALIASES) that used to
-      // resolve to one of the removed tools above - same redirect target.
-      { source: '/tools/http-headers-2025', destination: '/', permanent: true },
-      { source: '/tools/http-headers-analyzer', destination: '/', permanent: true },
-      { source: '/tools/http-headers-browser', destination: '/', permanent: true },
-      { source: '/tools/http-headers-check', destination: '/', permanent: true },
-      { source: '/tools/http-headers-checker', destination: '/', permanent: true },
-      { source: '/tools/http-headers-dg', destination: '/', permanent: true },
-      { source: '/tools/http-headers-easy', destination: '/', permanent: true },
-      { source: '/tools/http-headers-expander', destination: '/', permanent: true },
-      { source: '/tools/http-headers-fresh', destination: '/', permanent: true },
-      { source: '/tools/http-headers-full', destination: '/', permanent: true },
-      { source: '/tools/http-headers-quick', destination: '/', permanent: true },
-      { source: '/tools/http-headers-simple', destination: '/', permanent: true },
-      { source: '/tools/http-headers-tool', destination: '/', permanent: true },
-      { source: '/tools/http-headers-toolblip', destination: '/', permanent: true },
-      { source: '/tools/http-headers-ultra', destination: '/', permanent: true },
-      { source: '/tools/http-headers-viewer-adv', destination: '/', permanent: true },
-      { source: '/tools/http-headers-viewer-advanced', destination: '/', permanent: true },
-      { source: '/tools/http-headers-viewer-api', destination: '/', permanent: true },
-      { source: '/tools/http-headers-viewer-browser', destination: '/', permanent: true },
-      { source: '/tools/http-headers-viewer-classic', destination: '/', permanent: true },
-      { source: '/tools/http-headers-viewer-complete', destination: '/', permanent: true },
-      { source: '/tools/http-headers-viewer-enhanced', destination: '/', permanent: true },
-      { source: '/tools/http-headers-viewer-express', destination: '/', permanent: true },
-      { source: '/tools/http-headers-viewer-final', destination: '/', permanent: true },
-      { source: '/tools/http-headers-viewer-fresh', destination: '/', permanent: true },
-      { source: '/tools/http-headers-viewer-full', destination: '/', permanent: true },
-      { source: '/tools/http-headers-viewer-new', destination: '/', permanent: true },
-      { source: '/tools/http-headers-viewer-prime', destination: '/', permanent: true },
-      { source: '/tools/http-headers-viewer-pro', destination: '/', permanent: true },
-      { source: '/tools/http-headers-viewer-quick', destination: '/', permanent: true },
-      { source: '/tools/http-headers-viewer-smart', destination: '/', permanent: true },
-      { source: '/tools/http-headers-viewer-std', destination: '/', permanent: true },
-      { source: '/tools/http-headers-viewer-tool', destination: '/', permanent: true },
-      { source: '/tools/http-headers-viewer-ultimate', destination: '/', permanent: true },
-      { source: '/tools/http-headers-viewer-ultra', destination: '/', permanent: true },
-      { source: '/tools/http-headers-viewer-v2', destination: '/', permanent: true },
-      { source: '/tools/http-headers-viewer-v3', destination: '/', permanent: true },
-      { source: '/tools/http-headers-viewer-v4', destination: '/', permanent: true },
-      { source: '/tools/http-headers-viewer-v5', destination: '/', permanent: true },
-      { source: '/tools/http-headers-viewer-v6', destination: '/', permanent: true },
-      { source: '/tools/http-headers-viewer-x', destination: '/', permanent: true },
-      { source: '/tools/http-headers-viewer-xl', destination: '/', permanent: true },
-      { source: '/tools/image-to-svg-converter', destination: '/', permanent: true },
-      { source: '/tools/ssl-certificate-checker-v2', destination: '/', permanent: true },
-      { source: '/tools/ssl-checker-express', destination: '/', permanent: true },
     ];
   },
   async headers() {
