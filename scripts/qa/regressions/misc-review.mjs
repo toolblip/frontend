@@ -54,7 +54,8 @@ export async function wwwSchemes({tool, expect}) {
   for (const mode of ['add','remove']) {
     await tool.getByLabel('WWW handling').selectOption(mode);
     const output=tool.locator('#htaccess-output');
-    await expect(output).toHaveValue(/REQUEST_SCHEME/);
+    const expectedTarget=`%{REQUEST_SCHEME}://${mode==='add'?'www.':''}example.com%{REQUEST_URI}`;
+    await expect.poll(async () => (await output.inputValue()).match(/RewriteRule \^ (\S+) \[L,R=301\]/)?.[1]).toBe(expectedTarget);
     const target=(await output.inputValue()).match(/RewriteRule \^ (\S+) \[L,R=301\]/)[1];
     for (const scheme of ['http','https']) expect(target.replace('%{REQUEST_SCHEME}',scheme).replace('%{REQUEST_URI}','/path')).toBe(`${scheme}://${mode==='add'?'www.':''}example.com/path`);
   }
