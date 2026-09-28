@@ -187,7 +187,7 @@ export default function FakeAddressGeneratorClient() {
           </div>
           <button
             onClick={generateMultiple}
-            className="tb-v2-button tb-v2-button-primary flex-1 md:flex-none"
+            className="tb-v2-button tb-v2-button-primary w-full min-w-0 sm:w-auto sm:flex-1 md:flex-none"
           >
             Generate Address{count > 1 ? 'es' : ''}
           </button>
