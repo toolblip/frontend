@@ -28,7 +28,7 @@ const TOOL_ICON: Record<string, IconComp> = {
   'jwt-decoder': IconKey,
   'uuid-generator': IconHash,
   'hash-generator': IconHash,
-  'hash-from-text': IconHash,
+  'sha256-hash-generator': IconHash,
   'password-generator': IconLock,
   'word-counter': IconType,
   'case-converter': IconType,

@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useRef } from 'react';
 import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 interface Issue {
@@ -64,6 +64,7 @@ type Filter = 'All' | 'Grammar' | 'Spelling' | 'Style' | 'Punctuation';
 
 export default function GrammarCheckerProClient() {
   const [text, setText] = useState('');
+  const requestVersion = useRef(0);
   const [issues, setIssues] = useState<Issue[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -72,6 +73,7 @@ export default function GrammarCheckerProClient() {
 
   const checkGrammar = async () => {
     if (!text.trim()) return;
+    const version = ++requestVersion.current;
     setLoading(true);
     setError('');
     try {
@@ -81,26 +83,30 @@ export default function GrammarCheckerProClient() {
         body: JSON.stringify({ text, language: 'en-US' }),
       });
       const data = await res.json().catch(() => ({}));
+      if (version !== requestVersion.current) return;
       if (!res.ok) throw new Error(data.error || 'Grammar API unavailable');
       setIssues(data.matches || []);
       setChecked(true);
       setFilter('All');
     } catch {
+      if (version !== requestVersion.current) return;
       setError('Could not reach grammar service. Try again in a moment.');
       setIssues([]);
     } finally {
-      setLoading(false);
+      if (version === requestVersion.current) setLoading(false);
     }
   };
 
-  const applyFix = (issue: Issue) => {
+  const applyFix = (issue: Issue, replacement: string) => {
     if (!issue.replacements.length) return;
-    const fixed = text.slice(0, issue.offset) + issue.replacements[0].value + text.slice(issue.offset + issue.length);
+    const fixed = text.slice(0, issue.offset) + replacement + text.slice(issue.offset + issue.length);
     setText(fixed);
-    setIssues(prev => prev.filter(i => i !== issue));
+    resetResults();
   };
 
   const resetResults = () => {
+    requestVersion.current++;
+    setLoading(false);
     setChecked(false);
     setIssues([]);
     setError('');
@@ -145,7 +151,10 @@ export default function GrammarCheckerProClient() {
       </div>
       <textarea
         value={text}
-        onChange={e => setText(e.target.value)}
+        onChange={e => {
+          setText(e.target.value);
+          resetResults();
+        }}
         placeholder="Type or paste your text here to check grammar, spelling, style, and tone..."
         className="tb-v2-tool-textarea"
         rows={6}
@@ -241,7 +250,7 @@ export default function GrammarCheckerProClient() {
                           <button
                             key={j}
                             type="button"
-                            onClick={() => applyFix(issue)}
+                            onClick={() => applyFix(issue, r.value)}
                             className="tb-v2-copy-btn"
                           >
                             {r.value || '(remove)'}

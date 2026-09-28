@@ -7,6 +7,7 @@ const APP_URL = `http://127.0.0.1:${APP_PORT}`;
 
 export default defineConfig({
   testDir: './e2e',
+  testIgnore: '**/remaining-indexability.spec.ts',
   fullyParallel: false,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,

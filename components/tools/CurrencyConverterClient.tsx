@@ -138,7 +138,7 @@ export default function CurrencyConverterClient() {
               ))}
             </select>
             <div className="mt-1 text-sm text-gray-500">
-              1 {fromCurrency} = {formatNumber(fromCurrencyData.rate / toCurrencyData.rate, 4)} {toCurrency}
+              1 {fromCurrency} = {formatNumber(toCurrencyData.rate / fromCurrencyData.rate, 4)} {toCurrency}
             </div>
           </div>
 
@@ -156,7 +156,7 @@ export default function CurrencyConverterClient() {
               ))}
             </select>
             <div className="mt-1 text-sm text-gray-500">
-              1 {toCurrency} = {formatNumber(toCurrencyData.rate / fromCurrencyData.rate, 4)} {fromCurrency}
+              1 {toCurrency} = {formatNumber(fromCurrencyData.rate / toCurrencyData.rate, 4)} {fromCurrency}
             </div>
           </div>
         </div>

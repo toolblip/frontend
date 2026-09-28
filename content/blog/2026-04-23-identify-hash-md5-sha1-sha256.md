@@ -16,7 +16,7 @@ Is it MD5? SHA-1? SHA-256? bcrypt? Something else entirely?
 
 That question comes up constantly during debugging, security audits, data migrations, and incident response. The tricky part is that a hash does not usually announce its algorithm. Most hash outputs are just fixed-length strings. A 64-character hexadecimal value could be SHA-256, but it could also be something else that happens to output 256 bits. A bcrypt hash is easier because it includes a prefix like `$2b$`, but many hashes are not that friendly.
 
-This guide shows how to identify likely hash algorithms from visible clues, what those clues can and cannot prove, and how to use Toolblip's [Hash Identifier](/tools/hash-identifier) and [Hash Generator](/tools/hash-from-text) to investigate safely in your browser.
+This guide shows how to identify likely hash algorithms from visible clues, what those clues can and cannot prove, and how to use Toolblip's [Hash Identifier](/tools/hash-identifier) and [Hash Generator](/tools/sha256-hash-generator) to investigate safely in your browser.
 
 ## What Is a Hash?
 
@@ -174,7 +174,7 @@ For example, if you believe this is SHA-256 of `password`:
 5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8
 ```
 
-Use Toolblip's [Hash Generator](/tools/hash-from-text), enter `password`, choose SHA-256, and compare the result. If it matches exactly, you have confirmed the algorithm for that input.
+Use Toolblip's [Hash Generator](/tools/sha256-hash-generator), enter `password`, choose SHA-256, and compare the result. If it matches exactly, you have confirmed the algorithm for that input.
 
 ## Safe Debugging Workflow
 
@@ -237,7 +237,7 @@ These code paths usually confirm the algorithm faster than guessing from length 
 
 If you can reproduce the original input, generate hashes using likely candidates and compare. This is especially useful when migrating legacy data or validating old webhook signing code.
 
-Use [Hash Generator](/tools/hash-from-text) to compare MD5, SHA-1, SHA-256, SHA-512, and related outputs quickly.
+Use [Hash Generator](/tools/sha256-hash-generator) to compare MD5, SHA-1, SHA-256, SHA-512, and related outputs quickly.
 
 ## Common Developer Mistakes
 
@@ -281,7 +281,7 @@ A salted password hash may not match a simple hash generator output because the 
 
 ## Use the Right Tool for the Job
 
-If you have an unknown hash, start with [Hash Identifier](/tools/hash-identifier). If you need to reproduce or verify a digest, use [Hash Generator](/tools/hash-from-text). If you are dealing with tokens rather than hashes, use [JWT Decoder](/tools/jwt-decoder). If the string is reversible encoding, try [Base64 Encoder/Decoder](/tools/base64-encoder) or [URL Encode/Decode](/tools/url-encode).
+If you have an unknown hash, start with [Hash Identifier](/tools/hash-identifier). If you need to reproduce or verify a digest, use [Hash Generator](/tools/sha256-hash-generator). If you are dealing with tokens rather than hashes, use [JWT Decoder](/tools/jwt-decoder). If the string is reversible encoding, try [Base64 Encoder/Decoder](/tools/base64-encoder) or [URL Encode/Decode](/tools/url-encode).
 
 The key is to separate three ideas that often get mixed together:
 
@@ -297,4 +297,4 @@ You can often identify a hash type by length, character set, and prefixes. A 32-
 
 But "probably" is the important word. Hash identification is a best-effort process until you verify against a known input or inspect the code that generated it.
 
-Use Toolblip's browser-based [Hash Identifier](/tools/hash-identifier) for the first pass, then confirm with [Hash Generator](/tools/hash-from-text) when you can. It is fast, free, and keeps your debugging data on your machine.
+Use Toolblip's browser-based [Hash Identifier](/tools/hash-identifier) for the first pass, then confirm with [Hash Generator](/tools/sha256-hash-generator) when you can. It is fast, free, and keeps your debugging data on your machine.

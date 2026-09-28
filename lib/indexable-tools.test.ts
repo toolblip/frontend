@@ -47,9 +47,9 @@ describe('policy decisions and audit statuses', () => {
       expect(indexing.getToolIndexingStatus(slug)).toBe('reviewed');
       expect(indexing.isToolIndexable(slug)).toBe(true);
     }
-    expect(tools).toHaveLength(444);
+    expect(tools).toHaveLength(440);
     expect(tools.filter(t => indexing.isToolIndexable(t.slug))).toHaveLength(345);
-    expect(tools.filter(t => !indexing.isToolIndexable(t.slug))).toHaveLength(99);
+    expect(tools.filter(t => !indexing.isToolIndexable(t.slug))).toHaveLength(95);
     expect(indexing.getToolIndexingStatus('lorem-ipsum-generator')).toBe('legacy-eligible-needs-review');
     expect(indexing.getToolIndexingStatus('json-to-markdown-table')).toBe('pending');
     expect(indexing.getToolIndexingStatus('unknown-future-tool')).toBe('not-in-catalog');
