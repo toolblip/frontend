@@ -86,3 +86,35 @@ it('matching retired URLs redirect directly to their working replacements', asyn
     expect(matches[0].permanent, source).toBe(true);
   }
 });
+
+it('misleading retired tool URLs have no redirect, catalog row, or page alias', async () => {
+  const slugs = `
+vsd-to-jpg vsdx-to-jpg vsd-to-pdf vsdx-to-pdf webp-to-gif
+gif-to-avif gif-to-mov gif-to-webm gif-to-mp4 heic-to-avif
+google-rank-checker serp-rank-tracker keyword-position-checker
+json-schema-generator json-patch-generator youtube-to-text
+http-status-codes http-status-code-lookup http-status-ref
+favicon-checker seo-tag-analyzer audio-to-text
+`.trim().split(/\s+/);
+  expect(slugs).toHaveLength(22);
+
+  const redirects = await context.redirects();
+  const catalog = readFileSync(new URL('../data/tools.ts', import.meta.url), 'utf8');
+  const aliases = catalog.split('const TOOL_SLUG_ALIASES:')[1].split('export const tools:')[0];
+  const toolRows = catalog.split('export const tools: Tool[] = [')[1].split('];')[0];
+  const page = readFileSync(new URL('../app/tools/[slug]/page.tsx', import.meta.url), 'utf8');
+  const pageAliases = page.split('const REDIRECTS: Record<string, string> = {')[1].split('\n};')[0];
+
+  for (const slug of slugs) {
+    expect(redirects.some(({ source }) => source === `/tools/${slug}`), `redirect remains for ${slug}`).toBe(false);
+    expect(new RegExp(`\\bslug: ['"]${slug}['"]`).test(toolRows), `catalog row remains for ${slug}`).toBe(false);
+    expect(new RegExp(`['"]${slug}['"]\\s*:`).test(aliases), `catalog alias remains for ${slug}`).toBe(false);
+    expect(new RegExp(`['"]${slug}['"]\\s*:`).test(pageAliases), `page alias remains for ${slug}`).toBe(false);
+  }
+
+  expect(redirects).toContainEqual({
+    source: '/tools/website-age-checker',
+    destination: '/tools/domain-age-checker',
+    permanent: true,
+  });
+});

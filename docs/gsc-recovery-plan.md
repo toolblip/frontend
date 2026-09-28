@@ -14,6 +14,16 @@ the next pass (mine or someone else's) doesn't have to re-derive it.
 
 ## 2026-09-28 redirect follow-up
 
+Audited 22 more retired tool URLs whose redirect targets cannot perform the
+named task. Removed all 22 config redirects: Visio, GIF/video, HEIC/AVIF,
+ranking, JSON Schema/Patch generation, YouTube/file transcription, HTTP
+status reference, favicon checking, and SEO tag analysis. No matching catalog
+row or page alias exists for those exact URLs. Kept the other redirects,
+including `json-schema-viewer` and `json-schema-editor` to the real validator.
+Corrected the JSON Schema blog post's generator links and claims. After
+deployment, verify sample URLs return a direct missing-tool response and
+check Search Console after recrawl; local tests do not establish indexing recovery.
+
 Removed 220 explicit `/tools/*` to `/` redirects from `next.config.mjs`.
 Deleted tool URLs with no working equivalent should now use the existing
 missing-tool route behavior; redirects to actual replacement tools remain.
