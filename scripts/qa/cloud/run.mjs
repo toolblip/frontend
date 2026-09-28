@@ -31,7 +31,8 @@ export function verifyAggregate(aggregate, config, engine, exitCode, expectedSlu
   if (aggregate.metadata.revision !== config.source || aggregate.metadata.engine !== engine || aggregate.metadata.workingDiffHash !== hash('') || aggregate.summary.exitCode !== exitCode)
     throw Error('Aggregate provenance or exit code does not match the pinned run.');
   const selected = aggregate.metadata.selectedSlugs;
-  if (aggregate.metadata.options.group !== config.group || aggregate.metadata.options['pending-only'] !== true || aggregate.metadata.options.slugs ||
+  if (aggregate.metadata.options.group !== config.group || aggregate.metadata.options['pending-only'] !== true ||
+      aggregate.metadata.options.slugs?.length !== expectedSlugs.length || expectedSlugs.some(slug => !aggregate.metadata.options.slugs.includes(slug)) ||
       selected.length !== expectedSlugs.length || expectedSlugs.some(slug => !selected.includes(slug)))
     throw Error('Aggregate selection does not match the complete reviewed pending group');
   const observed = [...aggregate.results.map(result => result.slug), ...aggregate.incompleteSlugs];
@@ -110,7 +111,7 @@ export async function main() {
     provenance.before = await deployment('before');
     await save('provenance.json', provenance);
     const child = spawn(process.execPath, ['scripts/qa/run.mjs', '--inventory', path.join(directory, 'inventory.json'), '--base', config.baseURL,
-      '--group', config.group, '--pending-only', '--engine', engine, '--concurrency', '1', '--out', path.join(output, 'audit')],
+      '--group', config.group, '--pending-only', '--slugs', selectedSlugs.join(','), '--engine', engine, '--concurrency', '1', '--out', path.join(output, 'audit')],
     { cwd: checkout, env: childEnvironment(process.env), stdio: 'inherit' });
     exitCode = await waitForAudit(child, config.auditTimeoutMs, () => { provenance.auditTimedOut = true; });
     provenance.auditExitCode = exitCode;

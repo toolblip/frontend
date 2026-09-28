@@ -49,12 +49,13 @@ test('pending tool aliases follow the production redirect table', async () => {
 });
 
 test('aggregate cannot silently omit results or approve human-review failures', () => {
-  const good = { metadata: { revision:config.source,engine:'chrome',workingDiffHash:'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855',options:{group:config.group,'pending-only':true},selectedSlugs:['one'] }, summary:{exitCode:0}, results:[{slug:'one',status:'passed',functional:{status:'passed'}}],incompleteSlugs:[] };
+  const good = { metadata: { revision:config.source,engine:'chrome',workingDiffHash:'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855',options:{group:config.group,'pending-only':true,slugs:['one']},selectedSlugs:['one'] }, summary:{exitCode:0}, results:[{slug:'one',status:'passed',functional:{status:'passed'}}],incompleteSlugs:[] };
   assert.doesNotThrow(() => verifyAggregate(good,config,'chrome',0,['one']));
   assert.throws(() => verifyAggregate({...good,results:[]},config,'chrome',0,['one']));
   assert.throws(() => verifyAggregate({...good,incompleteSlugs:['one']},config,'chrome',0,['one']));
   assert.throws(() => verifyAggregate({...good,results:[{slug:'one',status:'failed',functional:{status:'failed'}}]},config,'chrome',0,['one']));
   assert.throws(() => verifyAggregate(good,config,'webkit',0,['one']));
+  assert.throws(() => verifyAggregate({...good,metadata:{...good.metadata,options:{...good.metadata.options,slugs:['other']}}},config,'chrome',0,['one']));
 });
 
 test('every automatically testable tool belongs to one group; human capabilities stay excluded', async () => {
@@ -83,9 +84,9 @@ test('matrix and artifact names cover exactly the reviewed groups on both engine
   assert(job['timeout-minutes']*60000 > reviewed.auditTimeoutMs+10000);
 });
 test('aggregate rejects a partial group, different group or narrowed slug selection', () => {
-  const good = { metadata: { revision:config.source,engine:'chrome',workingDiffHash:'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855',options:{group:config.group,'pending-only':true},selectedSlugs:['one'] }, summary:{exitCode:0}, results:[{slug:'one',status:'passed',functional:{status:'passed'}}],incompleteSlugs:[] };
+  const good = { metadata: { revision:config.source,engine:'chrome',workingDiffHash:'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855',options:{group:config.group,'pending-only':true,slugs:['one']},selectedSlugs:['one'] }, summary:{exitCode:0}, results:[{slug:'one',status:'passed',functional:{status:'passed'}}],incompleteSlugs:[] };
   assert.throws(() => verifyAggregate(good,config,'chrome',0,['one','two']), /selection/);
-  for (const options of [{group:'images','pending-only':true},{group:config.group,'pending-only':false},{group:config.group,'pending-only':true,slugs:['one']}]) {
+  for (const options of [{group:'images','pending-only':true,slugs:['one']},{group:config.group,'pending-only':false,slugs:['one']},{group:config.group,'pending-only':true},{group:config.group,'pending-only':true,slugs:['other']}]) {
     assert.throws(() => verifyAggregate({...good,metadata:{...good.metadata,options}},config,'chrome',0,['one']), /selection/);
   }
 });
