@@ -26,6 +26,11 @@ jobs:
       matrix:
         group: [developer-general, seo-network, developer-security, developer-data, utility-design, media-conversion, pdf, images]
         engine: [chrome, webkit]
+        # Video encoding requires macOS WebKit; the separate macOS media job
+        # runs the same complete media-conversion group on production.
+        exclude:
+          - group: media-conversion
+            engine: webkit
     steps:
       # actions/checkout credential cleanup runs submodule foreach, which fails
       # on this repository's preexisting api/mcp gitlinks without .gitmodules.

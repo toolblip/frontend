@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
-import { verifyDeployment, assertSource, childEnvironment, verifyAggregate, selectGroup, waitForAudit, assertHostedRunner, main } from './run.mjs';
+import { verifyDeployment, assertSource, childEnvironment, verifyAggregate, selectGroup, humanCapabilitySlugs, waitForAudit, assertHostedRunner, main } from './run.mjs';
 const reviewed = JSON.parse(await readFile(new URL('./pilot.json', import.meta.url)));
 const config = { ...reviewed, group: 'developer-data' };
 const deployment = { id: config.deploymentId, sha: config.deployedMerge, environment: config.environment };
@@ -57,7 +57,7 @@ test('aggregate cannot silently omit results or approve human-review failures', 
   assert.throws(() => verifyAggregate(good,config,'webkit',0,['one']));
 });
 
-test('every pending tool belongs to exactly one nonempty reviewed group', async () => {
+test('every automatically testable tool belongs to one group; human capabilities stay excluded', async () => {
   const inventory = JSON.parse(await readFile(new URL('./inventory.json', import.meta.url)));
   const selected = reviewed.groups.flatMap(group => {
     const result = selectGroup(reviewed, inventory, group);
@@ -65,7 +65,8 @@ test('every pending tool belongs to exactly one nonempty reviewed group', async 
     return result.selectedSlugs;
   });
   assert.equal(new Set(selected).size, selected.length);
-  assert.deepEqual([...selected].sort(), inventory.tools.filter(t => !t.historicallyApproved).map(t => t.slug).sort());
+  assert.deepEqual([...selected].sort(), inventory.tools.filter(t => !t.historicallyApproved && !humanCapabilitySlugs.includes(t.slug)).map(t => t.slug).sort());
+  assert.deepEqual(inventory.tools.filter(t => !t.historicallyApproved && humanCapabilitySlugs.includes(t.slug)).map(t => t.slug).sort(), [...humanCapabilitySlugs].sort());
   assert.throws(() => selectGroup(reviewed, inventory, '--other'), /Unknown/);
   assert.throws(() => selectGroup(reviewed, {tools:[]}, reviewed.groups[0]), /empty/);
   assert.throws(() => selectGroup({...reviewed,auditTimeoutMs:Infinity}, inventory, reviewed.groups[0]), /bounded/);
