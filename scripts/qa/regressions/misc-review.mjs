@@ -20,26 +20,27 @@ async function downloaded({ page, artifactsDir, slug }, action) {
   return { bytes: await readFile(target), name };
 }
 
-export async function stickyPersistence({page, tool, expect}) {
+export async function stickyPersistence({page, expect}) {
   const previous = await page.evaluate(() => localStorage.getItem('sticky-notes'));
   const notes = Array.from({length:101}, (_, i) => ({ id:String(i), content:`Review note ${i}`, color:'bg-yellow-200', createdAt:123, position:{x:0,y:0}, legacy:{pinned:true} }));
+  const opened = [];
   try {
     await page.evaluate(notes => localStorage.setItem('sticky-notes', JSON.stringify(notes)), notes);
-    await page.waitForLoadState('networkidle');
-    await page.reload();
-    await expect(tool.getByText('Review note 100', {exact:true})).toHaveCount(1);
-    expect(await page.evaluate(() => JSON.parse(localStorage.getItem('sticky-notes')))).toEqual(notes);
-    await expect(tool.getByRole('button', {name:'Add Note',exact:true})).toBeDisabled();
-    await page.waitForLoadState('networkidle');
-    await page.reload();
-    expect(await page.evaluate(() => JSON.parse(localStorage.getItem('sticky-notes')))).toEqual(notes);
+    for (let visit=0; visit<2; visit++) {
+      const freshPage=await page.context().newPage();
+      opened.push(freshPage);
+      await freshPage.goto(page.url(), {waitUntil:'domcontentloaded'});
+      const freshTool=freshPage.locator('.tb-v2-tool-card').first();
+      await expect(freshTool.getByText('Review note 100', {exact:true})).toHaveCount(1);
+      expect(await freshPage.evaluate(() => JSON.parse(localStorage.getItem('sticky-notes')))).toEqual(notes);
+      await expect(freshTool.getByRole('button', {name:'Add Note',exact:true})).toBeDisabled();
+    }
     // Overlapping legacy positions are intentional; delete the last rendered card.
-    await tool.getByRole('button', {name:'✕',exact:true}).last().click();
+    await opened.at(-1).locator('.tb-v2-tool-card').first().getByRole('button', {name:'✕',exact:true}).last().click();
     await expect.poll(() => page.evaluate(() => JSON.parse(localStorage.getItem('sticky-notes')))).toEqual(notes.slice(0,100));
   } finally {
     await page.evaluate(previous => previous === null ? localStorage.removeItem('sticky-notes') : localStorage.setItem('sticky-notes',previous), previous);
-    await page.waitForLoadState('networkidle');
-    await page.reload();
+    await Promise.all(opened.map(freshPage => freshPage.close()));
   }
 }
 

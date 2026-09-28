@@ -74,7 +74,21 @@ add('speech-to-text',async c=>{const {tool:t,page,expect,check}=c;
  } finally { await fixturePage.close(); }
  check(false,'Human review required: speak known words into a real microphone and verify the actual recognized transcript; mocked lifecycle events do not establish recognition accuracy.');
 });
-add('sticky-notes',async({tool:t,page,expect,check})=>{await example(t);await expect(t.getByText('Example: review the project checklist.',{exact:true})).toBeVisible();await page.waitForLoadState('networkidle');await page.reload();await expect(t.getByText('Example: review the project checklist.',{exact:true})).toBeVisible();await clear(t);await page.waitForLoadState('networkidle');await page.reload();await expect(t.getByText('Example: review the project checklist.',{exact:true})).toHaveCount(0);check(true,'Notes persist across reload and Clear removes persisted content');});
+add('sticky-notes',async({tool:t,page,expect,check})=>{
+ await example(t);
+ await expect(t.getByText('Example: review the project checklist.',{exact:true})).toBeVisible();
+ await page.waitForFunction(() => JSON.parse(localStorage.getItem('sticky-notes') || '[]').some(note => note.content === 'Example: review the project checklist.'));
+ const freshPage=await page.context().newPage();
+ try {
+  await freshPage.goto(page.url(),{waitUntil:'domcontentloaded'});
+  const freshTool=freshPage.locator('.tb-v2-tool-card').first();
+  await expect(freshTool.getByText('Example: review the project checklist.',{exact:true})).toBeVisible();
+  await clear(freshTool);
+  await expect(freshTool.getByText('Example: review the project checklist.',{exact:true})).toHaveCount(0);
+  await freshPage.waitForFunction(() => JSON.parse(localStorage.getItem('sticky-notes') || '[]').length === 0);
+ } finally { await freshPage.close(); }
+ check(true,'Notes persist in a fresh page and Clear removes persisted content');
+});
 add('css-grid-generator',async({tool:t,expect,check})=>{await click(t,'Card Grid');await expect(t.locator('pre').first()).toContainText('grid-template-rows: auto;');await fill(t,'Columns','2');await fill(t,'Rows','3');await expect(t.locator('pre').first()).toContainText('grid-template-columns: repeat(2, 1fr);');await expect(t.locator('pre').last()).toContainText('Item 6');await clear(t);await expect(t.locator('pre').first()).toContainText('gap: 0px;');check(true,'Auto row preset and 2×3 CSS/HTML output agree');});
 add('css-flexbox-generator',async({tool:t,expect,check})=>{await example(t);await expect(t.locator('pre')).toContainText('justify-content: space-between;');await t.getByLabel('Direction').selectOption('column');await expect(t.locator('pre')).toContainText('flex-direction: column;');await clear(t);await expect(t.locator('pre')).toContainText('gap: 0px;');check(true,'Flexbox direction, spacing and reset reach exported CSS');});
 add('word-cloud-generator',async c=>{const {tool:t,expect,check}=c;await fill(t,'Input','apple apple banana');await click(t,'Generate Word Cloud');const vals=await t.locator('.tb-v2-stat-pill-val').allTextContents();check(vals[0]==='3'&&vals[1]==='2','Word cloud counts three filtered words and two unique words');await png(c,'Download PNG',[760,440]);await fill(t,'Input','pear');await expect(t.getByRole('button',{name:'Download PNG'})).toBeDisabled();await clear(t);await expect(t.getByLabel('Input')).toHaveValue('');});
