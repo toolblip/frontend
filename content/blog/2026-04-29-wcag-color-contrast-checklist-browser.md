@@ -215,7 +215,7 @@ Contrast is one piece of a full accessibility toolkit:
 - [Contrast Checker](/tools/contrast-checker)  -  WCAG AA/AAA ratio testing
 - [Color Blindness Simulator](/tools/color-blindness-simulator)  -  test your palette across vision types
 - [Color Picker](/tools/color-picker)  -  find accessible color pairs with live preview
-- [HEX to RGB](/tools/hex-to-rgb)  -  convert colors for CSS use
+- [HEX to RGB](/tools/color-format-converter)  -  convert colors for CSS use
 - [Color Palette Generator](/tools/color-palette-generator)  -  generate palettes that are accessible by design
 
 ## Quick Reference: Common Accessible Color Pairs

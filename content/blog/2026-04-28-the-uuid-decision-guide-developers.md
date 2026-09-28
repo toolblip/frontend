@@ -304,7 +304,7 @@ Pick the right one for the job. Your future self debugging a bloated PostgreSQL 
 - **[UUID Generator](/tools/uuid-generator)**  -  Generate v1, v4, v5, and v7 UUIDs in your browser
 - **[JSON Formatter](/tools/json-formatter)**  -  Validate and pretty-print API responses
 - **[Regex Tester](/tools/regex-tester)**  -  Test patterns against sample text with real-time match highlighting
-- **[Hash Generator](/tools/hash-generator)**  -  SHA-1, SHA-256, MD5  -  useful when working with v5 namespaces
+- **[Hash Generator](/tools/md5-hash-generator)**  -  SHA-1, SHA-256, MD5  -  useful when working with v5 namespaces
 
 ---
 

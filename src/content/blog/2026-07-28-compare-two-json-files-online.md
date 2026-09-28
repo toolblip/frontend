@@ -58,7 +58,7 @@ Those differ by exactly two characters. A text diff shows one changed line and l
 
 ## How to Compare Two JSON Files Online in Three Steps
 
-The workflow is short. Open the [JSON Diff tool](https://toolblip.com/tools/json-diff), then:
+The workflow is short. Open the [JSON Diff tool](https://toolblip.com/tools/code-diff), then:
 
 1. Paste your original JSON into the left panel.
 2. Drop the updated JSON into the right panel.
@@ -145,7 +145,7 @@ The Toolblip JSON Diff runs entirely in your browser. JavaScript on your machine
 
 You can verify that yourself in about fifteen seconds:
 
-1. Open the [JSON Diff tool](https://toolblip.com/tools/json-diff).
+1. Open the [JSON Diff tool](https://toolblip.com/tools/code-diff).
 2. Switch to the Network tab in your browser DevTools.
 3. Click the clear button to empty the request list.
 4. Paste both JSON documents and run the comparison.
@@ -172,5 +172,5 @@ A structural diff turns "something changed somewhere in this file" into a precis
 
 Paste your two documents, read the highlighted changes, and move on.
 
-**[Open the JSON Diff tool on Toolblip](https://toolblip.com/tools/json-diff)** and compare two JSON files online right now. Free, no signup, and it runs entirely in your browser.
+**[Open the JSON Diff tool on Toolblip](https://toolblip.com/tools/code-diff)** and compare two JSON files online right now. Free, no signup, and it runs entirely in your browser.
 

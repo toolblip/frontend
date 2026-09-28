@@ -34,7 +34,7 @@ Debugging minified JSON is a nightmare. A good JSON formatter takes ugly, one-li
 
 Encoding images as data URIs, working with APIs that return Base64 strings, decoding configuration values  -  Base64 comes up constantly. Having a fast, reliable encoder/decoder that handles text and files alike is essential. Some days I use this tool five times before lunch.
 
-👉 **[Base64 Encoder / Decoder →](/tools/base64-encoder)**
+👉 **[Base64 Encoder / Decoder →](/tools/base64-encoder-decoder)**
 
 ## 3. Regex Tester
 
@@ -52,7 +52,7 @@ Cron syntax is notoriously hard to read. `*/15 9-17 * * 1-5`  -  is that every 1
 
 MD5, SHA-1, SHA-256  -  you need hashes for API signatures, file integrity checks, and more. Having a tool that handles text input and file drops, with instant output across multiple algorithms, saves constantly switching to a terminal.
 
-👉 **[Hash Generator →](/tools/hash-generator)**
+👉 **[Hash Generator →](/tools/md5-hash-generator)**
 
 Bookmark these five categories and you'll handle the vast majority of small developer tasks without leaving your browser. No installs, no sign-up, no tracked data. Just open the tab and go.
 

@@ -104,7 +104,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
 9TXL0Y4OHwAAAABJRU5ErkJggg==" alt="Red dot" />
 ```
 
-To convert an image to Base64 without uploading it anywhere, use the **[Toolblip Base64 Encoder](/tools/base64)** - drag in a PNG, JPEG, WebP, or SVG, and it generates the data URL instantly in your browser. Your image never touches a server.
+To convert an image to Base64 without uploading it anywhere, use the **[Toolblip Base64 Encoder](/tools/base64-encoder-decoder)** - drag in a PNG, JPEG, WebP, or SVG, and it generates the data URL instantly in your browser. Your image never touches a server.
 
 ## Base64 Image → File
 
@@ -216,7 +216,7 @@ payload += "=" * (4 - len(payload) % 4)
 decoded = json.loads(base64.urlsafe_b64decode(payload))
 ```
 
-> **Note:** You can decode a JWT payload instantly in the browser with the **[Toolblip JWT Decoder](/tools/jwt)** - no library, no install, entirely client-side.
+> **Note:** You can decode a JWT payload instantly in the browser with the **[Toolblip JWT Decoder](/tools/jwt-decoder)** - no library, no install, entirely client-side.
 
 ## Base64 in Configuration Files
 
@@ -311,21 +311,21 @@ const urlSafe = standard.replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "
 
 ## Try It in Your Browser
 
-Everything in this guide - text encoding, image conversion, data URL generation - works entirely in your browser with **[Toolblip Base64 Encoder/Decoder](/tools/base64)**. No upload. No server call. No account.
+Everything in this guide - text encoding, image conversion, data URL generation - works entirely in your browser with **[Toolblip Base64 Encoder/Decoder](/tools/base64-encoder-decoder)**. No upload. No server call. No account.
 
 Open a tab, paste, and you're done.
 
 ---
 
 **Related tools on Toolblip:**
-- [JWT Decoder](/tools/jwt) - inspect token payloads instantly
-- [JSON Formatter](/tools/json) - validate and beautify JSON from any API response
-- [URL Encoder/Decoder](/tools/url) - encode special characters for URLs and query strings
-- [Hash Generator](/tools/hash) - generate MD5, SHA-1, SHA-256, and more for any input
+- [JWT Decoder](/tools/jwt-decoder) - inspect token payloads instantly
+- [JSON Formatter](/tools/json-formatter) - validate and beautify JSON from any API response
+- [URL Encoder/Decoder](/tools/url-encode) - encode special characters for URLs and query strings
+- [Hash Generator](/tools/md5-hash-generator) - generate MD5, SHA-1, SHA-256, and more from text
 
 **Related reading:**
 - [JWT Decoder Guide](/blog/jwt-decoder-guide) - deeper dive into JWT structure and claims
-- [JSON Debugging Guide](/blog/json-debugging-guide-browser-tools) - working with API responses in the browser
+- [JSON Debugging Guide](/blog/2026-04-26-json-debugging-guide-browser-tools) - working with API responses in the browser
 - [Base64 Encoding Explained](/blog/base64-encoding-explained) - the concept behind the code
 
 ---

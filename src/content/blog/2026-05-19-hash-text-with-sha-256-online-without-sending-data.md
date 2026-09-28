@@ -55,7 +55,7 @@ sha256Hex("hello").then(console.log);
 
 That code runs inside the browser. The input is encoded into bytes, the browser computes the digest locally, and the result is converted to hex.
 
-Toolblip's [SHA-256 Hash Generator](https://toolblip.com/tools/sha256-hash-generator) is built for this kind of quick local check. Paste text, generate the digest, copy the output, and move on. For broader digest formats, the [Hash Generator](https://toolblip.com/tools/hash-generator) covers MD5, SHA-1, SHA-256, SHA-512, and related algorithms.
+Toolblip's [SHA-256 Hash Generator](https://toolblip.com/tools/sha256-hash-generator) is built for this kind of quick local check. Paste text, generate the digest, copy the output, and move on. For other digest formats, the [MD5 Hash Generator](https://toolblip.com/tools/md5-hash-generator) has a selector for MD5, SHA-1, SHA-256, SHA-384, and SHA-512.
 
 ## Check whether your input leaves the browser
 

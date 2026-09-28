@@ -54,4 +54,4 @@ The next time you need to format JSON, encode Base64, or test a regex pattern, t
 
 ---
 
-Try Toolblip's browser-based developer tools  -  [JSON formatter](/tools/json-formatter), [Base64 encoder](/tools/base64), [regex tester](/tools/regex-tester), and more. Everything runs client-side, nothing leaves your browser.
+Try Toolblip's browser-based developer tools  -  [JSON formatter](/tools/json-formatter), [Base64 encoder](/tools/base64-encoder-decoder), [regex tester](/tools/regex-tester), and more. Everything runs client-side, nothing leaves your browser.

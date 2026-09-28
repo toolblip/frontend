@@ -105,7 +105,7 @@ Output: YWRtaW46czNjcmV0LXBhc3M=
 
 That output goes straight into a Basic auth header. The reverse direction works too, so when a logfile shows you `eyJ1c2VyIjoiYWxpY2UifQ==` you can paste it in and see `{"user":"alice"}`.
 
-Toolblip's [base64 tool](https://toolblip.com/tools/base64) handles both directions and supports URL-safe variants for JWT work. Like the others, it runs client-side, so you can paste tokens without worrying about them showing up in a server log.
+Toolblip's [base64 tool](https://toolblip.com/tools/base64-encoder-decoder) handles both directions and supports URL-safe variants for JWT work. Like the others, it runs client-side, so you can paste tokens without worrying about them showing up in a server log.
 
 For hashing, an MD5 or SHA-256 generator is useful for verifying file checksums and debugging signed requests. Pair it with a UUID generator and you cover most of the small auth tasks that come up during development.
 

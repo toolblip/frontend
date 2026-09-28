@@ -14,7 +14,7 @@ Scheduling tasks is one of those things every developer deals with sooner or lat
 
 The problem is that cron syntax is dense. Even experienced developers forget which field controls which part of the schedule. That is why a good cron expression generator saves time every single day.
 
-Toolblip's [Cron Expression Generator](https://toolblip.com/tools/cron-expression-generator) lets you build, read, and validate cron expressions instantly in your browser - no signup, no installs, nothing stored.
+Toolblip's [Cron Expression Generator](https://toolblip.com/tools/cron-generator) lets you build, read, and validate cron expressions instantly in your browser - no signup, no installs, nothing stored.
 
 ## What Is a Cron Expression?
 
@@ -38,7 +38,7 @@ Each field accepts:
 
 ## How to Use the Tool
 
-1. **Open the generator** at [toolblip.com/tools/cron-expression-generator](https://toolblip.com/tools/cron-expression-generator)
+1. **Open the generator** at [toolblip.com/tools/cron-expression-generator](https://toolblip.com/tools/cron-generator)
 2. **Pick your schedule** using the dropdowns or type directly in the cron input field
 3. **See the human-readable description** instantly - no guessing
 4. **Copy the expression** with one click
@@ -128,4 +128,4 @@ Cron uses 24-hour format. 6 PM is `18`, not `6`.
 
 Whether you are configuring a Linux cron job, a GitHub Actions schedule, a Laravel scheduler, or a Jenkins job, the same cron syntax works across all of them. Toolblip's generator makes it fast and painless.
 
-Open [toolblip.com/tools/cron-expression-generator](https://toolblip.com/tools/cron-expression-generator) and schedule your first task in seconds.
+Open [toolblip.com/tools/cron-expression-generator](https://toolblip.com/tools/cron-generator) and schedule your first task in seconds.

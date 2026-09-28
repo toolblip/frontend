@@ -36,7 +36,7 @@ Base64 comes up in three contexts: Basic auth headers (`admin:password` → `YWR
 
 A good Base64 tool handles both encode and decode directions, and supports URL-safe variants for JWT work. When a log shows you a token like `eyJ1c2VyIjoiYWxpY2UifQ==`, you paste it in and see `{"user":"alice"}` instantly.
 
-Toolblip's [Base64 tool](/tools/base64) runs client-side, so your tokens never hit a server.
+Toolblip's [Base64 tool](/tools/base64-encoder-decoder) runs client-side, so your tokens never hit a server.
 
 ## 3. Regex Tester  -  Because Reading Regex Without Testing Is Guesswork
 
@@ -52,9 +52,9 @@ A cron parser takes an expression and shows you the next ten run times in human-
 
 ## 5. Hash Generator  -  For Checksums and Signed Requests
 
-MD5, SHA-1, SHA-256, SHA-512. You need them for verifying file downloads, debugging HMAC signatures, and comparing outputs across systems. A hash generator takes a string or file, picks your algorithm, and returns the digest in one click.
+MD5, SHA-1, SHA-256, SHA-512. You can use text digests to compare outputs across systems or check a short string. HMAC signatures need a keyed HMAC implementation; a plain hash generator cannot verify them.
 
-Toolblip's [Hash Generator](/tools/hash-generator) supports all four algorithms, handles text input directly, and computes the digest entirely in-browser.
+Toolblip's [MD5 Hash Generator](/tools/md5-hash-generator) has a selector for MD5, SHA-1, SHA-256, SHA-384, and SHA-512. It computes text digests in your browser.
 
 ## The Bookmark Bar Is Your Toolkit
 

@@ -120,7 +120,7 @@ env: staging
 
 ## Convert Between YAML and JSON
 
-👉 **[YAML ↔ JSON Converter →](/tools/yaml-converter)**
+👉 **[YAML ↔ JSON Converter →](/tools/json-yaml-converter)**
 
 Paste YAML → get JSON, or paste JSON → get YAML. Also validates syntax before converting.
 

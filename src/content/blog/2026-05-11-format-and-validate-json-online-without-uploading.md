@@ -139,4 +139,4 @@ If you want to validate JSON without uploading and prefer a keyboard-driven work
 
 The next time you have a malformed JSON payload and your first instinct is to paste it into a search result, stop. Open DevTools, check the network tab, and use a tool that keeps your data local. It takes 30 seconds and might save you from an accidental exposure.
 
-See [Toolblip's JSON Formatter](https://toolblip.com/tools/json-formatter) for a browser-based, client-side validator. Also useful: [Base64 Encoder](https://toolblip.com/tools/base64) for encoding credentials and [Regex Tester](https://toolblip.com/tools/regex-tester) for testing patterns against sample text.
+See [Toolblip's JSON Formatter](https://toolblip.com/tools/json-formatter) for a browser-based, client-side validator. Also useful: [Base64 Encoder](https://toolblip.com/tools/base64-encoder-decoder) for encoding credentials and [Regex Tester](https://toolblip.com/tools/regex-tester) for testing patterns against sample text.

@@ -238,11 +238,11 @@ For teams processing large codebases, integrating secret detection into a CI pip
 - [Regex Tester](/tools/regex-tester)  -  Test detection patterns against sample text
 - [Regex Explainer](/tools/regex-explainer)  -  Break down complex patterns into readable English
 - [JWT Decoder](/tools/jwt-decoder)  -  Inspect decoded JWT payloads without sending the token anywhere
-- [Hash Generator](/tools/hash-generator)  -  Generate or identify hash types for verification
+- [Hash Identifier](/tools/hash-identifier) - Check which algorithms a digest might use
 - [Base64 Encoder/Decoder](/tools/base64-encoder-decoder)  -  Decode embedded credentials in Base64 strings
 
 ## Further Reading
 
-- [JWT Security Checklist](/blog/jwt-security-checklist)  -  Validating and securing JWT-based authentication
-- [Identify Hash Types: MD5, SHA1, SHA256](/blog/identify-hash-md5-sha1-sha256)  -  Matching hash formats to detection patterns
-- [Why URL Encoding Breaks APIs](/blog/url-encoding-api-bugs)  -  Related encoding issues that often accompany secret leaks in URLs
+- [JWT Security Checklist](/blog/2026-04-23-jwt-security-checklist)  -  Validating and securing JWT-based authentication
+- [Identify Hash Types: MD5, SHA1, SHA256](/blog/2026-04-23-identify-hash-md5-sha1-sha256)  -  Matching hash formats to detection patterns
+- [Why URL Encoding Breaks APIs](/blog/2026-04-25-url-encoding-api-bugs)  -  Related encoding issues that often accompany secret leaks in URLs

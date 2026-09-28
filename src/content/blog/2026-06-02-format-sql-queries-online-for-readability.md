@@ -109,6 +109,6 @@ The useful workflow is simple: format first, then debug. Clean indentation makes
 
 ## Quick workflow
 
-Paste the query into the [Toolblip SQL formatter](https://toolblip.com/tools/sql-formatter), choose the style your team uses, and copy the result back into the review. If the same ticket also includes payloads or encoded strings, Toolblip has a [JSON formatter](https://toolblip.com/tools/json-formatter) and [base64 tools](https://toolblip.com/tools/base64) for those too.
+Paste the query into the [Toolblip SQL formatter](https://toolblip.com/tools/sql-formatter), choose the style your team uses, and copy the result back into the review. If the same ticket also includes payloads or encoded strings, Toolblip has a [JSON formatter](https://toolblip.com/tools/json-formatter) and [base64 tools](https://toolblip.com/tools/base64-encoder-decoder) for those too.
 
 You do not need a perfect SQL style guide to get value from formatting. You just need the query to stop hiding its structure.

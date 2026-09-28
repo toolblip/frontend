@@ -202,7 +202,7 @@ The Web Crypto API supports `SHA-1`, `SHA-256`, `SHA-384`, and `SHA-512` nativel
 
 ## Try It Now
 
-The [Hash Generator on Toolblip](/tools/hash-generator) generates MD5, SHA-1, SHA-256, and SHA-512 hashes entirely in your browser. Paste any text or upload a file. Nothing is sent to any server.
+The [Hash Generator on Toolblip](/tools/md5-hash-generator) generates MD5, SHA-1, SHA-256, and SHA-512 hashes from text in your browser. Paste text, pick an algorithm, and copy the digest.
 
 ---
 

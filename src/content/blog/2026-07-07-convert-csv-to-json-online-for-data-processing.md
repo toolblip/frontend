@@ -123,7 +123,7 @@ Toolblip runs the conversion entirely in your browser. The CSV never gets upload
 
 You can verify this yourself:
 
-1. Open the [CSV to JSON](/tools/csv-to-json) tool.
+1. Open the [CSV to JSON](/tools/json-csv-converter) tool.
 2. Open your browser DevTools and switch to the **Network** tab.
 3. Paste a CSV and run the conversion.
 4. Watch the request list - no upload fires. The output appears with zero network calls carrying your data.
@@ -148,4 +148,4 @@ Yes - the sibling JSON to CSV tool flattens nested objects with dotted keys and 
 
 CSV lands in your inbox constantly, and the next step is almost always JSON. Rather than write a fragile parser or trust a converter that uploads your file, convert CSV to JSON online for data processing in one paste - with header detection, type inference, and nested-key support handled for you, all in the browser.
 
-Ready to try it? Open the free [CSV to JSON converter on Toolblip](/tools/csv-to-json), paste your rows, and copy clean JSON straight into your pipeline. Need the round trip later? The matching [JSON to CSV](/tools/json-to-csv) tool takes you back the other way.
+Ready to try it? Open the free [CSV to JSON converter on Toolblip](/tools/json-csv-converter), paste your rows, and copy clean JSON straight into your pipeline. Need the round trip later? The matching [JSON to CSV](/tools/json-csv-converter) tool takes you back the other way.

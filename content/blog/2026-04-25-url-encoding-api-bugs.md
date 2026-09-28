@@ -179,7 +179,7 @@ URL-safe Base64:  Y-Bz8A    ← uses - and _ instead, drops =
 
 If you're putting tokens, signed data, or encoded payloads in URLs, URL-safe Base64 isn't optional - standard Base64 will break your URLs.
 
-The [Toolblip Base64 encoder](/tools/base64) supports URL-safe mode. Paste any string, check "URL-safe output," and get a variant that won't corrupt your URLs.
+The [Toolblip Base64 encoder](/tools/base64-encoder-decoder) supports URL-safe mode. Paste any string, check "URL-safe output," and get a variant that won't corrupt your URLs.
 
 ## Real-World Example: The Google Search Bug
 
@@ -210,7 +210,7 @@ The loop continued. Eventually, one system decoded three times and got: `C ` (ju
 No signup. No server round-trips. Everything runs in your browser.
 
 - [URL Encoder/Decoder](/tools/url-encode) - encode, decode, and debug percent-encoded strings
-- [Base64 Encode/Decode](/tools/base64) - with URL-safe mode for API tokens and URL payloads
+- [Base64 Encode/Decode](/tools/base64-encoder-decoder) - with URL-safe mode for API tokens and URL payloads
 
 ## Bottom Line
 

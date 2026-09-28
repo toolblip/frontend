@@ -149,7 +149,7 @@ Once your list is unique, you often want one more quick step.
 
 **Filter by pattern.** If your deduped list mixes record types and you only want one kind, run it through the [regex tester](https://toolblip.com/tools/regex-tester) to keep only the matching lines.
 
-**Encode for transport.** If the deduped list will live inside a URL parameter or a JSON string, encode it with a [Base64](https://toolblip.com/tools/base64) pass so it survives quoting and escaping rules.
+**Encode for transport.** If the deduped list will live inside a URL parameter or a JSON string, encode it with a [Base64](https://toolblip.com/tools/base64-encoder-decoder) pass so it survives quoting and escaping rules.
 
 **Diff against a previous version.** Sort both the old and new lists alphabetically, then paste them into a diff viewer. Sorted unique lists are the cleanest input for any line-based diff.
 

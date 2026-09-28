@@ -69,7 +69,7 @@ The last point is ironic: the tools that market themselves on convenience (no in
 
 ## How Toolblip's Image Cropper Handles It
 
-Toolblip's [Image Cropper](/tools/image-cropper) processes everything **100% in your browser**. Here's what that means in practice:
+Toolblip's [Image Cropper](/tools/images/image-cropper) processes everything **100% in your browser**. Here's what that means in practice:
 
 - **No upload step** - You select a file from your device and it loads directly into the browser's memory.
 - **No server involvement** - The server only serves the HTML, CSS, and JavaScript. Your image data never crosses the network.
@@ -115,7 +115,7 @@ The market is shifting. Users are increasingly privacy-aware, and developers bui
 
 Toolblip's approach of keeping all processing in the browser isn't just a technical choice. It's a statement about where developer tools should be heading: **powerful, free, and private by default**.
 
-Bookmark the [Image Cropper](/tools/image-cropper) and make it part of your privacy-first workflow. Your screenshots, medical documents, and business data will thank you.
+Bookmark the [Image Cropper](/tools/images/image-cropper) and make it part of your privacy-first workflow. Your screenshots, medical documents, and business data will thank you.
 
 ---
 

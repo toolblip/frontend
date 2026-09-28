@@ -83,7 +83,7 @@ Open the page, clear the Network log, generate a code, and look for requests tha
 
 You can also load the page, disconnect from the internet, and try generating another code. A client-side generator should still work after the JavaScript has loaded.
 
-Toolblip follows that browser-first pattern for the [QR code generator](https://toolblip.com/tools/qr-code-generator), [JSON formatter](https://toolblip.com/tools/json-formatter), and [Base64 encoder](https://toolblip.com/tools/base64). Paste data, get output, and keep the work on your device.
+Toolblip follows that browser-first pattern for the [QR code generator](https://toolblip.com/tools/images/qr-code-generator), [JSON formatter](https://toolblip.com/tools/json-formatter), and [Base64 encoder](https://toolblip.com/tools/base64-encoder-decoder). Paste data, get output, and keep the work on your device.
 
 ## When a paid dynamic QR service makes sense
 
@@ -95,4 +95,4 @@ If you want to clean a tracking URL before encoding it, use the [regex tester](h
 
 ## Generate the code
 
-Open the [Toolblip QR code generator](https://toolblip.com/tools/qr-code-generator), paste the value, and download the PNG or SVG. Scan it once before printing. If the decoded value matches what you entered, you are done.
+Open the [Toolblip QR code generator](https://toolblip.com/tools/images/qr-code-generator), paste the value, and download the PNG or SVG. Scan it once before printing. If the decoded value matches what you entered, you are done.

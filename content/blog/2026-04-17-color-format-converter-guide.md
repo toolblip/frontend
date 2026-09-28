@@ -198,4 +198,4 @@ Instead of manual conversions or searching for a tool:
 2. See it instantly converted to all other formats
 3. Copy whichever format you need
 
-[Toolblip's Color Format Converter](/tools/color) handles HEX (6-digit and 8-digit), RGB/RGBA, HSL/HSLA, and HSV/HSVA. One input, all the outputs.
+[Toolblip's Color Format Converter](/tools/color-format-converter) handles HEX (6-digit and 8-digit), RGB/RGBA, HSL/HSLA, and HSV/HSVA. One input, all the outputs.

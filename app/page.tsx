@@ -188,7 +188,7 @@ export default function HomePage() {
                 A short playbook for cleaner URLs, stronger intent matching, and better internal linking.
               </div>
             </Link>
-            <Link href="/blog/2026-04-16-seo-friendly-urls-guide" className="tb-v2-dir-card">
+            <Link href="/blog/url-structure-seo-guide" className="tb-v2-dir-card">
               <div className="tb-v2-dir-card-top">
                 <div style={{ flex: 1 }}>
                   <div className="tb-v2-kicker" style={{ marginBottom: 6 }}>Canonical URL</div>

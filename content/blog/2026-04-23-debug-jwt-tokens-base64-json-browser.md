@@ -72,7 +72,7 @@ eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ
 
 ### Step 2: Decode Base64 URL
 
-Open the [Toolblip Base64 Decoder](/tools/base64-decoder). Paste the payload string. Click decode.
+Open the [Toolblip Base64 Decoder](/tools/base64-encoder-decoder). Paste the payload string. Click decode.
 
 You'll get the raw JSON string:
 ```json
@@ -143,9 +143,7 @@ If you see `"alg": "none"` or `"alg": "HS256"` in a token that should use RSA si
 
 ### Scenario 4: Verifying a Token Locally
 
-If you have the secret key for an HS256 token, you can verify it in your browser too. The [Toolblip Hash Generator](/tools/hash-generator) supports HMAC-SHA256 - you can compute the expected signature locally and compare it to the signature section of the JWT.
-
-This is useful when debugging "why is my server rejecting this token?" - compute what the correct signature should be and see if it matches.
+If you have the secret key for an HS256 token, verify its signature with a trusted JWT library configured for HS256. Toolblip's [JWT Decoder](/tools/jwt-decoder) shows the header and payload, but it does not verify signatures. A plain SHA-256 hash is not an HMAC-SHA256 signature.
 
 ## Why Not Use a Library?
 
@@ -199,7 +197,7 @@ Here's a real debugging scenario from API development:
 
 1. Copy the JWT from localStorage/sessionStorage (or your network tab)
 2. Split on `.` - take the payload (middle section)
-3. Paste into [Toolblip Base64 Decoder](/tools/base64-decoder)
+3. Paste into [Toolblip Base64 Decoder](/tools/base64-encoder-decoder)
 4. Copy the decoded JSON string
 5. Paste into [Toolblip JSON Formatter](/tools/json-formatter)
 6. Inspect `sub`, `iat`, `exp`, and any custom claims
@@ -227,11 +225,11 @@ Toolblip's tools run 100% client-side - nothing is sent to any server. The decod
 
 ## Related Tools
 
-- **[Base64 Encoder/Decoder](/tools/base64-decoder)** - Encode or decode Base64 and URL-safe Base64, entirely in your browser
+- **[Base64 Encoder/Decoder](/tools/base64-encoder-decoder)** - Encode or decode Base64 and URL-safe Base64, entirely in your browser
 - **[JSON Formatter](/tools/json-formatter)** - Pretty-print and validate JSON with syntax highlighting
 - **[Unix Timestamp Converter](/tools/unix-timestamp-converter)** - Convert Unix timestamps to human-readable dates and vice versa
 - **[Regex Tester](/tools/regex-tester)** - Test patterns against strings for validation and parsing
-- **[Hash Generator](/tools/hash-generator)** - Compute HMAC-SHA256 and other hash functions client-side
+- **[Hash Generator](/tools/md5-hash-generator)** - Compute plain MD5, SHA-1, SHA-256, SHA-384, and SHA-512 digests from text
 
 ## Further Reading
 

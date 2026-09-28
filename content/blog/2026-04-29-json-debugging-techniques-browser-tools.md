@@ -86,7 +86,7 @@ Instead of manually scanning a large payload, you can zero in on exactly what yo
 
 When an API response changes and something breaks, you need to know *what* changed. Manually comparing two JSON objects side by side is error-prone and exhausting.
 
-[JSON Diff](/tools/json-diff) highlights structural differences between two JSON documents  -  added keys, removed keys, changed values, type changes.
+[JSON Diff](/tools/code-diff) highlights structural differences between two JSON documents  -  added keys, removed keys, changed values, type changes.
 
 ```json
 // Original response
@@ -171,8 +171,8 @@ The same [JSON Formatter](/tools/json-formatter) tool handles minification with 
 
 JSON rarely exists in isolation. You frequently need to convert it to work with other formats:
 
-- [JSON to CSV](/tools/json-to-csv)  -  export data for spreadsheets
-- [JSON to YAML](/tools/json-to-yaml)  -  make it readable for config files
+- [JSON to CSV](/tools/json-csv-converter)  -  export data for spreadsheets
+- [JSON to YAML](/tools/json-yaml-converter)  -  make it readable for config files
 - [JSON to TypeScript](/tools/json-to-typescript)  -  generate type definitions from API responses
 - [JSON to Python](/tools/json-to-python)  -  Python dict output for scripts
 
@@ -236,13 +236,13 @@ Here's the complete set of tools for a full JSON debugging workflow:
 |---|---|
 | Format + validate | [JSON Formatter](/tools/json-formatter) |
 | Query with JSONPath | [JSON Path Tester](/tools/json-path-tester) |
-| Compare two documents | [JSON Diff](/tools/json-diff) |
+| Compare two documents | [JSON Diff](/tools/code-diff) |
 | Validate against schema | [JSON Schema Validator](/tools/json-schema-validator) |
 | Explore as a tree | [JSON Tree View](/tools/json-tree-view) |
 | Edit with validation | [JSON Editor](/tools/json-editor) |
-| Convert to CSV | [JSON to CSV](/tools/json-to-csv) |
+| Convert to CSV | [JSON to CSV](/tools/json-csv-converter) |
 | Convert to TypeScript | [JSON to TypeScript](/tools/json-to-typescript) |
-| Convert to YAML | [JSON to YAML](/tools/json-to-yaml) |
+| Convert to YAML | [JSON to YAML](/tools/json-yaml-converter) |
 
 Bookmark these. You'll use them more than you expect.
 

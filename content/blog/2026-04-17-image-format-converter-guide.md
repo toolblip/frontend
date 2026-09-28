@@ -152,4 +152,4 @@ Image format has a direct impact on your Core Web Vitals:
 
 Switching from JPEG/PNG to WebP is the single highest-leverage image optimization you can do. It requires no changes to your HTML structure (just swap the filename), delivers immediate file size reductions, and is supported everywhere.
 
-Use [Toolblip's Image Format Converter](/tools/image-format-converter) for one-off conversions and batch processing - no software to install, no account needed.
+Use [Toolblip's Image Format Converter](/tools/images/image-format-converter) for one-off conversions and batch processing - no software to install, no account needed.

@@ -32,7 +32,7 @@ const featuredLinks = [
     note: 'A practical list for tool site growth and cleaner discovery.',
   },
   {
-    href: '/blog/2026-04-16-seo-friendly-urls-guide',
+    href: '/blog/url-structure-seo-guide',
     label: 'URL Structure and SEO',
     note: 'Keep URL shapes clean, consistent, and easy to understand.',
   },

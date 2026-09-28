@@ -149,7 +149,7 @@ This matters more as more systems move to append-only event logs, CQRS patterns,
 
 - **[UUID Generator](/tools/uuid-generator)** - Generate UUID v4 and v7 instantly in your browser
 - **[JSON Formatter](/tools/json-formatter)** - Validate and pretty-print JSON with syntax highlighting
-- **[Hash Generator](/tools/hash-generator)** - Generate MD5, SHA-1, SHA-256, and SHA-512 hashes client-side
+- **[Hash Generator](/tools/md5-hash-generator)** - Generate MD5, SHA-1, SHA-256, and SHA-512 hashes client-side
 
 ## Further Reading
 

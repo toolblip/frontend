@@ -133,7 +133,7 @@ While you are squaring away your project, these Toolblip tools pair well with co
 
 - [JSON Formatter](https://toolblip.com/tools/json-formatter) to clean up design tokens and theme config files.
 - [Regex Tester](https://toolblip.com/tools/regex-tester) to find and replace color codes across a stylesheet.
-- [Base64 Encoder](https://toolblip.com/tools/base64) to inline small icons and assets in your CSS.
+- [Base64 Encoder](https://toolblip.com/tools/base64-encoder-decoder) to inline small icons and assets in your CSS.
 
 Bookmark the converter and keep your color formats one paste away.
 convert hex color to RGB and HSL online for CSS design

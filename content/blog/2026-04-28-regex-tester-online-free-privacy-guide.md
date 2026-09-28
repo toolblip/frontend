@@ -221,7 +221,7 @@ Bookmark [/tools/regex-tester](/tools/regex-tester) and open it whenever you nee
 ## Related Tools on Toolblip
 
 - [/tools/json-formatter](/tools/json-formatter)  -  format and validate JSON with the same no-signup, instant approach
-- [/tools/base64-encoder](/tools/base64-encoder)  -  encode/decode base64 100% in-browser
+- [/tools/base64-encoder](/tools/base64-encoder-decoder)  -  encode/decode base64 100% in-browser
 - [/tools/uuid-generator](/tools/uuid-generator)  -  generate UUIDs (v1, v4, v7) instantly
 - [/tools/url-encode](/tools/url-encode)  -  encode/decode URLs without sending data anywhere
 

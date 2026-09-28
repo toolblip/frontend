@@ -97,34 +97,34 @@ Here's the full suite of converters available:
 
 | From | To | Tool |
 |------|-----|------|
-| CSV | JSON | [CSV to JSON](/tools/csv-to-json) |
-| JSON | CSV | [JSON to CSV](/tools/json-to-csv) |
-| YAML | JSON | [YAML to JSON](/tools/yaml-to-json) |
-| JSON | YAML | [JSON to YAML](/tools/json-to-yaml) |
-| TOML | JSON | [TOML to JSON](/tools/toml-to-json) |
-| XML | JSON | [XML to JSON](/tools/xml-to-json) |
+| CSV | JSON | [CSV to JSON](/tools/json-csv-converter) |
+| JSON | CSV | [JSON to CSV](/tools/json-csv-converter) |
+| YAML | JSON | [YAML to JSON](/tools/json-yaml-converter) |
+| JSON | YAML | [JSON to YAML](/tools/json-yaml-converter) |
+| TOML | JSON | [TOML to JSON](/tools/json-toml-converter) |
+| XML | JSON | [XML to JSON](/tools/json-xml-converter) |
 
 ## Common Conversion Scenarios
 
 ### "I got an API response in JSON but need to import it into Excel"
 
-Export your data as CSV. Use [JSON to CSV](/tools/json-to-csv) - it flattens nested objects using dot notation (e.g., `address.city`) so nothing gets lost. Open the CSV in Excel or Google Sheets and you're done.
+Export your data as CSV. Use [JSON to CSV](/tools/json-csv-converter) - it flattens nested objects using dot notation (e.g., `address.city`) so nothing gets lost. Open the CSV in Excel or Google Sheets and you're done.
 
 ### "I wrote a Kubernetes config in YAML but need it as JSON for a tool"
 
-Use [YAML to JSON](/tools/json-to-yaml) - it preserves all the indentation-aware structure YAML gives you and outputs clean, valid JSON. Useful when a tool only accepts JSON but you prefer writing in YAML.
+Use [YAML to JSON](/tools/json-yaml-converter) - it preserves all the indentation-aware structure YAML gives you and outputs clean, valid JSON. Useful when a tool only accepts JSON but you prefer writing in YAML.
 
 ### "I have a spreadsheet of user data I need to send as a JSON payload"
 
-Export from Excel as CSV, then use [CSV to JSON](/tools/csv-to-json). If your CSV has headers, the converter uses them as keys automatically.
+Export from Excel as CSV, then use [CSV to JSON](/tools/json-csv-converter). If your CSV has headers, the converter uses them as keys automatically.
 
 ### "I'm migrating from a legacy XML system to a modern JSON API"
 
-[XML to JSON](/tools/xml-to-json) handles the tag-to-key conversion. Element names become object keys, text content becomes values, and attributes get prefixed (e.g., `id` attribute → `@id`).
+[XML to JSON](/tools/json-xml-converter) handles the tag-to-key conversion. Element names become object keys, text content becomes values, and attributes get prefixed (e.g., `id` attribute → `@id`).
 
 ### "My config file is in TOML but I need JSON for a Node.js project"
 
-[TOML to JSON](/tools/toml-to-json) converts your TOML configuration directly. TOML tables become objects, arrays become arrays - clean one-click conversion.
+[TOML to JSON](/tools/json-toml-converter) converts your TOML configuration directly. TOML tables become objects, arrays become arrays - clean one-click conversion.
 
 ## A Note on CSV Quirks
 
@@ -132,7 +132,7 @@ CSV has no official standard, which means real-world CSV files vary wildly:
 
 - **Delimiter:** Most use commas, but tabs (`TSV`), semicolons, and pipes (`|`) are common in Europe
 - **Quoting:** Fields with commas or quotes must be quoted - some tools quote everything unnecessarily
-- **Headers:** Some CSVs have headers, some don't - [CSV to JSON](/tools/csv-to-json) assumes headers by default but can work without them
+- **Headers:** Some CSVs have headers, some don't - [CSV to JSON](/tools/json-csv-converter) assumes headers by default but can work without them
 
 If your CSV isn't parsing correctly, check whether it uses a different delimiter or has inconsistent quoting.
 

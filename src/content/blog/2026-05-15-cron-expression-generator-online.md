@@ -58,7 +58,7 @@ The wildcards and operators:
 
 Combining these lets you describe schedules precisely. `0 9-17/2 * * 1-5` means at minute 0, every 2 hours from 9 to 17, Monday through Friday. That is hard to read at a glance and easy to mistype, which makes the case for using a generator.
 
-If you ever need to debug schedules that arrive as encoded payloads from CI configs or queue messages, our [Base64 decoder](https://toolblip.com/tools/base64) pairs well with cron debugging when CI configs wrap expressions in environment variables.
+If you ever need to debug schedules that arrive as encoded payloads from CI configs or queue messages, our [Base64 decoder](https://toolblip.com/tools/base64-encoder-decoder) pairs well with cron debugging when CI configs wrap expressions in environment variables.
 
 ## Cron Syntax Cheat Sheet
 

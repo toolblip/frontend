@@ -201,8 +201,8 @@ If you're working with JSON, these related tools round out your workflow:
 
 - **[JSON Formatter](/tools/json-formatter)**  -  Paste messy JSON, get clean, readable output with syntax highlighting
 - **[JSON to TypeScript](/tools/json-to-typescript)**  -  Generate TypeScript interfaces from JSON data structures
-- **[JSON to YAML](/tools/json-to-yaml)**  -  Convert JSON to YAML for config files
-- **[Base64 Encoder](/tools/base64)**  -  Encode or decode base64 data (common in JSON payloads)
+- **[JSON to YAML](/tools/json-yaml-converter)**  -  Convert JSON to YAML for config files
+- **[Base64 Encoder](/tools/base64-encoder-decoder)**  -  Encode or decode base64 data (common in JSON payloads)
 - **[Fake Data Generator](/tools/fake-data-generator)**  -  Generate realistic test data that matches your JSON structure
 
 ## The Bottom Line
