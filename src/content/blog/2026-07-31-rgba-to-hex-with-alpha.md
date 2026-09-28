@@ -153,6 +153,6 @@ You can also verify by setting the converted hex on an element and comparing it 
 
 The math is simple enough to do in your head for round numbers, but a converter is faster and does not make padding mistakes. A good rgba to hex converter online should show a live preview swatch so you can confirm the transparency looks right against a real background rather than trusting the digits.
 
-If you are handling color values that arrive base64 encoded inside a data URI or a config blob, decode them first with a [base64 tool](https://toolblip.com/tools/base64) so you are converting the actual color string and not the encoding.
+If you are handling color values that arrive base64 encoded inside a data URI or a config blob, decode them first with a [base64 tool](https://toolblip.com/tools/base64-encoder-decoder) so you are converting the actual color string and not the encoding.
 
 To convert an RGBA value to 8-digit HEX, use the [Color Format Converter](https://toolblip.com/tools/color-format-converter) on Toolblip. Enter the RGBA value and copy the HEX8 result into your stylesheet.

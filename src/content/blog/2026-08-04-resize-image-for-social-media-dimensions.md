@@ -99,7 +99,7 @@ There is also a practical size trade-off worth knowing. A 1200 x 630 JPEG at qua
 
 ## Resize Image for Social Media Dimensions Instantly with Image Resizer
 
-For most day-to-day work, running the numbers above through code is more setup than a single social post needs. Toolblip's [Image Resizer](https://toolblip.com/tools/image-resizer) does the same cover-fit resize as the code above, with presets for every size in the cheat sheet.
+For most day-to-day work, running the numbers above through code is more setup than a single social post needs. Toolblip's [Image Resizer](https://toolblip.com/tools/images/image-resizer) does the same cover-fit resize as the code above, with presets for every size in the cheat sheet.
 
 The flow is simple:
 

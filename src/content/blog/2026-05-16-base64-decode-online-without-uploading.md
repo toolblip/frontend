@@ -66,7 +66,7 @@ Files work the same way conceptually, but the tool reads bytes from a local `Fil
 
 No upload is required. The page does not need a backend to convert text to Base64, decode Base64 back to text, or turn a Base64 file string into bytes.
 
-That is the practical reason tools like Toolblip's [Base64 Encode/Decode](https://toolblip.com/tools/base64) are useful for everyday debugging. You can inspect a value quickly without turning a local problem into a data-sharing problem.
+That is the practical reason tools like Toolblip's [Base64 Encode/Decode](https://toolblip.com/tools/base64-encoder-decoder) are useful for everyday debugging. You can inspect a value quickly without turning a local problem into a data-sharing problem.
 
 ## How to check that a decoder is really local
 

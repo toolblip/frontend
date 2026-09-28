@@ -52,7 +52,7 @@ Convert text between: `UPPERCASE`, `lowercase`, `Title Case`, `camelCase`, `snak
 ## Encoding & Decoding
 
 ### Base64 Encode / Decode
-**URL:** [toolblip.com/tools/base64](/tools/base64)
+**URL:** [toolblip.com/tools/base64](/tools/base64-encoder-decoder)
 
 Encode text or files to Base64, decode Base64 back to text. The file support means you can drag-and-drop an image and get its Base64 representation for embedding in CSS, HTML, or API payloads.
 
@@ -69,7 +69,7 @@ Encode individual URL components or full URLs. Handles special characters, space
 Format, minify, or validate JSON. Syntax highlighting, line numbers, and a clear error message if the JSON is malformed - including the exact character position of the error. Paste broken JSON, get pointed to the problem.
 
 ### YAML to JSON
-**URL:** [toolblip.com/tools/yaml-to-json](/tools/yaml-to-json)
+**URL:** [toolblip.com/tools/yaml-to-json](/tools/json-yaml-converter)
 
 Convert YAML to JSON and vice versa. Useful when your config is in YAML but your API expects JSON, or when you want to read a YAML config file in a script that only handles JSON.
 
@@ -86,9 +86,9 @@ Live split-pane preview: write Markdown on the left, see rendered HTML on the ri
 Generate UUIDs v4 (random) and v7 (time-sortable) directly in the browser using the Web Crypto API. Generate one or a batch. No external request, no server call.
 
 ### Hash Generator
-**URL:** [toolblip.com/tools/hash-generator](/tools/hash-generator)
+**URL:** [toolblip.com/tools/md5-hash-generator](/tools/md5-hash-generator)
 
-Generate MD5, SHA-1, SHA-256, SHA-384, or SHA-512 hashes from any text input. Also works with file drag-and-drop. Useful for checksum verification and password testing without sending anything anywhere.
+Generate MD5, SHA-1, SHA-256, SHA-384, or SHA-512 hashes from text input. Useful for checking a text digest without sending the input to a server. For password storage, use a password hashing algorithm such as Argon2id or bcrypt.
 
 ### URL Slug Generator
 **URL:** [toolblip.com/tools/url-slug-generator](/tools/url-slug-generator)
@@ -110,12 +110,12 @@ Visually adjust border-radius on all four corners independently. See the result 
 ## Image Tools
 
 ### Image Cropper
-**URL:** [toolblip.com/tools/image-cropper](/tools/image-cropper)
+**URL:** [toolblip.com/tools/image-cropper](/tools/images/image-cropper)
 
 Crop images to preset ratios (1:1, 16:9, 4:3, 3:2) or freeform. Supports drag-and-drop upload. All processing happens client-side - the image never leaves your browser.
 
 ### Image Format Converter
-**URL:** [toolblip.com/tools/image-format-converter](/tools/image-format-converter)
+**URL:** [toolblip.com/tools/image-format-converter](/tools/images/image-format-converter)
 
 Convert between PNG, JPEG, WebP, and GIF. Adjust quality/compression. Useful for optimizing assets before deployment without opening Photoshop.
 

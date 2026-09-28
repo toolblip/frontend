@@ -184,8 +184,8 @@ All of these run entirely in your browser. Nothing is sent to a server.
 |------|-------------|
 | [JSON Formatter](/tools/json-formatter) | Pretty-print and syntax-highlight JSON instantly |
 | [JSON Validator](/tools/json-validator) | Pinpoint exact parse errors with line/column info |
-| [JSON to YAML](/tools/json-to-yaml) | Convert JSON to YAML for config file compatibility |
-| [JSON to CSV](/tools/json-to-csv) | Flatten JSON arrays into CSV for spreadsheet analysis |
+| [JSON to YAML](/tools/json-yaml-converter) | Convert JSON to YAML for config file compatibility |
+| [JSON to CSV](/tools/json-csv-converter) | Flatten JSON arrays into CSV for spreadsheet analysis |
 
 ## Key Takeaways
 

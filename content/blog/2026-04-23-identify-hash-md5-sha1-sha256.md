@@ -259,7 +259,7 @@ Base64 is encoding, not hashing and not encryption. A string like this:
 cGFzc3dvcmQ=
 ```
 
-is just Base64 for `password`. You can decode it with a [Base64 Encoder/Decoder](/tools/base64-encoder). If the data is reversible without a key, it is not a hash.
+is just Base64 for `password`. You can decode it with a [Base64 Encoder/Decoder](/tools/base64-encoder-decoder). If the data is reversible without a key, it is not a hash.
 
 ### Mistake 4: Ignoring Salts
 
@@ -281,7 +281,7 @@ A salted password hash may not match a simple hash generator output because the 
 
 ## Use the Right Tool for the Job
 
-If you have an unknown hash, start with [Hash Identifier](/tools/hash-identifier). If you need to reproduce or verify a digest, use [Hash Generator](/tools/sha256-hash-generator). If you are dealing with tokens rather than hashes, use [JWT Decoder](/tools/jwt-decoder). If the string is reversible encoding, try [Base64 Encoder/Decoder](/tools/base64-encoder) or [URL Encode/Decode](/tools/url-encode).
+If you have an unknown hash, start with [Hash Identifier](/tools/hash-identifier). If you need to reproduce or verify a digest, use [Hash Generator](/tools/sha256-hash-generator). If you are dealing with tokens rather than hashes, use [JWT Decoder](/tools/jwt-decoder). If the string is reversible encoding, try [Base64 Encoder/Decoder](/tools/base64-encoder-decoder) or [URL Encode/Decode](/tools/url-encode).
 
 The key is to separate three ideas that often get mixed together:
 

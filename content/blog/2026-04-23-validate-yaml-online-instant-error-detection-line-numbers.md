@@ -21,7 +21,7 @@ Most YAML validators tell you the error is somewhere near "line 12." Some don't 
 
 A validator that reports **exact line and column numbers** turns a 20-minute debugging session into a 10-second fix. You scroll to line 47, look at the indentation, and the problem is right there.
 
-Toolblip's [YAML Validator](/tools/yaml-to-json) does exactly this  -  it parses your YAML, reports every error with its precise location, and highlights the problematic character so you don't have to guess.
+Toolblip's [YAML Validator](/tools/json-yaml-converter) does exactly this  -  it parses your YAML, reports every error with its precise location, and highlights the problematic character so you don't have to guess.
 
 ## The Five YAML Mistakes That Cause Most Failures
 
@@ -131,11 +131,11 @@ description: "Tools > Workflows > Results"
 
 ## How to Validate YAML Online with Line Numbers
 
-Here's how to use Toolblip's [YAML Validator](/tools/yaml-to-json) to find and fix errors fast.
+Here's how to use Toolblip's [YAML Validator](/tools/json-yaml-converter) to find and fix errors fast.
 
 ### Step 1: Paste Your YAML
 
-Open [toolblip.com/tools/yaml-to-json](/tools/yaml-to-json). Paste your YAML content. The validator runs entirely in your browser  -  no data is sent to any server.
+Open [toolblip.com/tools/yaml-to-json](/tools/json-yaml-converter). Paste your YAML content. The validator runs entirely in your browser  -  no data is sent to any server.
 
 ### Step 2: Read the Error Report
 
@@ -174,7 +174,7 @@ on: push
   branches: [main]
 ```
 
-The [YAML Validator](/tools/yaml-to-json) catches the space issue instantly and shows you the exact line.
+The [YAML Validator](/tools/json-yaml-converter) catches the space issue instantly and shows you the exact line.
 
 ### Docker Compose Files
 
@@ -196,7 +196,7 @@ ports:
 
 Kubernetes YAML must follow the schema for each resource type. A missing `spec:` block, an incorrect `apiVersion:`, or a malformed selector label will all cause the apply to fail  -  but `kubectl apply` doesn't always give you the most helpful error messages.
 
-Validate your manifest with the [YAML Validator](/tools/yaml-to-json) first to catch basic syntax errors before running `kubectl apply -f`.
+Validate your manifest with the [YAML Validator](/tools/json-yaml-converter) first to catch basic syntax errors before running `kubectl apply -f`.
 
 ## What Good YAML Looks Like
 
@@ -251,9 +251,9 @@ Notice:
 
 ## YAML Validation vs JSON Formatter: Different Tools, Different Jobs
 
-Toolblip's [YAML to JSON converter](/tools/yaml-to-json) does both jobs at once: paste a YAML file and it either converts cleanly or surfaces the parser's error message, complete with line and column, the moment something's malformed.
+Toolblip's [YAML to JSON converter](/tools/json-yaml-converter) does both jobs at once: paste a YAML file and it either converts cleanly or surfaces the parser's error message, complete with line and column, the moment something's malformed.
 
-For working with API data and configuration dumps, you'll also want the [JSON Formatter](/tools/json-formatter) and [JSON Diff](/tools/json-diff) tools in your workflow.
+For working with API data and configuration dumps, you'll also want the [JSON Formatter](/tools/json-formatter) and [JSON Diff](/tools/code-diff) tools in your workflow.
 
 ## The Short Version
 
@@ -264,8 +264,8 @@ Most YAML errors come from five root causes:
 4. **Unquoted colons in URLs and paths**  -  `https://` needs quotes
 5. **Mixed list/map syntax**  -  keep it consistent
 
-When you hit an error, don't guess. Paste your YAML into [toolblip.com/tools/yaml-to-json](/tools/yaml-to-json) and get the exact line number. The fix takes seconds once you know where to look.
+When you hit an error, don't guess. Paste your YAML into [toolblip.com/tools/yaml-to-json](/tools/json-yaml-converter) and get the exact line number. The fix takes seconds once you know where to look.
 
 ---
 
-*Toolblip's YAML Validator runs entirely in your browser. No data leaves your machine. [Validate YAML now →](/tools/yaml-to-json)*
+*Toolblip's YAML Validator runs entirely in your browser. No data leaves your machine. [Validate YAML now →](/tools/json-yaml-converter)*

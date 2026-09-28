@@ -134,7 +134,7 @@ If you're starting a new web project today: **default to JSON**. If you encounte
 ## Useful Tools
 
 - **[JSON Formatter](/tools/json-formatter)** - Validate, format, and minify JSON instantly in your browser
-- **[Base64 Encoder](/tools/base64)** - Encode and decode Base64 for data transmission
+- **[Base64 Encoder](/tools/base64-encoder-decoder)** - Encode and decode Base64 for data transmission
 - **[URL Encoder](/tools/url-encode)** - Safely encode URLs and URL components
 
 No data leaves your browser. Everything runs client-side.

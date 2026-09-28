@@ -392,8 +392,8 @@ Notice the subtle difference: Python uses `r'(?<=\$)\d+'` (raw string), while PH
 
 - **[Regex Tester](/tools/regex-tester)**  -  Test patterns in JavaScript, Python, and PCRE directly in your browser
 - **[Regex Cheatsheet](/blog/regex-cheatsheet)**  -  Copy-paste patterns for common tasks (email, URL, date, UUID)
-- **[Regex Lookahead and Lookbehind Explained](/blog/regex-lookahead-lookbehind-explained)**  -  Master the assertion syntax that trips up most developers
-- **[Regex101 vs Toolblip: Free Regex Tester Comparison](/blog/regex101-vs-toolblip-free-regex-tester)**  -  How Toolblip compares as a no-signup alternative
+- **[Regex Lookahead and Lookbehind Explained](/blog/2026-05-05-regex-lookahead-lookbehind-explained)**  -  Master the assertion syntax that trips up most developers
+- **[Regex101 vs Toolblip: Free Regex Tester Comparison](/blog/2026-04-23-regex101-vs-toolblip-free-regex-tester)**  -  How Toolblip compares as a no-signup alternative
 
 ---
 

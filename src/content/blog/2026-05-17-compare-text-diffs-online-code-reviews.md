@@ -26,7 +26,7 @@ A browser diff tool is best for small comparisons that are awkward in git.
 
 Maybe you have an old environment variable block from a runbook and a new one from production. Maybe a teammate sent a patch in chat instead of a branch. Maybe you are reviewing generated output where whitespace, commas, or one changed flag matters more than the surrounding file history.
 
-For those cases, Toolblip's [Text Diff Checker](https://toolblip.com/tools/text-diff-checker) gives you a quick side-by-side comparison. If you are comparing source snippets instead of plain text, the [Code Diff](https://toolblip.com/tools/code-diff) tool is usually a better fit because the intent is closer to code review than document review.
+For those cases, Toolblip's [Code Diff](https://toolblip.com/tools/code-diff) gives you a quick comparison of the two snippets. Read the changed lines in context before accepting a patch.
 
 Use the online diff for inspection, not as the source of truth. The final review still belongs in your pull request, commit diff, or local editor.
 
@@ -85,7 +85,7 @@ Config changes are another good use case. A diff makes it obvious when `CACHE_TT
 
 Generated text is trickier. API responses, lockfiles, translated strings, and documentation snapshots can change in tiny ways. A diff lets you inspect the exact line that changed before you approve the update.
 
-For structured data, plain text diff is not always enough. If the input is JSON, use a [JSON Diff](https://toolblip.com/tools/json-diff) tool so object order and formatting do not distract from the actual value changes.
+For structured data, plain text diff is not always enough. If the input is JSON, use a [JSON Diff](https://toolblip.com/tools/code-diff) tool so object order and formatting do not distract from the actual value changes.
 
 ## A practical review workflow
 

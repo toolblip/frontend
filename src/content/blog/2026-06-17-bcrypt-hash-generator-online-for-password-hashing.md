@@ -99,7 +99,7 @@ Not all bcrypt tools are equally useful. The ones worth bookmarking share a few 
 
 **Copy-friendly output.** The hash is a single line with no extra formatting. You should be able to click once and paste it directly into a database seed, a test file, or a `.env` variable.
 
-The [Toolblip hash generator](https://toolblip.com/tools/hash-generator) runs entirely in your browser and supports configurable cost factors from 4 to 16.
+The [Toolblip bcrypt hash generator](https://toolblip.com/tools/bcrypt-hash-generator) runs in your browser and lets you choose the cost factor.
 
 ## Verifying Your Bcrypt Integration
 
@@ -121,4 +121,4 @@ If it prints `true`, your bcrypt setup is compatible with the online generator a
 
 A bcrypt hash generator online saves time when you need a hash for testing, migration, or debugging your Node.js auth flow. Keep three things in mind: the output must be compatible with your backend implementation, the tool must run client-side so passwords never leave your browser, and the cost factor should match your production settings, typically 10 or 12.
 
-Try the [Toolblip hash generator](https://toolblip.com/tools/hash-generator) to create bcrypt hashes in your browser, then verify them against your Node.js `bcrypt.compare()` to confirm compatibility before writing any migration scripts.
+Try the [Toolblip bcrypt hash generator](https://toolblip.com/tools/bcrypt-hash-generator) to create a test hash, then verify it against your Node.js `bcrypt.compare()` before using it in a migration script.

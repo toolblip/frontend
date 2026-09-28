@@ -89,7 +89,7 @@ You could pull in a library, write a script, and run it from a terminal. For a q
 
 The no-install approach matters most when you are not in your own environment. You might be reviewing a teammate's pull request on a borrowed machine, or testing an API from a documentation page, or working inside a restricted container where you cannot add dependencies. A browser tool works the same everywhere and adds nothing to your project's lock file.
 
-It also keeps your test data out of any external system. The generation happens in your browser, so the IDs you create for a sensitive fixture never leave the page. That is the same client-side principle behind tools like the [Base64 encoder and decoder](https://toolblip.com/tools/base64), which transforms your data locally rather than uploading it.
+It also keeps your test data out of any external system. The generation happens in your browser, so the IDs you create for a sensitive fixture never leave the page. That is the same client-side principle behind tools like the [Base64 encoder and decoder](https://toolblip.com/tools/base64-encoder-decoder), which transforms your data locally rather than uploading it.
 
 ## Validating UUIDs before they reach your API
 

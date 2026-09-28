@@ -113,7 +113,7 @@ The `=` characters at the end of a Base64 string are not optional. `SGk=` decode
 
 Try it in your browser - no upload, no server call:
 
-👉 **[Toolblip Base64 Encoder/Decoder →](/tools/base64)**
+👉 **[Toolblip Base64 Encoder/Decoder →](/tools/base64-encoder-decoder)**
 
 Paste text or drag-and-drop a file. Encode or decode instantly, entirely in your browser.
 

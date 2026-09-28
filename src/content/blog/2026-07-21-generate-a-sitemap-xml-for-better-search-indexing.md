@@ -89,13 +89,13 @@ Disallow: /api/
 Sitemap: https://example.com/sitemap.xml
 ```
 
-The `Sitemap:` directive is absolute and sits outside any `User-agent` group. Run your file through the [robots.txt checker](https://toolblip.com/tools/robots-txt-checker) to confirm the directive parses and none of your sitemap URLs fall under a `Disallow` rule.
+The `Sitemap:` directive is absolute and sits outside any `User-agent` group. Use the [robots.txt checker](https://toolblip.com/tools/robots-txt-checker) to review the rules and test important page paths for Googlebot. A sitemap directive does not override a `Disallow` rule.
 
 ## Validate Sitemap.xml Before Submitting
 
 Search Console rejects malformed sitemaps with terse errors like "Couldn't fetch" that tell you nothing about the actual cause. Catch problems locally first.
 
-Run the file through the [sitemap XML validator](https://toolblip.com/tools/sitemap-xml-validator). It checks schema conformance, absolute URL format, escaping, and the 50,000 URL ceiling.
+Run the file through the [XML validator](https://toolblip.com/tools/xml-validator) to catch malformed XML and escaping errors. Then check the sitemap-specific rules yourself: absolute canonical URLs, the right host, and the 50,000 URL limit. This validator does not check the sitemap schema or URL limit.
 
 Four failures account for most rejections.
 
@@ -176,7 +176,6 @@ A stale sitemap is worse than none, because it burns crawl budget on URLs that 4
 
 Regenerate on every deploy that changes routes. Drop URLs the moment you delete or redirect a page. Exclude anything `noindex`, since listing a page you tell Google not to index is a contradiction. Review the Search Console sitemap report monthly for a growing error count.
 
-Generate a sitemap.xml for better search indexing, validate it before you submit, and keep robots.txt out of its way. That combination fixes the majority of "Google will not index my pages" problems that have nothing to do with content quality.
+Generate a sitemap.xml for the pages you want discovered, check it before submitting, and make sure robots.txt permits crawling. Google still decides whether each eligible page belongs in its index.
 
-Ready to build yours? Use the free [XML Sitemap Generator](https://toolblip.com/tools/xml-sitemap-generator) to create the file in your browser, then run it through the [sitemap XML validator](https://toolblip.com/tools/sitemap-xml-validator) before you submit it to Search Console. No account, no upload, no waiting.
-
+Use the [XML Sitemap Generator](https://toolblip.com/tools/xml-sitemap-generator) to create the file, then check XML syntax with the [XML validator](https://toolblip.com/tools/xml-validator). Review the sitemap rules separately before submitting it to Search Console.
