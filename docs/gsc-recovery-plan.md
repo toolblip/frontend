@@ -12,6 +12,32 @@ low-value doorway pages at scale.
 This file tracks what's been fixed in this repo and what's still open, so
 the next pass (mine or someone else's) doesn't have to re-derive it.
 
+## September 28 cohort refresh and sitewide measurement
+
+The September 28 refresh of the fixed 12-URL cohort still showed 11
+"Crawled - currently not indexed" and one unknown. None had a new crawl.
+That is the stored Search Console view for those URLs, not a new crawl or
+evidence that the sitewide indexing count changed.
+
+The weekly GSC workflow now writes a separate 28-finalized-day, sitewide
+Search Analytics report to `test-results/gsc-site-performance/`. It uses the
+same `GSC_SERVICE_ACCOUNT` read-only credential and the configured
+`GSC_SITEWIDE_URL`, which defaults to `sc-domain:toolblip.com` and also accepts
+the root HTTPS prefix `https://toolblip.com/`. This is independent of the
+cohort report's `GSC_SITE_URL`, which may be a `/tools/` URL prefix. The window
+ends three PT calendar days before collection. Run
+`node scripts/gsc-site-performance.mjs` locally with those variables to
+write `report.json` and `report.md` there. The existing cohort report stays
+at `test-results/gsc-recovery/`.
+
+The JSON lists each returned page and groups observed pages by home, tool,
+blog, directory, and other, with clicks, impressions, CTR, and average
+position. The Markdown shows the groups and the first 50 page rows. Search
+Analytics sorts page rows by clicks and this query requests at most 25,000.
+These rows are not a complete indexing inventory; omitted rows do not prove
+no indexing. A zero-row response means this query returned no pages, not
+that Google indexed none.
+
 ## 2026-09-28 redirect follow-up
 
 Audited 22 more retired tool URLs whose redirect targets cannot perform the
