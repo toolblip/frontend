@@ -243,7 +243,6 @@ Here's the complete set of tools for a full JSON debugging workflow:
 | Convert to CSV | [JSON to CSV](/tools/json-to-csv) |
 | Convert to TypeScript | [JSON to TypeScript](/tools/json-to-typescript) |
 | Convert to YAML | [JSON to YAML](/tools/json-to-yaml) |
-| Infer schema from data | [JSON Schema Generator](/tools/json-schema-generator) |
 
 Bookmark these. You'll use them more than you expect.
 
