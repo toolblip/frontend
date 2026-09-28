@@ -13,9 +13,11 @@ const context = { process: { env: {} }, browserPolicyHeaders: [], baseCsp: '', b
   browserPolicyHeaders: string[];
   baseCsp: string;
   basePermissions: string;
-  redirects: () => Promise<Redirect[]>;
+  redirects?: () => Promise<Redirect[]>;
 };
 runInNewContext(configSource, context);
+const getRedirects = context.redirects;
+if (!getRedirects) throw new Error('Next config did not expose redirects');
 
 const removedSlugs = `
 whois-lookup whois-lookup-v2 backlink-analyzer
@@ -33,7 +35,7 @@ response-header-analyzer webhook-tester protect
 
 it('retired tools without a close replacement have no redirect or static route', async () => {
   expect(removedSlugs).toHaveLength(56);
-  const redirects = await context.redirects();
+  const redirects = await getRedirects();
   const bySource = new Map(redirects.map(({ source, destination, permanent }) => [source, { destination, permanent }]));
   expect(redirects.filter(({ destination }) => destination === '/tools')).toHaveLength(0);
 
@@ -52,14 +54,14 @@ it('retired tools without a close replacement have no redirect or static route',
 });
 
 it('does not send any tool URL to the homepage', async () => {
-  const redirects = await context.redirects();
+  const redirects = await getRedirects();
   expect(redirects.filter(({ source, destination }) =>
     (source === '/tools' || source.startsWith('/tools/')) && destination === '/'
   )).toEqual([]);
 });
 
 it('named deleted tools have no redirect, catalog entry, or alias route', async () => {
-  const redirects = await context.redirects();
+  const redirects = await getRedirects();
   const catalog = readFileSync(new URL('../data/tools.ts', import.meta.url), 'utf8');
   const aliases = catalog.split('const TOOL_SLUG_ALIASES:')[1].split('export const tools:')[0];
   const toolRows = catalog.split('export const tools: Tool[] = [')[1].split('];')[0];
@@ -75,7 +77,7 @@ it('named deleted tools have no redirect, catalog entry, or alias route', async 
 });
 
 it('matching retired URLs redirect directly to their working replacements', async () => {
-  const redirects = await context.redirects();
+  const redirects = await getRedirects();
   for (const [source, destination] of [
     ['/tools/make-background-transparent', '/tools/images/image-background-remover'],
     ['/tools/website-age-checker', '/tools/domain-age-checker'],
@@ -98,7 +100,7 @@ favicon-checker seo-tag-analyzer audio-to-text
 `.trim().split(/\s+/);
   expect(slugs).toHaveLength(22);
 
-  const redirects = await context.redirects();
+  const redirects = await getRedirects();
   const catalog = readFileSync(new URL('../data/tools.ts', import.meta.url), 'utf8');
   const aliases = catalog.split('const TOOL_SLUG_ALIASES:')[1].split('export const tools:')[0];
   const toolRows = catalog.split('export const tools: Tool[] = [')[1].split('];')[0];
