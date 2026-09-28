@@ -200,7 +200,7 @@ export default slugs.map(slug => ({ slug, async test({ page, tool, check, expect
     prove(imageObjects(doc,0).length===1 && imageObjects(doc,1).length===0,'Signature image is added only to selected page');
     prove(pageOperators(doc,0).includes('1 0 0 1 25 35 cm'),'Signature placement is 25,35 PDF points');
     await tool.getByRole('tab',{name:'Draw',exact:true}).click();
-    const canvas=tool.locator('canvas').first(); const box=await canvas.boundingBox();
+    const canvas=tool.locator('.tb-sign-mode-panel canvas'); const box=await canvas.boundingBox();
     expect(box).not.toBeNull();
     await page.mouse.move(box.x+20,box.y+30); await page.mouse.down(); await page.mouse.move(box.x+100,box.y+60,{steps:8}); await page.mouse.up();
     await tool.getByLabel('Page to sign',{exact:true}).selectOption('1');
