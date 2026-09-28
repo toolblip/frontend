@@ -86,6 +86,6 @@ Generate the password locally in the browser or terminal. Copy it directly into 
 
 If a teammate needs access, share through the password manager. If a service needs access, store it as an environment variable or secret in the platform that runs the service. If you accidentally pasted it somewhere public or semi-public, rotate it instead of debating whether anyone saw it.
 
-For related privacy-first utilities, Toolblip also has a [Base64 encoder and decoder](https://toolblip.com/tools/base64-encoder-decoder) for harmless encoding tasks and a [Text Diff Checker](https://toolblip.com/tools/text-diff-checker) for comparing snippets before review. Keep the same rule for all of them: browser tools are convenient, but secrets deserve extra suspicion.
+For related privacy-first utilities, Toolblip also has a [Base64 encoder and decoder](https://toolblip.com/tools/base64-encoder-decoder) for harmless encoding tasks and a [Text Diff Checker](https://toolblip.com/tools/code-diff) for comparing snippets before review. Keep the same rule for all of them: browser tools are convenient, but secrets deserve extra suspicion.
 
 A secure password generator should make the secret stronger without making your handling of it worse. The password itself is only half the story. The path it takes after generation matters just as much.

@@ -187,7 +187,7 @@ const token = createHmac('sha256', secret)
 ## Useful Tools
 
 - **[UUID Generator](/tools/uuid-generator)** - Generate UUIDs v4 instantly in your browser
-- **[Hash Generator](/tools/hash-generator)** - Generate SHA/MD5 hashes
-- **[Base64 Encoder](/tools/base64)** - Encode any string to base64
+- **[Hash Generator](/tools/md5-hash-generator)** - Generate SHA/MD5 hashes
+- **[Base64 Encoder](/tools/base64-encoder-decoder)** - Encode any string to base64
 
 No data leaves your browser. Everything runs client-side using the Web Crypto API.

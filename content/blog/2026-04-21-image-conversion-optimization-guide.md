@@ -76,8 +76,8 @@ With client-side processing, the math is simple: if the image never leaves your 
 
 If you're ready to start optimizing, Toolblip has everything you need - all processing happens in your browser:
 
-- **[Image Resizer](/tools/image-resizer)** - Resize and convert images in one place. Pick your format, set dimensions, and download the result.
-- **[Favicon Generator](/tools/favicon-generator)** - Need a favicon in multiple sizes? This tool generates all the formats you need from a single upload, ready to drop into your project.
+- **[Image Resizer](/tools/images/image-resizer)** - Resize and convert images in one place. Pick your format, set dimensions, and download the result.
+- **[Favicon Generator](/tools/images/favicon-generator)** - Need a favicon in multiple sizes? This tool generates all the formats you need from a single upload, ready to drop into your project.
 - **[Image to Base64](/tools/images/base64-image-converter)** - Convert any image to a Base64 data URL. Useful for embedding images directly in CSS or HTML without external files.
 
 ## Quick Tips for Better Image Optimization
@@ -91,4 +91,4 @@ If you're ready to start optimizing, Toolblip has everything you need - all proc
 
 Image optimization isn't a one-time task - it's a habit. The good news is it takes seconds. Pick up an image, run it through a browser-based converter, and notice the difference in load times. Your visitors (and your Core Web Vitals scores) will thank you.
 
-With tools like Toolblip's [Image Resizer](/tools/image-resizer), there's no excuse to ship oversized images. Everything runs in your browser, nothing leaves your device, and you're done in under a minute.
+With tools like Toolblip's [Image Resizer](/tools/images/image-resizer), there's no excuse to ship oversized images. Everything runs in your browser, nothing leaves your device, and you're done in under a minute.

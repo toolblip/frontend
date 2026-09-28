@@ -102,7 +102,7 @@ Toolblip runs the entire conversion in your browser. No upload happens. The JSON
 
 You can verify this yourself in 30 seconds:
 
-1. Open the [JSON to CSV converter](/tools/json-to-csv).
+1. Open the [JSON to CSV converter](/tools/json-csv-converter).
 2. Open DevTools (`F12` or `Cmd+Option+I`) and switch to the **Network** tab.
 3. Paste your JSON and run the conversion.
 4. Watch the Network tab. No upload fires. The CSV appears with zero outbound requests carrying your data.
@@ -139,4 +139,4 @@ The practical limit is your browser's memory. Tens of thousands of objects conve
 
 When your data lands as JSON and your analysis needs a spreadsheet, convert JSON to CSV for spreadsheet analysis in one paste: flatten nested objects, keep types intact, and open the result in any spreadsheet tool. No upload, no script, no manual key extraction.
 
-Ready to try it? Open the free [JSON to CSV converter on Toolblip](/tools/json-to-csv), paste your API payload, and download a spreadsheet-ready CSV in seconds. Going the other way? The sibling [CSV to JSON converter](/tools/csv-to-json) handles the reverse transformation.
+Ready to try it? Open the free [JSON to CSV converter on Toolblip](/tools/json-csv-converter), paste your API payload, and download a spreadsheet-ready CSV in seconds. Going the other way? The sibling [CSV to JSON converter](/tools/json-csv-converter) handles the reverse transformation.

@@ -160,7 +160,7 @@ Second, if you are pasting a production API response into a browser tool, verify
 
 That check takes four seconds and is worth doing once for any tool you plan to paste real data into. Don't send responses with customer emails and internal IDs to a server you haven't audited.
 
-If your API returns encoded payloads, decode them before converting. A [Base64 decoder](https://toolblip.com/tools/base64) will get you back to readable JSON, and a [regex tester](https://toolblip.com/tools/regex-tester) helps when you need to strip wrapper text or extract one object out of a larger log line.
+If your API returns encoded payloads, decode them before converting. A [Base64 decoder](https://toolblip.com/tools/base64-encoder-decoder) will get you back to readable JSON, and a [regex tester](https://toolblip.com/tools/regex-tester) helps when you need to strip wrapper text or extract one object out of a larger log line.
 
 ## When to Convert JSON to TypeScript Interface Definitions Automatically
 

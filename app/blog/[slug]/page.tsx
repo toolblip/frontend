@@ -66,7 +66,7 @@ export default async function BlogPostPage({ params }: PageProps) {
             note: 'A compact list for tool site growth.',
           },
           {
-            href: '/blog/2026-04-16-seo-friendly-urls-guide',
+            href: '/blog/url-structure-seo-guide',
             label: 'URL Structure and SEO',
             note: 'Keep URL shapes clean and consistent.',
           },

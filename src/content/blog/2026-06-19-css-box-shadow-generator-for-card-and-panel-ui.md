@@ -140,4 +140,4 @@ The manual box-shadow process goes: type a value, save, alt-tab to the browser, 
 
 A visual CSS box-shadow generator removes that loop. You drag sliders and see the effect on a sample element instantly. When it looks right, copy the CSS and paste it into your stylesheet.
 
-The Toolblip [CSS box shadow generator](https://toolblip.com/tools/box-shadow-generator) works this way. It shows a live preview of a card element, lets you adjust all five box-shadow parameters independently, and supports multi-shadow layering. You can copy the CSS with one click and paste it directly into your project.
+Use your browser's developer tools to adjust `box-shadow` while you watch the card update. Once the values look right, copy the declaration into your stylesheet and check it at mobile and desktop widths.

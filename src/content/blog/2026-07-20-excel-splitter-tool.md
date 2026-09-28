@@ -142,7 +142,7 @@ Access control is the blocker: split by column value on the field that defines t
 
 An importer that reads only one sheet is the blocker: split by sheet and keep the tab names as filenames.
 
-A format mismatch rather than size is the blocker: convert instead of splitting. [Excel to CSV](https://toolblip.com/tools/excel-to-csv) or [CSV to JSON](https://toolblip.com/tools/csv-to-json) may solve it in one step.
+A format mismatch rather than size is the blocker: convert instead of splitting. [Excel to CSV](https://toolblip.com/tools/excel-to-csv) or [CSV to JSON](https://toolblip.com/tools/json-csv-converter) may solve it in one step.
 
 ## Split Your Spreadsheet Now
 

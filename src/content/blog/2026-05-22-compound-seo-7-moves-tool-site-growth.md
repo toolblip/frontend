@@ -48,7 +48,7 @@ A good page usually matches the target query in:
 
 That does not mean keyword stuffing. It means alignment. If the user types a phrase into search, the page should look like the obvious match as soon as it loads.
 
-Our [URL Structure and SEO guide](/blog/2026-04-16-seo-friendly-urls-guide) is a good example of this idea in practice.
+Our [URL Structure and SEO guide](/blog/url-structure-seo-guide) is a good example of this idea in practice.
 
 ## 3. Add internal links from related pages
 
@@ -145,4 +145,4 @@ Compound SEO is not about gaming search.
 
 It is about making each page do one clear job, then connecting those pages so the whole site feels coherent. That is better for users, better for search engines, and better for growth.
 
-If you want more examples of clean technical SEO pages, see the [robots.txt Generator](/tools/robots-txt-generator), the [XML Sitemap Generator](/tools/xml-sitemap-generator), and the [URL Structure and SEO guide](/blog/2026-04-16-seo-friendly-urls-guide).
+If you want more examples of clean technical SEO pages, see the [robots.txt Generator](/tools/robots-txt-generator), the [XML Sitemap Generator](/tools/xml-sitemap-generator), and the [URL Structure and SEO guide](/blog/url-structure-seo-guide).

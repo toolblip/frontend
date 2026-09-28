@@ -62,7 +62,7 @@ export default function BlogPage() {
               A practical list for tool sites: one canonical page per intent, cleaner URLs, stronger internal links, and content that matches real search queries.
             </div>
           </Link>
-          <Link href="/blog/2026-04-16-seo-friendly-urls-guide" className="tb-v2-dir-card">
+          <Link href="/blog/url-structure-seo-guide" className="tb-v2-dir-card">
             <div className="tb-v2-dir-card-top">
               <div style={{ flex: 1 }}>
                 <div className="tb-v2-kicker" style={{ marginBottom: 6 }}>Canonical URLs</div>

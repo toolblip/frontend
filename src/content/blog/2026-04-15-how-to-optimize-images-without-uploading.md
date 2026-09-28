@@ -39,7 +39,7 @@ No server. No upload. No "by using this service you agree to our privacy policy.
 
 Cropping in the browser works like any editor: you set your crop region, adjust aspect ratio if needed, and export. The difference is the file never leaves your machine, so you can crop that screenshot with client data in it without worrying about where it ends up.
 
-Toolblip's [Image Cropper](/tools/image-cropper) handles drag-to-select cropping, fixed aspect ratios (16:9, 4:3, 1:1, free), and exports directly to your disk.
+Toolblip's [Image Cropper](/tools/images/image-cropper) handles drag-to-select cropping, fixed aspect ratios (16:9, 4:3, 1:1, free), and exports directly to your disk.
 
 ## Format Conversion  -  PNG to WebP, JPEG to PNG, and Beyond
 
@@ -47,7 +47,7 @@ Different formats suit different jobs. PNG is lossless and supports transparency
 
 Converting between formats is a pure recompression. You decode the source image and re-encode it into the target format. In the browser this is fast  -  a 5 MB photo converts to WebP in under a second on a modern machine  -  and it happens entirely in-memory.
 
-Toolblip's [Format Converter](/tools/image-format-converter) supports PNG, JPEG, WebP, and GIF conversion with quality controls so you can tune the output size.
+Toolblip's [Format Converter](/tools/images/image-format-converter) supports PNG, JPEG, WebP, and GIF conversion with quality controls so you can tune the output size.
 
 ## Compression  -  Finding the Right Quality Balance
 

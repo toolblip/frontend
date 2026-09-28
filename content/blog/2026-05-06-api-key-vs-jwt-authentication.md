@@ -276,5 +276,5 @@ When you are ready to test full token validation  -  expiry, audience, issuer, c
 ## Further Reading
 
 - [JWT vs OAuth 2.0: What They Actually Are and How They Differ](/blog/jwt-vs-oauth2)  -  JWT and OAuth are not rivals; here is how they fit together
-- [Debug JWT Tokens in Your Browser  -  No Server Required](/blog/debug-jwt-tokens-base64-json-browser)  -  step-by-step JWT debugging with browser DevTools and Toolblip
+- [Debug JWT Tokens in Your Browser  -  No Server Required](/blog/2026-04-23-debug-jwt-tokens-base64-json-browser)  -  step-by-step JWT debugging with browser DevTools and Toolblip
 - Toolblip's [JWT Decoder](/tools/jwt-decoder)  -  instant JWT inspection, fully in-browser

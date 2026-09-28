@@ -75,11 +75,11 @@ Here's how browser-based Toolblip tools stack up against typical VS Code extensi
 |------|-------------------|----------------------|--------|
 | JSON formatting | Formatter extension | [JSON Formatter](/tools/json-formatter) | Tie - formatter wins for project files; browser wins for one-off tasks |
 | Regex testing | Regex extension | [Regex Tester](/tools/regex-tester) | **Browser** - faster, no install, Python/PCRE free |
-| Base64 encode/decode | Extension or CLI | [Base64 Encoder](/tools/base64-encoder) | **Browser** - zero setup, instant |
+| Base64 encode/decode | Extension or CLI | [Base64 Encoder](/tools/base64-encoder-decoder) | **Browser** - zero setup, instant |
 | UUID generation | Extension or terminal | [UUID Generator](/tools/uuid-generator) | **Browser** - no terminal, no extension |
 | URL encoding | Extension or CLI | [URL Encoder](/tools/url-encode) | **Browser** - paste and go |
-| Cron parsing | Extension | [Cron Expression Generator](/tools/cron-expression-generator) | **Browser** - visual, shows next run times |
-| Hash generation | Extension | [Hash Generator](/tools/hash-generator) | Tie - browser is faster for one-off |
+| Cron parsing | Extension | [Cron Expression Generator](/tools/cron-generator) | **Browser** - visual, shows next run times |
+| Hash generation | Extension | [Hash Generator](/tools/md5-hash-generator) | Tie - browser is faster for one-off |
 
 ## When to Use Which: A Practical Decision Guide
 

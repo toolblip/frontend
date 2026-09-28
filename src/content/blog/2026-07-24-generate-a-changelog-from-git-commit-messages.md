@@ -133,7 +133,7 @@ Any decent git commit message to changelog converter follows the same three step
 
 If your commit subjects are messy, a converter helps but cannot invent structure that was never there. That is the honest limit of every git commit message to changelog converter. Garbage in, grouped garbage out.
 
-For light cleanup on inconsistent history, a good [regex tester](https://toolblip.com/tools/regex-tester) lets you draft and check the patterns that extract issue numbers or normalize prefixes before you bake them into a script. If your pipeline passes tokens or metadata as encoded strings, a quick [Base64 decoder](https://toolblip.com/tools/base64) helps you inspect what is actually inside them.
+For light cleanup on inconsistent history, a good [regex tester](https://toolblip.com/tools/regex-tester) lets you draft and check the patterns that extract issue numbers or normalize prefixes before you bake them into a script. If your pipeline passes tokens or metadata as encoded strings, a quick [Base64 decoder](https://toolblip.com/tools/base64-encoder-decoder) helps you inspect what is actually inside them.
 
 ## Changelog Generator vs Manual Changelog: Which Fits Your Team
 

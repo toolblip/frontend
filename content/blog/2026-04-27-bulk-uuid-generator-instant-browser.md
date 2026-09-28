@@ -190,5 +190,5 @@ It's free, it's instant, and nothing leaves your browser.
 
 **Related tools you might find useful:**
 - [JSON Formatter](/tools/json-formatter) - validate and pretty-print JSON for testing
-- [Hash Generator](/tools/hash-generator) - generate hashes for test fixtures
+- [Hash Generator](/tools/md5-hash-generator) - generate hashes for test fixtures
 - [Lorem Ipsum Generator](/tools/lorem-ipsum-generator) - seed text for mockups and tests

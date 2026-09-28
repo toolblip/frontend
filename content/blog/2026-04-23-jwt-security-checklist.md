@@ -81,7 +81,7 @@ Every access token should have an `exp` claim:
 
 The value is a Unix timestamp in seconds. Your API should reject expired tokens automatically. Do not only decode the token and read `sub`; verify the signature and validate time-based claims in one step.
 
-Typical access-token lifetimes are short: 5–15 minutes for high-risk apps, 15–60 minutes for normal web apps, and only a few hours when risk is low and refresh-token handling is strong. If you see access tokens lasting days or months, pause. That is usually a refresh-token job, not an access-token job. The [Unix timestamp guide](/blog/2026-04-17-unix-timestamp-guide) can help sanity-check `exp`, `iat`, or `nbf` values while debugging.
+Typical access-token lifetimes are short: 5–15 minutes for high-risk apps, 15–60 minutes for normal web apps, and only a few hours when risk is low and refresh-token handling is strong. If you see access tokens lasting days or months, pause. That is usually a refresh-token job, not an access-token job. The [Unix timestamp guide](/blog/unix-timestamp-converter) can help sanity-check `exp`, `iat`, or `nbf` values while debugging.
 
 ### 5. Check `nbf` and `iat` for Clock Problems
 
@@ -145,7 +145,7 @@ jwt.verify(token, publicKey, {
 });
 ```
 
-If you are confused about how JWTs fit into OAuth, read [JWT vs OAuth 2.0](/blog/2026-04-30-jwt-vs-oauth2). The short version: JWT is a token format; OAuth 2.0 is an authorization framework. OAuth systems often issue JWT access tokens, but they are not the same thing.
+If you are confused about how JWTs fit into OAuth, read [JWT vs OAuth 2.0](/blog/jwt-vs-oauth2). The short version: JWT is a token format; OAuth 2.0 is an authorization framework. OAuth systems often issue JWT access tokens, but they are not the same thing.
 
 ### 8. Keep Sensitive Data Out of the Payload
 
@@ -265,7 +265,7 @@ A simple modified-payload test catches a surprising number of broken implementat
 
 JWTs rarely exist alone. They sit inside broader auth decisions: API keys, OAuth flows, refresh tokens, cookies, CSRF, and authorization checks.
 
-If you are deciding between token types, the [API Key vs JWT guide](/blog/2026-05-06-api-key-vs-jwt-authentication) explains when each one fits. If you are debugging tokens specifically, the [debug JWT tokens guide](/blog/2026-04-23-debug-jwt-tokens-base64-json-browser) walks through decoding and reading the Base64URL parts in the browser.
+If you are deciding between token types, the [API Key vs JWT guide](/blog/api-key-vs-jwt-authentication) explains when each one fits. If you are debugging tokens specifically, the [debug JWT tokens guide](/blog/2026-04-23-debug-jwt-tokens-base64-json-browser) walks through decoding and reading the Base64URL parts in the browser.
 
 ## Common JWT Mistakes to Catch Before Production
 

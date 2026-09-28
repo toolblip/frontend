@@ -50,7 +50,7 @@ The conversion from cURL to code is essentially a translation exercise. Each fla
 
 The quickest path: paste your cURL command into an online converter and copy the output. No install, no config.
 
-**Toolblip's cURL to Code converter** handles Python (`requests` and `http.client`), JavaScript (`fetch` and `axios`), and Go (`net/http`). It preserves headers, body parsing, and auth tokens, outputting code that is ready to paste into a real project.
+Toolblip has separate cURL converters for Python and JavaScript. Review the generated headers, body, and authentication before using the code. The Go example below shows how to translate a command manually.
 
 The workflow:
 
@@ -273,13 +273,11 @@ JavaScript's `fetch` requires the `FormData` API, which works in browsers but ne
 
 ## Try It Now
 
-Convert any cURL command to Python, JavaScript, or Go in your browser  -  no install, no signup, nothing leaves your machine.
-
-**→ [cURL to Code Converter](/tools/curl-to-code)**
+Convert a cURL command in your browser with the [cURL to Python](/tools/curl-to-python) or [cURL to JavaScript](/tools/curl-to-javascript) tool. Test the result against your API before using it in a project.
 
 Related tools for working with HTTP requests and API testing:
 
 - [JSON Formatter](/tools/json-formatter)  -  prettify and validate JSON responses
 - [JWT Decoder](/tools/jwt-decoder)  -  inspect tokens from API responses
-- [Base64 Encoder](/tools/base64)  -  encode credentials and payloads
+- [Base64 Encoder](/tools/base64-encoder-decoder)  -  encode credentials and payloads
 - [HTTP Status Checker](/tools/http-status-checker)  -  check the status code a URL returns
