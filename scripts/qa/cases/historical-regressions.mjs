@@ -32,7 +32,7 @@ async function jsonTable({ page, tool, expect, check }) {
   await input.fill('{"name":"Ada","score":0}');
   const singleExpected = '| name | score |\n| --- | --- |\n| Ada | 0 |';
   await expect(output).toHaveText(singleExpected);
-  check(await output.textContent() === singleExpected, 'Exact single-object Markdown matches the independent table, including trailing newline');
+  check(await output.textContent() === singleExpected, 'Exact single-object Markdown matches the independent table');
   // The approved workflow is output + Copy, with no download requirement.
   // Observe the real clipboard call and its native completion, without substituting
   // a successful mock or reading unrelated system clipboard contents.
