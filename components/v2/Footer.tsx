@@ -137,10 +137,10 @@ function DirectoryBadges({ duplicate = false }: { duplicate?: boolean }) {
         <DirectoryBadgeImage src="/directory-badges/codehype.svg" alt="Featured on CodeHype" width="180" height="65" decoding="async" loading="eager" style={{ height: 36, width: 'auto' }} fallback="Featured on CodeHype" />
       </a>
       <a tabIndex={duplicate ? -1 : undefined} href={duplicate ? undefined : "https://saasgrow.app/saas/toolblip"} target="_blank" rel="noopener noreferrer">
-        <DirectoryBadgeImage src="https://saasgrow.app/api/badge?type=featured&style=light" alt="Featured on SaaSGrow" fallback="SaaSGrow" />
+        <DirectoryBadgeImage src="/directory-badges/saasgrow.svg" alt="Featured on SaaSGrow" width="240" height="54" loading="eager" fallback="SaaSGrow" />
       </a>
       <a tabIndex={duplicate ? -1 : undefined} href={duplicate ? undefined : "https://huzzler.so/products/UI7339a8da/toolblip?utm_source=huzzler_product_website&utm_medium=badge&utm_campaign=free_listing"} target="_blank" rel="noopener noreferrer">
-        <DirectoryBadgeImage src="https://huzzler.so/assets/images/embeddable-badges/featured.png" alt="Huzzler Embed Badge" width="159" height="55" fallback="Huzzler" />
+        <DirectoryBadgeImage src="/directory-badges/huzzler.png" alt="Huzzler Embed Badge" width="159" height="55" loading="eager" fallback="Huzzler" />
       </a>
       <a tabIndex={duplicate ? -1 : undefined} href={duplicate ? undefined : "https://aitooltrek.com"}>AI Tool Trek</a>
     </div>

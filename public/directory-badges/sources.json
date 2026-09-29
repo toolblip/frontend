@@ -281,12 +281,23 @@
     {
       "name": "SaaSGrow",
       "source": "https://saasgrow.app/api/badge?type=featured&style=light",
-      "provenance": "Exact badge image URL supplied in the request on 2026-09-29"
+      "file": "saasgrow.svg",
+      "sha256": "82afc22b78b2da246234e3acf6ad8f5a5a86fcf4a1a66fd401fa1a76ff602d18",
+      "retrieved_on": "2026-09-29"
     },
     {
       "name": "Huzzler",
       "source": "https://huzzler.so/assets/images/embeddable-badges/featured.png",
-      "provenance": "Exact badge image URL supplied in the request on 2026-09-29"
+      "file": "huzzler.png",
+      "sha256": "643f503a45686179adc486016f54a91f1797e90e2e7fc9d356f9e9c96e8bd511",
+      "retrieved_on": "2026-09-29"
+    },
+    {
+      "name": "AI Tool Trek",
+      "source": "https://aitooltrek.com",
+      "fallback": true,
+      "reason": "No image embed was supplied; the homepage partner link is the available free listing requirement",
+      "retrieved_on": "2026-09-29"
     }
   ]
 }

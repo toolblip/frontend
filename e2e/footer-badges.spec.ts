@@ -4,10 +4,9 @@ import badgeSources from '../public/directory-badges/sources.json';
 
 const group = '.tb-v2-directory-group:not([aria-hidden])';
 const codeHypeHref = 'https://codehype.ai/product/toolblip?utm_source=codehype_badge';
-const remoteBadgeFallbacks = new Map<string, string>([
-  ['https://saasgrow.app/api/badge?type=featured&style=light', 'SaaSGrow'],
-  ['https://huzzler.so/assets/images/embeddable-badges/featured.png', 'Huzzler'],
-]);
+const saasGrowHref = 'https://saasgrow.app/saas/toolblip';
+const huzzlerHref = 'https://huzzler.so/products/UI7339a8da/toolblip?utm_source=huzzler_product_website&utm_medium=badge&utm_campaign=free_listing';
+const aiToolTrekHref = 'https://aitooltrek.com';
 
 for (const mobile of [false, true]) {
   test(`footer survives remote outages and exposes every listing on ${mobile ? 'mobile' : 'desktop'}`, async ({ browser, baseURL }, testInfo) => {
@@ -49,6 +48,24 @@ for (const mobile of [false, true]) {
       await (image as HTMLImageElement).decode();
       return true;
     })).resolves.toBe(true);
+    const saasGrowLink = page.locator(`${group} a[href="${saasGrowHref}"]`);
+    await expect(saasGrowLink).toHaveCount(1);
+    await expect(saasGrowLink.locator('img')).toHaveAttribute('src', '/directory-badges/saasgrow.svg');
+    await expect(saasGrowLink.locator('img')).toHaveAttribute('alt', 'Featured on SaaSGrow');
+    await expect(saasGrowLink.locator('img')).toHaveAttribute('width', '240');
+    await expect(saasGrowLink.locator('img')).toHaveAttribute('height', '54');
+    const huzzlerLink = page.locator(`${group} a[href="${huzzlerHref}"]`);
+    await expect(huzzlerLink).toHaveCount(1);
+    await expect(huzzlerLink.locator('img')).toHaveAttribute('src', '/directory-badges/huzzler.png');
+    await expect(huzzlerLink.locator('img')).toHaveAttribute('alt', 'Huzzler Embed Badge');
+    await expect(huzzlerLink.locator('img')).toHaveAttribute('width', '159');
+    await expect(huzzlerLink.locator('img')).toHaveAttribute('height', '55');
+    const aiToolTrekLink = page.locator(`${group} a[href="${aiToolTrekHref}"]`);
+    await expect(aiToolTrekLink).toHaveCount(1);
+    await expect(aiToolTrekLink).toHaveText('AI Tool Trek');
+    await expect(aiToolTrekLink).not.toHaveAttribute('target');
+    await expect(aiToolTrekLink).not.toHaveAttribute('rel');
+    await expect(aiToolTrekLink.locator('img')).toHaveCount(0);
     await expect(strip.locator('a[href="https://launchtory.com/projects/toolblip"]')).toHaveCount(1);
     await expect(strip.locator('a[href="https://bowora.com/?via=0aoviedt"]')).toHaveCount(1);
     await expect(strip.locator('a[href="https://saaspa.ge/product/cmu8mzn8n0005gm0a1obn4e2g"]')).toHaveCount(1);
@@ -65,7 +82,7 @@ for (const mobile of [false, true]) {
     await expect(page.locator('.tb-v2-directory-group[aria-hidden="true"] a:not([tabindex="-1"])')).toHaveCount(0);
     await expect(page.locator('.tb-v2-directory-group[aria-hidden=true] a[href]')).toHaveCount(0);
 
-    // Keyboard focus disables the transform so the browser can scroll to all 48 links.
+    // Keyboard focus disables the transform so the browser can scroll to all 51 links.
     await strip.focus();
     await page.keyboard.press('Tab');
     for (let index = 0; index < listings.length; index++) {
@@ -77,32 +94,20 @@ for (const mobile of [false, true]) {
       }
       const image = link.locator('img');
       if (await image.count()) {
-        const imageSource = await image.getAttribute('src');
-        const fallback = imageSource ? remoteBadgeFallbacks.get(imageSource) : undefined;
-        if (fallback) {
-          await expect(image).toBeHidden();
-          await expect(image).toHaveAttribute('aria-hidden', 'true');
-          await expect(link).toHaveAccessibleName(fallback);
-        } else {
-          await expect(image).toBeVisible();
-          const expectedLoading = await link.getAttribute('href') === codeHypeHref ? 'eager' : 'lazy';
-          await expect(image).toHaveAttribute('loading', expectedLoading);
-        }
+        await expect(image).toBeVisible();
+        const href = await link.getAttribute('href');
+        const expectedLoading = [codeHypeHref, saasGrowHref, huzzlerHref].includes(href ?? '') ? 'eager' : 'lazy';
+        await expect(image).toHaveAttribute('loading', expectedLoading);
       } else {
         await expect(link).not.toBeEmpty();
       }
       await page.keyboard.press('Tab');
     }
-    await expect.poll(async () => {
-      const imageStates = await page.locator(`${group} img`).evaluateAll(images => images.map(image => {
-        const img = image as HTMLImageElement;
-        return { source: img.getAttribute('src'), complete: img.complete, naturalWidth: img.naturalWidth };
-      }));
-      return imageStates.every(image => remoteBadgeFallbacks.has(image.source ?? '')
-        ? image.complete && image.naturalWidth === 0
-        : image.complete && image.naturalWidth > 0);
-    }).toBe(true);
-    expect([...new Set(externalImages)].sort()).toEqual([...remoteBadgeFallbacks.keys()].sort());
+    await expect.poll(() => page.locator(`${group} img`).evaluateAll(images => images.every(image => {
+      const img = image as HTMLImageElement;
+      return img.complete && img.naturalWidth > 0;
+    }))).toBe(true);
+    expect(externalImages).toEqual([]);
     await strip.focus();
     await strip.evaluate(el => { el.scrollLeft = 0; });
     await strip.screenshot({ path: testInfo.outputPath('footer.png') });
