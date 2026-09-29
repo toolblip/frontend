@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
-import { verifyDeployment, assertSource, childEnvironment, verifyAggregate, selectGroup, waitForAudit, assertHostedRunner, main } from './run.mjs';
+import { verifyDeployment, assertSource, childEnvironment, verifyAggregate, selectGroup, humanCapabilitySlugs, waitForAudit, assertHostedRunner, main } from './run.mjs';
 const reviewed = JSON.parse(await readFile(new URL('./pilot.json', import.meta.url)));
 const config = { ...reviewed, group: 'developer-data' };
 const deployment = { id: config.deploymentId, sha: config.deployedMerge, environment: config.environment };
@@ -33,17 +33,32 @@ test('sanitized inventory includes the complete pilot and valid canonical target
     if (tool.canonicalAlias) assert(tools.some(t => t.slug === tool.canonicalAlias));
   }
 });
+test('pending tool aliases follow the production redirect table', async () => {
+  const { tools } = JSON.parse(await readFile(new URL('./inventory.json', import.meta.url)));
+  const configText = await readFile(new URL('../../../next.config.mjs', import.meta.url), 'utf8');
+  const redirects = new Map([...configText.matchAll(/\{ source: '\/tools\/([^']+)', destination: '\/tools\/([^']+)', permanent: true \}/g)]
+    .map(match => [match[1], match[2]]));
+  for (const tool of tools.filter(entry => !entry.historicallyApproved)) {
+    const route = tool.url.split('/tools/')[1];
+    const redirectedTo = redirects.get(route);
+    if (!redirectedTo) continue;
+    const destination = tools.find(entry => entry.url === `https://toolblip.com/tools/${redirectedTo}`);
+    assert(destination, `Missing redirect destination for ${tool.slug}`);
+    assert.equal(tool.canonicalAlias, destination.slug, `${tool.slug} must follow its real canonical redirect`);
+  }
+});
 
 test('aggregate cannot silently omit results or approve human-review failures', () => {
-  const good = { metadata: { revision:config.source,engine:'chrome',workingDiffHash:'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855',options:{group:config.group,'pending-only':true},selectedSlugs:['one'] }, summary:{exitCode:0}, results:[{slug:'one',status:'passed',functional:{status:'passed'}}],incompleteSlugs:[] };
+  const good = { metadata: { revision:config.source,engine:'chrome',workingDiffHash:'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855',options:{group:config.group,'pending-only':true,slugs:['one']},selectedSlugs:['one'] }, summary:{exitCode:0}, results:[{slug:'one',status:'passed',functional:{status:'passed'}}],incompleteSlugs:[] };
   assert.doesNotThrow(() => verifyAggregate(good,config,'chrome',0,['one']));
   assert.throws(() => verifyAggregate({...good,results:[]},config,'chrome',0,['one']));
   assert.throws(() => verifyAggregate({...good,incompleteSlugs:['one']},config,'chrome',0,['one']));
   assert.throws(() => verifyAggregate({...good,results:[{slug:'one',status:'failed',functional:{status:'failed'}}]},config,'chrome',0,['one']));
   assert.throws(() => verifyAggregate(good,config,'webkit',0,['one']));
+  assert.throws(() => verifyAggregate({...good,metadata:{...good.metadata,options:{...good.metadata.options,slugs:['other']}}},config,'chrome',0,['one']));
 });
 
-test('every pending tool belongs to exactly one nonempty reviewed group', async () => {
+test('every automatically testable tool belongs to one group; human capabilities stay excluded', async () => {
   const inventory = JSON.parse(await readFile(new URL('./inventory.json', import.meta.url)));
   const selected = reviewed.groups.flatMap(group => {
     const result = selectGroup(reviewed, inventory, group);
@@ -51,7 +66,8 @@ test('every pending tool belongs to exactly one nonempty reviewed group', async 
     return result.selectedSlugs;
   });
   assert.equal(new Set(selected).size, selected.length);
-  assert.deepEqual([...selected].sort(), inventory.tools.filter(t => !t.historicallyApproved).map(t => t.slug).sort());
+  assert.deepEqual([...selected].sort(), inventory.tools.filter(t => !t.historicallyApproved && !humanCapabilitySlugs.includes(t.slug)).map(t => t.slug).sort());
+  assert.deepEqual(inventory.tools.filter(t => !t.historicallyApproved && humanCapabilitySlugs.includes(t.slug)).map(t => t.slug).sort(), [...humanCapabilitySlugs].sort());
   assert.throws(() => selectGroup(reviewed, inventory, '--other'), /Unknown/);
   assert.throws(() => selectGroup(reviewed, {tools:[]}, reviewed.groups[0]), /empty/);
   assert.throws(() => selectGroup({...reviewed,auditTimeoutMs:Infinity}, inventory, reviewed.groups[0]), /bounded/);
@@ -68,9 +84,9 @@ test('matrix and artifact names cover exactly the reviewed groups on both engine
   assert(job['timeout-minutes']*60000 > reviewed.auditTimeoutMs+10000);
 });
 test('aggregate rejects a partial group, different group or narrowed slug selection', () => {
-  const good = { metadata: { revision:config.source,engine:'chrome',workingDiffHash:'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855',options:{group:config.group,'pending-only':true},selectedSlugs:['one'] }, summary:{exitCode:0}, results:[{slug:'one',status:'passed',functional:{status:'passed'}}],incompleteSlugs:[] };
+  const good = { metadata: { revision:config.source,engine:'chrome',workingDiffHash:'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855',options:{group:config.group,'pending-only':true,slugs:['one']},selectedSlugs:['one'] }, summary:{exitCode:0}, results:[{slug:'one',status:'passed',functional:{status:'passed'}}],incompleteSlugs:[] };
   assert.throws(() => verifyAggregate(good,config,'chrome',0,['one','two']), /selection/);
-  for (const options of [{group:'images','pending-only':true},{group:config.group,'pending-only':false},{group:config.group,'pending-only':true,slugs:['one']}]) {
+  for (const options of [{group:'images','pending-only':true,slugs:['one']},{group:config.group,'pending-only':false,slugs:['one']},{group:config.group,'pending-only':true},{group:config.group,'pending-only':true,slugs:['other']}]) {
     assert.throws(() => verifyAggregate({...good,metadata:{...good.metadata,options}},config,'chrome',0,['one']), /selection/);
   }
 });

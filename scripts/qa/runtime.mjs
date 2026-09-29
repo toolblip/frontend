@@ -42,7 +42,9 @@ export function classifyRuntime(runtime, base, fixture) {
     if (abortedResourceFailure.test(text) && record.source?.url && Number.isInteger(record.sequence)) {
       // ConsoleMessage exposes no request identity. Pair only a unique recorded
       // injection and retain ambiguous/real same-URL failures as blocking evidence.
-      const failures = (runtime.failedRequests ?? []).map((request,index)=>({request,index})).filter(({request})=>request.url === record.source.url);
+      // A later navigation cancellation cannot explain an ERR_FAILED console event.
+      const failures = (runtime.failedRequests ?? []).map((request,index)=>({request,index})).filter(({request})=>
+        request.url === record.source.url && (injectedFailure(request) || ['net::ERR_FAILED','Failed','An error occurred while loading the resource.'].includes(request.failure?.errorText)));
       const candidates = failures.filter(({request,index})=>injectedFailure(request) && !linkedAborts.has(index) && request.injectedAbort.sequence < record.sequence);
       if (failures.every(({request})=>injectedFailure(request)) && candidates.length === 1) {
         const {request,index} = candidates[0];
