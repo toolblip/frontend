@@ -14,8 +14,6 @@ import { getToolPath } from '@/lib/tool-path';
 import { IconArrowUR } from '@/components/v2/icons';
 
 
-export const dynamic = 'force-dynamic';
-
 export const metadata: Metadata = {
   title: 'Toolblip - Free Online Developer Tools',
   alternates: {
