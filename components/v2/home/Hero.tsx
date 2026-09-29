@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import HeroToy from './HeroToy';
+import HeroToyOnView from './HeroToyOnView';
 import { IconArrow, IconShield, IconZap, IconGift } from '@/components/v2/icons';
 
 export default function Hero({ toolCount }: { toolCount: number }) {
@@ -33,7 +33,7 @@ export default function Hero({ toolCount }: { toolCount: number }) {
             </div>
           </div>
           <div>
-            <HeroToy />
+            <HeroToyOnView />
             <div className="tb-v2-hero-note">
               <span>Try it. Any tab is a real working tool.</span>
               <span>3 of {toolCount} shown</span>

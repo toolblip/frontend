@@ -44,7 +44,7 @@ const benefits = [
 
 export default function WhyToolblip() {
   return (
-    <section style={{ padding: '48px 0 40px' }}>
+    <section className="tb-home-deferred tb-home-why" style={{ padding: '48px 0 40px' }}>
       <div className="tb-v2-container">
         <div style={{ textAlign: 'center', marginBottom: 32 }}>
           <div className="tb-v2-kicker">Why Toolblip?</div>

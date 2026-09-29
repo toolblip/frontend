@@ -77,7 +77,7 @@ export default function HomePage() {
       <WhyToolblip />
       <CategoryGrid />
 
-      <section className="tb-v2-band">
+      <section className="tb-v2-band tb-home-deferred tb-home-reviewed">
         <div className="tb-v2-container">
           <div className="tb-v2-band-head">
             <div>
@@ -122,7 +122,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="tb-v2-band">
+      <section className="tb-v2-band tb-home-deferred tb-home-categories">
         <div className="tb-v2-container">
           <div className="tb-v2-band-head">
             <div>
@@ -161,7 +161,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="tb-v2-band">
+      <section className="tb-v2-band tb-home-deferred tb-home-seo">
         <div className="tb-v2-container">
           <div className="tb-v2-band-head">
             <div>
@@ -232,7 +232,7 @@ export default function HomePage() {
       </section>
 
       {recentPosts.length > 0 && (
-        <section className="tb-v2-band">
+        <section className="tb-v2-band tb-home-deferred tb-home-blog">
           <div className="tb-v2-container">
             <div className="tb-v2-band-head">
               <div>
