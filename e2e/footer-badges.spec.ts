@@ -33,8 +33,8 @@ for (const mobile of [false, true]) {
     const track = page.locator('.tb-v2-directory-track');
     const before = await track.evaluate(el => getComputedStyle(el).transform);
     await expect.poll(() => track.evaluate(el => getComputedStyle(el).transform)).not.toBe(before);
-    await expect(page.locator(`${group} a`)).toHaveCount(51);
-    await expect(page.locator(`${group} img`)).toHaveCount(41);
+    await expect(page.locator(`${group} a`)).toHaveCount(52);
+    await expect(page.locator(`${group} img`)).toHaveCount(42);
     const codeHypeLink = page.locator(`${group} a[href="${codeHypeHref}"]`);
     await expect(codeHypeLink).toHaveCount(1);
     const codeHypeImage = codeHypeLink.locator('img');
@@ -82,7 +82,7 @@ for (const mobile of [false, true]) {
     await expect(page.locator('.tb-v2-directory-group[aria-hidden="true"] a:not([tabindex="-1"])')).toHaveCount(0);
     await expect(page.locator('.tb-v2-directory-group[aria-hidden=true] a[href]')).toHaveCount(0);
 
-    // Keyboard focus disables the transform so the browser can scroll to all 51 links.
+    // Keyboard focus disables the transform so the browser can scroll to all 52 links.
     await strip.focus();
     await page.keyboard.press('Tab');
     for (let index = 0; index < listings.length; index++) {
@@ -96,7 +96,7 @@ for (const mobile of [false, true]) {
       if (await image.count()) {
         await expect(image).toBeVisible();
         const href = await link.getAttribute('href');
-        const expectedLoading = [codeHypeHref, saasGrowHref, huzzlerHref].includes(href ?? '') ? 'eager' : 'lazy';
+        const expectedLoading = [codeHypeHref, saasGrowHref, huzzlerHref, 'https://startupfa.me/s/toolblip?utm_source=toolblip.com'].includes(href ?? '') ? 'eager' : 'lazy';
         await expect(image).toHaveAttribute('loading', expectedLoading);
       } else {
         await expect(link).not.toBeEmpty();
