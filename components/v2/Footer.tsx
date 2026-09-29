@@ -95,6 +95,9 @@ function DirectoryBadges({ duplicate = false }: { duplicate?: boolean }) {
       <DirectoryBadgeLink duplicate={duplicate} href="https://www.startup.sx/product/toolblip-ce96?verify=fcb6b0b5fa7ba124c837775a248d82a6" target="_blank" rel="noopener">
         <DirectoryBadgeImage src="/directory-badges/startup-sx.png" alt="Featured on Startup.sx" width="150" fallback="Startup.sx" />
       </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://startupfa.me/s/toolblip?utm_source=toolblip.com" target="_blank" rel="noopener noreferrer">
+        <DirectoryBadgeImage src="/directory-badges/startup-fame.webp" alt="Toolblip - Featured on Startup Fame" width="171" height="54" loading="eager" fallback="Startup Fame" />
+      </DirectoryBadgeLink>
       <DirectoryBadgeLink duplicate={duplicate} href="https://webspot.app" target="_blank" rel="noopener noreferrer">
         <DirectoryBadgeImage src="/directory-badges/webspot.svg" alt="Featured on Webspot" style={{ height: 54, width: 'auto' }} fallback="Webspot" />
       </DirectoryBadgeLink>

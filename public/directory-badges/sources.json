@@ -298,6 +298,13 @@
       "fallback": true,
       "reason": "No image embed was supplied; the homepage partner link is the available free listing requirement",
       "retrieved_on": "2026-09-29"
+    },
+    {
+      "name": "Startup Fame",
+      "source": "https://startupfa.me/badges/featured-badge.webp",
+      "file": "startup-fame.webp",
+      "sha256": "31a611ba3b23309f11cdc0e385d1dbecb3224f005b4926b3d0011b70ab63c5c9",
+      "retrieved_on": "2026-09-29"
     }
   ]
 }
