@@ -277,6 +277,16 @@
       "source": "https://codehype.ai/badges/toolblip.svg?variant=find-us&v=20",
       "file": "codehype.svg",
       "sha256": "8eedf127bf13801530c5e92d4d52f7a81c5272dc86cfe4617ca58bf9b8667780"
+    },
+    {
+      "name": "SaaSGrow",
+      "source": "https://saasgrow.app/api/badge?type=featured&style=light",
+      "provenance": "Exact badge image URL supplied in the request on 2026-09-29"
+    },
+    {
+      "name": "Huzzler",
+      "source": "https://huzzler.so/assets/images/embeddable-badges/featured.png",
+      "provenance": "Exact badge image URL supplied in the request on 2026-09-29"
     }
   ]
 }

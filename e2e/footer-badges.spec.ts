@@ -4,6 +4,10 @@ import badgeSources from '../public/directory-badges/sources.json';
 
 const group = '.tb-v2-directory-group:not([aria-hidden])';
 const codeHypeHref = 'https://codehype.ai/product/toolblip?utm_source=codehype_badge';
+const remoteBadgeFallbacks = new Map<string, string>([
+  ['https://saasgrow.app/api/badge?type=featured&style=light', 'SaaSGrow'],
+  ['https://huzzler.so/assets/images/embeddable-badges/featured.png', 'Huzzler'],
+]);
 
 for (const mobile of [false, true]) {
   test(`footer survives remote outages and exposes every listing on ${mobile ? 'mobile' : 'desktop'}`, async ({ browser, baseURL }, testInfo) => {
@@ -30,8 +34,8 @@ for (const mobile of [false, true]) {
     const track = page.locator('.tb-v2-directory-track');
     const before = await track.evaluate(el => getComputedStyle(el).transform);
     await expect.poll(() => track.evaluate(el => getComputedStyle(el).transform)).not.toBe(before);
-    await expect(page.locator(`${group} a`)).toHaveCount(48);
-    await expect(page.locator(`${group} img`)).toHaveCount(39);
+    await expect(page.locator(`${group} a`)).toHaveCount(51);
+    await expect(page.locator(`${group} img`)).toHaveCount(41);
     const codeHypeLink = page.locator(`${group} a[href="${codeHypeHref}"]`);
     await expect(codeHypeLink).toHaveCount(1);
     const codeHypeImage = codeHypeLink.locator('img');
@@ -73,19 +77,32 @@ for (const mobile of [false, true]) {
       }
       const image = link.locator('img');
       if (await image.count()) {
-        await expect(image).toBeVisible();
-        const expectedLoading = await link.getAttribute('href') === codeHypeHref ? 'eager' : 'lazy';
-        await expect(image).toHaveAttribute('loading', expectedLoading);
+        const imageSource = await image.getAttribute('src');
+        const fallback = imageSource ? remoteBadgeFallbacks.get(imageSource) : undefined;
+        if (fallback) {
+          await expect(image).toBeHidden();
+          await expect(image).toHaveAttribute('aria-hidden', 'true');
+          await expect(link).toHaveAccessibleName(fallback);
+        } else {
+          await expect(image).toBeVisible();
+          const expectedLoading = await link.getAttribute('href') === codeHypeHref ? 'eager' : 'lazy';
+          await expect(image).toHaveAttribute('loading', expectedLoading);
+        }
       } else {
         await expect(link).not.toBeEmpty();
       }
       await page.keyboard.press('Tab');
     }
-    await expect.poll(() => page.locator(`${group} img`).evaluateAll(images => images.every(image => {
-      const img = image as HTMLImageElement;
-      return img.complete && img.naturalWidth > 0;
-    }))).toBe(true);
-    expect(externalImages).toEqual([]);
+    await expect.poll(async () => {
+      const imageStates = await page.locator(`${group} img`).evaluateAll(images => images.map(image => {
+        const img = image as HTMLImageElement;
+        return { source: img.getAttribute('src'), complete: img.complete, naturalWidth: img.naturalWidth };
+      }));
+      return imageStates.every(image => remoteBadgeFallbacks.has(image.source ?? '')
+        ? image.complete && image.naturalWidth === 0
+        : image.complete && image.naturalWidth > 0);
+    }).toBe(true);
+    expect([...new Set(externalImages)].sort()).toEqual([...remoteBadgeFallbacks.keys()].sort());
     await strip.focus();
     await strip.evaluate(el => { el.scrollLeft = 0; });
     await strip.screenshot({ path: testInfo.outputPath('footer.png') });
