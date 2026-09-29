@@ -9,7 +9,7 @@ export async function GET() {
     const token = cookieStore.get("auth_token")?.value;
 
     if (!token) {
-      return NextResponse.json({ user: null }, { status: 401 });
+      return NextResponse.json({ user: null });
     }
 
     const laravelRes = await fetch(`${LARAVEL_URL}/api/auth/me`, {

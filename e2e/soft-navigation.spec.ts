@@ -14,7 +14,7 @@ test.describe('soft navigation', () => {
 
     const initialSession = page.waitForResponse(response => response.url().endsWith('/api/auth/me'));
     await page.goto('/');
-    expect((await initialSession).status()).toBe(401);
+    expect((await initialSession).status()).toBe(200);
     await expect(page.locator('#main-content')).toBeVisible();
     expect(meRequests).toBe(1);
     const meAfterHome = meRequests;

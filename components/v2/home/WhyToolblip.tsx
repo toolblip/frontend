@@ -1,5 +1,3 @@
-'use client';
-
 const benefits = [
   {
     icon: (
@@ -7,7 +5,7 @@ const benefits = [
         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
       </svg>
     ),
-    colorVar: 'var(--green)',
+    colorVar: 'var(--c-img)',
     bgVar: 'var(--green-tint)',
     title: 'Private',
     tagline: 'Data never leaves your browser',
@@ -20,7 +18,7 @@ const benefits = [
         <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
       </svg>
     ),
-    colorVar: 'var(--amber, #d97706)',
+    colorVar: 'var(--c-conv)',
     bgVar: 'var(--amber-tint, #fef3c7)',
     title: 'Fast',
     tagline: 'Runs instantly in your tab',
@@ -145,7 +143,6 @@ export default function WhyToolblip() {
                     fontWeight: 600,
                     color: b.colorVar,
                     marginBottom: 8,
-                    opacity: 0.85,
                   }}
                 >
                   {b.tagline}

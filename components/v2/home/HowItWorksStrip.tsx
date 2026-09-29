@@ -1,5 +1,3 @@
-'use client';
-
 interface Props {
   toolCount: number;
   categoryCount: number;
@@ -55,7 +53,7 @@ export default function HowItWorksStrip({ toolCount, categoryCount }: Props) {
                   <rect x="8" y="2" width="8" height="4" rx="1" ry="1" />
                 </svg>
               ),
-              color: 'var(--green, #16a34a)',
+              color: 'var(--c-img)',
               bg: 'var(--green-tint, #dcfce7)',
               title: 'Paste your data',
               desc: 'Paste or type directly in the page. Everything stays local in your tab, not on a server.'
@@ -153,7 +151,7 @@ export default function HowItWorksStrip({ toolCount, categoryCount }: Props) {
               padding: '6px 16px',
               borderRadius: 999,
               background: 'var(--green-tint, #dcfce7)',
-              color: 'var(--green, #16a34a)',
+              color: 'var(--c-img)',
               fontSize: 13,
               fontWeight: 600,
               textDecoration: 'none',

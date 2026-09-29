@@ -35,9 +35,9 @@ test.describe('Session BDD regression', () => {
     await expect(page.getByRole('paragraph').filter({ hasText: VALID_USER.email })).toBeVisible();
   });
 
-  test('Given no auth cookie, When /api/auth/me is requested, Then the response is 401 with a null user', async ({ request }) => {
+  test('Given no auth cookie, When /api/auth/me is requested, Then the response is 200 with a null user', async ({ request }) => {
     const res = await request.get('/api/auth/me');
-    expect(res.status()).toBe(401);
+    expect(res.status()).toBe(200);
     expect(await res.json()).toEqual({ user: null });
   });
 });
