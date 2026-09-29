@@ -57,6 +57,33 @@ jobs:
           done
           set -e
           cat "$output/browser-exit.txt" "$output"/ai*-exit.txt
+      - name: Require technical checks while preserving human review gates
+        run: |
+          output="$RUNNER_TEMP/three-capabilities/$QA_ENGINE"
+          python3 - "$output" <<'PY'
+          import json, pathlib, sys
+          root = pathlib.Path(sys.argv[1])
+          assert (root / 'browser-exit.txt').read_text().strip() == '1'
+          reports = {p.stem: json.loads(p.read_text()) for p in (root / 'audit/tools').glob('*.json')}
+          assert set(reports) == {'speech-to-text', 'text-to-speech', 'image-background-remover'}
+          assert reports['image-background-remover']['status'] == 'passed'
+          for slug in ('speech-to-text', 'text-to-speech'):
+              report = reports[slug]
+              assert report['status'] == 'failed'
+              for check in ('route', 'canonical', 'http', 'hydration', 'ui', 'runtime'):
+                  assert report[check]['status'] == 'passed', (slug, check, report[check])
+              assert all(layout['status'] == 'passed' for layout in report['layouts'])
+              evidence = report['functional']['evidence']
+              assert all(item['passed'] for item in evidence[:-1]), (slug, evidence)
+              assert not evidence[-1]['passed'] and evidence[-1]['message'].startswith('Human review required:'), (slug, evidence[-1])
+          for label in ('ai', 'ai-portrait', 'ai-fern'):
+              assert (root / f'{label}-exit.txt').read_text().strip() == '0', label
+              records = json.loads((root / label / 'ai.json').read_text())
+              assert not any(item['kind'] == 'error' for item in records), label
+              assert any(item['kind'] == 'outputPixels' for item in records), label
+              assert any(item['kind'] == 'cancel' and item['passed'] for item in records), label
+          print('Technical checks passed; speech accuracy, audible output, and segmentation quality still require human judgment.')
+          PY
       - name: Verify deployment stayed fixed
         if: always()
         run: |
