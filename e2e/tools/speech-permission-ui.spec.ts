@@ -24,7 +24,7 @@ test('speech recognition confirms granted microphone access and stops the acquir
   await page.screenshot({ path: testInfo.outputPath('speech-to-text-desktop.png'), fullPage: true });
   await page.getByRole('button', { name: 'Stop Listening' }).click();
   await page.evaluate(() => (window as any).__recognition.onresult?.({ results: [[{ transcript: 'late words' }]] }));
-  await expect(page.getByLabel('Transcript', { exact: true })).toHaveText('');
+  await expect(page.getByLabel('Transcript', { exact: true })).toHaveValue('');
 });
 
 test('speech recognition explains a denied permission without starting recognition', async ({ page }) => {
@@ -67,10 +67,23 @@ test('speech transcript is read-only and copies microphone output in one click',
   await expect(card.getByRole('button', { name: 'Examples' })).toHaveCount(0);
   await card.getByRole('button', { name: 'Start Listening' }).click();
   await page.evaluate(() => (window as any).__recognition.onresult({ results: [[{ transcript: 'Hello from the microphone.' }]] }));
-  const transcript = card.getByLabel('Transcript', { exact: true });
-  await expect(transcript).toHaveText('Hello from the microphone.');
-  await expect(transcript).not.toHaveJSProperty('contentEditable', 'true');
-  await card.getByRole('button', { name: 'Copy transcript' }).click();
+  const transcript = card.getByRole('textbox', { name: 'Transcript', exact: true });
+  await expect(transcript).toHaveValue('Hello from the microphone.');
+  await expect(transcript).toHaveJSProperty('readOnly', true);
+  const fieldBox = await transcript.boundingBox();
+  const icon = card.getByRole('button', { name: 'Copy transcript' });
+  const iconBox = await icon.boundingBox();
+  expect(fieldBox && iconBox).toBeTruthy();
+  expect(iconBox!.x).toBeGreaterThan(fieldBox!.x + fieldBox!.width / 2);
+  expect(iconBox!.x + iconBox!.width).toBeLessThanOrEqual(fieldBox!.x + fieldBox!.width);
+  expect(iconBox!.y).toBeGreaterThanOrEqual(fieldBox!.y);
+  expect(iconBox!.y + iconBox!.height).toBeLessThan(fieldBox!.y + fieldBox!.height / 2);
+  await transcript.click({ position: { x: 18, y: 65 } });
+  expect(await page.evaluate(() => (window as any).__copiedTranscript)).toBe('Hello from the microphone.');
+  await page.keyboard.type('attempted edit');
+  await expect(transcript).toHaveValue('Hello from the microphone.');
+  await page.evaluate(() => { (window as any).__copiedTranscript = ''; });
+  await icon.click();
   expect(await page.evaluate(() => (window as any).__copiedTranscript)).toBe('Hello from the microphone.');
   await expect(card.getByRole('status').filter({ hasText: 'Copied' })).toBeVisible();
 });
