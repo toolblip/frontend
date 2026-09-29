@@ -1,12 +1,13 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useId, useMemo, useState } from 'react';
 import { IconDown } from '@/components/v2/icons';
 
 const N = 25;
 const CELL = 6;
 
 export default function ToyQR() {
+  const urlId = useId();
   const [url, setUrl] = useState('https://toolblip.com');
 
   const matrix = useMemo(() => {
@@ -51,8 +52,9 @@ export default function ToyQR() {
   return (
     <div className="tb-v2-toy-qr-pane">
       <div className="tb-v2-toy-qr-form">
-        <label>URL or Text</label>
+        <label htmlFor={urlId}>URL or Text</label>
         <input
+          id={urlId}
           value={url}
           onChange={(e) => setUrl(e.target.value)}
           spellCheck={false}

@@ -65,12 +65,11 @@ export default function CategoryQuickAccess({ categories }: CategoryQuickAccessP
                 key={name}
                 href={getCategoryPath(name)}
                 className="category-pill"
-                aria-label={`Browse ${counts[name] ?? 0} ${name} tools`}
                 style={
                   { '--pill-border': meta.borderColor } as React.CSSProperties
                 }
               >
-                <span style={{ fontSize: 12 }}>{meta.icon}</span>
+                <span aria-hidden="true" style={{ fontSize: 12 }}>{meta.icon}</span>
                 <span style={{ fontWeight: 600, fontSize: 13 }}>{name}</span>
                 <span className="cat-pill-count">{counts[name] ?? 0}</span>
               </Link>

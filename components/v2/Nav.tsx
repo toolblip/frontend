@@ -119,7 +119,7 @@ export default function Nav({ onOpenSearch }: Props) {
             type="button"
             className="tb-v2-nav-search tb-v2-nav-search-compact"
             onClick={onOpenSearch}
-            aria-label="Open search"
+            aria-label="Open search (⌘K or /)"
           >
             <IconSearch style={{ width: 14, height: 14, color: 'var(--fg-3)' }} />
             <span className="tb-v2-nav-search-label">⌘K or /</span>

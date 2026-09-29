@@ -43,7 +43,7 @@ export default function ApiStatus() {
             : 'bg-red-500'
         }`}
       />
-      <span className="text-xs text-gray-400 dark:text-gray-500 hidden sm:inline">
+      <span className="text-xs text-[var(--fg-3)] hidden sm:inline">
         {state === 'checking' ? 'Checking...' : state === 'online' ? 'API Online' : 'Offline'}
       </span>
     </div>

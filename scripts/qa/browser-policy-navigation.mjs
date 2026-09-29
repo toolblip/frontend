@@ -45,7 +45,7 @@ for (const engine of ['chrome', 'webkit']) {
     });
     const hydrated = async () => {
       await page.waitForFunction(() => {
-        const el = document.querySelector('button[aria-label="Open search"]');
+        const el = document.querySelector('button[aria-label="Open search (⌘K or /)"]');
         return document.readyState === 'complete' && el && Object.keys(el).some(key => key.startsWith('__reactProps$'));
       });
       // Allow hydration's passive effects (including Next's popstate listener)
@@ -53,7 +53,7 @@ for (const engine of ['chrome', 'webkit']) {
       await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
       // Exercise a stateful control, so this is interactive hydration rather
       // than merely SSR elements with React props attached.
-      await page.getByRole('button', { name: 'Open search', exact: true }).click();
+      await page.getByRole('button', { name: 'Open search (⌘K or /)', exact: true }).click();
       await page.locator('.tb-v2-sp-panel').waitFor();
       await page.getByRole('button', { name: 'Close', exact: true }).click();
       await page.locator('.tb-v2-sp-panel').waitFor({ state: 'hidden' });
@@ -77,7 +77,7 @@ for (const engine of ['chrome', 'webkit']) {
         await hydrated();
         const before = await identity();
         const refreshBefore = refreshCount;
-        await page.getByRole('button', { name: 'Open search', exact: true }).click();
+        await page.getByRole('button', { name: 'Open search (⌘K or /)', exact: true }).click();
         await page.getByPlaceholder('Search 100+ tools by name, category, or what they do…').fill(query);
         await page.locator(`.tb-v2-sp-panel a[href="${path}"]`).click();
         try {
