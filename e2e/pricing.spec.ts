@@ -7,19 +7,6 @@ test.describe('Pricing layout', () => {
     await resetMockBackend(request);
   });
 
-  test('includes the pricing content in the raw server response', async ({ request }) => {
-    const response = await request.get('/pricing');
-
-    expect(response.ok()).toBeTruthy();
-    const html = await response.text();
-    expect(html).toMatch(/<h1[^>]*>Simple, transparent pricing/);
-    expect(html).toContain('Starter');
-    expect(html).toContain('Pro');
-    expect(html).toContain('Max');
-    expect(html).toContain('Free');
-    expect(html).not.toContain('Loading plans...');
-  });
-
   test('shows a billing period switch at the top and keeps Free on its own row', async ({ page }) => {
     await page.goto('/pricing');
 
@@ -114,5 +101,62 @@ test.describe('Pricing layout', () => {
     expect(freeFeatureRects).toHaveLength(2);
     expect(Math.min(...freeFeatureRects)).toBeGreaterThan(freeButtonRect!.y + 20);
     await expect(pricing.getByText(/device/i)).toHaveCount(0);
+  });
+});
+
+test('includes the pricing content in the raw server response', async ({ request }) => {
+  const response = await request.get('/pricing');
+
+  expect(response.ok()).toBeTruthy();
+  const html = await response.text();
+  expect(html).toMatch(/<h1[^>]*>Simple, transparent pricing/);
+  expect(html).toContain('Starter');
+  expect(html).toContain('Pro');
+  expect(html).toContain('Max');
+  expect(html).toContain('Free');
+  expect(html).not.toContain('Loading plans...');
+});
+
+test.describe('Pricing action loading', () => {
+  test('keeps paid actions disabled until the plans request settles', async ({ page }) => {
+    let releasePlansRequest!: () => void;
+    const plansRequestGate = new Promise<void>((resolve) => {
+      releasePlansRequest = resolve;
+    });
+
+    await page.route('**/api/plans', async (route) => {
+      await plansRequestGate;
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ plans: [] }),
+      });
+    });
+
+    const plansRequest = page.waitForRequest((request) => new URL(request.url()).pathname === '/api/plans');
+    await page.goto('/pricing');
+    await plansRequest;
+
+    const pricing = page.locator('main');
+    const paidActions = [
+      ...['starter', 'ultra', 'max'].flatMap((tier) => {
+        const card = pricing.locator(`[data-tier="${tier}"]`);
+        return [
+          card.getByRole('button', { name: 'Start Free Trial' }),
+          card.getByRole('button', { name: /Skip trial/ }),
+        ];
+      }),
+    ];
+
+    for (const action of paidActions) {
+      await expect(action).toBeDisabled();
+    }
+    await expect(pricing.getByRole('button', { name: 'Continue with Free Plan' })).toBeEnabled();
+
+    releasePlansRequest();
+
+    for (const action of paidActions) {
+      await expect(action).toBeEnabled();
+    }
   });
 });

@@ -118,6 +118,7 @@ export default function PricingClient() {
   const [trialLoading, setTrialLoading] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [plans, setPlans] = useState<Plan[]>(FALLBACK_PLANS);
+  const [plansRequestSettled, setPlansRequestSettled] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
   const userIsPro = Boolean(user?.is_pro);
@@ -130,6 +131,9 @@ export default function PricingClient() {
       })
       .catch(() => {
         setPlans(FALLBACK_PLANS);
+      })
+      .finally(() => {
+        setPlansRequestSettled(true);
       });
   }, []);
 
@@ -291,7 +295,7 @@ export default function PricingClient() {
                     <div className="flex flex-col gap-2">
                       <button
                         onClick={() => handleStartTrial(sourcePlan)}
-                        disabled={trialLoading === sourcePlan.tier || loading === sourcePlan.tier}
+                        disabled={!plansRequestSettled || trialLoading === sourcePlan.tier || loading === sourcePlan.tier}
                         className={`tb-v2-btn tb-v2-pricing-btn ${isHighlighted ? 'inverse' : 'tb-v2-btn-primary'}`}
                         style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none' }}
                       >
@@ -299,7 +303,7 @@ export default function PricingClient() {
                       </button>
                       <button
                         onClick={() => handleUpgrade(sourcePlan)}
-                        disabled={loading === sourcePlan.tier || trialLoading === sourcePlan.tier}
+                        disabled={!plansRequestSettled || loading === sourcePlan.tier || trialLoading === sourcePlan.tier}
                         className="text-center text-xs text-[color:var(--fg-3)] underline-offset-2 hover:text-[color:var(--fg-1)] hover:underline"
                         style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '2px 0' }}
                       >
