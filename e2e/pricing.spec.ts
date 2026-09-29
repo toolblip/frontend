@@ -7,6 +7,19 @@ test.describe('Pricing layout', () => {
     await resetMockBackend(request);
   });
 
+  test('includes the pricing content in the raw server response', async ({ request }) => {
+    const response = await request.get('/pricing');
+
+    expect(response.ok()).toBeTruthy();
+    const html = await response.text();
+    expect(html).toMatch(/<h1[^>]*>Simple, transparent pricing/);
+    expect(html).toContain('Starter');
+    expect(html).toContain('Pro');
+    expect(html).toContain('Max');
+    expect(html).toContain('Free');
+    expect(html).not.toContain('Loading plans...');
+  });
+
   test('shows a billing period switch at the top and keeps Free on its own row', async ({ page }) => {
     await page.goto('/pricing');
 

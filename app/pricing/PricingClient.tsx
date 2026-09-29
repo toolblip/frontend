@@ -117,8 +117,7 @@ export default function PricingClient() {
   const [loading, setLoading] = useState<string | null>(null);
   const [trialLoading, setTrialLoading] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [plans, setPlans] = useState<Plan[]>([]);
-  const [plansLoading, setPlansLoading] = useState(true);
+  const [plans, setPlans] = useState<Plan[]>(FALLBACK_PLANS);
   const [showSuccess, setShowSuccess] = useState(false);
 
   const userIsPro = Boolean(user?.is_pro);
@@ -128,11 +127,9 @@ export default function PricingClient() {
       .then((r) => r.json())
       .then((data) => {
         setPlans((data.plans && data.plans.length > 0) ? data.plans : FALLBACK_PLANS);
-        setPlansLoading(false);
       })
       .catch(() => {
         setPlans(FALLBACK_PLANS);
-        setPlansLoading(false);
       });
   }, []);
 
@@ -224,16 +221,6 @@ export default function PricingClient() {
     } finally {
       setTrialLoading(null);
     }
-  }
-
-  if (plansLoading) {
-    return (
-      <div className="tb-v2-pricing">
-        <div className="tb-v2-container">
-          <div className="tb-v2-pricing-loader">Loading plans...</div>
-        </div>
-      </div>
-    );
   }
 
   const orderedPlans = sortPricingPlans(plans);
