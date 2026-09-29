@@ -825,7 +825,8 @@ button.tb-v2-mm-more-row-btn {
   gap: 20px;
   padding: 10px 20px 10px 0;
 }
-.tb-v2-directory-group > a {
+.tb-v2-directory-group > a,
+.tb-v2-directory-group > span {
   display: flex !important;
   align-items: center;
   justify-content: center;
@@ -861,7 +862,8 @@ button.tb-v2-mm-more-row-btn {
 }
 .tb-v2-directory-image[data-loaded] img { visibility: visible; }
 .tb-v2-directory-image[data-loaded] > .tb-v2-directory-text { visibility: hidden; }
-.tb-v2-directory-group > a[data-topaitools4u-badge] .tb-v2-directory-image {
+.tb-v2-directory-group > a[data-topaitools4u-badge] .tb-v2-directory-image,
+.tb-v2-directory-group > span[data-topaitools4u-badge] .tb-v2-directory-image {
   width: 26px;
   height: 26px;
   flex-shrink: 0;
@@ -872,8 +874,10 @@ button.tb-v2-mm-more-row-btn {
   height: 36px !important;
   object-fit: contain;
 }
-.tb-v2-directory-group > a[data-topaitools4u-badge] { padding: 4px 6px !important; gap: 6px !important; }
-.tb-v2-directory-group > a[data-topaitools4u-badge] img { width: 26px !important; height: 26px !important; flex-shrink: 0; }
+.tb-v2-directory-group > a[data-topaitools4u-badge],
+.tb-v2-directory-group > span[data-topaitools4u-badge] { padding: 4px 6px !important; gap: 6px !important; }
+.tb-v2-directory-group > a[data-topaitools4u-badge] img,
+.tb-v2-directory-group > span[data-topaitools4u-badge] img { width: 26px !important; height: 26px !important; flex-shrink: 0; }
 .tb-v2-directory-group > a:hover,
 .tb-v2-directory-group > a:focus-visible { opacity: 1; }
 .tb-v2-footer-badge:focus-visible,

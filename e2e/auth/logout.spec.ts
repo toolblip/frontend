@@ -23,6 +23,7 @@ test.describe('Logout BDD regression', () => {
     expect(cookies.find((cookie) => cookie.name === 'auth_token')).toBeUndefined();
 
     const me = await page.request.get('/api/auth/me');
-    expect(me.status()).toBe(401);
+    expect(me.status()).toBe(200);
+    expect(await me.json()).toEqual({ user: null });
   });
 });
