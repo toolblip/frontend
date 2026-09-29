@@ -46,6 +46,14 @@ export default function ToolDetailView({ tool }: { tool: Tool }) {
           <ToolUI tool={tool} />
         </ToolWrapper>
 
+        {tool.slug === 'image-background-remover' && (
+          <section aria-label="Background removal guidance" className="mt-6 rounded-xl border border-gray-200 bg-gray-50 px-5 py-4 text-sm text-gray-600 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300">
+            <h2 className="mb-2 text-base font-semibold text-gray-900 dark:text-white">How to choose a method</h2>
+            <p className="mb-2">AI Remove works best when the subject stands apart from the background. The model downloads on first use and runs in your browser. Review fine edges before downloading.</p>
+            <p>For a plain background, try Auto Detect. For a green screen or another known color, use Color Key and adjust Tolerance. Cancel discards an AI result, although processing may finish in the background.</p>
+          </section>
+        )}
+
         <ToolContentSection toolName={tool.name} content={content} />
 
         <RelatedTools slug={tool.slug} category={tool.category} />

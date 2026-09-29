@@ -623,11 +623,6 @@ export default function ImageBackgroundRemoverClient() {
       </dialog>
 
     </div>
-    <section aria-label="Background removal guidance" className="text-sm" style={{marginTop:24,padding:'16px 20px',border:'1px solid var(--line)',borderRadius:12,background:'var(--surface-2)',color:'var(--fg-2)'}}>
-      <h2 className="text-base font-semibold" style={{color:'var(--fg-0)',marginBottom:8}}>How to choose a method</h2>
-      <p style={{marginBottom:8}}>AI Remove works best when the subject stands apart from the background. The model downloads on first use and runs in your browser. Review fine edges before downloading.</p>
-      <p>For a plain background, try Auto Detect. For a green screen or another known color, use Color Key and adjust Tolerance. Cancel discards an AI result, although processing may finish in the background.</p>
-    </section>
     </>
   );
 }
