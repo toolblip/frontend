@@ -18,7 +18,7 @@ export default function DirectoryBadgeImage({ fallback, alt, ...props }: Props) 
         {...props}
         alt={alt}
         aria-hidden={!loaded || undefined}
-        loading="eager"
+        loading="lazy"
         ref={(image) => {
           if (image?.complete && image.naturalWidth > 0) setLoaded(true);
         }}

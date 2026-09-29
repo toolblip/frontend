@@ -1,5 +1,3 @@
-'use client';
-
 import Link from 'next/link';
 import { tools } from '@/data/tools';
 import { getCategoryMeta } from '@/lib/v2/categoryMeta';
