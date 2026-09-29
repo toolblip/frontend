@@ -29,11 +29,20 @@ for (const mobile of [false, true]) {
     const track = page.locator('.tb-v2-directory-track');
     const before = await track.evaluate(el => getComputedStyle(el).transform);
     await expect.poll(() => track.evaluate(el => getComputedStyle(el).transform)).not.toBe(before);
-    await expect(page.locator(`${group} a`)).toHaveCount(42);
-    await expect(page.locator(`${group} img`)).toHaveCount(36);
+    await expect(page.locator(`${group} a`)).toHaveCount(47);
+    await expect(page.locator(`${group} img`)).toHaveCount(38);
     await expect(strip.locator('a[href="https://launchtory.com/projects/toolblip"]')).toHaveCount(1);
     await expect(strip.locator('a[href="https://bowora.com/?via=0aoviedt"]')).toHaveCount(1);
     await expect(strip.locator('a[href="https://saaspa.ge/product/cmu8mzn8n0005gm0a1obn4e2g"]')).toHaveCount(1);
+    for (const href of [
+      'https://turbo0.com/item/toolblip',
+      'https://sumodir.com',
+      'https://dang.ai',
+      'https://web-review.com',
+      'https://navfolders.com/',
+    ]) {
+      await expect(strip.locator(`a[href="${href}"]`)).toHaveCount(1);
+    }
     await expect.poll(() => page.locator(`${group} img`).evaluateAll(images => images.every(image => {
       const img = image as HTMLImageElement;
       return img.complete && img.naturalWidth > 0;
@@ -42,7 +51,7 @@ for (const mobile of [false, true]) {
     await expect(page.locator('.tb-v2-directory-group[aria-hidden="true"] a:not([tabindex="-1"])')).toHaveCount(0);
     await expect(page.locator('.tb-v2-directory-group[aria-hidden=true] a[href]')).toHaveCount(0);
 
-    // Keyboard focus disables the transform so the browser can scroll to all 42 links.
+    // Keyboard focus disables the transform so the browser can scroll to all 47 links.
     await strip.focus();
     await page.keyboard.press('Tab');
     for (let index = 0; index < listings.length; index++) {
@@ -89,6 +98,9 @@ test('missing and corrupt local badges show accessible text without broken icons
   await expect(links.nth(0)).toHaveAccessibleName('SaaSCity');
   await expect(links.nth(17)).toHaveAccessibleName('LaunchVault');
   await expect(links.nth(19)).toHaveAccessibleName('Listed on TopAITools4U');
+  await expect(page.locator(`${group} a[href="https://turbo0.com/item/toolblip"]`)).toHaveAccessibleName('Featured on Turbo0');
+  await expect(page.locator(`${group} a[href="https://dang.ai"]`)).toHaveAccessibleName('Featured on Dang.ai');
+  await expect(page.locator(`${group} a[href="https://navfolders.com/"]`)).toHaveAccessibleName('Featured on NavFolders');
 });
 
 test('reduced motion keeps a single scrollable set of listings', async ({ page }) => {
