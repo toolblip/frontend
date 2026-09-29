@@ -58,6 +58,7 @@ jobs:
           node-version: '24'
           package-manager-cache: false
       - name: Collect fixed-cohort report
+        if: github.event_name != 'workflow_dispatch' || inputs.inspection_group != 'blog-core'
         env:
           GSC_SERVICE_ACCOUNT: ${{ secrets.GSC_SERVICE_ACCOUNT }}
           GSC_SITE_URL: ${{ vars.GSC_SITE_URL || 'sc-domain:toolblip.com' }}
@@ -94,6 +95,8 @@ jobs:
         run: |
           if [[ -f test-results/gsc-recovery/report.md ]]; then
             cat test-results/gsc-recovery/report.md >> "$GITHUB_STEP_SUMMARY"
+          elif [[ "$GITHUB_EVENT_NAME" == 'workflow_dispatch' && "$INSPECTION_GROUP" == 'blog-core' ]]; then
+            echo 'GSC recovery report skipped by selection (inspection_group=blog-core).' >> "$GITHUB_STEP_SUMMARY"
           else
             echo 'GSC recovery report unavailable; check the failed setup or collection step.' >> "$GITHUB_STEP_SUMMARY"
           fi
