@@ -32,7 +32,7 @@ export default function CategoryGrid() {
   );
 
   return (
-    <section style={{ padding: '0 0 56px' }}>
+    <section className="tb-home-deferred tb-home-toolkit" style={{ padding: '0 0 56px' }}>
       <div className="tb-v2-container">
         <div
           style={{

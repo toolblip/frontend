@@ -1204,6 +1204,33 @@ button.tb-v2-mm-more-row-btn {
 .tb-v2-band { padding: 72px 0; }
 .tb-v2-band + .tb-v2-band { border-top: 1px solid var(--line); }
 .tb-v2-band-sm { padding: 48px 0; }
+
+/* Only the substantial sections after the home intro skip offscreen rendering.
+   Intrinsic block sizes are based on measured 1440px and 390px layouts. */
+.tb-home-deferred,
+.tb-v2-shell > main:has(.tb-v2-hero) + .tb-v2-footer {
+  content-visibility: auto;
+}
+.tb-home-why { contain-intrinsic-size: auto none auto 352px; }
+.tb-home-toolkit { contain-intrinsic-size: auto none auto 985px; }
+.tb-home-reviewed { contain-intrinsic-size: auto none auto 700px; }
+.tb-home-categories { contain-intrinsic-size: auto none auto 567px; }
+.tb-home-seo { contain-intrinsic-size: auto none auto 355px; }
+.tb-home-blog { contain-intrinsic-size: auto none auto 302px; }
+.tb-v2-shell > main:has(.tb-v2-hero) + .tb-v2-footer {
+  contain-intrinsic-size: auto none auto 329px;
+}
+@media (max-width: 760px) {
+  .tb-home-why { contain-intrinsic-size: auto none auto 867px; }
+  .tb-home-toolkit { contain-intrinsic-size: auto none auto 3381px; }
+  .tb-home-reviewed { contain-intrinsic-size: auto none auto 2449px; }
+  .tb-home-categories { contain-intrinsic-size: auto none auto 1696px; }
+  .tb-home-seo { contain-intrinsic-size: auto none auto 874px; }
+  .tb-home-blog { contain-intrinsic-size: auto none auto 771px; }
+  .tb-v2-shell > main:has(.tb-v2-hero) + .tb-v2-footer {
+    contain-intrinsic-size: auto none auto 657px;
+  }
+}
 .tb-v2-band-head {
   display: flex; align-items: flex-end; justify-content: space-between;
   gap: 24px; margin-bottom: 36px;
