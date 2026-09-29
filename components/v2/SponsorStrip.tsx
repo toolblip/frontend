@@ -3,8 +3,7 @@
 import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { useAuth } from '@/app/providers/auth-provider';
-import useShowAds from '@/hooks/useShowAds';
+import { useShowAdsState } from '@/hooks/useShowAds';
 import SponsorAvatar from '@/components/v2/SponsorAvatar';
 import {
   applySponsorClick,
@@ -27,8 +26,7 @@ const SUPPRESSED_PREFIXES = ['/dashboard', '/account', '/admin', '/sponsors', '/
 export default function SponsorStrip() {
   const pathname = usePathname();
   const suppressed = SUPPRESSED_PREFIXES.some((p) => pathname === p || pathname?.startsWith(`${p}/`));
-  const { loading: authLoading } = useAuth();
-  const showAds = useShowAds();
+  const { showAds, loading: eligibilityLoading } = useShowAdsState();
   const [slots, setSlots] = useState<SponsorSlot[] | null>(() => readSponsorsTopCache()?.slots ?? null);
   const [minBidCents, setMinBidCents] = useState(() => Math.max(100, readSponsorsTopCache()?.min_bid_cents ?? 100));
 
@@ -59,13 +57,13 @@ export default function SponsorStrip() {
   }, [suppressed]);
 
   if (suppressed) return null;
-  if (!authLoading && !showAds) return null;
+  if (!eligibilityLoading && !showAds) return null;
 
   const bySlot = (rank: number): SponsorSlot | undefined => slots?.find((s) => s.rank === rank);
   const first = bySlot(1);
   const second = bySlot(2);
   const third = bySlot(3);
-  const loading = authLoading || slots === null;
+  const loading = eligibilityLoading || slots === null;
 
   return (
     <div className="tb-v2-sponsor-strip" aria-busy={loading}>
@@ -78,14 +76,20 @@ export default function SponsorStrip() {
             <Link
               href="/sponsors"
               className="tb-v2-sponsor-bidyours tb-v2-btn tb-v2-btn-primary"
-              style={authLoading ? { visibility: 'hidden' } : undefined}
-              tabIndex={authLoading ? -1 : undefined}
-              aria-hidden={authLoading || undefined}
+              style={eligibilityLoading ? { visibility: 'hidden' } : undefined}
+              tabIndex={eligibilityLoading ? -1 : undefined}
+              aria-hidden={eligibilityLoading || undefined}
             >
               <span>Outbid</span>
               <span>Now →</span>
             </Link>
-            <span className="tb-v2-sponsor-disclosure">Sponsored</span>
+            <span
+              className="tb-v2-sponsor-disclosure"
+              style={eligibilityLoading ? { visibility: 'hidden' } : undefined}
+              aria-hidden={eligibilityLoading || undefined}
+            >
+              Sponsored
+            </span>
           </div>
         </div>
       </div>
