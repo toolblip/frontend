@@ -1,25 +1,34 @@
 'use client';
 import UtilityDesignLayout from './UtilityDesignLayout';
 import { useEffect, useRef, useState } from 'react';
-import ToolExampleClearActions from './ToolExampleClearActions';
 export default function AudioToTextClient() {
-  const [transcript,setTranscript]=useState(''), [manualText,setManualText]=useState('');
+  const [transcript,setTranscript]=useState(''), [copied,setCopied]=useState(false);
   const [supported,setSupported]=useState(false), [listening,setListening]=useState(false), [error,setError]=useState('');
   const recognition=useRef<any>(null), active=useRef(false);
   const permissionRequest=useRef(0);
+  const copyReset=useRef<ReturnType<typeof setTimeout>|null>(null);
   const [permission,setPermission]=useState<'idle'|'requesting'|'granted'|'denied'>('idle');
   useEffect(()=>{
     const Constructor=(window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     setSupported(Boolean(Constructor));
-    return ()=>{ permissionRequest.current++; active.current=false; recognition.current?.abort(); };
+    return ()=>{ permissionRequest.current++; active.current=false; recognition.current?.abort(); if(copyReset.current)clearTimeout(copyReset.current); };
   },[]);
   const cancel=()=>{permissionRequest.current++; active.current=false; recognition.current?.abort(); recognition.current=null; setListening(false);};
-  const clear=()=>{ cancel(); setTranscript(''); setManualText(''); setPermission('idle'); setError(''); };
+  const clear=()=>{ cancel(); setTranscript(''); setCopied(false); setPermission('idle'); setError(''); };
   const stop=()=>{active.current=false;recognition.current?.stop();setListening(false);};
+  const copyTranscript=async()=>{
+    if(!transcript)return;
+    try {
+      await navigator.clipboard.writeText(transcript);
+      setCopied(true);
+      if(copyReset.current)clearTimeout(copyReset.current);
+      copyReset.current=setTimeout(()=>setCopied(false),2000);
+    } catch {setError('Clipboard unavailable. Select the transcript to copy.');}
+  };
   const start=async()=>{
     cancel();
     const request=permissionRequest.current;
-    setTranscript('');setError('');setPermission('requesting');
+    setTranscript('');setCopied(false);setError('');setPermission('requesting');
     try {
       const Constructor=(window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
       if(!Constructor) throw new Error('Speech recognition is not supported in this browser.');
@@ -37,7 +46,7 @@ export default function AudioToTextClient() {
         // results is the whole session, not just the newest event.
         const parts=[];
         for(let i=0;i<event.results.length;i++) parts.push(event.results[i][0].transcript);
-        setTranscript(parts.join(' ').slice(0,100000));
+        setTranscript(parts.join(' ').slice(0,100000));setCopied(false);
       };
       r.onstart=()=>{ if(active.current && recognition.current===r) setListening(true); };
       r.onerror=(event:any)=>{ if(recognition.current===r && active.current) {
@@ -59,14 +68,25 @@ export default function AudioToTextClient() {
     }
   };
   return <UtilityDesignLayout><div className="tb-v2-section" style={{display:'grid',gap:16,padding:20}}>
-    <ToolExampleClearActions onExample={()=>{clear();setManualText('This is an example transcript, not microphone recognition.');}} onClear={clear}/>
-    <div><h2 style={{fontSize:18,fontWeight:700,marginBottom:4}}>Record speech</h2><p>Microphone access is needed to transcribe speech. Your browser will ask when you start listening.</p></div>
+    <div>
+      <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',gap:12}}><h2 style={{fontSize:18,fontWeight:700,margin:0}}>Record speech</h2><button type="button" className="tb-v2-tool-text-action" onClick={clear}>Clear</button></div>
+      <p style={{margin:'8px 0 0'}}>Microphone access is needed to transcribe speech. Your browser will ask when you start listening.</p>
+    </div>
     {supported ? <button type="button" className="tb-v2-btn tb-v2-btn-primary" style={{justifySelf:'start'}} onClick={()=>permission==='requesting'?clear():listening?stop():void start()}>{permission==='requesting'?'Cancel request':listening?'Stop Listening':'Start Listening'}</button> : <p role="status">Speech recognition is not supported in this browser.</p>}
     {permission==='requesting'&&<p role="status" className="tb-v2-banner tb-v2-banner-info">Waiting for microphone permission…</p>}
     {permission==='granted'&&<p role="status" className="speech-permission-success">Microphone allowed. {listening?'Listening now.':'Ready to listen.'}</p>}
     {error && <p role="alert" className="tb-v2-banner tb-v2-banner-err">{error}</p>}
-    <div><label htmlFor="speech-manual-transcript" style={{display:'block',fontWeight:600,marginBottom:8}}>Manual transcript</label><textarea id="speech-manual-transcript" aria-label="Manual transcript" className="tb-v2-tool-textarea" maxLength={100000} value={manualText} onChange={e=>setManualText(e.target.value)} style={{minHeight:90,border:'1px solid var(--line)',borderRadius:8}}/><p style={{fontSize:12,color:'var(--fg-2)',margin:'6px 0'}}>Manual text is separate from microphone recognition.</p><button type="button" className="tb-v2-btn" disabled={!manualText.trim()} onClick={()=>{cancel();setPermission('idle');setTranscript(manualText);}}>Use This Text</button></div>
-    <div><p className="tb-v2-tool-label" style={{marginBottom:8}}>Transcript</p><pre aria-label="Transcript" className="tb-v2-tool-output-body" style={{whiteSpace:'pre-wrap',overflowWrap:'anywhere',minHeight:90,border:'1px solid var(--line)',borderRadius:8}}>{transcript}</pre></div>
-    {transcript && <button className="tb-v2-copy-btn" onClick={()=>navigator.clipboard.writeText(transcript).catch(()=>setError('Clipboard unavailable. Select the transcript to copy.'))}>Copy</button>}
+    <div>
+      <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',gap:12,marginBottom:8}}>
+        <p className="tb-v2-tool-label" style={{margin:0}}>Transcript</p>
+        <div style={{display:'flex',alignItems:'center',gap:8}}>
+          {copied&&<span role="status" style={{fontSize:12,color:'var(--fg-2)'}}>Copied</span>}
+          <button type="button" aria-label="Copy transcript" title="Copy transcript" className="tb-v2-copy-btn" disabled={!transcript} onClick={()=>void copyTranscript()} style={{padding:7}}>
+            <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>
+          </button>
+        </div>
+      </div>
+      <pre aria-label="Transcript" className="tb-v2-tool-output-body" style={{whiteSpace:'pre-wrap',overflowWrap:'anywhere',minHeight:90,border:'1px solid var(--line)',borderRadius:8}}>{transcript}</pre>
+    </div>
   </div><style>{`.speech-permission-success { padding:12px 16px; border:1px solid #86d6a1; border-radius:8px; background:#eaf8ef; color:#176236; font-size:13.5px; font-weight:600; } [data-theme="dark"] .speech-permission-success, .dark .speech-permission-success { background:#123323; border-color:#287b49; color:#a6efbf; }`}</style></UtilityDesignLayout>;
 }

@@ -20,3 +20,24 @@ test('background remover offers a representative AI example and keeps method tip
     if(width===390) await page.screenshot({ path: testInfo.outputPath('background-remover-mobile.png'), fullPage: true });
   }
 });
+
+test('download action is centered beneath the processed image', async ({ page }) => {
+  await page.goto('/tools/images/image-background-remover', { waitUntil: 'domcontentloaded' });
+  const card = page.locator('.tb-v2-tool-card').first();
+  await page.waitForFunction(() => [...document.querySelectorAll('.tb-v2-tool-card button')].some(button => Object.keys(button).some(key => key.startsWith('__reactProps$') && typeof (button as any)[key]?.onClick === 'function')));
+  await card.getByRole('button', { name: 'Examples' }).click();
+  await expect(card.getByRole('img', { name: 'Original' })).toBeVisible();
+  await card.getByRole('radio', { name: 'Color Key' }).check();
+  await card.getByRole('button', { name: 'Remove Background' }).click();
+  const result = card.getByRole('img', { name: 'No Background' });
+  await expect(result).toBeVisible();
+  const download = card.getByRole('button', { name: 'Download PNG' });
+  for (const width of [1280, 390]) {
+    await page.setViewportSize({ width, height: 850 });
+    const imageBox = await result.boundingBox();
+    const buttonBox = await download.boundingBox();
+    expect(imageBox && buttonBox).toBeTruthy();
+    expect(Math.abs((imageBox!.x + imageBox!.width / 2) - (buttonBox!.x + buttonBox!.width / 2))).toBeLessThan(4);
+    expect(buttonBox!.y).toBeGreaterThan(imageBox!.y + imageBox!.height);
+  }
+});
