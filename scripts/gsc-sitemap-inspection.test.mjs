@@ -6,6 +6,8 @@ import { join } from 'node:path';
 import { parseSitemap, groupResults, collect, main } from './gsc-sitemap-inspection.mjs';
 
 const urls = ['https://toolblip.com/tools/alpha', 'https://toolblip.com/tools/beta', 'https://toolblip.com/tools/gamma'];
+const blogUrls = ['https://toolblip.com/blog/first-post', 'https://toolblip.com/blog/another-2026-post'];
+const coreUrls = ['https://toolblip.com', 'https://toolblip.com/directory', 'https://toolblip.com/tools', 'https://toolblip.com/tools/images', 'https://toolblip.com/all-tools', 'https://toolblip.com/blog', 'https://toolblip.com/pricing', 'https://toolblip.com/sponsors', 'https://toolblip.com/sponsors/archive', 'https://toolblip.com/about', 'https://toolblip.com/seo', 'https://toolblip.com/api-docs'];
 const xml = entries => `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${entries.map(url => `<url><loc>${url}</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>`).join('')}</urlset>`;
 const response = (body, status = 200) => new Response(typeof body === 'string' ? body : JSON.stringify(body), { status });
 const stored = (verdict, coverageState) => ({ inspectionResult: { indexStatusResult: { verdict, coverageState, indexingState: 'INDEXING_ALLOWED', googleCanonical: urls[0] } } });
@@ -17,6 +19,51 @@ test('sitemap validation accepts generated XML and rejects unsafe or duplicate U
   for (const bad of [[], [urls[0], urls[0]], ['http://toolblip.com/tools/a'], ['https://evil.test/tools/a'], ['https://toolblip.com/tools/a?x=1'], ['https://toolblip.com/tools/a#x'], ['https://toolblip.com/tools/%61'], ['https://toolblip.com/tools/a/'], ['https://toolblip.com/other/a']]) assert.throws(() => parseSitemap(xml(bad)));
   for (const bad of ['<!DOCTYPE urlset [<!ENTITY x "secret">]>', '<urlset><url><loc>https://toolblip.com/tools/a</loc></url><script/></urlset>', '<urlset><url><loc>https://toolblip.com/tools/a&amp;evil;</loc></url></urlset>', '<urlset><url><loc>https://toolblip.com/tools/a</loc></url></urlset><extra/>']) assert.throws(() => parseSitemap(bad));
   assert.throws(() => parseSitemap(xml(Array(501).fill(urls[0]))));
+});
+
+test('blog and core validation enforce canonical cohort paths and the exact core route set', () => {
+  assert.deepEqual(parseSitemap(xml(blogUrls), 'blog'), blogUrls);
+  assert.deepEqual(parseSitemap(xml(coreUrls), 'core'), coreUrls);
+  for (const bad of ['https://toolblip.com/blog', 'https://toolblip.com/blog/first-post/', 'https://toolblip.com/blog/first-post/child', 'https://toolblip.com/blog/%66irst-post', 'https://toolblip.com/tools/alpha', 'https://evil.test/blog/first-post', 'https://toolblip.com/blog/first-post?secret=1']) {
+    assert.throws(() => parseSitemap(xml([bad]), 'blog'), /INVALID_SITEMAP/);
+  }
+  for (const bad of [coreUrls.slice(1), [...coreUrls, 'https://toolblip.com/tools/alpha'], [...coreUrls.slice(0, 1), ...coreUrls.slice(2), 'https://toolblip.com/blog/first-post'], coreUrls.map(url => url === 'https://toolblip.com' ? 'https://toolblip.com/' : url)]) {
+    assert.throws(() => parseSitemap(xml(bad), 'core'), /INVALID_SITEMAP/);
+  }
+  assert.throws(() => parseSitemap(xml(urls), 'unknown'), /INVALID_SITEMAP/);
+});
+
+test('blog and core collection fetch only their fixed sitemap URLs and label reports', async () => {
+  for (const [cohort, entries] of [['blog', blogUrls], ['core', coreUrls]]) {
+    const fetched = [];
+    const inspected = [];
+    const report = await collect({ sitemap: cohort, getToken: async () => 'fixture-token', sleep: async () => {}, transport: async (url, init) => {
+      if (url.endsWith('.xml')) { fetched.push(url); assert.equal(init.redirect, 'error'); return response(xml(entries)); }
+      inspected.push(JSON.parse(init.body).inspectionUrl);
+      return response(stored('PASS', 'Indexed'));
+    } });
+    assert.deepEqual(fetched, [`https://toolblip.com/sitemap-${cohort}.xml`]);
+    assert.deepEqual(inspected, entries);
+    assert.equal(report.sitemap.cohort, cohort);
+    assert.equal(report.sitemap.url, fetched[0]);
+    assert.deepEqual(report.results.map(row => row.url), entries);
+    assert.equal(report.counts.inspected, entries.length);
+    assert.equal(report.status, 'complete');
+  }
+});
+
+test('cross-cohort sitemap contents and invalid cohort fail before authentication or inspection', async () => {
+  for (const [cohort, entry] of [['blog', urls[0]], ['core', blogUrls[0]]]) {
+    let authenticated = false;
+    const report = await collect({ sitemap: cohort, transport: async url => {
+      assert.equal(url, `https://toolblip.com/sitemap-${cohort}.xml`);
+      return response(xml([entry]));
+    }, getToken: async () => { authenticated = true; return 'fixture-token'; } });
+    assert.equal(report.sitemap.error, 'INVALID_SITEMAP');
+    assert.equal(authenticated, false);
+    assert.equal(report.counts.inspected, 0);
+  }
+  await assert.rejects(collect({ sitemap: 'https://evil.test/sitemap-blog.xml', transport: async () => { throw Error('must not fetch'); } }), /INVALID_SITEMAP/);
 });
 
 test('authentication failure and bounded ordinary failures leave remaining URLs skipped', async () => {
@@ -224,5 +271,24 @@ test('CLI writes separate JSON and Markdown artifacts on partial and sitemap fai
     assert.equal(await main(['--output', dir], { transport: async () => response('private-body', 500), sleep: async () => {} }), 1);
     assert.equal(JSON.parse(await readFile(join(dir, 'report.json'), 'utf8')).sitemap.error, 'HTTP_500');
     assert.ok(!(await readFile(join(dir, 'report.md'), 'utf8')).includes('private-body'));
+  } finally { await rm(dir, { recursive: true, force: true }); }
+});
+
+test('CLI selects blog and core reports and rejects arbitrary sitemap selectors', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'gsc-sitemap-cohorts-'));
+  try {
+    for (const [cohort, entries] of [['blog', blogUrls], ['core', coreUrls]]) {
+      const output = join(dir, cohort);
+      const code = await main(['--sitemap', cohort, '--output', output], {
+        getToken: async () => 'fixture-token', sleep: async () => {},
+        transport: async url => response(url.endsWith('.xml') ? xml(entries) : stored('PASS', 'Indexed')),
+      });
+      assert.equal(code, 0);
+      assert.equal(JSON.parse(await readFile(join(output, 'report.json'), 'utf8')).sitemap.cohort, cohort);
+      assert.match(await readFile(join(output, 'report.md'), 'utf8'), new RegExp(`validated ${cohort} URLs`));
+    }
+    let fetched = false;
+    assert.equal(await main(['--sitemap', 'https://evil.test/sitemap-blog.xml', '--output', dir], { transport: async () => { fetched = true; } }), 1);
+    assert.equal(fetched, false);
   } finally { await rm(dir, { recursive: true, force: true }); }
 });
