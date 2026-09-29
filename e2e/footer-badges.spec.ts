@@ -29,16 +29,20 @@ for (const mobile of [false, true]) {
     const track = page.locator('.tb-v2-directory-track');
     const before = await track.evaluate(el => getComputedStyle(el).transform);
     await expect.poll(() => track.evaluate(el => getComputedStyle(el).transform)).not.toBe(before);
-    await expect(page.locator(`${group} a`)).toHaveCount(39);
-    await expect(page.locator(`${group} img`)).toHaveCount(35);
+    await expect(page.locator(`${group} a`)).toHaveCount(42);
+    await expect(page.locator(`${group} img`)).toHaveCount(36);
+    await expect(strip.locator('a[href="https://launchtory.com/projects/toolblip"]')).toHaveCount(1);
+    await expect(strip.locator('a[href="https://bowora.com/?via=0aoviedt"]')).toHaveCount(1);
+    await expect(strip.locator('a[href="https://saaspa.ge/product/cmu8mzn8n0005gm0a1obn4e2g"]')).toHaveCount(1);
     await expect.poll(() => page.locator(`${group} img`).evaluateAll(images => images.every(image => {
       const img = image as HTMLImageElement;
       return img.complete && img.naturalWidth > 0;
     }))).toBe(true);
     await expect(page.locator('main .tb-v2-directory-group')).toHaveCount(0);
     await expect(page.locator('.tb-v2-directory-group[aria-hidden="true"] a:not([tabindex="-1"])')).toHaveCount(0);
+    await expect(page.locator('.tb-v2-directory-group[aria-hidden=true] a[href]')).toHaveCount(0);
 
-    // Keyboard focus disables the transform so the browser can scroll to all 39 links.
+    // Keyboard focus disables the transform so the browser can scroll to all 42 links.
     await strip.focus();
     await page.keyboard.press('Tab');
     for (let index = 0; index < listings.length; index++) {

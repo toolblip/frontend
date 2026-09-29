@@ -222,6 +222,25 @@
       "source": "https://sololaunches.com/api/badges/support?theme=light",
       "file": "solo-launches.svg",
       "sha256": "fd676d6f67340ab59098c934cdf9462bcf49b47a71ceffe3b881ae20f4dd33ab"
+    },
+    {
+      "name": "Launchtory",
+      "source": "https://launchtory.com/projects/toolblip",
+      "fallback": true,
+      "reason": "Exact HTML listing is text only"
+    },
+    {
+      "name": "Bowora",
+      "source": "https://bowora.com/?via=0aoviedt",
+      "file": "bowora.svg",
+      "sha256": "b7b8594c1544fbffd30441e2e185818e46f08bd908bee1217a1932ecd7c9b749",
+      "provenance": "Inline SVG supplied in the request on 2026-09-29"
+    },
+    {
+      "name": "Saaspage",
+      "source": "https://saaspa.ge/api/embed/product/cmu8mzn8n0005gm0a1obn4e2g/badge.png?theme=orange",
+      "fallback": true,
+      "reason": "Remote badge image could not be verified locally"
     }
   ]
 }
