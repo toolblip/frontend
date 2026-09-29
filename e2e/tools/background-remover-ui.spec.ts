@@ -6,6 +6,7 @@ test('background remover offers a representative AI example and keeps method tip
   await page.waitForFunction(() => [...document.querySelectorAll('.tb-v2-tool-card button')].some(button => Object.keys(button).some(key => key.startsWith('__reactProps$') && typeof (button as any)[key]?.onClick === 'function')));
   await expect(card.getByText('Tips:', { exact: true })).toHaveCount(0);
   await expect(page.getByRole('heading', { name: 'How to choose a method' })).toBeVisible();
+  await expect(card.getByRole('heading', { name: 'How to choose a method' })).toHaveCount(0);
   await card.getByRole('button', { name: 'Examples' }).click();
   await expect(card.getByRole('img', { name: 'Original' })).toBeVisible({ timeout: 15000 });
   const dimensions = await card.getByRole('img', { name: 'Original' }).evaluate((image: HTMLImageElement) => ({ width: image.naturalWidth, height: image.naturalHeight }));

@@ -8,6 +8,7 @@ on:
       - 'components/tools/AudioToTextClient.tsx'
       - 'components/tools/TextToSpeechClient.tsx'
       - 'components/tools/ImageBackgroundRemoverClient.tsx'
+      - 'app/tools/ToolDetailView.tsx'
       - 'scripts/qa/cases/utility-design.mjs'
       - 'e2e/tools/speech-permission-ui.spec.ts'
       - 'e2e/tools/background-remover-ui.spec.ts'
