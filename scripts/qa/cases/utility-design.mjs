@@ -64,7 +64,7 @@ add('speech-to-text',async c=>{const {tool:t,page,expect,check}=c;
  const supported=native.supported;
  if(!supported)await expect(t.getByRole('status')).toContainText('not supported');
  check(true,supported?'Recognition API present; real microphone/service acceptance remains unverified':'Observed honest unsupported state; no real recognition claimed');
- await example(t);await click(t,'Use This Text');await expect(t.getByLabel('Transcript',{exact:true})).toHaveText('This is an example transcript, not microphone recognition.');await clear(t);await expect(t.getByLabel('Transcript',{exact:true})).toHaveText('');
+ await expect(t.getByRole('textbox',{name:'Manual transcript'})).toHaveCount(0);await expect(t.getByRole('button',{name:'Examples'})).toHaveCount(0);await expect(t.getByLabel('Transcript',{exact:true})).toHaveText('');
  // Controlled API fixture tests event handling, not speech recognition accuracy.
  const fixturePage=await page.context().newPage(); const fixtureTool=fixturePage.locator('.tb-v2-tool-card').first();
  try {

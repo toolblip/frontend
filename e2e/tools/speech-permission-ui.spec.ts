@@ -42,6 +42,39 @@ test('speech recognition explains a denied permission without starting recogniti
   expect(await page.evaluate(() => (window as any).__starts)).toBe(0);
 });
 
+test('speech transcript is read-only and copies microphone output in one click', async ({ page }) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, 'mediaDevices', {
+      configurable: true,
+      value: { getUserMedia: async () => ({ getTracks: () => [{ stop() {} }] }) },
+    });
+    Object.defineProperty(navigator, 'clipboard', {
+      configurable: true,
+      value: { writeText: async (value: string) => { (window as any).__copiedTranscript = value; } },
+    });
+    (window as any).SpeechRecognition = class {
+      start() { (window as any).__recognition = this; this.onstart?.(); }
+      stop() { this.onend?.(); }
+      abort() { this.onend?.(); }
+      onstart?: () => void;
+      onend?: () => void;
+      onresult?: (event: any) => void;
+    };
+  });
+  await page.goto('/tools/speech-to-text');
+  const card = page.locator('.tb-v2-tool-card').first();
+  await expect(card.getByRole('textbox', { name: 'Manual transcript' })).toHaveCount(0);
+  await expect(card.getByRole('button', { name: 'Examples' })).toHaveCount(0);
+  await card.getByRole('button', { name: 'Start Listening' }).click();
+  await page.evaluate(() => (window as any).__recognition.onresult({ results: [[{ transcript: 'Hello from the microphone.' }]] }));
+  const transcript = card.getByLabel('Transcript', { exact: true });
+  await expect(transcript).toHaveText('Hello from the microphone.');
+  await expect(transcript).not.toHaveJSProperty('contentEditable', 'true');
+  await card.getByRole('button', { name: 'Copy transcript' }).click();
+  expect(await page.evaluate(() => (window as any).__copiedTranscript)).toBe('Hello from the microphone.');
+  await expect(card.getByRole('status').filter({ hasText: 'Copied' })).toBeVisible();
+});
+
 test('Clear cancels a microphone request that resolves late', async ({ page }) => {
   await page.addInitScript(() => {
     (window as any).__mic = { stopped: 0, starts: 0 };
@@ -73,6 +106,9 @@ test('text to speech presents an in-view Listen control and compact voice select
   await page.setViewportSize({ width: 1280, height: 900 });
   await page.goto('/tools/text-to-speech');
   await page.getByLabel('Text input for speech synthesis').fill('Hello from Toolblip.');
+  const inputHeader = page.locator('.tb-v2-tool-input-head').filter({ hasText: 'Text to Convert' });
+  await expect(inputHeader.getByRole('button', { name: 'Examples' })).toBeVisible();
+  await expect(inputHeader.getByRole('button', { name: 'Clear', exact: true })).toBeVisible();
   const listen = page.getByRole('button', { name: 'Listen', exact: true });
   await expect(listen).toBeVisible();
   const box = await listen.boundingBox();
