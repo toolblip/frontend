@@ -119,6 +119,21 @@ export default function ImageBackgroundRemoverClient() {
     if (file) loadImage(file);
   };
 
+  const loadExample = async () => {
+    if (method !== 'ai') {
+      await loadImage(exampleFile());
+      return;
+    }
+    try {
+      const response = await fetch('/samples/background-remover-fern.png');
+      if (!response.ok) throw new Error('Example image is unavailable. Please upload your own image.');
+      const blob = await response.blob();
+      await loadImage(new File([blob], 'fern-example.png', { type: 'image/png' }));
+    } catch (cause) {
+      setAiError(cause instanceof Error ? cause.message : 'Could not load the example image.');
+    }
+  };
+
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     const file = e.dataTransfer.files[0];
@@ -372,8 +387,9 @@ export default function ImageBackgroundRemoverClient() {
   };
 
   return (
+    <>
     <div className="tb-v2-tool-card flex flex-col gap-4 p-4"><style jsx>{`input,textarea,select {max-width:100%;min-width:0} .tb-v2-tool-card {min-width:0;max-width:100%;overflow-wrap:anywhere} .tb-v2-tool-input-head {flex-wrap:wrap;gap:8px} .tb-v2-range-row {flex-wrap:wrap} .tb-v2-range {min-width:0;flex:1}`}</style>
-      <div className="tb-v2-tool-input-head"><span>Background Remover</span><ToolExampleClearActions onExample={()=>loadImage(exampleFile())} onClear={clear}/></div>{aiError&&!image&&<p role="alert">{aiError}</p>}{isProcessing&&<button className="tb-v2-btn" onClick={invalidateResult}>Cancel result</button>}<p className="tb-v2-hint">AI segmentation downloads a model on first use and runs locally. Cancel discards the result; inference may finish in the background. Color Key and Auto Detect use color matching, not AI.</p>
+      <div className="tb-v2-tool-input-head"><span>Background Remover</span><ToolExampleClearActions onExample={()=>void loadExample()} onClear={clear}/></div>{aiError&&!image&&<p role="alert">{aiError}</p>}{isProcessing&&<button className="tb-v2-btn" onClick={invalidateResult}>Cancel result</button>}
 
       <input
         ref={fileInputRef}
@@ -444,12 +460,6 @@ export default function ImageBackgroundRemoverClient() {
               </label>
             </div>
           </div>
-
-          {method === 'ai' && !isProcessing && (
-            <p className="text-sm text-gray-500">
-              Uses AI segmentation to estimate the subject. Results vary, especially around fine edges and complex backgrounds.
-            </p>
-          )}
 
           {isProcessing && isSlowFetch && (
             <div className="text-sm text-gray-500">
@@ -612,15 +622,12 @@ export default function ImageBackgroundRemoverClient() {
         </div>
       </dialog>
 
-      <div className="text-sm text-gray-500 mt-4">
-        <p className="font-medium">Tips:</p>
-        <ul className="list-disc pl-5">
-          <li><strong>AI Remove:</strong> Best suited to photos with a clear foreground subject. Review the edges before downloading.</li>
-          <li><strong>Auto Detect:</strong> Samples corners to identify and remove background color</li>
-          <li><strong>Color Key:</strong> Removes a specific color (e.g., green screen)</li>
-          <li>Auto Detect and Color Key both use the Tolerance slider - raise it for more color variation</li>
-        </ul>
-      </div>
     </div>
+    <section aria-label="Background removal guidance" className="text-sm" style={{marginTop:24,padding:'16px 20px',border:'1px solid var(--line)',borderRadius:12,background:'var(--surface-2)',color:'var(--fg-2)'}}>
+      <h2 className="text-base font-semibold" style={{color:'var(--fg-0)',marginBottom:8}}>How to choose a method</h2>
+      <p style={{marginBottom:8}}>AI Remove works best when the subject stands apart from the background. The model downloads on first use and runs in your browser. Review fine edges before downloading.</p>
+      <p>For a plain background, try Auto Detect. For a green screen or another known color, use Color Key and adjust Tolerance. Cancel discards an AI result, although processing may finish in the background.</p>
+    </section>
+    </>
   );
 }

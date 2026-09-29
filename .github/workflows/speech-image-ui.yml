@@ -1,0 +1,44 @@
+name: Speech and background remover UI
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/speech-image-ui.yml'
+      - 'components/tools/AudioToTextClient.tsx'
+      - 'components/tools/TextToSpeechClient.tsx'
+      - 'components/tools/ImageBackgroundRemoverClient.tsx'
+      - 'scripts/qa/cases/utility-design.mjs'
+      - 'e2e/tools/speech-permission-ui.spec.ts'
+      - 'e2e/tools/background-remover-ui.spec.ts'
+      - 'public/samples/background-remover-fern.png'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          submodules: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: node scripts/build-browser-workers.mjs
+      - run: npx --no-install tsc --noEmit
+      - run: npm run build
+      - run: npx --no-install playwright install --with-deps chromium --only-shell
+      - run: npx --no-install playwright test e2e/tools/speech-permission-ui.spec.ts e2e/tools/background-remover-ui.spec.ts --project=chromium --timeout=60000
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: speech-image-ui-${{ github.run_id }}
+          path: test-results/
+          if-no-files-found: ignore
+          retention-days: 14
