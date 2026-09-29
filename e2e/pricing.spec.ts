@@ -119,23 +119,39 @@ test('includes the pricing content in the raw server response', async ({ request
 
 test.describe('Pricing action loading', () => {
   test('keeps paid actions disabled until the plans request settles', async ({ page }) => {
-    let releasePlansRequest!: () => void;
-    const plansRequestGate = new Promise<void>((resolve) => {
-      releasePlansRequest = resolve;
+    await page.addInitScript(() => {
+      const originalFetch = window.fetch.bind(window);
+      let releasePlansRequest: (() => void) | undefined;
+      let plansRequestGate: Promise<void> | undefined;
+
+      window.fetch = ((input: RequestInfo | URL, init?: RequestInit) => {
+        const requestUrl = input instanceof Request ? input.url : String(input);
+        if (!requestUrl.endsWith('/api/plans')) {
+          return originalFetch(input, init);
+        }
+
+        if (!plansRequestGate) {
+          plansRequestGate = new Promise<void>((resolve) => {
+            releasePlansRequest = resolve;
+          });
+          (window as Window & { __releasePlansRequest?: () => void }).__releasePlansRequest = () => {
+            releasePlansRequest?.();
+          };
+        }
+
+        return plansRequestGate.then(
+          () => new Response(JSON.stringify({ plans: [] }), {
+            status: 200,
+            headers: { 'Content-Type': 'application/json' },
+          })
+        );
+      }) as typeof window.fetch;
     });
 
-    await page.route('**/api/plans', async (route) => {
-      await plansRequestGate;
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({ plans: [] }),
-      });
-    });
-
-    const plansRequest = page.waitForRequest((request) => new URL(request.url()).pathname === '/api/plans');
     await page.goto('/pricing');
-    await plansRequest;
+    await page.waitForFunction(
+      () => typeof (window as Window & { __releasePlansRequest?: () => void }).__releasePlansRequest === 'function'
+    );
 
     const pricing = page.locator('main');
     const paidActions = [
@@ -153,7 +169,9 @@ test.describe('Pricing action loading', () => {
     }
     await expect(pricing.getByRole('button', { name: 'Continue with Free Plan' })).toBeEnabled();
 
-    releasePlansRequest();
+    await page.evaluate(() => {
+      (window as Window & { __releasePlansRequest?: () => void }).__releasePlansRequest?.();
+    });
 
     for (const action of paidActions) {
       await expect(action).toBeEnabled();
