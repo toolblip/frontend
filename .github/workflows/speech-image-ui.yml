@@ -30,6 +30,7 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - run: node scripts/build-browser-workers.mjs
       - run: npx --no-install tsc --noEmit
       - run: npm run build
       - run: npx --no-install playwright install --with-deps chromium --only-shell
