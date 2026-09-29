@@ -51,8 +51,12 @@ jobs:
           echo "$?" > "$output/browser-exit.txt"
           node scripts/qa/helpers/images-real-capabilities.mjs "$QA_ENGINE" ai "$output/ai" > "$output/ai.log" 2>&1
           echo "$?" > "$output/ai-exit.txt"
+          for fixture in portrait fern; do
+            QA_AI_FIXTURE="scripts/qa/fixtures/background-remover-$fixture.png" node scripts/qa/helpers/images-real-capabilities.mjs "$QA_ENGINE" ai "$output/ai-$fixture" > "$output/ai-$fixture.log" 2>&1
+            echo "$?" > "$output/ai-$fixture-exit.txt"
+          done
           set -e
-          cat "$output/browser-exit.txt" "$output/ai-exit.txt"
+          cat "$output/browser-exit.txt" "$output"/ai*-exit.txt
       - name: Verify deployment stayed fixed
         if: always()
         run: |
