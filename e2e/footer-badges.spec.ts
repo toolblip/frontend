@@ -43,10 +43,6 @@ for (const mobile of [false, true]) {
     ]) {
       await expect(strip.locator(`a[href="${href}"]`)).toHaveCount(1);
     }
-    await expect.poll(() => page.locator(`${group} img`).evaluateAll(images => images.every(image => {
-      const img = image as HTMLImageElement;
-      return img.complete && img.naturalWidth > 0;
-    }))).toBe(true);
     await expect(page.locator('main .tb-v2-directory-group')).toHaveCount(0);
     await expect(page.locator('.tb-v2-directory-group[aria-hidden="true"] a:not([tabindex="-1"])')).toHaveCount(0);
     await expect(page.locator('.tb-v2-directory-group[aria-hidden=true] a[href]')).toHaveCount(0);
@@ -64,12 +60,16 @@ for (const mobile of [false, true]) {
       const image = link.locator('img');
       if (await image.count()) {
         await expect(image).toBeVisible();
-        await expect(image).toHaveAttribute('loading', 'eager');
+        await expect(image).toHaveAttribute('loading', 'lazy');
       } else {
         await expect(link).not.toBeEmpty();
       }
       await page.keyboard.press('Tab');
     }
+    await expect.poll(() => page.locator(`${group} img`).evaluateAll(images => images.every(image => {
+      const img = image as HTMLImageElement;
+      return img.complete && img.naturalWidth > 0;
+    }))).toBe(true);
     expect(externalImages).toEqual([]);
     await strip.focus();
     await strip.evaluate(el => { el.scrollLeft = 0; });
