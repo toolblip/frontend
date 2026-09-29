@@ -1206,7 +1206,7 @@ button.tb-v2-mm-more-row-btn {
 .tb-v2-band-sm { padding: 48px 0; }
 
 /* Only the substantial sections after the home intro skip offscreen rendering.
-   Intrinsic block sizes are based on measured 1440px and 390px layouts. */
+   Intrinsic block sizes are measured content-box heights at each layout width. */
 .tb-home-deferred,
 .tb-v2-shell > main:has(.tb-v2-hero) + .tb-v2-footer {
   content-visibility: auto;
@@ -1229,6 +1229,82 @@ button.tb-v2-mm-more-row-btn {
   .tb-home-blog { contain-intrinsic-size: auto none auto 771px; }
   .tb-v2-shell > main:has(.tb-v2-hero) + .tb-v2-footer {
     contain-intrinsic-size: auto none auto 657px;
+  }
+}
+@media (min-width: 570px) and (max-width: 760px) {
+  .tb-home-why { contain-intrinsic-size: auto none auto 665px; }
+  .tb-home-toolkit { contain-intrinsic-size: auto none auto 1722px; }
+  .tb-home-reviewed { contain-intrinsic-size: auto none auto 1309px; }
+  .tb-home-categories { contain-intrinsic-size: auto none auto 941px; }
+  .tb-home-seo { contain-intrinsic-size: auto none auto 577px; }
+  .tb-home-blog { contain-intrinsic-size: auto none auto 585px; }
+}
+@media (min-width: 580px) and (max-width: 760px) {
+  .tb-home-why { contain-intrinsic-size: auto none auto 623px; }
+  .tb-home-blog { contain-intrinsic-size: auto none auto 565px; }
+}
+@media (min-width: 640px) and (max-width: 760px) {
+  .tb-v2-shell > main:has(.tb-v2-hero) + .tb-v2-footer {
+    contain-intrinsic-size: auto none auto 651px;
+  }
+}
+@media (min-width: 719px) and (max-width: 760px) {
+  .tb-home-why { contain-intrinsic-size: auto none auto 582px; }
+}
+@media (min-width: 728px) and (max-width: 760px) {
+  .tb-home-why { contain-intrinsic-size: auto none auto 412px; }
+}
+@media (min-width: 760px) and (max-width: 760px) {
+  .tb-home-why { contain-intrinsic-size: auto none auto 394px; }
+}
+@media (min-width: 761px) and (max-width: 1139px) {
+  .tb-home-why { contain-intrinsic-size: auto none auto 373px; }
+  .tb-home-toolkit { contain-intrinsic-size: auto none auto 1169px; }
+  .tb-home-reviewed { contain-intrinsic-size: auto none auto 884px; }
+  .tb-home-categories { contain-intrinsic-size: auto none auto 674px; }
+  .tb-home-seo { contain-intrinsic-size: auto none auto 502px; }
+  .tb-home-blog { contain-intrinsic-size: auto none auto 301px; }
+}
+@media (min-width: 761px) and (max-width: 980px) {
+  .tb-home-reviewed { contain-intrinsic-size: auto none auto 940px; }
+  .tb-home-categories { contain-intrinsic-size: auto none auto 724px; }
+  .tb-home-seo { contain-intrinsic-size: auto none auto 576px; }
+  .tb-home-blog { contain-intrinsic-size: auto none auto 357px; }
+}
+@media (min-width: 761px) and (max-width: 859px) {
+  .tb-home-toolkit { contain-intrinsic-size: auto none auto 1722px; }
+  .tb-home-reviewed { contain-intrinsic-size: auto none auto 1309px; }
+  .tb-home-categories { contain-intrinsic-size: auto none auto 940px; }
+  .tb-home-blog { contain-intrinsic-size: auto none auto 564px; }
+}
+@media (min-width: 761px) and (max-width: 779px) {
+  .tb-home-why { contain-intrinsic-size: auto none auto 412px; }
+  .tb-v2-shell > main:has(.tb-v2-hero) + .tb-v2-footer {
+    contain-intrinsic-size: auto none auto 333px;
+  }
+}
+@media (min-width: 780px) and (max-width: 899px) {
+  .tb-home-why { contain-intrinsic-size: auto none auto 394px; }
+}
+@media (min-width: 860px) and (max-width: 899px) {
+  .tb-home-blog { contain-intrinsic-size: auto none auto 377px; }
+}
+@media (min-width: 1100px) and (max-width: 1139px) {
+  .tb-home-why { contain-intrinsic-size: auto none auto 352px; }
+}
+@media (min-width: 1132px) and (max-width: 1159px) {
+  .tb-home-why { contain-intrinsic-size: auto none auto 352px; }
+  .tb-home-toolkit { contain-intrinsic-size: auto none auto 985px; }
+  .tb-home-reviewed { contain-intrinsic-size: auto none auto 700px; }
+  .tb-home-categories { contain-intrinsic-size: auto none auto 567px; }
+  .tb-home-seo { contain-intrinsic-size: auto none auto 355px; }
+  .tb-home-blog { contain-intrinsic-size: auto none auto 321px; }
+}
+/* Wrapping and grid changes are too fluid here for a stable intrinsic estimate. */
+@media (max-width: 359px), (min-width: 430px) and (max-width: 569px) {
+  .tb-home-deferred,
+  .tb-v2-shell > main:has(.tb-v2-hero) + .tb-v2-footer {
+    content-visibility: visible;
   }
 }
 .tb-v2-band-head {
