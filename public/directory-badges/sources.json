@@ -241,6 +241,36 @@
       "source": "https://saaspa.ge/api/embed/product/cmu8mzn8n0005gm0a1obn4e2g/badge.png?theme=orange",
       "fallback": true,
       "reason": "Remote badge image could not be verified locally"
+    },
+    {
+      "name": "Turbo0",
+      "source": "https://turbo0.com/badge.svg",
+      "fallback": true,
+      "reason": "Supplied badge.svg returns HTML, not an image; provided directory link retained as text"
+    },
+    {
+      "name": "SumoDir",
+      "source": "https://sumodir.com/badge.png",
+      "file": "sumodir.png",
+      "sha256": "37551a3ca2c53d33c3d844b15cb54037dd636b4195a7de2217252cb8797ee51c"
+    },
+    {
+      "name": "Dang.ai",
+      "source": "https://assets.dang.ai/badge.svg",
+      "fallback": true,
+      "reason": "Supplied badge.svg returns 404; provided directory link retained as text"
+    },
+    {
+      "name": "Web Review",
+      "source": "https://web-review.com/badge.png",
+      "file": "web-review.png",
+      "sha256": "b3a30bd9352ce60bcc61f57bbb51cdcc99f697b62f211cad4bf0fceaf6c12735"
+    },
+    {
+      "name": "NavFolders",
+      "source": "https://navfolders.com/badge.png",
+      "fallback": true,
+      "reason": "Supplied badge URL returns HTML, not an image; provided directory link retained as text"
     }
   ]
 }
