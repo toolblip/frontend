@@ -12,22 +12,26 @@ import { useSubscription } from "@/lib/hooks/useSubscription";
  * - Still loading auth, or subscription not yet known for a logged-in user → false
  *   (default to no ads so paid users never see a flash of an ad)
  */
-export function useShowAds(): boolean {
+export function useShowAdsState(): { showAds: boolean; loading: boolean } {
   const { user, loading: authLoading } = useAuth();
-  const { subscription } = useSubscription();
+  const { subscription, subscriptionError } = useSubscription();
 
-  if (authLoading) return false;
+  if (authLoading) return { showAds: false, loading: true };
 
   // Guests always see ads.
-  if (!user) return true;
+  if (!user) return { showAds: true, loading: false };
 
   // Logged in: wait until we know the subscription before deciding.
-  if (!subscription) return false;
+  if (!subscription) return { showAds: false, loading: !subscriptionError };
 
   const tier = subscription.tier ?? "free";
   const isPaid = Boolean(subscription.is_pro) || (tier !== "free" && tier !== "");
 
-  return !isPaid;
+  return { showAds: !isPaid, loading: false };
+}
+
+export function useShowAds(): boolean {
+  return useShowAdsState().showAds;
 }
 
 export default useShowAds;

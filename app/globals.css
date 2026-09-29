@@ -4414,6 +4414,7 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
   align-items: center;
   justify-content: center;
   text-align: center;
+  min-height: 66px;
 }
 .tb-v2-sponsor-card-empty:hover { border-color: var(--red); color: var(--red); }
 .tb-v2-sponsor-empty-label { font-size: 13px; font-weight: 600; }
@@ -4423,6 +4424,11 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
   background-size: 400% 100%;
   animation: tb-v2-sponsor-shimmer 1.4s ease infinite;
   border-style: solid;
+  min-height: 66px;
+}
+.tb-v2-sponsor-slot-1.tb-v2-sponsor-card-empty,
+.tb-v2-sponsor-slot-1.tb-v2-sponsor-card-skeleton {
+  min-height: 82px;
 }
 @keyframes tb-v2-sponsor-shimmer {
   0% { background-position: 100% 50%; }

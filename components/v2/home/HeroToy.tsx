@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import ToyWordCounter from './ToyWordCounter';
 import ToyQR from './ToyQR';
@@ -19,34 +19,45 @@ const ROTATE_INTERVAL = 4000;
 export default function HeroToy() {
   const [tab, setTab] = useState<'words' | 'qr' | 'color'>('words');
   const [isPaused, setIsPaused] = useState(false);
-  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const [canAutoRotate, setCanAutoRotate] = useState(false);
 
-  const startTimer = () => {
-    if (timerRef.current) clearInterval(timerRef.current);
-    timerRef.current = setInterval(() => {
+  useEffect(() => {
+    const desktopQuery = window.matchMedia('(min-width: 761px)');
+    const motionQuery = window.matchMedia('(prefers-reduced-motion: no-preference)');
+    const updateAutoRotate = () => {
+      setCanAutoRotate(desktopQuery.matches && motionQuery.matches);
+    };
+
+    updateAutoRotate();
+    desktopQuery.addEventListener('change', updateAutoRotate);
+    motionQuery.addEventListener('change', updateAutoRotate);
+
+    return () => {
+      desktopQuery.removeEventListener('change', updateAutoRotate);
+      motionQuery.removeEventListener('change', updateAutoRotate);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!canAutoRotate || isPaused) return;
+
+    const timer = setInterval(() => {
       setTab((prev) => {
         const idx = TABS.findIndex((t) => t.id === prev);
         return TABS[(idx + 1) % TABS.length].id;
       });
     }, ROTATE_INTERVAL);
-  };
 
-  useEffect(() => {
-    startTimer();
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
-    };
-  }, []);
+    return () => clearInterval(timer);
+  }, [canAutoRotate, isPaused]);
 
   // Restart timer when user clicks a tab manually
   const handleTabClick = (id: 'words' | 'qr' | 'color') => {
     setTab(id);
     setIsPaused(true);
-    if (timerRef.current) clearInterval(timerRef.current);
     // Resume auto-rotate after 5s of inactivity
     setTimeout(() => {
       setIsPaused(false);
-      startTimer();
     }, 5000);
   };
 
@@ -55,11 +66,9 @@ export default function HeroToy() {
       className="tb-v2-toy"
       onMouseEnter={() => {
         setIsPaused(true);
-        if (timerRef.current) clearInterval(timerRef.current);
       }}
       onMouseLeave={() => {
         setIsPaused(false);
-        startTimer();
       }}
     >
       <div className="tb-v2-toy-head">
@@ -94,7 +103,7 @@ export default function HeroToy() {
             <path d="M2.5 6h7M6.5 3l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </Link>
-        {!isPaused && (
+        {canAutoRotate && !isPaused && (
           <span className="tb-v2-toy-rotate-hint">Auto-rotating</span>
         )}
       </div>
