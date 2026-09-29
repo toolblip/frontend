@@ -64,13 +64,13 @@ add('speech-to-text',async c=>{const {tool:t,page,expect,check}=c;
  const supported=native.supported;
  if(!supported)await expect(t.getByRole('status')).toContainText('not supported');
  check(true,supported?'Recognition API present; real microphone/service acceptance remains unverified':'Observed honest unsupported state; no real recognition claimed');
- await expect(t.getByRole('textbox',{name:'Manual transcript'})).toHaveCount(0);await expect(t.getByRole('button',{name:'Examples'})).toHaveCount(0);await expect(t.getByLabel('Transcript',{exact:true})).toHaveText('');
+ await expect(t.getByRole('textbox',{name:'Manual transcript'})).toHaveCount(0);await expect(t.getByRole('button',{name:'Examples'})).toHaveCount(0);await expect(t.getByLabel('Transcript',{exact:true})).toHaveValue('');
  // Controlled API fixture tests event handling, not speech recognition accuracy.
  const fixturePage=await page.context().newPage(); const fixtureTool=fixturePage.locator('.tb-v2-tool-card').first();
  try {
  await fixturePage.addInitScript(()=>{Object.defineProperty(navigator,'mediaDevices',{configurable:true,value:{getUserMedia:async()=>({getTracks:()=>[{stop(){}}]})}});class Recognition{start(){window.__recognition=this;this.onstart?.();}stop(){this.onend?.();}abort(){this.onend?.();}}window.SpeechRecognition=Recognition;});await fixturePage.goto(page.url());await click(fixtureTool,'Start Listening');
  await fixturePage.evaluate(()=>{const r=window.__recognition;r.onresult({results:[Object.assign([{transcript:'hello'}],{isFinal:true})]});r.onresult({results:[Object.assign([{transcript:'hello'}],{isFinal:true}),Object.assign([{transcript:'world'}],{isFinal:true})]});});
- await expect(fixtureTool.getByLabel('Transcript',{exact:true})).toHaveText('hello world');await clear(fixtureTool);await fixturePage.evaluate(()=>window.__recognition.onresult({results:[[{transcript:'late'}]]}));await expect(fixtureTool.getByLabel('Transcript',{exact:true})).toHaveText('');check(true,'Fixture-only lifecycle: finalized results do not duplicate; Clear rejects late events');
+ await expect(fixtureTool.getByLabel('Transcript',{exact:true})).toHaveValue('hello world');await clear(fixtureTool);await fixturePage.evaluate(()=>window.__recognition.onresult({results:[[{transcript:'late'}]]}));await expect(fixtureTool.getByLabel('Transcript',{exact:true})).toHaveValue('');check(true,'Fixture-only lifecycle: finalized results do not duplicate; Clear rejects late events');
  } finally { await fixturePage.close(); }
  check(false,'Human review required: speak known words into a real microphone and verify the actual recognized transcript; mocked lifecycle events do not establish recognition accuracy.');
 });

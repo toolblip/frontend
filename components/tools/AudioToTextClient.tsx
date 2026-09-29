@@ -77,16 +77,23 @@ export default function AudioToTextClient() {
     {permission==='granted'&&<p role="status" className="speech-permission-success">Microphone allowed. {listening?'Listening now.':'Ready to listen.'}</p>}
     {error && <p role="alert" className="tb-v2-banner tb-v2-banner-err">{error}</p>}
     <div>
-      <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',gap:12,marginBottom:8}}>
-        <p className="tb-v2-tool-label" style={{margin:0}}>Transcript</p>
-        <div style={{display:'flex',alignItems:'center',gap:8}}>
-          {copied&&<span role="status" style={{fontSize:12,color:'var(--fg-2)'}}>Copied</span>}
-          <button type="button" aria-label="Copy transcript" title="Copy transcript" className="tb-v2-copy-btn" disabled={!transcript} onClick={()=>void copyTranscript()} style={{padding:7}}>
-            <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>
-          </button>
-        </div>
+      <p className="tb-v2-tool-label" style={{margin:'0 0 8px'}}>Transcript</p>
+      <div style={{position:'relative'}}>
+        <textarea
+          aria-label="Transcript"
+          readOnly
+          value={transcript}
+          onClick={()=>void copyTranscript()}
+          onKeyDown={event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();void copyTranscript();}}}
+          title={transcript?'Click to copy transcript':'Transcript will appear here'}
+          className="tb-v2-tool-output-body"
+          style={{display:'block',width:'100%',minHeight:110,resize:'vertical',border:'1px solid var(--line)',borderRadius:8,background:'var(--surface-2)',color:'var(--fg-0)',font:'inherit',lineHeight:1.5,padding:'16px 52px 16px 16px',cursor:transcript?'copy':'default'}}
+        />
+        {copied&&<span role="status" style={{position:'absolute',top:14,right:48,fontSize:12,color:'var(--fg-2)'}}>Copied</span>}
+        <button type="button" aria-label="Copy transcript" title="Copy transcript" className="tb-v2-copy-btn" disabled={!transcript} onClick={()=>void copyTranscript()} style={{position:'absolute',top:10,right:10,padding:7}}>
+          <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>
+        </button>
       </div>
-      <pre aria-label="Transcript" className="tb-v2-tool-output-body" style={{whiteSpace:'pre-wrap',overflowWrap:'anywhere',minHeight:90,border:'1px solid var(--line)',borderRadius:8}}>{transcript}</pre>
     </div>
   </div><style>{`.speech-permission-success { padding:12px 16px; border:1px solid #86d6a1; border-radius:8px; background:#eaf8ef; color:#176236; font-size:13.5px; font-weight:600; } [data-theme="dark"] .speech-permission-success, .dark .speech-permission-success { background:#123323; border-color:#287b49; color:#a6efbf; }`}</style></UtilityDesignLayout>;
 }
