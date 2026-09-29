@@ -117,8 +117,8 @@ export default function PricingClient() {
   const [loading, setLoading] = useState<string | null>(null);
   const [trialLoading, setTrialLoading] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [plans, setPlans] = useState<Plan[]>([]);
-  const [plansLoading, setPlansLoading] = useState(true);
+  const [plans, setPlans] = useState<Plan[]>(FALLBACK_PLANS);
+  const [plansRequestSettled, setPlansRequestSettled] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
   const userIsPro = Boolean(user?.is_pro);
@@ -128,11 +128,12 @@ export default function PricingClient() {
       .then((r) => r.json())
       .then((data) => {
         setPlans((data.plans && data.plans.length > 0) ? data.plans : FALLBACK_PLANS);
-        setPlansLoading(false);
       })
       .catch(() => {
         setPlans(FALLBACK_PLANS);
-        setPlansLoading(false);
+      })
+      .finally(() => {
+        setPlansRequestSettled(true);
       });
   }, []);
 
@@ -226,16 +227,6 @@ export default function PricingClient() {
     }
   }
 
-  if (plansLoading) {
-    return (
-      <div className="tb-v2-pricing">
-        <div className="tb-v2-container">
-          <div className="tb-v2-pricing-loader">Loading plans...</div>
-        </div>
-      </div>
-    );
-  }
-
   const orderedPlans = sortPricingPlans(plans);
   const pricingPlans: PricingPlanLike[] = orderedPlans.map((plan) => ({
     tier: plan.tier,
@@ -304,7 +295,7 @@ export default function PricingClient() {
                     <div className="flex flex-col gap-2">
                       <button
                         onClick={() => handleStartTrial(sourcePlan)}
-                        disabled={trialLoading === sourcePlan.tier || loading === sourcePlan.tier}
+                        disabled={!plansRequestSettled || trialLoading === sourcePlan.tier || loading === sourcePlan.tier}
                         className={`tb-v2-btn tb-v2-pricing-btn ${isHighlighted ? 'inverse' : 'tb-v2-btn-primary'}`}
                         style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none' }}
                       >
@@ -312,7 +303,7 @@ export default function PricingClient() {
                       </button>
                       <button
                         onClick={() => handleUpgrade(sourcePlan)}
-                        disabled={loading === sourcePlan.tier || trialLoading === sourcePlan.tier}
+                        disabled={!plansRequestSettled || loading === sourcePlan.tier || trialLoading === sourcePlan.tier}
                         className="text-center text-xs text-[color:var(--fg-3)] underline-offset-2 hover:text-[color:var(--fg-1)] hover:underline"
                         style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '2px 0' }}
                       >
