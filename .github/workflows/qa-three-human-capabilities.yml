@@ -1,0 +1,68 @@
+name: Three human capability technical checks
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/qa-three-human-capabilities.yml'
+
+permissions:
+  contents: read
+  deployments: read
+
+jobs:
+  technical:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        engine: [chrome, webkit]
+    env:
+      GH_TOKEN: ${{ github.token }}
+      QA_ENGINE: ${{ matrix.engine }}
+      QA_BASE: https://toolblip.com
+    steps:
+      - name: Fetch exact reviewed QA source without submodule traversal
+        env:
+          QA_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          git init .
+          git remote add origin https://github.com/toolblip/frontend.git
+          GIT_TERMINAL_PROMPT=0 GIT_CONFIG_NOSYSTEM=1 GIT_CONFIG_GLOBAL=/dev/null git fetch --no-tags origin "$QA_HEAD"
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$QA_HEAD"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Install headless browser
+        run: npx --no-install playwright install --with-deps "$QA_ENGINE"
+      - name: Snapshot production deployment
+        run: |
+          mkdir -p "$RUNNER_TEMP/three-capabilities/$QA_ENGINE"
+          gh api "repos/$GITHUB_REPOSITORY/deployments?environment=toolblip%20%2F%20production&per_page=1" --jq '.[0] | {id,sha,environment}' > "$RUNNER_TEMP/three-capabilities/$QA_ENGINE/deployment-before.json"
+      - name: Exercise three tools and real AI inference
+        run: |
+          output="$RUNNER_TEMP/three-capabilities/$QA_ENGINE"
+          set +e
+          node scripts/qa/run.mjs --inventory scripts/qa/cloud/inventory.json --base "$QA_BASE" --slugs speech-to-text,text-to-speech,image-background-remover --engine "$QA_ENGINE" --concurrency 1 --out "$output/audit" > "$output/browser.log" 2>&1
+          echo "$?" > "$output/browser-exit.txt"
+          node scripts/qa/helpers/images-real-capabilities.mjs "$QA_ENGINE" ai "$output/ai" > "$output/ai.log" 2>&1
+          echo "$?" > "$output/ai-exit.txt"
+          set -e
+          cat "$output/browser-exit.txt" "$output/ai-exit.txt"
+      - name: Verify deployment stayed fixed
+        if: always()
+        run: |
+          output="$RUNNER_TEMP/three-capabilities/$QA_ENGINE"
+          gh api "repos/$GITHUB_REPOSITORY/deployments?environment=toolblip%20%2F%20production&per_page=1" --jq '.[0] | {id,sha,environment}' > "$output/deployment-after.json"
+          cmp "$output/deployment-before.json" "$output/deployment-after.json"
+      - name: Upload technical evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: three-capabilities-${{ matrix.engine }}-${{ github.run_id }}
+          path: ${{ runner.temp }}/three-capabilities/${{ matrix.engine }}/
+          retention-days: 14
