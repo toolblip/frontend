@@ -2,13 +2,13 @@
 
 import { useState, type ImgHTMLAttributes } from 'react';
 
-type Props = Omit<ImgHTMLAttributes<HTMLImageElement>, 'onLoad' | 'onError' | 'loading'> & {
+type Props = Omit<ImgHTMLAttributes<HTMLImageElement>, 'onLoad' | 'onError'> & {
   fallback: string;
 };
 
 // Text is visible even before hydration. Only successfully decoded images are
 // revealed, so missing assets never expose the browser's broken-image icon.
-export default function DirectoryBadgeImage({ fallback, alt, ...props }: Props) {
+export default function DirectoryBadgeImage({ fallback, alt, loading = 'lazy', ...props }: Props) {
   const [loaded, setLoaded] = useState(false);
 
   return (
@@ -18,7 +18,7 @@ export default function DirectoryBadgeImage({ fallback, alt, ...props }: Props) 
         {...props}
         alt={alt}
         aria-hidden={!loaded || undefined}
-        loading="lazy"
+        loading={loading}
         ref={(image) => {
           if (image?.complete && image.naturalWidth > 0) setLoaded(true);
         }}

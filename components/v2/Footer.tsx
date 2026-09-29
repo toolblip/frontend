@@ -133,6 +133,9 @@ function DirectoryBadges({ duplicate = false }: { duplicate?: boolean }) {
       <a tabIndex={duplicate ? -1 : undefined} href={duplicate ? undefined : "https://navfolders.com/"} target="_blank" rel="noopener noreferrer">
         <span className="tb-v2-directory-text">Featured on NavFolders</span>
       </a>
+      <a tabIndex={duplicate ? -1 : undefined} href={duplicate ? undefined : "https://codehype.ai/product/toolblip?utm_source=codehype_badge"} target="_blank" rel="noopener noreferrer">
+        <DirectoryBadgeImage src="/directory-badges/codehype.svg" alt="Featured on CodeHype" width="180" height="65" decoding="async" loading="eager" style={{ height: 36, width: 'auto' }} fallback="Featured on CodeHype" />
+      </a>
     </div>
   );
 }

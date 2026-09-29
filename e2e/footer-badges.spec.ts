@@ -3,6 +3,7 @@ import listings from './fixtures/footer-listings.json';
 import badgeSources from '../public/directory-badges/sources.json';
 
 const group = '.tb-v2-directory-group:not([aria-hidden])';
+const codeHypeHref = 'https://codehype.ai/product/toolblip?utm_source=codehype_badge';
 
 for (const mobile of [false, true]) {
   test(`footer survives remote outages and exposes every listing on ${mobile ? 'mobile' : 'desktop'}`, async ({ browser, baseURL }, testInfo) => {
@@ -29,8 +30,21 @@ for (const mobile of [false, true]) {
     const track = page.locator('.tb-v2-directory-track');
     const before = await track.evaluate(el => getComputedStyle(el).transform);
     await expect.poll(() => track.evaluate(el => getComputedStyle(el).transform)).not.toBe(before);
-    await expect(page.locator(`${group} a`)).toHaveCount(47);
-    await expect(page.locator(`${group} img`)).toHaveCount(38);
+    await expect(page.locator(`${group} a`)).toHaveCount(48);
+    await expect(page.locator(`${group} img`)).toHaveCount(39);
+    const codeHypeLink = page.locator(`${group} a[href="${codeHypeHref}"]`);
+    await expect(codeHypeLink).toHaveCount(1);
+    const codeHypeImage = codeHypeLink.locator('img');
+    await expect(codeHypeImage).toHaveAttribute('src', '/directory-badges/codehype.svg');
+    await expect(codeHypeImage).toHaveAttribute('alt', 'Featured on CodeHype');
+    await expect(codeHypeImage).toHaveAttribute('width', '180');
+    await expect(codeHypeImage).toHaveAttribute('height', '65');
+    await expect(codeHypeImage).toHaveAttribute('decoding', 'async');
+    await expect(codeHypeImage).toHaveAttribute('loading', 'eager');
+    await expect(codeHypeImage.evaluate(async image => {
+      await (image as HTMLImageElement).decode();
+      return true;
+    })).resolves.toBe(true);
     await expect(strip.locator('a[href="https://launchtory.com/projects/toolblip"]')).toHaveCount(1);
     await expect(strip.locator('a[href="https://bowora.com/?via=0aoviedt"]')).toHaveCount(1);
     await expect(strip.locator('a[href="https://saaspa.ge/product/cmu8mzn8n0005gm0a1obn4e2g"]')).toHaveCount(1);
@@ -47,7 +61,7 @@ for (const mobile of [false, true]) {
     await expect(page.locator('.tb-v2-directory-group[aria-hidden="true"] a:not([tabindex="-1"])')).toHaveCount(0);
     await expect(page.locator('.tb-v2-directory-group[aria-hidden=true] a[href]')).toHaveCount(0);
 
-    // Keyboard focus disables the transform so the browser can scroll to all 47 links.
+    // Keyboard focus disables the transform so the browser can scroll to all 48 links.
     await strip.focus();
     await page.keyboard.press('Tab');
     for (let index = 0; index < listings.length; index++) {
@@ -60,7 +74,8 @@ for (const mobile of [false, true]) {
       const image = link.locator('img');
       if (await image.count()) {
         await expect(image).toBeVisible();
-        await expect(image).toHaveAttribute('loading', 'lazy');
+        const expectedLoading = await link.getAttribute('href') === codeHypeHref ? 'eager' : 'lazy';
+        await expect(image).toHaveAttribute('loading', expectedLoading);
       } else {
         await expect(link).not.toBeEmpty();
       }
@@ -101,6 +116,7 @@ test('missing and corrupt local badges show accessible text without broken icons
   await expect(page.locator(`${group} a[href="https://turbo0.com/item/toolblip"]`)).toHaveAccessibleName('Featured on Turbo0');
   await expect(page.locator(`${group} a[href="https://dang.ai"]`)).toHaveAccessibleName('Featured on Dang.ai');
   await expect(page.locator(`${group} a[href="https://navfolders.com/"]`)).toHaveAccessibleName('Featured on NavFolders');
+  await expect(page.locator(`${group} a[href="${codeHypeHref}"]`)).toHaveAccessibleName('Featured on CodeHype');
 });
 
 test('reduced motion keeps a single scrollable set of listings', async ({ page }) => {

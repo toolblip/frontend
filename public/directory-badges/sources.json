@@ -271,6 +271,12 @@
       "source": "https://navfolders.com/badge.png",
       "fallback": true,
       "reason": "Supplied badge URL returns HTML, not an image; provided directory link retained as text"
+    },
+    {
+      "name": "CodeHype",
+      "source": "https://codehype.ai/badges/toolblip.svg?variant=find-us&v=20",
+      "file": "codehype.svg",
+      "sha256": "8eedf127bf13801530c5e92d4d52f7a81c5272dc86cfe4617ca58bf9b8667780"
     }
   ]
 }
