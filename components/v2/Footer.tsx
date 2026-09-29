@@ -118,6 +118,21 @@ function DirectoryBadges({ duplicate = false }: { duplicate?: boolean }) {
         <DirectoryBadgeImage src="/directory-badges/bowora.svg" alt="Featured on Bowora" width="170" height="50" fallback="Bowora" />
       </a>
       <a tabIndex={duplicate ? -1 : undefined} href={duplicate ? undefined : "https://saaspa.ge/product/cmu8mzn8n0005gm0a1obn4e2g"} target="_blank" rel="nofollow">Featured on Saaspage.ge</a>
+      <a tabIndex={duplicate ? -1 : undefined} href={duplicate ? undefined : "https://turbo0.com/item/toolblip"} target="_blank" rel="noopener noreferrer">
+        <span className="tb-v2-directory-text">Featured on Turbo0</span>
+      </a>
+      <a tabIndex={duplicate ? -1 : undefined} href={duplicate ? undefined : "https://sumodir.com"} target="_blank" rel="dofollow">
+        <DirectoryBadgeImage src="/directory-badges/sumodir.png" alt="Featured on SumoDir" width="200" height="54" fallback="Featured on SumoDir" />
+      </a>
+      <a tabIndex={duplicate ? -1 : undefined} href={duplicate ? undefined : "https://dang.ai"} target="_blank" rel="dofollow noopener">
+        <span className="tb-v2-directory-text">Featured on Dang.ai</span>
+      </a>
+      <a tabIndex={duplicate ? -1 : undefined} href={duplicate ? undefined : "https://web-review.com"} target="_blank" rel="dofollow">
+        <DirectoryBadgeImage src="/directory-badges/web-review.png" alt="Featured on Web Review" width="200" height="54" fallback="Featured on Web Review" />
+      </a>
+      <a tabIndex={duplicate ? -1 : undefined} href={duplicate ? undefined : "https://navfolders.com/"} target="_blank" rel="noopener noreferrer">
+        <span className="tb-v2-directory-text">Featured on NavFolders</span>
+      </a>
     </div>
   );
 }

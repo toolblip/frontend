@@ -74,9 +74,9 @@ export default function TextToSpeechClient() {
 
   return (<UtilityDesignLayout>
     <div onChangeCapture={() => {if(playbackStatus==='starting'||isSpeaking)stop();else setPlaybackStatus('idle');setError('');}}>
-      <ToolExampleClearActions onExample={() => { stop(); setText('Hello. This is an example of browser speech synthesis.'); setError(''); setPlaybackStatus('idle'); }} onClear={() => { stop(); setText(''); setError(''); setPlaybackStatus('idle'); }}/>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Text to Convert</span>
+        <ToolExampleClearActions onExample={() => { stop(); setText('Hello. This is an example of browser speech synthesis.'); setError(''); setPlaybackStatus('idle'); }} onClear={() => { stop(); setText(''); setError(''); setPlaybackStatus('idle'); }}/>
       </div>
       {!supported && <p role="status">Speech synthesis is not supported in this browser.</p>}
       {supported && voices.length === 0 && <p role="status">No voices are currently available. Playback depends on your browser and operating system.</p>}

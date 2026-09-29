@@ -577,13 +577,15 @@ export default function ImageBackgroundRemoverClient() {
             <div className="min-w-0">
               <p className="tb-v2-tool-label" style={{marginBottom:8}}>Result (with transparency)</p>
               <img src={processedImage} alt="No Background" className="w-full h-auto max-h-[60vh] object-contain rounded-lg" style={{ backgroundImage: 'url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAAdgAAAHYBTnsmCAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAABUSURBVDiNY/z//z8DJYCJgUIwaAzFMEoYRMVA4Y5LQNNLUMNA4TYowg1QLIMaB4rXIFYN0PQC1HhQ4oBEukE1LpT4IOqB2BgBAE0cFfVvYI0lAAAAAElFTkSuQmCC")', backgroundRepeat: 'repeat' }} />
-              <button
-                type="button"
-                onClick={handleDownload}
-                className="tb-v2-btn tb-v2-btn-primary tb-v2-btn-lg mt-3"
-              >
-                Download PNG
-              </button>
+              <div className="mt-4 flex justify-center">
+                <button
+                  type="button"
+                  onClick={handleDownload}
+                  className="tb-v2-btn tb-v2-btn-primary tb-v2-btn-lg"
+                >
+                  Download PNG
+                </button>
+              </div>
             </div>
           )}
         </div>
