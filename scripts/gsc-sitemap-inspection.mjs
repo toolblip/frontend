@@ -4,7 +4,16 @@ import { join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { getAccessToken, requestJson, parseInspection } from './gsc-recovery.mjs';
 
-const SITEMAP_URL = 'https://toolblip.com/sitemap-tools.xml';
+const SITEMAPS = Object.freeze({
+  tools: 'https://toolblip.com/sitemap-tools.xml',
+  blog: 'https://toolblip.com/sitemap-blog.xml',
+  core: 'https://toolblip.com/sitemap-core.xml',
+});
+const CORE_URLS = new Set(['https://toolblip.com', ...['directory', 'tools', 'tools/images', 'all-tools', 'blog', 'pricing', 'sponsors', 'sponsors/archive', 'about', 'seo', 'api-docs'].map(path => `https://toolblip.com/${path}`)]);
+const URL_PATHS = {
+  tools: /^\/tools\/(?:images\/)?[a-z0-9]+(?:-[a-z0-9]+)*$/,
+  blog: /^\/blog\/[a-z0-9]+(?:-[a-z0-9]+)*$/,
+};
 const INSPECT_URL = 'https://searchconsole.googleapis.com/v1/urlInspection/index:inspect';
 const SITE = 'sc-domain:toolblip.com';
 const MAX_BYTES = 1024 * 1024;
@@ -16,7 +25,13 @@ const safeError = error => /^(HTTP_\d{3}|REQUEST_FAILED|REQUEST_TIMEOUT|INVALID_
 const fail = code => { throw new Error(code); };
 const delay = ms => new Promise(done => setTimeout(done, ms));
 
-export function parseSitemap(xml) {
+function sitemapUrl(cohort) {
+  if (!Object.hasOwn(SITEMAPS, cohort)) fail('INVALID_SITEMAP');
+  return SITEMAPS[cohort];
+}
+
+export function parseSitemap(xml, cohort = 'tools') {
+  sitemapUrl(cohort);
   if (typeof xml !== 'string' || !xml || Buffer.byteLength(xml) > MAX_BYTES || /<!|<\?|<!--|-->|<!\[CDATA\[/.test(xml.replace(/^\s*<\?xml version="1\.0" encoding="UTF-8"\?>/, ''))) fail('INVALID_SITEMAP');
   if (/&(?!(?:amp|quot|apos|lt|gt);)/.test(xml)) fail('INVALID_SITEMAP');
   const clean = xml.replace(/^\s*<\?xml version="1\.0" encoding="UTF-8"\?>/, '').trim();
@@ -34,20 +49,22 @@ export function parseSitemap(xml) {
     let url;
     try { url = new URL(value); } catch { fail('INVALID_SITEMAP'); }
     if (url.protocol !== 'https:' || url.hostname !== 'toolblip.com' || url.port || url.username || url.password || url.search || url.hash ||
-        url.href !== value || !/^\/tools\/(?:images\/)?[a-z0-9]+(?:-[a-z0-9]+)*$/.test(url.pathname)) fail('INVALID_SITEMAP');
+        (url.href !== value && !(cohort === 'core' && value === 'https://toolblip.com')) ||
+        (cohort === 'core' ? !CORE_URLS.has(value) : !URL_PATHS[cohort].test(url.pathname))) fail('INVALID_SITEMAP');
     urls.push(value);
     if (urls.length > 500) fail('INVALID_SITEMAP');
     offset = entry.lastIndex;
   }
-  if (!urls.length || new Set(urls).size !== urls.length) fail('INVALID_SITEMAP');
+  if (!urls.length || new Set(urls).size !== urls.length ||
+      (cohort === 'core' && (urls.length !== CORE_URLS.size || urls.some(url => !CORE_URLS.has(url))))) fail('INVALID_SITEMAP');
   return urls;
 }
 
-async function fetchSitemap({ transport = fetch, timeoutMs = 15000 } = {}) {
+async function fetchSitemap({ cohort = 'tools', transport = fetch, timeoutMs = 15000 } = {}) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
-    const response = await transport(SITEMAP_URL, { method: 'GET', redirect: 'error', signal: controller.signal, headers: { accept: 'application/xml, text/xml' } });
+    const response = await transport(sitemapUrl(cohort), { method: 'GET', redirect: 'error', signal: controller.signal, headers: { accept: 'application/xml, text/xml' } });
     if (!response.ok) { await response.body?.cancel(); fail(`HTTP_${response.status}`); }
     if (Number(response.headers?.get('content-length')) > MAX_BYTES) fail('SITEMAP_TOO_LARGE');
     const chunks = [];
@@ -60,7 +77,7 @@ async function fetchSitemap({ transport = fetch, timeoutMs = 15000 } = {}) {
       if (size > MAX_BYTES) { await reader.cancel(); fail('SITEMAP_TOO_LARGE'); }
       chunks.push(value);
     }
-    return parseSitemap(new TextDecoder('utf-8', { fatal: true }).decode(Buffer.concat(chunks)));
+    return parseSitemap(new TextDecoder('utf-8', { fatal: true }).decode(Buffer.concat(chunks)), cohort);
   } catch (error) {
     if (controller.signal.aborted) fail('REQUEST_TIMEOUT');
     if (['HTTP_', 'SITEMAP_TOO_LARGE', 'INVALID_SITEMAP'].some(code => error?.message?.startsWith(code))) throw error;
@@ -89,11 +106,12 @@ export function groupResults(results) {
   return counts;
 }
 
-export async function collect({ env = process.env, now = new Date(), transport = fetch, sleep = delay, getToken = getAccessToken, onProgress = () => {} } = {}) {
-  const report = { schemaVersion: 1, generatedAt: now.toISOString(), status: 'complete', sitemap: { url: SITEMAP_URL, count: 0, error: null },
+export async function collect({ sitemap = 'tools', env = process.env, now = new Date(), transport = fetch, sleep = delay, getToken = getAccessToken, onProgress = () => {} } = {}) {
+  const selectedUrl = sitemapUrl(sitemap);
+  const report = { schemaVersion: 1, generatedAt: now.toISOString(), status: 'complete', sitemap: { cohort: sitemap, url: selectedUrl, count: 0, error: null },
     siteUrl: SITE, inspectionMeaning: "Google's stored index view; not a live test or indexing request.", results: [] };
   let urls;
-  try { urls = await fetchSitemap({ transport }); report.sitemap.count = urls.length; }
+  try { urls = await fetchSitemap({ cohort: sitemap, transport }); report.sitemap.count = urls.length; }
   catch (error) { report.sitemap.error = safeError(error); report.status = 'partial-failure'; report.counts = groupResults(report.results); onProgress({ completed: 0, total: 0, inspected: 0, errors: 0, skipped: 0 }); return report; }
   try { report.siteUrl = siteUrl(env.GSC_SITEWIDE_URL || SITE); }
   catch (error) { report.stopReason = safeError(error); }
@@ -164,7 +182,7 @@ export async function collect({ env = process.env, now = new Date(), transport =
 export function markdown(report) {
   const cell = value => String(value ?? '—').replace(/[\r\n|]/g, ' ').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   const lines = ['# GSC sitemap URL Inspection', '', `Status: **${report.status}** | Generated: ${report.generatedAt}`,
-    `Sitemap: ${report.sitemap.url} (${report.sitemap.count} validated tool URLs)`, report.inspectionMeaning,
+    `Sitemap: ${report.sitemap.url} (${report.sitemap.count} validated ${report.sitemap.cohort === 'tools' || !report.sitemap.cohort ? 'tool' : report.sitemap.cohort} URLs)`, report.inspectionMeaning,
     'Search Console data can lag a recrawl. A stored verdict is not a guarantee of future indexing.', '',
     `Inspected: ${report.counts.inspected} | Errors: ${report.counts.errors} | Skipped: ${report.counts.skipped}`, '',
     '## Stored verdict counts', '', ...Object.entries(report.counts.verdict).map(([key, count]) => `- ${cell(key)}: ${count}`), '',
@@ -181,13 +199,16 @@ export function markdown(report) {
 }
 
 export async function main(args = process.argv.slice(2), options = {}) {
-  let output = 'test-results/gsc-sitemap-inspection';
+  let output;
+  let sitemap = 'tools';
   try {
     for (let i = 0; i < args.length; i++) {
       if (args[i] === '--output' && args[i + 1] && !args[i + 1].startsWith('--')) output = args[++i];
-      else fail('Usage: node scripts/gsc-sitemap-inspection.mjs [--output DIR]');
+      else if (args[i] === '--sitemap' && args[i + 1] && Object.hasOwn(SITEMAPS, args[i + 1])) sitemap = args[++i];
+      else fail('INVALID_SITEMAP');
     }
-    const report = await collect({ ...options, onProgress: counts => {
+    output ??= `test-results/gsc-sitemap-inspection${sitemap === 'tools' ? '' : `-${sitemap}`}`;
+    const report = await collect({ ...options, sitemap, onProgress: counts => {
       console.log(`GSC sitemap inspection progress: ${counts.completed}/${counts.total} completed, ${counts.inspected} inspected, ${counts.errors} errors, ${counts.skipped} skipped.`);
       options.onProgress?.(counts);
     } });

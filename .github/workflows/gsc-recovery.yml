@@ -63,7 +63,19 @@ jobs:
         env:
           GSC_SERVICE_ACCOUNT: ${{ secrets.GSC_SERVICE_ACCOUNT }}
           GSC_SITEWIDE_URL: ${{ vars.GSC_SITEWIDE_URL || 'sc-domain:toolblip.com' }}
-        run: node scripts/gsc-sitemap-inspection.mjs
+        run: node scripts/gsc-sitemap-inspection.mjs --sitemap tools
+      - name: Collect blog-sitemap URL Inspection report
+        if: always()
+        env:
+          GSC_SERVICE_ACCOUNT: ${{ secrets.GSC_SERVICE_ACCOUNT }}
+          GSC_SITEWIDE_URL: ${{ vars.GSC_SITEWIDE_URL || 'sc-domain:toolblip.com' }}
+        run: node scripts/gsc-sitemap-inspection.mjs --sitemap blog
+      - name: Collect core-sitemap URL Inspection report
+        if: always()
+        env:
+          GSC_SERVICE_ACCOUNT: ${{ secrets.GSC_SERVICE_ACCOUNT }}
+          GSC_SITEWIDE_URL: ${{ vars.GSC_SITEWIDE_URL || 'sc-domain:toolblip.com' }}
+        run: node scripts/gsc-sitemap-inspection.mjs --sitemap core
       - name: Add report to run summary
         if: always()
         shell: bash
@@ -85,6 +97,18 @@ jobs:
           else
             echo 'GSC sitemap URL Inspection report unavailable; check the failed setup or collection step.' >> "$GITHUB_STEP_SUMMARY"
           fi
+          if [[ -f test-results/gsc-sitemap-inspection-blog/report.md ]]; then
+            printf '\n' >> "$GITHUB_STEP_SUMMARY"
+            cat test-results/gsc-sitemap-inspection-blog/report.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo 'GSC blog sitemap URL Inspection report unavailable; check the failed setup or collection step.' >> "$GITHUB_STEP_SUMMARY"
+          fi
+          if [[ -f test-results/gsc-sitemap-inspection-core/report.md ]]; then
+            printf '\n' >> "$GITHUB_STEP_SUMMARY"
+            cat test-results/gsc-sitemap-inspection-core/report.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo 'GSC core sitemap URL Inspection report unavailable; check the failed setup or collection step.' >> "$GITHUB_STEP_SUMMARY"
+          fi
       - name: Preserve reports, including partial failures
         if: always()
         uses: actions/upload-artifact@v7
@@ -97,5 +121,9 @@ jobs:
             test-results/gsc-site-performance/report.md
             test-results/gsc-sitemap-inspection/report.json
             test-results/gsc-sitemap-inspection/report.md
+            test-results/gsc-sitemap-inspection-blog/report.json
+            test-results/gsc-sitemap-inspection-blog/report.md
+            test-results/gsc-sitemap-inspection-core/report.json
+            test-results/gsc-sitemap-inspection-core/report.md
           retention-days: 90
           if-no-files-found: error
