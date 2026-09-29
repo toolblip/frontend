@@ -30,8 +30,8 @@ for (const mobile of [false, true]) {
     const track = page.locator('.tb-v2-directory-track');
     const before = await track.evaluate(el => getComputedStyle(el).transform);
     await expect.poll(() => track.evaluate(el => getComputedStyle(el).transform)).not.toBe(before);
-    await expect(page.locator(`${group} a`)).toHaveCount(48);
-    await expect(page.locator(`${group} img`)).toHaveCount(39);
+    await expect(page.locator(`${group} a`)).toHaveCount(51);
+    await expect(page.locator(`${group} img`)).toHaveCount(41);
     const codeHypeLink = page.locator(`${group} a[href="${codeHypeHref}"]`);
     await expect(codeHypeLink).toHaveCount(1);
     const codeHypeImage = codeHypeLink.locator('img');
