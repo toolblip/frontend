@@ -10,6 +10,7 @@ export default function TextToSpeechClient() {
   const [supported, setSupported] = useState(false);
   const [text, setText] = useState('');
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [playbackStatus, setPlaybackStatus] = useState<'idle'|'starting'|'speaking'|'stopped'|'finished'>('idle');
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
   const [selectedVoice, setSelectedVoice] = useState<string>('');
   const [rate, setRate] = useState(1);
@@ -19,10 +20,7 @@ export default function TextToSpeechClient() {
   const loadVoices = () => {
     const availableVoices = window.speechSynthesis.getVoices();
     setVoices(availableVoices);
-    if (availableVoices.length > 0 && !selectedVoice) {
-      const english = availableVoices.find(v => v.lang.startsWith('en')) || availableVoices[0];
-      setSelectedVoice(english?.name || '');
-    }
+    if (availableVoices.length > 0) setSelectedVoice(current => current || (availableVoices.find(v => v.lang.startsWith('en')) || availableVoices[0])?.name || '');
   };
 
   useEffect(() => {
@@ -35,7 +33,7 @@ export default function TextToSpeechClient() {
 
   const speak = () => {
     if (!text.trim() || !supported) return;
-    const id = ++generation.current; setError('');
+    const id = ++generation.current; setError('');setPlaybackStatus('starting');
     window.speechSynthesis.cancel();
 
     const utterance = new SpeechSynthesisUtterance(text);
@@ -44,9 +42,9 @@ export default function TextToSpeechClient() {
     utterance.rate = rate;
     utterance.pitch = pitch;
 
-    utterance.onstart = () => { if (id === generation.current) setIsSpeaking(true); };
-    utterance.onend = () => { if (id === generation.current) setIsSpeaking(false); };
-    utterance.onerror = (event) => { if (id === generation.current) { setIsSpeaking(false); setError(`Speech failed: ${event.error}`); } };
+    utterance.onstart = () => { if (id === generation.current) {setIsSpeaking(true);setPlaybackStatus('speaking');} };
+    utterance.onend = () => { if (id === generation.current) {setIsSpeaking(false);setPlaybackStatus('finished');} };
+    utterance.onerror = (event) => { if (id === generation.current) { setIsSpeaking(false);setPlaybackStatus('stopped'); setError(`Speech failed: ${event.error}`); } };
 
     window.speechSynthesis.speak(utterance);
   };
@@ -54,6 +52,7 @@ export default function TextToSpeechClient() {
   const stop = () => {
     generation.current++; window.speechSynthesis?.cancel();
     setIsSpeaking(false);
+    setPlaybackStatus('stopped');
   };
 
   if (!isMounted) {
@@ -74,8 +73,8 @@ export default function TextToSpeechClient() {
   }
 
   return (<UtilityDesignLayout>
-    <div onChangeCapture={() => {stop();setError('');}}>
-      <ToolExampleClearActions onExample={() => { stop(); setText('Hello. This is an example of browser speech synthesis.'); setError(''); }} onClear={() => { stop(); setText(''); setError(''); }}/>
+    <div onChangeCapture={() => {if(playbackStatus==='starting'||isSpeaking)stop();else setPlaybackStatus('idle');setError('');}}>
+      <ToolExampleClearActions onExample={() => { stop(); setText('Hello. This is an example of browser speech synthesis.'); setError(''); setPlaybackStatus('idle'); }} onClear={() => { stop(); setText(''); setError(''); setPlaybackStatus('idle'); }}/>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Text to Convert</span>
       </div>
@@ -91,6 +90,15 @@ export default function TextToSpeechClient() {
         aria-label="Text input for speech synthesis"
       />
 
+      <div style={{padding:'0 20px 16px',display:'flex',alignItems:'center',gap:12,flexWrap:'wrap'}}>
+        <button type="button" disabled={!supported || !text.trim()} onClick={playbackStatus==='starting'||isSpeaking ? stop : speak} className="tb-v2-btn tb-v2-btn-primary" style={{minWidth:120,justifyContent:'center'}}>
+          {playbackStatus==='starting'||isSpeaking ? 'Stop' : 'Listen'}
+        </button>
+        {supported && <span role="status" style={{fontSize:13,color:'var(--fg-2)'}}>
+          {playbackStatus==='starting'?'Starting playback…':playbackStatus==='speaking'?'Speaking now':playbackStatus==='stopped'?'Stopped':playbackStatus==='finished'?'Finished':'Enter text, then listen.'}
+        </span>}
+      </div>
+
       <div className="tb-v2-tool-input-head" style={{ marginTop: 16 }}>
         <span className="tb-v2-tool-label">Voice Settings</span>
       </div>
@@ -100,8 +108,7 @@ export default function TextToSpeechClient() {
           <select aria-label="Selected Voice"
             value={selectedVoice}
             onChange={(e) => setSelectedVoice(e.target.value)}
-            className="tb-v2-tool-textarea"
-            style={{ width: '100%' }}
+            style={{ width: '100%', height: 42, padding: '0 12px', border: '1px solid var(--line)', borderRadius: 8, background: 'var(--surface)', color: 'var(--fg-0)', font: 'inherit' }}
           >
             {voices.map((voice) => (
               <option key={voice.name} value={voice.name}>
@@ -122,12 +129,6 @@ export default function TextToSpeechClient() {
         </div>
       </div>
 
-      <div style={{ display: 'flex', gap: 8, marginTop: 16 }}>
-        <button type="button" disabled={!supported || !text.trim()} onClick={isSpeaking ? stop : speak} className="tb-v2-copy-btn" style={{ flex: 1, background: isSpeaking ? '#ef4444' : 'var(--tb-accent)', color: '#fff' }}>
-          {isSpeaking ? '⏹ Stop' : '▶ Speak'}
-        </button>
-
-      </div>
     </div>
   </UtilityDesignLayout>
   );
