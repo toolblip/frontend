@@ -12,7 +12,7 @@ readingTime: "5 min"
 
 Every developer has spent time crafting a regex pattern, then switching to a terminal to run a test, only to discover the pattern matched nothing. You tweak, run again, tweak again. It is slow. The loop does not have to be that way.
 
-Browser-based regex testers have gotten good enough that you can skip the terminal for most日常 regex work. Here is how to use them effectively, what to watch out for, and when to reach for the command line anyway.
+Browser-based regex testers have gotten good enough that you can skip the terminal for most everyday regex work. Here is how to use them effectively, what to watch out for, and when to reach for the command line anyway.
 
 ## Why Use an Online Regex Tester
 
@@ -26,7 +26,7 @@ A good online tester handles the mechanics so you can focus on the pattern logic
 
 Look for live match highlighting first. Type a pattern, paste some sample text, and see matches highlighted immediately. Some testers only show the full match. Others highlight capture groups separately, which is more useful when your pattern has groups.
 
-Regex dialect support matters if you write patterns for multiple languages. JavaScript, Python, and PHP each have slight differences. A tester that lets you switch between flavors helps catch dialect-specific bugs before you copy the pattern into your codebase.
+Regex dialect support matters if you write patterns for multiple languages. JavaScript, Python, and PHP each have slight differences. Toolblip uses JavaScript `RegExp`; test Python or PHP patterns in those runtimes before copying them into production.
 
 Real-time feedback without a submit button is the practical difference between a tester that saves you time and one that just moves the friction to a browser window.
 
@@ -47,17 +47,17 @@ Invalid: @notvalid.com
 
 If the pattern matches the invalid lines, your pattern is wrong. If it does not match the valid lines, your pattern is wrong. Either way, you know immediately.
 
-Once a simple case works, add edge cases: unicode characters, unusual domain names, spaces, newlines. If your tester lets you test against multiple strings at once, you can build a test suite that lives alongside your pattern documentation.
+Once a simple case works, add edge cases: unicode characters, unusual domain names, spaces, newlines. Put several lines into Toolblip’s single sample textarea for a quick visual check. Use automated tests in your target runtime for a real test suite.
 
 ## Common Mistakes When Testing Regex in the Browser
 
 One common mistake is forgetting that `.` does not match newlines in most dialects. If your sample text has multiline strings and your pattern uses `.` everywhere, you get unexpected non-matches. Use `[\s\S]` instead when you need dot-to-match-anything behavior.
 
-Greedy quantifiers cause over-matching. A pattern like `<.+>` applied to `<p>Hello</p>` matches from the first `<` to the last `>`, not from each opening tag to its close. Switching to non-greedy `<.+?>` fixes this. Live highlighting makes this behavior obvious immediately.
+Greedy quantifiers cause over-matching. A pattern like `<.+>` applied to `<p>Hello</p>` matches from the first `<` to the last `>`, not from each opening tag to its close. Switching to non-greedy `<.+?>` matches each tag separately (`<p>` and `</p>`); it does not match the full element. Live highlighting makes this behavior obvious immediately.
 
 Not anchoring when you need it is another frequent issue. `\d+` matches `abc123` just fine. If you meant only strings that are purely digits, you need `^\d+$`. A tester shows you exactly what matches and what does not.
 
-The case-insensitive flag (`i`) interacts with character classes in dialect-specific ways. `\w` is already case-insensitive in some environments but not others. Testing in the wrong dialect makes a pattern look correct when it is not.
+The case-insensitive flag (`i`) interacts with character classes in dialect-specific ways. `\w` is already case-insensitive in some environments but not others. Check the target runtime when dialect behavior matters.
 
 ## When to Still Use the Command Line
 
@@ -67,11 +67,11 @@ If your sample text is gigabytes of log output, a browser is not the right tool.
 
 Browser testers cannot help when your regex interacts with other code. The pattern might be correct in isolation but fail because of how your application processes the matches. That requires integration testing, not unit testing with sample text.
 
-When your pattern needs to run in a specific runtime, test it there. JavaScript regex works differently in Node.js than in a browser for unicode handling and lookbehind behavior. Run a quick `node -e` or `python3 -c` for production-accurate validation.
+When your pattern needs to run in a specific runtime, test it there. JavaScript and Python regex differ; check your target runtime and version for the behavior you rely on. Run a quick `node -e` or `python3 -c` for production-accurate validation.
 
 ## Browser-Based Regex Testing with Toolblip
 
-[Toolblip's regex tester](https://toolblip.com/tools/regex-tester) runs entirely in the browser. Your sample text never leaves your machine. It highlights matches and capture groups in real time as you type, supports JavaScript and Python-style regex syntax, and lets you test against multiple input strings simultaneously.
+[Toolblip's regex tester](https://toolblip.com/tools/regex-tester) runs entirely in the browser. The match calculation runs in the browser. It uses JavaScript regex flags and one sample textarea, which can contain multiple lines. It highlights matches and shows capture groups as you type.
 
 For most regex work during development, it is faster than switching to a terminal, and the live highlighting makes pattern mistakes obvious before they become debugging sessions.
 

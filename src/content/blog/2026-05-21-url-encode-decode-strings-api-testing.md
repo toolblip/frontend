@@ -60,7 +60,7 @@ console.log(url);
 
 Use `encodeURI()` only when you want to preserve URL structure characters like `:`, `/`, `?`, and `&`. For API test values, `encodeURIComponent()` is usually the safer choice.
 
-Toolblip's [URL Encode/Decode tool](https://toolblip.com/tools/url-encode) is useful for quick checks because it runs in the browser. Paste a value, encode it, decode it back, and compare the result before you put it into Postman, a curl command, or a webhook config.
+Toolblip's [URL Encode/Decode tool](https://toolblip.com/tools/url-encode) is useful for quick checks because it runs in the browser. Paste a value and choose encode or decode. To compare a round trip, copy the output, switch modes, and paste it back before using the result in Postman, curl, or a webhook config.
 
 ## Curl can encode form and query values too
 

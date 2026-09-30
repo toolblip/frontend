@@ -34,7 +34,7 @@ Here are the cases where sending JSON to a server is genuinely risky:
 
 **Customer data.** If you work with any regulated data (health, financial, EU residents under GDPR), sending payloads to an external tool can create compliance questions you do not want to answer.
 
-The solution is to use tools that never send your data anywhere.
+Use a local parser or a browser tool whose parse action you can inspect.
 
 ## How Client-Side JSON Validation Works
 
@@ -45,9 +45,9 @@ Modern browsers have everything needed to parse and format JSON without a server
 3. The JavaScript on the page calls `JSON.parse()` to validate the input.
 4. If the JSON is valid, `JSON.stringify(parsed, null, 2)` formats it with indentation.
 5. The result is displayed in the output area.
-6. Your data never leaves your browser.
+6. The parse and format action runs locally.
 
-No network request is made. No server receives your payload. The tool runs entirely inside the browser tab using the same JavaScript engine that powers every website you visit.
+Inspect outgoing request contents if you need to check how a page handles sensitive input.
 
 Some tools go further and use WebAssembly (WASM) to run validation logic at near-native speed inside the browser. Either way, the security model is the same: your data stays on your machine.
 
@@ -59,9 +59,7 @@ Open the JSON tool in one tab. Open DevTools with `F12` or `Cmd+Option+I`. Click
 
 Paste your JSON into the tool and hit validate or format.
 
-Watch the Network tab. If the tool is truly client-side, you will see zero outbound requests when you click the format button. No POST, no fetch, no analytics ping. The only network activity you might see is the initial page load and possibly a request for a font or analytics script that is unrelated to your data.
-
-If you see a request going out when you click format, your JSON was uploaded. Close the tab and find a different tool.
+Watch the Network tab. Inspect any requests after clicking format. Search their URLs and payloads for a distinctive value from your test JSON. A request alone does not prove that the JSON was uploaded.
 
 This check takes 30 seconds and works for any privacy-sensitive browser tool, not just JSON validators.
 
@@ -79,7 +77,7 @@ Once you have confirmed a tool is truly local, here is what to look for:
 
 **No data limits for normal use.** Some tools silently truncate large payloads. If you are validating a multi-megabyte webhook payload, you want to know upfront whether the tool will handle it.
 
-**Toolblip's JSON formatter** runs entirely in your browser. It validates as you type, shows the exact line and character of the first error, and can format or minify with one click. No account, no upload, no server contact when you validate.
+**Toolblip's JSON formatter** runs entirely in your browser. It validates as you type, shows parser error text, without a guaranteed line-and-column marker, and can format or minify with one click. No account, no upload, no server contact when you validate.
 
 ## Common JSON Errors and What They Look Like
 
@@ -114,11 +112,11 @@ Understanding the most common JSON mistakes helps you fix them faster.
 
 For most daily development work, client-side JSON validation is the right call. But there are cases where it is not sufficient:
 
-**Large files.** Browsers have memory limits. A 50MB JSON file will crash most browser tabs regardless of how the tool is built. For very large files, use a local CLI tool like `jq` or a desktop application.
+**Large files.** Browsers have memory limits. A large JSON file may strain a browser tab, depending on your device and the payload. Check with a small sample first; use a local CLI such as `jq` for larger files. For very large files, use a local CLI tool like `jq` or a desktop application.
 
 **Network-based validation.** Sometimes you need to validate against a live schema or API. That requires a server. The answer here is to send only what is necessary: a minimal payload, redacted values, or a synthetic test case.
 
-**Compliance environments.** If you work under strict data handling policies (SOC 2, HIPAA, PCI), your security team may have specific requirements about what can be processed where. Client-side tools satisfy those requirements, but document which tools your team uses so audits are straightforward.
+**Compliance environments.** If you work under strict data handling policies (SOC 2, HIPAA, PCI), your security team may have specific requirements about what can be processed where. Check your organization’s policy before pasting regulated data into any web page, and document approved tools.
 
 For everything else, the browser is the right place to validate JSON.
 
@@ -131,7 +129,7 @@ Bookmark the tool and add a shortcut to your browser bar. When you need it:
 3. Fix errors as the tool flags them in real time.
 4. Copy the formatted result.
 
-The entire interaction is a few seconds. Your data never left your machine.
+The entire interaction is a few seconds. The format action ran locally; inspect request contents if you need to check a particular session.
 
 If you want to validate JSON without uploading and prefer a keyboard-driven workflow, most JSON tools support pasting directly and show errors as you type. No button press required.
 

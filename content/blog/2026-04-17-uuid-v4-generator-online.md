@@ -12,7 +12,7 @@ author: Harun R Rayhan
 
 Every database row, every document, every session - something has to give each one a unique ID. If you're building anything with a database, you've faced this problem. The solution most developers land on is UUIDs.
 
-But not all UUIDs are the same. There are five versions, and version 4 is almost always the right one.
+But not all UUIDs are the same. RFC 9562 defines versions 1 through 8. Version 4 is a practical default when you need an ID without time ordering.
 
 ## What Is a UUID?
 
@@ -29,19 +29,19 @@ The format breaks down as:
 - 4 hex digits (16 bits) - clock_seq
 - 12 hex digits (48 bits) - node
 
-That's 2^128 possible values. To put that in perspective: if you generated a billion UUIDs per second, it would take longer than the age of the universe to have a 50% chance of generating a duplicate.
+UUID v4 has 122 random bits, giving 2^122 possible random values. Collision risk rises with the number of IDs you generate, so use a cryptographically secure random generator and check for duplicates when your application requires a guarantee.
 
-## The Five UUID Versions
+## Common UUID Versions
 
-**Version 1** - Time-based. Combines a timestamp and the machine's MAC address. Theoretically sortable by time, but exposes your MAC address (a privacy concern).
+**Version 1** - Time-based. Combines a timestamp, clock sequence, and node ID. The node may be a MAC address or a randomized value. Its byte layout is not reliably lexical time order.
 
-**Version 4** - Random. Pure random generation. No timestamp, no MAC address, no clues about when or where it was created.
+**Version 4** - Random. Uses 122 random bits with six version and variant bits fixed. It carries no timestamp or node ID.
 
 **Version 5** - SHA-1 hash of a namespace and name. Deterministic - the same input always produces the same UUID. Good for URL-safe namespacing.
 
 **Version 7** - Timestamp-based, like v1 but uses Unix timestamp instead of Gregorian. More sortable, less privacy-leaking than v1.
 
-**Version 3** - MD5 hash of namespace + name. Older, less preferred than v5.
+**Version 3** - MD5 hash of namespace + name. Older, less preferred than v5. RFC 9562 also defines v6, v8, and the nil/max values.
 
 ## Why UUID v4 Is the Default Choice
 
@@ -49,19 +49,19 @@ Here's why v4 dominates:
 
 **No external dependencies.** A v4 UUID is just random bits. No timestamp server, no namespace registry, no coordination. Generate anywhere.
 
-**No information leakage.** V1 exposes your MAC address. V4 reveals nothing. Every octet is random.
+**No information leakage.** V1 may expose a MAC address when that is used as its node ID. V4 carries no node or timestamp; six bits are fixed for version and variant.
 
-**Collision risk is negligible.** The birthday paradox says you need about 2^64 values before a 50% chance of collision. In practice, you'll never hit that.
+**Collision risk grows with use.** A v4 UUID has 122 random bits. The chance of a collision increases as you generate more IDs, so use a cryptographically secure random generator.
 
 **Database-friendly.** UUIDs can be primary keys, foreign keys, session tokens, event IDs - anything that needs uniqueness without coordination.
 
 ## When to Choose a Different Version
 
-**Use v7 instead of v1** if you need time-sortable IDs. V7 combines a Unix timestamp (48 bits) with random bits for a monotonically increasing ID that's also unique. Think: Instagram's Snowflake alternative, but self-contained.
+**Use v7 instead of v1** if you need time-sortable IDs. V7 combines a Unix timestamp (48 bits) with random bits for IDs that sort roughly by timestamp. Strict monotonic order within one millisecond requires a generator strategy. Think: Instagram's Snowflake alternative, but self-contained.
 
 **Use v5** if you need deterministic IDs from names. For example, if you want to generate the same UUID for "user@example.com" every time from any machine, namespace + name → v5 gives you that.
 
-**Use v1** in rare cases where you genuinely need the maximum Sortability and don't mind the MAC address exposure (internal systems behind a firewall, for example).
+**Use v1** in rare cases where you genuinely need the legacy v1 compatibility and understand its timestamp and node-ID tradeoffs (internal systems behind a firewall, for example).
 
 ## UUID v4 in Different Languages
 
@@ -101,8 +101,7 @@ Fact: They absolutely can. PostgreSQL, MySQL, MongoDB - all handle UUID primary 
 Instead of writing a script or installing a library just to get one UUID, use [Toolblip's UUID Generator](/tools/uuid-generator). One click gives you:
 
 - **UUID v4** (random) - default, most common
-- **UUID v1** (time + MAC)
 - **UUID v4 in uppercase** or lowercase
-- **Bulk generation** - up to 100 at once
+- **Five recent IDs** - copy the newline-separated history; no count or JSON-array control
 
 No sign-up. No library installation. Just generate and copy.

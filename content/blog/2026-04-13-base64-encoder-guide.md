@@ -24,7 +24,7 @@ If you've ever seen a string like `SGVsbG8gV29ybGQ=` and wondered what on earth 
 
 ## What Is Base64?
 
-Base64 is a way of representing binary data as ASCII text. It converts any input - images, files, binary files - into a string made of 64 safe-to-transmit characters (A-Z, a-z, 0-9, `+`, `/`, and `=` for padding).
+Base64 is a way of representing binary data as ASCII text. It converts any input - images, files, binary files - into a string made of 64 safe-to-transmit characters (A-Z, a-z, 0-9, `+`, and `/`). `=` is padding, outside the 64-character alphabet.
 
 The key insight: **Base64 is not encryption.** It's an encoding scheme, which means anyone can reverse it. If you Base64-encode a password, it is not secure. Base64 is about *transport safety*, not *security*.
 
@@ -76,7 +76,7 @@ Most API clients and languages have built-in Base64 encoding/decoding, so it's u
 
 ### 3. API Keys and Tokens
 
-Many authentication systems use Base64-encoded JSON or strings for tokens, API keys, and JWTs (which are Base64-encoded JSON + signature). If you've ever decoded a JWT payload on [jwt.io](https://jwt.io), you saw Base64 in action.
+Some tokens use Base64 or base64url. A compact signed JWT (JWS) has three segments, including a signature; encrypted compact JWTs (JWE) have five. Encoding alone does not secure a token. If you've ever decoded a JWT payload on [jwt.io](https://jwt.io), you saw Base64 in action.
 
 ### 4. Email Attachments (MIME)
 
@@ -93,12 +93,15 @@ Every email attachment you've ever sent was Base64-encoded under the hood. The e
 
 ### 1. Forgetting to Specify the Encoding
 
-When decoding a string, you need to know what character encoding was used to generate it. UTF-8 and ASCII produce different results:
+Text must be encoded to bytes before Base64. ASCII text such as `hello` has the same bytes in ASCII and UTF-8, while `café` needs UTF-8 if you want portable text:
 
 ```python
-# These produce different Base64 strings
-"hello".encode("utf-8").b64()   # aGVsbG8=
-"hello".encode("ascii").b64()   # aGVsbG8=
+import base64
+
+text = "café"
+encoded = base64.b64encode(text.encode("utf-8"))
+print(encoded.decode("ascii"))  # Y2Fmw6k=
+print(base64.b64decode(encoded).decode("utf-8"))  # café
 ```
 
 ### 2. Treating Base64 as a String
@@ -107,7 +110,7 @@ Base64-encoded data should be treated as binary. Always use a library function t
 
 ### 3. Not Handling Padding
 
-The `=` characters at the end of a Base64 string are not optional. `SGk=` decodes correctly; `SGk` may not. Some lenient decoders accept unpadded input, but it's not guaranteed.
+Standard Base64 uses padding only when needed. `SGk=` is the padded form of `Hi`; some decoders accept `SGk`, while strict decoders require the padding.
 
 ## How to Use It
 
@@ -115,7 +118,7 @@ Try it in your browser - no upload, no server call:
 
 👉 **[Toolblip Base64 Encoder/Decoder →](/tools/base64-encoder-decoder)**
 
-Paste text or drag-and-drop a file. Encode or decode instantly, entirely in your browser.
+Paste text to encode or decode. For supported image files and data URLs, use the separate [Base64 Image Converter](/tools/images/base64-image-converter).
 
 ## The Short Version
 

@@ -1,7 +1,7 @@
 ---
 title: "How to Resize Image for Social Media Dimensions Right"
 description: >-
-  Learn how to resize image for social media dimensions with the exact Open Graph, Instagram, and LinkedIn sizes plus code. Try the free Image Resizer now.
+  Learn how to resize image for social media dimensions with useful starting dimensions for Open Graph, Instagram, and LinkedIn plus code. Try the free Image Resizer now.
 slug: 2026-08-04-resize-image-for-social-media-dimensions
 date: 2026-08-04T00:00:00.000Z
 category: Developer Tools
@@ -18,7 +18,7 @@ featuredImage: https://api.radtx.com/gradient/6b7280-374151/1200/630
 
 If you need to resize image for social media dimensions, you are probably staring at a photo that looks wrong somewhere. Maybe it is cropped strangely on Facebook, blurry on LinkedIn, or missing entirely from a shared link preview. Every platform expects a specific pixel size, and getting it wrong costs you a clean thumbnail right when it matters most.
 
-This guide covers the exact dimensions each platform expects, how to resize an image without losing quality, and how to hit the open graph image size that link previews actually read from.
+This guide covers useful starting dimensions for common sharing surfaces, how to resize an image without losing quality, and how to hit the open graph image size that link previews actually read from.
 
 ## Why Image Dimensions Break Your Social Previews
 
@@ -28,21 +28,21 @@ If your source image is the wrong shape, the platform's cropper decides what get
 
 Link-preview crawlers are even less forgiving. Facebook, LinkedIn, and Slack all read the `og:image` meta tag and expect something close to the og image dimensions 1200x630 standard. Submit a tiny or oddly-shaped image and some crawlers skip the preview image altogether.
 
-Resizing ahead of time, to the exact pixel dimensions each surface expects, is the only way to control the crop yourself.
+Prepare the target aspect ratio ahead of time, then preview the result on the surface where it will appear.
 
 ## Resize Image for Social Media Dimensions: The Cheat Sheet
 
-Here are the sizes worth memorizing. These cover the vast majority of sharing surfaces developers deal with.
+These are useful export targets. Platform crops and display rules can change, so preview the actual post or link before publishing.
 
 - **Open Graph link preview**: 1200 x 630 px (1.91:1). This is the open graph image size used by Facebook, LinkedIn, and most link-preview crawlers, including Slack and Discord unfurls.
-- **Instagram feed post**: 1080 x 1080 px square, or 1080 x 1350 px portrait if you want the tallest possible feed card. Either counts as the standard instagram post image size today.
+- **Instagram feed post**: 1080 x 1080 px square, or 1080 x 1350 px portrait as a portrait starting point. Check the current Instagram composer for the crop it accepts.
 - **Instagram Stories**: 1080 x 1920 px, full-screen vertical.
 - **Facebook cover photo dimensions**: 820 x 312 px on desktop, cropped down to roughly 640 x 360 px on mobile. Keep key content centered so both crops survive.
 - **LinkedIn banner image size**: 1584 x 396 px for a personal profile background, 1128 x 191 px for a Company Page cover.
 - **Twitter/X summary card**: 1200 x 675 px.
 - **YouTube thumbnail**: 1280 x 720 px, under 2MB.
 
-None of these numbers are arbitrary. They match the aspect ratios each platform's mobile and desktop layouts actually render, so an image resized to spec shows up uncropped almost everywhere it appears.
+Treat these as starting targets, not guarantees that every placement will show the whole image. Keep important content away from the edges and check the final preview.
 
 ## How to Resize Image for Social Media Dimensions in the Browser
 
@@ -68,7 +68,7 @@ function resizeImageToFit(img, targetWidth, targetHeight) {
 
 This is a cover-fit resize, the same behavior as CSS `object-fit: cover`. It scales the image up until it fully fills the target box, then centers and crops the overflow, instead of squashing the image into the wrong aspect ratio.
 
-Because the whole operation runs in `<canvas>`, you can open your browser's DevTools Network tab while resizing and confirm nothing is uploaded. The original file bytes never leave the page.
+Because the whole operation runs in `<canvas>`, you can open your browser's DevTools Network tab while resizing and confirm nothing is uploaded. Check requests for image data rather than assuming that any network request is an upload.
 
 ## Resizing Images in Bulk with ImageMagick
 
@@ -99,12 +99,12 @@ There is also a practical size trade-off worth knowing. A 1200 x 630 JPEG at qua
 
 ## Resize Image for Social Media Dimensions Instantly with Image Resizer
 
-For most day-to-day work, running the numbers above through code is more setup than a single social post needs. Toolblip's [Image Resizer](https://toolblip.com/tools/images/image-resizer) does the same cover-fit resize as the code above, with presets for every size in the cheat sheet.
+For most day-to-day work, running the numbers above through code is more setup than a single social post needs. Toolblip's [Image Resizer](https://toolblip.com/tools/images/image-resizer) accepts numeric width and height values and has an aspect-ratio lock. It stretches the image to the requested dimensions when that lock is off. To fill a different aspect ratio without distortion, crop first with the [Image Cropper](/tools/images/image-cropper), then resize.
 
 The flow is simple:
 
-1. Upload the source image. It is processed in your browser, so nothing is sent to a server.
-2. Pick a preset, such as Open Graph 1200x630, Instagram Square, or LinkedIn Banner, or enter custom dimensions.
+1. Choose the source image for local processing.
+2. Enter the target width and height. Keep the aspect-ratio lock on to avoid stretching, or crop to your target ratio first.
 3. Download the resized file, ready to drop into your CMS, meta tags, or social scheduler.
 
 Once you have the resized image, pair it with the [Meta Tag Generator](https://toolblip.com/tools/meta-tag-generator) to build the matching `og:image` tag, then check the result with [Open Graph Preview](https://toolblip.com/tools/open-graph-preview) before you publish. That last step catches crawler caching issues and wrong aspect ratios before a broken card ships to a live page.

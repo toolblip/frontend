@@ -18,7 +18,7 @@ But the web runs on HTML. So at some point, your Markdown needs to become HTML. 
 
 Markdown is a lightweight text-to-HTML conversion syntax. It uses simple, readable punctuation to represent formatting:
 
-```markdown
+````markdown
 # Heading 1
 ## Heading 2
 
@@ -32,7 +32,7 @@ Markdown is a lightweight text-to-HTML conversion syntax. It uses simple, readab
 `inline code`
 
 ```code block```
-```
+````
 
 The goal is text that's readable as-is, even before conversion. Compare a raw Markdown file to an HTML file - the Markdown is obviously readable; the HTML is not.
 
@@ -114,18 +114,7 @@ becomes:
 </table>
 ```
 
-**Task lists:**
-```markdown
-- [x] Done
-- [ ] Not done
-```
-becomes:
-```html
-<ul>
-  <li><input type="checkbox" checked disabled> Done</li>
-  <li><input type="checkbox" disabled> Not done</li>
-</ul>
-```
+**Task lists:** GFM can produce checkbox inputs, but Toolblip’s sanitized output removes those inputs. Check the HTML tab if you need to preserve task-list controls.
 
 ## Live Preview: Why It Matters
 
@@ -148,6 +137,6 @@ But if you just need the HTML for one document, a direct converter is faster. No
 2. **See the HTML output** in the right pane, live, as you type
 3. **Copy the HTML** when ready
 
-[Markdown to HTML](/tools/markdown-to-html) supports GFM (GitHub Flavored Markdown), including tables, task lists, and code blocks with syntax highlighting.
+[Markdown to HTML](/tools/markdown-to-html) supports GFM (GitHub Flavored Markdown), including tables and fenced code blocks. The preview does not add syntax highlighting or preserve task-list checkboxes and table alignment attributes.
 
 If you're writing documentation regularly, consider pairing it with a static site generator. But for quick conversions, the live preview tool is the fastest path from Markdown to HTML.

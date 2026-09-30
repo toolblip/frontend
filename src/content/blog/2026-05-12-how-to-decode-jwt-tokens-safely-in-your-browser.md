@@ -19,18 +19,21 @@ featuredImage: 'https://toolblip.com/api/og?title=How%20to%20Decode%20JWT%20Toke
 
 You pull a JWT from a cookie or response body. It looks like three base64 strings joined by dots. You want to know what is inside the payload: the user ID, the expiration, the roles. The usual approach is to paste it into an online decoder and hope for the best. That works until the token contains something sensitive and the decoder is logging your input on a server somewhere.
 
-This happens. Third-party JWT decoders have been caught logging tokens on servers or returning them in search results. If you are working with production credentials or anything tied to a real user, you need a way to decode tokens that never leaves your machine.
+A third-party decoder could receive a token if it submits your input. Check its behavior before using a real credential, and follow your organization’s rules for production tokens.
 
 ## What a JWT Actually Contains
 
-A JSON Web Token has three parts separated by dots. The header is base64-encoded JSON describing the algorithm. The payload is base64-encoded JSON with the claims. The signature is a cryptographic proof that the header and payload have not been tampered with.
+A compact signed JWT (JWS) has three dot-separated parts. A compact encrypted JWT (JWE) has five. The header is base64-encoded JSON describing the algorithm. The payload is base64-encoded JSON with the claims. The signature is a cryptographic proof that the header and payload have not been tampered with.
 
 Decoding a token means base64-decoding the first two segments and reading the JSON. You can do this in a browser console without any library:
 
 ```javascript
 const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
 
-const payload = JSON.parse(atob(token.split('.')[1]));
+const part = token.split('.')[1];
+const base64 = part.replace(/-/g, '+').replace(/_/g, '/');
+const bytes = Uint8Array.from(atob(base64.padEnd(Math.ceil(base64.length / 4) * 4, '=')), c => c.charCodeAt(0));
+const payload = JSON.parse(new TextDecoder().decode(bytes));
 console.log(payload);
 // { sub: '1234567890', name: 'John Doe', iat: 1516239022 }
 ```
@@ -48,11 +51,11 @@ This works. It is a valid way to peek inside a token quickly. But it is not alwa
 
 ## Why Browser-Based Decoding Is the Right Default
 
-Browser-based JWT decoders run entirely in JavaScript. The token you paste never gets sent to any server. The decoding happens in your tab, using your CPU.
+Toolblip’s [JWT Decoder](/tools/jwt-decoder) decodes a compact signed token in the browser. Decoding reveals claims but does not verify the signature.
 
-The privacy advantage is real. A token might include a user ID, a session handle, or a role claim. That information should not travel further than your own machine. When decoding happens client-side, there is no server to log the input, no network request to trace, and no third party with access to your paste history.
+The privacy advantage is real. A token might include a user ID, a session handle, or a role claim. That information should not travel further than your own machine. The decode action does not need to submit the token to a server. Browser extensions and other page code still matter for sensitive credentials.
 
-You can verify this yourself. Open DevTools, go to the Network tab, paste a token into a client-side decoder, and confirm there are zero outbound requests. If the tool sends your token anywhere, you will see it in the network log immediately.
+You can verify this yourself. Open DevTools, go to the Network tab, paste a token into a client-side decoder, and inspect any requests for the token in their URL or payload. A request alone does not show that your token was uploaded.
 
 This is the verification step most developers skip. It takes thirty seconds and tells you whether the tool you are using is trustworthy.
 
@@ -81,20 +84,20 @@ A token that should work but does not is usually one of these:
 
 **Missing claims.** Some systems require a specific claim to be present. A token that decodes fine but still fails might be missing a claim like `scope` or a specific `iss`.
 
-Decoding the token first tells you which of these it is. That narrows the debugging from "something is wrong" to "the exp timestamp is from last month."
+Decoding helps you inspect the claims, but only server-side verification can confirm authenticity and acceptance. That narrows the debugging from "something is wrong" to "the exp timestamp is from last month."
 
 ## How to Use a Browser JWT Decoder Safely
 
-A good client-side JWT decoder shows you the header, payload, and expiration status in one view. It runs entirely in the browser without fetching anything.
+[Toolblip’s JWT Decoder](/tools/jwt-decoder) shows the header, payload, and expiration status for signed compact tokens.
 
 Before you paste a token into any tool, do the thirty-second check:
 
 1. Open DevTools, go to Network tab
 2. Make sure recording is on
 3. Paste the token and hit decode
-4. Check for any outbound requests
+4. Inspect outgoing request URLs and bodies for the token
 
-If you see any requests, the tool is sending your token somewhere. Use a different one.
+If the token appears in an outgoing request, stop using that tool for sensitive tokens.
 
 For local development, you can also use the browser console approach above. It takes longer to read, but it is always available and never sends data anywhere.
 
@@ -103,13 +106,13 @@ The goal is simple: know what is in the token, know what the tool is doing with 
 ## Frequently Asked Questions
 
 **Can a JWT be encrypted instead of just signed?**
-Yes. JWE (JSON Web Encryption) encrypts the payload. Standard JWT decoders that only base64-decode will show gibberish for an encrypted token. Most auth systems use signed JWTs (JWS) rather than encrypted ones.
+Yes. JWE (JSON Web Encryption) encrypts the payload. A simple signed-token decoder cannot read the encrypted JWE payload. Most auth systems use signed JWTs (JWS) rather than encrypted ones.
 
 **Is it safe to decode a token from production?**
 Decoding is read-only. You cannot modify a token by decoding it, and you cannot forge a valid signature without the secret or private key. The risk is sharing the token with an untrusted third party. Keep production tokens local.
 
 **How do I verify a token signature in the browser?**
-You need the public key or shared secret. You can use the Web Crypto API in modern browsers to verify signatures without sending the token anywhere. Most client-side JWT libraries (like jwt-decode) can validate signatures if you provide the key.
+You need the public key or shared secret. You can use the Web Crypto API in modern browsers to verify signatures without sending the token anywhere. `jwt-decode` only decodes; use a verification library with an explicitly configured key and algorithm to validate a signature.
 
 **Why do some JWT decoders show an error for a token I know is valid?**
 Common causes: the token is not valid base64, the token uses a different encoding (JWE instead of JWS), or the decoder does not handle multi-line payloads correctly. Try decoding in the browser console first to verify the token itself is well-formed.

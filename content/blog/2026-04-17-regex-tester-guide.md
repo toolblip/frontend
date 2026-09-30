@@ -28,15 +28,14 @@ Most testers provide:
 
 - **Real-time match highlighting** - matched text is colored or highlighted
 - **Match groups** - captured groups are labeled and displayed separately
-- **Replacement preview** - see what `replace()` would produce before committing
 - **Error messages** - clear explanations when your pattern is invalid
 - **Pattern explanation** - human-readable breakdown of what your regex does
 
 ## How to Use a Regex Tester
 
-### Step 1: Choose Your Flavor
+### Step 1: Use JavaScript regex syntax
 
-Most regex testers default to JavaScript (ECMAScript), but different languages use slightly different syntax. Common flavors include:
+Toolblip runs JavaScript `RegExp` and offers flags, not a flavor switch. Other languages use slightly different syntax:
 
 | Flavor | Used By |
 |--------|---------|
@@ -46,7 +45,7 @@ Most regex testers default to JavaScript (ECMAScript), but different languages u
 | Go | Go standard library |
 | Rust | Rust `regex` crate |
 
-If you're working in JavaScript, make sure the tester is set to JS mode - patterns that work in Python's `re` module may behave differently.
+If the pattern will run in Python, Go, or another engine, test it there too.
 
 ### Step 2: Write Your Pattern
 
@@ -93,24 +92,17 @@ gmail\.com
 # Step 3: Anchor it
 ^[^@\s]+@gmail\.com$
 
-# Step 4: That's a valid Gmail pattern
+# Step 4: This matches a simple Gmail-shaped string; it does not verify an address
 ```
 
-### Step 5: Use Replacement
+### Step 5: Check replacement in your code
 
-Most testers let you run a replacement:
+The Toolblip tester has no replacement preview. After checking the match, use JavaScript `replace()` in your console or tests:
 
-Pattern: `/world/`
-Replacement: `"developer"`
-Test string: `"hello world"`
-
-Result: `"hello developer"`
-
-With capture groups, you can do powerful transforms:
-
-Pattern: `/(\w+)\s(\w+)/`
-Replacement: `"$2 $1"`
-Result: Swaps first and last name
+```javascript
+"hello world".replace(/world/, "developer"); // "hello developer"
+"Ada Lovelace".replace(/(\w+)\s(\w+)/, "$2 $1"); // "Lovelace Ada"
+```
 
 ## Common Regex Patterns Every Developer Should Know
 
@@ -186,7 +178,7 @@ example\.com
 # Greedy: matches from the first < to the LAST >
 <a>.*</a>
 
-# Non-greedy: matches from the first < to the FIRST >
+# Non-greedy: stops at the first matching </a>, which may be a later tag
 <a>.*?</a>
 ```
 
@@ -215,19 +207,19 @@ Complex nested quantifiers can cause exponential slowdowns:
 # "aaaaaaaaaaaaaaaaaaaaaaaaac" takes seconds to fail
 ```
 
-Prefer possessive quantifiers or atomic groups where supported, or restructure the pattern to avoid nested quantifiers.
+JavaScript `RegExp` does not support possessive quantifiers or atomic groups. Restructure the pattern to avoid nested quantifiers.
 
 ## Regex Tester Best Practices
 
 1. **Test with edge cases** - empty strings, strings with only special characters, very long strings
-2. **Always set the right flavor** - a Python regex may work differently in JavaScript
+2. **Test in the target engine** - Toolblip uses JavaScript regex
 3. **Use non-greedy matching** (`*?`, `+?`) by default when matching between delimiters
 4. **Read your pattern aloud** - if you can't explain what it does, the pattern is probably too complex
 5. **Comment your patterns** - in languages that support regex comments (`(?#comment)` in PCRE or `(?x)` for extended mode)
 
 ## Try It Now
 
-The [Regex Tester on Toolblip](/tools/regex-tester) is built for real developer workflows. It highlights matches in real-time, shows capture groups, explains your pattern in plain English, and has a library of common patterns to copy.
+The [Regex Tester on Toolblip](/tools/regex-tester) is built for real developer workflows. It highlights matches in real-time, shows capture groups, provides a small example action and token reference.
 
 No signup, no server calls - everything runs in your browser.
 

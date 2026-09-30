@@ -51,7 +51,7 @@ Matches a position **not followed by** a specific pattern.
 
 ```js
 const text = "Total: $49.99, $39.99 USD, $29.99, $19.99 GBP";
-const regex = /\$[\d.]+(?! [A-Z]{3})/g;
+const regex = /\$\d+(?:\.\d{2})?(?![\d.]| [A-Z]{3})/g;
 
 text.match(regex);
 // → ["$49.99", "$29.99"]
@@ -67,13 +67,13 @@ Matches a position **preceded by** a specific pattern.
 
 ```js
 const text = "Item A costs $49.99. Item B costs $12.00.";
-const regex = /(?<=\$)[\d.]+/g;
+const regex = /(?<=\$)\d+(?:\.\d{2})?/g;
 
 text.match(regex);
 // → ["49.99", "12.00"]
 ```
 
-This reads as: "match one or more digits or dots, but only when preceded by a `$`." The `$` itself is not part of the match  -  it's only a condition.
+This reads as: "match one or more digits, optionally followed by a dot and exactly two decimal digits, when preceded by a `$`." The `$` itself is not part of the match  -  it's only a condition.
 
 > **Important:** JavaScript lookbehind support requires ES2018+. If you're on Node.js < 10, it won't work. All modern browsers support it.
 
@@ -81,42 +81,17 @@ This reads as: "match one or more digits or dots, but only when preceded by a `$
 
 Matches a position **not preceded by** a specific pattern.
 
-**Use case:** Find numbers in a string that don't follow a `$` sign.
+**Use case:** Find whole integers or decimal amounts that are not part of a dollar price.
 
 ```js
 const text = "Qty: 5 units, Price: $49.99, Discount: 10%";
-const regex = /(?<!\$)[\d]+/g;
+const regex = /(?<![\d.$])\b\d+(?:\.\d+)?\b(?![\d.])/g;
 
 text.match(regex);
-// → ["5", "49", "10"]
+// → ["5", "10"]
 ```
 
-Wait  -  `$49.99` still matched `49` because the `4` is preceded by `$`... wait, no. The lookbehind checks the character **immediately before** the match position. At `4` in `$49.99`, the character before it is `$`  -  so it shouldn't match. But `9` in `49` has `4` before it, which is a digit  -  so it matches.
-
-This reveals a subtlety: **lookbehind checks the character immediately before the match start**, not the whole preceding context. For `$49.99`, the pattern would match `49` (where `4` is preceded by `$`).
-
-```js
-// More precisely, exclude numbers that immediately follow $:
-const text = "Qty: 5 units, Price: $49.99, Discount: 10%";
-const regex = /(?<!\$)[\d]+/g;
-// Matches: "5", "49", "10"
-//  - "5" in Qty: space before, not $ → matches
-//  - "49" in $49.99: $ before the 4, but the lookbehind checks the 4 → $ before 4 → no match... wait
-//  - Actually: (?<!\$)[\d]+ means "not preceded by $" at the position where digits start.
-//    For "$49.99": position before 4 is $ → lookbehind fails → no match for 49
-//    Position before 9: character is 4 (digit) → lookbehind passes → 9 matches
-```
-
-This is why negative lookbehind can behave unexpectedly on continuous digit strings. For cleaner results, use a boundary:
-
-```js
-// Better: match whole numbers not directly after $
-const text = "Qty: 5 units, Price: $49.99, Discount: 10%";
-const regex = /(?<!\$)\b[\d.]+\b/g;
-// → ["5", "49.99", "10"]
-```
-
-The `\b` word boundary helps isolate the number more reliably.
+The lookbehind rejects a digit preceded by `$`, another digit, or a decimal point. The final lookahead stops a shorter partial match when more digits or a decimal point follow. For currency handling beyond this sample, use a parser that knows the accepted formats.
 
 ## Lookahead and Lookbehind Together
 
@@ -128,7 +103,7 @@ const text = "Username: @john, @jane_doe, @admin, @sara";
 const regex = /(?<=@)[a-z][a-z0-9]*(?![a-z0-9_])/g;
 
 text.match(regex);
-// → ["john", "jane"]  -  "jane_doe" has underscore, "admin" has 5 letters (matches), "sara" matches
+// → ["john", "admin", "sara"]  -  "jane_doe" has an underscore
 ```
 
 Breaking it down:
@@ -164,14 +139,14 @@ const text = "$5.99";
 
 ### 3. Variable-Length Lookbehind in Older Engines
 
-In older JavaScript environments (pre-ES2018), lookbehind **only worked with fixed-length patterns**. Modern engines support variable-length lookbehind, but some regex flavors (like Python's `re` module) still have restrictions.
+Older JavaScript engines did not support lookbehind. Modern JavaScript supports it, including variable-length assertions; Python's `re` requires the lookbehind assertion itself to have fixed width.
 
 ```python
 # Python re  -  lookbehind must be fixed length
 import re
 re.search(r'(?<=\$)\d+', "$49.99")  # ✅ works  -  fixed length
-re.search(r'(?<=\$)\d+\.?\d*', "$49.99")  # ❌ error in basic Python re
-# Use regex module for variable-length lookbehind in Python
+re.search(r'(?<=\$)\d+\.?\d*', "$49.99")  # ✅ also works: only the $ is in the lookbehind
+# re.search(r'(?<=\d+)x', '12x') would raise an error: variable-width assertion
 ```
 
 ### 4. Forgetting That Lookbehind Checks the Character Before the Match
@@ -237,10 +212,10 @@ const dbErrors = logs.filter(line => /(?=.*ERROR)(?=.*db)/.test(line));
 
 | Pattern | Meaning |
 |---------|---------|
-| `(?=abc)` | Preceded by `abc` (zero-width) |
-| `(?!abc)` | Not preceded by `abc` |
-| `(?<=abc)` | Followed by `abc` |
-| `(?<!abc)` | Not followed by `abc` |
+| `(?=abc)` | Followed by `abc` (zero-width) |
+| `(?!abc)` | Not followed by `abc` |
+| `(?<=abc)` | Preceded by `abc` |
+| `(?<!abc)` | Not preceded by `abc` |
 
 ## Test It in Your Browser
 
@@ -248,7 +223,7 @@ No signup. No data uploaded. Everything runs locally in your browser.
 
 👉 **[Try the Regex Tester](/tools/regex-tester)**  -  paste a pattern, write test strings, and see matches highlighted in real time.
 
-Pair it with the **[Regex Cheatsheet](/blog/regex-cheatsheet)** for quick pattern reminders.
+Pair it with the **[Regex Cheatsheet](/tools/regex-cheatsheet)** for quick pattern reminders.
 
 ## When to Use Each
 
@@ -261,4 +236,4 @@ Lookahead and lookbehind are among the most powerful features in modern regex  -
 
 ---
 
-*Toolblip's [regex-tester](/tools/regex-tester) runs entirely in your browser. Your test strings never leave your device.*
+*Toolblip's [regex-tester](/tools/regex-tester) runs entirely in your browser. The match calculation runs locally; inspect request contents if you need to check a sensitive sample.*

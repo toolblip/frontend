@@ -49,6 +49,7 @@ The `&` splits the query parameter. Your backend sees `q=bread` and a second par
 The fix:
 
 ```javascript
+const query = "bread & butter";
 const encoded = encodeURIComponent(query);
 // "bread%20%26%20butter"
 const url = `https://api.example.com/search?q=${encoded}`;
@@ -80,14 +81,12 @@ Double-encoding is insidious because the URL *looks* valid. It passes syntax che
 // Your code
 const slug = encodeURIComponent("hello world"); // "hello%20world"
 
-// Your logging middleware encodes again
-logger.log(`Request: ${url}`); // or any template interpolation
-
-// Your monitoring tool encodes again
-// → "hello%2520world" in logs
+// A second, explicit encode is the bug:
+const encodedAgain = encodeURIComponent(slug);
+console.log(encodedAgain); // "hello%2520world"
 ```
 
-Result: you look at your logs and see `hello%2520world`. You think something is wrong. Nothing is wrong - it's just double-encoded in the display. But if your monitoring scrapes that log and tries to query it, things break.
+Result: you look at your logs and see `hello%2520world`. You think something is wrong. Something encoded the already-encoded value a second time. Template interpolation and logging alone do not percent-encode it.
 
 **Fix:** Track exactly where encoding happens in your stack. Encode at the boundary (when constructing the URL), and nowhere else.
 
@@ -119,14 +118,12 @@ This one is subtler. Your frontend encodes data correctly. But then a proxy, a l
 
 ```javascript
 // Backend receives: ?q=bread%26butter
-// But the framework auto-decodes, and then you do:
-const searchQuery = decodeURIComponent(req.query.q);
-// "bread&butter"
-
-// Then you do:
-// const dbQuery = `SELECT * FROM posts WHERE title LIKE '%${searchQuery}%'`
-// → SQL injection risk if you didn't escape properly
+// Frameworks commonly give you the decoded value:
+const searchQuery = req.query.q; // "bread&butter" in this example
+// Use parameterized queries when sending it to a database.
 ```
+
+Decoding twice can corrupt a value containing literal percent escapes. SQL injection comes from building SQL with string interpolation, not from `decodeURIComponent()` itself.
 
 Actually, in most modern frameworks the auto-decode is fine - but the danger is when you mix raw and decoded values, or when you store the encoded string but display the decoded one inconsistently.
 
@@ -156,7 +153,7 @@ const fullyDecoded = decodeURIComponent(decoded);
 const reEncoded = encodeURIComponent(fullyDecoded);
 ```
 
-You can do this instantly in your browser with the [Toolblip URL Encoder/Decoder](/tools/url-encode) - paste any string, see both encoded and decoded output, and cycle through multiple decode passes.
+You can do this instantly in your browser with the [Toolblip URL Encoder/Decoder](/tools/url-encode) - paste a string, choose encode or decode, and copy the single output. To check another pass, paste that output back and run decode again.
 
 ### Step 3: Check the Raw HTTP Request
 
@@ -173,27 +170,17 @@ Look at exactly what's being sent. Is `%20` in the URL, or is it a literal space
 Standard Base64 uses `+`, `/`, and `=` - characters that conflict with URL encoding. When you're putting Base64 in a URL parameter, you need the **URL-safe variant**:
 
 ```
-Standard Base64:  Y+Bz8A==  ← contains +, /, =
-URL-safe Base64:  Y-Bz8A    ← uses - and _ instead, drops =
+Standard Base64:  +/8=  ← contains +, /, =
+URL-safe Base64:  -_8   ← replaces + and /, then removes padding
 ```
 
 If you're putting tokens, signed data, or encoded payloads in URLs, URL-safe Base64 isn't optional - standard Base64 will break your URLs.
 
-The [Toolblip Base64 encoder](/tools/base64-encoder-decoder) supports URL-safe mode. Paste any string, check "URL-safe output," and get a variant that won't corrupt your URLs.
+The [Toolblip Base64 encoder](/tools/base64-encoder-decoder) handles standard Base64 text, without a URL-safe toggle. For base64url, replace `+` with `-`, `/` with `_`, and remove trailing `=` in code.
 
-## Real-World Example: The Google Search Bug
+## Trace an encoding bug
 
-This actually happened. An engineering team was building a search-as-you-type feature. The frontend correctly encoded the query and sent it to their API. Their API logged the raw incoming request. A monitoring tool scraped those logs and built dashboards showing "top searches."
-
-The monitoring tool URL-decoded the log entries. One of their top searches: `javascript%20tutorial`. Decoded: `javascript tutorial`. Fine.
-
-But a search for `C%2B%2B` (C++) was stored in logs as `C%2B%2B`. The monitor decoded it once: `C++`. Fine. Then it encoded it again to store in a different system: `C%2B%2B`.
-
-Then a different system read that as double-encoded: `C%252B%252B` → `C%2B%2B` → `C++`.
-
-The loop continued. Eventually, one system decoded three times and got: `C ` (just the letter C). C++ searches were silently being attributed to searches for just "C". Nobody caught it for months.
-
-**The lesson:** The problem wasn't any single encoding operation. It was the *inconsistent handling* of encoding across systems that were supposed to share data.
+If a query arrives as `C%252B%252B`, decode one layer to get `C%2B%2B`, then another to get `C++`. Trace where each layer was added. Do not repeatedly decode unknown input until it “looks right”; a literal percent escape may be meaningful data.
 
 ## Quick Reference
 
@@ -210,7 +197,7 @@ The loop continued. Eventually, one system decoded three times and got: `C ` (ju
 No signup. No server round-trips. Everything runs in your browser.
 
 - [URL Encoder/Decoder](/tools/url-encode) - encode, decode, and debug percent-encoded strings
-- [Base64 Encode/Decode](/tools/base64-encoder-decoder) - with URL-safe mode for API tokens and URL payloads
+- [Base64 Encode/Decode](/tools/base64-encoder-decoder) - standard Base64 text conversion
 
 ## Bottom Line
 
