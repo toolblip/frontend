@@ -4,13 +4,25 @@ on:
   pull_request:
     branches: [main]
     paths-ignore:
+      - README.md
+      - AGENTS.md
+      - CLAUDE.md
+      - "docs/**/*.md"
       - 'scripts/qa/**'
       - '.github/workflows/tool-qa*.yml'
   push:
     branches: [main]
     paths-ignore:
+      - README.md
+      - AGENTS.md
+      - CLAUDE.md
+      - "docs/**/*.md"
       - 'scripts/qa/**'
       - '.github/workflows/tool-qa*.yml'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   auth-e2e:
