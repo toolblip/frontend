@@ -180,7 +180,7 @@ export default function Footer() {
               <BrandMark size={28} />
               <span>Toolblip</span>
             </div>
-            <p>Quick, private, well-made tools for developers and tinkerers. No signup, no surveillance, just utility.</p>
+            <p>Free browser tools for developers and tinkerers. Most process input in your browser; accounts and some features use online services.</p>
           </div>
           <div>
             <h2>Tools</h2>
@@ -213,7 +213,7 @@ export default function Footer() {
           <div>
             <h2>Legal</h2>
             <ul>
-              <li><Link href="/privacy">Privacy</Link></li>
+              <li><Link href="/privacy">Privacy policy</Link></li>
               <li><Link href="/terms">Terms</Link></li>
             </ul>
           </div>

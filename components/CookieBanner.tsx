@@ -34,7 +34,7 @@ export default function CookieBanner() {
     >
       <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center gap-4 text-sm">
         <p className="text-gray-300 flex-1 leading-relaxed">
-          We use analytics cookies to understand how tools are used. No personal data is sold or shared.{' '}
+          We use analytics cookies to understand how tools are used.{' '}
           <a href="/privacy" className="underline text-red-400 ml-1 hover:text-red-300 transition-colors">
             Privacy policy
           </a>

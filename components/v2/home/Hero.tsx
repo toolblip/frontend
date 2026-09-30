@@ -8,7 +8,7 @@ export default function Hero({ toolCount }: { toolCount: number }) {
       <div className="tb-v2-container">
         <div className="tb-v2-hero-grid">
           <div>
-            <div className="tb-v2-kicker">{toolCount} tools · 100% free · runs in your browser</div>
+            <div className="tb-v2-kicker">{toolCount} tools · free browser tools</div>
             <h1>
               The dev tools<br />
               you actually<br />
@@ -16,7 +16,7 @@ export default function Hero({ toolCount }: { toolCount: number }) {
             </h1>
             <p className="tb-v2-hero-sub">
               JSON formatter, Base64, QR generator, word counter  -  rebuilt clean.
-              No signup. No tracking. No server round-trips. Just paste and go.
+              These tools process your input in your browser. Just paste and go.
             </p>
             <div className="tb-v2-hero-cta">
               <Link href="/tools" className="tb-v2-btn tb-v2-btn-primary tb-v2-btn-lg">
@@ -27,9 +27,9 @@ export default function Hero({ toolCount }: { toolCount: number }) {
               </Link>
             </div>
             <div className="tb-v2-hero-chips">
-              <span className="tb-v2-chip"><IconShield /> Privacy-first</span>
-              <span className="tb-v2-chip"><IconZap /> No signup</span>
-              <span className="tb-v2-chip"><IconGift /> No tracking</span>
+              <span className="tb-v2-chip"><IconShield /> Local processing</span>
+              <span className="tb-v2-chip"><IconZap /> Free browser tools</span>
+              <span className="tb-v2-chip"><IconGift /> Ready to use</span>
             </div>
           </div>
           <div>
