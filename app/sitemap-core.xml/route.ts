@@ -23,6 +23,7 @@ export async function GET(): Promise<Response> {
     { url: `${baseUrl}/sponsors`, changeFrequency: 'daily', priority: 0.6 },
     { url: `${baseUrl}/sponsors/archive`, changeFrequency: 'monthly', priority: 0.5 },
     { url: `${baseUrl}/about`, changeFrequency: 'monthly', priority: 0.5 },
+    { url: `${baseUrl}/products`, changeFrequency: 'monthly', priority: 0.5 },
     { url: `${baseUrl}/seo`, changeFrequency: 'monthly', priority: 0.5 },
     { url: `${baseUrl}/api-docs`, changeFrequency: 'monthly', priority: 0.5 },
   ];
