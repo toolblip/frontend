@@ -31,7 +31,7 @@ Every image format makes different trade-offs. Understanding those trade-offs is
 | PNG    | Graphics, logos, screenshots | Yes | Lossless |
 | WebP   | Everything - modern replacement | Yes | Both |
 
-**WebP** is the format you should reach for first. It produces files 25–35% smaller than JPEG at equivalent quality, and supports both lossy and lossless compression with transparency. The only reason not to use WebP is browser compatibility - and at this point, [WebP has 98%+ global browser support](https://caniuse.com/webp).
+**WebP** is the format you should reach for first. It supports lossy and lossless compression with transparency. Compare output size and visual quality on your own images, and check browser support for your audience.
 
 ## When to Use Each Format
 
@@ -55,19 +55,18 @@ Every image format makes different trade-offs. Understanding those trade-offs is
 
 Traditionally, converting images meant uploading them to a server or downloading a desktop app like Photoshop. That's slow, raises privacy concerns (your images are on someone else's machine), and requires software installation.
 
-Browser-based conversion uses the Canvas API. JavaScript loads your image into memory, draws it onto an invisible `<canvas>` element, and then exports it in the desired format - entirely on your device. **No upload. No server. No third party.** Your image never leaves your browser.
+Browser-based conversion uses the Canvas API. JavaScript loads your image into memory, draws it onto an invisible `<canvas>` element, and then exports it in the desired format - entirely on your device. The conversion action runs locally, without submitting the image for processing.
 
 This means:
-- ⚡ Conversion is nearly instant
-- 🔒 Your images stay private
-- 🌐 It works offline once the page loads
-- 📱 It works on any device - phone, tablet, Chromebook
+- Conversion time depends on image size and device memory
+- Check your browser extensions and organization policy before using sensitive images
+- Browser support and offline behavior depend on the device and loaded page assets
 
 ## The Privacy Benefit of Client-Side Processing
 
 When you use a web-based image converter that requires uploads, you're trusting a third party with your data. That image might be stored on their servers, logged in their analytics, or exposed to their employees.
 
-With client-side processing, the math is simple: if the image never leaves your device, nobody else can see it. This matters for:
+With client-side processing, the math is simple: the transform does not require an image upload. Page scripts, extensions, and your work environment still affect how sensitive images should be handled. This matters for:
 - **Business documents** with sensitive layouts
 - **Personal photos** you don't want uploaded to random servers
 - **Client work** under NDA where data handling matters
@@ -82,7 +81,7 @@ If you're ready to start optimizing, Toolblip has everything you need - all proc
 
 ## Quick Tips for Better Image Optimization
 
-1. **Set a quality level.** For JPEG and lossy WebP, 80% quality is usually the sweet spot - nearly invisible difference in quality, significant file size reduction.
+1. **Set a quality level.** For JPEG and lossy WebP, try a few quality settings and compare the saved size with the visible result.
 2. **Resize before uploading.** A 4000px-wide image displayed at 400px wide is wasteful. Resize to the maximum display size.
 3. **Use responsive images.** Serve different sizes for different screens. A phone shouldn't download a 2MB hero image.
 4. **Consider lazy loading.** Images below the fold don't need to load immediately. Add `loading="lazy"` to your `<img>` tags.

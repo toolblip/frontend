@@ -35,7 +35,7 @@ A JSON formatter takes minified or poorly-structured JSON and pretty-prints it w
 - **Syntax highlighting** so you can distinguish strings from numbers from booleans
 - **Line breaks** between top-level keys
 
-The same tool usually doubles as a **JSON validator** - it tells you whether your JSON is actually valid, and pinpoints the exact character where an error occurs.
+The same tool usually doubles as a **JSON validator** - it tells you whether your JSON is actually valid, and shows parser error text. The displayed message is not guaranteed to include a line or column.
 
 ## Why JSON Goes Wrong
 
@@ -110,7 +110,7 @@ This is the difference between spending 20 minutes hunting for a missing quote a
 
 ### 3. Collapsible Tree View
 
-For deeply nested JSON (API responses often are), a tree view that lets you collapse and expand nodes is essential:
+For deeply nested JSON, the separate [JSON Tree View](/tools/json-tree-view) lets you collapse and expand nodes:
 
 ```javascript
 {
@@ -261,7 +261,7 @@ const compact = JSON.stringify(obj);           // minified
 
 ## Try It Now
 
-The [JSON Formatter on Toolblip](/tools/json-formatter) validates, formats, and highlights your JSON in real-time as you type. It pinpoints errors to the exact character and lets you explore nested structures with a collapsible tree view.
+The [JSON Formatter on Toolblip](/tools/json-formatter) validates, formats, and minifies JSON as you type. It shows parser errors in its text output. Use [JSON Tree View](/tools/json-tree-view) separately to explore nested structures.
 
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: "UUID Generator for API Testing: Fake IDs Fast"
 description: >-
-  A uuid generator for api testing gives you valid, unique IDs for fixtures and payloads. Generate single or bulk UUIDs in the browser, no install required.
+  A uuid generator for api testing gives you valid, freshly generated IDs for fixtures and payloads. Generate v4 UUIDs and copy recent IDs in the browser, no install required.
 slug: 2026-05-27-uuid-generator-for-api-testing
 date: "2026-05-27T00:00:00.000Z"
 category: Developer Tools
@@ -62,11 +62,11 @@ If you need the same ID referenced in two places, a parent record and a child th
 
 The `orderId` in the line item must match the order's `id` character for character. Generate the order ID first, then reuse it.
 
-## Bulk uuid generator online for seeding test data
+## Collect recent UUIDs for small fixtures
 
-One UUID is fine for a single fixture. Real test suites need more. When you seed a table with a hundred rows or stress-test pagination, you want a bulk uuid generator online so you can generate multiple uuids at once and paste a clean list.
+Toolblip generates one v4 UUID per click and keeps the five most recent IDs. Copy that newline-separated history for a small fixture. For hundreds of rows, generate IDs in a script with your runtime’s UUID library.
 
-A good batch tool lets you set the count, then outputs one UUID per line or as a JSON array. The array form drops straight into a fixture:
+If your fixture needs a JSON array, add the quotes and commas yourself:
 
 ```json
 {
@@ -79,9 +79,9 @@ A good batch tool lets you set the count, then outputs one UUID per line or as a
 }
 ```
 
-Generating multiple uuids at once also matters for negative tests. To confirm your uniqueness constraint actually fires, you need one duplicate among many valid values. Generate a batch, then deliberately repeat one entry and assert the API rejects it.
+Generating multiple uuids at once also matters for negative tests. To confirm your uniqueness constraint actually fires, you need one duplicate among many valid values. Generate a few IDs, then deliberately repeat one entry and assert the API rejects it.
 
-The reason to generate multiple uuids at once instead of looping in code is reproducibility. A static list in your fixture is the same on every run. Generating inside the test introduces fresh values each time, which makes a failing assertion harder to reproduce and debug.
+The reason to save generated IDs in a fixture instead of generating them during each test run is reproducibility. A static list in your fixture is the same on every run. Generating inside the test introduces fresh values each time, which makes a failing assertion harder to reproduce and debug.
 
 ## An online uuid generator for developers means no install
 
@@ -89,7 +89,7 @@ You could pull in a library, write a script, and run it from a terminal. For a q
 
 The no-install approach matters most when you are not in your own environment. You might be reviewing a teammate's pull request on a borrowed machine, or testing an API from a documentation page, or working inside a restricted container where you cannot add dependencies. A browser tool works the same everywhere and adds nothing to your project's lock file.
 
-It also keeps your test data out of any external system. The generation happens in your browser, so the IDs you create for a sensitive fixture never leave the page. That is the same client-side principle behind tools like the [Base64 encoder and decoder](https://toolblip.com/tools/base64-encoder-decoder), which transforms your data locally rather than uploading it.
+It also keeps your test data out of any external system. The generation happens in your browser, so generation itself runs locally. That is the same client-side principle behind tools like the [Base64 encoder and decoder](https://toolblip.com/tools/base64-encoder-decoder), which transforms your data locally rather than uploading it.
 
 ## Validating UUIDs before they reach your API
 
@@ -134,7 +134,7 @@ When you paste raw generated output into a file, run it through the [JSON format
 
 ## Putting it together in a test workflow
 
-A repeatable flow looks like this. Decide how many IDs the test needs. For one fixture, generate a single UUID. For seed data, use a bulk uuid generator online to generate multiple uuids at once. Paste the values into your JSON, reusing the same ID anywhere a relationship requires it.
+A repeatable flow looks like this. Decide how many IDs the test needs. For one fixture, generate a single UUID. For a small fixture, generate up to five recent IDs and copy the newline-separated list. For larger seed data, use a script. Paste the values into your JSON, reusing the same ID anywhere a relationship requires it.
 
 Then validate. Run your version 4 pattern over the IDs to confirm every one is well-formed. Format the fixture so the payload is readable. Now your test fails only when the API misbehaves, never because the test data was malformed.
 
@@ -142,6 +142,6 @@ That discipline pays off most in the negative cases. Valid UUIDs let you test th
 
 ## Generate your test UUIDs now
 
-A uuid generator for api testing removes the smallest, most annoying friction in writing API tests: producing valid, unique IDs that match production format. Generate them in the browser, with no install, and paste them straight into your fixtures.
+A uuid generator for api testing removes the smallest, most annoying friction in writing API tests: producing valid, freshly generated IDs that match production format. Generate them in the browser, with no install, and paste them straight into your fixtures.
 
-Start with the [JSON formatter on Toolblip](https://toolblip.com/tools/json-formatter) to keep those UUID-heavy fixtures clean and readable, then validate every ID against your pattern before the test runs. Your assertions will finally fail for the right reasons.
+Start with the [UUID Generator on Toolblip](/tools/uuid-generator), then use the [JSON formatter](https://toolblip.com/tools/json-formatter) to keep those UUID-heavy fixtures clean and readable, then validate every ID against your pattern before the test runs. Your assertions will finally fail for the right reasons.

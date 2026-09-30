@@ -1,9 +1,7 @@
 ---
-title: The Complete Character Limit Reference for Every Platform
+title: "Character Counts for Social Posts: Check the Composer"
 description: >-
-  Twitter/X: 280, LinkedIn: 3000, Instagram: 2200, TikTok: 150, YouTube: 5000.
-  Here's every character limit that matters for social media managers and
-  developers.
+  Understand X weighted counts and check other platforms in their current composer.
 slug: social-media-character-limits
 date: 2026-04-14T00:00:00.000Z
 category: Reference
@@ -18,102 +16,37 @@ readingTime: 4 min
 featuredImage: 'https://toolblip.com/api/og?title=The%20Complete%20Character%20Limit%20Reference%20for%20Every%20Platform&category=Reference&date=2026-04-14'
 ---
 
-# The Complete Character Limit Reference for Every Platform
+# Character Counts for Social Posts: Check the Composer
 
-Every social platform has its own character limit - some for historical reasons, some for technical constraints, some for engagement optimization. Here's every limit that matters.
+Each platform counts text differently, and limits vary by post type and account. Use the platform’s composer as the final check. The [Character Counter](/tools/character-counter) reports raw totals, counts without spaces or newlines, letters, and digits; it does not calculate remaining platform allowance.
 
-## Quick Reference Table
+## X ordinary posts
 
-| Platform | Limit | Notes |
-|----------|-------|-------|
-| Twitter / X | 280 | Hard limit, enforced |
-| Threads | 500 | Includes links |
-| LinkedIn | 3000 | Post body |
-| Instagram | 2200 | Caption |
-| Facebook | 63206 | Very generous |
-| TikTok | 150 | Caption |
-| YouTube | 5000 | Description |
-| Pinterest | 500 | Description |
-| Discord | 2000 | Message |
-| Reddit | 40000 | Post body |
+X allows 280 weighted characters for ordinary posts. Each URL counts as 23 characters regardless of its literal length, and emoji sequences count as two under [X’s counting rules](https://docs.x.com/fundamentals/counting-characters). [X Help](https://help.x.com/en/using-x/types-of-posts) describes Premium long posts separately, up to 25,000 characters. Draft in the X composer to check the applicable account and post type.
 
-## Twitter / X - 280 Characters
+A JavaScript string’s `.length` counts UTF-16 code units. That is useful for debugging, but it is not X’s weighted post count. Toolblip’s counter does not implement X’s URL or emoji weights.
 
-Twitter's famous 280-character limit is one of the most misunderstood constraints on the web. What most people don't know:
+## Other social surfaces
 
-**What's counted as characters:**
-- Every letter, number, and space
-- Emojis count as 2 characters each (except certain Japanese emojis)
+| Surface | What to check before publishing |
+|---------|---------------------------------|
+| LinkedIn post | The current composer for the account and post type |
+| Instagram caption | The current caption field and preview |
+| Threads post | The current composer and link handling |
+| TikTok caption | The native composer, or the API documentation if posting through an API |
+| YouTube title or description | The field you are editing in YouTube Studio |
+| Pinterest, Discord, Reddit | The specific post or message field |
 
-**What's NOT counted:**
-- URLs (they're auto-shortened to 23 characters regardless of actual length - so don't bother counting)
+Do not treat a number for one API as the native app’s universal limit. For example, TikTok’s [Content Posting API](https://developers.tiktok.com/docs/en/content-posting-api-reference-direct-post) documents a 2,200 UTF-16-unit maximum for its video `title` field. That applies to that API field, not every TikTok caption surface.
 
-**Tips:**
-- Use the character counter to see exactly what Twitter counts
-- The limit includes `@` mentions and `#` hashtags
-- If you need more: reply to your own tweet to create a thread
+## Count drafts without a preset
 
-## Threads by Meta - 500 Characters
+1. Draft the post in [Toolblip’s Character Counter](/tools/character-counter) to see raw totals.
+2. Paste it into the platform’s composer to check that surface’s limit and preview.
+3. Trim or move content if the composer warns you. Repeat after adding links or emoji.
 
-Threads posts follow Instagram's model. Links count toward the limit.
+For SEO meta descriptions, inspect the actual search snippet rather than treating a character number as a guaranteed display cutoff. Toolblip’s counter has no meta-description preset.
 
-## LinkedIn - 3,000 Characters
-
-LinkedIn's 3000-character limit is generous but don't use all of it. Studies consistently show that 150-300 character posts get more engagement. The counter helps you stay concise.
-
-**LinkedIn also has:**
-- Headline: 220 characters
-- "About" section: 2000 characters
-- Comment: 1250 characters
-
-## Instagram - 2,200 Characters
-
-Instagram captions over 125 characters get less engagement on average. Keep it punchy.
-
-**Instagram also has:**
-- Bio: 150 characters
-- Hashtag limit: 30 hashtags per post
-- Caption on carousel: same 2200
-
-## TikTok - 150 Characters
-
-TikTok captions are short and punchy. 150 characters forces brevity. Use keywords early - the caption gets truncated after ~100 characters in the feed.
-
-## YouTube - 5,000 Characters
-
-YouTube descriptions get truncated after the first 100-150 characters in mobile search results. Put the most important information first.
-
-**YouTube also has:**
-- Title: 100 characters (beyond this gets truncated in search)
-- Channel description: 5000 characters
-
-## Meta Description Tags - 160 Characters
-
-Not a social platform, but if you're writing meta descriptions for SEO:
-
-Google typically displays the first 150-160 characters of a meta description in search results. The counter tool on Toolblip has a specific "meta description" preset.
-
-## How to Count Characters Without Messing Up
-
-When writing for a platform with a character limit:
-
-1. **Draft without looking at the counter** - write naturally first
-2. **Then check** - copy into the character counter tool
-3. **Trim methodically** - remove filler words, redundant phrases
-4. **Check the specific preset** - use Twitter, LinkedIn, or meta tag presets to see the relevant limit
-
-## Free Tools
-
-The most useful tool is one that shows:
-- Total character count
-- Total byte count
-- Platform-specific limits overlaid
-- Live remaining count as you type
-
-👉 **[Character Counter with all platform presets →](/tools/character-counter)**
-
-See exactly how Twitter, LinkedIn, Instagram, and meta tag limits compare against your text in real time.
-
-## The Meta Tag Rule
+## If you build a character-limited form
 
 If you're a developer building UGC forms that accept social media content: always show the character counter with the relevant limit. Users routinely exceed limits and it's frustrating to lose content when submitting.

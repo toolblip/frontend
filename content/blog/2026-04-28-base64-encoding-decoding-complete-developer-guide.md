@@ -46,12 +46,15 @@ const text = "Hello, World!";
 const encoded = Buffer.from(text).toString("base64");
 ```
 
-**The pitfall most developers hit:** non-ASCII characters. `btoa()` fails on `"café"` in JavaScript. Handle it properly:
+**The pitfall most developers hit:** non-ASCII characters. `btoa("café")` succeeds because `é` fits in Latin-1, but it encodes Latin-1 bytes, not UTF-8. An emoji throws. Encode UTF-8 bytes first:
 
 ```javascript
-const encoded = btoa(unescape(encodeURIComponent("café")));
-// To decode:
-const decoded = decodeURIComponent(escape(atob(encoded)));
+const bytes = new TextEncoder().encode("café 🚀");
+const encoded = btoa(String.fromCharCode(...bytes));
+const decoded = new TextDecoder().decode(
+  Uint8Array.from(atob(encoded), c => c.charCodeAt(0))
+);
+// decoded === "café 🚀"
 ```
 
 ## Base64 → Text
@@ -104,7 +107,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
 9TXL0Y4OHwAAAABJRU5ErkJggg==" alt="Red dot" />
 ```
 
-To convert an image to Base64 without uploading it anywhere, use the **[Toolblip Base64 Encoder](/tools/base64-encoder-decoder)** - drag in a PNG, JPEG, WebP, or SVG, and it generates the data URL instantly in your browser. Your image never touches a server.
+To convert an image to Base64 without uploading it anywhere, use the **[Base64 Image Converter](/tools/images/base64-image-converter)** for supported image files. The [text Base64 tool](/tools/base64-encoder-decoder) has no file input.
 
 ## Base64 Image → File
 
@@ -165,23 +168,23 @@ REST APIs love returning Base64-encoded data. Common patterns:
 **Decode in JavaScript:**
 ```javascript
 const response = await fetch("/api/user/123");
-const { avatar, document } = await response.json();
+const { avatar, document: documentBase64 } = await response.json();
 
 // Render avatar directly as data URL
 const avatarUrl = `data:image/png;base64,${avatar}`;
 document.querySelector("#avatar").src = avatarUrl;
 
 // Decode document
-const docBytes = Uint8Array.from(atob(document), c => c.charCodeAt(0));
+const docBytes = Uint8Array.from(atob(documentBase64), c => c.charCodeAt(0));
 const docBlob = new Blob([docBytes], { type: "application/pdf" });
 ```
 
 **Decode in Python:**
 ```python
 import base64
-import json
+import requests
 
-response = requests.get("/api/user/123")
+response = requests.get("https://api.example.com/user/123")  # replace with your API URL
 data = response.json()
 
 avatar_bytes = base64.b64decode(data["avatar"])
@@ -191,16 +194,16 @@ with open("avatar.png", "wb") as f:
 
 ## JWT Payload Inspection
 
-Every JWT has three Base64-encoded parts separated by dots. You can read the payload without any library:
+A compact signed JWT (JWS) has three dot-separated base64url segments; a compact encrypted JWT (JWE) has five. This complete signed fixture is for reading the claims. Decoding does not verify its signature.
 
 **JavaScript:**
 ```javascript
-const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c3JfMTIzIiwibmFtZSI6IkFhcm9uIiwiaWF0IjoxNzQ...";
-const [, payload] = token.split(".");
-const decoded = JSON.parse(atob(payload));
-console.log(decoded.sub); // usr_123
-console.log(decoded.name); // Aaron
-console.log(new Date(decoded.exp * 1000)); // Expiration date
+const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
+const part = token.split(".")[1];
+const base64 = part.replace(/-/g, "+").replace(/_/g, "/");
+const bytes = Uint8Array.from(atob(base64.padEnd(Math.ceil(base64.length / 4) * 4, "=")), c => c.charCodeAt(0));
+const decoded = JSON.parse(new TextDecoder().decode(bytes));
+console.log(decoded.name); // John Doe
 ```
 
 **Python:**
@@ -208,12 +211,11 @@ console.log(new Date(decoded.exp * 1000)); // Expiration date
 import base64
 import json
 
-token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c3JfMTIzIiwiY25hbWUiOiJhcm9vbiJ9.SflKxwR..."
-
-# JWT uses "URL-safe" Base64 variant: replace - with + and _ with /
+token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
 payload = token.split(".")[1]
-payload += "=" * (4 - len(payload) % 4)
+payload += "=" * ((-len(payload)) % 4)
 decoded = json.loads(base64.urlsafe_b64decode(payload))
+print(decoded["name"])  # John Doe
 ```
 
 > **Note:** You can decode a JWT payload instantly in the browser with the **[Toolblip JWT Decoder](/tools/jwt-decoder)** - no library, no install, entirely client-side.
@@ -222,12 +224,12 @@ decoded = json.loads(base64.urlsafe_b64decode(payload))
 
 Many config formats (Docker, Docker Compose, `.env` files, SSH keys) use Base64 to store binary data as text.
 
-**Dockerfile - encode a file into an ENV variable:**
-```dockerfile
-# Build args come in as strings; encode for safe transport
-ARG SSL_CERT
-ENV SSL_CERT_DATA=$(echo -n "$SSL_CERT" | base64)
+**Host-side Base64 for a nonsensitive constant:**
+```bash
+printf '%s' 'example-value' | base64
 ```
+
+Dockerfile `ENV` does not run shell commands. Base64 does not protect secrets, and values baked into image layers remain accessible. Use runtime secret injection for credentials.
 
 **docker-compose.yml - storing credentials:**
 ```yaml
@@ -252,39 +254,31 @@ SERVICE_ACCOUNT_CREDENTIALS={"type":"service_account",...}
 
 ### `InvalidCharacterError` in JavaScript
 
-This fires when `atob()` or `btoa()` hits a character outside the Latin1 range. Fix:
+`btoa()` accepts code units through U+00FF, but it does not encode text as UTF-8. `btoa("café")` returns `Y2Fm6Q==`, while `btoa("🚀")` throws. For UTF-8 text, use `TextEncoder` and `TextDecoder`:
 
 ```javascript
-// WRONG - fails on non-ASCII
-btoa("café"); // Error
-
-// RIGHT
-btoa(unescape(encodeURIComponent("café")));
-atob(decodeURIComponent(escape(atob(encoded))));
-```
-
-Or use the native `TextEncoder` and `TextDecoder`:
-
-```javascript
-const encoder = new TextEncoder();
-const decoder = new TextDecoder();
-
-const encoded = btoa(String.fromCharCode(...new Uint8Array(encoder.encode("café"))));
-const decoded = decoder.decode(Uint8Array.from(atob(encoded), c => c.charCodeAt(0)));
+const bytes = new TextEncoder().encode("café 🚀");
+const encoded = btoa(String.fromCharCode(...bytes));
+const decoded = new TextDecoder().decode(
+  Uint8Array.from(atob(encoded), c => c.charCodeAt(0))
+);
+// decoded === "café 🚀"
 ```
 
 ### Wrong Padding
 
-Base64 strings should end with `=` or `==` for padding. If you're dealing with a server that strips padding:
+Base64 uses zero, one, or two padding characters as needed. Some decoders accept unpadded input; when a strict decoder needs padding, add only enough to reach a multiple of four:
 
 ```python
 import base64
 
 # Add padding if missing
+encoded = "SGk"  # unpadded Base64 for Hi
 def pad(s):
-    return s + "=" * (4 - len(s) % 4)
+    return s + "=" * ((-len(s)) % 4)
 
 decoded = base64.b64decode(pad(encoded))
+print(decoded.decode("utf-8"))  # Hi
 ```
 
 ### URL-Safe Base64 vs. Standard Base64
@@ -311,7 +305,7 @@ const urlSafe = standard.replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "
 
 ## Try It in Your Browser
 
-Everything in this guide - text encoding, image conversion, data URL generation - works entirely in your browser with **[Toolblip Base64 Encoder/Decoder](/tools/base64-encoder-decoder)**. No upload. No server call. No account.
+Use the **[Base64 Encoder/Decoder](/tools/base64-encoder-decoder)** for text and the **[Base64 Image Converter](/tools/images/base64-image-converter)** for supported image files. Both perform the conversion in your browser.
 
 Open a tab, paste, and you're done.
 

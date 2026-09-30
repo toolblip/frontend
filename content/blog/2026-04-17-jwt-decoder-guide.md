@@ -32,7 +32,7 @@ A JWT looks like this:
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
 ```
 
-It has three parts separated by dots:
+This compact signed JWT (JWS) has three dot-separated parts. An encrypted compact JWT (JWE) has five parts and cannot be read by simply decoding a payload:
 
 | Part | Name | Purpose |
 |------|------|---------|
@@ -130,7 +130,7 @@ That said, a decoder helps you diagnose validation failures:
 | `"Signature verification failed"` | The secret key or public key doesn't match what was used to sign |
 | `"Token expired"` | The `exp` claim is in the past |
 | `"Token not yet valid"` | The `nbf` claim is in the future |
-| `"Invalid signature"` | The algorithm doesn't match between client and server |
+| `"Invalid signature"` | The key, algorithm, token bytes, or verification configuration may be wrong |
 
 ## Common JWT Pitfalls
 
@@ -151,8 +151,7 @@ Tokens in URLs can end up in server logs, browser history, and referrer headers.
 The `alg: "none"` vulnerability allows attackers to strip the signature. Always validate the algorithm server-side and reject unexpected algorithms:
 
 ```javascript
-// Dangerous - allows alg:none
-const decoded = jwt.verify(token, secret);
+// Review your library version and reject unexpected algorithms
 
 // Safe - explicitly specify expected algorithm
 const decoded = jwt.verify(token, secret, { algorithms: ['HS256'] });
@@ -164,12 +163,15 @@ You can decode a JWT without a library:
 
 ```javascript
 function decodeJWT(token) {
-  const [headerB64, payloadB64, signature] = token.split('.');
+  const parts = token.split('.');
+  if (parts.length !== 3) throw new Error("Expected a compact signed JWT");
+  const [headerB64, payloadB64, signature] = parts;
   
   const decodeBase64 = (str) => {
     const base64 = str.replace(/-/g, '+').replace(/_/g, '/');
     const padded = base64 + '='.repeat((4 - base64.length % 4) % 4);
-    return JSON.parse(atob(padded));
+    const bytes = Uint8Array.from(atob(padded), c => c.charCodeAt(0));
+    return JSON.parse(new TextDecoder().decode(bytes));
   };
   
   return {
@@ -179,12 +181,15 @@ function decodeJWT(token) {
   };
 }
 
+const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
 const { header, payload } = decodeJWT(token);
 console.log(payload.sub); // "1234567890"
-console.log(payload.exp); // Unix timestamp - check if expired
+console.log(payload.exp); // undefined
 ```
 
 > **Note:** This decodes but does NOT verify the signature. Always use a proper library like `jose` (Node.js/browser) or `pyjwt` (Python) for verification.
+
+This sample has no `exp` claim, so the second log prints `undefined`. If a token has `exp`, compare its Unix timestamp with the current time after verifying the signature with a trusted library.
 
 ## The Three Types of JWT Claims
 

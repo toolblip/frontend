@@ -32,7 +32,7 @@ const wordCount = text.trim().split(/\s+/).length;
 // With punctuation stripped
 const cleanText = text.replace(/[^\w\s]/g, '');
 const cleanWordCount = cleanText.trim().split(/\s+/).length;
-// → 8
+// → 9 (punctuation was not a word)
 ```
 
 **Common use cases:**
@@ -72,21 +72,21 @@ text.replace(/\s/g, '').length;
 // → 13 (same here, but matters for multi-byte chars)
 
 const tweet = "Just shipped a new feature! 🚀";
-tweet.length;          // → 31 (code units)
-[...tweet].length;     // → 29 (actual characters, emoji = 2 code units)
+tweet.length;          // → 30 (UTF-16 code units)
+[...tweet].length;     // → 29 (Unicode code points; the emoji uses 2 UTF-16 units)
 ```
 
 **Where character limits bite you:**
 
 | Context | Typical Limit | Notes |
 |---|---|---|
-| Twitter/X post | 280 chars | Counts emoji as 2 |
+| X ordinary post | 280 weighted characters | URLs count as 23; emoji sequences count as 2 per X rules |
 | SMS segment | 160 chars | UCS-2 encoding |
 | URL query string | ~2000 | Browser/server dependent |
 | Database VARCHAR | Varies | Check your schema |
 | UI label | Design-dependent | Test with real content |
 
-[Toolblip's Character Counter](/tools/character-counter) gives you total characters, characters without spaces, and a live Twitter-length preview.
+[Toolblip's Character Counter](/tools/character-counter) shows total characters, counts without spaces or newlines, letters, and digits. For X’s weighted count, check its composer.
 
 ## Case Converter  -  `/tools/case-converter`
 
@@ -241,7 +241,7 @@ function countSyllables(word) {
 }
 
 fleschReadingEase("The quick brown fox jumps over the lazy dog.");
-// → ~82 (fairly easy)
+// → 94.3 with this rough syllable helper
 ```
 
 **Score interpretation (Flesch Reading Ease):**
@@ -265,12 +265,12 @@ For user-facing developer content (docs, README, error messages), aim for 60–8
 | Utility | What it measures | Best tool |
 |---|---|---|
 | [Word Counter](/tools/word-counter) | Word, sentence, paragraph count | In-browser, instant |
-| [Character Counter](/tools/character-counter) | Characters with/without spaces, Twitter preview | In-browser, instant |
+| [Character Counter](/tools/character-counter) | Characters with/without spaces, letters, digits | In-browser, instant |
 | [Case Converter](/tools/case-converter) | camelCase, snake_case, kebab-case, etc. | In-browser, instant |
 | [Text Sorter](/tools/text-line-sorter) | Sort, reverse, randomize, deduplicate lines | In-browser, instant |
 | [Readability Score](/tools/readability-score) | Flesch scores, grade level, syllable count | In-browser, instant |
 
-All five tools run entirely in your browser. No data is sent to any server  -  which matters when you are working with proprietary copy, internal documentation, or anything you would rather not upload.
+All five tools run entirely in your browser. The text operations run locally  -  which matters when you are working with proprietary copy, internal documentation, or anything you would rather not upload.
 
 ## Put It Together
 

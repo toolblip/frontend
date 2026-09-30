@@ -1,6 +1,6 @@
 ---
 title: "Debug JWT Tokens Without a Library: Base64 + JSON View in Your Browser"
-description: "Every JWT is just Base64-encoded JSON with a signature. Learn how to decode and inspect JWT claims in your browser - no npm install, no external API calls, no library required."
+description: "A compact signed JWT has three base64url segments; encrypted JWTs differ. Learn how to decode and inspect JWT claims in your browser - no npm install, no external API calls, no library required."
 date: '2026-04-23'
 category: Developer Tools
 tags:
@@ -21,13 +21,13 @@ featuredImage: 'https://toolblip.com/api/og?title=Debug%20JWT%20Tokens%20Without
 
 If you've ever stared at a JWT like `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c` and wondered what the hell it actually says - you're not alone.
 
-JWTs are everywhere in modern web development. They power API authentication, OAuth tokens, session management, and more. But debugging them shouldn't require installing a library, spinning up a debugger, or sending your tokens to a third-party website that logs everything you decode.
+JWTs are everywhere in modern web development. They power API authentication, OAuth tokens, session management, and more. But debugging them shouldn't require installing a library, spinning up a debugger, or sending your tokens to an unverified service.
 
-This guide shows you exactly how to decode and inspect any JWT in your browser - using nothing but a Base64 decoder and a JSON formatter.
+This guide shows you exactly how to decode and inspect a compact signed JWT in your browser - using the JWT Decoder or a short browser-console snippet.
 
 ## What a JWT Actually Looks Like
 
-A JWT is three Base64-encoded strings joined by dots:
+A compact signed JWT (JWS) has three base64url segments joined by dots. A compact encrypted JWT (JWE) has five:
 
 ```
 header.payload.signature
@@ -48,14 +48,13 @@ Each part is URL-safe Base64 (`base64url`), not standard Base64.
 {
   "sub": "1234567890",
   "name": "John Doe",
-  "iat": 1516239022,
-  "exp": 1516242622
+  "iat": 1516239022
 }
 ```
 
-**The signature** - this is where it gets cryptographic. It's the header and payload signed with a secret key. You can't decode the signature - but you can verify it if you have the secret.
+**The signature** - this is cryptographic data over the header and payload. Verification requires the appropriate key and algorithm. Decoding does not perform that check.
 
-The important point: **the header and payload are just encoded, not encrypted**. Anyone can read them. The signature only proves that the payload hasn't been tampered with - it doesn't hide anything.
+The important point: **the header and payload are just encoded, not encrypted**. Anyone can read them. A valid signature can prove integrity after verification; the encoded payload itself is readable.
 
 ## The Manual Decode Process
 
@@ -63,7 +62,7 @@ Here's how to decode a JWT by hand using Toolblip's browser-based tools.
 
 ### Step 1: Copy the Token
 
-Take your JWT and split it on the `.` character. You want the **middle section** - the payload.
+Copy the complete three-part token for the [JWT Decoder](/tools/jwt-decoder). If you're decoding it manually instead, split on `.` and take the middle section, which is the payload.
 
 For the example token above, the payload is:
 ```
@@ -72,11 +71,11 @@ eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ
 
 ### Step 2: Decode Base64 URL
 
-Open the [Toolblip Base64 Decoder](/tools/base64-encoder-decoder). Paste the payload string. Click decode.
+Paste the complete signed token into the [JWT Decoder](/tools/jwt-decoder). It decodes the header and payload without verifying the signature. The text [Base64 Decoder](/tools/base64-encoder-decoder) expects standard Base64 and does not automatically handle `-` or `_` in base64url.
 
 You'll get the raw JSON string:
 ```json
-{"sub":"1234567890","name":"John Doe","iat":1516239022,"exp":1516242622}
+{"sub":"1234567890","name":"John Doe","iat":1516239022}
 ```
 
 ### Step 3: Format the JSON
@@ -87,8 +86,7 @@ Copy the decoded string and paste it into the [Toolblip JSON Formatter](/tools/j
 {
   "sub": "1234567890",
   "name": "John Doe",
-  "iat": 1516239022,
-  "exp": 1516242622
+  "iat": 1516239022
 }
 ```
 
@@ -103,9 +101,9 @@ Here's what those fields mean:
 | `sub` | Subject - the user ID or entity this token represents |
 | `name` | Human-readable name associated with the token |
 | `iat` | Issued At - Unix timestamp when the token was created |
-| `exp` | Expiration - Unix timestamp after which the token is invalid |
+| `exp` | Optional expiration - Unix timestamp after which a token with this claim must be rejected |
 
-If `exp` (1516242622) is in the past relative to your current time, the token is expired. You can check the current Unix timestamp at the [Toolblip Unix Timestamp Converter](/tools/unix-timestamp-converter).
+This sample has no `exp` claim. If your token has one, compare it with the current Unix timestamp using the [Toolblip Unix Timestamp Converter](/tools/unix-timestamp-converter). A timestamp in the past means that token has expired; decoding alone does not verify its signature.
 
 ## Common JWT Debugging Scenarios
 
@@ -139,7 +137,7 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 ```
 Decode → `{"alg":"HS256","typ":"JWT"}`
 
-If you see `"alg": "none"` or `"alg": "HS256"` in a token that should use RSA signatures, flag it. The [JWT alg:none attack](https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/06-Session_Management_Testing/01-Testing_For_GraphQL_Query_Weakness) is a known exploitation vector.
+If you see `"alg": "none"` or `"alg": "HS256"` in a token that should use RSA signatures, flag it. See [OWASP’s JWT testing guidance](https://wstg.owasp.org/latest/4-Web_Application_Security_Testing/06-Session_Management/10-JSON_Web_Tokens/) for the verification risks.
 
 ### Scenario 4: Verifying a Token Locally
 
@@ -154,7 +152,7 @@ You should use libraries in your application code. They're the right tool for pr
 But when you're debugging in the moment:
 
 - Installing a package just to inspect one token is slow
-- Third-party JWT debuggers online send your token to their servers - that's your users' auth data touching an unknown infrastructure
+- A third-party decoder may submit token data; check its request behavior before using a real credential
 - You might be on a machine without Node.js, or without the right environment set up
 - Copy-pasting a token into a local browser tool is faster than writing a script
 
@@ -170,7 +168,7 @@ Standard Base64 uses `+`, `/`, and `=` characters. JWT uses URL-safe Base64, whi
 
 This matters because if you paste a JWT payload into a standard Base64 decoder, it might fail or produce garbage output.
 
-**Toolblip's Base64 tools auto-detect URL-safe Base64 and handle it correctly.** If you're using a different tool and getting weird output, check whether it's URL-safe or standard Base64.
+Use the [JWT Decoder](/tools/jwt-decoder) for a complete signed token. If decoding manually, replace `-` with `+` and `_` with `/`, add padding as needed, then decode bytes as UTF-8.
 
 ### Quick Manual Fix
 
@@ -178,11 +176,12 @@ If a JWT payload won't decode in a standard Base64 decoder, add back the padding
 
 ```javascript
 // JWT payload without padding
-const payload = 'eyJzdWIiOiIxMjM0NTY3ODkwIiwiaWF0IjoxNTE2MjM5MDIyfQ'
+const payload = 'eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ'
 
 // Add padding to make it valid standard Base64
-const padded = payload + '='.repeat((4 - payload.length % 4) % 4)
-// "eyJzdWIiOiIxMjM0NTY3ODkwIiwiaWF0IjoxNTE2MjM5MDIyfQ=="
+const base64 = payload.replace(/-/g, '+').replace(/_/g, '/');
+const padded = base64 + '='.repeat((4 - base64.length % 4) % 4);
+// "eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ=="
 ```
 
 Then decode as standard Base64. You'll get the same result as URL-safe Base64 decoding.
@@ -196,11 +195,11 @@ Here's a real debugging scenario from API development:
 **The decode workflow:**
 
 1. Copy the JWT from localStorage/sessionStorage (or your network tab)
-2. Split on `.` - take the payload (middle section)
-3. Paste into [Toolblip Base64 Decoder](/tools/base64-encoder-decoder)
-4. Copy the decoded JSON string
-5. Paste into [Toolblip JSON Formatter](/tools/json-formatter)
-6. Inspect `sub`, `iat`, `exp`, and any custom claims
+2. Paste the complete token into [Toolblip JWT Decoder](/tools/jwt-decoder)
+3. Read the decoded header and payload; the decoder does not verify the signature
+4. Check that the claims you expected are present
+5. If you need to compare JSON documents, copy the payload into [JSON Formatter](/tools/json-formatter)
+6. Inspect `sub`, `iat`, optional `exp`, and any custom claims
 
 **What you might find:**
 
@@ -215,9 +214,9 @@ This is the full debugging loop without writing a line of code.
 
 A few important things to keep in mind when debugging JWTs:
 
-**Never decode tokens from untrusted sources in tools you don't control.** If you paste a JWT into a random website's "JWT decoder", you're sending your auth token to that server. They can log it, use it, or store it.
+**Never decode tokens from untrusted sources in tools you don't control.** If you paste a JWT into an unverified website, inspect whether it sends the value in an outgoing request. Treat production credentials under your organization’s policy.
 
-Toolblip's tools run 100% client-side - nothing is sent to any server. The decode and format happen in your browser using your machine's resources. Your tokens never leave your device.
+The decode and format actions run in your browser. Inspect outgoing request contents when handling a sensitive token.
 
 **Don't put production tokens in logs.** If you're debugging a production issue and copy a JWT into a bug report, Slack message, or email - you've just shared your users' auth tokens externally. Always redact JWTs in bug reports.
 
@@ -225,8 +224,9 @@ Toolblip's tools run 100% client-side - nothing is sent to any server. The decod
 
 ## Related Tools
 
-- **[Base64 Encoder/Decoder](/tools/base64-encoder-decoder)** - Encode or decode Base64 and URL-safe Base64, entirely in your browser
-- **[JSON Formatter](/tools/json-formatter)** - Pretty-print and validate JSON with syntax highlighting
+- **[JWT Decoder](/tools/jwt-decoder)** - Decode signed compact token headers and payloads without signature verification
+- **[Base64 Encoder/Decoder](/tools/base64-encoder-decoder)** - Standard Base64 text conversion
+- **[JSON Formatter](/tools/json-formatter)** - Pretty-print, minify, and validate JSON
 - **[Unix Timestamp Converter](/tools/unix-timestamp-converter)** - Convert Unix timestamps to human-readable dates and vice versa
 - **[Regex Tester](/tools/regex-tester)** - Test patterns against strings for validation and parsing
 - **[Hash Generator](/tools/md5-hash-generator)** - Compute plain MD5, SHA-1, SHA-256, SHA-384, and SHA-512 digests from text
@@ -235,7 +235,7 @@ Toolblip's tools run 100% client-side - nothing is sent to any server. The decod
 
 - [JWT.io](https://jwt.io/) - Official JWT debugger with library integration
 - [RFC 7519](https://datatracker.ietf.org/doc/html/rfc7519) - The JWT specification
-- [OWASP JWT Security Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/JSON_Web_Token_for_Java_Cheat_Sheet.html)
+- [OWASP JWT Security Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/JSON_Web_Token_Cheat_Sheet.html)
 - [Auth0: JWT Structure Explained](https://auth0.com/blog/inside-jwt-tokens/)
 
 ---
