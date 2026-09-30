@@ -286,7 +286,7 @@ function CopyButton({ value }: { value: string }) {
       type="button"
       onClick={copy}
       aria-label={`Copy ${value.split('\n')[0]}`}
-      className="rounded-md border border-slate-700/70 px-2 py-1 text-xs font-medium text-slate-300 transition hover:border-slate-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-[#58D65D]"
+      className="shrink-0 whitespace-nowrap rounded-md border border-slate-700/70 px-2 py-1 text-xs font-medium text-slate-300 transition hover:border-slate-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-[#58D65D]"
     >
       {copied ? 'Copied' : 'Copy'}
     </button>
@@ -300,7 +300,7 @@ function InlineCode({ children }: { children: ReactNode }) {
 function CodeBlock({ code, label }: { code: string; label: string }) {
   return (
     <div className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-950 shadow-sm">
-      <div className="flex items-center justify-between border-b border-slate-800 px-4 py-2">
+      <div className="flex items-center justify-between gap-2 border-b border-slate-800 px-4 py-2">
         <span className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">{label}</span>
         <CopyButton value={code} />
       </div>
