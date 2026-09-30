@@ -37,10 +37,11 @@ test.describe('Signup BDD regression', () => {
     await page.goto('/signup');
 
     const consent = page.getByLabel(/I agree to the Terms and Conditions and Privacy Policy/i);
+    const consentLabel = page.locator('label[for="legal-consent"]');
     await expect(consent).toBeVisible();
     await expect(consent).not.toBeChecked();
-    await expect(page.getByRole('link', { name: 'Terms and Conditions' })).toHaveAttribute('href', '/terms');
-    await expect(page.getByRole('link', { name: 'Privacy Policy' })).toHaveAttribute('href', '/privacy');
+    await expect(consentLabel.getByRole('link', { name: 'Terms and Conditions' })).toHaveAttribute('href', '/terms');
+    await expect(consentLabel.getByRole('link', { name: 'Privacy Policy' })).toHaveAttribute('href', '/privacy');
   });
 
   test('Given a short password, When the user submits signup, Then a client-side error is shown and no register request is made', async ({ page }) => {
