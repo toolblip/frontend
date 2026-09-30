@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       inspection_group:
-        description: URL Inspection cohorts to collect
+        description: Collection group (performance runs Search Analytics only; no URL Inspections)
         type: choice
         required: true
         default: all
@@ -14,6 +14,8 @@ on:
           - all
           - blog-core
           - tools
+          - fixed
+          - performance
 
 permissions:
   contents: read
@@ -35,7 +37,7 @@ jobs:
             const { mkdir, writeFile } = require('node:fs/promises');
             const { dirname } = require('node:path');
             // Fetch directly to avoid checkout cleanup of the legacy malformed api gitlink.
-            for (const path of ['scripts/gsc-recovery.mjs', 'scripts/gsc-site-performance.mjs', 'scripts/gsc-sitemap-inspection.mjs', 'data/gsc-recovery-cohort.json']) {
+            for (const path of ['scripts/gsc-recovery.mjs', 'scripts/gsc-site-performance.mjs', 'scripts/gsc-sitemap-inspection.mjs', 'scripts/gsc-workflow.mjs', 'data/gsc-recovery-cohort.json']) {
               const { data } = await github.rest.repos.getContent({
                 ...context.repo,
                 path,
@@ -57,85 +59,36 @@ jobs:
         with:
           node-version: '24'
           package-manager-cache: false
-      - name: Collect fixed-cohort report
-        if: github.event_name != 'workflow_dispatch' || inputs.inspection_group != 'blog-core'
+      - name: Collect selected reports with run-level quota stop
         env:
+          INSPECTION_GROUP: ${{ inputs.inspection_group || 'all' }}
           GSC_SERVICE_ACCOUNT: ${{ secrets.GSC_SERVICE_ACCOUNT }}
           GSC_SITE_URL: ${{ vars.GSC_SITE_URL || 'sc-domain:toolblip.com' }}
-        run: node scripts/gsc-recovery.mjs
-      - name: Collect sitewide performance report
-        if: always()
-        env:
-          GSC_SERVICE_ACCOUNT: ${{ secrets.GSC_SERVICE_ACCOUNT }}
           GSC_SITEWIDE_URL: ${{ vars.GSC_SITEWIDE_URL || 'sc-domain:toolblip.com' }}
-        run: node scripts/gsc-site-performance.mjs
-      - name: Collect core-sitemap URL Inspection report
-        if: always() && (github.event_name != 'workflow_dispatch' || inputs.inspection_group == 'all' || inputs.inspection_group == 'blog-core')
-        env:
-          GSC_SERVICE_ACCOUNT: ${{ secrets.GSC_SERVICE_ACCOUNT }}
-          GSC_SITEWIDE_URL: ${{ vars.GSC_SITEWIDE_URL || 'sc-domain:toolblip.com' }}
-        run: node scripts/gsc-sitemap-inspection.mjs --sitemap core
-      - name: Collect blog-sitemap URL Inspection report
-        if: always() && (github.event_name != 'workflow_dispatch' || inputs.inspection_group == 'all' || inputs.inspection_group == 'blog-core')
-        env:
-          GSC_SERVICE_ACCOUNT: ${{ secrets.GSC_SERVICE_ACCOUNT }}
-          GSC_SITEWIDE_URL: ${{ vars.GSC_SITEWIDE_URL || 'sc-domain:toolblip.com' }}
-        run: node scripts/gsc-sitemap-inspection.mjs --sitemap blog
-      - name: Collect live-sitemap URL Inspection report
-        if: always() && (github.event_name != 'workflow_dispatch' || inputs.inspection_group == 'all' || inputs.inspection_group == 'tools')
-        env:
-          GSC_SERVICE_ACCOUNT: ${{ secrets.GSC_SERVICE_ACCOUNT }}
-          GSC_SITEWIDE_URL: ${{ vars.GSC_SITEWIDE_URL || 'sc-domain:toolblip.com' }}
-        run: node scripts/gsc-sitemap-inspection.mjs --sitemap tools
+        run: node scripts/gsc-workflow.mjs
       - name: Add report to run summary
         if: always()
         shell: bash
-        env:
-          INSPECTION_GROUP: ${{ inputs.inspection_group || 'all' }}
         run: |
-          if [[ -f test-results/gsc-recovery/report.md ]]; then
-            cat test-results/gsc-recovery/report.md >> "$GITHUB_STEP_SUMMARY"
-          elif [[ "$GITHUB_EVENT_NAME" == 'workflow_dispatch' && "$INSPECTION_GROUP" == 'blog-core' ]]; then
-            echo 'GSC recovery report skipped by selection (inspection_group=blog-core).' >> "$GITHUB_STEP_SUMMARY"
+          if [[ -f test-results/gsc-workflow/report.md ]]; then
+            cat test-results/gsc-workflow/report.md >> "$GITHUB_STEP_SUMMARY"
           else
-            echo 'GSC recovery report unavailable; check the failed setup or collection step.' >> "$GITHUB_STEP_SUMMARY"
+            echo 'GSC orchestration report unavailable; check setup or collection logs.' >> "$GITHUB_STEP_SUMMARY"
           fi
-          if [[ -f test-results/gsc-site-performance/report.md ]]; then
-            printf '\n' >> "$GITHUB_STEP_SUMMARY"
-            cat test-results/gsc-site-performance/report.md >> "$GITHUB_STEP_SUMMARY"
-          else
-            echo 'GSC sitewide performance report unavailable; check the failed setup or collection step.' >> "$GITHUB_STEP_SUMMARY"
-          fi
-          if [[ -f test-results/gsc-sitemap-inspection/report.md ]]; then
-            printf '\n' >> "$GITHUB_STEP_SUMMARY"
-            cat test-results/gsc-sitemap-inspection/report.md >> "$GITHUB_STEP_SUMMARY"
-          elif [[ "$GITHUB_EVENT_NAME" == 'workflow_dispatch' && "$INSPECTION_GROUP" != 'all' && "$INSPECTION_GROUP" != 'tools' ]]; then
-            echo 'GSC sitemap URL Inspection report skipped by selection (inspection_group excludes tools).' >> "$GITHUB_STEP_SUMMARY"
-          else
-            echo 'GSC sitemap URL Inspection report unavailable; check the failed setup or collection step.' >> "$GITHUB_STEP_SUMMARY"
-          fi
-          if [[ -f test-results/gsc-sitemap-inspection-blog/report.md ]]; then
-            printf '\n' >> "$GITHUB_STEP_SUMMARY"
-            cat test-results/gsc-sitemap-inspection-blog/report.md >> "$GITHUB_STEP_SUMMARY"
-          elif [[ "$GITHUB_EVENT_NAME" == 'workflow_dispatch' && "$INSPECTION_GROUP" != 'all' && "$INSPECTION_GROUP" != 'blog-core' ]]; then
-            echo 'GSC blog sitemap URL Inspection report skipped by selection (inspection_group excludes blog-core).' >> "$GITHUB_STEP_SUMMARY"
-          else
-            echo 'GSC blog sitemap URL Inspection report unavailable; check the failed setup or collection step.' >> "$GITHUB_STEP_SUMMARY"
-          fi
-          if [[ -f test-results/gsc-sitemap-inspection-core/report.md ]]; then
-            printf '\n' >> "$GITHUB_STEP_SUMMARY"
-            cat test-results/gsc-sitemap-inspection-core/report.md >> "$GITHUB_STEP_SUMMARY"
-          elif [[ "$GITHUB_EVENT_NAME" == 'workflow_dispatch' && "$INSPECTION_GROUP" != 'all' && "$INSPECTION_GROUP" != 'blog-core' ]]; then
-            echo 'GSC core sitemap URL Inspection report skipped by selection (inspection_group excludes blog-core).' >> "$GITHUB_STEP_SUMMARY"
-          else
-            echo 'GSC core sitemap URL Inspection report unavailable; check the failed setup or collection step.' >> "$GITHUB_STEP_SUMMARY"
-          fi
+          for dir in gsc-recovery gsc-site-performance gsc-sitemap-inspection-core gsc-sitemap-inspection-blog gsc-sitemap-inspection; do
+            if [[ -f "test-results/$dir/report.md" ]]; then
+              printf '\n' >> "$GITHUB_STEP_SUMMARY"
+              cat "test-results/$dir/report.md" >> "$GITHUB_STEP_SUMMARY"
+            fi
+          done
       - name: Preserve reports, including partial failures
         if: always()
         uses: actions/upload-artifact@v7
         with:
           name: gsc-recovery-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
+            test-results/gsc-workflow/report.json
+            test-results/gsc-workflow/report.md
             test-results/gsc-recovery/report.json
             test-results/gsc-recovery/report.md
             test-results/gsc-site-performance/report.json

@@ -4,7 +4,7 @@ import { generateKeyPairSync } from 'node:crypto';
 import { mkdtemp, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { siteDateWindow, parsePageRows, collectSitePerformance, markdown, main } from './gsc-site-performance.mjs';
+import { siteDateWindow, previousSiteDateWindow, parsePageRows, collectSitePerformance, markdown, main } from './gsc-site-performance.mjs';
 
 const now = new Date('2026-09-28T06:30:00Z'); // Still September 27 in PT.
 const { privateKey } = generateKeyPairSync('rsa', { modulusLength: 2048 });
@@ -31,9 +31,53 @@ test('28 finalized PT days end three days before PT today across UTC and DST bou
     startDate: '2026-02-07', endDate: '2026-03-06',
     timeZone: 'America/Los_Angeles', type: 'web', dataState: 'final',
   });
+  assert.deepEqual(previousSiteDateWindow(now), {
+    startDate: '2026-07-31', endDate: '2026-08-27',
+    timeZone: 'America/Los_Angeles', type: 'web', dataState: 'final',
+  });
+  assert.deepEqual(previousSiteDateWindow(new Date('2026-01-01T08:30:00Z')), {
+    startDate: '2025-11-04', endDate: '2025-12-01',
+    timeZone: 'America/Los_Angeles', type: 'web', dataState: 'final',
+  });
 });
 
-test('one read-only page query uses the exact sitewide Search Analytics request', async () => {
+test('queries two disjoint windows and compares weighted totals and types', async () => {
+  const requests = [];
+  const report = await collectSitePerformance({ now, env, transport: async (url, init) => {
+    if (url.includes('oauth2')) return reply({ access_token: 't', token_type: 'Bearer', expires_in: 3600 });
+    requests.push(JSON.parse(init.body));
+    return reply({ rows: requests.length === 1 ? [page('https://toolblip.com/', 1, 10, 10)] : rows, responseAggregationType: 'byPage' });
+  } });
+  assert.deepEqual(requests.map(({ startDate, endDate }) => [startDate, endDate]), [
+    ['2026-07-31', '2026-08-27'], ['2026-08-28', '2026-09-24'],
+  ]);
+  assert.ok(requests.every(request => request.dimensions[0] === 'page' && request.dataState === 'final'));
+  assert.equal(report.status, 'complete');
+  assert.deepEqual(report.totals, { clicks: 10, impressions: 105, ctr: 10 / 105, position: 540 / 105 });
+  assert.deepEqual(report.comparison.delta, { clicks: 9, impressions: 95, ctr: 10 / 105 - 0.1, position: 540 / 105 - 10 });
+  assert.equal(report.comparison.byType.find(group => group.type === 'tool').current.impressions, 70);
+  assert.equal(report.comparison.byType.find(group => group.type === 'tool').previous.impressions, 0);
+});
+
+test('previous failure preserves current and marks comparison unavailable; current failure preserves previous', async () => {
+  for (const failedWindow of [1, 2]) {
+    let queries = 0;
+    const report = await collectSitePerformance({ now, env, transport: async url => {
+      if (url.includes('oauth2')) return reply({ access_token: 't', token_type: 'Bearer', expires_in: 3600 });
+      queries++;
+      return queries === failedWindow ? reply({ error: 'private' }, 403) : reply({ rows });
+    } });
+    assert.equal(queries, 2);
+    assert.equal(report.status, 'partial-failure');
+    assert.equal(report.comparison.available, false);
+    assert.equal(report.comparison.error, 'HTTP_403');
+    if (failedWindow === 1) assert.equal(report.totals.clicks, 10);
+    else { assert.equal(report.totals, null); assert.equal(report.comparison.previous.totals.clicks, 10); }
+    assert.doesNotMatch(JSON.stringify(report), /private/);
+  }
+});
+
+test('read-only page queries use the exact sitewide Search Analytics request', async () => {
   let calls = 0;
   const report = await collectSitePerformance({ now, env, transport: async (url, init) => {
     calls++;
@@ -46,13 +90,13 @@ test('one read-only page query uses the exact sitewide Search Analytics request'
     assert.equal(init.redirect, 'error');
     assert.equal(init.headers.authorization, 'Bearer fixture-token');
     assert.deepEqual(JSON.parse(init.body), {
-      startDate: '2026-08-28', endDate: '2026-09-24',
+      startDate: calls === 2 ? '2026-07-31' : '2026-08-28', endDate: calls === 2 ? '2026-08-27' : '2026-09-24',
       dimensions: ['page'], type: 'web', dataState: 'final',
       aggregationType: 'byPage', rowLimit: 25000,
     });
     return reply({ rows, responseAggregationType: 'byPage' });
   } });
-  assert.equal(calls, 2);
+  assert.equal(calls, 3);
   assert.equal(report.status, 'complete');
   assert.equal(report.observedPages, 4);
   assert.deepEqual(report.totals, { clicks: 10, impressions: 105, ctr: 10 / 105, position: 540 / 105 });
@@ -167,9 +211,9 @@ test('authentication, HTTP and malformed responses produce safe report errors', 
   assert.ok(!JSON.stringify(badAuth).includes('private-secret'));
   assert.doesNotMatch(markdown(badAuth), /No page rows returned/);
 
-  for (const response of [reply({ message: 'upstream-private-body' }, 403), reply({ rows: [page('https://evil.invalid/x', 1, 10, 2)] })]) {
+  for (const response of [() => reply({ message: 'upstream-private-body' }, 403), () => reply({ rows: [page('https://evil.invalid/x', 1, 10, 2)] })]) {
     const report = await collectSitePerformance({ now, env, transport: async url => url.includes('oauth2')
-      ? reply({ access_token: 'fixture-token', token_type: 'Bearer', expires_in: 3600 }) : response });
+      ? reply({ access_token: 'fixture-token', token_type: 'Bearer', expires_in: 3600 }) : response() });
     assert.equal(report.status, 'failed');
     assert.ok(['HTTP_403', 'INVALID_ANALYTICS_RESPONSE'].includes(report.error));
     assert.ok(!JSON.stringify(report).includes('upstream-private-body'));

@@ -57,7 +57,7 @@ export default function ToolDetailView({ tool }: { tool: Tool }) {
         <ToolContentSection toolName={tool.name} content={content} />
 
         <RelatedTools slug={tool.slug} category={tool.category} />
-        <RelatedBlogPosts toolName={tool.name} category={tool.category} tags={tool.tags} />
+        <RelatedBlogPosts toolSlug={tool.slug} toolName={tool.name} category={tool.category} tags={tool.tags} />
 
         <FaqSection toolName={tool.name} faqs={faqs} emitSchema={hasFaqOverride(tool.slug)} />
       </div>

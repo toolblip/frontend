@@ -124,6 +124,25 @@ test('auth failures yield reports without raw credentials or tokens', async () =
   assert.ok(!JSON.stringify(report).includes(credential.client_email));
 });
 
+test('one inspection 429 skips remaining inspections but still collects every page metric', async () => {
+  let inspections = 0, analytics = 0;
+  const report = await collect({ cohort, now, env, transport: async url => {
+    if (url.includes('oauth2')) return reply({ access_token: 't', token_type: 'Bearer', expires_in: 3600 });
+    if (url.includes('urlInspection')) { inspections++; return reply({ error: 'private' }, 429); }
+    analytics++;
+    return reply(metrics);
+  } });
+  assert.equal(inspections, 1);
+  assert.equal(analytics, 12);
+  assert.equal(report.stopReason, 'HTTP_429');
+  assert.equal(report.status, 'partial-failure');
+  assert.equal(report.results.length, 12);
+  assert.equal(report.results[0].inspection.error, 'HTTP_429');
+  assert.equal(report.results[1].inspection.skipped, 'HTTP_429');
+  assert.equal(report.results[11].analytics.data.clicks, 2);
+  assert.match(markdown(report), /skipped.*HTTP_429/i);
+});
+
 test('comparisons report newer crawl, canonical/indexing changes and dated metrics; reject mismatched cohort', async () => {
   const report = await collect({ cohort, now, env, transport: async url => reply(url.includes('oauth2') ? { access_token: 't', token_type: 'Bearer', expires_in: 3600 } : url.includes('urlInspection') ? inspection : metrics) });
   const previous = structuredClone(report);
