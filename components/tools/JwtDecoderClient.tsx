@@ -142,7 +142,7 @@ export default function JwtDecoderClient() {
             <pre className="tb-v2-tool-pre">{JSON.stringify(result.payload, null, 2)}</pre>
           </div>
 
-          {claims && (claims.iss || claims.sub || claims.iat || claims.exp || claims.nbf) && (
+          {claims && (claims.iss || claims.sub || claims.aud !== undefined || claims.iat !== null || claims.exp !== null || claims.nbf !== null) && (
             <>
               <div className="tb-v2-tool-output-head">
                 <span className="tb-v2-tool-label">Standard claims</span>
