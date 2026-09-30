@@ -11,7 +11,8 @@ interface RelatedBlogPostsProps {
 
 const MAX_POSTS = 3;
 const MIN_POSTS = 2;
-const reviewedTutorials: Record<ReviewedToolSlug, readonly string[]> = {
+type EditorialToolSlug = ReviewedToolSlug | 'favicon-generator' | 'serp-preview';
+const reviewedTutorials: Record<EditorialToolSlug, readonly string[]> = {
   'jwt-decoder': ['2026-05-12-how-to-decode-jwt-tokens-safely-in-your-browser', 'jwt-decoder-guide', '2026-04-23-debug-jwt-tokens-base64-json-browser'],
   'json-formatter': ['2026-05-11-format-and-validate-json-online-without-uploading', 'json-formatter-guide', 'online-json-formatter-vs-browser-extension-security'],
   'regex-tester': ['2026-05-13-how-to-test-regular-expressions-online-with-sample-text', 'regex-tester-guide', '2026-05-05-regex-lookahead-lookbehind-explained'],
@@ -24,6 +25,8 @@ const reviewedTutorials: Record<ReviewedToolSlug, readonly string[]> = {
   'word-counter': ['text-utilities-cheatsheet-developers', 'social-media-character-limits'],
   'reading-time-calculator': [],
   'image-resizer': ['2026-08-04-resize-image-for-social-media-dimensions', 'how-to-optimize-images-without-uploading', 'image-conversion-optimization-guide'],
+  'favicon-generator': ['image-conversion-optimization-guide'],
+  'serp-preview': [],
 };
 const STOPWORDS = new Set([
   'online', 'free', 'the', 'and', 'for', 'with', 'your', 'from', 'tool', 'tools',
@@ -62,7 +65,7 @@ function formatDate(iso: string): string {
 
 export function selectRelatedBlogPosts(posts: BlogPost[], { toolSlug, toolName, category, tags = [] }: RelatedBlogPostsProps): BlogPost[] {
   if (Object.prototype.hasOwnProperty.call(reviewedTutorials, toolSlug)) {
-    const selected = reviewedTutorials[toolSlug as ReviewedToolSlug];
+    const selected = reviewedTutorials[toolSlug as EditorialToolSlug];
     const reciprocal = Object.entries(publishedTutorialTools)
       .filter(([, tools]) => (tools as readonly string[]).includes(toolSlug))
       .map(([slug]) => slug);

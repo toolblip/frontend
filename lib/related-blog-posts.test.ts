@@ -91,4 +91,41 @@ describe('reviewed tool blog links', () => {
     expect(selected.length).toBeGreaterThanOrEqual(2);
     expect(selected.length).toBeLessThanOrEqual(3);
   });
+
+  it('shows only the published image guide for favicon generator', () => {
+    const tool = getToolBySlug('favicon-generator')!;
+    const posts = getBlogPosts();
+    const guide = 'image-conversion-optimization-guide';
+    expect(posts.some(post => post.slug === guide)).toBe(true);
+    expect(selectRelatedBlogPosts(posts, {
+      toolSlug: tool.slug,
+      toolName: tool.name,
+      category: tool.category,
+      tags: tool.tags,
+    }).map(post => post.slug)).toEqual([guide]);
+    const html = renderToolPosts(tool.slug);
+    expect([...html.matchAll(/href="(\/blog\/[^\"]+)"/g)].map(match => match[1]))
+      .toEqual([`/blog/${guide}`]);
+  });
+
+  it('omits favicon posts when its guide is unavailable instead of adding category matches', () => {
+    const tool = getToolBySlug('favicon-generator')!;
+    expect(selectRelatedBlogPosts(getBlogPosts().filter(post => post.slug !== 'image-conversion-optimization-guide'), {
+      toolSlug: tool.slug,
+      toolName: tool.name,
+      category: tool.category,
+      tags: tool.tags,
+    })).toEqual([]);
+  });
+
+  it('omits the SERP preview section when no relevant tutorial is published', () => {
+    const tool = getToolBySlug('serp-preview')!;
+    expect(selectRelatedBlogPosts(getBlogPosts(), {
+      toolSlug: tool.slug,
+      toolName: tool.name,
+      category: tool.category,
+      tags: tool.tags,
+    })).toEqual([]);
+    expect(renderToolPosts(tool.slug)).toBe('');
+  });
 });
