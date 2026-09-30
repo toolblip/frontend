@@ -24,6 +24,13 @@ export function siteDateWindow(now = new Date()) {
   return { startDate, endDate: prior.endDate, timeZone: prior.timeZone, type: prior.type, dataState: prior.dataState };
 }
 
+export function previousSiteDateWindow(now = new Date()) {
+  const current = siteDateWindow(now);
+  const endDate = new Date(Date.parse(`${current.startDate}T00:00:00Z`) - 86400000).toISOString().slice(0, 10);
+  const startDate = new Date(Date.parse(`${endDate}T00:00:00Z`) - 27 * 86400000).toISOString().slice(0, 10);
+  return { startDate, endDate, timeZone: current.timeZone, type: current.type, dataState: current.dataState };
+}
+
 function siteProperty(value) {
   if (value === DEFAULT_SITE || value === 'https://toolblip.com/') return value;
   throw new Error('Invalid GSC_SITEWIDE_URL');
@@ -75,32 +82,56 @@ function metrics(pages) {
   return { clicks, impressions, ctr: impressions ? clicks / impressions : 0, position: impressions ? weightedPosition / impressions : 0 };
 }
 
+function summarize(pages) {
+  const byType = TYPE_ORDER.flatMap(type => {
+    const subset = pages.filter(row => row.type === type);
+    return subset.length ? [{ type, pages: subset.length, ...metrics(subset) }] : [];
+  });
+  return { observedPages: pages.length, rowLimitReached: pages.length === ROW_LIMIT, totals: metrics(pages), byType, pages };
+}
+
+function compare(previous, current) {
+  const delta = (before, after) => Object.fromEntries(['clicks', 'impressions', 'ctr', 'position'].map(key => [key, after[key] - before[key]]));
+  const empty = { pages: 0, clicks: 0, impressions: 0, ctr: 0, position: 0 };
+  return {
+    available: true,
+    delta: delta(previous.totals, current.totals),
+    byType: TYPE_ORDER.map(type => {
+      const before = previous.byType.find(group => group.type === type) ?? { type, ...empty };
+      const after = current.byType.find(group => group.type === type) ?? { type, ...empty };
+      return { type, previous: before, current: after, delta: { pages: after.pages - before.pages, ...delta(before, after) } };
+    }),
+  };
+}
+
 export async function collectSitePerformance({ now = new Date(), env = process.env, ...options } = {}) {
   const report = {
     schemaVersion: 1, generatedAt: now.toISOString(), status: 'failed',
-    siteUrl: null, dateWindow: siteDateWindow(now),
+    siteUrl: null, dateWindow: siteDateWindow(now), previousDateWindow: previousSiteDateWindow(now),
     query: { dimensions: ['page'], aggregationType: 'byPage', rowLimit: ROW_LIMIT },
     interpretation: DISCLAIMER, observedPages: null, rowLimitReached: false,
-    totals: null, byType: [], pages: [],
+    totals: null, byType: [], pages: [], comparison: { available: false },
   };
   try {
     report.siteUrl = siteProperty(env.GSC_SITEWIDE_URL || DEFAULT_SITE);
     const token = await getAccessToken(env.GSC_SERVICE_ACCOUNT, { now, ...options });
-    const body = await requestJson(`https://www.googleapis.com/webmasters/v3/sites/${encodeURIComponent(report.siteUrl)}/searchAnalytics/query`, {
-      method: 'POST',
-      headers: { authorization: `Bearer ${token}`, 'content-type': 'application/json' },
-      body: JSON.stringify({ startDate: report.dateWindow.startDate, endDate: report.dateWindow.endDate,
-        dimensions: ['page'], type: 'web', dataState: 'final', aggregationType: 'byPage', rowLimit: ROW_LIMIT }),
-    }, options);
-    report.pages = parsePageRows(body, report.siteUrl);
-    report.observedPages = report.pages.length;
-    report.rowLimitReached = report.observedPages === ROW_LIMIT;
-    report.totals = metrics(report.pages);
-    report.byType = TYPE_ORDER.flatMap(type => {
-      const pages = report.pages.filter(row => row.type === type);
-      return pages.length ? [{ type, pages: pages.length, ...metrics(pages) }] : [];
-    });
-    report.status = 'complete';
+    const query = async window => {
+      const body = await requestJson(`https://www.googleapis.com/webmasters/v3/sites/${encodeURIComponent(report.siteUrl)}/searchAnalytics/query`, {
+        method: 'POST', headers: { authorization: `Bearer ${token}`, 'content-type': 'application/json' },
+        body: JSON.stringify({ startDate: window.startDate, endDate: window.endDate,
+          dimensions: ['page'], type: 'web', dataState: 'final', aggregationType: 'byPage', rowLimit: ROW_LIMIT }),
+      }, options);
+      return summarize(parsePageRows(body, report.siteUrl));
+    };
+    let previous, previousError, currentError;
+    try { previous = await query(report.previousDateWindow); }
+    catch (error) { previousError = safeError(error); }
+    try { Object.assign(report, await query(report.dateWindow)); }
+    catch (error) { currentError = safeError(error); }
+    if (previous && !currentError) report.comparison = { ...compare(previous, report), previous };
+    else report.comparison = { available: false, ...(previous ? { previous } : {}), ...((previousError || currentError) ? { error: previousError || currentError } : {}) };
+    if (currentError) report.error = currentError;
+    report.status = currentError && !previous ? 'failed' : currentError || previousError ? 'partial-failure' : 'complete';
   } catch (error) {
     report.status = 'failed';
     report.error = safeError(error);
@@ -109,6 +140,7 @@ export async function collectSitePerformance({ now = new Date(), env = process.e
     report.totals = null;
     report.byType = [];
     report.pages = [];
+    report.comparison = { available: false };
   }
   return report;
 }
@@ -118,12 +150,22 @@ export function markdown(report) {
   const lines = [
     '# GSC sitewide performance', '',
     `Status: **${report.status}** | Generated: ${report.generatedAt}`,
-    `Window: ${report.dateWindow.startDate} through ${report.dateWindow.endDate}, inclusive PT; web, final.`,
-    `Observed pages: ${report.status === 'complete' ? report.observedPages : 'unavailable'}${report.rowLimitReached ? ' (row limit reached)' : ''}.`, '',
+    `Current window: ${report.dateWindow.startDate} through ${report.dateWindow.endDate}, inclusive PT; web, final.`,
+    `Previous window: ${report.previousDateWindow.startDate} through ${report.previousDateWindow.endDate}, inclusive PT; web, final.`,
+    `Observed current pages: ${report.totals ? report.observedPages : 'unavailable'}${report.rowLimitReached ? ' (row limit reached)' : ''}.`, '',
     report.interpretation, '',
   ];
   if (report.error) lines.push(`Collection error: ${cell(report.error)}`, '');
-  if (report.status !== 'complete') return `${lines.join('\n')}\n`;
+  if (report.comparison.error) lines.push(`Comparison unavailable: ${cell(report.comparison.error)}`, '');
+  if (!report.totals && report.comparison.previous) lines.push(`Previous window retained: ${report.comparison.previous.observedPages} observed pages, ${report.comparison.previous.totals.clicks} clicks, ${report.comparison.previous.totals.impressions} impressions. See JSON for rows and page types.`, '');
+  if (report.comparison.available) {
+    lines.push(`Comparison of observed page rows: previous ${report.comparison.previous.totals.clicks} clicks / ${report.comparison.previous.totals.impressions} impressions; current ${report.totals.clicks} clicks / ${report.totals.impressions} impressions. Delta: ${report.comparison.delta.clicks} clicks / ${report.comparison.delta.impressions} impressions. See JSON for weighted CTR, position and page type changes. This is not index coverage.`, '');
+    lines.push('| Page type | Previous pages | Current pages | Previous clicks | Current clicks | Previous impressions | Current impressions |',
+      '| --- | ---: | ---: | ---: | ---: | ---: | ---: |');
+    for (const group of report.comparison.byType) lines.push(`| ${[group.type, group.previous.pages, group.current.pages, group.previous.clicks, group.current.clicks, group.previous.impressions, group.current.impressions].map(cell).join(' | ')} |`);
+    lines.push('');
+  }
+  if (!report.totals) return `${lines.join('\n')}\n`;
   if (!report.observedPages) lines.push('No page rows returned.', '');
   lines.push('| Page type | Observed pages | Clicks | Impressions | CTR | Avg. position |',
     '| --- | ---: | ---: | ---: | ---: | ---: |');

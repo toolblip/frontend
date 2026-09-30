@@ -152,23 +152,26 @@ export async function collect({ cohort, now = new Date(), dryRun = false, env = 
     try { token = await getAccessToken(env.GSC_SERVICE_ACCOUNT, { now, ...options }); }
     catch (error) { authError = safeError(error); report.authError = authError; }
   }
-  const capture = async (url, body, parse) => {
+  const capture = async (url, body, parse, requestOptions = options) => {
     if (dryRun) return { data: null, error: null, skipped: 'dry-run' };
     if (authError) return { data: null, error: `AUTH: ${authError}` };
     try {
-      const response = await requestJson(url, { method: 'POST', headers: { authorization: `Bearer ${token}`, 'content-type': 'application/json' }, body: JSON.stringify(body) }, options);
+      const response = await requestJson(url, { method: 'POST', headers: { authorization: `Bearer ${token}`, 'content-type': 'application/json' }, body: JSON.stringify(body) }, requestOptions);
       return { data: parse(response), error: null };
     } catch (error) { return { data: null, error: safeError(error) }; }
   };
   for (const url of urls) {
-    const inspection = await capture(INSPECT_URL, { inspectionUrl: url, siteUrl: report.siteUrl, languageCode: 'en-US' }, parseInspection);
+    const inspection = report.stopReason
+      ? { data: null, error: null, skipped: report.stopReason }
+      : await capture(INSPECT_URL, { inspectionUrl: url, siteUrl: report.siteUrl, languageCode: 'en-US' }, parseInspection, { ...options, retry429: false });
+    if (inspection.error === 'HTTP_429') report.stopReason = 'HTTP_429';
     const analytics = await capture(`https://www.googleapis.com/webmasters/v3/sites/${encodeURIComponent(report.siteUrl)}/searchAnalytics/query`, {
       startDate: report.dateWindow.startDate, endDate: report.dateWindow.endDate, type: 'web', dataState: 'final',
       dimensionFilterGroups: [{ groupType: 'and', filters: [{ dimension: 'page', operator: 'equals', expression: url }] }],
     }, parseAnalytics);
     report.results.push({ url, inspection, analytics });
   }
-  if (report.results.some(row => row.inspection.error || row.analytics.error)) report.status = 'partial-failure';
+  if (report.results.some(row => row.inspection.error || row.analytics.error || row.inspection.skipped === 'HTTP_429')) report.status = 'partial-failure';
   if (previous) {
     try { report.comparison = compareReports(report, previous); }
     catch { report.comparisonError = 'INVALID_PREVIOUS_REPORT'; report.status = 'partial-failure'; }
@@ -238,8 +241,9 @@ export function markdown(report) {
     const inspection = row.inspection.data;
     const analytics = row.analytics.data;
     const metricCells = analytics ? METRICS.map(key => `${analytics[key]}${analytics.noData ? ' (no reported data)' : ''}`) : Array(4).fill(row.analytics.error ? `ERROR: ${row.analytics.error}` : 'not collected');
-    lines.push(`| ${[row.url, row.inspection.error ? `ERROR: ${row.inspection.error}` : inspection?.verdict || 'not collected', inspection?.lastCrawlTime, ...metricCells].map(cell).join(' | ')} |`);
+    lines.push(`| ${[row.url, row.inspection.error ? `ERROR: ${row.inspection.error}` : row.inspection.skipped ? `skipped: ${row.inspection.skipped}` : inspection?.verdict || 'not collected', inspection?.lastCrawlTime, ...metricCells].map(cell).join(' | ')} |`);
   }
+  if (report.stopReason) lines.push('', `URL Inspection stopped: ${cell(report.stopReason)}. Remaining inspections were skipped due to quota; skipped does not mean unindexed.`);
   if (report.authError) lines.push('', `Authentication: ${cell(report.authError)}`);
   if (report.comparisonError) lines.push('', `Comparison: ${report.comparisonError}`);
   if (report.comparison) {

@@ -1,5 +1,107 @@
 # GSC index-recovery — status and follow-up
 
+## Current readout, 2026-09-30
+
+The live Page Indexing screen was checked on September 30 and last updated
+September 21. It shows **13 indexed and 1,628 excluded**. The excluded reasons
+are 1,569 crawled but currently not indexed, 20 404s, 11 redirects, 7 noindex,
+1 alternate canonical, 1 Google-selected different canonical, and 19 duplicates
+without a selected canonical. Those are Search Console's reported categories,
+not a fresh crawl of every page. The older August 19 figures and diagnoses below
+are historical findings. Don't use them as current counts or as proof that a
+particular content defect caused today's exclusions.
+
+The three sitemap submissions are successful: tools has 437 URLs (last read
+September 28), blog 123 (September 29), and core 12 (September 26). The
+sitemap index is also successful, but its zero count isn't an index count.
+Run 36516394196 on September 29 inspected all 437 tool sitemap URLs: 368
+"Crawled - currently not indexed," 69 unknown, and no PASS verdicts. All
+368 with that coverage state reported robots ALLOWED and fetch SUCCESSFUL;
+Google's canonical matched where it was reported. This shows Google can fetch
+those inspected URLs. It doesn't explain why Google chose not to index them.
+The fixed 12 were all crawled but currently not indexed. JWT had a September
+26 last crawl and image-resizer a September 28 last crawl; most others showed
+May through August. Runs 36517623134 and 36526931626 hit HTTP 429, kept
+trying later cohorts, and produced partial reports.
+
+Sitewide Search Analytics for August 29 through September 25 PT recorded 0
+clicks and 11 impressions across four returned pages: home 8, favicon-generator-new
+1, regex-visual-builder 1, and serp-preview-complete 1. These are performance
+rows, **not an index inventory**. Initial HTML checks on September 30 found
+five priority pages returning 200 with self-canonical and index/follow.
+Old favicon and SERP URLs reach actual replacements. The regex-visual-builder
+URL returns 404; keep that response unless a real equivalent is established.
+
+The Crawl Stats screen last updated September 28 shows 3,270 requests over
+90 days and a 537 ms average. Its domain-level breakdown includes main
+(3,000, no host problem), api (161, no host problem), app (96, past problem),
+and www (15, no host problem). Responses were 92% 200, 3% DNS, and 2% 401.
+Purpose was 99% refresh and under 1% discovery. JSON made up 49% of requests,
+HTML 20%, and page resources 70%. These aggregate figures can't be assigned
+to the main host alone.
+
+## Reporting and quota behavior
+
+The weekly workflow and manual `all`, `blog-core`, `tools`, `fixed`, and
+`performance` choices use read-only credentials. Select `performance` in the
+manual workflow to run only sitewide Search Analytics and its two finalized,
+adjacent 28-day windows, with zero URL Inspection requests. `fixed` runs only
+the frozen 12 URL inspections plus sitewide Search Analytics. A fixed-cohort
+HTTP 429 stops further inspections immediately; every remaining fixed row
+says skipped with `HTTP_429`. Per-page analytics still runs where possible.
+The workflow also stops starting later sitemap inspection collectors after
+any fixed, core, or blog report records HTTP 429. It keeps partial JSON and
+Markdown artifacts and states quota skips in the run summary. A skipped URL
+has no index verdict.
+Sitewide Search Analytics runs independently, including when inspections fail.
+
+The sitewide report now queries two non-overlapping, finalized 28-day PT
+windows. The current window ends three PT days before collection; the
+previous window ends the day before the current one begins. It reports
+observed page-row totals and page-type changes, with impression-weighted
+position and CTR from total clicks divided by impressions. The old current
+`dateWindow`, `totals`, `byType`, and `pages` fields remain. If either
+window fails, a valid other window remains in the JSON and the comparison is
+unavailable with a partial failure. Page rows are sorted by clicks and capped
+at 25,000 per query, so these totals are not complete index coverage. Weekly
+rolling windows overlap; compare the explicit disjoint periods in this
+report, not successive weekly snapshots as independent periods.
+
+Google says the [URL Inspection API](https://developers.google.com/webmaster-tools/v1/urlInspection.index/inspect)
+returns the version in its index, not a live indexability test. Its
+[API limits](https://developers.google.com/webmaster-tools/limits) apply to
+URL Inspection and Search Analytics separately. Neither a successful fetch
+nor a PASS verdict guarantees future indexing.
+
+## Next checks
+
+1. **Phase 1, measure and find the cause.** Preserve the September 30
+   Page Indexing readout, the fixed-cohort stored views, both Search Analytics
+   periods, sitemap status, and host-level crawl data. Review the quota logs
+   before running another broad inspection. Check the 12 fixed URLs after an
+   actual Google recrawl; don't infer a new crawl from a deployment or a live
+   HTML request.
+2. **Phase 2, fix the 12 only where the audit supports it.** Check each tool
+   against the user's task: try a real input, confirm the output, compare
+   the page's claims and examples to its behavior, and inspect links from
+   relevant pages. Add specific examples and limits where missing. Avoid
+   repeating the same generated filler across tools. Google describes
+   [helpful, people-first content](https://developers.google.com/search/docs/fundamentals/creating-helpful-content)
+   in terms of useful, reliable information for visitors; this audit needs
+   real page evidence before any edit.
+3. **Phase 3, expand one cohort at a time.** Review more pages only after the
+   fixed 12 demonstrate usefulness and post-release measurements are
+   available. Do not bulk noindex, remove, or redirect pages based on the
+   current aggregate count. Review the first post-release readout on October
+   7 and the 28-day comparison on October 28. Confirm Google's actual recrawl
+   dates before attributing any change to this release. There is no indexing
+   guarantee.
+
+## Earlier implementation notes and historical findings
+
+The sections below record previous work and proposals. Dates and numbers in
+them describe those older checks unless a section explicitly says otherwise.
+
 ## Weekly sitemap URL Inspection report
 
 The `GSC recovery tracking` workflow now runs a separate read-only URL
@@ -23,8 +125,8 @@ malformed sitemap produces a failure artifact instead of inspecting an
 untrusted list. This is **Google's stored index view**, not a live test or an
 indexing request. Search Console
 may lag a recrawl; use later reports to assess whether Google's indexed
-corpus changed. The fixed cohort and existing sitewide reports remain
-independent.
+corpus changed. Sitewide analytics still runs after a quota stop, while
+later inspection cohorts are skipped.
 
 toolblip.com: 44 pages indexed, 1,710 not, per Search Console's Page Indexing
 report (checked 2026-08-19). No manual action — this is Google crawling the
@@ -748,13 +850,12 @@ the FAQ `OVERRIDES` campaign's incremental, one-batch-of-commits-at-a-time
 approach with real per-tool specificity is the right model to extend to
 `tool-content.ts`.
 
-**No pruning to a "tier A" indexable subset yet.** The recovery plan's core
-recommendation — cut the sitemap to a verified, working, well-described
-~150-tool core and `noindex` the rest rather than trying to fix all ~726 at
-once — has not been done. `sitemap-tools.xml` still lists the full catalog.
-That's the highest-leverage remaining step; it's gated on actually running
-a Playwright smoke test per tool (real input → correct output), not just
-static analysis, which is real effort, not a mechanical follow-up.
+**Historical proposal, not the current action plan:** an earlier pass
+proposed cutting the sitemap to a verified ~150-tool subset and adding
+`noindex` to the rest. That proposal was not implemented. The September 30
+plan above calls for validating the fixed 12 first, then reviewing more
+pages one cohort at a time. Don't apply bulk `noindex` or removal based on
+the old estimate.
 
 ## Self-review of the family-verification pass — 15 findings, 13 fixed
 

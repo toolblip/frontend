@@ -1,7 +1,9 @@
 import Link from 'next/link';
 import { getBlogPosts, type BlogPost } from '@/lib/blog';
+import { publishedTutorialTools, type ReviewedToolSlug } from '@/data/reviewed-tools';
 
 interface RelatedBlogPostsProps {
+  toolSlug: string;
   toolName: string;
   category: string;
   tags?: string[];
@@ -9,6 +11,20 @@ interface RelatedBlogPostsProps {
 
 const MAX_POSTS = 3;
 const MIN_POSTS = 2;
+const reviewedTutorials: Record<ReviewedToolSlug, readonly string[]> = {
+  'jwt-decoder': ['2026-05-12-how-to-decode-jwt-tokens-safely-in-your-browser', 'jwt-decoder-guide', '2026-04-23-debug-jwt-tokens-base64-json-browser'],
+  'json-formatter': ['2026-05-11-format-and-validate-json-online-without-uploading', 'json-formatter-guide', 'online-json-formatter-vs-browser-extension-security'],
+  'regex-tester': ['2026-05-13-how-to-test-regular-expressions-online-with-sample-text', 'regex-tester-guide', '2026-05-05-regex-lookahead-lookbehind-explained'],
+  'url-encode': ['2026-05-21-url-encode-decode-strings-api-testing', '2026-04-25-url-encoding-api-bugs'],
+  'base64-encoder-decoder': ['2026-05-16-base64-decode-online-without-uploading', '2026-04-28-base64-encoding-decoding-complete-developer-guide', 'base64-encoding-explained'],
+  'password-generator': ['2026-05-18-generate-secure-passwords-in-the-browser'],
+  'uuid-generator': ['2026-05-27-uuid-generator-for-api-testing', 'uuid-v4-generator-online', 'uuid-versions-guide'],
+  'markdown-to-html': ['2026-07-08-convert-markdown-to-html-online-free', 'markdown-to-html-guide'],
+  'case-converter': ['text-utilities-cheatsheet-developers'],
+  'word-counter': ['text-utilities-cheatsheet-developers', 'social-media-character-limits'],
+  'reading-time-calculator': [],
+  'image-resizer': ['2026-08-04-resize-image-for-social-media-dimensions', 'how-to-optimize-images-without-uploading', 'image-conversion-optimization-guide'],
+};
 const STOPWORDS = new Set([
   'online', 'free', 'the', 'and', 'for', 'with', 'your', 'from', 'tool', 'tools',
   'to', 'of', 'in', 'is', 'on', 'at', 'by', 'or', 'an', 'as', 'it', 'be', 'if',
@@ -44,18 +60,35 @@ function formatDate(iso: string): string {
   return new Date(iso).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
 }
 
-export default function RelatedBlogPosts({ toolName, category, tags = [] }: RelatedBlogPostsProps) {
+export function selectRelatedBlogPosts(posts: BlogPost[], { toolSlug, toolName, category, tags = [] }: RelatedBlogPostsProps): BlogPost[] {
+  if (Object.prototype.hasOwnProperty.call(reviewedTutorials, toolSlug)) {
+    const selected = reviewedTutorials[toolSlug as ReviewedToolSlug];
+    const reciprocal = Object.entries(publishedTutorialTools)
+      .filter(([, tools]) => (tools as readonly string[]).includes(toolSlug))
+      .map(([slug]) => slug);
+    const published = new Map(posts.map(post => [post.slug, post]));
+    return [...new Set([...selected, ...reciprocal])]
+      .map(slug => published.get(slug))
+      .filter((post): post is BlogPost => post !== undefined)
+      .slice(0, MAX_POSTS);
+  }
+
   const toolTokens = tokenize(`${toolName} ${tags.join(' ')}`);
   const categoryTokens = tokenize(category);
 
-  const matches = getBlogPosts()
+  return posts
     .map((post) => ({ post, score: scorePost(post, toolTokens, categoryTokens) }))
     .filter(({ score }) => score > 0)
     .sort((a, b) => b.score - a.score || new Date(b.post.date).getTime() - new Date(a.post.date).getTime())
     .slice(0, MAX_POSTS)
     .map(({ post }) => post);
+}
 
-  if (matches.length < MIN_POSTS) return null;
+export default function RelatedBlogPosts(props: RelatedBlogPostsProps) {
+  const matches = selectRelatedBlogPosts(getBlogPosts(), props);
+
+  const isReviewed = Object.prototype.hasOwnProperty.call(reviewedTutorials, props.toolSlug);
+  if (matches.length < (isReviewed ? 1 : MIN_POSTS)) return null;
 
   return (
     <section aria-labelledby="related-blog-title" className="mb-10">
