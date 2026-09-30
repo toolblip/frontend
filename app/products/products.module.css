@@ -63,7 +63,7 @@
 .asterisk { position: absolute; right: 0; top: -80px; color: #dadfcb; font-size: 230px; line-height: 1; transform: rotate(10deg); }
 :global([data-theme='dark']) .contact, :global(.dark) .contact { background: var(--surface-2); }
 :global([data-theme='dark']) .asterisk, :global(.dark) .asterisk { color: var(--line-2); }
-/* The reference artwork keeps its own light palette in both themes. */
+/* Original light artwork; resolved dark-theme palettes are scoped below. */
 .visual { height: 230px; padding-top: 16px; display: flex; align-items: center; justify-content: center; position: relative; color: #526073; }
 .caption { position: absolute; bottom: 14px; left: 8px; right: 8px; text-align: center; color: var(--product-color); font: 7px/1.5 var(--f-mono, monospace); letter-spacing: 1.3px; text-transform: uppercase; }
 .terminal { width: 66%; background: white; border: 1px solid #d5def1; border-radius: 7px; transform: rotate(-3deg); box-shadow: 0 12px 20px #7493c012; }
@@ -84,5 +84,35 @@
 .monitorRow { display: flex; align-items: center; gap: 12px; padding: 7px 0; border-top: 1px solid #eee2d8; font-size: 7px; }.monitorRow > span { width: 70px; }.monitorRow > svg { color: #739466; flex-shrink: 0; }
 .bars { flex: 1; display: flex; align-items: center; gap: 3px; height: 26px; }.bars i { flex: 1; max-width: 5px; border-radius: 1px; background: #c3d1b1; }.bars i:nth-child(5n) { background: #dfab88; }
 .symbol { display: flex; flex-direction: column; align-items: center; gap: 12px; color: var(--product-color); }.orbit { position: absolute; top: 35px; width: 175px; height: 175px; border: 1px solid; border-radius: 50%; opacity: .12; }.orbit::after { content: ''; position: absolute; inset: 20px; border: 1px dashed; border-radius: 50%; }.largeLogo { display: grid; place-items: center; position: relative; width: 95px; height: 95px; border-radius: 25px; background: #ffffffaa; transform: rotate(-8deg); box-shadow: 0 7px 17px #33333308; }.platform { position: relative; padding: 4px 8px; border-radius: 4px; background: #ffffff99; font-size: 8px; }
+/* Follow the resolved site theme, including manual overrides and System changes.
+   Keep these palettes scoped to artwork so the approved light design is unchanged. */
+:global(html[data-theme='dark']) .art { --art-text: #d2ddeb; --art-muted: #acbfd8; --art-success: #94d8b0; }
+:global(html[data-theme='dark']) .cloud .art { --product-background: #15243b; --product-color: #a9c8ff; --art-panel: #1e304b; --art-border: #3c5373; }
+:global(html[data-theme='dark']) .agents .art { --product-background: #2a1d38; --product-color: #d4b9f5; --art-panel: #382647; --art-border: #654977; }
+:global(html[data-theme='dark']) .monitor .art { --product-background: #30221e; --product-color: #f2bca2; --art-panel: #402d26; --art-border: #6a493b; }
+:global(html[data-theme='dark']) .plugins .art { --product-background: #302619; --product-color: #f0c48e; --art-panel: #403222; --art-border: #695235; }
+:global(html[data-theme='dark']) .shopify .art { --product-background: #22243e; --product-color: #bfc7ff; --art-panel: #303351; --art-border: #50567c; }
+:global(html[data-theme='dark']) .personal .art { --product-background: #242625; --product-color: #cbd0bd; --art-panel: #333733; --art-border: #565e53; }
+:global(html[data-theme='dark']) .visual { color: var(--art-text); }
+:global(html[data-theme='dark']) .art :is(.badge, .terminal, .hub, .chip, .monitorDashboard, .largeLogo, .platform) { background: var(--art-panel); border-color: var(--art-border); box-shadow: none; }
+:global(html[data-theme='dark']) .terminalHeader { color: var(--art-muted); border-color: var(--art-border); }
+:global(html[data-theme='dark']) .terminalHeader i { background: #a35e50; }
+:global(html[data-theme='dark']) .terminalHeader i:nth-child(2) { background: #9b823d; }
+:global(html[data-theme='dark']) .terminalHeader i:nth-child(3) { background: #4b8765; }
+:global(html[data-theme='dark']) .terminalBody small { color: var(--art-muted); }
+:global(html[data-theme='dark']) .terminalBody b,
+:global(html[data-theme='dark']) .terminalBody p > span { color: var(--product-color); }
+:global(html[data-theme='dark']) .terminalBody > div svg,
+:global(html[data-theme='dark']) .monitorRow > svg { color: var(--art-success); }
+:global(html[data-theme='dark']) .terminalBody footer { color: var(--art-success); background: #203d37; }
+:global(html[data-theme='dark']) .terminalBody footer i,
+:global(html[data-theme='dark']) .security i { background: #498060; }
+:global(html[data-theme='dark']) .chip,
+:global(html[data-theme='dark']) .monitorHeader { color: var(--product-color); }
+:global(html[data-theme='dark']) .connector,
+:global(html[data-theme='dark']) .monitorRow { border-color: var(--art-border); }
+:global(html[data-theme='dark']) .bars i { background: #527054; }
+:global(html[data-theme='dark']) .bars i:nth-child(5n) { background: #966242; }
+:global(html[data-theme='dark']) .orbit { color: var(--product-color); opacity: .24; }
 @media (max-width: 900px) { .wrap { width: calc(100% - 44px); }.filter { padding-inline: 10px; }.terminal { width: 79%; }.monitorDashboard { width: 84%; }.chip { padding: 9px; gap: 5px; font-size: 8px; }.editor { left: 5%; }.security { right: 4%; }.contact { padding: 32px; gap: 25px; } }
 @media (max-width: 767px) { .wrap { width: calc(100% - 40px); }.page { padding-bottom: 50px; }.header { padding: 45px 0 32px; margin-bottom: 30px; }.header h1 { font-size: clamp(39px, 9.5vw, 58px); margin: 20px 0; }.intro { font-size: 14px; }.toolbar { gap: 15px; margin-bottom: 20px; }.filters { gap: 5px; }.filter { font-size: 11px; }.search { width: 100%; }.search input { flex: 1; width: 100%; font-size: 16px; }.grid { grid-template-columns: minmax(0, 1fr); gap: 23px; }.visual { height: 220px; }.artTop { top: 15px; left: 15px; right: 15px; font-size: 8px; }.body { padding: 20px 21px 0; }.description { font-size: 12px; }.terminal { width: 79%; }.monitorDashboard { padding: 11px; }.monitorRow { gap: 6px; }.bars { gap: 2px; }.hub { width: 60px; height: 60px; }.connector { width: 75px; }.catalog { padding-bottom: 50px; }.endnote { align-items: flex-start; font-size: 9px; }.endnote > span:last-child { max-width: 130px; text-align: right; font-size: 7px; }.contact { grid-template-columns: 1fr; gap: 6px; padding: 28px 24px; }.contact h2 { font-size: 34px; }.contact > div:last-child { padding-top: 15px; }.contact .eyebrow { font-size: 8px; }.asterisk { font-size: 180px; top: -30px; right: -20px; opacity: .5; } }
