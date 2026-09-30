@@ -207,7 +207,7 @@ A tree view makes it much easier to find `data.organization.members[0].role` wit
 
 ### 5. Compare Before and After Payloads
 
-When an API response changes unexpectedly, use [JSON Diff](/tools/json-diff) instead of scanning two formatted blobs by eye. Diffing catches field renames, type changes, missing arrays, and subtle value differences.
+When an API response changes unexpectedly, use [Code Diff](/tools/code-diff) instead of scanning two formatted blobs by eye. Diffing catches field renames, type changes, missing arrays, and subtle value differences.
 
 This is especially useful after backend deployments, schema migrations, and third-party API version changes.
 
@@ -260,6 +260,6 @@ Before adopting a JSON formatter for your team, ask whether it processes data lo
 
 For day-to-day API debugging, a browser-local online JSON formatter is usually the best balance: faster than a CLI, safer than a broad-permission extension, and easier to use than raw DevTools for complex payloads.
 
-Use [JSON Formatter](/tools/json-formatter) when you need to pretty-print, validate, or minify JSON quickly. Use [JSON Tree View](/tools/json-tree-view) for nested structures, [JSON Diff](/tools/json-diff) for before/after comparisons, and [JSON Schema Validator](/tools/json-schema-validator) when correctness depends on more than valid syntax.
+Use [JSON Formatter](/tools/json-formatter) when you need to pretty-print, validate, or minify JSON quickly. Use [JSON Tree View](/tools/json-tree-view) for nested structures, [Code Diff](/tools/code-diff) for before/after comparisons, and [JSON Schema Validator](/tools/json-schema-validator) when correctness depends on more than valid syntax.
 
 The safest JSON workflow is not complicated: inspect in DevTools when possible, redact secrets, prefer local processing, and do not grant persistent browser permissions for a task that only needs a formatter.

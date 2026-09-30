@@ -223,7 +223,7 @@ No signup. No data uploaded. Everything runs locally in your browser.
 
 👉 **[Try the Regex Tester](/tools/regex-tester)**  -  paste a pattern, write test strings, and see matches highlighted in real time.
 
-Pair it with the **[Regex Cheatsheet](/tools/regex-cheatsheet)** for quick pattern reminders.
+Use the **[Regex Tester](/tools/regex-tester)** to check these lookaround patterns against your own sample strings.
 
 ## When to Use Each
 
