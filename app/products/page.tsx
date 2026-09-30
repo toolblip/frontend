@@ -28,15 +28,21 @@ export const metadata: Metadata = {
 
 export default function ProductsPage() {
   return (
-    <div className="tb-v2-page">
-      <div className="tb-v2-container">
+    <div className={styles.page}>
+      <div className={styles.wrap}>
         <header className={styles.header}>
-          <h1 className="tb-v2-page-title">Our products</h1>
+          <span className={styles.eyebrow}><i />The Toolblip collection</span>
+          <h1>Built out of curiosity. Made to be useful.</h1>
           <p className={styles.intro}>
-            Other projects from the people behind Toolblip. Explore what we’re building for cloud, development, and commerce.
+            Cloud tools, everyday utilities, and better ways to run a store. Different problems, the same hands-on approach.
           </p>
         </header>
         <ProductCatalog />
+        <section className={styles.contact} aria-labelledby="contact-heading">
+          <span className={styles.asterisk} aria-hidden="true">✳</span>
+          <div><span className={styles.eyebrow}>Good things start with a conversation</span><h2 id="contact-heading">What are you<br />thinking of building<span>?</span></h2></div>
+          <div><p>A new product, a tricky infrastructure problem, or an idea that won’t leave you alone. We’d love to hear it.</p><a href="https://binarylabssoft.com/contact">Let’s make it happen <span aria-hidden="true">↗</span></a></div>
+        </section>
       </div>
     </div>
   );
