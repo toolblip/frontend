@@ -3,8 +3,7 @@
 import { useState, type ReactNode } from 'react';
 import Link from 'next/link';
 
-const BASE_URL = 'https://toolblip-api-production.up.railway.app';
-const FUTURE_BASE_URL = 'https://api.toolblip.com';
+const BASE_URL = 'https://api.toolblip.com';
 
 type Method = 'GET' | 'POST';
 type AuthMode = 'No auth required' | 'Bearer token required';
@@ -42,32 +41,33 @@ const endpoints: Endpoint[] = [
     method: 'GET',
     path: '/api/tools',
     title: 'List all tools',
-    description: 'Returns the public Toolblip directory. The tool array is nested at tools.tools to match the app client contract.',
+    description: 'Returns a paginated list of public API tool records. The array is in data and pagination details are in meta.',
     auth: 'No auth required',
     status: '200 OK',
-    responseShape: '{ tools: { tools: [...] } }',
+    responseShape: '{ data: [...], meta: { ... } }',
     headers: [{ name: 'Accept', value: 'application/json', when: 'Recommended for all requests' }],
     query: [
-      { name: 'category', type: 'string', required: false, description: 'Filter tools by category slug or name.' },
+      { name: 'category', type: 'string', required: false, description: 'Filter by exact category value, for example formatter.' },
       { name: 'search', type: 'string', required: false, description: 'Search tool names and descriptions.' },
       { name: 'page', type: 'number', required: false, description: 'Pagination page number.' },
-      { name: 'per_page', type: 'number', required: false, description: 'Number of tools to return per page.' },
+      { name: 'per_page', type: 'number', required: false, description: 'Number of tools per page (default 20, maximum 100).' },
     ],
-    curl: `curl "${BASE_URL}/api/tools" \\\n  -H "Accept: application/json"`,
+    curl: `curl "${BASE_URL}/api/tools?per_page=1" \\\n  -H "Accept: application/json"`,
     response: `{
-  "tools": {
-    "tools": [
-      {
-        "id": 1,
-        "slug": "json-formatter",
-        "name": "JSON Formatter",
-        "description": "Format, validate, and prettify JSON data instantly.",
-        "category": "Developer",
-        "is_pro": false,
-        "emoji": "🧰",
-        "created_at": "2026-01-15T10:30:00.000000Z"
-      }
-    ]
+  "data": [
+    {
+      "id": 2,
+      "slug": "base64",
+      "name": "Base64 Encoder/Decoder",
+      "category": "encoder",
+      "is_pro": false
+    }
+  ],
+  "meta": {
+    "current_page": 1,
+    "total": 1,
+    "per_page": 1,
+    "last_page": 1
   }
 }`,
   },
@@ -80,22 +80,24 @@ const endpoints: Endpoint[] = [
     description: 'Fetch metadata for one tool by slug. Use the slug returned by GET /api/tools.',
     auth: 'No auth required',
     status: '200 OK',
-    responseShape: '{ tool }',
+    responseShape: '{ data: { ... } }',
     headers: [{ name: 'Accept', value: 'application/json', when: 'Recommended for all requests' }],
     pathParams: [
       { name: 'slug', type: 'string', required: true, description: 'Tool slug, for example json-formatter.' },
     ],
     curl: `curl "${BASE_URL}/api/tools/json-formatter" \\\n  -H "Accept: application/json"`,
     response: `{
-  "tool": {
+  "data": {
     "id": 1,
     "slug": "json-formatter",
     "name": "JSON Formatter",
-    "description": "Format, validate, and prettify JSON data instantly.",
-    "category": "Developer",
+    "description": "Format and validate JSON data with syntax highlighting.",
+    "category": "formatter",
+    "icon": "{}",
     "is_pro": false,
-    "emoji": "🧰",
-    "created_at": "2026-01-15T10:30:00.000000Z"
+    "view_count": 0,
+    "share_count": 0,
+    "favorite_count": 0
   }
 }`,
   },
@@ -105,7 +107,7 @@ const endpoints: Endpoint[] = [
     method: 'POST',
     path: '/api/auth/register',
     title: 'Register',
-    description: 'Create a user account and receive a Bearer token for authenticated API requests.',
+    description: 'If registration is enabled, create an account after the person accepts the terms and receive a Bearer token.',
     auth: 'No auth required',
     status: '201 Created',
     responseShape: '{ user, token }',
@@ -116,21 +118,25 @@ const endpoints: Endpoint[] = [
     body: [
       { name: 'name', type: 'string', required: true, description: 'Display name for the account.' },
       { name: 'email', type: 'string', required: true, description: 'Unique email address.' },
-      { name: 'password', type: 'string', required: true, description: 'Account password.' },
+      { name: 'password', type: 'string', required: true, description: 'Account password, at least 8 characters.' },
       { name: 'password_confirmation', type: 'string', required: true, description: 'Must match password.' },
+      { name: 'accepted_terms', type: 'boolean', required: true, description: 'Send true only after the person registering has accepted the terms.' },
     ],
-    curl: `curl -X POST "${BASE_URL}/api/auth/register" \\\n  -H "Content-Type: application/json" \\\n  -H "Accept: application/json" \\\n  -d '{
+    curl: `# Run only after the person registering has accepted the terms.
+curl -X POST "${BASE_URL}/api/auth/register" \\\n  -H "Content-Type: application/json" \\\n  -H "Accept: application/json" \\\n  -d '{
     "name": "Jane Doe",
     "email": "jane@example.com",
     "password": "correct-horse-battery-staple",
-    "password_confirmation": "correct-horse-battery-staple"
+    "password_confirmation": "correct-horse-battery-staple",
+    "accepted_terms": true
   }'`,
     response: `{
   "user": {
     "id": 42,
     "name": "Jane Doe",
     "email": "jane@example.com",
-    "is_pro": false
+    "is_pro": false,
+    "requires_terms_acceptance": false
   },
   "token": "1|exampleBearerToken"
 }`,
@@ -162,7 +168,8 @@ const endpoints: Endpoint[] = [
     "id": 42,
     "name": "Jane Doe",
     "email": "jane@example.com",
-    "is_pro": false
+    "is_pro": false,
+    "requires_terms_acceptance": false
   },
   "token": "2|exampleBearerToken"
 }`,
@@ -183,14 +190,14 @@ const endpoints: Endpoint[] = [
     ],
     curl: `curl -X POST "${BASE_URL}/api/auth/logout" \\\n  -H "Authorization: Bearer YOUR_TOKEN" \\\n  -H "Accept: application/json"`,
     response: `{
-  "message": "Logged out successfully"
+  "message": "Logged out"
 }`,
   },
   {
     id: 'auth-user',
     group: 'Authentication',
     method: 'GET',
-    path: '/api/auth/user',
+    path: '/api/auth/me',
     title: 'Get authenticated user',
     description: 'Return the user profile attached to the supplied Bearer token.',
     auth: 'Bearer token required',
@@ -200,13 +207,14 @@ const endpoints: Endpoint[] = [
       { name: 'Authorization', value: 'Bearer YOUR_TOKEN', when: 'Required' },
       { name: 'Accept', value: 'application/json', when: 'Recommended for all requests' },
     ],
-    curl: `curl "${BASE_URL}/api/auth/user" \\\n  -H "Authorization: Bearer YOUR_TOKEN" \\\n  -H "Accept: application/json"`,
+    curl: `curl "${BASE_URL}/api/auth/me" \\\n  -H "Authorization: Bearer YOUR_TOKEN" \\\n  -H "Accept: application/json"`,
     response: `{
   "user": {
     "id": 42,
     "name": "Jane Doe",
     "email": "jane@example.com",
-    "is_pro": false
+    "is_pro": false,
+    "requires_terms_acceptance": false
   }
 }`,
   },
@@ -222,32 +230,31 @@ const endpointGroups = [
   { label: 'Authentication', endpoints: endpoints.filter((endpoint) => endpoint.group === 'Authentication') },
 ];
 
-const starterRequest = `curl "${BASE_URL}/api/tools" \\\n  -H "Accept: application/json"`;
+const starterRequest = `curl "${BASE_URL}/api/tools?per_page=1" \\\n  -H "Accept: application/json"`;
 
-const authenticatedRequest = `curl "${BASE_URL}/api/auth/user" \\\n  -H "Authorization: Bearer YOUR_TOKEN" \\\n  -H "Accept: application/json"`;
+const authenticatedRequest = `curl "${BASE_URL}/api/auth/me" \\\n  -H "Authorization: Bearer YOUR_TOKEN" \\\n  -H "Accept: application/json"`;
 
 const tokenFlow = `# 1. Register or login to receive a token
 TOKEN=$(curl -s -X POST "${BASE_URL}/api/auth/login" \\\n  -H "Content-Type: application/json" \\\n  -H "Accept: application/json" \\\n  -d '{"email":"jane@example.com","password":"your-password"}' \\\n  | jq -r .token)
 
 # 2. Use the token on protected endpoints
-curl "${BASE_URL}/api/auth/user" \\\n  -H "Authorization: Bearer $TOKEN" \\\n  -H "Accept: application/json"
+curl "${BASE_URL}/api/auth/me" \\\n  -H "Authorization: Bearer $TOKEN" \\\n  -H "Accept: application/json"
 
 # 3. Revoke the token when done
 curl -X POST "${BASE_URL}/api/auth/logout" \\\n  -H "Authorization: Bearer $TOKEN" \\\n  -H "Accept: application/json"`;
 
 const unauthorizedResponse = `{
+  "error": {
+    "code": "AUTH_INVALID",
+    "message": "Unauthenticated."
+  },
   "message": "Unauthenticated."
 }`;
 
-const baseUrlSwap = `# Current production API
-BASE_URL="${BASE_URL}"
-
-# Planned custom domain after SSL is ready
-BASE_URL="${FUTURE_BASE_URL}"`;
+const baseUrlSetup = `BASE_URL="${BASE_URL}"`;
 
 const quickFacts = [
-  { label: 'Current base URL', value: BASE_URL, detail: 'Use this Railway production host today.' },
-  { label: 'Future base URL', value: FUTURE_BASE_URL, detail: 'Switch here once api.toolblip.com SSL is ready.' },
+  { label: 'API base URL', value: BASE_URL, detail: 'Use this host for the direct Laravel API endpoints below.' },
   { label: 'Path prefix', value: '/api', detail: 'Every documented endpoint below is relative to the active base URL.' },
   { label: 'Auth header', value: 'Authorization: Bearer YOUR_TOKEN', detail: 'Required only on protected auth endpoints.' },
   { label: 'Content type', value: 'application/json', detail: 'Send and receive JSON for POST requests.' },
@@ -404,7 +411,7 @@ function EndpointCard({ endpoint }: { endpoint: Endpoint }) {
 
       <div className="mt-6 grid gap-4 xl:grid-cols-2">
         <CodeBlock label="curl" code={endpoint.curl} />
-        <CodeBlock label="JSON response" code={endpoint.response} />
+        <CodeBlock label="Illustrative JSON response" code={endpoint.response} />
       </div>
     </article>
   );
@@ -415,7 +422,7 @@ export default function ApiDocsClient() {
   const auth = endpointGroups.find((group) => group.label === 'Authentication')?.endpoints ?? [];
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-white via-slate-50 to-white text-slate-900 dark:from-slate-950 dark:via-slate-950 dark:to-slate-900 dark:text-white">
+    <div className="min-h-screen bg-gradient-to-b from-white via-slate-50 to-white text-slate-900 dark:from-slate-950 dark:via-slate-950 dark:to-slate-900 dark:text-white">
       <section className="border-b border-slate-200 bg-white/85 backdrop-blur dark:border-slate-800 dark:bg-slate-950/85">
         <div className="mx-auto max-w-7xl px-6 py-16 lg:px-8">
           <Link href="/" className="inline-flex items-center gap-2 text-sm font-semibold text-slate-500 transition hover:text-[#58D65D] dark:text-slate-400 dark:hover:text-emerald-400">
@@ -434,20 +441,10 @@ export default function ApiDocsClient() {
               </div>
             </div>
             <div className="rounded-3xl border border-slate-200 bg-slate-50 p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900/70">
-              <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Base URLs</p>
-              <div className="mt-3 space-y-3">
-                <div>
-                  <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Current production</p>
-                  <code className="block break-all rounded-xl bg-white p-3 text-sm text-slate-900 dark:bg-slate-950 dark:text-slate-100">{BASE_URL}</code>
-                </div>
-                <div>
-                  <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Custom domain after SSL is ready</p>
-                  <code className="block break-all rounded-xl bg-white p-3 text-sm text-slate-900 dark:bg-slate-950 dark:text-slate-100">{FUTURE_BASE_URL}</code>
-                </div>
-              </div>
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">API base URL</p>
+              <code className="mt-3 block break-all rounded-xl bg-white p-3 text-sm text-slate-900 dark:bg-slate-950 dark:text-slate-100">{BASE_URL}</code>
               <p className="mt-4 text-sm text-slate-600 dark:text-slate-300">
-                Use the Railway URL today for every example below. The endpoint paths and response shapes stay the same when the custom API domain is ready.
-                Examples use placeholder credentials and tokens; replace them with your own values before running requests.
+                These examples call the direct Laravel API. Sample responses and credentials are illustrative; pagination totals and tool data change over time.
               </p>
             </div>
           </div>
@@ -474,11 +471,11 @@ export default function ApiDocsClient() {
           </div>
         </aside>
 
-        <div className="space-y-12">
+        <div className="min-w-0 space-y-12 [overflow-wrap:anywhere]">
           <section id="authentication" className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/60">
             <h2 className="text-2xl font-bold text-slate-950 dark:text-white">Authentication</h2>
             <p className="mt-3 text-slate-600 dark:text-slate-300">
-              Register or log in to receive a token, then send it in the <InlineCode>Authorization</InlineCode> header as <InlineCode>Bearer YOUR_TOKEN</InlineCode>. Keep tokens private and never send them in query strings.
+              Register or log in to receive a token, then send it in the <InlineCode>Authorization</InlineCode> header as <InlineCode>Bearer YOUR_TOKEN</InlineCode>. Keep tokens private and never send them in query strings. Only send <InlineCode>accepted_terms: true</InlineCode> during registration after the person has accepted the terms.
             </p>
             <div className="mt-5 grid gap-4 xl:grid-cols-2">
               <CodeBlock label="Authorization header" code={'Authorization: Bearer YOUR_TOKEN'} />
@@ -489,7 +486,7 @@ export default function ApiDocsClient() {
           <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/60">
             <h2 className="text-2xl font-bold text-slate-950 dark:text-white">Before you start</h2>
             <p className="mt-3 text-slate-600 dark:text-slate-300">
-              All endpoints are JSON over HTTPS and currently live under the <InlineCode>/api</InlineCode> path. Prefix every path below with <InlineCode>{BASE_URL}</InlineCode> today; when SSL is ready, the same requests can use <InlineCode>{FUTURE_BASE_URL}</InlineCode>.
+              These direct Laravel API endpoints use JSON over HTTPS under <InlineCode>/api</InlineCode>. Prefix each path with <InlineCode>{BASE_URL}</InlineCode>. Frontend same-origin session routes, where used, have separate request and response contracts.
             </p>
             <div className="mt-5 grid gap-4 xl:grid-cols-2">
               <CodeBlock label="Public request" code={starterRequest} />
@@ -508,36 +505,39 @@ export default function ApiDocsClient() {
           </section>
 
           <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/60">
-            <h2 className="text-2xl font-bold text-slate-950 dark:text-white">Base URL strategy</h2>
+            <h2 className="text-2xl font-bold text-slate-950 dark:text-white">Base URL</h2>
             <p className="mt-3 text-slate-600 dark:text-slate-300">
-              Store the API host in one environment variable so you can switch from the Railway production URL to <InlineCode>api.toolblip.com</InlineCode> once SSL is live without changing endpoint paths.
+              Set the direct API host once when using the curl examples below.
             </p>
             <div className="mt-5">
-              <CodeBlock label="Environment setup" code={baseUrlSwap} />
+              <CodeBlock label="Environment setup" code={baseUrlSetup} />
             </div>
           </section>
 
           <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/60">
             <h2 className="text-2xl font-bold text-slate-950 dark:text-white">Response models</h2>
             <p className="mt-3 text-slate-600 dark:text-slate-300">
-              Toolblip wraps resources in top-level objects. Tools are returned under <InlineCode>tool</InlineCode> for a single item and under <InlineCode>tools.tools</InlineCode> for the directory list.
+              The directory returns <InlineCode>data</InlineCode> as an array with a <InlineCode>meta</InlineCode> pagination object. A single tool returns <InlineCode>data</InlineCode> as an object. Authentication returns <InlineCode>user</InlineCode>, and register and login also return <InlineCode>token</InlineCode>.
             </p>
             <div className="mt-5 grid gap-4 xl:grid-cols-2">
               <CodeBlock label="Tool" code={`{
   "id": 1,
   "slug": "json-formatter",
   "name": "JSON Formatter",
-  "description": "Format, validate, and prettify JSON data instantly.",
-  "category": "Developer",
+  "description": "Format and validate JSON data with syntax highlighting.",
+  "category": "formatter",
+  "icon": "{}",
   "is_pro": false,
-  "emoji": "🧰",
-  "created_at": "2026-01-15T10:30:00.000000Z"
+  "view_count": 0,
+  "share_count": 0,
+  "favorite_count": 0
 }`} />
               <CodeBlock label="User" code={`{
   "id": 42,
   "name": "Jane Doe",
   "email": "jane@example.com",
-  "is_pro": false
+  "is_pro": false,
+  "requires_terms_acceptance": false
 }`} />
             </div>
           </section>
@@ -593,13 +593,20 @@ export default function ApiDocsClient() {
 
           <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/60">
             <h2 className="text-2xl font-bold text-slate-950 dark:text-white">Errors</h2>
-            <p className="mt-3 text-slate-600 dark:text-slate-300">Errors are returned as JSON with a message. Validation errors may include an errors object keyed by field name.</p>
+            <p className="mt-3 text-slate-600 dark:text-slate-300">The API exception handlers return <InlineCode>error.code</InlineCode> and <InlineCode>error.message</InlineCode>. Validation errors also include <InlineCode>error.details</InlineCode> and legacy top-level <InlineCode>errors</InlineCode> and <InlineCode>message</InlineCode>; authentication errors also include a top-level <InlineCode>message</InlineCode>. Some controller responses, including explicit 403 responses, may contain only <InlineCode>message</InlineCode>. Prefer <InlineCode>error.message</InlineCode> and fall back to the top-level <InlineCode>message</InlineCode>.</p>
             <div className="mt-5 grid gap-4 xl:grid-cols-2">
               <CodeBlock label="Validation error" code={`{
-  "message": "The given data was invalid.",
+  "error": {
+    "code": "VALIDATION_ERROR",
+    "message": "The email field is required.",
+    "details": {
+      "email": ["The email field is required."]
+    }
+  },
   "errors": {
     "email": ["The email field is required."]
-  }
+  },
+  "message": "The email field is required."
 }`} />
               <CodeBlock label="Unauthorized" code={unauthorizedResponse} />
               <div className="rounded-2xl border border-slate-200 p-4 text-sm dark:border-slate-800">
@@ -608,8 +615,10 @@ export default function ApiDocsClient() {
                   <li><strong>200</strong> OK</li>
                   <li><strong>201</strong> Created</li>
                   <li><strong>401</strong> Missing or invalid token</li>
+                  <li><strong>403</strong> Forbidden</li>
                   <li><strong>404</strong> Resource not found</li>
                   <li><strong>422</strong> Validation failed</li>
+                  <li><strong>429</strong> Rate limited</li>
                   <li><strong>500</strong> Server error</li>
                 </ul>
               </div>
@@ -617,6 +626,6 @@ export default function ApiDocsClient() {
           </section>
         </div>
       </div>
-    </main>
+    </div>
   );
 }

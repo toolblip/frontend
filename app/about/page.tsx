@@ -5,10 +5,10 @@ export const metadata: Metadata = {
     canonical: 'https://toolblip.com/about',
   },
   title: 'About | Toolblip',
-  description: 'Toolblip is a collection of free developer and productivity tools that run entirely in your browser. No servers, no uploads, no accounts required.',
+  description: 'Toolblip offers free browser tools for everyday tasks. Most process input locally; optional accounts and paid features use online services.',
   openGraph: {
     title: 'About | Toolblip',
-    description: 'Toolblip is a collection of free developer and productivity tools that run entirely in your browser. No servers, no uploads, no accounts required.',
+    description: 'Toolblip offers free browser tools for everyday tasks. Most process input locally; optional accounts and paid features use online services.',
     url: 'https://toolblip.com/about',
     siteName: 'Toolblip',
     type: 'website',
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary',
     title: 'About | Toolblip',
-    description: 'Toolblip is a collection of free developer and productivity tools that run entirely in your browser. No servers, no uploads, no accounts required.',
+    description: 'Toolblip offers free browser tools for everyday tasks. Most process input locally; optional accounts and paid features use online services.',
   },
 };
 
@@ -32,18 +32,17 @@ export default function AboutPage() {
 
           <div className="tb-v2-article-section">
             <p>
-              Toolblip is a collection of free developer and productivity tools that run entirely in your browser.
-              There are no servers, no uploads, and no accounts required. You paste your data in, get your result out,
-              and nothing leaves your machine.
+              Toolblip offers free browser tools for everyday developer and productivity tasks. Most process
+              your input in your browser. You can use those tools without an account; optional accounts and paid
+              features use online services.
             </p>
           </div>
 
           <div className="tb-v2-article-section">
             <p>
-              Privacy-first is not a marketing phrase here. Every tool on Toolblip processes data locally using
-              JavaScript. Base64 encoding, JSON formatting, text conversion, image manipulation - all of it happens
-              client-side. The only analytics collected are cookieless page-view stats via Cloudflare, and optional
-              Google Analytics uses consent mode so the Google tag can be detected before you opt in while analytics storage remains denied until you accept.
+              JSON formatting, Base64 encoding, QR generation, and word counting process input locally. Toolblip
+              also uses analytics and handles account data. Read our{' '}
+              <a href="/privacy">privacy policy</a> for details.
             </p>
           </div>
 

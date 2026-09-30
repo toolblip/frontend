@@ -90,7 +90,7 @@ export const metadata: Metadata = {
     template: "%s",
   },
   description:
-    "Free browser-based tools: word counter, JSON formatter, Base64, URL encoder, UUID generator, and more. 100% client-side, no uploads, no account needed.",
+    "Free browser tools for JSON, Base64, QR codes, word counts, and more. Most process input in your browser; accounts and some features use online services.",
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "https://toolblip.com"),
   appleWebApp: {
     capable: true,

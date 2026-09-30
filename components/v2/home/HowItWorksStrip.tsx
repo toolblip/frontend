@@ -19,7 +19,7 @@ export default function HowItWorksStrip({ toolCount, categoryCount }: Props) {
             Pick a tool&nbsp;→ Paste your data&nbsp;→ Get your result
           </h2>
           <p style={{ fontSize: 13.5, color: 'var(--fg-2)', marginTop: 6 }}>
-            No servers, no uploads, no data trail  -  nothing leaves your browser.
+            Most tools process input in your browser. Accounts and some features use online services.
           </p>
         </div>
 
@@ -56,7 +56,7 @@ export default function HowItWorksStrip({ toolCount, categoryCount }: Props) {
               color: 'var(--c-img)',
               bg: 'var(--green-tint, #dcfce7)',
               title: 'Paste your data',
-              desc: 'Paste or type directly in the page. Everything stays local in your tab, not on a server.'
+              desc: 'Paste or type directly in the page. Many tools process your input in this tab.'
             },
             {
               icon: (
@@ -67,7 +67,7 @@ export default function HowItWorksStrip({ toolCount, categoryCount }: Props) {
               color: 'var(--purple)',
               bg: 'var(--purple-tint)',
               title: 'Get your result',
-              desc: 'Copy the result instantly  -  no upload queue, waitlist, or account wall.'
+              desc: 'Copy your result when the tool finishes.'
             },
           ].map((item, i) => (
             <div
@@ -173,7 +173,7 @@ export default function HowItWorksStrip({ toolCount, categoryCount }: Props) {
               <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
               <path d="M7 11V7a5 5 0 0 1 10 0v4" />
             </svg>
-            No servers &nbsp;&middot;&nbsp; No uploads &nbsp;&middot;&nbsp; Nothing leaves your browser.
+            Privacy policy: analytics and account data
           </a>
         </div>
       </div>

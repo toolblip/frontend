@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 const sample = `The best tool is the one that doesn't get in your way.
 
-Paste anything here - an email, a tweet, a paragraph from your novel - and watch the counts update live. No character limit, no telemetry.`;
+Paste anything here - an email, a tweet, a paragraph from your novel. Counts update as you type.`;
 
 export default function HeroToyPreview() {
   return (
@@ -27,8 +27,8 @@ export default function HeroToyPreview() {
           readOnly
         />
         <div className="tb-v2-toy-stats">
-          <div className="tb-v2-toy-stat"><div className="tb-v2-toy-stat-num">37</div><div className="tb-v2-toy-stat-lbl">Words</div></div>
-          <div className="tb-v2-toy-stat"><div className="tb-v2-toy-stat-num">194</div><div className="tb-v2-toy-stat-lbl">Characters</div></div>
+          <div className="tb-v2-toy-stat"><div className="tb-v2-toy-stat-num">30</div><div className="tb-v2-toy-stat-lbl">Words</div></div>
+          <div className="tb-v2-toy-stat"><div className="tb-v2-toy-stat-num">152</div><div className="tb-v2-toy-stat-lbl">Characters</div></div>
           <div className="tb-v2-toy-stat"><div className="tb-v2-toy-stat-num">3</div><div className="tb-v2-toy-stat-lbl">Sentences</div></div>
           <div className="tb-v2-toy-stat"><div className="tb-v2-toy-stat-num">1<sub>m</sub></div><div className="tb-v2-toy-stat-lbl">To read</div></div>
         </div>
