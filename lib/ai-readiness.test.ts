@@ -83,11 +83,13 @@ describe('AI crawler policy', () => {
   });
 
   it('keeps assistant user agents on the blocking HTML metadata list', () => {
-    expect(config.htmlLimitedBots).toBeInstanceOf(RegExp);
+    const htmlLimitedBots = config.htmlLimitedBots;
+    expect(htmlLimitedBots).toBeInstanceOf(RegExp);
+    if (!(htmlLimitedBots instanceof RegExp)) return;
     for (const agent of [...TRAINING_AGENTS, ...SEARCH_AGENTS, 'Bytespider']) {
-      expect(config.htmlLimitedBots.test(agent), agent).toBe(true);
+      expect(htmlLimitedBots.test(agent), agent).toBe(true);
     }
-    expect(config.htmlLimitedBots.test('Mediapartners-Google')).toBe(true);
+    expect(htmlLimitedBots.test('Mediapartners-Google')).toBe(true);
   });
 });
 
