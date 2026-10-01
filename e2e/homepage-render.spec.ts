@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { waitForToolHandler } from './tools/react-readiness';
 
 test('mobile HTML retains the demo preview and useful homepage content', async ({ browser, baseURL, request }) => {
   const response = await request.get('/');
@@ -67,7 +68,10 @@ test('mobile hero tabs work as the demo approaches the viewport', async ({ brows
   await page.goto('/');
   const demo = page.locator('.tb-v2-toy');
   await demo.scrollIntoViewIfNeeded();
-  await page.getByRole('tab', { name: 'QR code' }).click();
+  const qrTab = page.getByRole('tab', { name: 'QR code' });
+  // The first paint is a static preview. Its tab has no click handler until the interactive toy loads.
+  await waitForToolHandler(qrTab, 'onClick');
+  await qrTab.click();
   await expect(page.getByRole('tab', { name: 'QR code' })).toHaveAttribute('aria-selected', 'true');
   await expect(demo.getByLabel('Sample QR code preview')).toBeVisible();
   await expect(demo.getByRole('link', { name: 'Open QR code tool' })).toHaveAttribute('href', '/tools/qr-code-generator');

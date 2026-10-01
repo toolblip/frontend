@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { waitForToolHandler } from './react-readiness';
 
 test.describe('Banner Generator tool', () => {
   test('appears in the homepage featured tools list', async ({ page }) => {
@@ -57,7 +58,9 @@ test.describe('Banner Generator tool', () => {
 
     await page.getByLabel('Banner title').fill('Ship Faster With Browser Tools');
     await page.getByLabel('Banner subtitle').fill('Generate clean blog covers and OG images without design software.');
-    await page.getByRole('button', { name: /Background controls/i }).click();
+    const background = page.getByRole('button', { name: /Background controls/i });
+    await waitForToolHandler(background, 'onClick');
+    await background.click();
     await page.getByRole('button', { name: /Indigo Violet/i }).click();
 
     const preview = page.getByTestId('article-banner-preview');
@@ -96,7 +99,9 @@ test.describe('Banner Generator tool', () => {
     }
 
     await expect(page.getByRole('button', { name: 'Solid' })).toBeHidden();
-    await page.getByRole('button', { name: /Background controls/i }).click();
+    const background = page.getByRole('button', { name: /Background controls/i });
+    await waitForToolHandler(background, 'onClick');
+    await background.click();
     await expect(page.getByRole('button', { name: /Background controls/i })).toHaveAttribute('aria-expanded', 'true');
     await expect(page.getByRole('button', { name: 'Solid' })).toBeVisible();
     await expect(page.getByRole('group', { name: 'Background presets' }).getByRole('button')).toHaveCount(12);
@@ -136,7 +141,9 @@ test.describe('Banner Generator tool', () => {
     await page.setViewportSize({ width: 1440, height: 1100 });
     await page.goto('/tools/og-image-generator');
 
-    await page.getByRole('button', { name: /Background controls/i }).click();
+    const background = page.getByRole('button', { name: /Background controls/i });
+    await waitForToolHandler(background, 'onClick');
+    await background.click();
     await page.getByRole('button', { name: /Typography controls/i }).click();
     await page.getByRole('button', { name: /Pattern overlay controls/i }).click();
 
