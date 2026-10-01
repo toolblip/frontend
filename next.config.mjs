@@ -328,6 +328,20 @@ const nextConfig = {
 
     ];
   },
+  // Public list URLs are /@username/slug. A folder named @… is a parallel
+  // route, so it cannot be a page. proxy.ts rewrites this path, but that
+  // layer does not run in production (see the note above). beforeFiles
+  // runs in every environment and keeps the public URL in the address bar.
+  async rewrites() {
+    return {
+      beforeFiles: [
+        {
+          source: "/@:username([a-zA-Z0-9][a-zA-Z0-9-]{1,28}[a-zA-Z0-9])/:slug([a-zA-Z0-9][a-zA-Z0-9-]{0,78}[a-zA-Z0-9])",
+          destination: "/lists/:username/:slug",
+        },
+      ],
+    };
+  },
   async headers() {
     return [
       {
