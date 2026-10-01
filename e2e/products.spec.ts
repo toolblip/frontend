@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { waitForToolHandler } from './tools/react-readiness';
 
 test.beforeEach(async ({ page }) => {
   await page.addInitScript(() => localStorage.setItem('toolblip_cookie_consent', 'declined'));
@@ -101,7 +102,10 @@ for (const width of [1440, 375, 320]) {
     await page.goto('/products', { waitUntil: 'domcontentloaded' });
     const cards = page.getByRole('main').getByRole('article');
     const search = page.getByRole('searchbox', { name: 'Search products' });
-    await page.getByRole('button', { name: 'Commerce', exact: true }).click();
+    const commerce = page.getByRole('button', { name: 'Commerce', exact: true });
+    await waitForToolHandler(commerce, 'onClick');
+    await waitForToolHandler(search, 'onChange');
+    await commerce.click();
     await search.fill('sHoPiFy');
     await expect(cards.getByRole('heading')).toHaveText(['Appnary']);
     await search.fill('cloud');
@@ -146,7 +150,9 @@ for (const width of [1440, 375, 320]) {
     // CSS-module class names are hashed; the card link's first child is its cover.
     const covers = cards.locator('a > div:first-child');
     const choose = async (theme: 'Light' | 'Dark' | 'System') => {
-      await page.getByRole('button', { name: 'Theme', exact: true }).click();
+      const themeButton = page.getByRole('button', { name: 'Theme', exact: true });
+      await waitForToolHandler(themeButton, 'onClick');
+      await themeButton.click();
       await page.getByRole('menuitemradio', { name: theme, exact: true }).click();
     };
     const palette = () => covers.evaluateAll(elements => elements.map(cover =>

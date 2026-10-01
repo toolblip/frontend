@@ -192,8 +192,10 @@ for (const width of [1440, 375]) {
       await expect(output).toContainText('nbformat');
       expect(JSON.parse(await output.innerText())).toEqual(notebook);
       await copy(page, await output.innerText());
+      const cookies = page.getByRole('button', { name: /^Accept(?: analytics cookies)?$/ });
+      if (await cookies.isVisible()) await cookies.click();
       const download = page.waitForEvent('download');
-      await page.getByRole('button', { name: /Download/ }).click();
+      await clickInView(page.getByRole('button', { name: /Download/ }));
       expect(JSON.parse(await readFile((await (await download).path())!, 'utf8'))).toEqual(notebook);
       await fits(page);
       await input.fill('{"nbformat":4,"cells":[{}]}');
