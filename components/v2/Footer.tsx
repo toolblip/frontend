@@ -37,8 +37,8 @@ function DirectoryBadges({ duplicate = false }: { duplicate?: boolean }) {
       <DirectoryBadgeLink duplicate={duplicate} href="https://indiehunt.io/project/toolblip" target="_blank" rel="noopener noreferrer">
         <DirectoryBadgeImage src="/directory-badges/indiehunt.svg" alt="Featured on IndieHunt" width="265" height="58" fallback="IndieHunt" />
       </DirectoryBadgeLink>
-      <DirectoryBadgeLink duplicate={duplicate} href="https://fazier.com/launches/toolblip.com" target="_blank" rel="noopener noreferrer">
-        <DirectoryBadgeImage src="/directory-badges/fazier.svg" width="120" alt="Fazier badge" fallback="Fazier" />
+      <DirectoryBadgeLink duplicate={duplicate} href="https://fazier.com/launches/toolblip" target="_blank" rel="noopener noreferrer">
+        <DirectoryBadgeImage src="/directory-badges/fazier.svg" width="255" height="54" alt="Fazier #5 Product of the Month" fallback="Fazier" />
       </DirectoryBadgeLink>
       <DirectoryBadgeLink duplicate={duplicate} href="https://tinylaunch.com" target="_blank" rel="noopener">
         <DirectoryBadgeImage src="/directory-badges/tinylaunch.svg" alt="TinyLaunch Badge" style={{ width: 202, height: 'auto' }} fallback="TinyLaunch" />
