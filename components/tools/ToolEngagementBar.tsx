@@ -278,6 +278,21 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
     }
   }
 
+  function commitFetchedStats(favoriteRevision: number, payload: { data?: EngagementStats } | null) {
+    const incoming = payload?.data ?? fallbackStats(toolSlug);
+    if (favoriteRevision === favoriteRevisionRef.current) {
+      setStats(incoming);
+      return;
+    }
+    // The response was captured before a favorite save or removal. Keep that
+    // decision, and only take counters that moved forward.
+    setStats((current) => ({
+      ...current,
+      views: Math.max(current.views, incoming.views),
+      shares: Math.max(current.shares, incoming.shares),
+    }));
+  }
+
   async function favoriteTool() {
     setFavoriteLoading(true);
     try {
@@ -386,9 +401,7 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
       const res = await fetch(`/api/tools/${toolSlug}/engagement`, { credentials: "include", cache: "no-store" });
       if (!res.ok) return;
       const data = await res.json();
-      // A login refresh can contain the snapshot from before a favorite save.
-      if (favoriteRevision !== favoriteRevisionRef.current) return;
-      setStats(data.data ?? fallbackStats(toolSlug));
+      commitFetchedStats(favoriteRevision, data);
     } catch {
       // Optional counters must not interrupt the tool when offline or unloading.
       // Keep the last known stats if the response is unavailable or malformed.
@@ -398,11 +411,12 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
   async function recordViewOnce() {
     if (viewRecordedRef.current) return;
     viewRecordedRef.current = true;
+    const favoriteRevision = favoriteRevisionRef.current;
     try {
       const res = await fetch(`/api/tools/${toolSlug}/view`, { method: "POST", credentials: "include" });
       if (!res.ok) return;
       const data = await res.json();
-      setStats(data.data ?? fallbackStats(toolSlug));
+      commitFetchedStats(favoriteRevision, data);
     } catch {
       // Do not retry a view POST: the server may have counted it before disconnect.
     }
@@ -422,6 +436,7 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
   }, [user?.id]);
 
   async function recordShare(channel: string) {
+    const favoriteRevision = favoriteRevisionRef.current;
     setStats((current) => ({ ...current, shares: current.shares + 1 }));
 
     const res = await fetch(`/api/tools/${toolSlug}/share`, {
@@ -433,7 +448,7 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
     });
     if (!res.ok) return;
     const data = await res.json();
-    setStats(data.data ?? fallbackStats(toolSlug));
+    commitFetchedStats(favoriteRevision, data);
   }
 
   async function copyLink() {
