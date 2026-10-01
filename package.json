@@ -3,7 +3,7 @@
   "description": "Free browser-based developer tools: JSON formatter, Base64, UUID generator, and more. Next.js on Railway.",
   "version": "0.0.2",
   "scripts": {
-    "dev": "next dev",
+    "dev": "node scripts/reclaim-next-dev.mjs && next dev",
     "build": "next build",
     "prebuild": "node scripts/generate-blog-manifest.mjs && node scripts/build-browser-workers.mjs",
     "start": "next start",
