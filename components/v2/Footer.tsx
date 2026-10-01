@@ -13,9 +13,8 @@ function DirectoryBadgeLink({
   children,
   ...attributes
 }: React.ComponentPropsWithoutRef<'a'> & { duplicate: boolean }) {
-  if (duplicate) return <span {...attributes}>{children}</span>;
   return (
-    <a {...attributes} href={href} target={target} rel={rel} tabIndex={tabIndex}>
+    <a {...attributes} href={href} target={target} rel={rel} tabIndex={duplicate ? -1 : tabIndex}>
       {children}
     </a>
   );
@@ -38,7 +37,7 @@ function DirectoryBadges({ duplicate = false }: { duplicate?: boolean }) {
         <DirectoryBadgeImage src="/directory-badges/indiehunt.svg" alt="Featured on IndieHunt" width="265" height="58" fallback="IndieHunt" />
       </DirectoryBadgeLink>
       <DirectoryBadgeLink duplicate={duplicate} href="https://fazier.com/launches/toolblip" target="_blank" rel="noopener noreferrer">
-        <DirectoryBadgeImage src="/directory-badges/fazier.svg" width="255" height="54" alt="Fazier #5 Product of the Month" fallback="Fazier" />
+        <DirectoryBadgeImage src="/directory-badges/fazier-monthly.svg" width="255" height="54" alt="Fazier #5 Product of the Month" fallback="Fazier" />
       </DirectoryBadgeLink>
       <DirectoryBadgeLink duplicate={duplicate} href="https://tinylaunch.com" target="_blank" rel="noopener">
         <DirectoryBadgeImage src="/directory-badges/tinylaunch.svg" alt="TinyLaunch Badge" style={{ width: 202, height: 'auto' }} fallback="TinyLaunch" />

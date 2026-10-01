@@ -66,9 +66,9 @@ for (const mobile of [false, true]) {
     await expect(aiToolTrekLink).not.toHaveAttribute('target');
     await expect(aiToolTrekLink).not.toHaveAttribute('rel');
     await expect(aiToolTrekLink.locator('img')).toHaveCount(0);
-    await expect(strip.locator('a[href="https://launchtory.com/projects/toolblip"]')).toHaveCount(1);
-    await expect(strip.locator('a[href="https://bowora.com/?via=0aoviedt"]')).toHaveCount(1);
-    await expect(strip.locator('a[href="https://saaspa.ge/product/cmu8mzn8n0005gm0a1obn4e2g"]')).toHaveCount(1);
+    await expect(page.locator(`${group} a[href="https://launchtory.com/projects/toolblip"]`)).toHaveCount(1);
+    await expect(page.locator(`${group} a[href="https://bowora.com/?via=0aoviedt"]`)).toHaveCount(1);
+    await expect(page.locator(`${group} a[href="https://saaspa.ge/product/cmu8mzn8n0005gm0a1obn4e2g"]`)).toHaveCount(1);
     for (const href of [
       'https://turbo0.com/item/toolblip',
       'https://sumodir.com',
@@ -76,11 +76,12 @@ for (const mobile of [false, true]) {
       'https://web-review.com',
       'https://navfolders.com/',
     ]) {
-      await expect(strip.locator(`a[href="${href}"]`)).toHaveCount(1);
+      await expect(page.locator(`${group} a[href="${href}"]`)).toHaveCount(1);
     }
     await expect(page.locator('main .tb-v2-directory-group')).toHaveCount(0);
     await expect(page.locator('.tb-v2-directory-group[aria-hidden="true"] a:not([tabindex="-1"])')).toHaveCount(0);
-    await expect(page.locator('.tb-v2-directory-group[aria-hidden=true] a[href]')).toHaveCount(0);
+    await expect(page.locator('.tb-v2-directory-group[aria-hidden="true"] a[href]')).toHaveCount(listings.length);
+    await expect(page.locator('.tb-v2-directory-group[aria-hidden="true"] a[href="https://fazier.com/launches/toolblip"]')).toHaveCount(1);
 
     // Keyboard focus disables the transform so the browser can scroll to all 52 links.
     await strip.focus();
