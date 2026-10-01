@@ -1,7 +1,7 @@
 /** Live edge entry for Next.js 16+ (middleware.ts is forbidden alongside this file). */
 import { NextRequest, NextResponse } from "next/server";
 
-const PROTECTED_PREFIXES = ["/account", "/dashboard", "/submit-tool"];
+const PROTECTED_PREFIXES = ["/account", "/dashboard", "/submit-tool", "/lists"];
 const AUTH_ROUTES = ["/login", "/register"];
 
 export function proxy(req: NextRequest) {
@@ -33,6 +33,20 @@ export function proxy(req: NextRequest) {
   // Let Next.js API auth routes through - handled by route handlers
   if (pathname.startsWith("/api/auth")) {
     return NextResponse.next();
+  }
+
+  const atList = pathname.match(/^\/@([a-z0-9][a-z0-9-]{1,28}[a-z0-9])\/([a-z0-9][a-z0-9-]{0,78}[a-z0-9])$/i);
+  if (atList) {
+    if (!token) {
+      const login = req.nextUrl.clone();
+      login.pathname = "/login";
+      login.search = "";
+      login.searchParams.set("next", pathname);
+      return NextResponse.redirect(login);
+    }
+    const url = req.nextUrl.clone();
+    url.pathname = `/lists/${atList[1].toLowerCase()}/${atList[2].toLowerCase()}`;
+    return NextResponse.rewrite(url);
   }
 
   const isProtected = PROTECTED_PREFIXES.some((p) => pathname.startsWith(p));
