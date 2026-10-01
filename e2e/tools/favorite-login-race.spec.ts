@@ -63,3 +63,56 @@ for (const refreshOrder of ['before', 'after'] as const) {
     await expect(page.locator('#favorite-tools').getByRole('link', { name: /JSON Formatter/i })).toBeVisible();
   });
 }
+
+// A view or share request that started while signed out can return after the
+// favorite save. Its payload has viewer_favorited false and must not replace it.
+for (const lateWrite of ['view', 'share'] as const) {
+  test(`a late ${lateWrite} response does not clear a favorite saved after login`, async ({ page, request, context }) => {
+    await resetMockBackend(request);
+    let releaseLateWrite!: () => void;
+    const lateWriteReleased = new Promise<void>(resolve => { releaseLateWrite = resolve; });
+    let lateWriteSeen!: () => void;
+    const lateWriteCaptured = new Promise<void>(resolve => { lateWriteSeen = resolve; });
+
+    await page.route(`**/api/tools/json-formatter/${lateWrite}`, async route => {
+      if (route.request().method() !== 'POST') {
+        await route.continue();
+        return;
+      }
+      const response = await route.fetch();
+      lateWriteSeen();
+      await lateWriteReleased;
+      await route.fulfill({ response });
+    });
+
+    await page.goto('/tools/json-formatter', { waitUntil: 'domcontentloaded' });
+    const favorite = page.getByTestId('tool-favorite-button');
+    await expect(favorite).toBeEnabled();
+
+    if (lateWrite === 'share') {
+      await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+      await page.getByTestId('tool-share-count').click();
+      await page.getByRole('button', { name: /Copy link/i }).click();
+    }
+    await lateWriteCaptured;
+
+    await favorite.click();
+    const dialog = page.getByRole('dialog', { name: /Sign in to favorite JSON Formatter/i });
+    await dialog.getByLabel('Email').fill(VALID_USER.email);
+    await dialog.getByLabel('Password', { exact: true }).fill(VALID_USER.password);
+    await dialog.getByRole('button', { name: /^Sign in$/i }).click();
+    await expect(dialog).toBeHidden();
+    await expect(favorite).toHaveText('Favorited');
+
+    const lateResponse = page.waitForResponse(response => response.url().includes(`/api/tools/json-formatter/${lateWrite}`) && response.request().method() === 'POST');
+    releaseLateWrite();
+    await (await lateResponse).finished();
+    await page.evaluate(() => new Promise<void>(resolve => {
+      requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+    }));
+
+    await expect(favorite).toHaveText('Favorited');
+    await expect(favorite).toHaveClass(/bg-red-600/);
+    await expect(page.getByTestId('tool-favorite-count')).toHaveText('1');
+  });
+}
