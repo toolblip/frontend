@@ -26,7 +26,7 @@ test.describe('Favorite item saving', () => {
     await expect(page.getByTestId('tool-favorite-count')).toHaveText('1');
   });
 
-  test('saved favorites show in the single default dashboard list with no list selector', async ({ page }) => {
+  test('saved favorites stay on the private default list beside custom lists', async ({ page }) => {
     const loginRes = await page.request.post('/api/auth/login', {
       data: { email: VALID_USER.email, password: VALID_USER.password },
     });
@@ -39,19 +39,14 @@ test.describe('Favorite item saving', () => {
     await page.goto('/dashboard');
     await dismissDashboardOnboarding(page);
 
-    // Exactly one hidden default favorites list — no multi-list UI.
     const favoritesPanel = page.locator('#favorite-tools');
     await expect(favoritesPanel).toHaveCount(1);
     await expect(favoritesPanel.getByRole('link', { name: /JSON Formatter/ })).toHaveAttribute(
       'href',
       '/tools/json-formatter',
     );
-    // Each tool card has two links: the tool name and the "View" button.
     await expect(favoritesPanel.locator('a[href^="/tools/"]')).toHaveCount(4, { timeout: 10000 });
-
-    // No list picker / list-management affordances anywhere on the dashboard.
-    await expect(page.getByRole('combobox')).toHaveCount(0);
-    await expect(page.getByRole('button', { name: /new list|create list|add list|manage lists/i })).toHaveCount(0);
-    await expect(page.getByText(/^All lists$/i)).toHaveCount(0);
+    await expect(page.getByTestId('favorite-lists')).toBeVisible();
+    await expect(page.getByTestId('dashboard-list-create')).toBeVisible();
   });
 });

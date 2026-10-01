@@ -7,6 +7,7 @@ import GoogleAuthButton from "@/components/auth/GoogleAuthButton";
 import { useAuth } from "@/app/providers/auth-provider";
 import { recordRecentTool } from "@/lib/toolHistory";
 import { getToolPathBySlug } from "@/lib/tool-path";
+import FavoriteListMenu from "@/components/lists/FavoriteListMenu";
 import ShareCard, { type ShareChannelLink } from "@/components/share/ShareCard";
 import { XIcon, FacebookIcon, WhatsAppIcon, LinkedInIcon, MessengerIcon, SnapchatIcon, EmailIcon, ShareGlyphIcon, SOCIAL_COLORS } from "@/components/share/shareIcons";
 
@@ -200,6 +201,7 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
   const viewRecordedRef = useRef(false);
   const favoriteRevisionRef = useRef(0);
   const [shareOpen, setShareOpen] = useState(false);
+  const [listsOpen, setListsOpen] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -487,6 +489,7 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
 
   async function toggleFavorite() {
     setShareOpen(false);
+    setListsOpen(false);
 
     if (authLoading) {
       return;
@@ -561,7 +564,19 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
 
   function toggleSharePopover() {
     setLoginOpen(false);
+    setListsOpen(false);
     setShareOpen((open) => !open);
+  }
+
+  function toggleLists() {
+    setShareOpen(false);
+    if (authLoading) return;
+    if (!user) {
+      setFavoriteIntent(false);
+      setLoginOpen(true);
+      return;
+    }
+    setListsOpen((open) => !open);
   }
 
   return (
@@ -627,33 +642,61 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
         <span className="font-bold text-gray-800 dark:text-gray-100">{formatCount(stats.views)}</span>
       </span>
 
-      <div className="ml-auto flex items-stretch overflow-hidden rounded-xl">
-        <button
-          data-testid="tool-favorite-button"
-          type="button"
-          onClick={toggleFavorite}
-          disabled={favoriteDisabled}
-          className={`inline-flex items-center gap-1.5 rounded-l-xl border border-r-0 px-3 py-1.5 text-sm font-medium shadow-sm transition cursor-pointer disabled:opacity-60 ${
-            stats.viewer_favorited
-              ? "border-red-500 bg-red-500 text-white hover:bg-red-600"
-              : "border-gray-200 bg-white text-gray-600 hover:border-red-200 hover:bg-red-50 hover:text-red-600 dark:border-gray-800 dark:bg-gray-950 dark:text-gray-300 dark:hover:border-red-900 dark:hover:bg-red-950/40 dark:hover:text-red-400"
-          }`}
-          aria-label={favoriteLabel}
-        >
-          {stats.viewer_favorited ? <HeartIcon className="h-4 w-4" /> : <HeartOutlineIcon className="h-4 w-4" />}
-          {favoriteText}
-        </button>
-        <span
-          data-testid="tool-favorite-count"
-          className={`inline-flex min-w-8 items-center justify-center rounded-r-xl border px-2.5 py-1.5 text-sm font-bold shadow-sm transition dark:border-gray-700 ${
-            stats.viewer_favorited
-              ? "border-red-500 bg-red-50 text-red-600 dark:bg-red-950/40 dark:text-red-300"
-              : "border-gray-200 bg-gray-50 text-gray-700 hover:bg-red-50 hover:text-red-600 dark:bg-gray-900 dark:text-gray-300 dark:hover:bg-red-950/40 dark:hover:text-red-400"
-          }`}
-          aria-label={`Favorites ${formatCount(stats.favorites)}`}
-        >
-          {formatCount(stats.favorites)}
-        </span>
+      <div className="relative ml-auto">
+        <div className="flex items-stretch overflow-hidden rounded-xl">
+          <button
+            data-testid="tool-favorite-button"
+            type="button"
+            onClick={toggleFavorite}
+            disabled={favoriteDisabled}
+            className={`inline-flex items-center gap-1.5 rounded-l-xl border border-r-0 px-3 py-1.5 text-sm font-medium shadow-sm transition cursor-pointer disabled:opacity-60 ${
+              stats.viewer_favorited
+                ? "border-red-500 bg-red-500 text-white hover:bg-red-600"
+                : "border-gray-200 bg-white text-gray-600 hover:border-red-200 hover:bg-red-50 hover:text-red-600 dark:border-gray-800 dark:bg-gray-950 dark:text-gray-300 dark:hover:border-red-900 dark:hover:bg-red-950/40 dark:hover:text-red-400"
+            }`}
+            aria-label={favoriteLabel}
+          >
+            {stats.viewer_favorited ? <HeartIcon className="h-4 w-4" /> : <HeartOutlineIcon className="h-4 w-4" />}
+            {favoriteText}
+          </button>
+          <span
+            data-testid="tool-favorite-count"
+            className={`inline-flex min-w-8 items-center justify-center border border-r-0 px-2.5 py-1.5 text-sm font-bold shadow-sm transition dark:border-gray-700 ${
+              stats.viewer_favorited
+                ? "border-red-500 bg-red-50 text-red-600 dark:bg-red-950/40 dark:text-red-300"
+                : "border-gray-200 bg-gray-50 text-gray-700 dark:bg-gray-900 dark:text-gray-300"
+            }`}
+            aria-label={`Favorites ${formatCount(stats.favorites)}`}
+          >
+            {formatCount(stats.favorites)}
+          </span>
+          <button
+            type="button"
+            data-testid="tool-favorite-lists"
+            onClick={toggleLists}
+            disabled={authLoading}
+            aria-label={`Add ${toolName} to a list`}
+            aria-expanded={listsOpen}
+            aria-haspopup="dialog"
+            className={`inline-flex items-center rounded-r-xl border px-2 py-1.5 shadow-sm cursor-pointer ${
+              stats.viewer_favorited
+                ? "border-red-500 bg-red-500 text-white hover:bg-red-600"
+                : "border-gray-200 bg-white text-gray-600 hover:bg-red-50 hover:text-red-600 dark:border-gray-800 dark:bg-gray-950 dark:text-gray-300 dark:hover:bg-red-950/40 dark:hover:text-red-400"
+            }`}
+          >
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="m4 6 4 4 4-4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
+        </div>
+        {listsOpen && user && (
+          <FavoriteListMenu
+            toolName={toolName}
+            toolSlug={toolSlug}
+            onEngagement={setStats}
+            onClose={() => setListsOpen(false)}
+          />
+        )}
       </div>
 
       {loginOpen && (

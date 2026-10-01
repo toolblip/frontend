@@ -16,6 +16,7 @@ import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { OnboardingChecklist } from "@/components/dashboard/OnboardingChecklist";
 import { TrialBanner } from "@/components/dashboard/TrialBanner";
 import { TabbedTools } from "@/components/dashboard/TabbedTools";
+import { FavoriteListManager } from "@/components/lists/FavoriteListManager";
 import { TermsOnboarding } from "@/components/dashboard/TermsOnboarding";
 import { PlanOnboarding } from "@/components/dashboard/PlanOnboarding";
 
@@ -606,6 +607,8 @@ export default function AccountPage() {
         recentTools={recentTools}
         recentToolsCount={recentToolsCount}
       />
+
+      <FavoriteListManager />
 
       <div className="mt-8 text-center">
         <Link

@@ -10,8 +10,10 @@ const users = new Map();
 const tokens = new Map();
 const toolStats = new Map();
 const userFavorites = new Map();
+const favoriteLists = new Map();
 let nextId = 1;
 let nextToken = 1;
+let nextListId = 1;
 
 function json(res, status, body) {
   const payload = JSON.stringify(body);
@@ -81,6 +83,8 @@ function reset() {
   tokens.clear();
   toolStats.clear();
   userFavorites.clear();
+  favoriteLists.clear();
+  nextListId = 1;
   toolStats.set('json-formatter', { slug: 'json-formatter', views: 0, shares: 0, favorites: 0 });
   nextId = 1;
   nextToken = 1;
@@ -419,10 +423,124 @@ const server = http.createServer(async (req, res) => {
     const stats = ensureStats(slug);
     const favorites = userFavorites.get(email) ?? new Set();
     if (req.method === 'POST') favorites.add(slug);
-    if (req.method === 'DELETE') favorites.delete(slug);
+    if (req.method === 'DELETE') {
+      favorites.delete(slug);
+      for (const list of favoriteLists.get(email) ?? []) list.tools.delete(slug);
+    }
     userFavorites.set(email, favorites);
     stats.favorites = Array.from(userFavorites.values()).filter((set) => set.has(slug)).length;
     return json(res, 200, { data: engagementPayload(slug, req) });
+  }
+
+  if (req.method === 'GET' && url.pathname === '/api/auth/favorite-lists') {
+    const email = tokens.get(bearer(req));
+    if (!email) return json(res, 401, { message: 'Unauthenticated.' });
+    const tool = url.searchParams.get('tool');
+    const user = users.get(email);
+    const lists = favoriteLists.get(email) ?? [];
+    return json(res, 200, {
+      username: user?.username ?? null,
+      joined: [],
+      data: lists.map((list) => ({
+        id: list.id,
+        name: list.name,
+        slug: list.slug,
+        is_shared: list.is_shared,
+        public_path: list.is_shared && user?.username ? `/@${user.username}/${list.slug}` : null,
+        tool_count: list.tools.size,
+        tool_slugs: Array.from(list.tools),
+        contains_tool: Boolean(tool && list.tools.has(tool)),
+        can_edit: true,
+      })),
+    });
+  }
+
+  if (req.method === 'POST' && url.pathname === '/api/auth/favorite-lists') {
+    const email = tokens.get(bearer(req));
+    if (!email) return json(res, 401, { message: 'Unauthenticated.' });
+    const body = await readJson(req);
+    const name = String(body.name ?? '').trim();
+    if (!name) return json(res, 422, { message: 'Name is required.' });
+    const base = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'list';
+    const lists = favoriteLists.get(email) ?? [];
+    let slug = base;
+    let suffix = 2;
+    while (lists.some((list) => list.slug === slug)) slug = `${base}-${suffix++}`;
+    const list = { id: nextListId++, name, slug, is_shared: false, tools: new Set() };
+    lists.push(list);
+    favoriteLists.set(email, lists);
+    return json(res, 201, {
+      data: { id: list.id, name, slug, is_shared: false, public_path: null, tool_count: 0, tool_slugs: [], contains_tool: false, can_edit: true },
+    });
+  }
+
+  const listToolMatch = url.pathname.match(/^\/api\/auth\/favorite-lists\/(\d+)\/tools\/([^/]+)$/);
+  if ((req.method === 'PUT' || req.method === 'DELETE') && listToolMatch) {
+    const email = tokens.get(bearer(req));
+    if (!email) return json(res, 401, { message: 'Unauthenticated.' });
+    const list = (favoriteLists.get(email) ?? []).find((item) => item.id === Number(listToolMatch[1]));
+    if (!list) return json(res, 404, { message: 'List not found.' });
+    const slug = decodeURIComponent(listToolMatch[2]);
+    const stats = ensureStats(slug);
+    if (req.method === 'PUT') {
+      const favorites = userFavorites.get(email) ?? new Set();
+      favorites.add(slug);
+      userFavorites.set(email, favorites);
+      list.tools.add(slug);
+      stats.favorites = Array.from(userFavorites.values()).filter((set) => set.has(slug)).length;
+    } else {
+      list.tools.delete(slug);
+    }
+    return json(res, 200, { data: engagementPayload(slug, req) });
+  }
+
+  const listShareMatch = url.pathname.match(/^\/api\/auth\/favorite-lists\/(\d+)\/share$/);
+  if ((req.method === 'POST' || req.method === 'DELETE') && listShareMatch) {
+    const email = tokens.get(bearer(req));
+    if (!email) return json(res, 401, { message: 'Unauthenticated.' });
+    const user = users.get(email);
+    const list = (favoriteLists.get(email) ?? []).find((item) => item.id === Number(listShareMatch[1]));
+    if (!list) return json(res, 404, { message: 'List not found.' });
+    if (req.method === 'POST' && !user?.username) {
+      return json(res, 422, { message: 'Choose a username before sharing this list.', code: 'username_required' });
+    }
+    list.is_shared = req.method === 'POST';
+    return json(res, 200, {
+      data: {
+        id: list.id,
+        name: list.name,
+        slug: list.slug,
+        is_shared: list.is_shared,
+        public_path: list.is_shared && user?.username ? `/@${user.username}/${list.slug}` : null,
+        tool_count: list.tools.size,
+        tool_slugs: Array.from(list.tools),
+        contains_tool: false,
+        can_edit: true,
+      },
+    });
+  }
+
+  if (req.method === 'POST' && url.pathname === '/api/auth/username') {
+    const email = tokens.get(bearer(req));
+    if (!email) return json(res, 401, { message: 'Unauthenticated.' });
+    const body = await readJson(req);
+    const username = String(body.username ?? '').trim().toLowerCase();
+    if (!/^[a-z0-9][a-z0-9-]{1,28}[a-z0-9]$/.test(username)) {
+      return json(res, 422, { message: 'Choose a username with letters, numbers, and hyphens.' });
+    }
+    const user = users.get(email);
+    user.username = username;
+    return json(res, 200, { data: { username } });
+  }
+
+  const listInviteMatch = url.pathname.match(/^\/api\/auth\/favorite-lists\/(\d+)\/invites$/);
+  if (req.method === 'POST' && listInviteMatch) {
+    const email = tokens.get(bearer(req));
+    if (!email) return json(res, 401, { message: 'Unauthenticated.' });
+    const list = (favoriteLists.get(email) ?? []).find((item) => item.id === Number(listInviteMatch[1]));
+    if (!list?.is_shared) return json(res, 422, { message: 'Share the list before emailing the link.', code: 'list_private' });
+    const body = await readJson(req);
+    return json(res, 200, { data: { email: body.email } });
   }
 
   if (req.method === 'GET' && url.pathname === '/api/auth/favorite-tools') {
