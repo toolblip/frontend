@@ -10,6 +10,7 @@ import RelatedBlogPosts from '@/components/tools/RelatedBlogPosts';
 import { getFaqs, hasFaqOverride } from '@/lib/faq';
 import { getToolContent } from '@/data/tool-content';
 import { getCategoryPath } from '@/lib/tool-path';
+import { buildToolJsonLd, jsonLdScript } from '@/lib/tool-jsonld';
 
 export default function ToolDetailView({ tool }: { tool: Tool }) {
   const faqs = getFaqs(tool);
@@ -17,6 +18,10 @@ export default function ToolDetailView({ tool }: { tool: Tool }) {
 
   return (
     <div data-testid="tool-detail-shell" className="tb-v2-tool-page">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLdScript(buildToolJsonLd(tool)) }}
+      />
       <div className="tb-v2-container">
         <nav className="tb-v2-breadcrumb">
           <Link href="/">Home</Link>

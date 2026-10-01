@@ -11,6 +11,7 @@ import Shell from "@/components/v2/Shell";
 import Footer from "@/components/v2/Footer";
 import { AuthProvider } from "./providers/auth-provider";
 import PwaProvider from "./providers/pwa-provider";
+import { buildSiteJsonLd, jsonLdScript } from "@/lib/tool-jsonld";
 import "./globals.css";
 import "./fonts/fallbacks.css";
 
@@ -143,6 +144,7 @@ export default function RootLayout({
     >
       <head>
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="alternate" type="text/plain" href="/llms.txt" title="LLM guidance" />
         {process.env.NEXT_PUBLIC_BING_VERIFICATION_CODE ? (
           <meta
             name="msvalidate.01"
@@ -157,6 +159,10 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: jsonLdScript(buildSiteJsonLd()) }}
+        />
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[100] focus:px-4 focus:py-2 focus:bg-red-600 focus:text-white focus:rounded-lg focus:text-sm focus:font-medium"
