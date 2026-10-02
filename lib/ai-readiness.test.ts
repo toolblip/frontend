@@ -15,7 +15,8 @@ import { readFileSync } from 'node:fs';
 import { findPublicTool, handleMcpMessage, searchPublicTools } from './assistant-mcp';
 import { buildIndexNowBody, INDEXNOW_KEY } from './indexnow.mjs';
 import { buildLlmsFullTxt, buildLlmsTxt, publicTools } from './llms-txt';
-import { tools } from '@/data/tools';
+import { getToolBySlug, tools } from '@/data/tools';
+import { buildToolMetadata } from '@/app/tools/tool-page-meta';
 import { isToolIndexable } from '@/lib/indexable-tools';
 import { getToolPath } from '@/lib/tool-path';
 import { buildSiteJsonLd, buildToolJsonLd, jsonLdScript } from './tool-jsonld';
@@ -159,5 +160,16 @@ describe('assistant tool lookup', () => {
     });
     expect(JSON.stringify(called)).toContain('https://toolblip.com/tools/json-formatter');
     expect(buildLlmsTxt()).toContain('/mcp');
+  });
+});
+
+describe('tool meta descriptions', () => {
+  it('keeps the JSON formatter description inside Bing’s 160 character limit', () => {
+    const metadata = buildToolMetadata(getToolBySlug('json-formatter')!);
+    const description = String(metadata.description);
+    expect(description.length).toBeLessThanOrEqual(160);
+    expect(description).toBe('Format JSON with two or four spaces, or remove whitespace with Minify.');
+    expect(metadata.openGraph?.description).toBe(description);
+    expect(metadata.twitter?.description).toBe(description);
   });
 });
