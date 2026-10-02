@@ -15,14 +15,16 @@ type EngagementStats = {
 type FavoriteListMenuProps = {
   toolName: string;
   toolSlug: string;
+  favorited: boolean;
   onEngagement: (stats: EngagementStats) => void;
   onClose: () => void;
 };
 
-export default function FavoriteListMenu({ toolName, toolSlug, onEngagement, onClose }: FavoriteListMenuProps) {
+export default function FavoriteListMenu({ toolName, toolSlug, favorited, onEngagement, onClose }: FavoriteListMenuProps) {
   const [lists, setLists] = useState<FavoriteListSummary[]>([]);
   const [loading, setLoading] = useState(true);
   const listLoad = useRef(0);
+  const wasFavorited = useRef(favorited);
   const [error, setError] = useState("");
   const [name, setName] = useState("");
   const [creating, setCreating] = useState(false);
@@ -51,6 +53,20 @@ export default function FavoriteListMenu({ toolName, toolSlug, onEngagement, onC
     }
     void load();
   }, [toolSlug]);
+
+  useEffect(() => {
+    if (wasFavorited.current && !favorited) {
+      listLoad.current += 1;
+      setLists((current) =>
+        current.map((item) =>
+          item.contains_tool
+            ? { ...item, contains_tool: false, tool_count: Math.max(0, item.tool_count - 1) }
+            : item,
+        ),
+      );
+    }
+    wasFavorited.current = favorited;
+  }, [favorited]);
 
   async function toggle(list: FavoriteListSummary) {
     setError("");

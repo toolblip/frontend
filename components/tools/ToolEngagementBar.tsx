@@ -693,6 +693,7 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
           <FavoriteListMenu
             toolName={toolName}
             toolSlug={toolSlug}
+            favorited={stats.viewer_favorited}
             onEngagement={setStats}
             onClose={() => setListsOpen(false)}
           />
