@@ -13,7 +13,7 @@ test.describe('Account settings BDD regression', () => {
     await page.goto('/dashboard/profile');
     await expect(page.getByText('BDD User').first()).toBeVisible();
 
-    await page.getByLabel('Name').fill('Updated BDD User');
+    await page.getByLabel('Name', { exact: true }).fill('Updated BDD User');
     await page.getByLabel('Email').fill('updated-bdd@toolblip.test');
     await page.getByRole('button', { name: 'Save profile' }).click();
 
@@ -25,7 +25,7 @@ test.describe('Account settings BDD regression', () => {
 
   test('Given an unverified user, When they resend verification, Then a confirmation appears', async ({ page }) => {
     await page.goto('/signup');
-    await page.getByLabel('Name').fill('Unverified User');
+    await page.getByLabel('Name', { exact: true }).fill('Unverified User');
     await page.getByLabel('Email').fill('unverified@toolblip.test');
     await page.getByLabel('Password', { exact: true }).fill('Password123!');
     await page.getByLabel('Confirm password').fill('Password123!');

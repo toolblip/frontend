@@ -43,7 +43,7 @@ export async function loginByForm(page: Page, user: TestUser = VALID_USER) {
 
 export async function signupByForm(page: Page, user: TestUser, next = '/dashboard') {
   await page.goto(`/signup?next=${encodeURIComponent(next)}`);
-  await page.getByLabel('Name').fill(user.name);
+  await page.getByLabel('Name', { exact: true }).fill(user.name);
   await page.getByLabel('Email').fill(user.email);
   await page.getByLabel('Password', { exact: true }).fill(user.password);
   await page.getByLabel('Confirm password').fill(user.password);

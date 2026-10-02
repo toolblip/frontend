@@ -131,7 +131,7 @@ test('guest users can register from the favorite prompt and auto-favorite on ret
   await loginDialog.getByRole('link', { name: /Create account/i }).click();
   await expect(page).toHaveURL(/\/signup\?next=%2Ftools%2Fjson-formatter&favorite=1/);
 
-  await page.getByLabel('Name').fill('Favorite Tester');
+  await page.getByLabel('Name', { exact: true }).fill('Favorite Tester');
   await page.getByLabel('Email').fill('favorite-tester@example.com');
   await page.getByLabel('Password', { exact: true }).fill('Password123!');
   await page.getByLabel('Confirm password').fill('Password123!');
