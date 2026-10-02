@@ -1,4 +1,4 @@
-// Starter catalog for the AI MCP Bots menu. Bots link to each vendor's MCP
+// Starter catalog for the AI / MCP / Bots menu. Bots link to each vendor's MCP
 // docs. Servers are the official reference set:
 // https://github.com/modelcontextprotocol/servers
 
