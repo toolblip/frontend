@@ -1,49 +1,115 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import InstallAppMoreRow from './InstallAppMoreRow';
 import { aiMcpMenu } from '@/data/ai-mcp-menu';
-import { CAT_META } from '@/lib/v2/categoryMeta';
-import { tools } from '@/data/tools';
+import { getCategoryMeta } from '@/lib/v2/categoryMeta';
+import { tools, type Tool } from '@/data/tools';
 import { getCategoryPath, getToolPath, getToolPathBySlug } from '@/lib/tool-path';
 import {
-  IconChevronDown, IconArrow, IconArrowUR, IconCode, IconHash, IconKey,
-  IconCrop, IconGrid, IconLock, IconType, IconClock, IconDice, IconGlobe,
-  IconLink, IconFile, IconZap, IconShield, IconGift, IconCommand, IconHelp,
-  IconUtil,
+  IconChevronDown, IconArrow, IconFile, IconZap, IconShield, IconGift,
+  IconCommand, IconHelp, IconUtil, IconGlobe, IconLink, IconCode, IconClock, IconHash,
 } from './icons';
 
 type IconComp = React.ComponentType<React.SVGProps<SVGSVGElement>>;
 
-const TOOL_ICON: Record<string, IconComp> = {
-  'json-formatter': IconCode,
-  'regex-tester': IconHash,
-  'jwt-decoder': IconKey,
-  'uuid-generator': IconHash,
-  'hash-generator': IconHash,
-  'sha256-hash-generator': IconHash,
-  'password-generator': IconLock,
-  'word-counter': IconType,
-  'case-converter': IconType,
-  'image-resizer': IconCrop,
-  'image-cropper': IconCrop,
-  'qr-code-generator': IconGrid,
-  'url-encode': IconLink,
-  'base64': IconLock,
-  'timestamp-converter': IconClock,
-  'random-number-generator': IconDice,
-  'meta-tag-generator': IconFile,
-  'dns-lookup': IconGlobe,
+type NavCatSpec = {
+  cat: string;
+  label: string;
+  tier: 'main' | 'compact';
+  limit: number;
+  picks: string[];
 };
+
+/** Curated links, then the next live tools in that category if a slug was removed. */
+const NAV_CATS: NavCatSpec[] = [
+  { cat: 'Developer', label: 'Developer', tier: 'main', limit: 4, picks: ['json-formatter', 'jwt-decoder', 'regex-tester', 'uuid-generator', 'sha256-hash-generator', 'password-generator'] },
+  { cat: 'Text', label: 'Text', tier: 'main', limit: 4, picks: ['word-counter', 'case-converter', 'lorem-ipsum-generator', 'character-counter', 'remove-duplicate-lines'] },
+  { cat: 'Image', label: 'Image', tier: 'main', limit: 4, picks: ['image-resizer', 'image-cropper', 'image-compressor', 'image-format-converter'] },
+  { cat: 'Conversion', label: 'Conversion', tier: 'main', limit: 4, picks: ['json-yaml-converter', 'unit-converter', 'html-to-markdown', 'timestamp-converter'] },
+  { cat: 'SEO', label: 'SEO', tier: 'main', limit: 4, picks: ['meta-tag-generator', 'xml-sitemap-generator', 'robots-txt-generator', 'open-graph-preview'] },
+  { cat: 'Color', label: 'Color', tier: 'main', limit: 4, picks: ['color-palette-generator', 'contrast-checker', 'color-picker', 'color-mixer'] },
+  { cat: 'Utility', label: 'Utility', tier: 'main', limit: 4, picks: ['random-number-generator', 'countdown-timer', 'age-calculator', 'uptime-calculator'] },
+  { cat: 'PDF Tools', label: 'PDF', tier: 'main', limit: 4, picks: ['merge-pdfs', 'sign-pdf', 'edit-pdf', 'extract-images-from-pdf'] },
+  { cat: 'CSS', label: 'CSS', tier: 'compact', limit: 0, picks: [] },
+  { cat: 'Math', label: 'Math', tier: 'compact', limit: 0, picks: [] },
+  { cat: 'Network', label: 'Network', tier: 'compact', limit: 0, picks: [] },
+  { cat: 'Encoder', label: 'Encoder', tier: 'compact', limit: 0, picks: [] },
+  { cat: 'Document Generator', label: 'Documents', tier: 'compact', limit: 0, picks: [] },
+  { cat: 'Video Tools', label: 'Video', tier: 'compact', limit: 0, picks: [] },
+];
+
+type BuiltCat = { cat: string; label: string; count: number; tools: Tool[] };
+
+function toolsIn(cat: string): Tool[] {
+  return tools.filter((tool) => tool.category === cat);
+}
+
+function pickTools(cat: string, picks: string[], limit: number): Tool[] {
+  const pool = toolsIn(cat);
+  const chosen: Tool[] = [];
+  const seen = new Set<string>();
+  for (const slug of picks) {
+    const tool = pool.find((item) => item.slug === slug);
+    if (tool && !seen.has(tool.slug)) {
+      chosen.push(tool);
+      seen.add(tool.slug);
+    }
+    if (chosen.length >= limit) break;
+  }
+  for (const tool of pool) {
+    if (chosen.length >= limit) break;
+    if (!seen.has(tool.slug)) {
+      chosen.push(tool);
+      seen.add(tool.slug);
+    }
+  }
+  return chosen;
+}
+
+function builtCategories(): { main: BuiltCat[]; compact: BuiltCat[] } {
+  const known = new Set(NAV_CATS.map((spec) => spec.cat));
+  const specs: NavCatSpec[] = [
+    ...NAV_CATS,
+    ...Array.from(new Set(tools.map((tool) => tool.category)))
+      .filter((cat) => !known.has(cat))
+      .map((cat) => ({ cat, label: cat, tier: 'compact' as const, limit: 0, picks: [] })),
+  ];
+
+  const built = specs.flatMap((spec): BuiltCat[] => {
+    const pool = toolsIn(spec.cat);
+    if (pool.length === 0) return [];
+    return [{
+      cat: spec.cat,
+      label: spec.label,
+      count: pool.length,
+      tools: spec.limit > 0 ? pickTools(spec.cat, spec.picks, spec.limit) : [],
+    }];
+  });
+
+  const tierOf = (cat: string) => NAV_CATS.find((spec) => spec.cat === cat)?.tier ?? 'compact';
+  const main = built.filter((cat) => tierOf(cat.cat) === 'main');
+  const compact = built.filter((cat) => tierOf(cat.cat) === 'compact');
+  const remainder = main.length % 4;
+  if (remainder !== 0) compact.unshift(...main.splice(main.length - remainder));
+  return { main, compact };
+}
 
 type SidebarCatItem = { cat: string; label: string; desc: string; slug?: string };
 type FeaturedItem = { slug: string; name: string; category: string; description: string };
 type LearnItem = { label: string; desc: string };
+type MoreItem = {
+  icon: string;
+  label: string;
+  desc: string;
+  href: string;
+  kbd?: string;
+  native?: boolean;
+  external?: boolean;
+};
 type MoreCol = {
   label: string;
-  items: Array<{ icon: string; label: string; desc: string; href: string; kbd?: string; external?: boolean }>;
+  items: MoreItem[];
 };
 type TipBlock = { title: string; body: string };
 
@@ -69,31 +135,18 @@ type MenuContent =
     };
 
 function getMenuContent(key: string): MenuContent | null {
-  const lookup = (slug: string): FeaturedItem | null => {
-    const t = tools.find((x) => x.slug === slug);
-    return t
-      ? { slug: t.slug, name: t.name, category: t.category, description: t.description }
-      : null;
-  };
-
   if (key === 'tools') {
-    const featured = [
-      lookup('json-formatter'),
-      lookup('image-aspect-ratio-calculator') ?? lookup('image-resizer'),
-      lookup('color-palette-generator'),
-    ].filter((x): x is FeaturedItem => !!x);
+    const { main, compact } = builtCategories();
     return {
       more: false,
-      sidebarLabel: 'Tool Categories',
-      sidebar: [
-        { cat: 'Developer',  label: 'Developer',  desc: 'JSON, JWT, hash, regex' },
-        { cat: 'Text',       label: 'Text',       desc: 'Count, convert, diff' },
-        { cat: 'Image',      label: 'Image',      desc: 'Resize, crop, compress' },
-        { cat: 'Color',      label: 'Color',      desc: 'Palettes, contrast, picker' },
-        { cat: 'SEO',        label: 'SEO',        desc: 'Meta tags, sitemaps, OG' },
-      ],
+      sidebarLabel: 'Categories',
+      sidebar: [...main, ...compact].map((cat) => ({
+        cat: cat.cat,
+        label: cat.label,
+        desc: `${cat.count} tools`,
+      })),
       featuredLabel: 'Featured',
-      featured,
+      featured: [],
       ctaLabel: 'All Tools',
       ctaTarget: '/tools',
     };
@@ -106,22 +159,28 @@ function getMenuContent(key: string): MenuContent | null {
         {
           label: 'Product',
           items: [
-            { icon: 'zap',     label: 'Toolblip Pro',       desc: 'Higher limits, history, team vault', href: '/pricing' },
+            { icon: 'zap', label: 'Toolblip Pro', desc: 'Higher limits, history, team vault', href: '/pricing' },
+            { icon: 'gift', label: 'Support Toolblip', desc: 'Keep the free tools running', href: '/donate' },
+            { icon: 'file', label: 'Submit a tool', desc: 'Suggest a free tool for the directory', href: '/submit-tool' },
+            { icon: 'util', label: 'Sponsors', desc: 'Who is on the strip this month', href: '/sponsors' },
           ],
         },
         {
           label: 'Resources',
           items: [
-            { icon: 'file',    label: 'API Docs',     desc: 'REST endpoints + examples',     href: '/api-docs' },
-            { icon: 'zap',     label: 'Blog',         desc: 'Notes on building small tools', href: '/blog' },
+            { icon: 'file', label: 'API Docs', desc: 'REST endpoints and examples', href: '/api-docs' },
+            { icon: 'zap', label: 'Blog', desc: 'Notes on building small tools', href: '/blog' },
+            { icon: 'globe', label: 'Status', desc: 'Frontend health', href: '/frontend-health' },
+            { icon: 'link', label: 'Sitemap', desc: 'Every public page', href: '/sitemap.xml', native: true },
           ],
         },
         {
           label: 'Company',
           items: [
-            { icon: 'gift',    label: 'About',         desc: 'Who makes this, and why',       href: '/about' },
-            { icon: 'shield',  label: 'Privacy',       desc: 'We do the boring thing: nothing', href: '/privacy' },
-            { icon: 'command', label: 'Terms',         desc: 'The short, plain-English version', href: '/terms' },
+            { icon: 'help', label: 'About', desc: 'Who makes this, and why', href: '/about' },
+            { icon: 'util', label: 'Our products', desc: 'Other work from the same team', href: '/products' },
+            { icon: 'shield', label: 'Privacy', desc: 'We do the boring thing: nothing', href: '/privacy' },
+            { icon: 'command', label: 'Terms', desc: 'The short, plain-English version', href: '/terms' },
           ],
         },
       ],
@@ -151,196 +210,139 @@ const MORE_ICONS: Record<string, IconComp> = {
   link: IconLink, code: IconCode, clock: IconClock, hash: IconHash,
 };
 
-function outboundLinkProps(external?: boolean) {
-  return external ? { target: '_blank' as const, rel: 'noopener noreferrer' } : {};
+function CategoryMark({ cat }: { cat: string }) {
+  const meta = getCategoryMeta(cat);
+  const Ic = meta.icon;
+  return (
+    <span
+      className="tb-v2-mm-cat-head-icon"
+      style={{ '--cat-color': meta.color, '--cat-bg': meta.bg } as React.CSSProperties}
+    >
+      <Ic className="tb-v2-ic" />
+    </span>
+  );
+}
+
+function ToolsDirectory({ onClose }: { onClose: () => void }) {
+  const { main, compact } = builtCategories();
+  return (
+    <div className="tb-v2-mega-menu tb-v2-mega-tools">
+      <div className="tb-v2-mm-cat-grid">
+        {main.map((cat) => (
+          <div key={cat.cat} className="tb-v2-mm-cat-block">
+            <Link href={getCategoryPath(cat.cat)} className="tb-v2-mm-cat-head" onClick={onClose}>
+              <CategoryMark cat={cat.cat} />
+              <span className="tb-v2-mm-cat-head-title">{cat.label}</span>
+              <span className="tb-v2-mm-cat-head-count">{cat.count}</span>
+            </Link>
+            <div className="tb-v2-mm-cat-links">
+              {cat.tools.map((tool) => (
+                <Link
+                  key={tool.slug}
+                  href={getToolPath(tool)}
+                  className="tb-v2-mm-list-row"
+                  onClick={onClose}
+                  prefetch={false}
+                >
+                  {tool.name}
+                </Link>
+              ))}
+            </div>
+            <Link href={getCategoryPath(cat.cat)} className="tb-v2-mm-cat-all" onClick={onClose}>
+              See all {cat.count}
+            </Link>
+          </div>
+        ))}
+      </div>
+      {compact.length > 0 && (
+        <div className="tb-v2-mm-cat-strip">
+          {compact.map((cat) => (
+            <Link
+              key={cat.cat}
+              href={getCategoryPath(cat.cat)}
+              className="tb-v2-mm-cat-chip"
+              onClick={onClose}
+            >
+              <CategoryMark cat={cat.cat} />
+              <span className="tb-v2-mm-cat-head-title">{cat.label}</span>
+              <span className="tb-v2-mm-cat-head-count">{cat.count}</span>
+            </Link>
+          ))}
+        </div>
+      )}
+      <div className="tb-v2-mm-foot">
+        <span className="tb-v2-mm-cat-foot-note">{tools.length} tools, grouped by category</span>
+        <Link href="/tools" className="tb-v2-mm-cta" onClick={onClose}>
+          All Tools <IconArrow className="tb-v2-ic" />
+        </Link>
+      </div>
+    </div>
+  );
+}
+
+function MoreLink({ item, onClose }: { item: MoreItem; onClose: () => void }) {
+  const Ic = MORE_ICONS[item.icon] ?? IconUtil;
+  const body = (
+    <>
+      <div className="tb-v2-mm-more-icon"><Ic className="tb-v2-ic" /></div>
+      <div className="tb-v2-mm-more-txt">
+        <div className="tb-v2-mm-more-title">
+          {item.label}
+          {item.external && <span className="tb-v2-sr"> (opens in a new tab)</span>}
+        </div>
+        <div className="tb-v2-mm-more-desc">{item.desc}</div>
+      </div>
+      {item.kbd && <span className="tb-v2-kbd tb-v2-mm-more-kbd">{item.kbd}</span>}
+    </>
+  );
+  if (item.native) {
+    return (
+      <a href={item.href} className="tb-v2-mm-more-row" onClick={onClose}>
+        {body}
+      </a>
+    );
+  }
+  return (
+    <Link
+      href={item.href}
+      className="tb-v2-mm-more-row"
+      onClick={onClose}
+      {...(item.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+    >
+      {body}
+    </Link>
+  );
 }
 
 function MegaMenu({ which, onClose }: { which: string; onClose: () => void }) {
   const content = getMenuContent(which);
-  const [activeIdx, setActiveIdx] = useState<number>(0);
-  const router = useRouter();
-
   if (!content) return null;
-
-  if (content.more) {
-    return (
-      <div className="tb-v2-mega-menu tb-v2-mega-more">
-        <div className="tb-v2-mm-cols">
-          {content.columns.map((col, ci) => (
-            <div key={ci} className="tb-v2-mm-col">
-              <div className="tb-v2-mm-label">{col.label}</div>
-              {col.items.map((it, i) => {
-                const Ic = MORE_ICONS[it.icon] ?? IconUtil;
-                return (
-                  <Link
-                    key={i}
-                    href={it.href}
-                    className="tb-v2-mm-more-row"
-                    onClick={onClose}
-                    {...outboundLinkProps(it.external)}
-                  >
-                    <div className="tb-v2-mm-more-icon"><Ic className="tb-v2-ic" /></div>
-                    <div className="tb-v2-mm-more-txt">
-                      <div className="tb-v2-mm-more-title">
-                        {it.label}
-                        {it.external && <span className="tb-v2-sr"> (opens in a new tab)</span>}
-                      </div>
-                      <div className="tb-v2-mm-more-desc">{it.desc}</div>
-                    </div>
-                    {it.kbd && <span className="tb-v2-kbd tb-v2-mm-more-kbd">{it.kbd}</span>}
-                  </Link>
-                );
-              })}
-              {content.installApp && col.label === 'Product' && <InstallAppMoreRow onClose={onClose} />}
-            </div>
-          ))}
-        </div>
-        <div className="tb-v2-mm-more-foot">
-          <div className="tb-v2-mm-tip">
-            <div className="tb-v2-mm-tip-label">{content.tip.title}</div>
-            <div className="tb-v2-mm-tip-body">{content.tip.body}</div>
-          </div>
-          {content.status && (
-            <div className="tb-v2-mm-status">
-              <span className="tb-v2-mm-dot" />
-              <span>{content.status}</span>
-            </div>
-          )}
-        </div>
-      </div>
-    );
-  }
-
-  const activeCat = content.sidebar[activeIdx]?.cat ?? null;
-  const activeList =
-    which === 'tools' && activeCat
-      ? tools.filter((t) => t.category === activeCat).slice(0, 12)
-      : [];
+  if (!content.more) return <ToolsDirectory onClose={onClose} />;
 
   return (
-    <div className="tb-v2-mega-menu">
-      <aside className="tb-v2-mm-side">
-        <div className="tb-v2-mm-label">{content.sidebarLabel}</div>
-        {content.sidebar.map((s, i) => {
-          const meta = CAT_META[s.cat];
-          const Ic = meta?.icon ?? IconUtil;
-          const active = activeIdx === i;
-          const handleClick = () => {
-            if (s.slug) router.push(getToolPathBySlug(s.slug));
-            else router.push(getCategoryPath(s.cat));
-            onClose();
-          };
-          return (
-            <button
-              key={i}
-              type="button"
-              className={`tb-v2-mm-side-row${active ? ' on' : ''}`}
-              onMouseEnter={() => setActiveIdx(i)}
-              onClick={handleClick}
-              style={{ '--cat-color': meta?.color, '--cat-bg': meta?.bg } as React.CSSProperties}
-            >
-              <div className="tb-v2-mm-side-icon"><Ic className="tb-v2-ic" /></div>
-              <div className="tb-v2-mm-side-txt">
-                <div className="tb-v2-mm-side-title">{s.label}</div>
-                <div className="tb-v2-mm-side-desc">{s.desc}</div>
-              </div>
-            </button>
-          );
-        })}
-      </aside>
-
-      <div className="tb-v2-mm-body">
-        {content.featured.length > 0 && (
-          <div>
-            <div className="tb-v2-mm-label">{content.featuredLabel}</div>
-            <div className="tb-v2-mm-featured">
-              {content.featured.map((t) => {
-                const meta = CAT_META[t.category];
-                const Ic = TOOL_ICON[t.slug] ?? meta?.icon ?? IconUtil;
-                return (
-                  <Link
-                    key={t.slug}
-                    href={getToolPath(t)}
-                    className="tb-v2-mm-feat-card"
-                    onClick={onClose}
-                    style={{ '--cat-color': meta?.color, '--cat-bg': meta?.bg } as React.CSSProperties}
-                  >
-                    <div className="tb-v2-mm-feat-thumb"><Ic className="tb-v2-ic" /></div>
-                    <div className="tb-v2-mm-feat-title">{t.name}</div>
-                    <div className="tb-v2-mm-feat-desc">{t.description}</div>
-                    <IconArrowUR className="tb-v2-ic tb-v2-mm-feat-go" />
-                  </Link>
-                );
-              })}
-            </div>
+    <div className="tb-v2-mega-menu tb-v2-mega-more">
+      <div className="tb-v2-mm-cols">
+        {content.columns.map((col) => (
+          <div key={col.label} className="tb-v2-mm-col">
+            <div className="tb-v2-mm-label">{col.label}</div>
+            {col.items.map((item) => (
+              <MoreLink key={item.href} item={item} onClose={onClose} />
+            ))}
+            {content.installApp && col.label === 'Product' && <InstallAppMoreRow onClose={onClose} />}
           </div>
-        )}
-
-        {which === 'tools' && activeList.length > 0 && (
-          <div>
-            <div className="tb-v2-mm-label">{activeCat} · {activeList.length}</div>
-            <div className="tb-v2-mm-list">
-              {activeList.map((t) => (
-                <Link
-                  key={t.slug}
-                  href={getToolPath(t)}
-                  className="tb-v2-mm-list-row"
-                  onClick={onClose}
-                >
-                  {t.name}
-                </Link>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {content.learn && content.learn.length > 0 && (
-          <div>
-            <div className="tb-v2-mm-label">Learn</div>
-            <div className="tb-v2-mm-list">
-              {content.learn.map((l, i) => (
-                <div key={i} className="tb-v2-mm-learn-row">
-                  <div className="tb-v2-mm-learn-title">{l.label}</div>
-                  <div className="tb-v2-mm-learn-desc">{l.desc}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {which !== 'tools' && content.list && content.list.length > 0 && (
-          <div>
-            <div className="tb-v2-mm-label">{content.listLabel}</div>
-            <div className="tb-v2-mm-list">
-              {content.list.map((slug) => {
-                const t = tools.find((x) => x.slug === slug);
-                const name =
-                  t?.name ??
-                  slug
-                    .split('-')
-                    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-                    .join(' ');
-                const href = t ? getToolPath(t) : content.ctaTarget;
-                return (
-                  <Link
-                    key={slug}
-                    href={href}
-                    className="tb-v2-mm-list-row"
-                    onClick={onClose}
-                  >
-                    {name}
-                  </Link>
-                );
-              })}
-            </div>
-          </div>
-        )}
-
-        <div className="tb-v2-mm-foot">
-          <Link href={content.ctaTarget} className="tb-v2-mm-cta" onClick={onClose}>
-            {content.ctaLabel} <IconArrow className="tb-v2-ic" />
-          </Link>
+        ))}
+      </div>
+      <div className="tb-v2-mm-more-foot">
+        <div className="tb-v2-mm-tip">
+          <div className="tb-v2-mm-tip-label">{content.tip.title}</div>
+          <div className="tb-v2-mm-tip-body">{content.tip.body}</div>
         </div>
+        {content.status && (
+          <div className="tb-v2-mm-status">
+            <span className="tb-v2-mm-dot" />
+            <span>{content.status}</span>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -425,17 +427,31 @@ export default function NavPanels({
                 {expanded && content && content.more && (
                   <>
                     {content.columns.flatMap((col) =>
-                      col.items.map((it, i) => (
-                        <Link
-                          key={`${col.label}-${i}`}
-                          href={it.href}
-                          onClick={onCloseMobile}
-                          {...outboundLinkProps(it.external)}
-                        >
-                          {it.label}
-                          {it.external && <span className="tb-v2-sr"> (opens in a new tab)</span>}
-                        </Link>
-                      )),
+                      col.items.map((it) => {
+                        const label = (
+                          <>
+                            {it.label}
+                            {it.external && <span className="tb-v2-sr"> (opens in a new tab)</span>}
+                          </>
+                        );
+                        if (it.native) {
+                          return (
+                            <a key={`${col.label}-${it.href}`} href={it.href} onClick={onCloseMobile}>
+                              {label}
+                            </a>
+                          );
+                        }
+                        return (
+                          <Link
+                            key={`${col.label}-${it.href}`}
+                            href={it.href}
+                            onClick={onCloseMobile}
+                            {...(it.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                          >
+                            {label}
+                          </Link>
+                        );
+                      }),
                     )}
                     {content.installApp && (
                       <InstallAppMoreRow
