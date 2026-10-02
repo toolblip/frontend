@@ -8,8 +8,11 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 
-# Copy source and build
+# Copy source and build. Next inlines NEXT_PUBLIC_* during `npm run build`.
+# Docker only receives the Railway service variable when it is declared as ARG.
 COPY . .
+ARG NEXT_PUBLIC_BING_VERIFICATION_CODE
+ENV NEXT_PUBLIC_BING_VERIFICATION_CODE=$NEXT_PUBLIC_BING_VERIFICATION_CODE
 RUN npm run build
 
 # Strip dev deps for smaller runtime image
