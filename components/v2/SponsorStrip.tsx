@@ -186,10 +186,9 @@ function SponsorStat({
   plural: string;
 }) {
   return (
-    <span className="tb-v2-sponsor-stat">
+    <span className="tb-v2-sponsor-stat" aria-label={formatSponsorStat(count, singular, plural)}>
       {icon}
-      <span aria-hidden="true">{formatCompactCount(count)}</span>
-      <span className="tb-v2-sponsor-stat-full">{formatSponsorStat(count, singular, plural)}</span>
+      <span>{formatCompactCount(count)}</span>
     </span>
   );
 }
