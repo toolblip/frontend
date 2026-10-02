@@ -12,6 +12,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/signup',
     '/blog',
     '/seo',
+    '/ai-mcp-bots',
   ];
 
   const now = new Date();

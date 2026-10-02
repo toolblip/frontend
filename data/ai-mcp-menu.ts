@@ -1,13 +1,10 @@
-// Starter catalog for the AI / MCP / Bots menu. Bots link to each vendor's MCP
-// docs. Servers are the official reference set:
-// https://github.com/modelcontextprotocol/servers
+// Starter catalog for the AI / MCP / Bots menu. Every item stays on Toolblip.
 
 export type AiMcpMenuItem = {
   icon: string;
   label: string;
   desc: string;
   href: string;
-  external: true;
 };
 
 export type AiMcpMenuColumn = {
@@ -15,7 +12,13 @@ export type AiMcpMenuColumn = {
   items: AiMcpMenuItem[];
 };
 
-const REF = 'https://github.com/modelcontextprotocol/servers/tree/main/src';
+export function aiMcpItemId(label: string) {
+  return label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+}
+
+function item(icon: string, label: string, desc: string): AiMcpMenuItem {
+  return { icon, label, desc, href: `/ai-mcp-bots#${aiMcpItemId(label)}` };
+}
 
 export const aiMcpMenu: {
   columns: AiMcpMenuColumn[];
@@ -25,126 +28,36 @@ export const aiMcpMenu: {
     {
       label: 'AI bots',
       items: [
-        {
-          icon: 'command',
-          label: 'Claude',
-          desc: 'Desktop and Claude Code',
-          href: 'https://code.claude.com/docs/en/mcp',
-          external: true,
-        },
-        {
-          icon: 'zap',
-          label: 'ChatGPT',
-          desc: 'MCP connectors',
-          href: 'https://developers.openai.com/api/docs/mcp',
-          external: true,
-        },
-        {
-          icon: 'code',
-          label: 'Cursor',
-          desc: 'Servers in the editor',
-          href: 'https://cursor.com/docs/mcp',
-          external: true,
-        },
-        {
-          icon: 'globe',
-          label: 'Gemini CLI',
-          desc: 'Tools for the Gemini CLI',
-          href: 'https://geminicli.com/docs/tools/mcp-server/',
-          external: true,
-        },
-        {
-          icon: 'file',
-          label: 'VS Code',
-          desc: 'Copilot with MCP servers',
-          href: 'https://code.visualstudio.com/docs/agent-customization/mcp-servers',
-          external: true,
-        },
+        item('command', 'Claude', 'Desktop and Claude Code'),
+        item('zap', 'ChatGPT', 'MCP connectors'),
+        item('code', 'Cursor', 'Servers in the editor'),
+        item('globe', 'Gemini CLI', 'Tools for the Gemini CLI'),
+        item('file', 'VS Code', 'Copilot with MCP servers'),
       ],
     },
     {
       label: 'MCP servers',
       items: [
-        {
-          icon: 'file',
-          label: 'Filesystem',
-          desc: 'Only the folders you allow',
-          href: `${REF}/filesystem`,
-          external: true,
-        },
-        {
-          icon: 'globe',
-          label: 'Fetch',
-          desc: 'A page, as markdown',
-          href: `${REF}/fetch`,
-          external: true,
-        },
-        {
-          icon: 'code',
-          label: 'Git',
-          desc: 'Read and search a repo',
-          href: `${REF}/git`,
-          external: true,
-        },
-        {
-          icon: 'hash',
-          label: 'Memory',
-          desc: 'A knowledge graph',
-          href: `${REF}/memory`,
-          external: true,
-        },
-        {
-          icon: 'help',
-          label: 'Sequential Thinking',
-          desc: 'One step at a time',
-          href: `${REF}/sequentialthinking`,
-          external: true,
-        },
-        {
-          icon: 'clock',
-          label: 'Time',
-          desc: 'Clock and timezones',
-          href: `${REF}/time`,
-          external: true,
-        },
-        {
-          icon: 'util',
-          label: 'Everything',
-          desc: 'Test server for the full surface',
-          href: `${REF}/everything`,
-          external: true,
-        },
+        item('file', 'Filesystem', 'Only the folders you allow'),
+        item('globe', 'Fetch', 'A page, as markdown'),
+        item('code', 'Git', 'Read and search a repo'),
+        item('hash', 'Memory', 'A knowledge graph'),
+        item('help', 'Sequential Thinking', 'One step at a time'),
+        item('clock', 'Time', 'Clock and timezones'),
+        item('util', 'Everything', 'Test server for the full surface'),
       ],
     },
     {
       label: 'References',
       items: [
-        {
-          icon: 'file',
-          label: 'Protocol',
-          desc: 'How MCP fits together',
-          href: 'https://modelcontextprotocol.io/',
-          external: true,
-        },
-        {
-          icon: 'globe',
-          label: 'Registry',
-          desc: 'Servers people have published',
-          href: 'https://registry.modelcontextprotocol.io/',
-          external: true,
-        },
-        {
-          icon: 'link',
-          label: 'Reference servers',
-          desc: 'The official implementations',
-          href: 'https://github.com/modelcontextprotocol/servers',
-          external: true,
-        },
+        item('file', 'Protocol', 'How MCP fits together'),
+        item('globe', 'Registry', 'Servers people have published'),
+        item('link', 'Reference servers', 'The official implementations'),
       ],
     },
   ],
   tip: {
-    title: 'Starter list',
-    body: "Bots from each vendor's MCP docs. Servers are the official reference set. More will show up here.",
+    title: 'On this site',
+    body: 'Each item stays on Toolblip. More will show up here.',
   },
 };
