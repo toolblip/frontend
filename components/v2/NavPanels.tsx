@@ -165,7 +165,7 @@ function MegaMenu({ which, onClose }: { which: string; onClose: () => void }) {
   if (content.more) {
     return (
       <div className="tb-v2-mega-menu tb-v2-mega-more">
-        <div className="tb-v2-mm-cols">
+        <div className={`tb-v2-mm-cols${content.columns.length === 2 ? ' tb-v2-mm-cols-2' : ''}`}>
           {content.columns.map((col, ci) => (
             <div key={ci} className="tb-v2-mm-col">
               <div className="tb-v2-mm-label">{col.label}</div>

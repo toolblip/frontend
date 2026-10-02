@@ -1,4 +1,5 @@
 import type { MetadataRoute } from 'next';
+import { aiMcpItems } from '@/data/ai-mcp-menu';
 import { tools } from '@/src/data/tools';
 
 const siteUrl = 'https://toolblip.com';
@@ -12,7 +13,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/signup',
     '/blog',
     '/seo',
-    '/ai-mcp-bots',
   ];
 
   const now = new Date();
@@ -28,5 +28,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
         url: `${siteUrl}/tools/${tool.slug}`,
         lastModified: now,
       })),
+    ...aiMcpItems().map((entry) => ({
+      url: `${siteUrl}/ai-mcp-bots/${entry.slug}`,
+      lastModified: now,
+    })),
   ];
 }

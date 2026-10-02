@@ -1,6 +1,7 @@
-// Starter catalog for the AI / MCP / Bots menu. Every item stays on Toolblip.
+// Starter dropdown for AI / MCP / Bots. Add items here; each one gets its own page.
 
 export type AiMcpMenuItem = {
+  slug: string;
   icon: string;
   label: string;
   desc: string;
@@ -12,12 +13,8 @@ export type AiMcpMenuColumn = {
   items: AiMcpMenuItem[];
 };
 
-export function aiMcpItemId(label: string) {
-  return label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-}
-
-function item(icon: string, label: string, desc: string): AiMcpMenuItem {
-  return { icon, label, desc, href: `/ai-mcp-bots#${aiMcpItemId(label)}` };
+function item(slug: string, icon: string, label: string, desc: string): AiMcpMenuItem {
+  return { slug, icon, label, desc, href: `/ai-mcp-bots/${slug}` };
 }
 
 export const aiMcpMenu: {
@@ -28,36 +25,32 @@ export const aiMcpMenu: {
     {
       label: 'AI bots',
       items: [
-        item('command', 'Claude', 'Desktop and Claude Code'),
-        item('zap', 'ChatGPT', 'MCP connectors'),
-        item('code', 'Cursor', 'Servers in the editor'),
-        item('globe', 'Gemini CLI', 'Tools for the Gemini CLI'),
-        item('file', 'VS Code', 'Copilot with MCP servers'),
+        item('claude', 'command', 'Claude', 'Desktop and Claude Code'),
+        item('chatgpt', 'zap', 'ChatGPT', 'MCP connectors'),
+        item('cursor', 'code', 'Cursor', 'Servers in the editor'),
       ],
     },
     {
       label: 'MCP servers',
       items: [
-        item('file', 'Filesystem', 'Only the folders you allow'),
-        item('globe', 'Fetch', 'A page, as markdown'),
-        item('code', 'Git', 'Read and search a repo'),
-        item('hash', 'Memory', 'A knowledge graph'),
-        item('help', 'Sequential Thinking', 'One step at a time'),
-        item('clock', 'Time', 'Clock and timezones'),
-        item('util', 'Everything', 'Test server for the full surface'),
-      ],
-    },
-    {
-      label: 'References',
-      items: [
-        item('file', 'Protocol', 'How MCP fits together'),
-        item('globe', 'Registry', 'Servers people have published'),
-        item('link', 'Reference servers', 'The official implementations'),
+        item('filesystem', 'file', 'Filesystem', 'Only the folders you allow'),
+        item('fetch', 'globe', 'Fetch', 'A page, as markdown'),
+        item('git', 'code', 'Git', 'Read and search a repo'),
       ],
     },
   ],
   tip: {
-    title: 'On this site',
-    body: 'Each item stays on Toolblip. More will show up here.',
+    title: 'Starter list',
+    body: 'Each one has its own page. More will show up here.',
   },
 };
+
+export function aiMcpItems() {
+  return aiMcpMenu.columns.flatMap((column) =>
+    column.items.map((entry) => ({ ...entry, group: column.label })),
+  );
+}
+
+export function aiMcpItemBySlug(slug: string) {
+  return aiMcpItems().find((entry) => entry.slug === slug);
+}
