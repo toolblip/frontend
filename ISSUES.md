@@ -162,6 +162,6 @@
 ## Notes
 
 - GSC credentials in project `.env`
-- IndexNow key: `toolblip-indexnow-key-2024`
+- IndexNow key: `toolblip-indexnow-20261002`
 - Railway token in `.secrets/tb.env`
 - All coding through Claude Code via `./claude.sh`
