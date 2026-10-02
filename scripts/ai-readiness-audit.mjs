@@ -33,8 +33,8 @@ const toolLinks = (full.body.match(/https:\/\/toolblip\.com\/tools\//g) || []).l
 record('llms-full.txt responds', full.response.status === 200, String(full.response.status));
 record('llms-full.txt lists tools', toolLinks >= 50, `${toolLinks} tool links`);
 
-const key = await load('/toolblip-indexnow-key-2024.txt');
-record('IndexNow key file', key.response.status === 200 && key.body === 'toolblip-indexnow-key-2024', JSON.stringify(key.body));
+const key = await load('/toolblip-indexnow-20261002.txt');
+record('IndexNow key file', key.response.status === 200 && key.body === 'toolblip-indexnow-20261002', JSON.stringify(key.body));
 
 const home = await load('/');
 record('homepage JSON-LD', home.body.includes('application/ld+json') && home.body.includes('WebSite'), 'site schema');
@@ -47,6 +47,14 @@ record(
 
 const tool = await load('/tools/json-formatter');
 record('tool page WebApplication schema', tool.body.includes('WebApplication'), 'tool schema');
+
+const mcpResponse = await fetch(`${base}/mcp`, {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'tools/list' }),
+});
+const mcpBody = await mcpResponse.text();
+record('assistant tool lookup', mcpResponse.status === 200 && mcpBody.includes('search_tools'), String(mcpResponse.status));
 
 const passed = checks.filter((check) => check.ok).length;
 for (const check of checks) {
