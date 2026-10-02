@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import InstallAppMoreRow from './InstallAppMoreRow';
+import { aiMcpMenu } from '@/data/ai-mcp-menu';
 import { CAT_META } from '@/lib/v2/categoryMeta';
 import { tools } from '@/data/tools';
 import { getCategoryPath, getToolPath, getToolPathBySlug } from '@/lib/tool-path';
@@ -42,7 +43,7 @@ type FeaturedItem = { slug: string; name: string; category: string; description:
 type LearnItem = { label: string; desc: string };
 type MoreCol = {
   label: string;
-  items: Array<{ icon: string; label: string; desc: string; href: string; kbd?: string }>;
+  items: Array<{ icon: string; label: string; desc: string; href: string; kbd?: string; external?: boolean }>;
 };
 type TipBlock = { title: string; body: string };
 
@@ -63,6 +64,8 @@ type MenuContent =
       more: true;
       columns: MoreCol[];
       tip: TipBlock;
+      installApp?: boolean;
+      status?: string;
     };
 
 function getMenuContent(key: string): MenuContent | null {
@@ -126,6 +129,16 @@ function getMenuContent(key: string): MenuContent | null {
         title: 'Tip of the day',
         body: 'Hit / anywhere on the site to open search. Hit Esc to close any panel.',
       },
+      installApp: true,
+      status: 'All systems operational',
+    };
+  }
+
+  if (key === 'ai-mcp-bots') {
+    return {
+      more: true,
+      columns: aiMcpMenu.columns,
+      tip: aiMcpMenu.tip,
     };
   }
 
@@ -134,8 +147,13 @@ function getMenuContent(key: string): MenuContent | null {
 
 const MORE_ICONS: Record<string, IconComp> = {
   zap: IconZap, command: IconCommand, file: IconFile, shield: IconShield,
-  gift: IconGift, help: IconHelp, util: IconUtil,
+  gift: IconGift, help: IconHelp, util: IconUtil, globe: IconGlobe,
+  link: IconLink, code: IconCode, clock: IconClock, hash: IconHash,
 };
+
+function outboundLinkProps(external?: boolean) {
+  return external ? { target: '_blank' as const, rel: 'noopener noreferrer' } : {};
+}
 
 function MegaMenu({ which, onClose }: { which: string; onClose: () => void }) {
   const content = getMenuContent(which);
@@ -159,17 +177,21 @@ function MegaMenu({ which, onClose }: { which: string; onClose: () => void }) {
                     href={it.href}
                     className="tb-v2-mm-more-row"
                     onClick={onClose}
+                    {...outboundLinkProps(it.external)}
                   >
                     <div className="tb-v2-mm-more-icon"><Ic className="tb-v2-ic" /></div>
                     <div className="tb-v2-mm-more-txt">
-                      <div className="tb-v2-mm-more-title">{it.label}</div>
+                      <div className="tb-v2-mm-more-title">
+                        {it.label}
+                        {it.external && <span className="tb-v2-sr"> (opens in a new tab)</span>}
+                      </div>
                       <div className="tb-v2-mm-more-desc">{it.desc}</div>
                     </div>
                     {it.kbd && <span className="tb-v2-kbd tb-v2-mm-more-kbd">{it.kbd}</span>}
                   </Link>
                 );
               })}
-              {col.label === 'Product' && <InstallAppMoreRow onClose={onClose} />}
+              {content.installApp && col.label === 'Product' && <InstallAppMoreRow onClose={onClose} />}
             </div>
           ))}
         </div>
@@ -178,10 +200,12 @@ function MegaMenu({ which, onClose }: { which: string; onClose: () => void }) {
             <div className="tb-v2-mm-tip-label">{content.tip.title}</div>
             <div className="tb-v2-mm-tip-body">{content.tip.body}</div>
           </div>
-          <div className="tb-v2-mm-status">
-            <span className="tb-v2-mm-dot" />
-            <span>All systems operational</span>
-          </div>
+          {content.status && (
+            <div className="tb-v2-mm-status">
+              <span className="tb-v2-mm-dot" />
+              <span>{content.status}</span>
+            </div>
+          )}
         </div>
       </div>
     );
@@ -406,15 +430,19 @@ export default function NavPanels({
                           key={`${col.label}-${i}`}
                           href={it.href}
                           onClick={onCloseMobile}
+                          {...outboundLinkProps(it.external)}
                         >
                           {it.label}
+                          {it.external && <span className="tb-v2-sr"> (opens in a new tab)</span>}
                         </Link>
                       )),
                     )}
-                    <InstallAppMoreRow
-                      variant="mobile"
-                      onClose={onCloseMobile}
-                    />
+                    {content.installApp && (
+                      <InstallAppMoreRow
+                        variant="mobile"
+                        onClose={onCloseMobile}
+                      />
+                    )}
                   </>
                 )}
               </div>

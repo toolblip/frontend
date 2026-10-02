@@ -16,6 +16,7 @@ const NavPanels = dynamic(() => import('./NavPanels'));
 const menus: Array<{ key: string; label: string; href?: string }> = [
   { key: 'tools', label: 'Tools' },
   { key: 'sponsors', label: 'Sponsors', href: '/sponsors' },
+  { key: 'ai-mcp-bots', label: 'AI MCP Bots' },
   { key: 'more',  label: 'More' },
 ];
 
