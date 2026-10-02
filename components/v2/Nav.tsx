@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useLayoutEffect, useState, useRef } from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import BrandMark from './BrandMark';
@@ -8,6 +8,7 @@ import ThemeMenu from './ThemeMenu';
 import { IconSearch, IconChevronDown, IconMenu } from './icons';
 import NavbarAuth from '@/components/NavbarAuth';
 import { useAuth } from '@/app/providers/auth-provider';
+import { currentSearchShortcut, isSearchShortcutEvent, type SearchShortcut } from '@/lib/search-shortcut';
 
 type Props = { onOpenSearch: () => void };
 
@@ -25,6 +26,7 @@ export default function Nav({ onOpenSearch }: Props) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
+  const [shortcut, setShortcut] = useState<SearchShortcut | null>(null);
   const navRef = useRef<HTMLElement>(null);
   const closeTimer = useRef<number | null>(null);
 
@@ -40,6 +42,10 @@ export default function Nav({ onOpenSearch }: Props) {
   };
 
   useEffect(() => () => cancelClose(), []);
+
+  useLayoutEffect(() => {
+    setShortcut(currentSearchShortcut());
+  }, []);
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -59,10 +65,10 @@ export default function Nav({ onOpenSearch }: Props) {
         active instanceof HTMLTextAreaElement ||
         (active as HTMLElement | null)?.isContentEditable;
 
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+      if (isSearchShortcutEvent(e)) {
         e.preventDefault();
         onOpenSearch();
-      } else if (e.key === '/' && !inField) {
+      } else if (e.key === '/' && !inField && !e.metaKey && !e.ctrlKey && !e.altKey) {
         e.preventDefault();
         onOpenSearch();
       } else if (e.key === 'Escape') {
@@ -120,10 +126,10 @@ export default function Nav({ onOpenSearch }: Props) {
             type="button"
             className="tb-v2-nav-search tb-v2-nav-search-compact"
             onClick={onOpenSearch}
-            aria-label="Open search (⌘K or /)"
+            aria-label={shortcut ? `Open search (${shortcut.spoken})` : 'Open search'}
           >
             <IconSearch style={{ width: 14, height: 14, color: 'var(--fg-3)' }} />
-            <span className="tb-v2-nav-search-label">⌘K or /</span>
+            <span className="tb-v2-nav-search-label">{shortcut?.label ?? ''}</span>
           </button>
           {user && (
             <Link href="/dashboard" className="tb-v2-nav-pro">Dashboard</Link>
