@@ -16,6 +16,8 @@
     "test:e2e:install": "playwright install --with-deps chromium",
     "seo:bing:health": "python3 scripts/bing-nightly-health.py",
     "seo:bing:submit": "python3 scripts/bing-nightly-submit.py",
+    "seo:indexnow": "node scripts/indexnow-submit.mjs",
+    "ai:readiness": "node scripts/ai-readiness-audit.mjs",
     "predev": "node scripts/build-browser-workers.mjs",
     "pretest": "node scripts/build-browser-workers.mjs"
   },

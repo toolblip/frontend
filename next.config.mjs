@@ -1,9 +1,11 @@
 import { withSerwist } from '@serwist/turbopack';
 
 import { baseCsp, basePermissions, browserPolicyHeaders } from './lib/browser-policy.mjs';
+import { htmlLimitedBots } from './lib/html-limited-bots.mjs';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  htmlLimitedBots,
   // '127.0.0.1' covers plain localhost dev; the Tailscale hostname/wildcard
   // covers the toolblip-preview tooling's path-mounted worktree URLs. Without
   // this, Next's dev server refuses the cross-origin HMR websocket handshake
@@ -388,6 +390,10 @@ const nextConfig = {
           {
             key: 'Content-Security-Policy',
             value: baseCsp,
+          },
+          {
+            key: 'Content-Signal',
+            value: 'search=yes, ai-input=yes, ai-train=yes',
           },
         ],
       },
