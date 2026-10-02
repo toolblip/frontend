@@ -4441,16 +4441,6 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
   text-overflow: ellipsis;
 }
 
-.tb-v2-sponsor-rank {
-  flex-shrink: 0;
-  font-family: ui-monospace, "SF Mono", Menlo, monospace;
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--fg-3);
-  line-height: 1;
-}
-.tb-v2-sponsor-slot-1 .tb-v2-sponsor-rank { color: var(--red-text); }
-
 .tb-v2-sponsor-card-avatar {
   flex-shrink: 0;
   width: 44px;
@@ -4511,9 +4501,35 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
 .tb-v2-sponsor-meta {
   display: inline-flex;
   align-items: center;
+  flex-wrap: nowrap;
   gap: 6px;
   font-size: 11px;
   color: var(--fg-3);
+  white-space: nowrap;
+}
+
+.tb-v2-sponsor-stat {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.tb-v2-sponsor-stat svg {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+}
+
+.tb-v2-sponsor-stat-full {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .tb-v2-sponsor-card-empty {

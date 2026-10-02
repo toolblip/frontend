@@ -6,6 +6,7 @@ export interface SponsorSlot {
   name: string;
   tagline: string | null;
   clicks: number;
+  views: number;
   balance_cents: number;
   last_bid_at: string | null;
   placeholder?: boolean;
@@ -38,7 +39,7 @@ export interface SponsorsArchiveResponse {
   data: SponsorsArchivePeriod[];
 }
 
-const CACHE_KEY = "tb_sponsors_top_v3";
+const CACHE_KEY = "tb_sponsors_top_v4";
 const CACHE_TTL_MS = 60_000;
 
 /**
@@ -186,6 +187,107 @@ export function applySponsorClick(slots: SponsorSlot[], target: SponsorClickTarg
       : !slot.placeholder && slot.id === target.id;
     if (!matches) return slot;
     return { ...slot, clicks: result.clicks === null ? slot.clicks + 1 : Math.max(slot.clicks, result.clicks) };
+  });
+}
+
+export type SponsorViewTarget = Pick<SponsorSlot, 'id' | 'domain' | 'placeholder'>;
+
+let lastViewToken = '';
+
+/** Test hook. Production call sites rely on the module token surviving remounts. */
+export function resetSponsorViewDedupe(): void {
+  lastViewToken = '';
+}
+
+/** One impression per surface+path+listing set. Repeating the same token
+ * (React strict mode, a click updating the same cards) does not count again.
+ * Leaving and coming back does, because the token changed in between. */
+export function shouldRecordSponsorViews(surface: string, pathname: string, targets: SponsorViewTarget[]): boolean {
+  const keys = targets
+    .map((target) => (target.placeholder ? `p:${target.domain}` : `id:${target.id}`))
+    .sort()
+    .join(',');
+  if (!keys) return false;
+  const token = `${surface}:${pathname}:${keys}`;
+  if (token === lastViewToken) return false;
+  lastViewToken = token;
+  return true;
+}
+
+/** 999, then 1.2k / 1.2m. A value that rounds up to the next thousand steps up a suffix. */
+export function formatCompactCount(value: number): string {
+  if (!Number.isFinite(value) || value <= 0) return '0';
+  const n = Math.floor(value);
+  if (n < 1000) return String(n);
+  const steps = [
+    { size: 1000, suffix: 'k' },
+    { size: 1_000_000, suffix: 'm' },
+    { size: 1_000_000_000, suffix: 'b' },
+  ];
+  let index = 0;
+  for (let i = 0; i < steps.length; i++) {
+    if (n >= steps[i].size) index = i;
+  }
+  let scaled = Math.round((n / steps[index].size) * 10) / 10;
+  if (scaled >= 1000 && index < steps.length - 1) {
+    index += 1;
+    scaled = Math.round((n / steps[index].size) * 10) / 10;
+  }
+  const text = Number.isInteger(scaled) ? String(scaled) : scaled.toFixed(1);
+  return `${text}${steps[index].suffix}`;
+}
+
+export function formatSponsorStat(count: number, singular: string, plural: string): string {
+  const n = Number.isFinite(count) ? Math.max(0, Math.floor(count)) : 0;
+  return `${n.toLocaleString('en-US')} ${n === 1 ? singular : plural}`;
+}
+
+/** Keep a locally incremented count when a refetch returns an older total. */
+export function mergeSponsorCounts(previous: SponsorSlot[] | null | undefined, incoming: SponsorSlot[]): SponsorSlot[] {
+  if (!previous?.length) return incoming;
+  return incoming.map((slot) => {
+    const prev = previous.find((item) =>
+      slot.placeholder ? item.placeholder && item.domain === slot.domain : !item.placeholder && item.id === slot.id,
+    );
+    if (!prev) return slot;
+    return { ...slot, clicks: Math.max(slot.clicks || 0, prev.clicks || 0), views: Math.max(slot.views || 0, prev.views || 0) };
+  });
+}
+
+export async function pingSponsorViews(targets: SponsorViewTarget[]): Promise<boolean> {
+  const paidIds: number[] = [];
+  const placeholderDomains: string[] = [];
+  for (const target of targets) {
+    if (target.placeholder) {
+      if (target.domain) placeholderDomains.push(target.domain);
+      continue;
+    }
+    if (Number.isSafeInteger(target.id) && target.id > 0) paidIds.push(target.id);
+  }
+  if (paidIds.length === 0 && placeholderDomains.length === 0) return false;
+
+  try {
+    const res = await fetch(apiPath('/api/sponsors/views'), {
+      method: 'POST',
+      keepalive: true,
+      headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ paid_ids: paidIds, placeholder_domains: placeholderDomains }),
+    });
+    if (!res.ok) return false;
+    const cached = readSponsorsTopCache();
+    if (cached) writeSponsorsTopCache({ ...cached, slots: applySponsorViews(cached.slots, targets) });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export function applySponsorViews(slots: SponsorSlot[], targets: SponsorViewTarget[]): SponsorSlot[] {
+  return slots.map((slot) => {
+    const matches = targets.some((target) =>
+      target.placeholder ? slot.placeholder && slot.domain === target.domain : !slot.placeholder && slot.id === target.id,
+    );
+    return matches ? { ...slot, views: (Number.isFinite(slot.views) ? slot.views : 0) + 1 } : slot;
   });
 }
 
