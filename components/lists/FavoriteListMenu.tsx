@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import type { FavoriteListSummary } from "./types";
 
 type EngagementStats = {
@@ -22,12 +22,13 @@ type FavoriteListMenuProps = {
 export default function FavoriteListMenu({ toolName, toolSlug, onEngagement, onClose }: FavoriteListMenuProps) {
   const [lists, setLists] = useState<FavoriteListSummary[]>([]);
   const [loading, setLoading] = useState(true);
+  const listLoad = useRef(0);
   const [error, setError] = useState("");
   const [name, setName] = useState("");
   const [creating, setCreating] = useState(false);
 
   useEffect(() => {
-    let cancelled = false;
+    const generation = ++listLoad.current;
     async function load() {
       setLoading(true);
       try {
@@ -36,21 +37,19 @@ export default function FavoriteListMenu({ toolName, toolSlug, onEngagement, onC
           headers: { Accept: "application/json" },
         });
         const data = await res.json();
+        if (generation !== listLoad.current) return;
         if (!res.ok) {
-          if (!cancelled) setError(data.message ?? "Could not load lists.");
+          setError(data.message ?? "Could not load lists.");
           return;
         }
-        if (!cancelled) setLists(Array.isArray(data.data) ? data.data : []);
+        setLists(Array.isArray(data.data) ? data.data : []);
       } catch {
-        if (!cancelled) setError("Could not load lists.");
+        if (generation === listLoad.current) setError("Could not load lists.");
       } finally {
-        if (!cancelled) setLoading(false);
+        if (generation === listLoad.current) setLoading(false);
       }
     }
     void load();
-    return () => {
-      cancelled = true;
-    };
   }, [toolSlug]);
 
   async function toggle(list: FavoriteListSummary) {
@@ -105,10 +104,10 @@ export default function FavoriteListMenu({ toolName, toolSlug, onEngagement, onC
       });
       const addedData = await added.json();
       if (added.ok && addedData.data) onEngagement(addedData.data);
-      setLists((current) => [
-        ...current,
-        { ...createdData.data, contains_tool: true, tool_count: 1 },
-      ]);
+      const createdList = { ...createdData.data, contains_tool: true, tool_count: 1 };
+      listLoad.current += 1;
+      setLoading(false);
+      setLists((current) => [...current.filter((item) => item.id !== createdList.id), createdList]);
       setName("");
     } catch {
       setError("Could not create that list.");

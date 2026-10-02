@@ -10,7 +10,7 @@ function listParams({ username, slug }: { username: string; slug: string }) {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { username, slug } = listParams(await params);
   return {
-    title: `${slug} · @${username}`,
+    title: `${slug} · ${username}`,
     robots: { index: false, follow: false },
   };
 }

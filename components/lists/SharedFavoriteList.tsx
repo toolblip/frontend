@@ -64,7 +64,7 @@ export function SharedFavoriteList({ username, slug }: { username: string; slug:
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-10" data-testid="shared-favorite-list">
-      <p className="text-sm text-gray-500">@{list.owner_username}</p>
+      <p className="text-sm text-gray-500">/user/{list.owner_username}</p>
       <h1 className="mt-1 text-3xl font-semibold text-gray-900 dark:text-white">{list.name}</h1>
       <p className="mt-2 text-sm text-gray-500">
         {list.can_edit ? "You own this list." : "You can view this list. Only the owner can change it."}

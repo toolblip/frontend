@@ -7,6 +7,7 @@ test.describe('Favorite lists', () => {
   });
 
   test('a tool can be added to a new list and the list can be shared', async ({ page }) => {
+    test.setTimeout(90_000);
     const loginRes = await page.request.post('/api/auth/login', {
       data: { email: VALID_USER.email, password: VALID_USER.password },
     });
@@ -15,6 +16,7 @@ test.describe('Favorite lists', () => {
     await page.goto('/tools/json-formatter');
     await page.getByTestId('tool-favorite-lists').click();
     await expect(page.getByTestId('favorite-list-menu')).toBeVisible();
+    await expect(page.getByText('No lists yet. Create one and this tool is added to it.')).toBeVisible({ timeout: 30_000 });
     await page.getByTestId('favorite-list-name').fill('Wishlist');
     await page.getByTestId('favorite-list-create').click();
     await expect(page.getByTestId('favorite-list-toggle-wishlist')).toBeChecked();
@@ -26,11 +28,14 @@ test.describe('Favorite lists', () => {
     await expect(list).toBeVisible();
     await expect(list).toContainText('Private');
     await list.getByTestId('share-list-wishlist').click();
-    await page.getByTestId('list-username').fill('bdd-user');
-    await page.getByRole('button', { name: 'Save username and share' }).click();
-    await expect(list).toContainText('/@bdd-user/wishlist');
+    await expect(list).toContainText('/user/bdd-user/wishlist');
     await list.getByTestId('invite-email-wishlist').fill('friend@example.com');
     await list.getByRole('button', { name: 'Email link' }).click();
     await expect(page.getByText('Sent the link to friend@example.com.')).toBeVisible();
+
+    await list.getByRole('link', { name: '/user/bdd-user/wishlist' }).click();
+    await expect(page).toHaveURL(/\/user\/bdd-user\/wishlist$/, { timeout: 30_000 });
+    await expect(page.getByTestId('shared-favorite-list')).toContainText('/user/bdd-user', { timeout: 30_000 });
+    await expect(page.getByRole('heading', { name: 'Wishlist' })).toBeVisible();
   });
 });

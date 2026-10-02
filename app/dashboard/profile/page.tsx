@@ -9,6 +9,7 @@ export default function ProfilePage() {
   const { user, token, login, logout, loading: authLoading } = useRequireAuth();
 
   const [profileName, setProfileName] = useState("");
+  const [profileUsername, setProfileUsername] = useState("");
   const [profileEmail, setProfileEmail] = useState("");
   const [profileMessage, setProfileMessage] = useState("");
   const [profileError, setProfileError] = useState("");
@@ -21,6 +22,7 @@ export default function ProfilePage() {
   useEffect(() => {
     if (!user) return;
     setProfileName(user.name);
+    setProfileUsername(typeof user.username === "string" ? user.username : "");
     setProfileEmail(user.email);
   }, [user]);
 
@@ -36,7 +38,7 @@ export default function ProfilePage() {
         method: "PATCH",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         credentials: "include",
-        body: JSON.stringify({ name: profileName, email: profileEmail }),
+        body: JSON.stringify({ name: profileName, email: profileEmail, username: profileUsername.trim() }),
       });
       const data = await res.json();
 
@@ -174,6 +176,9 @@ export default function ProfilePage() {
               {user.name}
             </h2>
             <p className="text-sm text-gray-500 dark:text-gray-400">{user.email}</p>
+            {typeof user.username === "string" && user.username && (
+              <p className="text-sm text-gray-500 dark:text-gray-400">/user/{user.username}</p>
+            )}
           </div>
         </div>
       </div>
@@ -230,6 +235,21 @@ export default function ProfilePage() {
               className="w-full rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 shadow-sm outline-none transition focus:border-red-500 focus:ring-2 focus:ring-red-500/20 dark:border-gray-700 dark:bg-gray-950 dark:text-white"
               required
             />
+          </div>
+          <div>
+            <label htmlFor="profile-username" className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
+              Username
+            </label>
+            <input
+              id="profile-username"
+              type="text"
+              value={profileUsername}
+              onChange={(e) => setProfileUsername(e.target.value)}
+              autoComplete="username"
+              className="w-full rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 shadow-sm outline-none transition focus:border-red-500 focus:ring-2 focus:ring-red-500/20 dark:border-gray-700 dark:bg-gray-950 dark:text-white"
+              required
+            />
+            <p className="mt-1 text-xs text-gray-500">Shared lists use /user/{profileUsername || "username"}/list-name. Saving updates those links.</p>
           </div>
           <div>
             <label htmlFor="profile-email" className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
