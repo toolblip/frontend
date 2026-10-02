@@ -1,7 +1,7 @@
 import type { ComponentType, SVGProps } from 'react';
 import {
   IconDev, IconText, IconImage, IconColor, IconConv, IconSEO, IconCSS,
-  IconNet, IconEnc, IconUtil, IconMath, IconMCP, IconAI,
+  IconNet, IconEnc, IconUtil, IconMath, IconMCP, IconAI, IconFile,
 } from '@/components/v2/icons';
 
 type IconComp = ComponentType<SVGProps<SVGSVGElement>>;
@@ -26,6 +26,9 @@ export const CAT_META: Record<string, CategoryMeta> = {
   Math:       { icon: IconMath,  color: 'var(--c-math)', bg: 'var(--c-math-bg)' },
   MCP:        { icon: IconMCP,   color: 'var(--c-mcp)',  bg: 'var(--c-mcp-bg)'  },
   'AI/ML':    { icon: IconAI,    color: 'var(--c-aiml)', bg: 'var(--c-aiml-bg)' },
+  'PDF Tools': { icon: IconFile, color: 'var(--c-util)', bg: 'var(--c-util-bg)' },
+  'Document Generator': { icon: IconFile, color: 'var(--c-txt)', bg: 'var(--c-txt-bg)' },
+  'Video Tools': { icon: IconImage, color: 'var(--c-img)', bg: 'var(--c-img-bg)' },
 };
 
 export function getCategoryMeta(category: string): CategoryMeta {
