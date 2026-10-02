@@ -574,8 +574,13 @@ button.tb-v2-mm-more-row-btn {
 .tb-v2-nav-search-slash { color: var(--fg-3); font-size: 11px; }
 .tb-v2-nav-search-compact { width: auto; padding: 6px 12px; gap: 8px; font-size: 12.5px; }
 .tb-v2-nav-search-compact .tb-v2-nav-search-label {
-  white-space: nowrap; color: var(--fg-3);
-  font-family: var(--f-mono); font-size: 11.5px; letter-spacing: 0;
+  display: inline-flex; align-items: center; gap: 8px;
+  white-space: nowrap; color: var(--fg-2);
+  font-family: inherit; font-size: 12.5px; letter-spacing: -0.01em;
+}
+.tb-v2-nav-search-keys {
+  font-family: var(--f-mono); font-size: 11px; letter-spacing: 0;
+  color: var(--fg-3);
 }
 
 /* Get Pro amber pill */
@@ -937,6 +942,7 @@ button.tb-v2-mm-more-row-btn {
     background: var(--surface-2);
   }
   .tb-v2-nav-search-compact { width: 56px !important; min-width: 56px; height: 36px; padding: 0 10px; border-radius: 999px; }
+  .tb-v2-nav-search-compact .tb-v2-nav-search-label,
   .tb-v2-nav-search-label { display: none; }
   .tb-v2-nav-inner { gap: 6px; }
   .tb-v2-tm-wrap { display: inline-flex; }

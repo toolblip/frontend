@@ -125,10 +125,13 @@ export default function Nav({ onOpenSearch }: Props) {
             type="button"
             className="tb-v2-nav-search tb-v2-nav-search-compact"
             onClick={onOpenSearch}
-            aria-label={shortcut ? `Open search (${shortcut.spoken})` : 'Open search'}
+            aria-label={shortcut ? `Search, ${shortcut.spoken}` : 'Search'}
           >
             <IconSearch style={{ width: 14, height: 14, color: 'var(--fg-3)' }} />
-            <span className="tb-v2-nav-search-label">{shortcut?.label ?? ''}</span>
+            <span className="tb-v2-nav-search-label">
+              <span>Search</span>
+              {shortcut ? <span className="tb-v2-nav-search-keys">{shortcut.label}</span> : null}
+            </span>
           </button>
           {user && (
             <Link href="/dashboard" className="tb-v2-nav-pro">Dashboard</Link>
