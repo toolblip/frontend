@@ -3574,6 +3574,7 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
 .tb-v2-article ul li { font-size: 15px; color: var(--fg-1); line-height: 1.7; padding: 4px 0; display: flex; gap: 8px; }
 .tb-v2-article ul li::before { content: '·'; color: var(--fg-3); flex-shrink: 0; }
 .tb-v2-article strong { color: var(--fg-0); font-weight: 600; }
+.tb-v2-ai-mcp-item { scroll-margin-top: 88px; }
 .tb-v2-article a { color: var(--red); }
 .tb-v2-article a:hover { color: var(--red-hover); }
 
