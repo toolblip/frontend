@@ -140,7 +140,16 @@ describe('assistant tool lookup', () => {
     expect(findPublicTool('not-a-real-tool')).toBeNull();
 
     const listed = handleMcpMessage({ jsonrpc: '2.0', id: 1, method: 'tools/list' });
-    expect(listed).toMatchObject({ result: { tools: [{ name: 'search_tools' }, { name: 'get_tool' }] } });
+    expect(listed).toMatchObject({
+      result: {
+        tools: [
+          { name: 'search_tools', annotations: { readOnlyHint: true } },
+          { name: 'get_tool', annotations: { readOnlyHint: true } },
+        ],
+      },
+    });
+    const initialized = handleMcpMessage({ jsonrpc: '2.0', id: 3, method: 'initialize' });
+    expect(JSON.stringify(initialized)).toContain('Use search_tools when');
 
     const called = handleMcpMessage({
       jsonrpc: '2.0',
