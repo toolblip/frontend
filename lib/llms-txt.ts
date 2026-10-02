@@ -85,6 +85,7 @@ export function buildLlmsTxt(): string {
     '## Catalog files',
     `- [Full tool list](${SITE_ORIGIN}/llms-full.txt)`,
     `- [Sitemap](${SITE_ORIGIN}/sitemap.xml)`,
+    `- [Assistant tool lookup](${SITE_ORIGIN}/mcp): POST JSON-RPC tools/call with search_tools or get_tool to get a canonical URL.`,
     '',
     '## Pricing',
     'Free, Starter ($4.99/mo), Pro ($19.99/mo), and Max ($49.99/mo). Ordinary tools work without an account.',

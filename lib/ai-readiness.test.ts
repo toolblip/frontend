@@ -12,6 +12,7 @@ import {
   renderRobotsTxt,
 } from './ai-crawlers';
 import { readFileSync } from 'node:fs';
+import { findPublicTool, handleMcpMessage, searchPublicTools } from './assistant-mcp';
 import { buildIndexNowBody, INDEXNOW_KEY } from './indexnow.mjs';
 import { buildLlmsFullTxt, buildLlmsTxt, publicTools } from './llms-txt';
 import { tools } from '@/data/tools';
@@ -127,6 +128,27 @@ describe('IndexNow', () => {
       'http://toolblip.com/tools/json-formatter',
       'https://example.com/',
     ]).urlList).toEqual(['https://toolblip.com/tools/json-formatter']);
-    expect(readFileSync('public/toolblip-indexnow-key-2024.txt', 'utf8')).toBe(INDEXNOW_KEY);
+    expect(readFileSync('public/toolblip-indexnow-20261002.txt', 'utf8')).toBe(INDEXNOW_KEY);
+  });
+});
+
+describe('assistant tool lookup', () => {
+  it('returns canonical URLs for a search and a slug', () => {
+    const matches = searchPublicTools('json formatter');
+    expect(matches[0]?.url).toBe('https://toolblip.com/tools/json-formatter');
+    expect(findPublicTool('qr-code-generator')?.url).toBe('https://toolblip.com/tools/images/qr-code-generator');
+    expect(findPublicTool('not-a-real-tool')).toBeNull();
+
+    const listed = handleMcpMessage({ jsonrpc: '2.0', id: 1, method: 'tools/list' });
+    expect(listed).toMatchObject({ result: { tools: [{ name: 'search_tools' }, { name: 'get_tool' }] } });
+
+    const called = handleMcpMessage({
+      jsonrpc: '2.0',
+      id: 2,
+      method: 'tools/call',
+      params: { name: 'get_tool', arguments: { slug: 'json-formatter' } },
+    });
+    expect(JSON.stringify(called)).toContain('https://toolblip.com/tools/json-formatter');
+    expect(buildLlmsTxt()).toContain('/mcp');
   });
 });
