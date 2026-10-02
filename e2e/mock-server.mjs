@@ -38,6 +38,31 @@ function bearer(req) {
   return String(req.headers.authorization ?? '').replace(/^Bearer\s+/i, '');
 }
 
+function slugUsername(value) {
+  const slug = String(value ?? '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 30)
+    .replace(/-+$/g, '');
+  return /^[a-z0-9][a-z0-9-]{1,28}[a-z0-9]$/.test(slug) ? slug : 'user';
+}
+
+function ensureUsername(user) {
+  if (user.username) return user;
+  const base = slugUsername(user.name || String(user.email).split('@')[0]);
+  let candidate = base;
+  let n = 2;
+  const taken = (name) => [...users.values()].some((other) => other.id !== user.id && other.username === name);
+  while (taken(candidate)) {
+    const suffix = `-${n}`;
+    candidate = `${base.slice(0, 30 - suffix.length).replace(/-+$/g, '')}${suffix}`;
+    n += 1;
+  }
+  user.username = candidate;
+  return user;
+}
+
 function publicUser(user) {
   if (!user) return null;
   const termsAcceptedAt = user.terms_accepted_at ?? null;
@@ -45,6 +70,7 @@ function publicUser(user) {
     id: user.id,
     name: user.name,
     email: user.email,
+    username: user.username ?? null,
     role: user.role ?? 'user',
     email_verified_at: user.email_verified_at ?? null,
     avatar_url: user.avatar_url ?? null,
@@ -183,15 +209,21 @@ const server = http.createServer(async (req, res) => {
         errors: { email: ['The email has already been taken.'] },
       });
     }
+    const chosen = String(body.username ?? '').trim().toLowerCase();
+    if (chosen && !/^[a-z0-9][a-z0-9-]{1,28}[a-z0-9]$/.test(chosen)) {
+      return json(res, 422, { message: 'Choose a username with 3–30 letters, numbers, and hyphens.', code: 'username_invalid' });
+    }
     const user = {
       id: nextId++,
       name: String(body.name),
       email,
       password: String(body.password),
+      username: chosen || null,
       role: 'user',
       email_verified_at: null,
       terms_accepted_at: new Date().toISOString(),
     };
+    ensureUsername(user);
     users.set(email, user);
     const token = issueToken(email);
     return json(res, 201, { user: publicUser(user), token });
@@ -207,6 +239,7 @@ const server = http.createServer(async (req, res) => {
         error: { code: 'INVALID_CREDENTIALS', message: 'Invalid email or password.' },
       });
     }
+    ensureUsername(user);
     const token = issueToken(email);
     return json(res, 200, { user: publicUser(user), token });
   }
@@ -231,6 +264,7 @@ const server = http.createServer(async (req, res) => {
       email_verified_at: '2026-01-01T00:00:00.000Z',
       terms_accepted_at: null,
     };
+    ensureUsername(user);
     users.set(user.email, user);
     const token = issueToken(user.email);
     return json(res, 200, { user: publicUser(user), token, is_new_user: true, requires_terms_acceptance: true });
@@ -277,8 +311,13 @@ const server = http.createServer(async (req, res) => {
     if (nextEmail !== email && users.has(nextEmail)) {
       return json(res, 422, { message: 'The email has already been taken.', errors: { email: ['The email has already been taken.'] } });
     }
+    const nextUsername = String(body.username ?? '').trim().toLowerCase();
+    if (nextUsername && !/^[a-z0-9][a-z0-9-]{1,28}[a-z0-9]$/.test(nextUsername)) {
+      return json(res, 422, { message: 'Choose a username with 3–30 letters, numbers, and hyphens.', code: 'username_invalid' });
+    }
     users.delete(email);
     user.name = String(body.name);
+    if (nextUsername) user.username = nextUsername;
     if (nextEmail !== email) {
       user.email = nextEmail;
       user.email_verified_at = null;
@@ -446,7 +485,7 @@ const server = http.createServer(async (req, res) => {
         name: list.name,
         slug: list.slug,
         is_shared: list.is_shared,
-        public_path: list.is_shared && user?.username ? `/@${user.username}/${list.slug}` : null,
+        public_path: list.is_shared && user?.username ? `/user/${user.username}/${list.slug}` : null,
         tool_count: list.tools.size,
         tool_slugs: Array.from(list.tools),
         contains_tool: Boolean(tool && list.tools.has(tool)),
@@ -511,11 +550,53 @@ const server = http.createServer(async (req, res) => {
         name: list.name,
         slug: list.slug,
         is_shared: list.is_shared,
-        public_path: list.is_shared && user?.username ? `/@${user.username}/${list.slug}` : null,
+        public_path: list.is_shared && user?.username ? `/user/${user.username}/${list.slug}` : null,
         tool_count: list.tools.size,
         tool_slugs: Array.from(list.tools),
         contains_tool: false,
         can_edit: true,
+      },
+    });
+  }
+
+  const publicListMatch = url.pathname.match(/^\/api\/lists\/([^/]+)\/([^/]+)$/);
+  if (req.method === 'GET' && publicListMatch) {
+    const email = tokens.get(bearer(req));
+    if (!email) return json(res, 401, { message: 'Unauthenticated.' });
+    const username = decodeURIComponent(publicListMatch[1]).toLowerCase();
+    const slug = decodeURIComponent(publicListMatch[2]).toLowerCase();
+    let found = null;
+    let owner = null;
+    for (const [ownerEmail, lists] of favoriteLists.entries()) {
+      const candidate = users.get(ownerEmail);
+      if (candidate?.username !== username) continue;
+      const list = lists.find((item) => item.slug === slug);
+      if (!list) continue;
+      found = list;
+      owner = candidate;
+      break;
+    }
+    if (!found || !owner || (!found.is_shared && owner.email !== email)) {
+      return json(res, 404, { message: 'List not found.' });
+    }
+    return json(res, 200, {
+      data: {
+        id: found.id,
+        name: found.name,
+        slug: found.slug,
+        is_shared: found.is_shared,
+        can_edit: owner.email === email,
+        role: owner.email === email ? 'owner' : 'viewer',
+        owner_name: owner.name,
+        owner_username: owner.username,
+        public_path: found.is_shared ? `/user/${owner.username}/${found.slug}` : null,
+        tools: Array.from(found.tools).map((toolSlug) => ({
+          slug: toolSlug,
+          name: toolSlug === 'json-formatter' ? 'JSON Formatter' : toolSlug,
+          description: 'Format JSON online.',
+          category: 'Developer',
+          icon: '🧰',
+        })),
       },
     });
   }

@@ -55,18 +55,13 @@ export function proxy(req: NextRequest) {
     return NextResponse.next();
   }
 
-  const atList = pathname.match(/^\/@([a-z0-9][a-z0-9-]{1,28}[a-z0-9])\/([a-z0-9][a-z0-9-]{0,78}[a-z0-9])$/i);
-  if (atList) {
-    if (!token) {
-      const login = req.nextUrl.clone();
-      login.pathname = "/login";
-      login.search = "";
-      login.searchParams.set("next", pathname);
-      return NextResponse.redirect(login);
-    }
-    const url = req.nextUrl.clone();
-    url.pathname = `/lists/${atList[1].toLowerCase()}/${atList[2].toLowerCase()}`;
-    return NextResponse.rewrite(url);
+  const sharedList = pathname.match(/^\/user\/([a-z0-9][a-z0-9-]{1,28}[a-z0-9])\/([a-z0-9][a-z0-9-]{0,78}[a-z0-9])$/i);
+  if (sharedList && !token) {
+    const login = req.nextUrl.clone();
+    login.pathname = "/login";
+    login.search = "";
+    login.searchParams.set("next", pathname);
+    return NextResponse.redirect(login);
   }
 
   const isProtected = PROTECTED_PREFIXES.some((p) => pathname.startsWith(p));

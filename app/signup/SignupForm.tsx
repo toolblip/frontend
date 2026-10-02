@@ -11,6 +11,7 @@ export default function SignupForm() {
   const { login } = useAuth();
   const router = useRouter();
   const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
@@ -43,7 +44,14 @@ export default function SignupForm() {
       const res = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({ name, email, password, password_confirmation: confirm, accepted_terms: true }),
+        body: JSON.stringify({
+          name,
+          email,
+          password,
+          password_confirmation: confirm,
+          accepted_terms: true,
+          ...(username.trim() ? { username: username.trim() } : {}),
+        }),
         credentials: "include",
       });
       const data = await res.json();
@@ -103,6 +111,22 @@ export default function SignupForm() {
                 onChange={(e) => setName(e.target.value)}
                 className="tb-v2-auth-input"
                 placeholder="Your name"
+              />
+            </div>
+
+            <div className="tb-v2-auth-field">
+              <label htmlFor="username" className="tb-v2-auth-label">
+                Username <span className="font-normal text-gray-500">optional</span>
+              </label>
+              <input
+                id="username"
+                type="text"
+                name="username"
+                autoComplete="username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="tb-v2-auth-input"
+                placeholder="Leave blank and we'll pick one"
               />
             </div>
 

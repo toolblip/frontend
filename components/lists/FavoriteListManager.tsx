@@ -14,6 +14,9 @@ export function FavoriteListManager() {
   const [pendingUsername, setPendingUsername] = useState("");
   const [shareTarget, setShareTarget] = useState<number | null>(null);
   const [inviteEmail, setInviteEmail] = useState("");
+  const [renamingId, setRenamingId] = useState<number | null>(null);
+  const [renameValue, setRenameValue] = useState("");
+  const [deletingId, setDeletingId] = useState<number | null>(null);
   const [notice, setNotice] = useState("");
 
   async function load() {
@@ -62,29 +65,34 @@ export function FavoriteListManager() {
     await load();
   }
 
-  async function rename(list: FavoriteListSummary) {
-    const next = window.prompt("List name", list.name);
-    if (!next || next.trim() === list.name) return;
+  async function rename(event: FormEvent<HTMLFormElement>, list: FavoriteListSummary) {
+    event.preventDefault();
+    const next = renameValue.trim();
+    if (!next || next === list.name) {
+      setRenamingId(null);
+      return;
+    }
     const res = await fetch(`/api/auth/favorite-lists/${list.id}`, {
       method: "PATCH",
       credentials: "include",
       headers: { "Content-Type": "application/json", Accept: "application/json" },
-      body: JSON.stringify({ name: next.trim() }),
+      body: JSON.stringify({ name: next }),
     });
     if (!res.ok) {
       setError("Could not rename that list.");
       return;
     }
+    setRenamingId(null);
     await load();
   }
 
   async function remove(list: FavoriteListSummary) {
-    if (!window.confirm(`Delete ${list.name}?`)) return;
     const res = await fetch(`/api/auth/favorite-lists/${list.id}`, { method: "DELETE", credentials: "include" });
     if (!res.ok) {
       setError("Could not delete that list.");
       return;
     }
+    setDeletingId(null);
     await load();
   }
 
@@ -221,17 +229,61 @@ export function FavoriteListManager() {
             <article key={list.id} className="rounded-2xl border border-gray-200 p-4 dark:border-gray-800" data-testid={`owned-list-${list.slug}`}>
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
-                  <h3 className="font-semibold text-gray-900 dark:text-white">{list.name}</h3>
-                  <p className="text-sm text-gray-500">{list.is_shared ? "Shared by link" : "Private"} · {list.tool_count} tools</p>
+                  {renamingId === list.id ? (
+                    <form onSubmit={(event) => void rename(event, list)} className="flex flex-wrap gap-2">
+                      <input
+                        value={renameValue}
+                        onChange={(event) => setRenameValue(event.target.value)}
+                        aria-label={`Rename ${list.name}`}
+                        data-testid={`rename-list-name-${list.slug}`}
+                        className="rounded-xl border border-gray-200 px-3 py-1.5 text-sm dark:border-gray-700 dark:bg-gray-950 dark:text-white"
+                      />
+                      <button type="submit" className="rounded-full bg-gray-900 px-3 py-1.5 text-xs font-medium text-white dark:bg-white dark:text-gray-900">Save</button>
+                      <button type="button" onClick={() => setRenamingId(null)} className="rounded-full border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 dark:border-gray-700 dark:text-gray-300">Cancel</button>
+                    </form>
+                  ) : (
+                    <>
+                      <h3 className="font-semibold text-gray-900 dark:text-white">{list.name}</h3>
+                      <p className="text-sm text-gray-500">{list.is_shared ? "Shared by link" : "Private"} · {list.tool_count} tools</p>
+                    </>
+                  )}
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  <button type="button" onClick={() => void rename(list)} className="rounded-full border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 dark:border-gray-700 dark:text-gray-300">Rename</button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setRenamingId(list.id);
+                      setRenameValue(list.name);
+                      setDeletingId(null);
+                    }}
+                    data-testid={`rename-list-${list.slug}`}
+                    className="rounded-full border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 dark:border-gray-700 dark:text-gray-300"
+                  >
+                    Rename
+                  </button>
                   {list.is_shared ? (
                     <button type="button" onClick={() => void unshare(list)} data-testid={`unshare-list-${list.slug}`} className="rounded-full border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 dark:border-gray-700 dark:text-gray-300">Make private</button>
                   ) : (
                     <button type="button" onClick={() => void share(list)} data-testid={`share-list-${list.slug}`} className="rounded-full border border-red-200 bg-red-50 px-3 py-1.5 text-xs font-medium text-red-700 dark:border-red-900 dark:bg-red-950/40 dark:text-red-300">Share</button>
                   )}
-                  <button type="button" onClick={() => void remove(list)} className="rounded-full border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 dark:border-gray-700 dark:text-gray-300">Delete</button>
+                  {deletingId === list.id ? (
+                    <>
+                      <button type="button" onClick={() => void remove(list)} data-testid={`confirm-delete-list-${list.slug}`} className="rounded-full bg-red-600 px-3 py-1.5 text-xs font-medium text-white">Delete {list.name}</button>
+                      <button type="button" onClick={() => setDeletingId(null)} className="rounded-full border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 dark:border-gray-700 dark:text-gray-300">Cancel</button>
+                    </>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setDeletingId(list.id);
+                        setRenamingId(null);
+                      }}
+                      data-testid={`delete-list-${list.slug}`}
+                      className="rounded-full border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 dark:border-gray-700 dark:text-gray-300"
+                    >
+                      Delete
+                    </button>
+                  )}
                 </div>
               </div>
               {shareTarget === list.id && (
@@ -282,7 +334,7 @@ export function FavoriteListManager() {
               <li key={list.id} className="flex items-center justify-between gap-3 rounded-xl border border-gray-200 px-4 py-3 dark:border-gray-800">
                 <Link href={list.public_path ?? "#"} className="min-w-0">
                   <span className="block font-medium text-gray-900 dark:text-white">{list.name}</span>
-                  <span className="text-sm text-gray-500">@{list.owner_username} · view only</span>
+                  <span className="text-sm text-gray-500">/user/{list.owner_username} · view only</span>
                 </Link>
                 <button type="button" onClick={() => void leave(list)} className="text-xs font-medium text-gray-500 hover:text-gray-800">Leave</button>
               </li>

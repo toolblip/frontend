@@ -8,7 +8,7 @@ test.describe('Email verification BDD regression', () => {
 
   test('Given a valid verification link, When the verification page loads, Then the email is verified', async ({ page }) => {
     await page.goto('/signup');
-    await page.getByLabel('Name').fill('Verification User');
+    await page.getByLabel('Name', { exact: true }).fill('Verification User');
     await page.getByLabel('Email').fill('verify-me@toolblip.test');
     await page.getByLabel('Password', { exact: true }).fill('Password123!');
     await page.getByLabel('Confirm password').fill('Password123!');

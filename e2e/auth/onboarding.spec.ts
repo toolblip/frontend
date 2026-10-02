@@ -80,7 +80,7 @@ test.describe('Account onboarding BDD regression', () => {
     await signUpLink.click();
     await expect(page).toHaveURL(/\/signup\?next=.*dashboard.*plan%3Dultra.*billing%3Dmonthly/);
 
-    await page.getByLabel('Name').fill(user.name);
+    await page.getByLabel('Name', { exact: true }).fill(user.name);
     await page.getByLabel('Email').fill(user.email);
     await page.getByLabel('Password', { exact: true }).fill(user.password);
     await page.getByLabel('Confirm password').fill(user.password);

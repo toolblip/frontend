@@ -25,7 +25,7 @@ test.describe('Signup BDD regression', () => {
     });
 
     await page.goto('/signup');
-    await page.getByLabel('Name').fill('Legal Consent User');
+    await page.getByLabel('Name', { exact: true }).fill('Legal Consent User');
     await page.getByLabel('Email').fill('legal-consent@toolblip.test');
     await page.getByLabel('Password', { exact: true }).fill('Password123!');
     await page.getByLabel('Confirm password').fill('Password123!');
@@ -53,7 +53,7 @@ test.describe('Signup BDD regression', () => {
     });
 
     await page.goto('/signup');
-    await page.getByLabel('Name').fill('Short Password');
+    await page.getByLabel('Name', { exact: true }).fill('Short Password');
     await page.getByLabel('Email').fill('short-password@toolblip.test');
     await page.getByLabel('Password', { exact: true }).fill('short');
     await page.getByLabel('Confirm password').fill('short');
@@ -73,7 +73,7 @@ test.describe('Signup BDD regression', () => {
     });
 
     await page.goto('/signup');
-    await page.getByLabel('Name').fill('Mismatch User');
+    await page.getByLabel('Name', { exact: true }).fill('Mismatch User');
     await page.getByLabel('Email').fill('mismatch@toolblip.test');
     await page.getByLabel('Password', { exact: true }).fill('Password123!');
     await page.getByLabel('Confirm password').fill('Different123!');
@@ -86,7 +86,7 @@ test.describe('Signup BDD regression', () => {
 
   test('Given a duplicate email, When the API returns validation errors, Then the error is shown and the user remains on signup', async ({ page }) => {
     await page.goto('/signup');
-    await page.getByLabel('Name').fill('Duplicate User');
+    await page.getByLabel('Name', { exact: true }).fill('Duplicate User');
     await page.getByLabel('Email').fill(TAKEN_EMAIL);
     await page.getByLabel('Password', { exact: true }).fill('Password123!');
     await page.getByLabel('Confirm password').fill('Password123!');

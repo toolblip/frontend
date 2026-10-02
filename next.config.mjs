@@ -32,6 +32,17 @@ const nextConfig = {
   },
   async redirects() {
     return [
+      // Shared lists used /@username/slug before the public path moved under /user.
+      {
+        source: "/@:username([a-zA-Z0-9][a-zA-Z0-9-]{1,28}[a-zA-Z0-9])/:slug([a-zA-Z0-9][a-zA-Z0-9-]{0,78}[a-zA-Z0-9])",
+        destination: "/user/:username/:slug",
+        permanent: true,
+      },
+      {
+        source: "/lists/:username([a-zA-Z0-9][a-zA-Z0-9-]{1,28}[a-zA-Z0-9])/:slug([a-zA-Z0-9][a-zA-Z0-9-]{0,78}[a-zA-Z0-9])",
+        destination: "/user/:username/:slug",
+        permanent: true,
+      },
       // Consolidate older articles that cover the same topic under one URL.
       { source: '/blog/optimize-images-without-uploading', destination: '/blog/how-to-optimize-images-without-uploading', permanent: true },
       { source: '/blog/top-5-developer-tools-should-bookmark', destination: '/blog/top-5-developer-tools-you-should-bookmark', permanent: true },
@@ -329,20 +340,6 @@ const nextConfig = {
       // meta-tag-generator creates tags, so it cannot replace that analysis.
 
     ];
-  },
-  // Public list URLs are /@username/slug. A folder named @… is a parallel
-  // route, so it cannot be a page. proxy.ts rewrites this path, but that
-  // layer does not run in production (see the note above). beforeFiles
-  // runs in every environment and keeps the public URL in the address bar.
-  async rewrites() {
-    return {
-      beforeFiles: [
-        {
-          source: "/@:username([a-zA-Z0-9][a-zA-Z0-9-]{1,28}[a-zA-Z0-9])/:slug([a-zA-Z0-9][a-zA-Z0-9-]{0,78}[a-zA-Z0-9])",
-          destination: "/lists/:username/:slug",
-        },
-      ],
-    };
   },
   async headers() {
     return [
