@@ -6,13 +6,18 @@ import { IconRefresh, IconX } from '@/components/v2/icons';
 import SponsorAvatar, { sponsorFaviconSrc } from '@/components/v2/SponsorAvatar';
 import {
   applySponsorClick,
+  applySponsorViews,
   apiPath,
   displayIdentity,
   fetchSponsorsLeaderboard,
   formatBid,
+  formatSponsorStat,
   formatTimeAgo,
+  mergeSponsorCounts,
   minutesSince,
   pingSponsorClick,
+  pingSponsorViews,
+  shouldRecordSponsorViews,
   withSponsorSource,
   type SponsorSlot,
   type SponsorsLeaderboardResponse,
@@ -144,7 +149,9 @@ function SponsorRow({
                 <span className="tb-v2-sponsor-live-dot" aria-hidden="true" />
               </>
             )}
-            {row.clicks} clicks
+            {formatSponsorStat(row.views, 'view', 'views')}
+            <span className="tb-v2-sponsor-live-dot" aria-hidden="true" />
+            {formatSponsorStat(row.clicks, 'click', 'clicks')}
           </span>
         </div>
         <div className="tb-v2-sponsor-row-price-wrap">
@@ -225,7 +232,12 @@ export default function SponsorsClient() {
   // skeleton or a scary error for a low-stakes background refresh).
   const loadLeaderboard = () =>
     fetchSponsorsLeaderboard()
-      .then(setBoard)
+      .then((data) => {
+        setBoard((prev) => {
+          if (!prev) return data;
+          return { ...data, data: mergeSponsorCounts(prev.data, data.data) };
+        });
+      })
       .catch(() => {
         setBoard((prev) =>
           prev ?? {
@@ -244,6 +256,15 @@ export default function SponsorsClient() {
   useEffect(() => {
     loadLeaderboard();
   }, []);
+
+  useEffect(() => {
+    if (!board?.data.length) return;
+    if (!shouldRecordSponsorViews('leaderboard', `/sponsors?page=${board.page}`, board.data)) return;
+    const targets = board.data;
+    void pingSponsorViews(targets).then((ok) => {
+      if (ok) setBoard((current) => current && { ...current, data: applySponsorViews(current.data, targets) });
+    });
+  }, [board]);
 
   const refreshLeaderboard = () => {
     setRefreshing(true);

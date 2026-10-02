@@ -8,7 +8,7 @@ for (const initialPath of ['/sponsors', '/']) {
     let documentRequests = 0;
     const slot = () => ({
       id: -1, rank: 1, domain: 'example.com', url: 'https://example.com',
-      name: 'Example', tagline: null, clicks, balance_cents: 100, last_bid_at: null, placeholder: true,
+      name: 'Example', tagline: null, clicks, views: 0, balance_cents: 100, last_bid_at: null, placeholder: true,
     });
     page.on('request', request => {
       if (request.resourceType() === 'document') documentRequests++;
@@ -31,11 +31,12 @@ for (const initialPath of ['/sponsors', '/']) {
       clicks++;
       await route.fulfill({ json: { clicks } });
     });
+    await page.route('**/api/sponsors/views', route => route.fulfill({ status: 204 }));
 
     await page.goto(initialPath);
     const strip = page.getByTestId('sponsor-strip-primary');
     if (initialPath === '/') {
-      await expect(strip).toContainText('0 clicks');
+      await expect(strip.locator('.tb-v2-sponsor-stat').nth(1)).toHaveAccessibleName('0 clicks');
       await page.locator('.tb-v2-sponsor-bidyours').click();
     }
     await expect(page).toHaveURL(/\/sponsors$/);
@@ -53,7 +54,7 @@ for (const initialPath of ['/sponsors', '/']) {
     await expect(popup).toHaveURL(/example.com/);
     await popup.close();
     expect((await confirmed).ok()).toBe(true);
-    await expect(leaderboard).toContainText('1 clicks');
+    await expect(leaderboard).toContainText('1 click');
     expect(posts).toBe(1);
 
     const documentsBeforeHome = documentRequests;
@@ -63,7 +64,7 @@ for (const initialPath of ['/sponsors', '/']) {
     const response = await freshTop;
     expect(response.ok()).toBe(true);
     expect((await response.json()).slots[0].clicks).toBe(1);
-    await expect(strip).toContainText('1 clicks');
+    await expect(strip.locator('.tb-v2-sponsor-stat').nth(1)).toHaveAccessibleName('1 click');
     expect(documentRequests).toBe(documentsBeforeHome);
     expect(topRequests).toBe(topRequestsWhileHidden + 1);
     if (initialPath === '/') expect(topRequestsWhileHidden).toBeGreaterThan(0);
@@ -76,7 +77,7 @@ for (const initialPath of ['/sponsors', '/']) {
     await expect(page).toHaveURL(/\/tools$/);
     await page.locator('a[href="/tools/json-formatter"]').first().click();
     await expect(page.locator('[data-testid="tool-detail-shell"]')).toBeVisible();
-    await expect(strip).toContainText('1 clicks');
+    await expect(strip.locator('.tb-v2-sponsor-stat').nth(1)).toHaveAccessibleName('1 click');
     expect(topRequests).toBe(topRequestsAfterHome);
     expect(documentRequests).toBe(documentsBeforeHome);
     expect(posts).toBe(1);
@@ -92,7 +93,7 @@ for (const surface of ['strip', 'leaderboard'] as const) {
       let release: (() => void) | undefined;
       const slot = () => ({
         id: placeholder ? -1 : 12, rank: 1, domain: 'example.com', url: 'https://example.com',
-        name: 'Example', tagline: null, clicks, balance_cents: 100, last_bid_at: null, placeholder,
+        name: 'Example', tagline: null, clicks, views: 0, balance_cents: 100, last_bid_at: null, placeholder,
       });
       await context.route('https://example.com/**', route => route.fulfill({ body: 'Sponsor destination' }));
       await page.route('**/api/sponsors/top', route => route.fulfill({ json: {
@@ -113,10 +114,15 @@ for (const surface of ['strip', 'leaderboard'] as const) {
           await route.fulfill(placeholder ? { json: { clicks } } : { status: 204 });
         }
       });
+      await page.route('**/api/sponsors/views', route => route.fulfill({ status: 204 }));
 
       await page.goto(surface === 'strip' ? '/' : '/sponsors');
       const link = page.locator(surface === 'strip' ? 'a.tb-v2-sponsor-card' : 'a.tb-v2-sponsor-row-link').filter({ hasText: 'example.com' });
-      await expect(link).toContainText('7 clicks');
+      const clickStat = link.locator('.tb-v2-sponsor-stat').nth(1);
+      const expectClicks = (label: string) => surface === 'strip'
+        ? expect(clickStat).toHaveAccessibleName(label)
+        : expect(link).toContainText(label);
+      await expectClicks('7 clicks');
       await expect(link).toHaveAttribute('target', '_blank');
       const click = async () => {
         const popupPromise = page.waitForEvent('popup');
@@ -125,25 +131,27 @@ for (const surface of ['strip', 'leaderboard'] as const) {
         await expect(popup).toHaveURL(/example.com/);
         await popup.close();
         await expect.poll(() => release !== undefined).toBe(true);
-        await expect(link).toContainText('7 clicks');
+        await expectClicks('7 clicks');
       };
       await click();
-      const rejected = page.waitForResponse(res => res.request().method() === 'POST' && res.url().includes('/api/sponsors/'));
+      const rejected = page.waitForResponse(res =>
+        res.request().method() === 'POST' && res.url().includes('/api/sponsors/') && !res.url().includes('/api/sponsors/views'),
+      );
       release!();
       await rejected;
-      await expect(link).toContainText('7 clicks');
+      await expectClicks('7 clicks');
       expect(posts).toBe(1);
 
       fail = false;
       release = undefined;
       await click();
       release!();
-      await expect(link).toContainText('8 clicks');
+      await expectClicks('8 clicks');
       expect(posts).toBe(2);
-      const cached = await page.evaluate(() => sessionStorage.getItem('tb_sponsors_top_v3'));
+      const cached = await page.evaluate(() => sessionStorage.getItem('tb_sponsors_top_v4'));
       expect(cached).toBeNull();
       await page.reload();
-      await expect(link).toContainText('8 clicks');
+      await expectClicks('8 clicks');
       expect(posts).toBe(2);
     });
   }

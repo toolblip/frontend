@@ -1,17 +1,23 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { useShowAdsState } from '@/hooks/useShowAds';
 import SponsorAvatar from '@/components/v2/SponsorAvatar';
 import {
   applySponsorClick,
+  applySponsorViews,
   displayIdentity,
   fetchSponsorsTop,
   formatBid,
+  formatCompactCount,
+  formatSponsorStat,
+  mergeSponsorCounts,
   pingSponsorClick,
+  pingSponsorViews,
   readSponsorsTopCache,
+  shouldRecordSponsorViews,
   withSponsorSource,
   writeSponsorsTopCache,
   type SponsorSlot,
@@ -43,8 +49,11 @@ export default function SponsorStrip() {
     fetchSponsorsTop()
       .then((data) => {
         if (cancelled) return;
-        writeSponsorsTopCache(data);
-        setSlots(data.slots);
+        setSlots((current) => {
+          const next = mergeSponsorCounts(current, data.slots);
+          writeSponsorsTopCache({ ...data, slots: next });
+          return next;
+        });
         setMinBidCents(Math.max(100, data.min_bid_cents));
       })
       .catch(() => {
@@ -55,6 +64,15 @@ export default function SponsorStrip() {
       cancelled = true;
     };
   }, [suppressed]);
+
+  useEffect(() => {
+    if (suppressed || eligibilityLoading || !showAds || !slots?.length) return;
+    if (!shouldRecordSponsorViews('strip', pathname ?? '/', slots)) return;
+    const targets = slots;
+    void pingSponsorViews(targets).then((ok) => {
+      if (ok) setSlots((current) => current && applySponsorViews(current, targets));
+    });
+  }, [suppressed, eligibilityLoading, showAds, slots, pathname]);
 
   if (suppressed) return null;
   if (!eligibilityLoading && !showAds) return null;
@@ -69,9 +87,9 @@ export default function SponsorStrip() {
     <div className="tb-v2-sponsor-strip" aria-busy={loading}>
       <div className="tb-v2-container">
         <div className="tb-v2-sponsor-grid">
-          <SlotCard rank={2} slot={second} loading={loading} minBidCents={minBidCents} className="tb-v2-sponsor-slot-2" onSponsorClick={handleClick} />
-          <SlotCard rank={1} slot={first} loading={loading} minBidCents={minBidCents} className="tb-v2-sponsor-slot-1" onSponsorClick={handleClick} primary />
-          <SlotCard rank={3} slot={third} loading={loading} minBidCents={minBidCents} className="tb-v2-sponsor-slot-3" onSponsorClick={handleClick} />
+          <SlotCard slot={second} loading={loading} minBidCents={minBidCents} className="tb-v2-sponsor-slot-2" onSponsorClick={handleClick} />
+          <SlotCard slot={first} loading={loading} minBidCents={minBidCents} className="tb-v2-sponsor-slot-1" onSponsorClick={handleClick} primary />
+          <SlotCard slot={third} loading={loading} minBidCents={minBidCents} className="tb-v2-sponsor-slot-3" onSponsorClick={handleClick} />
           <div className="tb-v2-sponsor-bidyours-wrap">
             <Link
               href="/sponsors"
@@ -98,7 +116,6 @@ export default function SponsorStrip() {
 }
 
 function SlotCard({
-  rank,
   slot,
   loading,
   minBidCents,
@@ -106,7 +123,6 @@ function SlotCard({
   primary,
   onSponsorClick,
 }: {
-  rank: number;
   slot?: SponsorSlot;
   loading: boolean;
   minBidCents: number;
@@ -139,7 +155,6 @@ function SlotCard({
         className="tb-v2-sponsor-card"
         data-testid={primary ? 'sponsor-strip-primary' : 'sponsor-strip-slot'}
       >
-        <span className="tb-v2-sponsor-rank">#{rank}</span>
         <SponsorAvatar domain={slot.domain} name={slot.name} className="tb-v2-sponsor-card-avatar" />
         <div className="tb-v2-sponsor-card-copy">
           <span className="tb-v2-sponsor-name">{displayIdentity(slot.domain)}</span>
@@ -147,7 +162,8 @@ function SlotCard({
           <span className="tb-v2-sponsor-meta">
             {formatBid(slot.balance_cents)}
             <span className="tb-v2-sponsor-live-dot" aria-hidden="true" />
-            {slot.clicks} clicks
+            <SponsorStat icon={<EyeIcon />} count={slot.views} singular="view" plural="views" />
+            <SponsorStat icon={<ClickIcon />} count={slot.clicks} singular="click" plural="clicks" />
           </span>
         </div>
       </a>
@@ -155,5 +171,41 @@ function SlotCard({
         claim this rank for {formatBid(claimPriceCents)}
       </Link>
     </div>
+  );
+}
+
+function SponsorStat({
+  icon,
+  count,
+  singular,
+  plural,
+}: {
+  icon: ReactNode;
+  count: number;
+  singular: string;
+  plural: string;
+}) {
+  return (
+    <span className="tb-v2-sponsor-stat" aria-label={formatSponsorStat(count, singular, plural)}>
+      {icon}
+      <span>{formatCompactCount(count)}</span>
+    </span>
+  );
+}
+
+function EyeIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z" />
+      <circle cx="12" cy="12" r="3" />
+    </svg>
+  );
+}
+
+function ClickIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M4 4l7 16 2.5-6.5L20 11 4 4z" />
+    </svg>
   );
 }

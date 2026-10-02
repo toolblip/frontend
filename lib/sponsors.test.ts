@@ -1,9 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { applySponsorClick, fetchSponsorsArchive, fetchSponsorsLeaderboard, fetchSponsorsTop, pingSponsorClick, readSponsorsTopCache, writeSponsorsTopCache, type SponsorSlot } from './sponsors';
+import { applySponsorClick, applySponsorViews, fetchSponsorsArchive, fetchSponsorsLeaderboard, fetchSponsorsTop, formatCompactCount, pingSponsorClick, pingSponsorViews, readSponsorsTopCache, resetSponsorViewDedupe, shouldRecordSponsorViews, writeSponsorsTopCache, type SponsorSlot } from './sponsors';
 
 const slot: SponsorSlot = {
   id: 12, rank: 1, domain: 'example.com', url: 'https://example.com', name: 'Example',
-  tagline: null, clicks: 4, balance_cents: 100, last_bid_at: null,
+  tagline: null, clicks: 4, views: 7, balance_cents: 100, last_bid_at: null,
 };
 
 describe('confirmed sponsor clicks', () => {
@@ -119,5 +119,65 @@ describe('fetchSponsorsArchive', () => {
     expect(fetchMock).toHaveBeenCalledWith('/api/sponsors/archive', {
       headers: { Accept: 'application/json' },
     });
+  });
+});
+
+describe('sponsor views', () => {
+  beforeEach(() => {
+    resetSponsorViewDedupe();
+    vi.stubEnv('NEXT_PUBLIC_BASE_PATH', '');
+    const storage = new Map<string, string>();
+    vi.stubGlobal('sessionStorage', {
+      getItem: (key: string) => storage.get(key) ?? null,
+      setItem: (key: string, value: string) => storage.set(key, value),
+      removeItem: (key: string) => storage.delete(key),
+    });
+  });
+  afterEach(() => {
+    vi.restoreAllMocks();
+    vi.unstubAllGlobals();
+    vi.unstubAllEnvs();
+  });
+
+  it.each([
+    [0, '0'],
+    [999, '999'],
+    [1000, '1k'],
+    [1200, '1.2k'],
+    [999950, '1m'],
+    [1_200_000, '1.2m'],
+  ] as const)('compacts %i as %s', (value, expected) => {
+    expect(formatCompactCount(value)).toBe(expected);
+  });
+
+  it('batches paid and placeholder targets and keeps the session cache', async () => {
+    const placeholder = { ...slot, id: -1, placeholder: true, domain: 'cloudploy.com', views: 3 };
+    writeSponsorsTopCache({ period: '2026-10', period_ends_at: '', min_bid_cents: 100, slots: [slot, placeholder] });
+    const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response(null, { status: 204 }));
+    const ok = await pingSponsorViews([slot, placeholder]);
+    expect(ok).toBe(true);
+    expect(fetchMock).toHaveBeenCalledExactlyOnceWith('/api/sponsors/views', {
+      method: 'POST',
+      keepalive: true,
+      headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ paid_ids: [12], placeholder_domains: ['cloudploy.com'] }),
+    });
+    expect(applySponsorViews([slot, placeholder], [slot, placeholder]).map((item) => item.views)).toEqual([8, 4]);
+    expect(readSponsorsTopCache()?.slots.map((item) => item.views)).toEqual([8, 4]);
+  });
+
+  it('does not change counts or cache when the view ping fails', async () => {
+    writeSponsorsTopCache({ period: '2026-10', period_ends_at: '', min_bid_cents: 100, slots: [slot] });
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue(Response.json({ message: 'nope' }, { status: 422 }));
+    expect(await pingSponsorViews([slot])).toBe(false);
+    expect(readSponsorsTopCache()?.slots[0].views).toBe(7);
+  });
+
+  it('records a route once, then again after the visitor leaves and returns', () => {
+    expect(shouldRecordSponsorViews('strip', '/tools/json-formatter', [slot])).toBe(true);
+    expect(shouldRecordSponsorViews('strip', '/tools/json-formatter', [slot])).toBe(false);
+    expect(shouldRecordSponsorViews('strip', '/tools/base64', [slot])).toBe(true);
+    expect(shouldRecordSponsorViews('strip', '/tools/json-formatter', [slot])).toBe(true);
+    expect(shouldRecordSponsorViews('leaderboard', '/sponsors?page=1', [slot])).toBe(true);
   });
 });
