@@ -33,8 +33,8 @@ for (const mobile of [false, true]) {
     const track = page.locator('.tb-v2-directory-track');
     const before = await track.evaluate(el => getComputedStyle(el).transform);
     await expect.poll(() => track.evaluate(el => getComputedStyle(el).transform)).not.toBe(before);
-    await expect(page.locator(`${group} a`)).toHaveCount(52);
-    await expect(page.locator(`${group} img`)).toHaveCount(42);
+    await expect(page.locator(`${group} a`)).toHaveCount(68);
+    await expect(page.locator(`${group} img`)).toHaveCount(54);
     const codeHypeLink = page.locator(`${group} a[href="${codeHypeHref}"]`);
     await expect(codeHypeLink).toHaveCount(1);
     const codeHypeImage = codeHypeLink.locator('img');
@@ -83,7 +83,7 @@ for (const mobile of [false, true]) {
     await expect(page.locator('.tb-v2-directory-group[aria-hidden="true"] a[href]')).toHaveCount(listings.length);
     await expect(page.locator('.tb-v2-directory-group[aria-hidden="true"] a[href="https://fazier.com/launches/toolblip"]')).toHaveCount(1);
 
-    // Keyboard focus disables the transform so the browser can scroll to all 52 links.
+    // Keyboard focus disables the transform so the browser can scroll to all 68 links.
     await strip.focus();
     await page.keyboard.press('Tab');
     for (let index = 0; index < listings.length; index++) {

@@ -981,6 +981,7 @@ button.tb-v2-mm-more-row-btn {
   font-size: 12px;
   font-weight: 600;
   white-space: normal;
+  overflow-wrap: anywhere;
   text-align: center;
 }
 .tb-v2-directory-image img {
@@ -1001,6 +1002,11 @@ button.tb-v2-mm-more-row-btn {
   width: 100% !important;
   height: 36px !important;
   object-fit: contain;
+}
+.tb-v2-directory-group > a > svg {
+  height: 36px;
+  width: auto;
+  max-width: 100%;
 }
 .tb-v2-directory-group > a[data-topaitools4u-badge],
 .tb-v2-directory-group > span[data-topaitools4u-badge] { padding: 4px 6px !important; gap: 6px !important; }

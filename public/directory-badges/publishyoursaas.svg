@@ -1,0 +1,16 @@
+<svg width="240" height="60" viewBox="0 0 240 60" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Listed on PublishYourSaaS</title>
+  <desc id="desc">A backlink badge for products listed on PublishYourSaaS.</desc>
+  <rect x="7" y="10" width="228" height="44" rx="7" fill="#34511E"/>
+  <rect x="4" y="4" width="228" height="44" rx="7" fill="#B7FF35" stroke="#030915" stroke-width="2"/>
+  <text
+    x="118"
+    y="31"
+    fill="#030915"
+    font-family="Courier New, Courier, monospace"
+    font-size="14"
+    font-weight="800"
+    letter-spacing="0.2"
+    text-anchor="middle"
+  >Listed on PublishYourSaaS</text>
+</svg>
