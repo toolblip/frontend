@@ -219,6 +219,18 @@ function DirectoryBadges({ duplicate = false }: { duplicate?: boolean }) {
       <DirectoryBadgeLink duplicate={duplicate} href="https://toolhunter.ai/ai-tool/toolblip?ref=badge" target="_blank" rel="noopener">
         <DirectoryBadgeImage src="/directory-badges/toolhunter.svg" alt="Featured on Toolhunter" width="200" height="50" fallback="Featured on Toolhunter" />
       </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://www.deepbluedirectory.com/">
+        <span className="tb-v2-directory-text">Deep Blue Directory.com</span>
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://www.ecobluedirectory.com/">
+        <span className="tb-v2-directory-text">Eco Blue Directory.com</span>
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://www.alive2directory.com/">
+        <span className="tb-v2-directory-text">Alive 2 Directory.com</span>
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://hotools.com/" title="HoTools - Online Tools Directory">
+        <span className="tb-v2-directory-text">HoTools</span>
+      </DirectoryBadgeLink>
     </div>
   );
 }
