@@ -305,6 +305,118 @@
       "file": "startup-fame.webp",
       "sha256": "31a611ba3b23309f11cdc0e385d1dbecb3224f005b4926b3d0011b70ab63c5c9",
       "retrieved_on": "2026-09-29"
+    },
+    {
+      "name": "AI Jet",
+      "source": "https://aijet.cc/badge/badge_light.svg",
+      "file": "aijet.svg",
+      "sha256": "06177866250902e3d45a9c182706a429d538f2e5f9097b51b54292e06174d8a7",
+      "retrieved_on": "2026-10-03"
+    },
+    {
+      "name": "Aihustle",
+      "source": "https://aihustle.tools",
+      "fallback": true,
+      "reason": "Supplied embed is a text link",
+      "retrieved_on": "2026-10-03"
+    },
+    {
+      "name": "Gets.Tools",
+      "source": "https://gets.tools/badge/badge_dark.svg",
+      "file": "gets-tools.svg",
+      "sha256": "a38f54c7cd61af77c2113a37c5f59d1fe7dc54ac2f4adfdf1b7edd775bb88e76",
+      "retrieved_on": "2026-10-03"
+    },
+    {
+      "name": "LaunchIt",
+      "source": "https://launchit.fast/img/launching.svg",
+      "file": "launchit.svg",
+      "sha256": "18c5b8b24c53b44d169b262c731c77bc40e43e70ead37af658226b1ce04cf569",
+      "retrieved_on": "2026-10-03"
+    },
+    {
+      "name": "First Look",
+      "source": "https://firstlook.tools/badge/badge_dark.svg",
+      "file": "firstlook.svg",
+      "sha256": "8fa2ee04b85080d556eaf6b3eb8b6a97e7af9ea9336e3756ce4c35e800d60a82",
+      "retrieved_on": "2026-10-03"
+    },
+    {
+      "name": "Mydentify",
+      "source": "https://mydentify.com",
+      "fallback": true,
+      "reason": "Supplied embed is a text link",
+      "retrieved_on": "2026-10-03"
+    },
+    {
+      "name": "PublishYourSaaS",
+      "source": "https://publishyoursaas.com/publishyoursaas-badge.svg",
+      "file": "publishyoursaas.svg",
+      "sha256": "e7dd61f8a165251698ec60b6351f39b7541306deae1bf7e478107990068f51c5",
+      "retrieved_on": "2026-10-03"
+    },
+    {
+      "name": "SimilarLabs",
+      "source": "https://similarlabs.com/similarlabs-embed-badge-light.svg",
+      "file": "similarlabs.svg",
+      "sha256": "abf4df6e3f160ed36395e2bcfef2dab71de189a35bd63676cec6ef5be8263cbe",
+      "retrieved_on": "2026-10-03"
+    },
+    {
+      "name": "Spot Startups",
+      "source": "https://spotstartups.com/assets/badges/spotstartups.com_badge_light.svg",
+      "file": "spotstartups.svg",
+      "sha256": "ab43495d54ff8983c2b36231ee9e49d5c878b57bda770e080d26eeb791249c8a",
+      "retrieved_on": "2026-10-03"
+    },
+    {
+      "name": "Stork Verified",
+      "source": "https://www.stork.ai/badge/verified-dark.svg",
+      "file": "stork-verified.svg",
+      "sha256": "08839ab07390a1315448e972005b1bf4e451631604823eedb5f7fed1a88fdc9e",
+      "retrieved_on": "2026-10-03"
+    },
+    {
+      "name": "TheSaaSDir",
+      "source": "https://thesaasdir.com/badge/toolblip.svg",
+      "file": "thesaasdir.svg",
+      "sha256": "3da45e490081a8790839b95e47af5d6e4222ff4b341240b6168bbe65d3608943",
+      "retrieved_on": "2026-10-03"
+    },
+    {
+      "name": "LetsLaunch",
+      "source": "https://letslaunch.today/badge/toolblip.svg",
+      "file": "letslaunch.svg",
+      "sha256": "58b94fc85f27d66cddd339d521ef59035f3711495c8f26645e548c7205dc9f79",
+      "retrieved_on": "2026-10-03"
+    },
+    {
+      "name": "ToolRain",
+      "source": "https://toolrain.com/badges/badge-listed-light.svg",
+      "file": "toolrain.svg",
+      "sha256": "44f518dab75163413412f99dc51e1cce0878d4b11ab82fb01a0025e085fd5fbc",
+      "retrieved_on": "2026-10-03"
+    },
+    {
+      "name": "Ufind",
+      "source": "https://ufind.best",
+      "fallback": true,
+      "reason": "Official embed is inline SVG, not a remote image",
+      "retrieved_on": "2026-10-03"
+    },
+    {
+      "name": "Useneedle",
+      "source": "https://useneedle.net/directory/toolblip",
+      "fallback": true,
+      "reason": "Supplied embed is a text link",
+      "retrieved_on": "2026-10-03"
+    },
+    {
+      "name": "Toolhunter",
+      "source": "https://toolhunter.ai/badge/toolblip.svg?theme=light",
+      "file": "toolhunter.svg",
+      "sha256": "3a564bda1bdf2a01ac32a4b4cce00cbbbfd69f88c082562e005dcc8ba08cacde",
+      "retrieved_on": "2026-10-03"
     }
   ]
 }

@@ -1,0 +1,15 @@
+<svg width="167" height="44" viewBox="0 0 167 44" xmlns="http://www.w3.org/2000/svg">
+      <!-- Background -->
+      <rect x="1" y="1" width="165" height="42" rx="5" fill="#ffffff" stroke="#e5e7eb" stroke-width="1"/>
+      
+      <!-- Logo/Icon -->
+      <image x="12" y="12" width="20" height="20" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjA0IiBoZWlnaHQ9IjE4OCIgdmlld0JveD0iMCAwIDIwNCAxODgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xpcC1ydWxlPSJldmVub2RkIiBkPSJNMTAwLjM3NyAwLjQwMDk1MkMxMDAuNzc1IC0wLjEzMTY4IDEwMS41NzIgLTAuMTMzOTgxIDEwMS45NzQgMC4zOTYwNjlMMjAzLjU2MSAxMzQuNDM0QzIwNC4wNiAxMzUuMDkzIDIwMy41OTEgMTM2LjAzOSAyMDIuNzY0IDEzNi4wMzlIMTUxLjUzNkwxMDEuODg5IDE4Ny4xMDNDMTAxLjQ5NyAxODcuNTA3IDEwMC44NDcgMTg3LjUwNyAxMDAuNDU1IDE4Ny4xMDNMNTAuODA4MiAxMzYuMDM5SDEuMDAxNTdDMC4xNzgzNDEgMTM2LjAzOSAtMC4yOTE5NDkgMTM1LjA5OSAwLjIwMDc5MiAxMzQuNDRMMTAwLjM3NyAwLjQwMDk1MlpNNzMuODMxNiAxMTEuNTc2TDEwMS4xNzIgMTM2LjAzOUwxMjcuMDczIDExMS41NzZMMTAxLjE3MiA0OS43MDA4TDczLjgzMTYgMTExLjU3NloiIGZpbGw9IiMyMEVCRkYiLz4KPC9zdmc+Cg=="/>
+      
+      <!-- Text -->
+      <text x="40" y="18" font-family="system-ui, -apple-system, sans-serif" font-size="9" font-weight="500" fill="#000000" opacity="0.8" text-transform="uppercase">FEATURED ON</text>
+      
+      <!-- Site name -->
+      <text x="40" y="32" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="700" fill="#000000">
+        SpotStartups.com
+      </text>
+    </svg>

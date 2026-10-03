@@ -249,5 +249,80 @@
   },
   {
     "href": "https://aitooltrek.com"
+  },
+  {
+    "href": "https://aijet.cc",
+    "target": "_blank"
+  },
+  {
+    "href": "https://aihustle.tools",
+    "target": "_blank",
+    "rel": "noopener"
+  },
+  {
+    "href": "https://gets.tools",
+    "target": "_blank"
+  },
+  {
+    "href": "https://launchit.fast",
+    "target": "_blank",
+    "rel": "noopener"
+  },
+  {
+    "href": "https://firstlook.tools",
+    "target": "_blank",
+    "rel": "noopener noreferrer"
+  },
+  {
+    "href": "https://mydentify.com",
+    "target": "_blank",
+    "rel": "noopener"
+  },
+  {
+    "href": "https://publishyoursaas.com",
+    "target": "_blank",
+    "rel": "noopener",
+    "data-publishyoursaas-badge": "manual-submission"
+  },
+  {
+    "href": "https://similarlabs.com",
+    "target": "_blank",
+    "rel": "noopener"
+  },
+  {
+    "href": "https://spotstartups.com",
+    "target": "_blank"
+  },
+  {
+    "href": "https://www.stork.ai/",
+    "rel": "nofollow",
+    "title": "Stork Verified — stork.ai AI tools directory"
+  },
+  {
+    "href": "https://thesaasdir.com/product/toolblip?ref=badge",
+    "rel": "dofollow"
+  },
+  {
+    "href": "https://letslaunch.today/product/toolblip",
+    "target": "_blank",
+    "rel": "noopener"
+  },
+  {
+    "href": "https://toolrain.com/item/toolblip",
+    "target": "_blank",
+    "rel": "noopener noreferrer"
+  },
+  {
+    "href": "https://ufind.best",
+    "target": "_blank",
+    "rel": "noopener"
+  },
+  {
+    "href": "https://useneedle.net/directory/toolblip"
+  },
+  {
+    "href": "https://toolhunter.ai/ai-tool/toolblip?ref=badge",
+    "target": "_blank",
+    "rel": "noopener"
   }
 ]
