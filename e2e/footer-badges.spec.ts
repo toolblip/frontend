@@ -33,7 +33,7 @@ for (const mobile of [false, true]) {
     const track = page.locator('.tb-v2-directory-track');
     const before = await track.evaluate(el => getComputedStyle(el).transform);
     await expect.poll(() => track.evaluate(el => getComputedStyle(el).transform)).not.toBe(before);
-    await expect(page.locator(`${group} a`)).toHaveCount(68);
+    await expect(page.locator(`${group} a`)).toHaveCount(listings.length);
     await expect(page.locator(`${group} img`)).toHaveCount(54);
     const codeHypeLink = page.locator(`${group} a[href="${codeHypeHref}"]`);
     await expect(codeHypeLink).toHaveCount(1);
@@ -63,6 +63,12 @@ for (const mobile of [false, true]) {
     const aiToolTrekLink = page.locator(`${group} a[href="${aiToolTrekHref}"]`);
     await expect(aiToolTrekLink).toHaveCount(1);
     await expect(aiToolTrekLink).toHaveText('AI Tool Trek');
+    await expect(page.locator(`${group} a[href="https://www.deepbluedirectory.com/"]`)).toHaveText('Deep Blue Directory.com');
+    await expect(page.locator(`${group} a[href="https://www.ecobluedirectory.com/"]`)).toHaveText('Eco Blue Directory.com');
+    await expect(page.locator(`${group} a[href="https://www.alive2directory.com/"]`)).toHaveText('Alive 2 Directory.com');
+    const hoToolsLink = page.locator(`${group} a[href="https://hotools.com/"]`);
+    await expect(hoToolsLink).toHaveText('HoTools');
+    await expect(hoToolsLink).toHaveAttribute('title', 'HoTools - Online Tools Directory');
     await expect(aiToolTrekLink).not.toHaveAttribute('target');
     await expect(aiToolTrekLink).not.toHaveAttribute('rel');
     await expect(aiToolTrekLink.locator('img')).toHaveCount(0);
@@ -83,7 +89,7 @@ for (const mobile of [false, true]) {
     await expect(page.locator('.tb-v2-directory-group[aria-hidden="true"] a[href]')).toHaveCount(listings.length);
     await expect(page.locator('.tb-v2-directory-group[aria-hidden="true"] a[href="https://fazier.com/launches/toolblip"]')).toHaveCount(1);
 
-    // Keyboard focus disables the transform so the browser can scroll to all 68 links.
+    // Keyboard focus disables the transform so the browser can scroll to every listing.
     await strip.focus();
     await page.keyboard.press('Tab');
     for (let index = 0; index < listings.length; index++) {
