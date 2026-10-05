@@ -176,16 +176,19 @@ describe('installInstructions', () => {
     expect(manual.label).toBe('Chrome on Mac');
     expect(manual.steps.join(' ')).toMatch(/address bar/i);
     expect(manual.steps.join(' ')).toMatch(/Install page as app/);
+    expect(manual.visual).toBe('omnibox');
     expect(manual.showNativeInstall).toBe(false);
     expect(installInstructions({ os: 'mac', browser: 'chrome' }, true).showNativeInstall).toBe(true);
   });
 
   it('uses the phone or desktop path for the detected browser', () => {
+    expect(installInstructions({ os: 'ios', browser: 'safari' }, false).visual).toBe('ios-share');
     expect(installInstructions({ os: 'ios', browser: 'safari' }, false).steps.join(' ')).toMatch(/Add to Home Screen/);
     expect(installInstructions({ os: 'ios', browser: 'chrome' }, true).steps.join(' ')).toMatch(/Safari/);
     expect(installInstructions({ os: 'ios', browser: 'chrome' }, true).showNativeInstall).toBe(false);
     expect(installInstructions({ os: 'mac', browser: 'safari' }, false).steps.join(' ')).toMatch(/Add to Dock/);
-    expect(installInstructions({ os: 'windows', browser: 'edge' }, false).label).toBe('Edge on Windows');
+    expect(installInstructions({ os: 'windows', browser: 'edge' }, false).visual).toBe('edge-bar');
+    expect(installInstructions({ os: 'android', browser: 'samsung' }, false).visual).toBe('samsung-menu');
     expect(installInstructions({ os: 'android', browser: 'chrome' }, false).steps.join(' ')).toMatch(/Install app/);
     expect(installInstructions({ os: 'linux', browser: 'firefox' }, false).steps.join(' ')).toMatch(/Chrome or Edge/);
   });

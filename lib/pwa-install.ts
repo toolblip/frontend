@@ -8,9 +8,22 @@ export type InstallOs = 'ios' | 'android' | 'mac' | 'windows' | 'chromeos' | 'li
 export type InstallBrowser = 'safari' | 'chrome' | 'edge' | 'firefox' | 'opera' | 'samsung' | 'other';
 export type InstallTarget = { os: InstallOs; browser: InstallBrowser };
 export type InstallPromptOutcome = 'accepted' | 'dismissed';
+export type InstallVisual =
+  | 'omnibox'
+  | 'edge-bar'
+  | 'safari-dock'
+  | 'firefox-desktop'
+  | 'ios-share'
+  | 'ios-other'
+  | 'android-menu'
+  | 'samsung-menu'
+  | 'android-firefox'
+  | 'android-edge'
+  | 'generic';
 export type InstallInstructions = {
   label: string;
   steps: string[];
+  visual: InstallVisual;
   showNativeInstall: boolean;
 };
 
@@ -229,6 +242,21 @@ function phoneInstallSteps(os: InstallOs, browser: InstallBrowser): string[] {
   ];
 }
 
+export function installVisual(target: InstallTarget): InstallVisual {
+  const { os, browser } = target;
+  if (os === 'ios' && browser === 'safari') return 'ios-share';
+  if (os === 'ios') return 'ios-other';
+  if (os === 'android' && browser === 'samsung') return 'samsung-menu';
+  if (os === 'android' && browser === 'firefox') return 'android-firefox';
+  if (os === 'android' && browser === 'edge') return 'android-edge';
+  if (os === 'android') return 'android-menu';
+  if (browser === 'safari') return 'safari-dock';
+  if (browser === 'firefox') return 'firefox-desktop';
+  if (browser === 'edge') return 'edge-bar';
+  if (browser === 'chrome' || browser === 'opera') return 'omnibox';
+  return 'generic';
+}
+
 export function installInstructions(target: InstallTarget, canPrompt: boolean): InstallInstructions {
   const browser = BROWSER_LABEL[target.browser];
   const os = OS_LABEL[target.os];
@@ -238,6 +266,7 @@ export function installInstructions(target: InstallTarget, canPrompt: boolean): 
   return {
     label: `${browser} on ${os}`,
     steps,
+    visual: installVisual(target),
     showNativeInstall: canPrompt && nativeBrowser && target.os !== 'ios',
   };
 }
