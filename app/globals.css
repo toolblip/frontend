@@ -5432,3 +5432,81 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
   .tb-image-actions, .tb-image-result { align-items: stretch; flex-direction: column; }
   .tb-image-actions .tb-v2-btn, .tb-image-result .tb-v2-btn, .tb-qr-generate { width: 100%; }
 }
+
+/* Bottom-left PWA install hint. Sits above the cookie banner via --tb-pwa-install-lift. */
+.tb-pwa-install {
+  position: fixed;
+  left: 12px;
+  bottom: calc(12px + env(safe-area-inset-bottom, 0px) + var(--tb-pwa-install-lift, 0px));
+  z-index: 45;
+  max-width: min(320px, calc(100vw - 24px));
+  font-family: var(--f-sans);
+}
+.tb-pwa-install-card,
+.tb-pwa-install-chip {
+  animation: tb-pwa-install-in .28s ease;
+}
+.tb-pwa-install-card {
+  position: relative;
+  padding: 14px 36px 14px 14px;
+  background: var(--surface);
+  color: var(--fg-0);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: 0 12px 32px -18px rgba(0, 0, 0, .45);
+}
+.tb-pwa-install-title {
+  margin: 0 0 4px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.tb-pwa-install-body {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--fg-1);
+}
+.tb-pwa-install-card .tb-v2-btn { margin-top: 10px; }
+.tb-pwa-install-close {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--fg-2);
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+}
+.tb-pwa-install-close:hover { background: var(--surface-2); color: var(--fg-0); }
+.tb-pwa-install-chip {
+  height: 34px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--fg-0);
+  font: 600 13px/1 var(--f-sans);
+  cursor: pointer;
+  box-shadow: 0 8px 20px -14px rgba(0, 0, 0, .5);
+}
+.tb-pwa-install-chip:hover { border-color: var(--red); color: var(--red-text); }
+.tb-pwa-install :focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 2px;
+}
+@keyframes tb-pwa-install-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tb-pwa-install-card,
+  .tb-pwa-install-chip { animation: none; }
+}
+@media print {
+  .tb-pwa-install { display: none !important; }
+}

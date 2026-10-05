@@ -1,4 +1,5 @@
 import type { MetadataRoute } from 'next';
+import { webAppManifestUrl } from '@/lib/pwa-install';
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
@@ -14,6 +15,13 @@ export default function manifest(): MetadataRoute.Manifest {
     background_color: '#1a1a1f',
     theme_color: '#1a1a1f',
     categories: ['developer', 'utilities', 'productivity'],
+    prefer_related_applications: false,
+    related_applications: [
+      {
+        platform: 'webapp',
+        url: webAppManifestUrl(process.env.NEXT_PUBLIC_APP_URL),
+      },
+    ],
     icons: [
       {
         src: '/icons/icon-192.png',

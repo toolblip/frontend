@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import Script from "next/script";
 import localFont from "next/font/local";
 import CookieBanner from "@/components/CookieBanner";
+import InstallAppPrompt from "@/components/v2/InstallAppPrompt";
 import Analytics from "@/components/Analytics";
 import ThemeProvider from "@/components/ThemeProvider";
 import TopLoader from "@/components/TopLoader";
@@ -181,6 +182,7 @@ export default function RootLayout({
               </BrowserPolicyBoundary>
               <Analytics measurementId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
               <CookieBanner />
+              <InstallAppPrompt />
             </AuthProvider>
           </PwaProvider>
         </ThemeProvider>

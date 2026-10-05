@@ -24,6 +24,28 @@ export default function CookieBanner() {
     setVisible(false);
   }
 
+  useEffect(() => {
+    if (!visible) {
+      document.documentElement.style.removeProperty('--tb-pwa-install-lift');
+      return;
+    }
+    const banner = document.querySelector<HTMLElement>('[aria-label="Cookie consent"]');
+    if (!banner) return;
+    const apply = () => {
+      document.documentElement.style.setProperty(
+        '--tb-pwa-install-lift',
+        `${Math.ceil(banner.getBoundingClientRect().height)}px`,
+      );
+    };
+    apply();
+    const observer = new ResizeObserver(apply);
+    observer.observe(banner);
+    return () => {
+      observer.disconnect();
+      document.documentElement.style.removeProperty('--tb-pwa-install-lift');
+    };
+  }, [visible]);
+
   if (!visible) return null;
 
   return (
