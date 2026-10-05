@@ -5433,58 +5433,90 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
   .tb-image-actions .tb-v2-btn, .tb-image-result .tb-v2-btn, .tb-qr-generate { width: 100%; }
 }
 
-/* Bottom-left PWA install hint. Sits above the cookie banner via --tb-pwa-install-lift. */
+/* Bottom-left PWA install launcher. The button stays put; the panel opens above it. */
 .tb-pwa-install {
   position: fixed;
   left: 12px;
   bottom: calc(12px + env(safe-area-inset-bottom, 0px) + var(--tb-pwa-install-lift, 0px));
   z-index: 60;
-  max-width: min(320px, calc(100vw - 24px));
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  width: min(360px, calc(100vw - 24px));
   font-family: var(--f-sans);
 }
-.tb-pwa-install-card,
 .tb-pwa-install-chip {
   animation: tb-pwa-install-in .28s ease;
 }
 .tb-pwa-install-card {
   position: relative;
+  width: 100%;
+  max-height: min(420px, calc(100vh - 120px));
+  overflow: auto;
   padding: 14px 36px 14px 14px;
   background: var(--surface);
   color: var(--fg-0);
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  box-shadow: 0 12px 32px -18px rgba(0, 0, 0, .45);
+  box-shadow: 0 16px 40px -18px rgba(0, 0, 0, .5);
+  animation: tb-pwa-install-in .28s ease;
 }
 .tb-pwa-install-heading {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin: 0 0 4px;
+  margin: 0 0 10px;
 }
 .tb-pwa-install-heading .tb-v2-ic { color: var(--red); }
 .tb-pwa-install-title {
   margin: 0;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 700;
   letter-spacing: -0.01em;
 }
-.tb-pwa-install-kicker {
+.tb-pwa-install-picks {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 0 0 8px;
+}
+.tb-pwa-install-pick {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--fg-2);
+}
+.tb-pwa-install-pick select {
+  width: 100%;
+  height: 34px;
+  padding: 0 8px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface-2);
+  color: var(--fg-0);
+  font: 600 13px/1 var(--f-sans);
+}
+.tb-pwa-install-here {
   margin: 0 0 8px;
   font-size: 12px;
   font-weight: 600;
-  color: var(--fg-2);
+  color: var(--red-text);
 }
 .tb-pwa-install-steps {
   margin: 0;
   padding-left: 18px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
   font-size: 13px;
-  line-height: 1.4;
+  line-height: 1.45;
   color: var(--fg-1);
 }
-.tb-pwa-install-card .tb-v2-btn { margin-top: 10px; }
+.tb-pwa-install-card .tb-v2-btn { margin-top: 12px; }
 .tb-pwa-install-close {
   position: absolute;
   top: 6px;
@@ -5503,20 +5535,22 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
 .tb-pwa-install-chip {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  height: 34px;
-  padding: 0 12px;
+  gap: 8px;
+  height: 44px;
+  padding: 0 16px;
   border-radius: 999px;
   border: 1px solid var(--line);
   background: var(--surface);
   color: var(--fg-0);
-  font: 600 13px/1 var(--f-sans);
+  font: 600 14px/1 var(--f-sans);
   cursor: pointer;
   box-shadow: 0 8px 20px -14px rgba(0, 0, 0, .5);
 }
-.tb-pwa-install-chip .tb-v2-ic { color: var(--red); }
-.tb-pwa-install-chip:hover { border-color: var(--red); color: var(--red-text); }
-.tb-pwa-install-chip:hover .tb-v2-ic { color: var(--red-text); }
+.tb-pwa-install-chip .tb-v2-ic { width: 18px; height: 18px; color: var(--red); }
+.tb-pwa-install-chip:hover,
+.tb-pwa-install-chip[aria-expanded="true"] { border-color: var(--red); color: var(--red-text); }
+.tb-pwa-install-chip:hover .tb-v2-ic,
+.tb-pwa-install-chip[aria-expanded="true"] .tb-v2-ic { color: var(--red-text); }
 .tb-pwa-install :focus-visible {
   outline: 2px solid var(--red);
   outline-offset: 2px;

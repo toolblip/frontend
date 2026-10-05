@@ -63,8 +63,46 @@ const OS_LABEL: Record<InstallOs, string> = {
   windows: 'Windows',
   chromeos: 'Chromebook',
   linux: 'Linux',
-  other: 'this device',
+  other: 'This device',
 };
+
+export type InstallDeviceOption = {
+  os: InstallOs;
+  label: string;
+  browsers: { browser: InstallBrowser; label: string }[];
+};
+
+const INSTALL_DEVICES: { os: InstallOs; browsers: InstallBrowser[] }[] = [
+  { os: 'ios', browsers: ['safari', 'chrome', 'edge', 'firefox', 'opera'] },
+  { os: 'android', browsers: ['chrome', 'samsung', 'edge', 'firefox', 'opera'] },
+  { os: 'mac', browsers: ['safari', 'chrome', 'edge', 'firefox', 'opera'] },
+  { os: 'windows', browsers: ['chrome', 'edge', 'firefox', 'opera'] },
+  { os: 'chromeos', browsers: ['chrome'] },
+  { os: 'linux', browsers: ['chrome', 'edge', 'firefox', 'opera'] },
+];
+
+export function installDeviceOptions(detected: InstallTarget): InstallDeviceOption[] {
+  const options: InstallDeviceOption[] = INSTALL_DEVICES.map((device) => ({
+    os: device.os,
+    label: OS_LABEL[device.os],
+    browsers: device.browsers.map((browser) => ({ browser, label: BROWSER_LABEL[browser] })),
+  }));
+  const match = options.find((device) => device.os === detected.os);
+  if (!match) {
+    return [
+      {
+        os: detected.os,
+        label: OS_LABEL[detected.os],
+        browsers: [{ browser: detected.browser, label: BROWSER_LABEL[detected.browser] }],
+      },
+      ...options,
+    ];
+  }
+  if (!match.browsers.some((browser) => browser.browser === detected.browser)) {
+    match.browsers = [{ browser: detected.browser, label: BROWSER_LABEL[detected.browser] }, ...match.browsers];
+  }
+  return options;
+}
 
 function detectBrowser(ua: string): InstallBrowser {
   if (/Edg\/|EdgA|EdgiOS/.test(ua)) return 'edge';
@@ -100,59 +138,95 @@ export function detectInstallTarget(input: {
 
 function desktopInstallSteps(browser: InstallBrowser, os: InstallOs): string[] {
   if (browser === 'safari' && os === 'mac') {
-    return ['In the menu bar, choose File.', 'Choose Add to Dock.'];
+    return [
+      'In the menu bar at the top of the screen, open File.',
+      'Choose Add to Dock.',
+      'Toolblip shows up in the Dock. Open it from there the same way you open any other app.',
+    ];
   }
   if (browser === 'edge') {
     return [
-      'Look for the install icon in the address bar.',
-      'If it is missing, open the Edge menu, choose Apps, then Install this site as an app.',
+      'At the right end of the address bar, click the install icon. It looks like a screen with a plus.',
+      "If it isn't there, open the Edge menu, choose Apps, then Install this site as an app.",
+      'Click Install. After that, Toolblip opens in its own window.',
     ];
   }
   if (browser === 'chrome' || browser === 'opera') {
-    const menu = browser === 'opera' ? 'Opera' : 'Chrome';
+    const fallback =
+      browser === 'opera'
+        ? "If you don't see the icon, open the Opera menu and choose Install Toolblip."
+        : "If you don't see the icon, open the Chrome menu, choose Cast, save, and share, then Install page as app.";
     return [
-      'Look for the install icon in the address bar.',
-      `If it is missing, open the ${menu} menu and choose Install Toolblip.`,
+      'At the right end of the address bar, click the install icon. It looks like a small screen with a down arrow.',
+      'Click Install.',
+      fallback,
     ];
   }
   if (browser === 'firefox') {
     if (os === 'mac') {
       return [
-        'Firefox on Mac does not install sites as apps.',
-        'Open this page in Chrome or Edge, or use Safari and choose File, then Add to Dock.',
+        "Firefox can't add Toolblip to the Dock.",
+        'Open this page in Chrome or Edge and use the install icon in the address bar.',
+        'Or open it in Safari, then choose File, then Add to Dock.',
       ];
     }
     return [
-      'Firefox does not install sites as apps.',
-      'Open this page in Chrome or Edge and use the install icon in the address bar.',
+      "Firefox can't install Toolblip as an app.",
+      'Open this page in Chrome or Edge.',
+      'Use the install icon at the right end of the address bar.',
     ];
   }
-  return ['Open the browser menu and choose Install app or Add to Home Screen.'];
+  return [
+    'Open the browser menu.',
+    'Look for Install app, Add to Home Screen, or Add to Dock.',
+    'Confirm, and Toolblip keeps its own icon.',
+  ];
 }
 
 function phoneInstallSteps(os: InstallOs, browser: InstallBrowser): string[] {
   if (os === 'ios' && browser === 'safari') {
-    return ['Tap the Share button.', 'Tap Add to Home Screen.', 'Tap Add.'];
+    return [
+      "Tap the Share button. It's the square with an arrow pointing up, at the bottom of Safari.",
+      'Scroll the share sheet and tap Add to Home Screen.',
+      'Tap Add. The Toolblip icon lands on your Home Screen.',
+    ];
   }
   if (os === 'ios') {
     return [
-      'Open this page in Safari. Other iPhone and iPad browsers cannot add the icon.',
-      'Tap Share, then Add to Home Screen.',
+      'iPhone and iPad only add a Home Screen icon from Safari.',
+      'Open Safari, go to toolblip.com, and tap the Share button.',
+      'Tap Add to Home Screen, then Add.',
     ];
   }
   if (browser === 'samsung') {
-    return ['Tap the menu.', 'Tap Add page to, then Home screen.'];
+    return [
+      'Tap the menu button at the bottom right.',
+      'Tap Add page to, then Home screen.',
+      'Tap Add. The icon shows up on your home screen.',
+    ];
   }
   if (browser === 'firefox') {
-    return ['Tap the menu.', 'Tap Install.'];
+    return ['Tap the menu button.', 'Tap Install.', 'Confirm, and the Toolblip icon is added to your home screen.'];
   }
   if (browser === 'edge') {
-    return ['Tap the menu.', 'Tap Add to phone, or Apps, then Install this site as an app.'];
+    return [
+      'Tap the menu button at the bottom.',
+      'Tap Add to phone.',
+      'If you see Apps instead, tap Install this site as an app.',
+    ];
   }
   if (browser === 'chrome' || browser === 'opera') {
-    return ['Tap the three-dot menu.', 'Tap Install app or Add to Home screen.', 'Confirm the install.'];
+    return [
+      'Tap the three-dot menu at the top right.',
+      "Tap Install app. If that isn't listed, tap Add to Home screen.",
+      'Confirm. Toolblip gets its own icon.',
+    ];
   }
-  return ['Open the browser menu.', 'Choose Install app or Add to Home screen.'];
+  return [
+    'Open the browser menu.',
+    'Look for Install app or Add to Home Screen.',
+    'Confirm, and Toolblip keeps its own icon.',
+  ];
 }
 
 export function installInstructions(target: InstallTarget, canPrompt: boolean): InstallInstructions {

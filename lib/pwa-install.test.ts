@@ -3,6 +3,7 @@ import {
   PWA_INSTALL_DISMISS_KEY,
   PWA_INSTALL_OPEN_DELAY_MS,
   detectInstallTarget,
+  installDeviceOptions,
   installInstructions,
   installPromptPhase,
   isRunningAsInstalledApp,
@@ -147,17 +148,40 @@ describe('detectInstallTarget', () => {
   });
 });
 
+describe('installDeviceOptions', () => {
+  it('lists every device and keeps the detected browser available', () => {
+    const options = installDeviceOptions({ os: 'windows', browser: 'edge' });
+    expect(options.map((device) => device.os)).toEqual(['ios', 'android', 'mac', 'windows', 'chromeos', 'linux']);
+    expect(options.find((device) => device.os === 'ios')?.browsers.map((browser) => browser.browser)).toContain(
+      'safari',
+    );
+    expect(options.find((device) => device.os === 'android')?.browsers.map((browser) => browser.browser)).toContain(
+      'samsung',
+    );
+    expect(options.find((device) => device.os === 'windows')?.browsers.map((browser) => browser.browser)).toContain(
+      'edge',
+    );
+  });
+
+  it('adds an unknown device without dropping the rest', () => {
+    const options = installDeviceOptions({ os: 'other', browser: 'other' });
+    expect(options[0]).toMatchObject({ os: 'other', label: 'This device' });
+    expect(options.map((device) => device.os)).toContain('mac');
+  });
+});
+
 describe('installInstructions', () => {
   it('gives Chrome on Mac the address-bar steps and a native button when the browser can prompt', () => {
     const manual = installInstructions({ os: 'mac', browser: 'chrome' }, false);
     expect(manual.label).toBe('Chrome on Mac');
     expect(manual.steps.join(' ')).toMatch(/address bar/i);
+    expect(manual.steps.join(' ')).toMatch(/Install page as app/);
     expect(manual.showNativeInstall).toBe(false);
     expect(installInstructions({ os: 'mac', browser: 'chrome' }, true).showNativeInstall).toBe(true);
   });
 
   it('uses the phone or desktop path for the detected browser', () => {
-    expect(installInstructions({ os: 'ios', browser: 'safari' }, false).steps).toContain('Tap Add to Home Screen.');
+    expect(installInstructions({ os: 'ios', browser: 'safari' }, false).steps.join(' ')).toMatch(/Add to Home Screen/);
     expect(installInstructions({ os: 'ios', browser: 'chrome' }, true).steps.join(' ')).toMatch(/Safari/);
     expect(installInstructions({ os: 'ios', browser: 'chrome' }, true).showNativeInstall).toBe(false);
     expect(installInstructions({ os: 'mac', browser: 'safari' }, false).steps.join(' ')).toMatch(/Add to Dock/);
