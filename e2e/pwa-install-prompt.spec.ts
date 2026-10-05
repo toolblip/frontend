@@ -33,26 +33,42 @@ test.describe('PWA install corner prompt', () => {
     await page.clock.fastForward(61_000);
 
     await expect(card).toBeVisible();
-    await expect(card).toContainText('Chrome on Windows');
+    await expect(button).toBeVisible();
+    await expect(card.getByLabel('Device')).toHaveValue('windows');
+    await expect(card.getByLabel('Browser')).toHaveValue('chrome');
     await expect(card).toContainText(/address bar/i);
+    await expect(card).toContainText("You're on Windows, in Chrome.");
     const banner = page.getByRole('dialog', { name: 'Cookie consent' });
     await expect(banner).toBeVisible();
     await expect.poll(async () => {
+      const nextButton = await button.boundingBox();
       const nextCard = await card.boundingBox();
       const nextBanner = await banner.boundingBox();
-      if (!nextCard || !nextBanner) return Number.POSITIVE_INFINITY;
-      return nextCard.y + nextCard.height - nextBanner.y;
+      if (!nextButton || !nextCard || !nextBanner) return Number.POSITIVE_INFINITY;
+      const buttonOverBanner = nextButton.y + nextButton.height - nextBanner.y;
+      const cardOverButton = nextCard.y + nextCard.height - nextButton.y;
+      return Math.max(buttonOverBanner, cardOverButton);
     }).toBeLessThanOrEqual(1);
+    const buttonBox = await button.boundingBox();
+    expect(buttonBox?.height ?? 0).toBeGreaterThanOrEqual(40);
     await page.screenshot({ path: 'test-results/pwa-install-desktop.png' });
 
-    await page.getByRole('button', { name: 'Close install instructions' }).click();
+    await card.getByLabel('Device').selectOption('ios');
+    await expect(card.getByLabel('Browser')).toHaveValue('chrome');
+    await expect(card).toContainText(/Safari/);
+    await card.getByLabel('Browser').selectOption('safari');
+    await expect(card).toContainText(/Add to Home Screen/i);
+    await expect(card).toContainText("You're on Windows, in Chrome.");
+
+    await card.getByRole('button', { name: 'Close' }).click();
     await expect(card).toHaveCount(0);
     await expect(button).toBeVisible();
     await page.screenshot({ path: 'test-results/pwa-install-button.png' });
 
     await button.click();
     await expect(card).toBeVisible();
-    await page.getByRole('button', { name: 'Close install instructions' }).click();
+    await expect(button).toBeVisible();
+    await card.getByRole('button', { name: 'Close' }).click();
 
     await page.reload();
     await expect(button).toBeVisible();
@@ -74,9 +90,17 @@ test.describe('PWA install corner prompt', () => {
       await advancePastInstallDelay(page);
 
       const card = page.getByRole('complementary', { name: 'Install Toolblip' });
+      const button = page.getByRole('button', { name: 'Install app' });
       await expect(card).toBeVisible();
-      await expect(card).toContainText('Tap Add to Home Screen.');
-      await expect(card).toContainText('Safari on iPhone or iPad');
+      await expect(button).toBeVisible();
+      await expect(card.getByLabel('Device')).toHaveValue('ios');
+      await expect(card.getByLabel('Browser')).toHaveValue('safari');
+      await expect(card).toContainText(/Add to Home Screen/i);
+      const buttonBox = await button.boundingBox();
+      const cardBox = await card.boundingBox();
+      expect(buttonBox).not.toBeNull();
+      expect(cardBox).not.toBeNull();
+      expect(cardBox!.y + cardBox!.height).toBeLessThanOrEqual(buttonBox!.y + 1);
       const box = await card.boundingBox();
       expect(box).not.toBeNull();
       expect(box!.x).toBeGreaterThanOrEqual(0);
