@@ -5530,146 +5530,6 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
   flex: 0 0 auto;
 }
 .tb-pwa-mark svg { width: 18px; height: 18px; display: block; }
-.tb-pwa-scene {
-  margin: 2px 0 12px;
-  padding: 10px;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  background: var(--surface-2);
-}
-.tb-pwa-scene figcaption {
-  margin: 8px 2px 0;
-  font-size: 12px;
-  line-height: 1.4;
-  font-weight: 600;
-  color: var(--fg-0);
-}
-.tb-pwa-scene-stage { min-height: 92px; }
-.tb-pwa-window,
-.tb-pwa-phone,
-.tb-pwa-swap {
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  background: var(--surface);
-  overflow: hidden;
-}
-.tb-pwa-window-dots {
-  display: flex;
-  gap: 5px;
-  padding: 8px 10px 0;
-}
-.tb-pwa-window-dots i {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--line-2, var(--line));
-}
-.tb-pwa-url,
-.tb-pwa-phone-url,
-.tb-pwa-menubar,
-.tb-pwa-toolbar {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin: 8px;
-  min-height: 32px;
-  padding: 0 8px;
-  border-radius: 8px;
-  background: var(--surface-2);
-  color: var(--fg-1);
-  font-size: 12px;
-  font-weight: 600;
-}
-.tb-pwa-url { justify-content: space-between; }
-.tb-pwa-phone-url { justify-content: space-between; margin-bottom: 0; }
-.tb-pwa-menubar { justify-content: flex-start; margin-bottom: 0; }
-.tb-pwa-dropdown,
-.tb-pwa-sheet {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  width: min(180px, 70%);
-  margin: 0 8px 8px;
-  padding: 6px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: var(--surface);
-  box-shadow: 0 8px 18px -14px rgba(0, 0, 0, .6);
-  font-size: 12px;
-  font-weight: 600;
-}
-.tb-pwa-sheet.is-low { margin-left: auto; }
-.tb-pwa-dropdown span,
-.tb-pwa-sheet span,
-.tb-pwa-menubar span,
-.tb-pwa-toolbar i {
-  position: relative;
-  padding: 4px 6px;
-  border-radius: 6px;
-}
-.tb-pwa-toolbar { justify-content: space-around; }
-.tb-pwa-toolbar i {
-  width: 18px;
-  height: 8px;
-  border-radius: 99px;
-  background: var(--line);
-  padding: 0;
-}
-.tb-pwa-hot {
-  position: relative;
-  color: var(--fg-0);
-  box-shadow: inset 0 0 0 1.5px var(--red);
-  background: color-mix(in srgb, var(--red) 12%, var(--surface));
-}
-.tb-pwa-badge {
-  position: absolute;
-  top: -7px;
-  right: -7px;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: var(--red);
-  color: #fff;
-  font-size: 10px;
-  font-weight: 700;
-  display: grid;
-  place-items: center;
-  line-height: 1;
-}
-.tb-pwa-install-glyph,
-.tb-pwa-share {
-  display: inline-flex;
-  width: 26px;
-  height: 26px;
-  align-items: center;
-  justify-content: center;
-  border-radius: 6px;
-}
-.tb-pwa-install-glyph svg,
-.tb-pwa-share svg { width: 16px; height: 16px; }
-.tb-pwa-dots { padding: 2px 6px; letter-spacing: 1px; font-weight: 800; }
-.tb-pwa-swap {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 12px;
-}
-.tb-pwa-swap-label,
-.tb-pwa-swap-then { font-size: 12px; font-weight: 600; color: var(--fg-1); }
-.tb-pwa-swap-apps { display: flex; flex-wrap: wrap; gap: 6px; }
-.tb-pwa-swap-app {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  height: 32px;
-  padding: 0 10px 0 6px;
-  border-radius: 999px;
-  border: 1px solid var(--line);
-  font-size: 12px;
-  font-weight: 700;
-}
-.tb-pwa-steps,
 .tb-pwa-install-steps {
   margin: 0;
   padding: 0;
@@ -5678,28 +5538,58 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
   display: flex;
   flex-direction: column;
   gap: 8px;
-  font-size: 13px;
-  line-height: 1.4;
-  color: var(--fg-1);
 }
 .tb-pwa-install-steps li {
   display: grid;
-  grid-template-columns: 22px minmax(0, 1fr);
-  gap: 8px;
+  grid-template-columns: 28px minmax(0, 1fr);
+  gap: 10px;
   align-items: start;
+  margin: 0;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface-2);
 }
-.tb-pwa-install-steps li::before {
-  counter-increment: tb-pwa-step;
-  content: counter(tb-pwa-step);
-  width: 22px;
-  height: 22px;
+.tb-pwa-step-num {
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   display: grid;
   place-items: center;
-  background: color-mix(in srgb, var(--red) 12%, var(--surface));
-  color: var(--red-text);
-  font-size: 11px;
+  background: var(--red);
+  color: #fff;
+  font-size: 13px;
   font-weight: 700;
+}
+.tb-pwa-step-num::before {
+  counter-increment: tb-pwa-step;
+  content: counter(tb-pwa-step);
+}
+.tb-pwa-step-marks {
+  margin: 2px 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+}
+.tb-pwa-step-piece { display: inline-flex; align-items: center; gap: 4px; }
+.tb-pwa-step-arrow { color: var(--fg-2); font-size: 12px; font-weight: 700; }
+.tb-pwa-step-mark {
+  display: inline-block;
+  padding: 2px 7px;
+  border-radius: 7px;
+  background: color-mix(in srgb, var(--red) 14%, var(--surface));
+  color: var(--red-text);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--red) 45%, transparent);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+.tb-pwa-step-where {
+  margin: 4px 0 0;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--fg-1);
 }
 .tb-pwa-install-card .tb-v2-btn { width: 100%; justify-content: center; margin-top: 12px; }
 .tb-pwa-install-close {
