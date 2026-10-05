@@ -417,6 +417,20 @@
       "file": "toolhunter.svg",
       "sha256": "3a564bda1bdf2a01ac32a4b4cce00cbbbfd69f88c082562e005dcc8ba08cacde",
       "retrieved_on": "2026-10-03"
+    },
+    {
+      "name": "DevTool.io",
+      "source": "https://devtool.io",
+      "fallback": true,
+      "reason": "Supplied embed is a text link",
+      "retrieved_on": "2026-10-05"
+    },
+    {
+      "name": "Launch and Loop",
+      "source": "https://www.launchandloop.com/api/badge/toolblip?theme=dark",
+      "file": "launch-and-loop.svg",
+      "sha256": "81363ede99f97a9bc598151ae8c4174205cfdd990a58926e10e999f552a2219d",
+      "retrieved_on": "2026-10-05"
     }
   ]
 }

@@ -337,5 +337,15 @@
   {
     "href": "https://hotools.com/",
     "title": "HoTools - Online Tools Directory"
+  },
+  {
+    "href": "https://devtool.io",
+    "target": "_blank",
+    "rel": "noopener"
+  },
+  {
+    "href": "https://www.launchandloop.com/product/toolblip",
+    "target": "_blank",
+    "rel": "dofollow"
   }
 ]
