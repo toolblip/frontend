@@ -237,8 +237,26 @@ function DirectoryBadges({ duplicate = false }: { duplicate?: boolean }) {
       <DirectoryBadgeLink duplicate={duplicate} href="https://www.launchandloop.com/product/toolblip" target="_blank" rel="dofollow">
         <DirectoryBadgeImage src="/directory-badges/launch-and-loop.svg" alt="Toolblip on Launch and Loop" width="170" height="46" fallback="Toolblip on Launch and Loop" />
       </DirectoryBadgeLink>
-      <DirectoryBadgeLink duplicate={duplicate} href="https://wallof.tools" target="_blank" rel="noopener">
+      <DirectoryBadgeLink duplicate={duplicate} href="https://wallof.tools/dev-tools/toolblip" target="_blank" rel="noopener">
         <DirectoryBadgeImage src="/directory-badges/wall-of-tools.svg" alt="Featured on Wall of Tools" width="188" height="56" fallback="Featured on Wall of Tools" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://www.stackledge.com/tools/toolblip?ref=badge&t=bdg_491aae0e9b8f91a371248d14df3586e3" target="_blank" rel="noopener">
+        <DirectoryBadgeImage src="/directory-badges/stackledge.svg" alt="Featured on StackLedge" width="200" height="54" fallback="Featured on StackLedge" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://easylaunch.dev/dev-tools/toolblip" target="_blank" rel="noopener">
+        <DirectoryBadgeImage src="/directory-badges/easylaunch.svg" alt="Featured on EasyLaunch" width="188" height="56" fallback="Featured on EasyLaunch" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://launchkiwi.com/p/toolblip" target="_blank" rel="noopener">
+        <DirectoryBadgeImage src="/directory-badges/launchkiwi.svg" alt="Featured on LaunchKiwi" width="198" height="62" fallback="Featured on LaunchKiwi" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://starthub.zip" title="starthub.zip">
+        <span className="tb-v2-directory-text">starthub.zip</span>
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://toolindex.net/?ref=listed" target="_blank" rel="nofollow noopener">
+        <span className="tb-v2-directory-text">Listed on Tool Index</span>
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://www.productlaunchify.com" target="_blank" rel="noopener noreferrer" title="Featured on Product Launchify" aria-label="Featured on Product Launchify">
+        <DirectoryBadgeImage src="/directory-badges/product-launchify.svg" alt="Featured on Product Launchify" width="231" height="55" fallback="Featured on Product Launchify" />
       </DirectoryBadgeLink>
     </div>
   );

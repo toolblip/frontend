@@ -439,6 +439,48 @@
       "file": "wall-of-tools.svg",
       "sha256": "57cf610c3b0b26da69a94c570eb6d5e37651d4892357a247566380fbe3f3ae47",
       "retrieved_on": "2026-10-05"
+    },
+    {
+      "name": "StackLedge",
+      "source": "https://www.stackledge.com/badge?token=bdg_491aae0e9b8f91a371248d14df3586e3",
+      "file": "stackledge.svg",
+      "sha256": "5e17266c56c1cc1a29a5b616babd108910a1515463489d20ec0cf4a181b50231",
+      "retrieved_on": "2026-10-05"
+    },
+    {
+      "name": "EasyLaunch",
+      "source": "https://easylaunch.dev/badge/easylaunch-badge-light.svg",
+      "file": "easylaunch.svg",
+      "sha256": "589d01dda08bc6ffc2a9abdabb86b3304568f98ee93b04b8ffec20373596f2b2",
+      "retrieved_on": "2026-10-05"
+    },
+    {
+      "name": "LaunchKiwi",
+      "source": "https://launchkiwi.com/badge-light.svg",
+      "file": "launchkiwi.svg",
+      "sha256": "bad8e4e01204e2d882833bec7702c8f51b632aed204de017a007ab567d80d5ba",
+      "retrieved_on": "2026-10-05"
+    },
+    {
+      "name": "Starthub.zip",
+      "source": "https://starthub.zip",
+      "fallback": true,
+      "reason": "Supplied embed is a text link",
+      "retrieved_on": "2026-10-05"
+    },
+    {
+      "name": "Tool Index",
+      "source": "https://toolindex.net/?ref=listed",
+      "fallback": true,
+      "reason": "Supplied embed is a text link",
+      "retrieved_on": "2026-10-05"
+    },
+    {
+      "name": "Product Launchify",
+      "source": "https://www.productlaunchify.com/images/badges/powered-by-light.svg",
+      "file": "product-launchify.svg",
+      "sha256": "79639dc3be4ae5a9187e0751364d024cdef349890292688d352925c01f7dcc6c",
+      "retrieved_on": "2026-10-05"
     }
   ]
 }
