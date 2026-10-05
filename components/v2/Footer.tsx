@@ -232,10 +232,13 @@ function DirectoryBadges({ duplicate = false }: { duplicate?: boolean }) {
         <span className="tb-v2-directory-text">HoTools</span>
       </DirectoryBadgeLink>
       <DirectoryBadgeLink duplicate={duplicate} href="https://devtool.io" target="_blank" rel="noopener">
-        <span className="tb-v2-directory-text">Listed on DevTool.io</span>
+        <DirectoryBadgeImage src="/directory-badges/devtool.svg" alt="Listed on DevTool.io" width="168" height="36" fallback="Listed on DevTool.io" />
       </DirectoryBadgeLink>
       <DirectoryBadgeLink duplicate={duplicate} href="https://www.launchandloop.com/product/toolblip" target="_blank" rel="dofollow">
         <DirectoryBadgeImage src="/directory-badges/launch-and-loop.svg" alt="Toolblip on Launch and Loop" width="170" height="46" fallback="Toolblip on Launch and Loop" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://wallof.tools" target="_blank" rel="noopener">
+        <DirectoryBadgeImage src="/directory-badges/wall-of-tools.svg" alt="Featured on Wall of Tools" width="188" height="56" fallback="Featured on Wall of Tools" />
       </DirectoryBadgeLink>
     </div>
   );

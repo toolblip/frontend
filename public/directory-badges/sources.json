@@ -421,8 +421,9 @@
     {
       "name": "DevTool.io",
       "source": "https://devtool.io",
-      "fallback": true,
-      "reason": "Supplied embed is a text link",
+      "file": "devtool.svg",
+      "sha256": "d8250a4a9225c9410997f9166eaf5ffaf471acf5859395737d98ba378cae1ea5",
+      "reason": "Supplied embed is a green text badge. Local SVG keeps the label and color.",
       "retrieved_on": "2026-10-05"
     },
     {
@@ -430,6 +431,13 @@
       "source": "https://www.launchandloop.com/api/badge/toolblip?theme=dark",
       "file": "launch-and-loop.svg",
       "sha256": "81363ede99f97a9bc598151ae8c4174205cfdd990a58926e10e999f552a2219d",
+      "retrieved_on": "2026-10-05"
+    },
+    {
+      "name": "Wall of Tools",
+      "source": "https://wallof.tools/badge/toolwall-badge-light.svg",
+      "file": "wall-of-tools.svg",
+      "sha256": "57cf610c3b0b26da69a94c570eb6d5e37651d4892357a247566380fbe3f3ae47",
       "retrieved_on": "2026-10-05"
     }
   ]

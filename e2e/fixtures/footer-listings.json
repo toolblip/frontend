@@ -347,5 +347,10 @@
     "href": "https://www.launchandloop.com/product/toolblip",
     "target": "_blank",
     "rel": "dofollow"
+  },
+  {
+    "href": "https://wallof.tools",
+    "target": "_blank",
+    "rel": "noopener"
   }
 ]
