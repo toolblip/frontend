@@ -15,9 +15,8 @@ export function installPromptPhase(input: {
 }): InstallPromptPhase {
   if (input.installed) return 'hidden';
   if (input.manuallyOpen) return 'open';
-  if (input.dismissed) return 'button';
-  if (input.elapsedMs >= PWA_INSTALL_OPEN_DELAY_MS) return 'open';
-  return 'hidden';
+  if (!input.dismissed && input.elapsedMs >= PWA_INSTALL_OPEN_DELAY_MS) return 'open';
+  return 'button';
 }
 
 export function shouldHideInstallAfterPrompt(outcome: InstallPromptOutcome | undefined): boolean {
