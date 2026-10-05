@@ -349,8 +349,39 @@
     "rel": "dofollow"
   },
   {
-    "href": "https://wallof.tools",
+    "href": "https://wallof.tools/dev-tools/toolblip",
     "target": "_blank",
     "rel": "noopener"
+  },
+  {
+    "href": "https://www.stackledge.com/tools/toolblip?ref=badge&t=bdg_491aae0e9b8f91a371248d14df3586e3",
+    "target": "_blank",
+    "rel": "noopener"
+  },
+  {
+    "href": "https://easylaunch.dev/dev-tools/toolblip",
+    "target": "_blank",
+    "rel": "noopener"
+  },
+  {
+    "href": "https://launchkiwi.com/p/toolblip",
+    "target": "_blank",
+    "rel": "noopener"
+  },
+  {
+    "href": "https://starthub.zip",
+    "title": "starthub.zip"
+  },
+  {
+    "href": "https://toolindex.net/?ref=listed",
+    "target": "_blank",
+    "rel": "nofollow noopener"
+  },
+  {
+    "href": "https://www.productlaunchify.com",
+    "target": "_blank",
+    "rel": "noopener noreferrer",
+    "title": "Featured on Product Launchify",
+    "aria-label": "Featured on Product Launchify"
   }
 ]
