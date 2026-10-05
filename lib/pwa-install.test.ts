@@ -170,8 +170,8 @@ describe('installDeviceOptions', () => {
   });
 });
 
-function stepText(steps: { marks: string[]; where: string }[]) {
-  return steps.map((item) => `${item.marks.join(' ')} ${item.where}`).join(' ');
+function stepText(steps: { parts: { text: string }[] }[]) {
+  return steps.map((item) => item.parts.map((part) => part.text).join('')).join(' ');
 }
 
 describe('installInstructions', () => {
@@ -179,18 +179,25 @@ describe('installInstructions', () => {
     const manual = installInstructions({ os: 'mac', browser: 'chrome' }, false);
     expect(manual.label).toBe('Chrome on Mac');
     expect(stepText(manual.steps)).toMatch(/address bar/i);
-    expect(manual.steps[2].marks).toContain('Install page as app');
+    expect(stepText(manual.steps)).toMatch(/Install page as app/);
     expect(manual.showNativeInstall).toBe(false);
     expect(installInstructions({ os: 'mac', browser: 'chrome' }, true).showNativeInstall).toBe(true);
   });
 
   it('uses the phone or desktop path for the detected browser', () => {
-    expect(installInstructions({ os: 'ios', browser: 'safari' }, false).steps[1].marks).toContain('Add to Home Screen');
+    const iphone = stepText(installInstructions({ os: 'ios', browser: 'safari' }, false).steps);
+    expect(iphone).toMatch(/Add to Home Screen/);
+    expect(iphone).toMatch(/bottom/);
+    expect(iphone).toMatch(/iPad/);
+    const macSafari = stepText(installInstructions({ os: 'mac', browser: 'safari' }, false).steps);
+    expect(macSafari).toMatch(/menu bar/);
+    expect(macSafari).toMatch(/Apple logo/);
+    expect(macSafari).toMatch(/Add to Dock/);
+    expect(macSafari).toMatch(/row of app icons/);
     expect(stepText(installInstructions({ os: 'ios', browser: 'chrome' }, true).steps)).toMatch(/Safari/);
     expect(installInstructions({ os: 'ios', browser: 'chrome' }, true).showNativeInstall).toBe(false);
-    expect(stepText(installInstructions({ os: 'mac', browser: 'safari' }, false).steps)).toMatch(/Add to Dock/);
-    expect(installInstructions({ os: 'windows', browser: 'edge' }, false).steps[1].marks).toContain('Apps');
-    expect(installInstructions({ os: 'android', browser: 'samsung' }, false).steps[1].marks).toContain('Home screen');
+    expect(stepText(installInstructions({ os: 'windows', browser: 'edge' }, false).steps)).toMatch(/Apps/);
+    expect(stepText(installInstructions({ os: 'android', browser: 'samsung' }, false).steps)).toMatch(/Home screen/);
     expect(stepText(installInstructions({ os: 'android', browser: 'chrome' }, false).steps)).toMatch(/Install app/);
     expect(stepText(installInstructions({ os: 'linux', browser: 'firefox' }, false).steps)).toMatch(/Chrome/);
     expect(stepText(installInstructions({ os: 'linux', browser: 'firefox' }, false).steps)).toMatch(/Edge/);

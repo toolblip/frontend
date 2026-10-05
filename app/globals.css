@@ -5456,7 +5456,7 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
 .tb-pwa-install-card {
   position: relative;
   width: min(400px, calc(100vw - 24px));
-  max-height: min(540px, calc(100vh - 120px));
+  max-height: min(560px, calc(100vh - 160px));
   overflow: auto;
   padding: 14px 14px 14px;
   background: var(--surface);
@@ -5541,7 +5541,7 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
   counter-reset: tb-pwa-step;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 }
 .tb-pwa-install-steps li {
   display: grid;
@@ -5549,7 +5549,7 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
   gap: 10px;
   align-items: start;
   margin: 0;
-  padding: 10px;
+  padding: 8px 10px;
   border: 1px solid var(--line);
   border-radius: 12px;
   background: var(--surface-2);
@@ -5569,31 +5569,20 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
   counter-increment: tb-pwa-step;
   content: counter(tb-pwa-step);
 }
-.tb-pwa-step-marks {
+.tb-pwa-step-line {
   margin: 2px 0 0;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 4px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--fg-0);
 }
-.tb-pwa-step-piece { display: inline-flex; align-items: center; gap: 4px; }
-.tb-pwa-step-arrow { color: var(--fg-2); font-size: 12px; font-weight: 700; }
 .tb-pwa-step-mark {
-  display: inline-block;
-  padding: 2px 7px;
-  border-radius: 7px;
+  display: inline;
+  padding: 1px 6px;
+  border-radius: 6px;
   background: color-mix(in srgb, var(--red) 14%, var(--surface));
   color: var(--red-text);
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--red) 45%, transparent);
-  font-size: 13px;
   font-weight: 700;
-  line-height: 1.35;
-}
-.tb-pwa-step-where {
-  margin: 4px 0 0;
-  font-size: 13px;
-  line-height: 1.4;
-  color: var(--fg-1);
 }
 .tb-pwa-install-card .tb-v2-btn { width: 100%; justify-content: center; margin-top: 12px; }
 .tb-pwa-install-close {

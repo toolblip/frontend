@@ -60,6 +60,13 @@ test.describe('PWA install corner prompt', () => {
     await expect(card).toContainText(/Safari/);
     await card.getByRole('radio', { name: 'Safari' }).click();
     await expect(card).toContainText(/Add to Home Screen/i);
+    await expect(card).toContainText(/square with an arrow pointing up/);
+    await card.getByRole('radio', { name: 'Mac' }).click();
+    await expect(card.getByRole('radio', { name: 'Safari' })).toHaveAttribute('aria-checked', 'true');
+    await expect(card).toContainText(/menu bar at the top of the screen, next to the Apple logo/);
+    await expect(card).toContainText(/row of app icons at the bottom of the screen/);
+    await expect.poll(async () => card.evaluate((el) => el.scrollHeight - el.clientHeight)).toBeLessThanOrEqual(1);
+    await page.screenshot({ path: 'test-results/pwa-install-safari-mac.png' });
     await expect(card).toContainText("You're on Windows, in Chrome.");
 
     await card.getByRole('button', { name: 'Close' }).click();
@@ -108,6 +115,7 @@ test.describe('PWA install corner prompt', () => {
       expect(box).not.toBeNull();
       expect(box!.x).toBeGreaterThanOrEqual(0);
       expect(box!.x + box!.width).toBeLessThanOrEqual(375);
+      await expect.poll(async () => card.evaluate((el) => el.scrollHeight - el.clientHeight)).toBeLessThanOrEqual(1);
       await page.screenshot({ path: 'test-results/pwa-install-mobile.png' });
     });
   });
