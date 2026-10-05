@@ -231,6 +231,12 @@ function DirectoryBadges({ duplicate = false }: { duplicate?: boolean }) {
       <DirectoryBadgeLink duplicate={duplicate} href="https://hotools.com/" title="HoTools - Online Tools Directory">
         <span className="tb-v2-directory-text">HoTools</span>
       </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://devtool.io" target="_blank" rel="noopener">
+        <span className="tb-v2-directory-text">Listed on DevTool.io</span>
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://www.launchandloop.com/product/toolblip" target="_blank" rel="dofollow">
+        <DirectoryBadgeImage src="/directory-badges/launch-and-loop.svg" alt="Toolblip on Launch and Loop" width="170" height="46" fallback="Toolblip on Launch and Loop" />
+      </DirectoryBadgeLink>
     </div>
   );
 }

@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="170" height="46" viewBox="0 0 170 46" fill="none">
+  <!-- Container Box -->
+  <rect x="1" y="1" width="168" height="44" rx="10" fill="#0f172a" stroke="#1e293b" stroke-width="1.5"/>
+
+  <!-- Authentic Launch & Loop Logo Mark -->
+  <g transform="translate(9, 7)">
+    <svg width="32" height="32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="50" r="50" fill="white" />
+      <path d="M68.5 73.5C63 77.5 56.5 79.5 50 79.5C33.5 79.5 20.5 66.5 20.5 50C20.5 43.5 22.5 37 26.5 31.5" stroke="#0F172A" stroke-width="7" stroke-linecap="round" />
+      <path d="M26.5 31.5L20 31M26.5 31.5L27 38" stroke="#0F172A" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" />
+      <path d="M31.5 26.5C37 22.5 43.5 20.5 50 20.5C66.5 20.5 79.5 33.5 79.5 50C79.5 56.5 77.5 63 73.5 68.5" stroke="#2563EB" stroke-width="7" stroke-linecap="round" />
+      <path d="M73.5 68.5L80 69M73.5 68.5L73 62" stroke="#2563EB" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" />
+      <path d="M50 32C50 32 42 45 42 56C42 57 39 60 37 62H45L46.5 59.5H53.5L55 62H63C61 60 58 57 58 56C58 45 50 32 50 32Z" fill="#0F172A" />
+      <circle cx="50" cy="46" r="3.5" fill="white" />
+      <path d="M47 65V69M53 65V69M50 67V72" stroke="#8B5CF6" stroke-width="2.5" stroke-linecap="round" />
+    </svg>
+  </g>
+
+  <!-- Backlink Brand Text -->
+  <text x="48" y="18" fill="#94a3b8" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="8.5" font-weight="700" letter-spacing="0.8">FEATURED ON</text>
+  <text x="48" y="33" fill="#ffffff" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="800" letter-spacing="-0.3">Launch &amp; Loop</text>
+</svg>
