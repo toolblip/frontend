@@ -1,6 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import InstallGuideScene from '@/components/v2/InstallGuideScene';
+import InstallMark from '@/components/v2/InstallMarks';
 import { IconInstall } from '@/components/v2/icons';
 import { usePwaInstall } from '@/hooks/usePwaInstall';
 import {
@@ -66,41 +68,59 @@ export default function InstallAppPrompt() {
     <div className="tb-pwa-install">
       {open ? (
         <aside className="tb-pwa-install-card" aria-label="Install Toolblip">
-          <button type="button" className="tb-pwa-install-close" aria-label="Close" onClick={close}>
-            <span aria-hidden="true">×</span>
-          </button>
-          <div className="tb-pwa-install-heading">
-            <IconInstall aria-hidden="true" />
-            <p className="tb-pwa-install-title">Install Toolblip</p>
+          <div className="tb-pwa-install-top">
+            <button type="button" className="tb-pwa-install-close" aria-label="Close" onClick={close}>
+              <span aria-hidden="true">×</span>
+            </button>
+            <div className="tb-pwa-install-heading">
+              <IconInstall aria-hidden="true" />
+              <p className="tb-pwa-install-title">Install Toolblip</p>
+            </div>
+            <p className="tb-pwa-install-here">{currentDeviceLine(target, devices)}</p>
           </div>
-          <div className="tb-pwa-install-picks">
-            <label className="tb-pwa-install-pick">
+          <div className="tb-pwa-install-group">
+            <p className="tb-pwa-install-group-label" id="tb-pwa-device-label">
               Device
-              <select value={selected.os} onChange={(event) => onDevice(event.target.value as InstallOs)}>
-                {devices.map((device) => (
-                  <option key={device.os} value={device.os}>
-                    {device.label}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className="tb-pwa-install-pick">
-              Browser
-              <select
-                value={selected.browser}
-                onChange={(event) => setPicked({ os: selected.os, browser: event.target.value as InstallBrowser })}
-              >
-                {devices
-                  .find((device) => device.os === selected.os)
-                  ?.browsers.map((browser) => (
-                    <option key={browser.browser} value={browser.browser}>
-                      {browser.label}
-                    </option>
-                  ))}
-              </select>
-            </label>
+            </p>
+            <div className="tb-pwa-install-choices" role="radiogroup" aria-labelledby="tb-pwa-device-label">
+              {devices.map((device) => (
+                <button
+                  key={device.os}
+                  type="button"
+                  role="radio"
+                  aria-checked={selected.os === device.os}
+                  className="tb-pwa-install-choice"
+                  onClick={() => onDevice(device.os)}
+                >
+                  <InstallMark kind={device.os} />
+                  {device.label}
+                </button>
+              ))}
+            </div>
           </div>
-          <p className="tb-pwa-install-here">{currentDeviceLine(target, devices)}</p>
+          <div className="tb-pwa-install-group">
+            <p className="tb-pwa-install-group-label" id="tb-pwa-browser-label">
+              Browser
+            </p>
+            <div className="tb-pwa-install-choices" role="radiogroup" aria-labelledby="tb-pwa-browser-label">
+              {devices
+                .find((device) => device.os === selected.os)
+                ?.browsers.map((browser) => (
+                  <button
+                    key={browser.browser}
+                    type="button"
+                    role="radio"
+                    aria-checked={selected.browser === browser.browser}
+                    className="tb-pwa-install-choice"
+                    onClick={() => setPicked({ os: selected.os, browser: browser.browser })}
+                  >
+                    <InstallMark kind={browser.browser} />
+                    {browser.label}
+                  </button>
+                ))}
+            </div>
+          </div>
+          <InstallGuideScene visual={guide.visual} os={selected.os} />
           <ol className="tb-pwa-install-steps">
             {guide.steps.map((step) => (
               <li key={step}>{step}</li>

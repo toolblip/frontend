@@ -34,8 +34,9 @@ test.describe('PWA install corner prompt', () => {
 
     await expect(card).toBeVisible();
     await expect(button).toBeVisible();
-    await expect(card.getByLabel('Device')).toHaveValue('windows');
-    await expect(card.getByLabel('Browser')).toHaveValue('chrome');
+    await expect(card.getByRole('radio', { name: 'Windows' })).toHaveAttribute('aria-checked', 'true');
+    await expect(card.getByRole('radio', { name: 'Chrome', exact: true })).toHaveAttribute('aria-checked', 'true');
+    await expect(card.locator('.tb-pwa-scene')).toBeVisible();
     await expect(card).toContainText(/address bar/i);
     await expect(card).toContainText("You're on Windows, in Chrome.");
     const banner = page.getByRole('dialog', { name: 'Cookie consent' });
@@ -53,10 +54,10 @@ test.describe('PWA install corner prompt', () => {
     expect(buttonBox?.height ?? 0).toBeGreaterThanOrEqual(40);
     await page.screenshot({ path: 'test-results/pwa-install-desktop.png' });
 
-    await card.getByLabel('Device').selectOption('ios');
-    await expect(card.getByLabel('Browser')).toHaveValue('chrome');
+    await card.getByRole('radio', { name: 'iPhone or iPad' }).click();
+    await expect(card.getByRole('radio', { name: 'Chrome', exact: true })).toHaveAttribute('aria-checked', 'true');
     await expect(card).toContainText(/Safari/);
-    await card.getByLabel('Browser').selectOption('safari');
+    await card.getByRole('radio', { name: 'Safari' }).click();
     await expect(card).toContainText(/Add to Home Screen/i);
     await expect(card).toContainText("You're on Windows, in Chrome.");
 
@@ -93,8 +94,9 @@ test.describe('PWA install corner prompt', () => {
       const button = page.getByRole('button', { name: 'Install app' });
       await expect(card).toBeVisible();
       await expect(button).toBeVisible();
-      await expect(card.getByLabel('Device')).toHaveValue('ios');
-      await expect(card.getByLabel('Browser')).toHaveValue('safari');
+      await expect(card.getByRole('radio', { name: 'iPhone or iPad' })).toHaveAttribute('aria-checked', 'true');
+      await expect(card.getByRole('radio', { name: 'Safari' })).toHaveAttribute('aria-checked', 'true');
+      await expect(card.locator('.tb-pwa-scene')).toBeVisible();
       await expect(card).toContainText(/Add to Home Screen/i);
       const buttonBox = await button.boundingBox();
       const cardBox = await card.boundingBox();
