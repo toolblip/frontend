@@ -121,23 +121,19 @@ export default function InstallAppPrompt() {
           </div>
           <ol className="tb-pwa-install-steps">
             {guide.steps.map((item) => (
-              <li key={`${item.marks.join('>')}:${item.where}`}>
+              <li key={item.parts.map((part) => part.text).join('')}>
                 <span className="tb-pwa-step-num" aria-hidden="true" />
-                <div>
-                  <p className="tb-pwa-step-marks">
-                    {item.marks.map((mark, index) => (
-                      <span key={mark} className="tb-pwa-step-piece">
-                        {index > 0 ? (
-                          <span className="tb-pwa-step-arrow" aria-hidden="true">
-                            →
-                          </span>
-                        ) : null}
-                        <span className="tb-pwa-step-mark">{mark}</span>
+                <p className="tb-pwa-step-line">
+                  {item.parts.map((part, index) =>
+                    part.hot ? (
+                      <span key={index} className="tb-pwa-step-mark">
+                        {part.text}
                       </span>
-                    ))}
-                  </p>
-                  <p className="tb-pwa-step-where">{item.where}</p>
-                </div>
+                    ) : (
+                      <span key={index}>{part.text}</span>
+                    ),
+                  )}
+                </p>
               </li>
             ))}
           </ol>

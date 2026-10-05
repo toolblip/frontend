@@ -8,7 +8,8 @@ export type InstallOs = 'ios' | 'android' | 'mac' | 'windows' | 'chromeos' | 'li
 export type InstallBrowser = 'safari' | 'chrome' | 'edge' | 'firefox' | 'opera' | 'samsung' | 'other';
 export type InstallTarget = { os: InstallOs; browser: InstallBrowser };
 export type InstallPromptOutcome = 'accepted' | 'dismissed';
-export type InstallStep = { marks: string[]; where: string };
+export type InstallStepPart = { text: string; hot?: boolean };
+export type InstallStep = { parts: InstallStepPart[] };
 export type InstallInstructions = {
   label: string;
   steps: InstallStep[];
@@ -137,104 +138,180 @@ export function detectInstallTarget(input: {
   return { os: detectOs(input), browser: detectBrowser(input.userAgent) };
 }
 
-function step(marks: string | string[], where: string): InstallStep {
-  return { marks: Array.isArray(marks) ? marks : [marks], where };
+function say(...parts: Array<string | { hot: string }>): InstallStep {
+  return {
+    parts: parts.map((part) => (typeof part === 'string' ? { text: part } : { text: part.hot, hot: true })),
+  };
 }
 
 function desktopInstallSteps(browser: InstallBrowser, os: InstallOs): InstallStep[] {
   if (browser === 'safari' && os === 'mac') {
     return [
-      step('File', 'In the menu bar at the top of the screen.'),
-      step('Add to Dock', 'Choose it from the File menu.'),
-      step('Dock', 'Toolblip shows up there. Open it like any other app.'),
+      say(
+        'Click ',
+        { hot: 'File' },
+        ' in the menu bar at the top of the screen, next to the Apple logo. That menu belongs to the Mac, not the page.',
+      ),
+      say('In the menu that opens, click ', { hot: 'Add to Dock' }, '.'),
+      say(
+        'A Toolblip icon appears in the ',
+        { hot: 'Dock' },
+        ', the row of app icons at the bottom of the screen. Click that icon to open Toolblip.',
+      ),
     ];
   }
   if (browser === 'edge') {
     return [
-      step('install icon', 'Right end of the address bar. It looks like a screen with a plus.'),
-      step(['Edge menu', 'Apps', 'Install this site as an app'], "Use this if the icon isn't there."),
-      step('Install', 'Confirm. Toolblip then opens in its own window.'),
+      say(
+        'At the right end of the address bar, click the ',
+        { hot: 'install icon' },
+        '. It looks like a screen with a plus.',
+      ),
+      say(
+        'If that icon isn’t there, open the ',
+        { hot: 'Edge menu' },
+        ' (the three dots), then ',
+        { hot: 'Apps' },
+        ', then ',
+        { hot: 'Install this site as an app' },
+        '.',
+      ),
+      say('Click ', { hot: 'Install' }, '. Toolblip then opens in its own window.'),
     ];
   }
   if (browser === 'chrome' || browser === 'opera') {
-    const menu =
+    const fallback =
       browser === 'opera'
-        ? ['Opera menu', 'Install Toolblip']
-        : ['Chrome menu', 'Cast, save, and share', 'Install page as app'];
+        ? [
+            say(
+              'If that icon isn’t there, open the ',
+              { hot: 'Opera menu' },
+              ' and choose ',
+              { hot: 'Install Toolblip' },
+              '.',
+            ),
+          ]
+        : [
+            say(
+              'If that icon isn’t there, open the ',
+              { hot: 'Chrome menu' },
+              ' (the three dots at the top right), then ',
+              { hot: 'Cast, save, and share' },
+              ', then ',
+              { hot: 'Install page as app' },
+              '.',
+            ),
+          ];
     return [
-      step('install icon', 'Right end of the address bar. It looks like a small screen with a down arrow.'),
-      step('Install', 'Click it in the box that opens.'),
-      step(menu, "Use this if you don't see the icon."),
+      say(
+        'At the right end of the address bar, click the ',
+        { hot: 'install icon' },
+        '. It looks like a small screen with a down arrow.',
+      ),
+      say('In the box that opens, click ', { hot: 'Install' }, '.'),
+      ...fallback,
     ];
   }
   if (browser === 'firefox') {
     if (os === 'mac') {
       return [
-        step('Not in Firefox', "Firefox can't add Toolblip to the Dock."),
-        step(['Chrome', 'Edge'], 'Open this page in one of these and use the install icon in the address bar.'),
-        step(['Safari', 'File', 'Add to Dock'], 'Or stay on this Mac and use Safari.'),
+        say('Firefox can’t put Toolblip in the Dock.'),
+        say(
+          'Open this page in ',
+          { hot: 'Chrome' },
+          ' or ',
+          { hot: 'Edge' },
+          ', then click the install icon at the right end of the address bar.',
+        ),
+        say(
+          'Or open it in ',
+          { hot: 'Safari' },
+          ', click ',
+          { hot: 'File' },
+          ' in the menu bar at the top of the screen, then ',
+          { hot: 'Add to Dock' },
+          '.',
+        ),
       ];
     }
     return [
-      step('Not in Firefox', "Firefox can't install Toolblip as an app."),
-      step(['Chrome', 'Edge'], 'Open this page in one of these.'),
-      step('install icon', 'Right end of the address bar.'),
+      say('Firefox can’t install Toolblip as an app.'),
+      say('Open this page in ', { hot: 'Chrome' }, ' or ', { hot: 'Edge' }, '.'),
+      say('Click the ', { hot: 'install icon' }, ' at the right end of the address bar.'),
     ];
   }
   return [
-    step('Browser menu', 'Open it.'),
-    step(['Install app', 'Add to Home Screen', 'Add to Dock'], 'Look for one of these.'),
-    step('Confirm', 'Toolblip keeps its own icon.'),
+    say('Open the browser menu.'),
+    say('Look for ', { hot: 'Install app' }, ', ', { hot: 'Add to Home Screen' }, ', or ', { hot: 'Add to Dock' }, '.'),
+    say('Confirm. Toolblip keeps its own icon.'),
   ];
 }
 
 function phoneInstallSteps(os: InstallOs, browser: InstallBrowser): InstallStep[] {
   if (os === 'ios' && browser === 'safari') {
     return [
-      step('Share', 'The square with an arrow pointing up, at the bottom of Safari.'),
-      step('Add to Home Screen', 'Scroll the share sheet and tap it.'),
-      step('Add', 'The Toolblip icon lands on your Home Screen.'),
+      say(
+        'Tap ',
+        { hot: 'Share' },
+        '. On an iPhone it is in the bar at the bottom. On an iPad it is at the top, in the address bar. The icon is a square with an arrow pointing up.',
+      ),
+      say('A panel opens. Scroll the list of actions and tap ', { hot: 'Add to Home Screen' }, '.'),
+      say('Tap ', { hot: 'Add' }, ' in the corner. A Toolblip icon appears on your Home Screen.'),
     ];
   }
   if (os === 'ios') {
     return [
-      step('Safari', 'iPhone and iPad only add a Home Screen icon from Safari.'),
-      step('Share', 'Open toolblip.com in Safari, then tap Share.'),
-      step(['Add to Home Screen', 'Add'], 'Tap those to finish.'),
+      say(
+        'This browser can’t add the icon. Open ',
+        { hot: 'Safari' },
+        ' and go to toolblip.com.',
+      ),
+      say(
+        'In Safari, tap ',
+        { hot: 'Share' },
+        '. On an iPhone it is at the bottom. On an iPad it is at the top. It is a square with an arrow pointing up.',
+      ),
+      say('Tap ', { hot: 'Add to Home Screen' }, ', then tap ', { hot: 'Add' }, '.'),
     ];
   }
   if (browser === 'samsung') {
     return [
-      step('Menu', 'Bottom right of the browser.'),
-      step(['Add page to', 'Home screen'], 'Tap those in that order.'),
-      step('Add', 'The icon shows up on your home screen.'),
+      say('Tap the ', { hot: 'menu' }, ' button at the bottom right.'),
+      say('Tap ', { hot: 'Add page to' }, ', then ', { hot: 'Home screen' }, '.'),
+      say('Tap ', { hot: 'Add' }, '. The icon shows up on your home screen.'),
     ];
   }
   if (browser === 'firefox') {
     return [
-      step('Menu', 'Tap the menu button.'),
-      step('Install', 'Tap it in that menu.'),
-      step('Confirm', 'The Toolblip icon is added to your home screen.'),
+      say('Tap the ', { hot: 'menu' }, ' button.'),
+      say('Tap ', { hot: 'Install' }, '.'),
+      say('Confirm. The Toolblip icon is added to your home screen.'),
     ];
   }
   if (browser === 'edge') {
     return [
-      step('Menu', 'At the bottom of Edge.'),
-      step('Add to phone', 'If you see Apps instead, choose Install this site as an app.'),
-      step('Install', 'Confirm to finish.'),
+      say('Tap the ', { hot: 'menu' }, ' button at the bottom.'),
+      say(
+        'Tap ',
+        { hot: 'Add to phone' },
+        '. If you see Apps instead, tap ',
+        { hot: 'Install this site as an app' },
+        '.',
+      ),
+      say('Confirm to finish.'),
     ];
   }
   if (browser === 'chrome' || browser === 'opera') {
     return [
-      step('three-dot menu', 'Top right.'),
-      step('Install app', "If that isn't listed, tap Add to Home screen."),
-      step('Confirm', 'Toolblip gets its own icon.'),
+      say('Tap the ', { hot: 'three-dot menu' }, ' at the top right.'),
+      say('Tap ', { hot: 'Install app' }, '. If you don’t see that, tap ', { hot: 'Add to Home screen' }, '.'),
+      say('Confirm. Toolblip gets its own icon.'),
     ];
   }
   return [
-    step('Browser menu', 'Open it.'),
-    step(['Install app', 'Add to Home Screen'], 'Look for one of these.'),
-    step('Confirm', 'Toolblip keeps its own icon.'),
+    say('Open the browser menu.'),
+    say('Look for ', { hot: 'Install app' }, ' or ', { hot: 'Add to Home Screen' }, '.'),
+    say('Confirm. Toolblip keeps its own icon.'),
   ];
 }
 
