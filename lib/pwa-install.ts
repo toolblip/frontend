@@ -8,22 +8,10 @@ export type InstallOs = 'ios' | 'android' | 'mac' | 'windows' | 'chromeos' | 'li
 export type InstallBrowser = 'safari' | 'chrome' | 'edge' | 'firefox' | 'opera' | 'samsung' | 'other';
 export type InstallTarget = { os: InstallOs; browser: InstallBrowser };
 export type InstallPromptOutcome = 'accepted' | 'dismissed';
-export type InstallVisual =
-  | 'omnibox'
-  | 'edge-bar'
-  | 'safari-dock'
-  | 'firefox-desktop'
-  | 'ios-share'
-  | 'ios-other'
-  | 'android-menu'
-  | 'samsung-menu'
-  | 'android-firefox'
-  | 'android-edge'
-  | 'generic';
+export type InstallStep = { marks: string[]; where: string };
 export type InstallInstructions = {
   label: string;
-  steps: string[];
-  visual: InstallVisual;
+  steps: InstallStep[];
   showNativeInstall: boolean;
 };
 
@@ -149,112 +137,105 @@ export function detectInstallTarget(input: {
   return { os: detectOs(input), browser: detectBrowser(input.userAgent) };
 }
 
-function desktopInstallSteps(browser: InstallBrowser, os: InstallOs): string[] {
+function step(marks: string | string[], where: string): InstallStep {
+  return { marks: Array.isArray(marks) ? marks : [marks], where };
+}
+
+function desktopInstallSteps(browser: InstallBrowser, os: InstallOs): InstallStep[] {
   if (browser === 'safari' && os === 'mac') {
     return [
-      'In the menu bar at the top of the screen, open File.',
-      'Choose Add to Dock.',
-      'Toolblip shows up in the Dock. Open it from there the same way you open any other app.',
+      step('File', 'In the menu bar at the top of the screen.'),
+      step('Add to Dock', 'Choose it from the File menu.'),
+      step('Dock', 'Toolblip shows up there. Open it like any other app.'),
     ];
   }
   if (browser === 'edge') {
     return [
-      'At the right end of the address bar, click the install icon. It looks like a screen with a plus.',
-      "If it isn't there, open the Edge menu, choose Apps, then Install this site as an app.",
-      'Click Install. After that, Toolblip opens in its own window.',
+      step('install icon', 'Right end of the address bar. It looks like a screen with a plus.'),
+      step(['Edge menu', 'Apps', 'Install this site as an app'], "Use this if the icon isn't there."),
+      step('Install', 'Confirm. Toolblip then opens in its own window.'),
     ];
   }
   if (browser === 'chrome' || browser === 'opera') {
-    const fallback =
+    const menu =
       browser === 'opera'
-        ? "If you don't see the icon, open the Opera menu and choose Install Toolblip."
-        : "If you don't see the icon, open the Chrome menu, choose Cast, save, and share, then Install page as app.";
+        ? ['Opera menu', 'Install Toolblip']
+        : ['Chrome menu', 'Cast, save, and share', 'Install page as app'];
     return [
-      'At the right end of the address bar, click the install icon. It looks like a small screen with a down arrow.',
-      'Click Install.',
-      fallback,
+      step('install icon', 'Right end of the address bar. It looks like a small screen with a down arrow.'),
+      step('Install', 'Click it in the box that opens.'),
+      step(menu, "Use this if you don't see the icon."),
     ];
   }
   if (browser === 'firefox') {
     if (os === 'mac') {
       return [
-        "Firefox can't add Toolblip to the Dock.",
-        'Open this page in Chrome or Edge and use the install icon in the address bar.',
-        'Or open it in Safari, then choose File, then Add to Dock.',
+        step('Not in Firefox', "Firefox can't add Toolblip to the Dock."),
+        step(['Chrome', 'Edge'], 'Open this page in one of these and use the install icon in the address bar.'),
+        step(['Safari', 'File', 'Add to Dock'], 'Or stay on this Mac and use Safari.'),
       ];
     }
     return [
-      "Firefox can't install Toolblip as an app.",
-      'Open this page in Chrome or Edge.',
-      'Use the install icon at the right end of the address bar.',
+      step('Not in Firefox', "Firefox can't install Toolblip as an app."),
+      step(['Chrome', 'Edge'], 'Open this page in one of these.'),
+      step('install icon', 'Right end of the address bar.'),
     ];
   }
   return [
-    'Open the browser menu.',
-    'Look for Install app, Add to Home Screen, or Add to Dock.',
-    'Confirm, and Toolblip keeps its own icon.',
+    step('Browser menu', 'Open it.'),
+    step(['Install app', 'Add to Home Screen', 'Add to Dock'], 'Look for one of these.'),
+    step('Confirm', 'Toolblip keeps its own icon.'),
   ];
 }
 
-function phoneInstallSteps(os: InstallOs, browser: InstallBrowser): string[] {
+function phoneInstallSteps(os: InstallOs, browser: InstallBrowser): InstallStep[] {
   if (os === 'ios' && browser === 'safari') {
     return [
-      "Tap the Share button. It's the square with an arrow pointing up, at the bottom of Safari.",
-      'Scroll the share sheet and tap Add to Home Screen.',
-      'Tap Add. The Toolblip icon lands on your Home Screen.',
+      step('Share', 'The square with an arrow pointing up, at the bottom of Safari.'),
+      step('Add to Home Screen', 'Scroll the share sheet and tap it.'),
+      step('Add', 'The Toolblip icon lands on your Home Screen.'),
     ];
   }
   if (os === 'ios') {
     return [
-      'iPhone and iPad only add a Home Screen icon from Safari.',
-      'Open Safari, go to toolblip.com, and tap the Share button.',
-      'Tap Add to Home Screen, then Add.',
+      step('Safari', 'iPhone and iPad only add a Home Screen icon from Safari.'),
+      step('Share', 'Open toolblip.com in Safari, then tap Share.'),
+      step(['Add to Home Screen', 'Add'], 'Tap those to finish.'),
     ];
   }
   if (browser === 'samsung') {
     return [
-      'Tap the menu button at the bottom right.',
-      'Tap Add page to, then Home screen.',
-      'Tap Add. The icon shows up on your home screen.',
+      step('Menu', 'Bottom right of the browser.'),
+      step(['Add page to', 'Home screen'], 'Tap those in that order.'),
+      step('Add', 'The icon shows up on your home screen.'),
     ];
   }
   if (browser === 'firefox') {
-    return ['Tap the menu button.', 'Tap Install.', 'Confirm, and the Toolblip icon is added to your home screen.'];
+    return [
+      step('Menu', 'Tap the menu button.'),
+      step('Install', 'Tap it in that menu.'),
+      step('Confirm', 'The Toolblip icon is added to your home screen.'),
+    ];
   }
   if (browser === 'edge') {
     return [
-      'Tap the menu button at the bottom.',
-      'Tap Add to phone.',
-      'If you see Apps instead, tap Install this site as an app.',
+      step('Menu', 'At the bottom of Edge.'),
+      step('Add to phone', 'If you see Apps instead, choose Install this site as an app.'),
+      step('Install', 'Confirm to finish.'),
     ];
   }
   if (browser === 'chrome' || browser === 'opera') {
     return [
-      'Tap the three-dot menu at the top right.',
-      "Tap Install app. If that isn't listed, tap Add to Home screen.",
-      'Confirm. Toolblip gets its own icon.',
+      step('three-dot menu', 'Top right.'),
+      step('Install app', "If that isn't listed, tap Add to Home screen."),
+      step('Confirm', 'Toolblip gets its own icon.'),
     ];
   }
   return [
-    'Open the browser menu.',
-    'Look for Install app or Add to Home Screen.',
-    'Confirm, and Toolblip keeps its own icon.',
+    step('Browser menu', 'Open it.'),
+    step(['Install app', 'Add to Home Screen'], 'Look for one of these.'),
+    step('Confirm', 'Toolblip keeps its own icon.'),
   ];
-}
-
-export function installVisual(target: InstallTarget): InstallVisual {
-  const { os, browser } = target;
-  if (os === 'ios' && browser === 'safari') return 'ios-share';
-  if (os === 'ios') return 'ios-other';
-  if (os === 'android' && browser === 'samsung') return 'samsung-menu';
-  if (os === 'android' && browser === 'firefox') return 'android-firefox';
-  if (os === 'android' && browser === 'edge') return 'android-edge';
-  if (os === 'android') return 'android-menu';
-  if (browser === 'safari') return 'safari-dock';
-  if (browser === 'firefox') return 'firefox-desktop';
-  if (browser === 'edge') return 'edge-bar';
-  if (browser === 'chrome' || browser === 'opera') return 'omnibox';
-  return 'generic';
 }
 
 export function installInstructions(target: InstallTarget, canPrompt: boolean): InstallInstructions {
@@ -266,7 +247,6 @@ export function installInstructions(target: InstallTarget, canPrompt: boolean): 
   return {
     label: `${browser} on ${os}`,
     steps,
-    visual: installVisual(target),
     showNativeInstall: canPrompt && nativeBrowser && target.os !== 'ios',
   };
 }

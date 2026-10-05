@@ -36,7 +36,8 @@ test.describe('PWA install corner prompt', () => {
     await expect(button).toBeVisible();
     await expect(card.getByRole('radio', { name: 'Windows' })).toHaveAttribute('aria-checked', 'true');
     await expect(card.getByRole('radio', { name: 'Chrome', exact: true })).toHaveAttribute('aria-checked', 'true');
-    await expect(card.locator('.tb-pwa-scene')).toBeVisible();
+    await expect(card.locator('.tb-pwa-step-num')).toHaveCount(3);
+    await expect(card.locator('.tb-pwa-step-mark', { hasText: 'install icon' })).toBeVisible();
     await expect(card).toContainText(/address bar/i);
     await expect(card).toContainText("You're on Windows, in Chrome.");
     const banner = page.getByRole('dialog', { name: 'Cookie consent' });
@@ -96,7 +97,7 @@ test.describe('PWA install corner prompt', () => {
       await expect(button).toBeVisible();
       await expect(card.getByRole('radio', { name: 'iPhone or iPad' })).toHaveAttribute('aria-checked', 'true');
       await expect(card.getByRole('radio', { name: 'Safari' })).toHaveAttribute('aria-checked', 'true');
-      await expect(card.locator('.tb-pwa-scene')).toBeVisible();
+      await expect(card.locator('.tb-pwa-step-mark', { hasText: 'Add to Home Screen' })).toBeVisible();
       await expect(card).toContainText(/Add to Home Screen/i);
       const buttonBox = await button.boundingBox();
       const cardBox = await card.boundingBox();
