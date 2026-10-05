@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   PWA_INSTALL_DISMISS_KEY,
   PWA_INSTALL_OPEN_DELAY_MS,
-  detectInstallPlatform,
+  detectInstallTarget,
   installInstructions,
   installPromptPhase,
   isRunningAsInstalledApp,
@@ -117,35 +117,52 @@ describe('installed app detection', () => {
   });
 });
 
-describe('detectInstallPlatform', () => {
-  it('recognizes Chromium, iOS Safari, iOS Chrome, Mac Safari, and everyone else', () => {
-    expect(detectInstallPlatform({ userAgent: CHROME_MAC })).toBe('chromium');
-    expect(detectInstallPlatform({ userAgent: IPHONE_SAFARI })).toBe('ios-safari');
-    expect(detectInstallPlatform({ userAgent: IPHONE_CHROME })).toBe('ios-other');
-    expect(detectInstallPlatform({ userAgent: SAFARI_MAC, platform: 'MacIntel', maxTouchPoints: 0 })).toBe(
-      'mac-safari',
-    );
-    expect(
-      detectInstallPlatform({ userAgent: SAFARI_MAC, platform: 'MacIntel', maxTouchPoints: 5 }),
-    ).toBe('ios-safari');
-    expect(detectInstallPlatform({ userAgent: FIREFOX_MAC })).toBe('other');
+const EDGE_WINDOWS =
+  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 Edg/128.0.0.0';
+const ANDROID_CHROME =
+  'Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Mobile Safari/537.36';
+const ANDROID_SAMSUNG =
+  'Mozilla/5.0 (Linux; Android 14; SAMSUNG SM-S918B) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/26.0 Chrome/128.0.0.0 Mobile Safari/537.36';
+const CHROMEOS =
+  'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36';
+
+describe('detectInstallTarget', () => {
+  it('pairs the browser with the operating system', () => {
+    expect(detectInstallTarget({ userAgent: CHROME_MAC })).toEqual({ os: 'mac', browser: 'chrome' });
+    expect(detectInstallTarget({ userAgent: SAFARI_MAC, platform: 'MacIntel', maxTouchPoints: 0 })).toEqual({
+      os: 'mac',
+      browser: 'safari',
+    });
+    expect(detectInstallTarget({ userAgent: SAFARI_MAC, platform: 'MacIntel', maxTouchPoints: 5 })).toEqual({
+      os: 'ios',
+      browser: 'safari',
+    });
+    expect(detectInstallTarget({ userAgent: IPHONE_SAFARI })).toEqual({ os: 'ios', browser: 'safari' });
+    expect(detectInstallTarget({ userAgent: IPHONE_CHROME })).toEqual({ os: 'ios', browser: 'chrome' });
+    expect(detectInstallTarget({ userAgent: FIREFOX_MAC })).toEqual({ os: 'mac', browser: 'firefox' });
+    expect(detectInstallTarget({ userAgent: EDGE_WINDOWS })).toEqual({ os: 'windows', browser: 'edge' });
+    expect(detectInstallTarget({ userAgent: ANDROID_CHROME })).toEqual({ os: 'android', browser: 'chrome' });
+    expect(detectInstallTarget({ userAgent: ANDROID_SAMSUNG })).toEqual({ os: 'android', browser: 'samsung' });
+    expect(detectInstallTarget({ userAgent: CHROMEOS })).toEqual({ os: 'chromeos', browser: 'chrome' });
   });
 });
 
 describe('installInstructions', () => {
-  it('offers the native install button only when Chromium can prompt', () => {
-    expect(installInstructions('chromium', true)).toEqual({
-      body: 'Install Toolblip for quick access, even when you are offline.',
-      showNativeInstall: true,
-    });
-    expect(installInstructions('chromium', false).showNativeInstall).toBe(false);
-    expect(installInstructions('chromium', false).body).toMatch(/address bar/i);
+  it('gives Chrome on Mac the address-bar steps and a native button when the browser can prompt', () => {
+    const manual = installInstructions({ os: 'mac', browser: 'chrome' }, false);
+    expect(manual.label).toBe('Chrome on Mac');
+    expect(manual.steps.join(' ')).toMatch(/address bar/i);
+    expect(manual.showNativeInstall).toBe(false);
+    expect(installInstructions({ os: 'mac', browser: 'chrome' }, true).showNativeInstall).toBe(true);
   });
 
-  it('tells iOS visitors how to add the home screen icon', () => {
-    expect(installInstructions('ios-safari', false).body).toBe('Tap Share, then Add to Home Screen.');
-    expect(installInstructions('ios-other', false).body).toMatch(/Safari/);
-    expect(installInstructions('mac-safari', false).body).toBe('Choose File, then Add to Dock.');
-    expect(installInstructions('other', false).body).toMatch(/Install app or Add to Home Screen/);
+  it('uses the phone or desktop path for the detected browser', () => {
+    expect(installInstructions({ os: 'ios', browser: 'safari' }, false).steps).toContain('Tap Add to Home Screen.');
+    expect(installInstructions({ os: 'ios', browser: 'chrome' }, true).steps.join(' ')).toMatch(/Safari/);
+    expect(installInstructions({ os: 'ios', browser: 'chrome' }, true).showNativeInstall).toBe(false);
+    expect(installInstructions({ os: 'mac', browser: 'safari' }, false).steps.join(' ')).toMatch(/Add to Dock/);
+    expect(installInstructions({ os: 'windows', browser: 'edge' }, false).label).toBe('Edge on Windows');
+    expect(installInstructions({ os: 'android', browser: 'chrome' }, false).steps.join(' ')).toMatch(/Install app/);
+    expect(installInstructions({ os: 'linux', browser: 'firefox' }, false).steps.join(' ')).toMatch(/Chrome or Edge/);
   });
 });

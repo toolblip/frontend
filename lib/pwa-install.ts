@@ -4,8 +4,15 @@ export const INSTALLED_DISPLAY_QUERY =
   '(display-mode: standalone), (display-mode: minimal-ui), (display-mode: fullscreen)';
 
 export type InstallPromptPhase = 'hidden' | 'open' | 'button';
-export type InstallPlatform = 'chromium' | 'ios-safari' | 'ios-other' | 'mac-safari' | 'other';
+export type InstallOs = 'ios' | 'android' | 'mac' | 'windows' | 'chromeos' | 'linux' | 'other';
+export type InstallBrowser = 'safari' | 'chrome' | 'edge' | 'firefox' | 'opera' | 'samsung' | 'other';
+export type InstallTarget = { os: InstallOs; browser: InstallBrowser };
 export type InstallPromptOutcome = 'accepted' | 'dismissed';
+export type InstallInstructions = {
+  label: string;
+  steps: string[];
+  showNativeInstall: boolean;
+};
 
 export function installPromptPhase(input: {
   installed: boolean;
@@ -39,56 +46,124 @@ export function isThisWebAppInstalled(
   return apps.some((app) => app.platform === 'webapp' && app.url === manifestUrl);
 }
 
-export function detectInstallPlatform(input: {
-  userAgent: string;
-  platform?: string;
-  maxTouchPoints?: number;
-}): InstallPlatform {
-  const ua = input.userAgent;
-  const iosDevice =
-    /iPad|iPhone|iPod/.test(ua) ||
-    (input.platform === 'MacIntel' && (input.maxTouchPoints ?? 0) > 1);
+const BROWSER_LABEL: Record<InstallBrowser, string> = {
+  safari: 'Safari',
+  chrome: 'Chrome',
+  edge: 'Edge',
+  firefox: 'Firefox',
+  opera: 'Opera',
+  samsung: 'Samsung Internet',
+  other: 'Your browser',
+};
 
-  if (iosDevice) {
-    return /CriOS|FxiOS|EdgiOS|OPiOS/.test(ua) ? 'ios-other' : 'ios-safari';
-  }
-  if (/Macintosh/.test(ua) && /Safari/.test(ua) && !/Chrome|Chromium|Edg|OPR|Firefox/.test(ua)) {
-    return 'mac-safari';
-  }
-  if (/Chrome|Chromium|Edg|OPR|Opera/.test(ua)) return 'chromium';
+const OS_LABEL: Record<InstallOs, string> = {
+  ios: 'iPhone or iPad',
+  android: 'Android',
+  mac: 'Mac',
+  windows: 'Windows',
+  chromeos: 'Chromebook',
+  linux: 'Linux',
+  other: 'this device',
+};
+
+function detectBrowser(ua: string): InstallBrowser {
+  if (/Edg\/|EdgA|EdgiOS/.test(ua)) return 'edge';
+  if (/OPR\/|Opera|OPiOS/.test(ua)) return 'opera';
+  if (/SamsungBrowser/.test(ua)) return 'samsung';
+  if (/Firefox|FxiOS/.test(ua)) return 'firefox';
+  if (/Chrome|Chromium|CriOS/.test(ua)) return 'chrome';
+  if (/Safari/.test(ua)) return 'safari';
   return 'other';
 }
 
-export function installInstructions(
-  platform: InstallPlatform,
-  canPrompt: boolean,
-): { body: string; showNativeInstall: boolean } {
-  if (platform === 'chromium' && canPrompt) {
-    return {
-      body: 'Install Toolblip for quick access, even when you are offline.',
-      showNativeInstall: true,
-    };
+function detectOs(input: { userAgent: string; platform?: string; maxTouchPoints?: number }): InstallOs {
+  const ua = input.userAgent;
+  const ios =
+    /iPad|iPhone|iPod/.test(ua) ||
+    (input.platform === 'MacIntel' && (input.maxTouchPoints ?? 0) > 1);
+  if (ios) return 'ios';
+  if (/Android/.test(ua)) return 'android';
+  if (/CrOS/.test(ua)) return 'chromeos';
+  if (/Macintosh|Mac OS X/.test(ua)) return 'mac';
+  if (/Windows/.test(ua)) return 'windows';
+  if (/Linux/.test(ua)) return 'linux';
+  return 'other';
+}
+
+export function detectInstallTarget(input: {
+  userAgent: string;
+  platform?: string;
+  maxTouchPoints?: number;
+}): InstallTarget {
+  return { os: detectOs(input), browser: detectBrowser(input.userAgent) };
+}
+
+function desktopInstallSteps(browser: InstallBrowser, os: InstallOs): string[] {
+  if (browser === 'safari' && os === 'mac') {
+    return ['In the menu bar, choose File.', 'Choose Add to Dock.'];
   }
-  if (platform === 'chromium') {
-    return {
-      body: 'Use the install icon in the address bar, or open the browser menu and choose Install Toolblip.',
-      showNativeInstall: false,
-    };
+  if (browser === 'edge') {
+    return [
+      'Look for the install icon in the address bar.',
+      'If it is missing, open the Edge menu, choose Apps, then Install this site as an app.',
+    ];
   }
-  if (platform === 'ios-safari') {
-    return { body: 'Tap Share, then Add to Home Screen.', showNativeInstall: false };
+  if (browser === 'chrome' || browser === 'opera') {
+    const menu = browser === 'opera' ? 'Opera' : 'Chrome';
+    return [
+      'Look for the install icon in the address bar.',
+      `If it is missing, open the ${menu} menu and choose Install Toolblip.`,
+    ];
   }
-  if (platform === 'ios-other') {
-    return {
-      body: 'Open this page in Safari, tap Share, then Add to Home Screen.',
-      showNativeInstall: false,
-    };
+  if (browser === 'firefox') {
+    if (os === 'mac') {
+      return [
+        'Firefox on Mac does not install sites as apps.',
+        'Open this page in Chrome or Edge, or use Safari and choose File, then Add to Dock.',
+      ];
+    }
+    return [
+      'Firefox does not install sites as apps.',
+      'Open this page in Chrome or Edge and use the install icon in the address bar.',
+    ];
   }
-  if (platform === 'mac-safari') {
-    return { body: 'Choose File, then Add to Dock.', showNativeInstall: false };
+  return ['Open the browser menu and choose Install app or Add to Home Screen.'];
+}
+
+function phoneInstallSteps(os: InstallOs, browser: InstallBrowser): string[] {
+  if (os === 'ios' && browser === 'safari') {
+    return ['Tap the Share button.', 'Tap Add to Home Screen.', 'Tap Add.'];
   }
+  if (os === 'ios') {
+    return [
+      'Open this page in Safari. Other iPhone and iPad browsers cannot add the icon.',
+      'Tap Share, then Add to Home Screen.',
+    ];
+  }
+  if (browser === 'samsung') {
+    return ['Tap the menu.', 'Tap Add page to, then Home screen.'];
+  }
+  if (browser === 'firefox') {
+    return ['Tap the menu.', 'Tap Install.'];
+  }
+  if (browser === 'edge') {
+    return ['Tap the menu.', 'Tap Add to phone, or Apps, then Install this site as an app.'];
+  }
+  if (browser === 'chrome' || browser === 'opera') {
+    return ['Tap the three-dot menu.', 'Tap Install app or Add to Home screen.', 'Confirm the install.'];
+  }
+  return ['Open the browser menu.', 'Choose Install app or Add to Home screen.'];
+}
+
+export function installInstructions(target: InstallTarget, canPrompt: boolean): InstallInstructions {
+  const browser = BROWSER_LABEL[target.browser];
+  const os = OS_LABEL[target.os];
+  const phone = target.os === 'ios' || target.os === 'android';
+  const steps = phone ? phoneInstallSteps(target.os, target.browser) : desktopInstallSteps(target.browser, target.os);
+  const nativeBrowser = target.browser === 'chrome' || target.browser === 'edge' || target.browser === 'opera';
   return {
-    body: 'Open the browser menu and choose Install app or Add to Home Screen.',
-    showNativeInstall: false,
+    label: `${browser} on ${os}`,
+    steps,
+    showNativeInstall: canPrompt && nativeBrowser && target.os !== 'ios',
   };
 }

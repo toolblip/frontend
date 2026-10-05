@@ -5455,16 +5455,33 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
   border-radius: var(--radius);
   box-shadow: 0 12px 32px -18px rgba(0, 0, 0, .45);
 }
-.tb-pwa-install-title {
+.tb-pwa-install-heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   margin: 0 0 4px;
+}
+.tb-pwa-install-heading .tb-v2-ic { color: var(--red); }
+.tb-pwa-install-title {
+  margin: 0;
   font-size: 14px;
   font-weight: 700;
   letter-spacing: -0.01em;
 }
-.tb-pwa-install-body {
+.tb-pwa-install-kicker {
+  margin: 0 0 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--fg-2);
+}
+.tb-pwa-install-steps {
   margin: 0;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
   font-size: 13px;
-  line-height: 1.45;
+  line-height: 1.4;
   color: var(--fg-1);
 }
 .tb-pwa-install-card .tb-v2-btn { margin-top: 10px; }
@@ -5484,6 +5501,9 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
 }
 .tb-pwa-install-close:hover { background: var(--surface-2); color: var(--fg-0); }
 .tb-pwa-install-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   height: 34px;
   padding: 0 12px;
   border-radius: 999px;
@@ -5494,7 +5514,9 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
   cursor: pointer;
   box-shadow: 0 8px 20px -14px rgba(0, 0, 0, .5);
 }
+.tb-pwa-install-chip .tb-v2-ic { color: var(--red); }
 .tb-pwa-install-chip:hover { border-color: var(--red); color: var(--red-text); }
+.tb-pwa-install-chip:hover .tb-v2-ic { color: var(--red-text); }
 .tb-pwa-install :focus-visible {
   outline: 2px solid var(--red);
   outline-offset: 2px;

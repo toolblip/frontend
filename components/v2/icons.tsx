@@ -30,6 +30,13 @@ export function IconX({ style, ...props }: IconProps) {
   );
 }
 
+export const IconInstall = compound(
+  <>
+    <path d="M12 3v10" />
+    <path d="m8 9 4 4 4-4" />
+    <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" />
+  </>
+);
 export const IconRefresh = compound(
   <>
     <path d="M21 12a9 9 0 1 1-2.64-6.36" />

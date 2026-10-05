@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { IconInstall } from '@/components/v2/icons';
 import { usePwaInstall } from '@/hooks/usePwaInstall';
 import {
   PWA_INSTALL_DISMISS_KEY,
@@ -10,7 +11,7 @@ import {
 } from '@/lib/pwa-install';
 
 export default function InstallAppPrompt() {
-  const { installed, canPrompt, platform, install } = usePwaInstall();
+  const { installed, canPrompt, target, install } = usePwaInstall();
   const [ready, setReady] = useState(false);
   const [dismissed, setDismissed] = useState(false);
   const [due, setDue] = useState(false);
@@ -46,13 +47,14 @@ export default function InstallAppPrompt() {
     return (
       <div className="tb-pwa-install">
         <button type="button" className="tb-pwa-install-chip" onClick={() => setManuallyOpen(true)}>
+          <IconInstall aria-hidden="true" />
           Install app
         </button>
       </div>
     );
   }
 
-  const instructions = installInstructions(platform, canPrompt);
+  const instructions = installInstructions(target, canPrompt);
 
   return (
     <aside className="tb-pwa-install" aria-label="Install Toolblip">
@@ -65,14 +67,23 @@ export default function InstallAppPrompt() {
         >
           <span aria-hidden="true">×</span>
         </button>
-        <p className="tb-pwa-install-title">Install Toolblip</p>
-        <p className="tb-pwa-install-body">{instructions.body}</p>
+        <div className="tb-pwa-install-heading">
+          <IconInstall aria-hidden="true" />
+          <p className="tb-pwa-install-title">Install Toolblip</p>
+        </div>
+        <p className="tb-pwa-install-kicker">{instructions.label}</p>
+        <ol className="tb-pwa-install-steps">
+          {instructions.steps.map((step) => (
+            <li key={step}>{step}</li>
+          ))}
+        </ol>
         {instructions.showNativeInstall ? (
           <button
             type="button"
             className="tb-v2-btn tb-v2-btn-primary tb-v2-btn-sm"
             onClick={() => void install()}
           >
+            <IconInstall aria-hidden="true" />
             Install
           </button>
         ) : null}

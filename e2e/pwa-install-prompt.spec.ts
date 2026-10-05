@@ -27,11 +27,13 @@ test.describe('PWA install corner prompt', () => {
     const button = page.getByRole('button', { name: 'Install app' });
     await page.clock.fastForward(1_000);
     await expect(button).toBeVisible();
+    await expect(button.locator('svg')).toBeVisible();
     await expect(card).toHaveCount(0);
 
     await page.clock.fastForward(61_000);
 
     await expect(card).toBeVisible();
+    await expect(card).toContainText('Chrome on Windows');
     await expect(card).toContainText(/address bar/i);
     const banner = page.getByRole('dialog', { name: 'Cookie consent' });
     await expect(banner).toBeVisible();
@@ -73,7 +75,8 @@ test.describe('PWA install corner prompt', () => {
 
       const card = page.getByRole('complementary', { name: 'Install Toolblip' });
       await expect(card).toBeVisible();
-      await expect(card).toContainText('Tap Share, then Add to Home Screen.');
+      await expect(card).toContainText('Tap Add to Home Screen.');
+      await expect(card).toContainText('Safari on iPhone or iPad');
       const box = await card.boundingBox();
       expect(box).not.toBeNull();
       expect(box!.x).toBeGreaterThanOrEqual(0);
