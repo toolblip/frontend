@@ -3,10 +3,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   INSTALLED_DISPLAY_QUERY,
-  detectInstallPlatform,
+  detectInstallTarget,
   isRunningAsInstalledApp,
   shouldHideInstallAfterPrompt,
-  type InstallPlatform,
+  type InstallTarget,
 } from '@/lib/pwa-install';
 
 type BeforeInstallPromptEvent = Event & {
@@ -31,15 +31,15 @@ export function usePwaInstall() {
   const [mode, setMode] = useState<PwaInstallMode>('hidden');
   const [installed, setInstalled] = useState<boolean | null>(null);
   const [canPrompt, setCanPrompt] = useState(false);
-  const [platform, setPlatform] = useState<InstallPlatform>('other');
+  const [target, setTarget] = useState<InstallTarget>({ os: 'other', browser: 'other' });
 
   useEffect(() => {
-    const detected = detectInstallPlatform({
+    const detected = detectInstallTarget({
       userAgent: navigator.userAgent,
       platform: navigator.platform,
       maxTouchPoints: navigator.maxTouchPoints,
     });
-    setPlatform(detected);
+    setTarget(detected);
 
     const markInstalled = () => {
       deferred.current = null;
@@ -54,7 +54,7 @@ export function usePwaInstall() {
     }
 
     setInstalled(false);
-    if (detected === 'ios-safari' || detected === 'ios-other') setMode('ios-tip');
+    if (detected.os === 'ios') setMode('ios-tip');
 
     const onBip = (event: Event) => {
       event.preventDefault();
@@ -91,5 +91,5 @@ export function usePwaInstall() {
     }
   }, []);
 
-  return { mode, install, installed, canPrompt, platform };
+  return { mode, install, installed, canPrompt, target };
 }
