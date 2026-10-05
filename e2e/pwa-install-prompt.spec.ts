@@ -25,10 +25,11 @@ test.describe('PWA install corner prompt', () => {
 
     const card = page.getByRole('complementary', { name: 'Install Toolblip' });
     const button = page.getByRole('button', { name: 'Install app' });
+    await page.clock.fastForward(1_000);
+    await expect(button).toBeVisible();
     await expect(card).toHaveCount(0);
-    await expect(button).toHaveCount(0);
 
-    await advancePastInstallDelay(page);
+    await page.clock.fastForward(61_000);
 
     await expect(card).toBeVisible();
     await expect(card).toContainText(/address bar/i);

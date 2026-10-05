@@ -23,14 +23,14 @@ const FIREFOX_MAC =
   'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:130.0) Gecko/20100101 Firefox/130.0';
 
 describe('installPromptPhase', () => {
-  it('stays hidden until a full minute on a first visit', () => {
+  it('shows the button on a first visit before the card opens', () => {
     expect(
       installPromptPhase({
         installed: false,
         dismissed: false,
         elapsedMs: PWA_INSTALL_OPEN_DELAY_MS - 1,
       }),
-    ).toBe('hidden');
+    ).toBe('button');
   });
 
   it('opens the card once a minute has passed', () => {

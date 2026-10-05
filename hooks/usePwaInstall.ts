@@ -5,9 +5,7 @@ import {
   INSTALLED_DISPLAY_QUERY,
   detectInstallPlatform,
   isRunningAsInstalledApp,
-  isThisWebAppInstalled,
   shouldHideInstallAfterPrompt,
-  webAppManifestUrl,
   type InstallPlatform,
 } from '@/lib/pwa-install';
 
@@ -22,24 +20,10 @@ function readIosStandalone(): boolean {
   return 'standalone' in navigator && Boolean((navigator as Navigator & { standalone?: boolean }).standalone);
 }
 
-async function readInstalledRelatedApps(): Promise<Array<{ platform?: string; url?: string }>> {
-  const getter = (
-    navigator as Navigator & {
-      getInstalledRelatedApps?: () => Promise<Array<{ platform?: string; url?: string }>>;
-    }
-  ).getInstalledRelatedApps;
-  if (typeof getter !== 'function') return [];
-  try {
-    return await getter.call(navigator);
-  } catch {
-    return [];
-  }
-}
-
 /**
  * Chrome/Edge fire `beforeinstallprompt` when the app is installable.
  * iOS browsers have no prompt API — we surface Share → Add to Home Screen tips instead.
- * Standalone display and an already-installed Chromium app stay hidden.
+ * The corner hint hides only while this window is the installed app.
  * Cancelling the native dialog keeps the install entry available.
  */
 export function usePwaInstall() {
@@ -50,7 +34,6 @@ export function usePwaInstall() {
   const [platform, setPlatform] = useState<InstallPlatform>('other');
 
   useEffect(() => {
-    let cancelled = false;
     const detected = detectInstallPlatform({
       userAgent: navigator.userAgent,
       platform: navigator.platform,
@@ -70,6 +53,7 @@ export function usePwaInstall() {
       return;
     }
 
+    setInstalled(false);
     if (detected === 'ios-safari' || detected === 'ios-other') setMode('ios-tip');
 
     const onBip = (event: Event) => {
@@ -82,38 +66,7 @@ export function usePwaInstall() {
     window.addEventListener('beforeinstallprompt', onBip);
     window.addEventListener('appinstalled', markInstalled);
 
-    const manifestUrl = webAppManifestUrl(process.env.NEXT_PUBLIC_APP_URL);
-    const pending = readInstalledRelatedApps();
-    let relatedTimer = 0;
-    const timed = new Promise<Array<{ platform?: string; url?: string }> | undefined>((resolve) => {
-      relatedTimer = window.setTimeout(() => resolve(undefined), 1500);
-      pending.then(
-        (apps) => {
-          window.clearTimeout(relatedTimer);
-          resolve(apps);
-        },
-        () => {
-          window.clearTimeout(relatedTimer);
-          resolve(undefined);
-        },
-      );
-    });
-    void timed.then(async (apps) => {
-      if (cancelled) return;
-      if (apps && isThisWebAppInstalled(apps, manifestUrl)) {
-        markInstalled();
-        return;
-      }
-      setInstalled(false);
-      if (apps !== undefined) return;
-      const settled = await pending;
-      if (cancelled) return;
-      if (isThisWebAppInstalled(settled, manifestUrl)) markInstalled();
-    });
-
     return () => {
-      cancelled = true;
-      window.clearTimeout(relatedTimer);
       window.removeEventListener('beforeinstallprompt', onBip);
       window.removeEventListener('appinstalled', markInstalled);
     };
