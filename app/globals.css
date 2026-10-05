@@ -5443,15 +5443,19 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
   flex-direction: column;
   align-items: flex-start;
   gap: 10px;
-  width: min(400px, calc(100vw - 24px));
+  width: max-content;
+  max-width: min(400px, calc(100vw - 24px));
+  pointer-events: none;
   font-family: var(--f-sans);
 }
 .tb-pwa-install-chip {
   animation: tb-pwa-install-in .28s ease;
 }
+.tb-pwa-install-card,
+.tb-pwa-install-chip { pointer-events: auto; }
 .tb-pwa-install-card {
   position: relative;
-  width: 100%;
+  width: min(400px, calc(100vw - 24px));
   max-height: min(540px, calc(100vh - 120px));
   overflow: auto;
   padding: 14px 14px 14px;
