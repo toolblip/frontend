@@ -107,7 +107,8 @@ describe('llms.txt catalog', () => {
     expect(buildLlmsTxt()).toContain('https://toolblip.com/tools/images');
     expect(buildLlmsTxt()).toContain('/llms-full.txt');
     expect(buildLlmsTxt()).toContain('https://toolblip.com/blog/llms.txt');
-    const rewrites = await config.rewrites();
+    expect(config.rewrites).toBeTypeOf('function');
+    const rewrites = await config.rewrites?.();
     expect(JSON.stringify(rewrites)).toContain('/blog/:slug.md');
   });
 });
