@@ -7,10 +7,10 @@ interface RelatedBlogPostsProps {
   toolName: string;
   category: string;
   tags?: string[];
+  posts?: BlogPost[];
 }
 
 const MAX_POSTS = 3;
-const MIN_POSTS = 2;
 type EditorialToolSlug = ReviewedToolSlug | 'favicon-generator' | 'serp-preview';
 const reviewedTutorials: Record<EditorialToolSlug, readonly string[]> = {
   'jwt-decoder': ['2026-05-12-how-to-decode-jwt-tokens-safely-in-your-browser', 'jwt-decoder-guide', '2026-04-23-debug-jwt-tokens-base64-json-browser'],
@@ -31,6 +31,7 @@ const reviewedTutorials: Record<EditorialToolSlug, readonly string[]> = {
 const STOPWORDS = new Set([
   'online', 'free', 'the', 'and', 'for', 'with', 'your', 'from', 'tool', 'tools',
   'to', 'of', 'in', 'is', 'on', 'at', 'by', 'or', 'an', 'as', 'it', 'be', 'if',
+  'convert', 'converter', 'compiler', 'generator',
 ]);
 
 function tokenize(text: string): Set<string> {
@@ -49,21 +50,11 @@ function overlapCount(a: Set<string>, b: Set<string>): number {
   return count;
 }
 
-function scorePost(post: BlogPost, toolTokens: Set<string>, categoryTokens: Set<string>): number {
-  const titleAndTagTokens = tokenize(`${post.title} ${post.tags.join(' ')}`);
-  const categoryFieldTokens = tokenize(post.category);
-  return (
-    overlapCount(toolTokens, titleAndTagTokens) * 2 +
-    overlapCount(categoryTokens, titleAndTagTokens) +
-    overlapCount(categoryTokens, categoryFieldTokens) * 2
-  );
-}
-
 function formatDate(iso: string): string {
   return new Date(iso).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
 }
 
-export function selectRelatedBlogPosts(posts: BlogPost[], { toolSlug, toolName, category, tags = [] }: RelatedBlogPostsProps): BlogPost[] {
+export function selectRelatedBlogPosts(posts: BlogPost[], { toolSlug, toolName, tags = [] }: RelatedBlogPostsProps): BlogPost[] {
   if (Object.prototype.hasOwnProperty.call(reviewedTutorials, toolSlug)) {
     const selected = reviewedTutorials[toolSlug as EditorialToolSlug];
     const reciprocal = Object.entries(publishedTutorialTools)
@@ -77,10 +68,12 @@ export function selectRelatedBlogPosts(posts: BlogPost[], { toolSlug, toolName, 
   }
 
   const toolTokens = tokenize(`${toolName} ${tags.join(' ')}`);
-  const categoryTokens = tokenize(category);
 
   return posts
-    .map((post) => ({ post, score: scorePost(post, toolTokens, categoryTokens) }))
+    .map((post) => ({
+      post,
+      score: overlapCount(toolTokens, tokenize(`${post.title} ${post.tags.join(' ')}`)),
+    }))
     .filter(({ score }) => score > 0)
     .sort((a, b) => b.score - a.score || new Date(b.post.date).getTime() - new Date(a.post.date).getTime())
     .slice(0, MAX_POSTS)
@@ -88,10 +81,9 @@ export function selectRelatedBlogPosts(posts: BlogPost[], { toolSlug, toolName, 
 }
 
 export default function RelatedBlogPosts(props: RelatedBlogPostsProps) {
-  const matches = selectRelatedBlogPosts(getBlogPosts(), props);
+  const matches = selectRelatedBlogPosts(props.posts ?? getBlogPosts(), props);
 
-  const isReviewed = Object.prototype.hasOwnProperty.call(reviewedTutorials, props.toolSlug);
-  if (matches.length < (isReviewed ? 1 : MIN_POSTS)) return null;
+  if (matches.length < 1) return null;
 
   return (
     <section aria-labelledby="related-blog-title" className="mb-10">

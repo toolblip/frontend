@@ -38,6 +38,7 @@ describe('sitemap routes', () => {
       'https://toolblip.com/sponsors',
       'https://toolblip.com/sponsors/archive',
       'https://toolblip.com/about',
+      'https://toolblip.com/products',
       'https://toolblip.com/seo',
       'https://toolblip.com/api-docs',
     ]);

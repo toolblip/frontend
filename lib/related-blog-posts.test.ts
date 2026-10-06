@@ -80,16 +80,102 @@ describe('reviewed tool blog links', () => {
     expect(selection([...posts, ...posts]).map(post => post.slug)).toEqual(priorityTutorials['json-formatter']);
   });
 
-  it('keeps generic matching for tools outside the reviewed set', () => {
+  it('omits category-only matches and still renders one strong title match', () => {
     const tool = getToolBySlug('color-picker')!;
-    const selected = selectRelatedBlogPosts(getBlogPosts(), {
+    const categoryOnly: BlogPost = {
+      slug: 'palette-roundup',
+      title: 'Palette ideas for interface work',
+      description: '',
+      date: '2026-08-01T00:00:00.000Z',
+      category: tool.category,
+      tags: ['design'],
+      author: 'Toolblip Team',
+      readingTime: '4 min',
+      emoji: '🎨',
+    };
+    const strong: BlogPost = {
+      slug: 'how-a-color-picker-works',
+      title: 'How a color picker reads a pixel',
+      description: '',
+      date: '2026-08-02T00:00:00.000Z',
+      category: 'SEO',
+      tags: [],
+      author: 'Toolblip Team',
+      readingTime: '4 min',
+      emoji: '🎨',
+    };
+    const props = {
+      toolSlug: tool.slug,
+      toolName: tool.name,
+      category: tool.category,
+      tags: tool.tags,
+    };
+    expect(selectRelatedBlogPosts([categoryOnly], props)).toEqual([]);
+    expect(selectRelatedBlogPosts([categoryOnly, strong], props).map(post => post.slug)).toEqual([strong.slug]);
+    const html = renderToStaticMarkup(createElement(RelatedBlogPosts, { ...props, posts: [strong] }));
+    expect(html).toContain('href="/blog/how-a-color-picker-works"');
+    expect(html).toContain('Related Blog Posts');
+    expect(renderToStaticMarkup(createElement(RelatedBlogPosts, { ...props, posts: [categoryOnly] }))).toBe('');
+  });
+
+  it('caps uncurated posts at three and prefers the stronger overlap', () => {
+    const tool = getToolBySlug('color-picker')!;
+    const make = (slug: string, title: string, date: string): BlogPost => ({
+      slug,
+      title,
+      description: '',
+      date,
+      category: 'Color',
+      tags: [],
+      author: 'Toolblip Team',
+      readingTime: '3 min',
+      emoji: '🎨',
+    });
+    const selected = selectRelatedBlogPosts([
+      make('weak-older', 'A note about color', '2026-01-01T00:00:00.000Z'),
+      make('strong-older', 'Color picker calibration notes', '2026-02-01T00:00:00.000Z'),
+      make('weak-newer', 'Another color swatch', '2026-06-01T00:00:00.000Z'),
+      make('strong-newer', 'Color picker shortcuts', '2026-05-01T00:00:00.000Z'),
+    ], {
       toolSlug: tool.slug,
       toolName: tool.name,
       category: tool.category,
       tags: tool.tags,
     });
-    expect(selected.length).toBeGreaterThanOrEqual(2);
-    expect(selected.length).toBeLessThanOrEqual(3);
+    expect(selected.map(post => post.slug)).toEqual(['strong-newer', 'strong-older', 'weak-newer']);
+  });
+
+  it('ignores generic convert tokens from stuffed tags', () => {
+    const selected = selectRelatedBlogPosts([
+      {
+        slug: 'markdown-convert',
+        title: 'Convert Markdown to HTML Online Free in the Browser',
+        description: '',
+        date: '2026-07-08T00:00:00.000Z',
+        category: 'Developer Tools',
+        tags: ['markdown to html converter'],
+        author: 'Toolblip Team',
+        readingTime: '5 min',
+        emoji: '📝',
+      },
+      {
+        slug: 'compile-sass',
+        title: 'Compile Sass to CSS in the browser',
+        description: '',
+        date: '2026-06-01T00:00:00.000Z',
+        category: 'Developer Tools',
+        tags: ['scss'],
+        author: 'Toolblip Team',
+        readingTime: '5 min',
+        emoji: '📝',
+      },
+    ], {
+      toolSlug: 'sass-to-css',
+      toolName: 'Sass to CSS',
+      category: 'CSS',
+      tags: ['convert sass to css', 'sass converter'],
+    });
+    expect(selected.map(post => post.slug)).toEqual(['compile-sass']);
   });
 
   it('shows only the published image guide for favicon generator', () => {

@@ -9,7 +9,7 @@ const SITEMAPS = Object.freeze({
   blog: 'https://toolblip.com/sitemap-blog.xml',
   core: 'https://toolblip.com/sitemap-core.xml',
 });
-const CORE_URLS = new Set(['https://toolblip.com', ...['directory', 'tools', 'tools/images', 'all-tools', 'blog', 'pricing', 'sponsors', 'sponsors/archive', 'about', 'seo', 'api-docs'].map(path => `https://toolblip.com/${path}`)]);
+const CORE_URLS = new Set(['https://toolblip.com', ...['directory', 'tools', 'tools/images', 'all-tools', 'blog', 'pricing', 'sponsors', 'sponsors/archive', 'about', 'products', 'seo', 'api-docs'].map(path => `https://toolblip.com/${path}`)]);
 const URL_PATHS = {
   tools: /^\/tools\/(?:images\/)?[a-z0-9]+(?:-[a-z0-9]+)*$/,
   blog: /^\/blog\/[a-z0-9]+(?:-[a-z0-9]+)*$/,

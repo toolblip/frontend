@@ -7,7 +7,7 @@ import { parseSitemap, groupResults, collect, main } from './gsc-sitemap-inspect
 
 const urls = ['https://toolblip.com/tools/alpha', 'https://toolblip.com/tools/beta', 'https://toolblip.com/tools/gamma'];
 const blogUrls = ['https://toolblip.com/blog/first-post', 'https://toolblip.com/blog/another-2026-post'];
-const coreUrls = ['https://toolblip.com', 'https://toolblip.com/directory', 'https://toolblip.com/tools', 'https://toolblip.com/tools/images', 'https://toolblip.com/all-tools', 'https://toolblip.com/blog', 'https://toolblip.com/pricing', 'https://toolblip.com/sponsors', 'https://toolblip.com/sponsors/archive', 'https://toolblip.com/about', 'https://toolblip.com/seo', 'https://toolblip.com/api-docs'];
+const coreUrls = ['https://toolblip.com', 'https://toolblip.com/directory', 'https://toolblip.com/tools', 'https://toolblip.com/tools/images', 'https://toolblip.com/all-tools', 'https://toolblip.com/blog', 'https://toolblip.com/pricing', 'https://toolblip.com/sponsors', 'https://toolblip.com/sponsors/archive', 'https://toolblip.com/about', 'https://toolblip.com/products', 'https://toolblip.com/seo', 'https://toolblip.com/api-docs'];
 const xml = entries => `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${entries.map(url => `<url><loc>${url}</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>`).join('')}</urlset>`;
 const response = (body, status = 200) => new Response(typeof body === 'string' ? body : JSON.stringify(body), { status });
 const stored = (verdict, coverageState) => ({ inspectionResult: { indexStatusResult: { verdict, coverageState, indexingState: 'INDEXING_ALLOWED', googleCanonical: urls[0] } } });
@@ -27,7 +27,7 @@ test('blog and core validation enforce canonical cohort paths and the exact core
   for (const bad of ['https://toolblip.com/blog', 'https://toolblip.com/blog/first-post/', 'https://toolblip.com/blog/first-post/child', 'https://toolblip.com/blog/%66irst-post', 'https://toolblip.com/tools/alpha', 'https://evil.test/blog/first-post', 'https://toolblip.com/blog/first-post?secret=1']) {
     assert.throws(() => parseSitemap(xml([bad]), 'blog'), /INVALID_SITEMAP/);
   }
-  for (const bad of [coreUrls.slice(1), [...coreUrls, 'https://toolblip.com/tools/alpha'], [...coreUrls.slice(0, 1), ...coreUrls.slice(2), 'https://toolblip.com/blog/first-post'], coreUrls.map(url => url === 'https://toolblip.com' ? 'https://toolblip.com/' : url)]) {
+  for (const bad of [coreUrls.slice(1), coreUrls.filter(url => url !== 'https://toolblip.com/products'), [...coreUrls, 'https://toolblip.com/tools/alpha'], [...coreUrls.slice(0, 1), ...coreUrls.slice(2), 'https://toolblip.com/blog/first-post'], coreUrls.map(url => url === 'https://toolblip.com' ? 'https://toolblip.com/' : url)]) {
     assert.throws(() => parseSitemap(xml(bad), 'core'), /INVALID_SITEMAP/);
   }
   assert.throws(() => parseSitemap(xml(urls), 'unknown'), /INVALID_SITEMAP/);
