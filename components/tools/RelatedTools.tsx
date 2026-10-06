@@ -8,8 +8,7 @@ interface RelatedToolsProps {
   category: string;
 }
 
-const MIN_RELATED = 4;
-const MAX_RELATED = 6;
+const MAX_UNCURATED = 3;
 
 function sharedTagCount(a: Tool, b: Tool): number {
   if (!a.tags?.length || !b.tags?.length) return 0;
@@ -17,34 +16,29 @@ function sharedTagCount(a: Tool, b: Tool): number {
   return a.tags.reduce((count, tag) => count + (bTags.has(tag.toLowerCase()) ? 1 : 0), 0);
 }
 
-// Deterministic stand-in for Math.random(): tool pages are statically
-// generated, so any per-request randomness here would just pick once at
-// build time anyway — a hash keeps the "random" order stable and reproducible.
-function shuffleKey(seed: string, value: string): number {
-  let hash = 0;
-  const input = `${seed}:${value}`;
-  for (let i = 0; i < input.length; i++) {
-    hash = (hash * 31 + input.charCodeAt(i)) | 0;
+export function selectRelatedTools(catalog: readonly Tool[], { slug }: { slug: string; category: string }): Tool[] {
+  if (Object.prototype.hasOwnProperty.call(reviewedRelatedTools, slug)) {
+    const targets = reviewedRelatedTools[slug as ReviewedToolSlug];
+    return targets.flatMap((target) => catalog.filter((tool) => tool.slug === target && tool.slug !== slug));
   }
-  return hash;
+
+  const current = catalog.find((tool) => tool.slug === slug);
+  if (!current?.tags?.length) return [];
+
+  return catalog
+    .filter((tool) => tool.slug !== slug && sharedTagCount(current, tool) > 0)
+    .sort((a, b) => {
+      const tagDiff = sharedTagCount(current, b) - sharedTagCount(current, a);
+      if (tagDiff !== 0) return tagDiff;
+      return a.slug < b.slug ? -1 : a.slug > b.slug ? 1 : 0;
+    })
+    .slice(0, MAX_UNCURATED);
 }
 
 export default function RelatedTools({ slug, category }: RelatedToolsProps) {
-  const current = tools.find((tool) => tool.slug === slug);
-  const candidates = tools.filter((tool) => tool.slug !== slug && tool.category === category);
-
-
-
-  const ranked = [...candidates].sort((a, b) => {
-    const tagDiff = (current ? sharedTagCount(current, b) : 0) - (current ? sharedTagCount(current, a) : 0);
-    if (tagDiff !== 0) return tagDiff;
-    return shuffleKey(slug, a.slug) - shuffleKey(slug, b.slug);
-  });
-
-  const curated = reviewedRelatedTools[slug as ReviewedToolSlug]?.flatMap(target => tools.filter(tool => tool.slug === target && tool.slug !== slug));
-  const related = curated?.length ? curated : ranked.slice(0, Math.min(MAX_RELATED, Math.max(MIN_RELATED, ranked.length)));
+  const related = selectRelatedTools(tools, { slug, category });
   if (!related.length) return null;
-  const sameCategory = related.every(tool => tool.category === category);
+  const sameCategory = related.every((tool) => tool.category === category);
 
   return (
     <section aria-labelledby="related-tools-title" className="mb-10">
