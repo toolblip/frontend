@@ -9,9 +9,8 @@ import RelatedTools from '@/components/tools/RelatedTools';
 import RelatedBlogPosts from '@/components/tools/RelatedBlogPosts';
 import { getFaqs, hasFaqOverride } from '@/lib/faq';
 import { getToolContent } from '@/data/tool-content';
-import CopyToolLink from '@/components/tools/CopyToolLink';
 import { priorityToolLimits } from '@/data/priority-tool-notes';
-import { reviewedToolSlugs, type ReviewedToolSlug } from '@/data/reviewed-tools';
+import type { ReviewedToolSlug } from '@/data/reviewed-tools';
 import { getCategoryPath } from '@/lib/tool-path';
 import { buildToolJsonLd, jsonLdScript } from '@/lib/tool-jsonld';
 
@@ -20,7 +19,6 @@ export default function ToolDetailView({ tool }: { tool: Tool }) {
   const content = getToolContent(tool.slug);
   const limit = priorityToolLimits[tool.slug as ReviewedToolSlug];
   const shownContent = content && limit ? { ...content, description: limit } : content;
-  const reviewed = (reviewedToolSlugs as readonly string[]).includes(tool.slug);
 
   return (
     <div data-testid="tool-detail-shell" className="tb-v2-tool-page">
@@ -56,7 +54,6 @@ export default function ToolDetailView({ tool }: { tool: Tool }) {
         <ToolWrapper toolSlug={tool.slug} toolName={tool.name}>
           <ToolUI tool={tool} />
         </ToolWrapper>
-        {reviewed ? <p className="mt-3"><CopyToolLink /></p> : null}
 
         {tool.slug === 'image-background-remover' && (
           <section aria-label="Background removal guidance" className="mt-6 rounded-xl border border-gray-200 bg-gray-50 px-5 py-4 text-sm text-gray-600 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300">
