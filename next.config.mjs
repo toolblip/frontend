@@ -30,6 +30,13 @@ const nextConfig = {
       },
     ],
   },
+  async rewrites() {
+    return {
+      beforeFiles: [
+        { source: '/blog/:slug.md', destination: '/blog-md/:slug' },
+      ],
+    };
+  },
   async redirects() {
     return [
       // Shared lists used /@username/slug before the public path moved under /user.

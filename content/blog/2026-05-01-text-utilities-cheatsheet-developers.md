@@ -276,7 +276,7 @@ All five tools run entirely in your browser. The text operations run locally  - 
 
 These utilities shine when chained together:
 
-1. Paste draft documentation into [Character Counter](/tools/character-counter) to check meta description length
+1. Paste draft documentation into [Character Counter](/tools/character-counter) to count characters. It does not apply a meta-description or social-network preset.
 2. Run it through [Readability Score](/tools/readability-score) to catch over-complex sentences
 3. Use [Case Converter](/tools/case-converter) to standardize terminology
 4. Sort with [Text Sorter](/tools/text-line-sorter) and deduplicate a list of terms

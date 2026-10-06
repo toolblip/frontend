@@ -65,7 +65,7 @@ A browser tool has zero footprint in your project. Nobody cloning your repo need
 
 ### 5. Feature Richness Without Bloat
 
-Here's the paradox: browser tools can often offer more features *without* the bloat because they don't need to integrate with VS Code's extension API. The [Regex Tester](/tools/regex-tester) on Toolblip, for instance, supports all major regex flavors (JavaScript, Python, PCRE2) - including Python support, which most free regex testers gate behind a paywall. On regex101, Python support requires a paid plan. On Toolblip, it's free, instant, client-side.
+Here's the paradox: browser tools can often offer more features *without* the bloat because they don't need to integrate with VS Code's extension API. The [Regex Tester](/tools/regex-tester) on Toolblip runs JavaScript `RegExp` in the browser. It does not switch to Python or PCRE2. Test those in the language you ship.
 
 ## Direct Comparison: Tool by Tool
 
@@ -74,7 +74,7 @@ Here's how browser-based Toolblip tools stack up against typical VS Code extensi
 | Task | VS Code Extension | Toolblip Browser Tool | Winner |
 |------|-------------------|----------------------|--------|
 | JSON formatting | Formatter extension | [JSON Formatter](/tools/json-formatter) | Tie - formatter wins for project files; browser wins for one-off tasks |
-| Regex testing | Regex extension | [Regex Tester](/tools/regex-tester) | **Browser** - faster, no install, Python/PCRE free |
+| Regex testing | Regex extension | [Regex Tester](/tools/regex-tester) | Browser, JavaScript `RegExp` only |
 | Base64 encode/decode | Extension or CLI | [Base64 Encoder](/tools/base64-encoder-decoder) | **Browser** - zero setup, instant |
 | UUID generation | Extension or terminal | [UUID Generator](/tools/uuid-generator) | **Browser** - no terminal, no extension |
 | URL encoding | Extension or CLI | [URL Encoder](/tools/url-encode) | **Browser** - paste and go |

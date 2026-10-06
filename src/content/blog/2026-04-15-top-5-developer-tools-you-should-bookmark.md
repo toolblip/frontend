@@ -34,7 +34,7 @@ Toolblip's [JSON Formatter](/tools/json-formatter) does all of this and handles 
 
 Base64 comes up in three contexts: Basic auth headers (`admin:password` → `YWRtaW46cGFzc3dvcmQ=`), JWT payload inspection (decode the middle segment to read the claims), and embedding binary data in text formats.
 
-A good Base64 tool handles both encode and decode directions, and supports URL-safe variants for JWT work. When a log shows you a token like `eyJ1c2VyIjoiYWxpY2UifQ==`, you paste it in and see `{"user":"alice"}` instantly.
+A good Base64 tool handles both encode and decode. Toolblip's text tool does standard Base64, not a URL-safe mode. For a JWT, use the [JWT Decoder](/tools/jwt-decoder) instead of pasting the token into the text Base64 box.
 
 Toolblip's [Base64 tool](/tools/base64-encoder-decoder) runs client-side, so your tokens never hit a server.
 

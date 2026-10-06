@@ -2,12 +2,16 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import FeaturedImage from '@/components/blog/FeaturedImage';
 import { getBlogPosts, type BlogPost } from '@/lib/blog';
+import { BLOG_LLMS_PATH } from '@/lib/blog-markdown';
 
 export const metadata: Metadata = {
   title: 'Blog',
   description: 'Guides, tutorials, and updates from the Toolblip team. Learn about developer tools, MCP, and how to get the most out of Toolblip.',
   alternates: {
     canonical: 'https://toolblip.com/blog',
+    types: {
+      'text/plain': 'https://toolblip.com/blog/llms.txt',
+    },
   },
   openGraph: {
     title: 'Blog | Toolblip',
@@ -43,6 +47,7 @@ export default function BlogPage() {
 
   return (
     <div className="tb-v2-blog">
+      <link rel="describedby" href={BLOG_LLMS_PATH} />
       <div className="tb-v2-container">
         <div className="tb-v2-blog-header">
           <div className="tb-v2-kicker">Blog</div>

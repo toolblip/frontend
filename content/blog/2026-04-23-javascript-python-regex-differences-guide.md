@@ -350,12 +350,12 @@ re.search('\\\\', 'backslash \\')  # Works, but confusing
 
 When you need a pattern to work in multiple languages, test it in each one before committing.
 
-**[Toolblip's Regex Tester](/tools/regex-tester)** supports JavaScript, Python, and PCRE flavors. You can paste your pattern, select a flavor, and see matches in real time. Switch the flavor dropdown to verify the same pattern works in each language.
+**[Toolblip's Regex Tester](/tools/regex-tester)** runs JavaScript `RegExp` only. Paste a pattern and a test string to see matches. It has no flavor menu, so check Python and PCRE in those languages' own engines.
 
 For quick cross-flavor testing:
 
 1. Write your pattern in the flavor you're most familiar with
-2. Switch to another flavor and retest  -  watch for failures
+2. Run it in the other language's engine and retest. Watch for failures
 3. If a feature isn't supported (like lookbehind in older JavaScript), you'll see it immediately
 
 ```javascript

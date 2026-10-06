@@ -5,6 +5,7 @@ import { notFound, redirect } from 'next/navigation';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { getBlogPost, getBlogPosts } from '@/lib/blog';
+import { BLOG_LLMS_PATH } from '@/lib/blog-markdown';
 import BlogShareButton from '@/components/share/BlogShareButton';
 
 interface PageProps {
@@ -28,6 +29,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     description: post.description,
     alternates: {
       canonical: canonicalUrl,
+      types: {
+        'text/markdown': `${canonicalUrl}.md`,
+      },
     },
     openGraph: {
       title: `${post.title} | Toolblip`,
@@ -85,6 +89,7 @@ export default async function BlogPostPage({ params }: PageProps) {
 
   return (
     <main className="min-h-screen" style={{ background: 'var(--bg)' }}>
+      <link rel="describedby" href={BLOG_LLMS_PATH} />
       <div className="max-w-3xl mx-auto px-4 pt-8">
         <nav
           className="flex items-center gap-2 text-sm mb-8"
@@ -233,6 +238,10 @@ export default async function BlogPostPage({ params }: PageProps) {
           </div>
         )}
 
+        <p className="mt-10 text-sm" style={{ color: 'var(--fg-2)' }}>
+          <a href={`/blog/${currentPost.slug}.md`}>Markdown</a>
+        </p>
+        {tutorialTools.length === 0 && !currentPost.content.includes('/tools/') && (
         <div
           className="mt-10 p-6 rounded-2xl border border-[var(--line)] text-center"
           style={{ background: 'var(--surface-2)' }}
@@ -252,6 +261,7 @@ export default async function BlogPostPage({ params }: PageProps) {
             Browse Free Tools →
           </Link>
         </div>
+        )}
       </article>
     </main>
   );

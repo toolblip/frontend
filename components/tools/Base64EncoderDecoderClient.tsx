@@ -3,6 +3,7 @@ import { copySecurityText, MAX_TEXT, MAX_BASE64_INPUT } from '@/lib/developer-se
 import DeveloperSecurityFrame, { useSecurityTask } from './DeveloperSecurityFrame';
 import { encodeBase64 as base64Encode, decodeBase64 as base64Decode } from '@/lib/developer-security/primitives';
 
+import { useToolHash } from '@/components/tools/useToolHash';
 import { useState, useCallback, useEffect, useRef } from 'react';
 import ToolContextControls from '@/components/tools/ToolContextControls';
 import { useToolContext } from '@/components/tools/useToolContext';
@@ -21,7 +22,7 @@ const EXAMPLES = [
 export default function Base64EncoderDecoderClient() {
   const [clipboardError,setClipboardError]=useState('');
   const clipboardTask=useSecurityTask();
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState(EXAMPLES[0].data);
   const [mode, setMode] = useState<Mode>('encode');
   const [output, setOutput] = useState('');
   const [error, setError] = useState('');
@@ -31,6 +32,11 @@ export default function Base64EncoderDecoderClient() {
   const toolContext = useToolContext<Base64Context>('base64-encoder-decoder');
 
   const appliedSaved = useRef(false);
+  useToolHash({ t: input, m: mode }, (params) => {
+    if (params.has('t')) setInput(params.get('t') ?? '');
+    const nextMode = params.get('m');
+    if (nextMode === 'encode' || nextMode === 'decode') setMode(nextMode);
+  });
   useEffect(() => {
     if (appliedSaved.current || !toolContext.saved) return;
     const savedMode = toolContext.saved.mode;

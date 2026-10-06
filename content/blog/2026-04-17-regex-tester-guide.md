@@ -219,9 +219,9 @@ JavaScript `RegExp` does not support possessive quantifiers or atomic groups. Re
 
 ## Try It Now
 
-The [Regex Tester on Toolblip](/tools/regex-tester) is built for real developer workflows. It highlights matches in real-time, shows capture groups, provides a small example action and token reference.
+The [Regex Tester on Toolblip](/tools/regex-tester) highlights matches, shows capture groups, and includes a small example plus a token reference. It runs JavaScript regex only.
 
-No signup, no server calls - everything runs in your browser.
+The match runs in the page.
 
 ---
 

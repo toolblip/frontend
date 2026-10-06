@@ -1,5 +1,6 @@
 import { tools } from '@/data/tools';
 import { SEARCH_AGENTS, SITE_ORIGIN, TRAINING_AGENTS } from '@/lib/ai-crawlers';
+import { BLOG_LLMS_PATH } from '@/lib/blog-markdown';
 import { isToolIndexable } from '@/lib/indexable-tools';
 import { getCategoryPath, getToolAbsoluteUrl } from '@/lib/tool-path';
 
@@ -72,6 +73,9 @@ export function buildLlmsTxt(): string {
     '',
     '## Core pages',
     ...CORE_PAGES.map(([label, path]) => `- [${label}](${SITE_ORIGIN}${path})`),
+    '',
+    '## Blog',
+    `- [Guides](${SITE_ORIGIN}${BLOG_LLMS_PATH}): Markdown copies of the articles. Open the HTML URL on each file for the canonical page.`,
     '',
     '## Categories',
     ...categories.map((category) => {

@@ -1,13 +1,17 @@
 'use client';
 
 import { useRef, useState, useMemo } from 'react';
+import { useToolHash } from '@/components/tools/useToolHash';
 import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 const EXAMPLE =
   'Toolblip helps developers format JSON, count words, and test regex patterns. Paste any draft here to see live word and character stats.';
 
 export default function WordCounterClient() {
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState(EXAMPLE);
+  useToolHash({ t: input }, (params) => {
+    if (params.has('t')) setInput(params.get('t') ?? '');
+  });
   const [copyError, setCopyError] = useState('');
   const copyAttempt = useRef(0);
   const [copied, setCopied] = useState(false);
