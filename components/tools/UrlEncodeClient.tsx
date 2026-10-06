@@ -2,15 +2,21 @@
 import { copySecurityText } from '@/lib/developer-security/primitives';
 import DeveloperSecurityFrame, { useSecurityTask } from './DeveloperSecurityFrame';
 import { useState, useMemo } from 'react';
+import { useToolHash } from '@/components/tools/useToolHash';
 
 type Mode = 'encode' | 'decode';
 
 export default function UrlEncodeClient() {
   const [clipboardError,setClipboardError]=useState('');
   const clipboardTask=useSecurityTask();
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState('café & tea');
   const [mode, setMode] = useState<Mode>('encode');
   const [copied, setCopied] = useState(false);
+  useToolHash({ t: input, m: mode }, (params) => {
+    if (params.has('t')) setInput(params.get('t') ?? '');
+    const nextMode = params.get('m');
+    if (nextMode === 'encode' || nextMode === 'decode') setMode(nextMode);
+  });
 
   const conversion = useMemo(() => {
     if (!input) return {value:'',error:''};

@@ -5,6 +5,7 @@ import ToolExampleClearActions from './ToolExampleClearActions';
 import { useSafeRegex } from '@/lib/developer-general/use-safe-regex';
 import { tokenize } from './RegexExplainerClient';
 import { Fragment, useMemo, useState } from 'react';
+import { useToolHash } from '@/components/tools/useToolHash';
 
 interface MatchInfo {
   index: number;
@@ -38,8 +39,22 @@ export default function RegexTesterClient() {
   const [sample, setSample] = useState(
     'Email Ada at ada@example.com or Grace at grace@toolblip.com to confirm.\nNo match: just plain text on this line.',
   );
-
   const flagStr = useMemo(() => Array.from(flags).join(''), [flags]);
+  useToolHash(
+    { p: pattern, f: flagStr, t: sample },
+    (params) => {
+      if (params.has('p')) setPattern(params.get('p') ?? '');
+      if (params.has('t')) setSample(params.get('t') ?? '');
+      if (params.has('f')) {
+        const next = new Set<Flag>();
+        for (const char of params.get('f') ?? '') {
+          if ((FLAG_CHARS as readonly string[]).includes(char)) next.add(char as Flag);
+        }
+        setFlags(next);
+      }
+    },
+  );
+
   const result = useSafeRegex(pattern, flagStr, sample);
 
   const toggleFlag = (f: Flag) => {

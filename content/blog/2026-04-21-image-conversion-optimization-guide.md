@@ -90,4 +90,4 @@ If you're ready to start optimizing, Toolblip has everything you need - all proc
 
 Image optimization isn't a one-time task - it's a habit. The good news is it takes seconds. Pick up an image, run it through a browser-based converter, and notice the difference in load times. Your visitors (and your Core Web Vitals scores) will thank you.
 
-With tools like Toolblip's [Image Resizer](/tools/images/image-resizer), there's no excuse to ship oversized images. Everything runs in your browser, nothing leaves your device, and you're done in under a minute.
+With tools like Toolblip's [Image Resizer](/tools/images/image-resizer), you can resize in the browser. The resize itself does not upload the file. Extensions and page scripts can still see it, so check those before you use a sensitive image.

@@ -4,6 +4,7 @@ import DeveloperSecurityFrame, { useSecurityTask } from './DeveloperSecurityFram
 import { decodeJwt as parseJwt } from '@/lib/developer-security/primitives';
 
 import { useMemo, useState, useEffect } from 'react';
+import { useToolHash } from '@/components/tools/useToolHash';
 
 const SAMPLE = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
 
@@ -45,6 +46,9 @@ export default function JwtDecoderClient() {
   const [clipboardError,setClipboardError]=useState('');
   const clipboardTask=useSecurityTask();
   const [token, setToken] = useState(SAMPLE);
+  useToolHash({ t: token }, (params) => {
+    if (params.has('t')) setToken(params.get('t') ?? '');
+  });
   const [copied, setCopied] = useState<string | null>(null);
   const [decoded, setDecoded] = useState<{ result: Decoded | null; error: string }>({ result: null, error: '' });
 

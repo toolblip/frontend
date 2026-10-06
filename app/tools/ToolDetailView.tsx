@@ -9,12 +9,16 @@ import RelatedTools from '@/components/tools/RelatedTools';
 import RelatedBlogPosts from '@/components/tools/RelatedBlogPosts';
 import { getFaqs, hasFaqOverride } from '@/lib/faq';
 import { getToolContent } from '@/data/tool-content';
+import { priorityToolLimits } from '@/data/priority-tool-notes';
+import type { ReviewedToolSlug } from '@/data/reviewed-tools';
 import { getCategoryPath } from '@/lib/tool-path';
 import { buildToolJsonLd, jsonLdScript } from '@/lib/tool-jsonld';
 
 export default function ToolDetailView({ tool }: { tool: Tool }) {
   const faqs = getFaqs(tool);
   const content = getToolContent(tool.slug);
+  const limit = priorityToolLimits[tool.slug as ReviewedToolSlug];
+  const shownContent = content && limit ? { ...content, description: limit } : content;
 
   return (
     <div data-testid="tool-detail-shell" className="tb-v2-tool-page">
@@ -59,7 +63,7 @@ export default function ToolDetailView({ tool }: { tool: Tool }) {
           </section>
         )}
 
-        <ToolContentSection toolName={tool.name} content={content} />
+        <ToolContentSection toolName={tool.name} content={shownContent} />
 
         <RelatedTools slug={tool.slug} category={tool.category} />
         <RelatedBlogPosts toolSlug={tool.slug} toolName={tool.name} category={tool.category} tags={tool.tags} />

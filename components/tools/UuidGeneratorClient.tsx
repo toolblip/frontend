@@ -3,6 +3,7 @@ import { copySecurityText } from '@/lib/developer-security/primitives';
 import DeveloperSecurityFrame, { useSecurityTask } from './DeveloperSecurityFrame';
 
 import { useState, useEffect } from 'react';
+import { useToolHash } from '@/components/tools/useToolHash';
 
 const HISTORY_SIZE = 5;
 
@@ -18,6 +19,15 @@ export default function UuidGeneratorClient() {
   const [history, setHistory] = useState<string[] | null>(null);
   const [hyphens, setHyphens] = useState(true);
   const [uppercase, setUppercase] = useState(false);
+  useToolHash(
+    { h: hyphens ? '1' : '0', u: uppercase ? '1' : '0' },
+    (params) => {
+      if (params.get('h') === '0') setHyphens(false);
+      if (params.get('h') === '1') setHyphens(true);
+      if (params.get('u') === '1') setUppercase(true);
+      if (params.get('u') === '0') setUppercase(false);
+    },
+  );
   const [copied, setCopied] = useState<number | null>(null);
 
   const [error,setError]=useState('');

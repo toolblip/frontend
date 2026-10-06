@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef, useState } from 'react';
+import { useToolHash } from '@/components/tools/useToolHash';
 import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 const CASES = [
@@ -53,7 +54,10 @@ function convert(text: string, key: CaseKey): string {
 }
 
 export default function CaseConverterClient() {
-  const [text, setText] = useState('');
+  const [text, setText] = useState('Hello World Example');
+  useToolHash({ t: text }, (params) => {
+    if (params.has('t')) setText(params.get('t') ?? '');
+  });
   const [copyError, setCopyError] = useState('');
   const copyAttempt = useRef(0);
   const [copied, setCopied] = useState<CaseKey | null>(null);

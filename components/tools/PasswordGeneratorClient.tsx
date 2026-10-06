@@ -4,6 +4,7 @@ import DeveloperSecurityFrame, { useSecurityTask } from './DeveloperSecurityFram
 import { password as securePassword } from '@/lib/developer-security/primitives';
 
 import { useEffect, useState } from 'react';
+import { useToolHash } from '@/components/tools/useToolHash';
 import { randomFromAlphabet } from '@/lib/secureRandom';
 
 const UPPER = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -66,6 +67,27 @@ export default function PasswordGeneratorClient() {
     symbols: true,
     excludeAmbiguous: false,
   });
+  useToolHash(
+    {
+      l: String(opts.length),
+      u: opts.upper ? '1' : '0',
+      w: opts.lower ? '1' : '0',
+      d: opts.digits ? '1' : '0',
+      s: opts.symbols ? '1' : '0',
+      a: opts.excludeAmbiguous ? '1' : '0',
+    },
+    (params) => {
+      const length = Number(params.get('l'));
+      setOpts((current) => ({
+        length: length >= 8 && length <= 64 ? length : current.length,
+        upper: params.has('u') ? params.get('u') === '1' : current.upper,
+        lower: params.has('w') ? params.get('w') === '1' : current.lower,
+        digits: params.has('d') ? params.get('d') === '1' : current.digits,
+        symbols: params.has('s') ? params.get('s') === '1' : current.symbols,
+        excludeAmbiguous: params.has('a') ? params.get('a') === '1' : current.excludeAmbiguous,
+      }));
+    },
+  );
   const [cleared,setCleared]=useState(false);
   const [generationError,setGenerationError]=useState('');
   const [password, setPassword] = useState('');

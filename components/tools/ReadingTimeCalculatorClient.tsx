@@ -1,12 +1,18 @@
 'use client';
 
 import { useState } from 'react';
+import { useToolHash } from '@/components/tools/useToolHash';
 import { READING_STATS_EXAMPLE } from '@/components/tools/reading-stats-example';
 import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 export default function ReadingTimeCalculatorClient() {
-  const [text, setText] = useState('');
+  const [text, setText] = useState(READING_STATS_EXAMPLE);
   const [wpm, setWpm] = useState(200);
+  useToolHash({ t: text, w: String(wpm) }, (params) => {
+    if (params.has('t')) setText(params.get('t') ?? '');
+    const nextWpm = Number(params.get('w'));
+    if (nextWpm >= 100 && nextWpm <= 500 && nextWpm % 10 === 0) setWpm(nextWpm);
+  });
 
   const analysis = (() => {
     if (!text.trim()) return null;

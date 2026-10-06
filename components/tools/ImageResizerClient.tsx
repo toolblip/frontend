@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import { readHash } from '@/lib/tool-hash';
+import { useToolHash } from '@/components/tools/useToolHash';
 import { Upload, FileImage } from 'lucide-react';
 import { useSubscription } from '@/hooks/useSubscription';
 import { FileSizeError, UpgradeNotice } from '@/components/FileSizeGuard';
@@ -287,6 +289,17 @@ export default function ImageResizerClient() {
   const [quality, setQuality] = useState(DEFAULT_QUALITY);
   const [result, setResult] = useState<ResizeResult | null>(null);
   const [encoding, setEncoding] = useState(false);
+  useToolHash(
+    { w: String(width), h: String(height), lock: maintain ? '1' : '0', q: String(quality), f: formatChoice },
+    (params) => {
+      if (params.get('lock') === '0') setMaintain(false);
+      if (params.get('lock') === '1') setMaintain(true);
+      const nextQuality = Number(params.get('q'));
+      if (nextQuality >= MIN_QUALITY && nextQuality <= 100) setQuality(nextQuality);
+      const nextFormat = params.get('f');
+      if (nextFormat === 'auto' || nextFormat === 'png' || nextFormat === 'jpeg' || nextFormat === 'webp') setFormatChoice(nextFormat);
+    },
+  );
   const loadId = useRef(0);
   const encodeId = useRef(0);
   const resultUrlRef = useRef('');
@@ -335,7 +348,7 @@ export default function ImageResizerClient() {
     setResult(null);
   };
 
-  const loadFile = (f: File, options: { targetWidth?: number } = {}) => {
+  const loadFile = (f: File, options: { targetWidth?: number; targetHeight?: number } = {}) => {
     const id = ++loadId.current;
     clearResult();
     setLoading(false);
@@ -367,10 +380,15 @@ export default function ImageResizerClient() {
         ? Math.min(sourceDimensions.width, Math.max(1, Math.round(options.targetWidth)))
         : sourceDimensions.width;
       setDimensions(sourceDimensions);
-      setWidth(targetWidth);
-      setHeight(options.targetWidth
-        ? Math.max(1, Math.round(targetWidth * sourceDimensions.height / sourceDimensions.width))
-        : sourceDimensions.height);
+      if (options.targetWidth && options.targetHeight) {
+        setWidth(options.targetWidth);
+        setHeight(options.targetHeight);
+      } else {
+        setWidth(targetWidth);
+        setHeight(options.targetWidth
+          ? Math.max(1, Math.round(targetWidth * sourceDimensions.height / sourceDimensions.width))
+          : sourceDimensions.height);
+      }
       setLoading(false);
       setError('');
     };
@@ -390,7 +408,7 @@ export default function ImageResizerClient() {
     e.target.value = '';
   };
 
-  const loadExample = async () => {
+  const loadExample = async (targetWidth?: number, targetHeight?: number) => {
     const id = ++loadId.current;
     clearResult();
     setLoading(true);
@@ -400,11 +418,14 @@ export default function ImageResizerClient() {
       if (!response.ok) throw new Error('Sample image request failed.');
       const blob = await response.blob();
       if (id !== loadId.current) return;
-      setFormatChoice('auto');
-      setQuality(DEFAULT_QUALITY);
-      setMaintain(true);
+      if (targetWidth === undefined) {
+        setFormatChoice('auto');
+        setQuality(DEFAULT_QUALITY);
+        setMaintain(true);
+      }
       loadFile(new File([blob], IMAGE_RESIZER_SAMPLE_NAME, { type: blob.type || IMAGE_RESIZER_SAMPLE_MIME }), {
-        targetWidth: IMAGE_RESIZER_SAMPLE_TARGET_WIDTH,
+        targetWidth: targetWidth ?? IMAGE_RESIZER_SAMPLE_TARGET_WIDTH,
+        targetHeight,
       });
     } catch {
       if (id !== loadId.current) return;
@@ -412,6 +433,19 @@ export default function ImageResizerClient() {
       setError('The sample image could not be loaded. Try the example again or upload your own image.');
     }
   };
+
+  const sampleStarted = useRef(false);
+  useEffect(() => {
+    if (sampleStarted.current) return;
+    sampleStarted.current = true;
+    const params = readHash(window.location.hash);
+    const nextWidth = Number(params?.get('w'));
+    const nextHeight = Number(params?.get('h'));
+    void loadExample(
+      Number.isFinite(nextWidth) && nextWidth > 0 ? Math.round(nextWidth) : undefined,
+      Number.isFinite(nextHeight) && nextHeight > 0 ? Math.round(nextHeight) : undefined,
+    );
+  }, []);
 
   const clear = () => {
     loadId.current++;

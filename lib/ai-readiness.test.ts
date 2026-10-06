@@ -96,7 +96,7 @@ describe('AI crawler policy', () => {
 });
 
 describe('llms.txt catalog', () => {
-  it('lists only indexable tools and uses the image category path', () => {
+  it('lists only indexable tools and uses the image category path', async () => {
     const full = buildLlmsFullTxt();
     const links = full.split('\n').filter((line) => line.startsWith('- ['));
     expect(links).toHaveLength(publicTools().length);
@@ -106,6 +106,10 @@ describe('llms.txt catalog', () => {
     if (hidden) expect(full).not.toContain(`https://toolblip.com${getToolPath(hidden)}`);
     expect(buildLlmsTxt()).toContain('https://toolblip.com/tools/images');
     expect(buildLlmsTxt()).toContain('/llms-full.txt');
+    expect(buildLlmsTxt()).toContain('https://toolblip.com/blog/llms.txt');
+    expect(config.rewrites).toBeTypeOf('function');
+    const rewrites = await config.rewrites?.();
+    expect(JSON.stringify(rewrites)).toContain('/blog/:slug.md');
   });
 });
 

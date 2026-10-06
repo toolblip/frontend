@@ -2,11 +2,17 @@
 import { useMemo, useState, useRef, useEffect } from 'react';
 import { markdownHtml, previewDocument } from '@/lib/developer-data/browser';
 import { textPdf } from '@/lib/developer-data/pdf';
+import { useToolHash } from '@/components/tools/useToolHash';
 import { Actions, DataShell, TextInput, Result, attempt } from './DataUi';
-export default function MarkdownTool({ pdf = false }: {
+const MARKDOWN_SAMPLE = '# Hello\n\nA **bold** statement.\n\n- One\n- Two';
+export default function MarkdownTool({ pdf = false, initial = pdf ? '' : MARKDOWN_SAMPLE }: {
     pdf?: boolean;
+    initial?: string;
 }) {
-    const [input, setInput] = useState(''), [view, setView] = useState('preview'), [busy, setBusy] = useState(false), [error, setError] = useState('');
+    const [input, setInput] = useState(initial), [view, setView] = useState('preview'), [busy, setBusy] = useState(false), [error, setError] = useState('');
+    useToolHash({ t: input }, (params) => {
+        if (params.has('t')) setInput(params.get('t') ?? '');
+    });
     const version = useRef(0);
     useEffect(() => () => { version.current++; }, []);
     function change(s: string) { version.current++; setInput(s); setBusy(false); setError(''); }

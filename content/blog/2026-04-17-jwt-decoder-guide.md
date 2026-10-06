@@ -206,7 +206,7 @@ This sample has no `exp` claim, so the second log prints `undefined`. If a token
 
 ## Try It Now
 
-The [JWT Decoder on Toolblip](/tools/jwt-decoder) is 100% client-side. Paste any JWT and instantly see the decoded header, payload, and expiration status. No data is sent to any server.
+The [JWT Decoder on Toolblip](/tools/jwt-decoder) decodes the header, payload, and signature in the page. It does not check the signature, and it does not send the token anywhere for that decode.
 
 ---
 

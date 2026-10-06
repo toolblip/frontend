@@ -21,9 +21,8 @@ export const reviewedRelatedTools: Record<ReviewedToolSlug, readonly string[]> =
     "url-encode"
   ],
   "json-formatter": [
-    "jwt-decoder",
-    "markdown-to-html",
-    "regex-tester"
+    "json-tree-view",
+    "jwt-decoder"
   ],
   "regex-tester": [
     "json-formatter",
@@ -36,9 +35,8 @@ export const reviewedRelatedTools: Record<ReviewedToolSlug, readonly string[]> =
     "json-formatter"
   ],
   "base64-encoder-decoder": [
-    "jwt-decoder",
-    "url-encode",
-    "json-formatter"
+    "base64-image-converter",
+    "jwt-decoder"
   ],
   "password-generator": [
     "uuid-generator",

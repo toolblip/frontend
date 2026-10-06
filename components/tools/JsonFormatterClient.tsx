@@ -3,6 +3,7 @@ import { useDataClipboard } from './developer-data/useDataClipboard';
 import ToolExampleClearActions from './ToolExampleClearActions';
 import { parseJson } from '@/lib/developer-data/core';
 
+import { useToolHash } from '@/components/tools/useToolHash';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import ToolContextControls from '@/components/tools/ToolContextControls';
 import { useToolContext } from '@/components/tools/useToolContext';
@@ -44,10 +45,17 @@ function process(input: string, mode: Mode, indent: number): { result: string; e
 }
 
 export default function JsonFormatterClient() {
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState(EXAMPLES[0].data);
   const [mode, setMode] = useState<Mode>('format');
   const [indent, setIndent] = useState(2);
   const [showExamples, setShowExamples] = useState(false);
+  useToolHash({ t: input, m: mode, i: String(indent) }, (params) => {
+    if (params.has('t')) setInput(params.get('t') ?? '');
+    const nextMode = params.get('m');
+    if (nextMode === 'format' || nextMode === 'minify') setMode(nextMode);
+    const nextIndent = Number(params.get('i'));
+    if (nextIndent === 2 || nextIndent === 4) setIndent(nextIndent);
+  });
 
   // Paid-gated saved defaults — only the formatting settings are stored, never input.
   const toolContext = useToolContext<JsonFormatterContext>('json-formatter');

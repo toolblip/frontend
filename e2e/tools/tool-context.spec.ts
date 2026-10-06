@@ -40,14 +40,15 @@ test.describe('Paid saved tool context', () => {
     });
     expect(stored).toEqual({ mode: 'minify', indent: 2 });
 
-    // Reload: the saved setting is restored, the input is not.
-    await page.reload();
+    // The hash keeps the snippet for sharing. Saved context does not, so a
+    // fresh visit restores the sample and the saved mode.
+    await page.goto('/tools/json-formatter');
     await expect(page.getByRole('tab', { name: 'Minify' })).toHaveAttribute('aria-selected', 'true');
-    await expect(page.getByLabel('JSON input')).toHaveValue('');
+    await expect(page.getByLabel('JSON input')).toHaveValue('{"name": "John", "age": 30, "city": "New York"}');
 
     // Clear removes the saved context.
     await page.getByTestId('clear-tool-context').click();
-    await page.reload();
+    await page.goto('/tools/json-formatter');
     await expect(page.getByRole('tab', { name: 'Format' })).toHaveAttribute('aria-selected', 'true');
     const clearedStored = await page.evaluate(() =>
       Object.keys(localStorage).some(
