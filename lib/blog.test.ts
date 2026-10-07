@@ -38,3 +38,14 @@ describe('blog featured images', () => {
     expect(getBlogPost(slug)?.featuredImage).toBe('/images/blog-placeholder.png');
   });
 });
+
+describe('WCAG contrast checklist', () => {
+  it('uses the contrast checker ratios instead of the old failure claims', () => {
+    const content = getBlogPost('2026-04-29-wcag-color-contrast-checklist-browser')?.content ?? '';
+    expect(content).toContain('2.54:1');
+    expect(content).toContain('4.83:1');
+    expect(content).toContain('Inactive text is exempt');
+    expect(content).not.toContain('3.01:1');
+    expect(content).not.toContain('fails AA for normal body text');
+  });
+});
