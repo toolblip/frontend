@@ -23,7 +23,7 @@ Before reaching for a tool, run through this mental checklist on every UI you to
 | AA | 4.5:1 | Body text, labels, form inputs |
 | AAA | 7:1 | Legal text, high-importance labels |
 
-**Why it matters:** This is the most common failure point. Even a well-designed UI with `#999999` text on `#FFFFFF` backgrounds fails AA (ratio: 2.87:1).
+**Why it matters:** This is the most common failure point. Even a well-designed UI with `#999999` text on `#FFFFFF` backgrounds fails AA (ratio: 2.85:1).
 
 ### 2. Large Text (≥ 18pt regular / ≥ 14pt bold)
 
@@ -44,14 +44,14 @@ Before reaching for a tool, run through this mental checklist on every UI you to
 
 ### 4. Active vs Inactive States
 
-Your button looks great in its default state  -  but what about `:disabled`? Does the muted version still pass?
+Your button looks great in its default state  -  but what about `:disabled`? WCAG 1.4.3 does not require a contrast ratio for inactive user-interface text, so a muted disabled label is not an automatic failure.
 
 | State | What to Check |
 |---|---|
 | Default | Does primary text/background meet AA? |
 | Hover | Does hover contrast still meet AA? |
 | Focus | Does focus indicator (usually an outline) meet 3:1 against adjacent colors? |
-| Disabled | Does muted text still meet 4.5:1? |
+| Disabled | Inactive text is exempt from WCAG 1.4.3. A 4.5:1 ratio is not required. |
 | Error | Does error color meet AA for text AND isn't color-alone as the only indicator? |
 
 ### 5. Overlapping Content
@@ -66,20 +66,18 @@ If you have text over images, gradients, or complex backgrounds:
 
 The checklist above tells you what to check. Now here's how to check it in under 30 seconds:
 
-**Toolblip's [Contrast Checker](/tools/contrast-checker)**  -  enter any foreground and background color, get an instant WCAG pass/fail for AA and AAA across normal text, large text, and UI components.
+**Toolblip's [Contrast Checker](/tools/contrast-checker)**  -  enter any foreground and background color. It shows one contrast ratio, to two decimal places, and one level: Fail, AA Large, AA, or AAA.
 
 ```text
-Foreground: #6B7280 (cool gray)
-Background: #FFFFFF (white)
+Foreground: #9CA3AF
+Background: #FFFFFF
 
 Result:
-✗ Normal text (4.5:1 required)  -  3.01:1  -  FAILS AA
-✗ Large text (3:1 required)  -  3.01:1  -  PASSES AA
-✗ UI components (3:1 required)  -  3.01:1  -  PASSES AA
-✗ AAA normal text (7:1 required)  -  3.01:1  -  FAILS AAA
+2.54:1
+Fail
 ```
 
-In this case, `#6B7280` on white looks "close enough" but actually **fails AA for normal body text**. You'd need `#4B5563` (5.89:1) or darker to pass.
+`#9CA3AF` on white is 2.54:1, so it misses the 4.5:1 bar for normal text and the 3:1 bar for large text and UI components. `#6B7280` on the same white is 4.83:1. The checker labels that AA: it passes normal text and does not reach AAA. `#4B5563` on white is 7.56:1, which is AAA.
 
 ## Real-World Contrast Failure Examples
 
@@ -90,7 +88,7 @@ Here are the most common patterns that fail in production UIs:
 ```css
 /* FAILS  -  gray placeholder on white */
 input::placeholder {
-  color: #AAAAAA; /* Ratio: 2.71:1  -  below AA */
+  color: #AAAAAA; /* Ratio: 2.32:1  -  below AA */
 }
 
 /* PASSES */
@@ -107,15 +105,17 @@ Placeholder text counts as text under WCAG. If it's too low-contrast to read, it
 /* FAILS  -  light gray button text */
 button {
   background: #3B82F6;
-  color: #D1D5DB; /* Ratio: 2.71:1  -  fails AA */
+  color: #D1D5DB; /* Ratio: 2.50:1  -  fails AA */
 }
 
-/* PASSES */
+/* PASSES normal text AA */
 button {
-  background: #3B82F6;
-  color: #FFFFFF; /* Ratio: 4.99:1  -  passes AA */
+  background: #1D4ED8;
+  color: #FFFFFF; /* Ratio: 6.70:1  -  passes AA */
 }
 ```
+
+White on `#3B82F6` is only 3.68:1. That passes large text and UI components, and it fails AA for normal-size button labels.
 
 ### 3. Secondary Text in Cards
 
@@ -124,14 +124,14 @@ button {
 .meta {
   color: #9CA3AF;
   background: #F9FAFB;
-  /* Ratio: 2.26:1  -  severe failure */
+  /* Ratio: 2.43:1  -  fails AA */
 }
 
 /* PASSES */
 .meta {
   color: #6B7280;
   background: #F9FAFB;
-  /* Ratio: 3.05:1  -  passes AA */
+  /* Ratio: 4.63:1  -  passes AA */
 }
 ```
 
@@ -178,7 +178,6 @@ Pro tip: if you have dark mode and light mode, test both palettes separately.
 - Focus indicators
 - Border colors on inputs
 - Icon colors (especially if icons carry meaning)
-- Disabled state colors
 
 ### Step 4: Test Real Content
 
@@ -225,13 +224,14 @@ These combinations are reliable starting points for accessible UI:
 | Foreground | Background | Ratio | Passes |
 |---|---|---|---|
 | `#000000` | `#FFFFFF` | 21:1 | AAA |
-| `#1F2937` | `#FFFFFF` | 13.5:1 | AAA |
-| `#374151` | `#FFFFFF` | 9:1 | AAA |
-| `#4B5563` | `#FFFFFF` | 5.9:1 | AA |
-| `#6B7280` | `#FFFFFF` | 3.0:1 | FAIL (normal text) |
-| `#3B82F6` | `#FFFFFF` | 4.9:1 | AA |
-| `#FFFFFF` | `#1F2937` | 13.5:1 | AAA |
-| `#D1D5DB` | `#1F2937` | 7.0:1 | AAA |
+| `#1F2937` | `#FFFFFF` | 14.68:1 | AAA |
+| `#374151` | `#FFFFFF` | 10.31:1 | AAA |
+| `#4B5563` | `#FFFFFF` | 7.56:1 | AAA |
+| `#6B7280` | `#FFFFFF` | 4.83:1 | AA |
+| `#3B82F6` | `#FFFFFF` | 3.68:1 | AA large / UI only |
+| `#FFFFFF` | `#1F2937` | 14.68:1 | AAA |
+| `#D1D5DB` | `#1F2937` | 9.96:1 | AAA |
+| `#9CA3AF` | `#FFFFFF` | 2.54:1 | Fail |
 
 If you're building a design system, start from accessible pairs and adjust from there. It's easier than auditing failures later.
 
