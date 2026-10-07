@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { mkdtemp, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { parseSitemap, groupResults, collect, main } from './gsc-sitemap-inspection.mjs';
+import { parseSitemap, groupResults, collect, main, selectOnly } from './gsc-sitemap-inspection.mjs';
 
 const urls = ['https://toolblip.com/tools/alpha', 'https://toolblip.com/tools/beta', 'https://toolblip.com/tools/gamma'];
 const blogUrls = ['https://toolblip.com/blog/first-post', 'https://toolblip.com/blog/another-2026-post'];
@@ -272,6 +272,33 @@ test('CLI writes separate JSON and Markdown artifacts on partial and sitemap fai
     assert.equal(JSON.parse(await readFile(join(dir, 'report.json'), 'utf8')).sitemap.error, 'HTTP_500');
     assert.ok(!(await readFile(join(dir, 'report.md'), 'utf8')).includes('private-body'));
   } finally { await rm(dir, { recursive: true, force: true }); }
+});
+
+test('one listed URL is inspected and a URL outside the sitemap makes no inspection request', async () => {
+  assert.deepEqual(selectOnly(blogUrls, blogUrls[0]), [blogUrls[0]]);
+  assert.throws(() => selectOnly(blogUrls, 'https://toolblip.com/blog/missing'), /ONLY_URL_NOT_LISTED/);
+  const inspected = [];
+  const report = await collect({
+    sitemap: 'blog',
+    only: blogUrls[1],
+    getToken: async () => 'fixture-token',
+    sleep: async () => {},
+    transport: async (url, init) => {
+      if (init?.method === 'POST') inspected.push(JSON.parse(init.body).inspectionUrl);
+      return response(url.endsWith('.xml') ? xml(blogUrls) : stored('NEUTRAL', 'Not found (404)'));
+    },
+  });
+  assert.deepEqual(inspected, [blogUrls[1]]);
+  assert.equal(report.results.length, 1);
+  assert.equal(report.sitemap.only, blogUrls[1]);
+  const missed = await collect({
+    sitemap: 'blog',
+    only: 'https://toolblip.com/blog/missing',
+    getToken: async () => { throw new Error('must not authenticate'); },
+    transport: async url => response(url.endsWith('.xml') ? xml(blogUrls) : stored('PASS', 'Indexed')),
+  });
+  assert.equal(missed.sitemap.error, 'ONLY_URL_NOT_LISTED');
+  assert.equal(missed.results.length, 0);
 });
 
 test('CLI selects blog and core reports and rejects arbitrary sitemap selectors', async () => {

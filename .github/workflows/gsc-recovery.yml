@@ -16,6 +16,13 @@ on:
           - tools
           - fixed
           - performance
+          - core
+          - url
+      only_url:
+        description: One canonical URL. Required when inspection_group is url, and empty for every other group.
+        type: string
+        required: false
+        default: ''
 
 permissions:
   contents: read
@@ -62,6 +69,7 @@ jobs:
       - name: Collect selected reports with run-level quota stop
         env:
           INSPECTION_GROUP: ${{ inputs.inspection_group || 'all' }}
+          GSC_ONLY_URL: ${{ inputs.only_url }}
           GSC_SERVICE_ACCOUNT: ${{ secrets.GSC_SERVICE_ACCOUNT }}
           GSC_SITE_URL: ${{ vars.GSC_SITE_URL || 'sc-domain:toolblip.com' }}
           GSC_SITEWIDE_URL: ${{ vars.GSC_SITEWIDE_URL || 'sc-domain:toolblip.com' }}
