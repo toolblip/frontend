@@ -21,7 +21,7 @@ const MAX_ERRORS = 20;
 const MAX_IN_FLIGHT = 4;
 const START_INTERVAL_MS = 200;
 const STORED_FIELDS = ['verdict', 'coverageState', 'indexingState', 'robotsTxtState', 'pageFetchState', 'lastCrawlTime', 'userCanonical', 'googleCanonical'];
-const safeError = error => /^(HTTP_\d{3}|REQUEST_FAILED|REQUEST_TIMEOUT|INVALID_JSON_RESPONSE|INVALID_INSPECTION_RESPONSE|INVALID_TOKEN_RESPONSE|AUTH_SIGNING_FAILED|Missing GSC_SERVICE_ACCOUNT|Invalid GSC_SERVICE_ACCOUNT|INVALID_SITEMAP|SITEMAP_TOO_LARGE|INVALID_SITE_URL)$/.test(error?.message ?? '') ? error.message : 'OPERATION_FAILED';
+const safeError = error => /^(HTTP_\d{3}|REQUEST_FAILED|REQUEST_TIMEOUT|INVALID_JSON_RESPONSE|INVALID_INSPECTION_RESPONSE|INVALID_TOKEN_RESPONSE|AUTH_SIGNING_FAILED|Missing GSC_SERVICE_ACCOUNT|Invalid GSC_SERVICE_ACCOUNT|INVALID_SITEMAP|SITEMAP_TOO_LARGE|INVALID_SITE_URL|ONLY_URL_NOT_LISTED)$/.test(error?.message ?? '') ? error.message : 'OPERATION_FAILED';
 const fail = code => { throw new Error(code); };
 const delay = ms => new Promise(done => setTimeout(done, ms));
 
@@ -106,12 +106,24 @@ export function groupResults(results) {
   return counts;
 }
 
-export async function collect({ sitemap = 'tools', env = process.env, now = new Date(), transport = fetch, sleep = delay, getToken = getAccessToken, onProgress = () => {} } = {}) {
+export function selectOnly(urls, only) {
+  if (typeof only !== 'string' || !urls.includes(only)) fail('ONLY_URL_NOT_LISTED');
+  return [only];
+}
+
+export async function collect({ sitemap = 'tools', only, env = process.env, now = new Date(), transport = fetch, sleep = delay, getToken = getAccessToken, onProgress = () => {} } = {}) {
   const selectedUrl = sitemapUrl(sitemap);
   const report = { schemaVersion: 1, generatedAt: now.toISOString(), status: 'complete', sitemap: { cohort: sitemap, url: selectedUrl, count: 0, error: null },
     siteUrl: SITE, inspectionMeaning: "Google's stored index view; not a live test or indexing request.", results: [] };
   let urls;
-  try { urls = await fetchSitemap({ cohort: sitemap, transport }); report.sitemap.count = urls.length; }
+  try {
+    urls = await fetchSitemap({ cohort: sitemap, transport });
+    if (only) {
+      urls = selectOnly(urls, only);
+      report.sitemap.only = only;
+    }
+    report.sitemap.count = urls.length;
+  }
   catch (error) { report.sitemap.error = safeError(error); report.status = 'partial-failure'; report.counts = groupResults(report.results); onProgress({ completed: 0, total: 0, inspected: 0, errors: 0, skipped: 0 }); return report; }
   try { report.siteUrl = siteUrl(env.GSC_SITEWIDE_URL || SITE); }
   catch (error) { report.stopReason = safeError(error); }
@@ -182,7 +194,7 @@ export async function collect({ sitemap = 'tools', env = process.env, now = new 
 export function markdown(report) {
   const cell = value => String(value ?? '—').replace(/[\r\n|]/g, ' ').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   const lines = ['# GSC sitemap URL Inspection', '', `Status: **${report.status}** | Generated: ${report.generatedAt}`,
-    `Sitemap: ${report.sitemap.url} (${report.sitemap.count} validated ${report.sitemap.cohort === 'tools' || !report.sitemap.cohort ? 'tool' : report.sitemap.cohort} URLs)`, report.inspectionMeaning,
+    `Sitemap: ${report.sitemap.url} (${report.sitemap.count} validated ${report.sitemap.cohort === 'tools' || !report.sitemap.cohort ? 'tool' : report.sitemap.cohort} URLs${report.sitemap.only ? `; one listed URL: ${report.sitemap.only}` : ''})`, report.inspectionMeaning,
     'Search Console data can lag a recrawl. A stored verdict is not a guarantee of future indexing.', '',
     `Inspected: ${report.counts.inspected} | Errors: ${report.counts.errors} | Skipped: ${report.counts.skipped}`, '',
     '## Stored verdict counts', '', ...Object.entries(report.counts.verdict).map(([key, count]) => `- ${cell(key)}: ${count}`), '',
@@ -201,14 +213,16 @@ export function markdown(report) {
 export async function main(args = process.argv.slice(2), options = {}) {
   let output;
   let sitemap = 'tools';
+  let only;
   try {
     for (let i = 0; i < args.length; i++) {
       if (args[i] === '--output' && args[i + 1] && !args[i + 1].startsWith('--')) output = args[++i];
       else if (args[i] === '--sitemap' && args[i + 1] && Object.hasOwn(SITEMAPS, args[i + 1])) sitemap = args[++i];
+      else if (args[i] === '--only' && args[i + 1] && !args[i + 1].startsWith('--')) only = args[++i];
       else fail('INVALID_SITEMAP');
     }
     output ??= `test-results/gsc-sitemap-inspection${sitemap === 'tools' ? '' : `-${sitemap}`}`;
-    const report = await collect({ ...options, sitemap, onProgress: counts => {
+    const report = await collect({ ...options, sitemap, only, onProgress: counts => {
       console.log(`GSC sitemap inspection progress: ${counts.completed}/${counts.total} completed, ${counts.inspected} inspected, ${counts.errors} errors, ${counts.skipped} skipped.`);
       options.onProgress?.(counts);
     } });

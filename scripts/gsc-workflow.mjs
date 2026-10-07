@@ -10,6 +10,8 @@ const selected = {
   tools: ['fixed', 'site', 'tools'],
   fixed: ['fixed', 'site'],
   performance: ['site'],
+  core: ['core'],
+  url: ['blog'],
 };
 const paths = {
   fixed: 'test-results/gsc-recovery', site: 'test-results/gsc-site-performance',
@@ -18,9 +20,10 @@ const paths = {
   tools: 'test-results/gsc-sitemap-inspection',
 };
 
-export async function runWorkflow({ group = 'all', event = 'workflow_dispatch', execute }) {
+export async function runWorkflow({ group = 'all', event = 'workflow_dispatch', execute, only = '' }) {
   if (event === 'schedule' || group === 'schedule') group = 'all';
-  if (!Object.hasOwn(selected, group)) throw new Error('Invalid inspection_group');
+  const listed = typeof only === 'string' ? only.trim() : '';
+  if (!Object.hasOwn(selected, group) || (group === 'url') !== Boolean(listed)) throw new Error('Invalid inspection_group');
   const reports = {}, skipped = {}, lines = ['# GSC collection summary', ''];
   let quotaSource;
   for (const name of ['fixed', 'site', 'core', 'blog', 'tools']) {
@@ -39,10 +42,11 @@ export async function runWorkflow({ group = 'all', event = 'workflow_dispatch', 
   return { status: Object.values(reports).every(report => report?.status === 'complete') ? 'complete' : 'partial-failure', reports, skipped, summary: `${lines.join('\n')}\n` };
 }
 
-export async function executeCollector(name, { reportPath = `${paths[name]}/report.json`, spawn = spawnSync } = {}) {
+export async function executeCollector(name, { reportPath = `${paths[name]}/report.json`, spawn = spawnSync, only = (process.env.GSC_ONLY_URL || '').trim() } = {}) {
   const args = name === 'fixed' ? ['scripts/gsc-recovery.mjs']
     : name === 'site' ? ['scripts/gsc-site-performance.mjs']
       : ['scripts/gsc-sitemap-inspection.mjs', '--sitemap', name];
+  if (name === 'blog' && only) args.push('--only', only);
   // Clear this collector's generated artifacts before spawning the child.
   for (const path of [reportPath, reportPath.replace(/\.json$/, '.md')]) {
     try { await unlink(path); }
@@ -60,7 +64,7 @@ export async function executeCollector(name, { reportPath = `${paths[name]}/repo
 }
 
 export async function main(group = process.env.INSPECTION_GROUP || 'all') {
-  const result = await runWorkflow({ group, event: process.env.GITHUB_EVENT_NAME || 'workflow_dispatch', execute: executeCollector });
+  const result = await runWorkflow({ group, event: process.env.GITHUB_EVENT_NAME || 'workflow_dispatch', execute: executeCollector, only: process.env.GSC_ONLY_URL || '' });
   await mkdir('test-results/gsc-workflow', { recursive: true });
   await writeFile('test-results/gsc-workflow/report.json', `${JSON.stringify({ status: result.status, skipped: result.skipped }, null, 2)}\n`);
   await writeFile('test-results/gsc-workflow/report.md', result.summary);

@@ -12,16 +12,18 @@ const expected = {
   tools: ['fixed', 'site', 'tools'],
   fixed: ['fixed', 'site'],
   performance: ['site'],
+  core: ['core'],
+  url: ['blog'],
 };
 
 test('schedule and every manual selection run the intended collectors', async () => {
   for (const [group, names] of Object.entries(expected)) {
     const calls = [];
-    const result = await runWorkflow({ group, execute: async name => { calls.push(name); return { status: 'complete' }; } });
+    const result = await runWorkflow({ group, only: group === 'url' ? 'https://toolblip.com/blog/example' : '', execute: async name => { calls.push(name); return { status: 'complete' }; } });
     assert.deepEqual(calls, names);
     assert.equal(result.status, 'complete');
   }
-  for (const group of ['all', 'blog-core', 'tools', 'fixed', 'performance']) {
+  for (const group of ['all', 'blog-core', 'tools', 'fixed', 'performance', 'core', 'url']) {
     const calls = [];
     await runWorkflow({ event: 'schedule', group, execute: async name => { calls.push(name); return { status: 'complete' }; } });
     assert.deepEqual(calls, expected.all);
@@ -98,6 +100,45 @@ test('429 from fixed, core or blog suppresses later URL Inspection but not site 
     assert.equal(result.skipped.tools, `quota exhausted by ${source}`);
     assert.match(result.summary, /skipped due to HTTP_429/);
   }
+});
+
+test('url selection inspects one listed blog URL and rejects a mismatched only_url', async () => {
+  const calls = [];
+  const result = await runWorkflow({ group: 'url', only: 'https://toolblip.com/blog/example', execute: async name => { calls.push(name); return { status: 'complete' }; } });
+  assert.deepEqual(calls, ['blog']);
+  assert.equal(result.skipped.core, 'not selected');
+  await assert.rejects(runWorkflow({ group: 'url', execute: async () => ({ status: 'complete' }) }), /Invalid inspection_group/);
+  await assert.rejects(runWorkflow({ group: 'core', only: 'https://toolblip.com/blog/example', execute: async () => ({ status: 'complete' }) }), /Invalid inspection_group/);
+});
+
+test('blog collector forwards one listed URL and other collectors do not', async () => {
+  const dir = mkdtempSync(join(tmpdir(), 'gsc-workflow-only-'));
+  const reportPath = join(dir, 'report.json');
+  try {
+    let args;
+    const report = await executeCollector('blog', {
+      reportPath,
+      only: 'https://toolblip.com/blog/example',
+      spawn: (_exe, argv) => {
+        args = argv;
+        writeFileSync(reportPath, JSON.stringify({ status: 'complete' }));
+        return { status: 0 };
+      },
+    });
+    assert.equal(report.status, 'complete');
+    assert.deepEqual(args.slice(-4), ['--sitemap', 'blog', '--only', 'https://toolblip.com/blog/example']);
+    let coreArgs;
+    await executeCollector('core', {
+      reportPath,
+      only: 'https://toolblip.com/blog/example',
+      spawn: (_exe, argv) => {
+        coreArgs = argv;
+        writeFileSync(reportPath, JSON.stringify({ status: 'complete' }));
+        return { status: 0 };
+      },
+    });
+    assert.deepEqual(coreArgs, ['scripts/gsc-sitemap-inspection.mjs', '--sitemap', 'core']);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
 });
 
 test('selection and quota skips are distinct and never called', async () => {
