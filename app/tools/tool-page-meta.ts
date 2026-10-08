@@ -15,6 +15,10 @@ const SEO_TITLE_OVERRIDES: Record<string, string> = {
   'word-counter': 'Word Counter — Free Words, Characters & Reading Time',
   'password-generator': 'Password Generator — Free Strong Random Passwords',
   'image-resizer': 'Image Resizer — Free Exact Pixel Resize',
+  // Next volume tier from the same DataForSEO pack (prefer head terms).
+  'json-formatter': 'JSON Formatter — Free Beautify & Minify',
+  'case-converter': 'Case Converter — Free camelCase, snake_case & More',
+  'regex-tester': 'Regex Tester — Free JavaScript Pattern Tester',
 };
 
 const META_DESCRIPTION_MAX = 160;
