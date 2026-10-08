@@ -27,9 +27,16 @@ for (const mobile of [false, true]) {
       return route.continue();
     });
     await page.goto('/');
-    const strip = page.locator('.tb-v2-footer-badge');
+    const brand = page.locator('.tb-v2-footer-brand');
+    const strip = brand.locator('.tb-v2-footer-badge');
+    await expect(brand.locator('[google-add-preferred-source-btn]')).toHaveCount(1);
+    await expect(page.locator('.tb-v2-footer-grid > .tb-v2-footer-badge')).toHaveCount(0);
     await strip.scrollIntoViewIfNeeded();
     await page.mouse.move(0, 0);
+    // Brand-column strip stays Cloudploy-narrow (21rem → px depends on root font size).
+    const maxWidthPx = await strip.evaluate(el => parseFloat(getComputedStyle(el).maxWidth));
+    expect(maxWidthPx).toBeGreaterThan(200);
+    expect(maxWidthPx).toBeLessThanOrEqual(336);
     const track = page.locator('.tb-v2-directory-track');
     const before = await track.evaluate(el => getComputedStyle(el).transform);
     await expect.poll(() => track.evaluate(el => getComputedStyle(el).transform)).not.toBe(before);
@@ -204,6 +211,7 @@ test('reduced motion keeps a single scrollable set of listings', async ({ page }
   await page.goto('/');
   await expect(page.locator('.tb-v2-directory-track')).toHaveCSS('animation-name', 'none');
   await expect(page.locator('.tb-v2-directory-group[aria-hidden="true"]')).toBeHidden();
+  await expect(page.locator('.tb-v2-footer-badge')).toHaveCSS('overflow-x', 'auto');
   await page.locator(`${group} > a`).last().scrollIntoViewIfNeeded();
   await expect(page.locator(`${group} > a`).last()).toBeInViewport();
 });
@@ -212,7 +220,9 @@ test('text remains available before hydration or with JavaScript disabled', asyn
   const context = await browser.newContext({ baseURL, javaScriptEnabled: false });
   const page = await context.newPage();
   await page.goto('/');
-  const strip = page.locator('.tb-v2-footer-badge');
+  const brand = page.locator('.tb-v2-footer-brand');
+  await expect(brand.locator('a[href="https://www.google.com/preferences/source?q=toolblip.com"]')).toHaveCount(1);
+  const strip = brand.locator('.tb-v2-footer-badge');
   await strip.scrollIntoViewIfNeeded();
   await strip.focus();
   for (const link of await page.locator(`${group} > a`).all()) {
