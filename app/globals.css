@@ -933,16 +933,21 @@ button.tb-v2-mm-more-row-btn {
   color: var(--fg-2); font-size: 14px; max-width: 36ch; line-height: 1.6; margin: 14px 0 0;
 }
 .tb-v2-preferred-source {
+  position: relative;
   align-self: flex-start;
   width: fit-content;
   max-width: 100%;
   margin-top: 16px;
+  min-height: 40px;
 }
 .tb-v2-preferred-source .google-add-preferred-source-btn {
   display: block;
   min-height: 40px;
 }
-.tb-v2-preferred-source noscript a {
+.tb-v2-preferred-source .google-add-preferred-source-btn[data-google-ready] + .tb-v2-preferred-source-fallback {
+  display: none;
+}
+.tb-v2-preferred-source-fallback {
   display: inline-flex;
   align-items: center;
   min-height: 40px;
@@ -952,6 +957,18 @@ button.tb-v2-mm-more-row-btn {
   font-size: 14px;
   font-weight: 500;
   color: var(--fg-0);
+}
+.tb-v2-preferred-source-fallback {
+  position: absolute;
+  inset: 0;
+  width: max-content;
+  max-width: 100%;
+  background: var(--bg);
+  z-index: 0;
+}
+.tb-v2-preferred-source .google-add-preferred-source-btn {
+  position: relative;
+  z-index: 1;
 }
 .tb-v2-footer h2 {
   font-size: 12px; color: var(--fg-1); margin: 0 0 14px;
@@ -1071,6 +1088,11 @@ button.tb-v2-mm-more-row-btn {
 @media (prefers-reduced-motion: reduce) {
   .tb-v2-directory-track { animation: none; }
   .tb-v2-directory-group[aria-hidden="true"] { display: none; }
+  .tb-v2-footer-badge {
+    overflow-x: auto;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
 }
 .tb-v2-footer-meta {
   margin-top: 44px; padding-top: 20px; border-top: 1px solid var(--line);

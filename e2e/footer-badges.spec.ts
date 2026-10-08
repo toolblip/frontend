@@ -211,6 +211,7 @@ test('reduced motion keeps a single scrollable set of listings', async ({ page }
   await page.goto('/');
   await expect(page.locator('.tb-v2-directory-track')).toHaveCSS('animation-name', 'none');
   await expect(page.locator('.tb-v2-directory-group[aria-hidden="true"]')).toBeHidden();
+  await expect(page.locator('.tb-v2-footer-badge')).toHaveCSS('overflow-x', 'auto');
   await page.locator(`${group} > a`).last().scrollIntoViewIfNeeded();
   await expect(page.locator(`${group} > a`).last()).toBeInViewport();
 });

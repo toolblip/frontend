@@ -29,6 +29,7 @@ export default function PreferredSourceButton() {
   const hostRef = useRef<HTMLDivElement>(null);
   const { theme } = useTheme();
   const [isDark, setIsDark] = useState(true);
+  const [googleReady, setGoogleReady] = useState(false);
 
   useEffect(() => {
     setIsDark(resolveIsDark(theme));
@@ -48,22 +49,48 @@ export default function PreferredSourceButton() {
     const host = hostRef.current;
     if (!host) return;
 
+    const markReady = () => {
+      if (host.getAttribute('data-initialized') === 'true' || host.shadowRoot?.childNodes.length) {
+        setGoogleReady(true);
+        return true;
+      }
+      return false;
+    };
+
+    const readyObserver = new MutationObserver(() => {
+      if (markReady()) readyObserver.disconnect();
+    });
+    readyObserver.observe(host, { attributes: true, attributeFilter: ['data-initialized'], childList: true, subtree: true });
+
+    const timeout = window.setTimeout(() => {
+      // Leave the text fallback visible if Google never initializes.
+      markReady();
+    }, 8000);
+
     if (!('IntersectionObserver' in window)) {
       loadPublisherScript();
-      return;
+    } else {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          if (entries.some((entry) => entry.isIntersecting)) {
+            observer.disconnect();
+            loadPublisherScript();
+          }
+        },
+        { rootMargin: '400px' },
+      );
+      observer.observe(host);
+      return () => {
+        observer.disconnect();
+        readyObserver.disconnect();
+        window.clearTimeout(timeout);
+      };
     }
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries.some((entry) => entry.isIntersecting)) {
-          observer.disconnect();
-          loadPublisherScript();
-        }
-      },
-      { rootMargin: '400px' },
-    );
-    observer.observe(host);
-    return () => observer.disconnect();
+    return () => {
+      readyObserver.disconnect();
+      window.clearTimeout(timeout);
+    };
   }, []);
 
   return (
@@ -74,12 +101,18 @@ export default function PreferredSourceButton() {
         // Google’s publisher.js scans for this attribute.
         {...{ 'google-add-preferred-source-btn': '' }}
         data-theme={isDark ? 'dark' : 'light'}
+        data-google-ready={googleReady || undefined}
       />
-      <noscript>
-        <a href={FALLBACK_HREF} target="_blank" rel="noopener noreferrer">
+      {!googleReady ? (
+        <a
+          className="tb-v2-preferred-source-fallback"
+          href={FALLBACK_HREF}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           Add to Preferred Sources
         </a>
-      </noscript>
+      ) : null}
     </div>
   );
 }

@@ -92,11 +92,14 @@ describe('per-tool browser policy', () => {
     }
   });
 
-  it('allows only self frames on implemented sandboxed srcDoc previews', async () => {
+  it('allows self frames on sandboxed srcDoc previews without dropping Preferred Sources hosts', async () => {
     const base = await headers('/');
     for (const path of paths(previews)) {
       const actual = await headers(path);
-      expect(directives(actual['Content-Security-Policy'])).toEqual({ ...directives(base['Content-Security-Policy']), 'frame-src': "'self'" });
+      expect(directives(actual['Content-Security-Policy'])).toEqual({
+        ...directives(base['Content-Security-Policy']),
+        'frame-src': "'self' https://news.google.com https://www.google.com https://accounts.google.com",
+      });
       expect({ ...actual, 'Content-Security-Policy': base['Content-Security-Policy'] }).toEqual(base);
     }
   });
