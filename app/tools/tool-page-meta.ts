@@ -7,7 +7,22 @@ const CUSTOM_OG_IMAGES: Record<string, string> = {
   'punycode-encoder': '/og-punycode-encoder.png',
 };
 
+/**
+ * Document titles for high-volume head terms (DataForSEO 2026-10-08).
+ * H1 stays `tool.name`; this only changes `<title>` / OG / Twitter.
+ */
+const SEO_TITLE_OVERRIDES: Record<string, string> = {
+  'word-counter': 'Word Counter — Free Words, Characters & Reading Time',
+  'password-generator': 'Password Generator — Free Strong Random Passwords',
+  'image-resizer': 'Image Resizer — Free Exact Pixel Resize',
+};
+
 const META_DESCRIPTION_MAX = 160;
+
+function documentTitle(tool: Tool): string {
+  const base = SEO_TITLE_OVERRIDES[tool.slug] ?? tool.name;
+  return `${base} | Toolblip`;
+}
 
 function metaDescription(description: string): string {
   const text = description.replace(/\s+/g, ' ').trim();
@@ -23,9 +38,10 @@ export function buildToolMetadata(tool: Tool): Metadata {
   const ogImage = `https://toolblip.com${CUSTOM_OG_IMAGES[tool.slug] ?? '/og-preview.png'}`;
   const indexable = isToolIndexable(tool.slug);
   const description = metaDescription(tool.description);
+  const title = documentTitle(tool);
 
   return {
-    title: `${tool.name} | Toolblip`,
+    title,
     description,
     keywords: tool.tags,
     alternates: {
@@ -35,7 +51,7 @@ export function buildToolMetadata(tool: Tool): Metadata {
       ? { index: true, follow: true }
       : { index: false, follow: true },
     openGraph: {
-      title: `${tool.name} | Toolblip`,
+      title,
       description,
       url,
       siteName: 'Toolblip',
@@ -43,7 +59,7 @@ export function buildToolMetadata(tool: Tool): Metadata {
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${tool.name} | Toolblip`,
+      title,
       description,
       images: [{ url: ogImage, alt: tool.name }],
     },
