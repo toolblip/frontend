@@ -10,7 +10,7 @@ export const priorityToolLimits: Record<ReviewedToolSlug, string> = {
   'uuid-generator': 'Generates UUID v4 values and keeps the last five. There is no version picker and no bulk count.',
   'markdown-to-html': 'Converts Markdown to HTML in the page. Copy the HTML. There is no HTML file download, syntax highlighting, or task-list checkbox in the preview.',
   'case-converter': 'Converts the text you paste into UPPER, lower, Title, Sentence, camelCase, snake_case, kebab-case, and CONSTANT at the same time.',
-  'word-counter': 'Counts words, characters (with and without spaces), sentences, paragraphs, and lines, plus reading/speaking time. It does not apply platform-weighted character rules—use Character Counter for those caps.',
+  'word-counter': 'Counts words, characters (with and without spaces), sentences, paragraphs, and lines, plus reading/speaking time. For a focused character-only breakdown, use Character Counter.',
   'reading-time-calculator': 'Estimates reading time from the text and the words-per-minute slider. It does not know how fast a specific reader actually reads.',
   'image-resizer': 'Resizes one image to whole-pixel width/height (max 8,192 px per side, 40 megapixels) in the browser. Lock aspect ratio to avoid distortion. It does not crop to a social preset or resize a batch—use Image Cropper or Batch Image Resizer.',
 };

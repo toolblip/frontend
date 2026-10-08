@@ -279,7 +279,7 @@ export const reviewedToolContent: Record<string, ToolContent> = {
       {
         "title": "Estimate reading time on a draft",
         "code": "A 400-word draft → about 2 minutes reading (200 wpm) and about 4 minutes speaking (130 wpm), each rounded up.",
-        "note": "For platform character caps (Twitter, LinkedIn, meta description), use Character Counter. For a custom words-per-minute slider, use Reading Time Calculator."
+        "note": "For a character-only breakdown (total, no spaces, letters, digits), use Character Counter. For a custom words-per-minute slider, use Reading Time Calculator."
       }
     ],
     "features": [

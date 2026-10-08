@@ -495,7 +495,7 @@ const OVERRIDES: Record<string, FAQ[]> = {
   'word-counter': [
     { q: "How are words counted?", a: "Words are separated by whitespace. Sentence counts use punctuation heuristics; results can differ from a language-aware editor." },
     { q: "What do reading and speaking time mean?", a: "Reading time uses 200 words per minute and speaking time uses 130. Both round up to whole minutes. For a custom speed slider, use the Reading Time Calculator." },
-    { q: "Do character counts include spaces?", a: "Both totals are shown. The no-spaces count removes all whitespace. JavaScript string length counts some emoji as more than one character. For Twitter, LinkedIn, or meta-description caps, use Character Counter." },
+    { q: "Do character counts include spaces?", a: "Both totals are shown. The no-spaces count removes all whitespace. JavaScript string length counts some emoji as more than one character. For a character-only breakdown, use Character Counter." },
   ],
   'http-method-tester': [
     { q: 'What is the HTTP Method Tester?', a: 'The HTTP Method Tester is a browser-based HTTP tester for sending GET, POST, PUT, DELETE, and other requests with custom headers and body content.' },
