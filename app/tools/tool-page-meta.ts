@@ -19,6 +19,10 @@ const SEO_TITLE_OVERRIDES: Record<string, string> = {
   'json-formatter': 'JSON Formatter — Free Beautify & Minify',
   'case-converter': 'Case Converter — Free camelCase, snake_case & More',
   'regex-tester': 'Regex Tester — Free JavaScript Pattern Tester',
+  'base64-encoder-decoder': 'Base64 Encode & Decode — Free In-Browser Tool',
+  'uuid-generator': 'UUID Generator — Free Random UUID v4',
+  'jwt-decoder': 'JWT Decoder — Free Inspect Header & Payload',
+  'url-encode': 'URL Encode & Decode — Free Percent Encoding',
 };
 
 const META_DESCRIPTION_MAX = 160;

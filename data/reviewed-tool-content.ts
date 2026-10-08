@@ -124,18 +124,23 @@ export const reviewedToolContent: Record<string, ToolContent> = {
   },
 
   "jwt-decoder": {
-    "description": "Inspect the header, payload and signature text of a three-part JWT. Numeric date claims are shown in UTC, with an expiry status based on your device clock. Decoding does not verify the signature, issuer or audience.",
+    "description": "Free JWT decoder that shows header, payload, and signature text for a three-part token in your browser. Numeric date claims appear in UTC with an expiry status from your device clock—without verifying the signature.",
     "examples": [
       {
         "title": "Inspect a sample token",
-        "code": "Use Example. The header contains alg: HS256 and the payload contains sub: 1234567890.",
-        "note": "The sample has no exp claim. A readable payload or Not expired badge does not prove a token is trusted. Input is limited to 100,000 characters."
+        "code": "Use Example. Header shows alg: HS256; payload shows sub: 1234567890.",
+        "note": "A readable payload or Not expired badge does not prove the token is trusted. Input limit: 100,000 characters."
+      },
+      {
+        "title": "Format claim JSON after decode",
+        "code": "Copy the payload JSON, then open JSON Formatter to beautify nested claims before debugging.",
+        "note": "This page does not verify issuer, audience, or signature. Pair with Base64 Encode/Decode only when you need to inspect a single JWT segment by hand."
       }
     ],
     "features": [
       "Header and payload JSON",
       "UTC claim dates",
-      "Separate copy buttons"
+      "Copy each part separately"
     ]
   },
   "json-formatter": {
@@ -159,27 +164,37 @@ export const reviewedToolContent: Record<string, ToolContent> = {
     ]
   },
   "regex-tester": {
-    "description": "Test a JavaScript regular expression against sample text. Toggle flags, inspect highlighted matches, and read numbered or named capture groups. Enter the pattern without surrounding slashes.",
+    "description": "Free JavaScript regex tester: paste a pattern (no surrounding slashes), toggle flags, and inspect highlighted matches with numbered or named capture groups—all in your browser.",
     "examples": [
       {
         "title": "Find order numbers",
         "code": "Pattern: \\d+\nFlags: g\nText: Order 12 costs 34\nMatches: 12 at index 6; 34 at index 15",
-        "note": "This uses JavaScript regex syntax, not PCRE. Limits: 2,000 pattern characters, 50,000 test characters, 1,000 matches and a 500 ms worker timeout. The detailed list shows the first 100 matches."
+        "note": "JavaScript RegExp only—not Python or PCRE. Limits: 2,000 pattern chars, 50,000 test chars, 1,000 matches, 500 ms worker timeout. The detailed list shows the first 100 matches."
+      },
+      {
+        "title": "Named groups for a slug",
+        "code": "Pattern: (?<kind>blog|docs)/(?<slug>[a-z0-9-]+)\nFlags: g\nText: /blog/hello-world\nGroups: kind=blog, slug=hello-world",
+        "note": "This page tests matches; it does not run replace. For lookahead/lookbehind walkthroughs, open the related tutorial on the page."
       }
     ],
     "features": [
-      "JavaScript regex flags",
+      "JavaScript flags and highlights",
       "Match offsets and capture groups",
-      "Highlighted matches"
+      "No upload, runs locally"
     ]
   },
   "url-encode": {
-    "description": "Encode text for a URL component, such as one query parameter value, or decode percent-encoded text. Spaces become %20. Paste a value rather than a complete URL when you want to preserve the URL structure.",
+    "description": "Free URL encode and decode for a single component value with encodeURIComponent. Spaces become %20. Paste a value—not a full URL—when you need to keep structure intact.",
     "examples": [
       {
         "title": "Encode a search value",
         "code": "Input: café & tea\nOutput: caf%C3%A9%20%26%20tea",
-        "note": "This uses encodeURIComponent and decodeURIComponent. A plus sign is not decoded to a space. Malformed percent escapes and invalid UTF-8 sequences produce an error. Input is limited to 100,000 characters."
+        "note": "A plus sign is not decoded to a space. Malformed percent escapes and invalid UTF-8 produce an error. Input limit: 100,000 characters."
+      },
+      {
+        "title": "Decode a query fragment",
+        "code": "Input: hello%20world%21\nDecode: hello world!",
+        "note": "Switch to Decode mode for one result at a time. For Base64 payloads use Base64 Encode/Decode; for JWT parts use JWT Decoder."
       }
     ],
     "features": [
@@ -189,18 +204,23 @@ export const reviewedToolContent: Record<string, ToolContent> = {
     ]
   },
   "base64-encoder-decoder": {
-    "description": "Encode UTF-8 text as Base64 or decode Base64 back to text. Use Swap to move a result into the opposite mode and check a round trip. This tool handles text, not file uploads or image previews.",
+    "description": "Free Base64 encode and decode for UTF-8 text in your browser. Use Swap to round-trip a result. Text only—images and files belong on Base64 Image Converter.",
     "examples": [
       {
         "title": "Round-trip a greeting",
-        "code": "Encode: Hello, World!\nResult: SGVsbG8sIFdvcmxkIQ==\nDecode that result to recover: Hello, World!",
-        "note": "Base64 is reversible encoding, not encryption. Decoding expects the standard +/ alphabet and valid UTF-8, not arbitrary binary data or Base64URL. Text is limited to 100,000 characters; encoded input has a separate size limit."
+        "code": "Encode: Hello, World!\nResult: SGVsbG8sIFdvcmxkIQ==\nDecode that result → Hello, World!",
+        "note": "Base64 is reversible encoding, not encryption. Expects the standard +/ alphabet and valid UTF-8, not Base64URL or arbitrary binary."
+      },
+      {
+        "title": "Prefer JWT Decoder for tokens",
+        "code": "For a compact three-part JWT, open JWT Decoder. Use this page when you only need UTF-8 text ↔ standard Base64.",
+        "note": "Text limit 100,000 characters; encoded input has a separate size cap. This decoder expects +/ padding, not Base64URL."
       }
     ],
     "features": [
-      "UTF-8 text encoding",
-      "Decode and swap",
-      "Copy output"
+      "UTF-8 text encode/decode",
+      "Swap for round trips",
+      "Runs locally in the browser"
     ]
   },
   "password-generator": {
@@ -224,16 +244,21 @@ export const reviewedToolContent: Record<string, ToolContent> = {
     ]
   },
   "uuid-generator": {
-    "description": "Generate random UUID v4 identifiers using your browser. Keep or remove hyphens, change letter case, and copy one value or the last five generated values. Use these identifiers for test fixtures or record IDs.",
+    "description": "Free UUID generator for random UUID v4 values in your browser. Toggle hyphens and letter case, then copy one ID or the last five from page history—ideal for fixtures and record keys.",
     "examples": [
       {
         "title": "Choose an identifier format",
-        "code": "A UUID v4 has the shape xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx. Turn off Hyphens for 32 hexadecimal characters.",
-        "note": "This page generates version 4 only. UUIDs are identifiers, not passwords or access tokens. The five-item history is held in page memory and disappears on reload."
+        "code": "Shape: xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx. Turn off Hyphens for 32 hex characters; toggle UPPERCASE if your fixture style needs it.",
+        "note": "Version 4 only. UUIDs are identifiers, not passwords—use Password Generator for secrets. History clears on reload."
+      },
+      {
+        "title": "Build a small fixture set",
+        "code": "Generate five times, copy the history list into a test file, then regenerate if you need a fresh set.",
+        "note": "There is no bulk count slider and no UUID v1/v7 picker on this page."
       }
     ],
     "features": [
-      "UUID v4 generation",
+      "UUID v4 from browser crypto",
       "Hyphen and case controls",
       "Five-item history"
     ]
@@ -254,18 +279,23 @@ export const reviewedToolContent: Record<string, ToolContent> = {
     ]
   },
   "case-converter": {
-    "description": "View eight case conversions for the same text, including uppercase, lowercase, title case, sentence case, camelCase, snake_case, kebab-case and CONSTANT_CASE. Copy the result that fits a label or code identifier.",
+    "description": "Free case converter that shows eight outputs at once—UPPER, lower, Title, Sentence, camelCase, snake_case, kebab-case, and CONSTANT_CASE—so you can copy the form that fits a label or identifier.",
     "examples": [
       {
         "title": "Convert a variable name",
-        "code": "Input: Hello World Example\ncamelCase: helloWorldExample\nsnake_case: hello_world_example\nkebab-case: hello-world-example",
-        "note": "Title case capitalizes words without applying an editorial style guide. Sentence mode capitalizes only the first character of the input. Identifier splitting handles whitespace, underscores, hyphens, dots, slashes and lowercase-to-uppercase boundaries; review acronyms and punctuation."
+        "code": "Input: Hello World Example\ncamelCase: helloWorldExample\nsnake_case: hello_world_example\nkebab-case: hello-world-example\nCONSTANT_CASE: HELLO_WORLD_EXAMPLE",
+        "note": "Title case capitalizes words without an editorial style guide. Sentence mode capitalizes only the first input character. Review acronyms after splitting."
+      },
+      {
+        "title": "Normalize an API field name",
+        "code": "Input: user_id\ncamelCase: userId\n→ paste into code, or check length with Word Counter / Character Counter if the label has a UI limit.",
+        "note": "Identifier splitting handles whitespace, underscores, hyphens, dots, slashes, and lowercase-to-uppercase boundaries."
       }
     ],
     "features": [
-      "Eight outputs at once",
+      "Eight conversions at once",
       "Copy each result",
-      "Example and clear controls"
+      "Runs in your browser"
     ]
   },
   "word-counter": {

@@ -526,34 +526,40 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Does the Character Counter work offline?', a: 'Yes. Once this page has loaded, the Character Counter runs entirely in your browser  -  no server calls, no tracking, and no signup.' },
   ],
   'base64-encoder-decoder': [
-    { q: "Does this support files or images?", a: "This page encodes UTF-8 text and decodes Base64 back to UTF-8 text. It has no file upload or image preview." },
+    { q: "Does this support files or images?", a: "This page encodes UTF-8 text and decodes Base64 back to UTF-8 text. It has no file upload or image preview—use Base64 Image Converter for those." },
     { q: "Is Base64 encryption?", a: "No. Anyone can reverse the encoding. It does not protect a secret." },
     { q: "Why does Base64 end in equals signs?", a: "Equals signs pad the final group when the input byte length is not a multiple of three. This decoder expects the standard +/ alphabet, not Base64URL." },
+    { q: "Does my text leave the browser?", a: "No. Encode and decode run locally. For a full three-part JWT, use JWT Decoder instead of decoding segments by hand." },
   ],
   'url-encode': [
     { q: "Should I paste a complete URL?", a: "Encode individual component values when you need to preserve URL structure. This page uses encodeURIComponent, which also escapes URL separators." },
     { q: "Does decoding turn plus into a space?", a: "No. A plus sign stays a plus sign. Spaces encode as %20." },
     { q: "What happens with invalid input?", a: "Malformed percent escapes and invalid UTF-8 sequences produce an error. Input is limited to 100,000 characters." },
+    { q: "When should I use Base64 instead?", a: "Use URL Encode for query and path component values. Use Base64 Encode/Decode for binary-safe text transport, and JWT Decoder for compact tokens." },
   ],
   'uuid-generator': [
     { q: "Which UUID version is generated?", a: "Version 4 only, using browser randomness. You can change letter case and remove hyphens." },
     { q: "Does it keep a history?", a: "It keeps the last five generated values in page memory. Reloading clears them." },
-    { q: "Can I use a UUID as a password?", a: "Use UUIDs as identifiers. Use a password generator for passwords and an appropriate token generator for access tokens." },
+    { q: "Can I use a UUID as a password?", a: "Use UUIDs as identifiers. Use Password Generator for passwords and an appropriate token generator for access tokens." },
+    { q: "Does generation leave my device?", a: "No. UUID v4 values are created with browser cryptographic randomness and stay in the page until you copy them." },
   ],
   'case-converter': [
     { q: "Which conversions are available?", a: "Uppercase, lowercase, title case, sentence case, camelCase, snake_case, kebab-case and CONSTANT_CASE appear together." },
     { q: "Does title case follow an editorial guide?", a: "No. It capitalizes words without rules for short articles or prepositions. Sentence mode capitalizes only the first input character." },
     { q: "How are identifiers split?", a: "Splitting handles whitespace, underscores, hyphens, dots, slashes and lowercase-to-uppercase boundaries. Review acronyms and punctuation before using the result." },
+    { q: "Does my text leave the browser?", a: "No. Conversions run locally. For length checks after renaming labels, use Word Counter or Character Counter." },
   ],
   'regex-tester': [
     { q: "Which regex syntax does it use?", a: "JavaScript regular expressions. Enter a pattern without surrounding slashes and choose flags using the controls." },
     { q: "What are the limits?", a: "2,000 pattern characters, 50,000 test characters and 1,000 matches. A worker stops after 500 ms. The detailed list shows the first 100 matches." },
     { q: "Can I inspect capture groups?", a: "Yes. The result lists match offsets and numbered or named capture groups. This page tests matches; it does not replace text." },
+    { q: "Does my pattern or sample leave the browser?", a: "No. Matching runs in a local worker. There is no Python or PCRE mode on this page." },
   ],
   'jwt-decoder': [
     { q: "Does decoding verify a token?", a: "No. A readable header and payload do not verify the signature, issuer or audience." },
     { q: "How are dates interpreted?", a: "Numeric date claims are displayed in UTC. Expiry status uses your device clock when the token is decoded; it does not continuously recheck an unchanged token." },
     { q: "What input does it accept?", a: "A three-part JWT, up to 100,000 characters. You can copy the header, payload and signature text separately." },
+    { q: "Does my token leave the browser?", a: "No. Decoding runs locally. Copy the payload into JSON Formatter if you need prettier nested claim JSON." },
   ],
   'cron-parser': [
     { q: 'What does the Cron Expression Parser do?', a: 'The Cron Expression Parser takes any 5-field cron expression and shows you what it means in plain English, plus the next five times it will run, so you catch mistakes before you deploy.' },

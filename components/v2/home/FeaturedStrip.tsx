@@ -11,10 +11,10 @@ const FEATURED_SLUGS = [
   'word-counter',
   'password-generator',
   'image-resizer',
+  'case-converter',
   'regex-tester',
   'base64-encoder-decoder',
   'uuid-generator',
-  'url-encode',
 ];
 
 export default function FeaturedStrip() {
