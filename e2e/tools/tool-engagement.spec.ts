@@ -55,7 +55,7 @@ test('tool pages render templated share left, inert views, and favorite hard rig
   expect(redirect.headers().location).toBe(page.url());
   const shareDialog = page.getByRole('dialog', { name: /Share JSON Formatter/i });
   await expect(shareDialog).toBeVisible();
-  await expect(shareDialog).toContainText('JSON Formatter | Toolblip');
+  await expect(shareDialog).toContainText('JSON Formatter — Free Beautify & Minify | Toolblip');
   const shareOnFacebook = shareDialog.getByRole('link', { name: /Share via Facebook/i });
   const shareOnX = shareDialog.getByRole('link', { name: /Share via X/i });
   const shareOnLinkedIn = shareDialog.getByRole('link', { name: /Share via LinkedIn/i });
