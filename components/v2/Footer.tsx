@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import BrandMark from './BrandMark';
 import DirectoryBadgeImage from './DirectoryBadgeImage';
+import PreferredSourceButton from './PreferredSourceButton';
 import ApiStatus from '@/components/ApiStatus';
 import { tools } from '@/data/tools';
 
@@ -276,6 +277,18 @@ export default function Footer() {
               <span>Toolblip</span>
             </div>
             <p>Free browser tools for developers and tinkerers. Most process input in your browser; accounts and some features use online services.</p>
+            <PreferredSourceButton />
+            <div
+              className="tb-v2-footer-badge"
+              role="region"
+              aria-label="Directory listings (scroll to explore)"
+              tabIndex={0}
+            >
+              <div className="tb-v2-directory-track">
+                <DirectoryBadges />
+                <DirectoryBadges duplicate />
+              </div>
+            </div>
           </div>
           <div>
             <h2>Tools</h2>
@@ -311,17 +324,6 @@ export default function Footer() {
               <li><Link href="/privacy">Privacy policy</Link></li>
               <li><Link href="/terms">Terms</Link></li>
             </ul>
-          </div>
-        </div>
-        <div
-          className="tb-v2-footer-badge"
-          role="region"
-          aria-label="Directory listings (scroll to explore)"
-          tabIndex={0}
-        >
-          <div className="tb-v2-directory-track">
-            <DirectoryBadges />
-            <DirectoryBadges duplicate />
           </div>
         </div>
         <div className="tb-v2-footer-meta">

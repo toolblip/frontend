@@ -34,11 +34,14 @@ describe('per-tool browser policy', () => {
     const base = await headers('/');
     expect(base['Permissions-Policy']).toBe('camera=(), microphone=(), geolocation=(), interest-cohort=()');
     expect(directives(base['Content-Security-Policy'])).toEqual({
-      'default-src': "'self'", 'script-src': "'self' 'unsafe-inline' 'unsafe-eval' blob: https://static.cloudflareinsights.com",
+      'default-src': "'self'",
+      'script-src': "'self' 'unsafe-inline' 'unsafe-eval' blob: https://static.cloudflareinsights.com https://news.google.com",
       'style-src': "'self' 'unsafe-inline'", 'img-src': "'self' data: https: blob:",
       'font-src': "'self' data:",
-      'connect-src': "'self' blob: https://toolblip-api-production.up.railway.app https://api.toolblip.com https://*.railway.app https://publish.twitter.com https://publish.x.com https://unavatar.io",
-      'worker-src': "'self' blob:", 'frame-src': "'none'", 'object-src': "'none'",
+      'connect-src': "'self' blob: https://toolblip-api-production.up.railway.app https://api.toolblip.com https://*.railway.app https://publish.twitter.com https://publish.x.com https://unavatar.io https://news.google.com https://www.google.com",
+      'worker-src': "'self' blob:",
+      'frame-src': 'https://news.google.com https://www.google.com https://accounts.google.com',
+      'object-src': "'none'",
       'base-uri': "'self'", 'form-action': "'self'", 'upgrade-insecure-requests': '',
     });
     for (const path of ['/', '/login', '/dashboard', '/api/favicon', '/tools', ...tools.map(getToolPath)]) {
