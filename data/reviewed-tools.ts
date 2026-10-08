@@ -22,7 +22,8 @@ export const reviewedRelatedTools: Record<ReviewedToolSlug, readonly string[]> =
   ],
   "json-formatter": [
     "json-tree-view",
-    "jwt-decoder"
+    "jwt-decoder",
+    "base64-encoder-decoder"
   ],
   "regex-tester": [
     "json-formatter",
@@ -39,8 +40,8 @@ export const reviewedRelatedTools: Record<ReviewedToolSlug, readonly string[]> =
     "jwt-decoder"
   ],
   "password-generator": [
-    "uuid-generator",
-    "jwt-decoder"
+    "password-strength-checker",
+    "uuid-generator"
   ],
   "uuid-generator": [
     "password-generator",
@@ -57,16 +58,16 @@ export const reviewedRelatedTools: Record<ReviewedToolSlug, readonly string[]> =
   ],
   "word-counter": [
     "reading-time-calculator",
-    "case-converter",
-    "markdown-to-html"
+    "character-counter",
+    "case-converter"
   ],
   "reading-time-calculator": [
     "word-counter",
     "case-converter"
   ],
   "image-resizer": [
-    "image-format-converter",
-    "crop",
+    "batch-image-resizer",
+    "image-cropper",
     "image-compressor"
   ]
 };

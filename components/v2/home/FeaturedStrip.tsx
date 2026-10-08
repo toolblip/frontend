@@ -8,11 +8,11 @@ import { IconArrowUR } from '@/components/v2/icons';
 
 const FEATURED_SLUGS = [
   'json-formatter',
-  'base64',
   'word-counter',
-  'regex-tester',
-  'banner-generator',
+  'password-generator',
   'image-resizer',
+  'regex-tester',
+  'base64-encoder-decoder',
   'uuid-generator',
   'url-encode',
 ];

@@ -139,18 +139,23 @@ export const reviewedToolContent: Record<string, ToolContent> = {
     ]
   },
   "json-formatter": {
-    "description": "Format JSON with two or four spaces, or remove whitespace with Minify. Invalid JSON produces an input error. Use this to inspect an API response or check a configuration file before copying it back.",
+    "description": "Free JSON formatter that beautifies with two or four spaces, or minifies whitespace, entirely in your browser. Invalid JSON shows the parser error so you can fix it before copying an API response or config back.",
     "examples": [
       {
-        "title": "Minify a response",
-        "code": "Input: { \"ok\": true, \"items\": [1, 2] }\nOutput: {\"ok\":true,\"items\":[1,2]}",
-        "note": "Use double-quoted keys and strings. Comments and trailing commas are invalid JSON. Limits: 100,000 characters, 10,000 values and 64 nesting levels. Unsafe integer values are rejected; use strings for large IDs."
+        "title": "Beautify a compressed payload",
+        "code": "Input: {\"ok\":true,\"items\":[1,2]}\nFormat (2 spaces):\n{\n  \"ok\": true,\n  \"items\": [1, 2]\n}",
+        "note": "Use double-quoted keys and strings. Comments and trailing commas are invalid JSON. For a collapsible tree, open JSON Tree View after formatting."
+      },
+      {
+        "title": "Minify before shipping",
+        "code": "Input: { \"ok\": true, \"items\": [1, 2] }\nMinify: {\"ok\":true,\"items\":[1,2]}",
+        "note": "Limits: 100,000 characters, 10,000 values and 64 nesting levels. Unsafe integers are rejected; quote large IDs as strings."
       }
     ],
     "features": [
-      "Two or four space indentation",
-      "Format and minify modes",
-      "Copy parsed output"
+      "Beautify with 2 or 4 spaces",
+      "Minify for compact payloads",
+      "Parser errors without uploading"
     ]
   },
   "regex-tester": {
@@ -199,17 +204,22 @@ export const reviewedToolContent: Record<string, ToolContent> = {
     ]
   },
   "password-generator": {
-    "description": "Generate a random password in your browser. Choose a length from 8 to 64 characters and select uppercase letters, lowercase letters, digits or symbols. Each selected character group is represented in the result.",
+    "description": "Free strong random password generator that runs in your browser with cryptographic randomness. Choose length 8–64 and which character groups to include; each selected group appears in the result.",
     "examples": [
       {
         "title": "Create a password without look-alikes",
-        "code": "Set length to 20. Keep letters and digits selected, turn symbols off if the destination requires it, then enable No look-alikes and regenerate.",
-        "note": "No look-alikes excludes O, 0, I, l and 1. Output changes on each generation; do not reuse a published example as a password. The strength label is an estimate based on length and the selected character pool."
+        "code": "Length 20 · uppercase + lowercase + digits · No look-alikes on · symbols off if the site bans them · Generate",
+        "note": "No look-alikes excludes O, 0, I, l and 1. Do not reuse a published sample as a real password. Shareable links keep settings only, never the password."
+      },
+      {
+        "title": "Check a candidate you already have",
+        "code": "Generate here, then open Password Strength Checker to review composition heuristics on a password you typed yourself.",
+        "note": "The on-page strength label is only an estimate from length and character pool. Prefer a unique password per account."
       }
     ],
     "features": [
       "8 to 64 characters",
-      "Selected character groups included",
+      "Guaranteed character groups",
       "Look-alike exclusion"
     ]
   },
@@ -259,17 +269,22 @@ export const reviewedToolContent: Record<string, ToolContent> = {
     ]
   },
   "word-counter": {
-    "description": "Count words, characters, lines and paragraphs as you type. Copy the statistics for a draft or length check. Reading time uses 200 words per minute; speaking time uses 130, both rounded up to whole minutes.",
+    "description": "Free word counter for words, characters, sentences, paragraphs and lines as you type, plus reading and speaking time. Copy the statistics for a draft or length check.",
     "examples": [
       {
         "title": "Check a short sentence",
-        "code": "Input: Hello world.\nWords: 2\nCharacters: 12\nSentences: 1\nParagraphs: 1\nLines: 1",
-        "note": "Words are separated by whitespace. Paragraphs are separated by blank lines; sentence counts use punctuation heuristics. Character counts use JavaScript string length, so some emoji count as more than one. This is not a language-aware text analysis."
+        "code": "Input: Hello world.\nWords: 2 · Characters: 12 · Sentences: 1 · Paragraphs: 1 · Lines: 1",
+        "note": "Words are separated by whitespace. Sentence counts use punctuation heuristics. Character length is JavaScript string length, so some emoji count as more than one."
+      },
+      {
+        "title": "Estimate reading time on a draft",
+        "code": "A 400-word draft → about 2 minutes reading (200 wpm) and about 4 minutes speaking (130 wpm), each rounded up.",
+        "note": "For platform character caps (Twitter, LinkedIn, meta description), use Character Counter. For a custom words-per-minute slider, use Reading Time Calculator."
       }
     ],
     "features": [
-      "Live text statistics",
-      "Counts with and without whitespace",
+      "Live word and character counts",
+      "Reading and speaking time",
       "Copy statistics"
     ]
   },
@@ -289,18 +304,23 @@ export const reviewedToolContent: Record<string, ToolContent> = {
     ]
   },
   "image-resizer": {
-    "description": "Resize one image to exact pixel dimensions in your browser. Keep its aspect ratio or set width and height separately, then choose Auto, PNG, JPEG or WebP output. Preview the result and compare its dimensions and file size before downloading.",
+    "description": "Free image resizer for exact pixel width and height in your browser. Lock aspect ratio or set both sides, choose Auto, PNG, JPEG or WebP, then preview dimensions and file size before download.",
     "examples": [
       {
-        "title": "Make a smaller landscape image",
-        "code": "Load a 1200 × 800 image. Keep the aspect ratio locked and set width to 600 pixels; height becomes 400 pixels. Choose the output format and create the resized result.",
-        "note": "Use whole-pixel dimensions up to 8,192 pixels per side and 40 megapixels total. The input file limit depends on your plan. JPEG flattens transparency onto white. Smaller dimensions do not guarantee a smaller file, and resizing does not preserve animation."
+        "title": "Shrink a landscape photo",
+        "code": "1200 × 800 → lock ratio → width 600 → height becomes 400 → export Auto/JPEG/PNG/WebP and compare bytes.",
+        "note": "Whole-pixel sizes only, max 8,192 px per side and 40 megapixels. Smaller dimensions do not always mean a smaller file. Animation is not preserved."
+      },
+      {
+        "title": "Need crop or many files instead?",
+        "code": "Crop a region with Image Cropper, shrink file size with Image Compressor, or resize up to 20 files with Batch Image Resizer.",
+        "note": "This page stretches one image to the typed size. It does not apply social-media crop presets or batch folders."
       }
     ],
     "features": [
       "Aspect ratio lock",
-      "PNG, JPEG or WebP output",
-      "Result dimensions and size comparison"
+      "PNG, JPEG or WebP export",
+      "Preview size before download"
     ]
   },
   "serp-preview": {
