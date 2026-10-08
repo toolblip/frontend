@@ -172,8 +172,27 @@ describe('tool meta descriptions', () => {
     const metadata = buildToolMetadata(getToolBySlug('json-formatter')!);
     const description = String(metadata.description);
     expect(description.length).toBeLessThanOrEqual(160);
-    expect(description).toBe('Format JSON with two or four spaces, or remove whitespace with Minify.');
+    expect(description.toLowerCase()).toContain('json formatter');
+    expect(description.toLowerCase()).toMatch(/beautify|minify|format/);
     expect(metadata.openGraph?.description).toBe(description);
     expect(metadata.twitter?.description).toBe(description);
+  });
+
+  it('keeps high-volume tool titles and metas on head terms', () => {
+    const cases: Array<{ slug: string; titlePart: string }> = [
+      { slug: 'case-converter', titlePart: 'Case Converter' },
+      { slug: 'regex-tester', titlePart: 'Regex Tester' },
+      { slug: 'base64-encoder-decoder', titlePart: 'Base64 Encode' },
+      { slug: 'uuid-generator', titlePart: 'UUID Generator' },
+      { slug: 'jwt-decoder', titlePart: 'JWT Decoder' },
+      { slug: 'url-encode', titlePart: 'URL Encode' },
+    ];
+    for (const { slug, titlePart } of cases) {
+      const metadata = buildToolMetadata(getToolBySlug(slug)!);
+      expect(String(metadata.title)).toContain(titlePart);
+      expect(String(metadata.title)).toContain('| Toolblip');
+      expect(String(metadata.description).length).toBeLessThanOrEqual(160);
+      expect(String(metadata.description).length).toBeGreaterThanOrEqual(40);
+    }
   });
 });

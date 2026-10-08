@@ -28,7 +28,7 @@ export const reviewedRelatedTools: Record<ReviewedToolSlug, readonly string[]> =
   "regex-tester": [
     "json-formatter",
     "case-converter",
-    "word-counter"
+    "url-encode"
   ],
   "url-encode": [
     "base64-encoder-decoder",
@@ -36,8 +36,9 @@ export const reviewedRelatedTools: Record<ReviewedToolSlug, readonly string[]> =
     "json-formatter"
   ],
   "base64-encoder-decoder": [
-    "base64-image-converter",
-    "jwt-decoder"
+    "jwt-decoder",
+    "url-encode",
+    "base64-image-converter"
   ],
   "password-generator": [
     "password-strength-checker",
@@ -45,6 +46,7 @@ export const reviewedRelatedTools: Record<ReviewedToolSlug, readonly string[]> =
   ],
   "uuid-generator": [
     "password-generator",
+    "jwt-decoder",
     "json-formatter"
   ],
   "markdown-to-html": [
@@ -54,7 +56,8 @@ export const reviewedRelatedTools: Record<ReviewedToolSlug, readonly string[]> =
   ],
   "case-converter": [
     "word-counter",
-    "reading-time-calculator"
+    "character-counter",
+    "regex-tester"
   ],
   "word-counter": [
     "reading-time-calculator",
