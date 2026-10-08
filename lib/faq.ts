@@ -488,13 +488,14 @@ const OVERRIDES: Record<string, FAQ[]> = {
   ],
   'json-formatter': [
     { q: "Does it fix invalid JSON?", a: "No. It shows the parser error. Correct invalid input before formatting; comments and trailing commas are rejected." },
-    { q: "What changes between Format and Minify?", a: "Format adds two or four spaces of indentation. Minify removes insignificant whitespace, keeping spaces inside strings." },
+    { q: "What changes between Format and Minify?", a: "Format (beautify) adds two or four spaces of indentation. Minify removes insignificant whitespace, keeping spaces inside strings." },
     { q: "What limits apply?", a: "Input is limited to 100,000 characters, 10,000 values and 64 nesting levels. Unsafe integers are rejected; quote large identifiers to preserve their digits." },
+    { q: "Does my JSON leave the browser?", a: "No. Formatting and minifying run locally. For a collapsible tree after you fix the JSON, use JSON Tree View." },
   ],
   'word-counter': [
     { q: "How are words counted?", a: "Words are separated by whitespace. Sentence counts use punctuation heuristics; results can differ from a language-aware editor." },
-    { q: "What do reading and speaking time mean?", a: "Reading time uses 200 words per minute and speaking time uses 130. Both round up to whole minutes." },
-    { q: "Do character counts include spaces?", a: "Both totals are shown. The no-spaces count removes all whitespace. JavaScript string length counts some emoji as more than one character." },
+    { q: "What do reading and speaking time mean?", a: "Reading time uses 200 words per minute and speaking time uses 130. Both round up to whole minutes. For a custom speed slider, use the Reading Time Calculator." },
+    { q: "Do character counts include spaces?", a: "Both totals are shown. The no-spaces count removes all whitespace. JavaScript string length counts some emoji as more than one character. For a character-only breakdown, use Character Counter." },
   ],
   'http-method-tester': [
     { q: 'What is the HTTP Method Tester?', a: 'The HTTP Method Tester is a browser-based HTTP tester for sending GET, POST, PUT, DELETE, and other requests with custom headers and body content.' },
@@ -583,9 +584,9 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Does the Color Picker work offline?', a: 'Yes. Once the page has loaded, the Color Picker runs entirely in your browser. Bookmark it and reach for it even without an internet connection.' },
   ],
   'password-generator': [
-    { q: "How is the password generated?", a: "The tool uses browser cryptographic randomness. Each selected character group appears in the result." },
+    { q: "How is the password generated?", a: "The tool uses browser cryptographic randomness. Each selected character group appears in the result. Nothing is uploaded." },
     { q: "What does No look-alikes exclude?", a: "O, 0, I, l and 1. You can also choose uppercase, lowercase, digits and symbols, with a length from 8 to 64." },
-    { q: "What does the strength label mean?", a: "It is an estimate based on length and the selected character pool, not a guarantee. Generate a new password for each account." },
+    { q: "What does the strength label mean?", a: "It is an estimate based on length and the selected character pool, not a guarantee. Generate a new password for each account. To review a password you already typed, use Password Strength Checker." },
   ],
   'hash-generator': [
     { q: 'Which hash algorithms does the Hash Generator support?', a: 'The Hash Generator produces MD5, SHA-1, SHA-256, and SHA-512 hashes simultaneously. SHA hashes are computed via the browser\'s native Web Crypto API; MD5 is computed in pure JavaScript locally. For password hashing specifically, use bcrypt, scrypt, or Argon2 instead.' },
@@ -890,9 +891,10 @@ const OVERRIDES: Record<string, FAQ[]> = {
   'image-resizer': [
     { q: 'Can I resize multiple images at once?', a: 'No. This tool resizes one image at a time. Use the Batch Image Resizer when you need to process several files together.' },
     { q: 'What format does the resized image use?', a: 'Auto keeps JPEG, PNG, or WebP source files in the same format when the browser encoder supports it. You can also choose PNG, JPEG, or WebP explicitly. Other browser-decodable image inputs default to PNG with a note before export.' },
-    { q: 'Will resizing always make the file smaller?', a: 'No. Quality is not a size reduction percent. JPEG and WebP exports start at your maximum quality, then lower quality only if the actual resized file is not smaller. PNG is lossless, so use WebP or JPEG when file size matters.' },
+    { q: 'Will resizing always make the file smaller?', a: 'No. Quality is not a size reduction percent. JPEG and WebP exports start at your maximum quality, then lower quality only if the actual resized file is not smaller. PNG is lossless, so use WebP or JPEG when file size matters. Prefer Image Compressor when you mainly want fewer bytes.' },
     { q: 'Why does it require whole-pixel dimensions?', a: 'Canvas exports have integer pixel sizes, so the tool rejects fractional, zero, and non-finite dimensions before export instead of producing a file whose name does not match its actual size.' },
     { q: 'What size limits apply?', a: 'Output dimensions must be no more than 8192 pixels on either side and no more than 40 megapixels total. Those limits avoid huge browser canvas allocations that can fail or freeze the page.' },
+    { q: 'Does my image leave my device?', a: 'No. Resize runs in a canvas in your browser. For cutting a region instead of scaling the whole image, use Image Cropper.' },
   ],
   'byte-converter': [
     { q: 'What units does it convert between?', a: 'Bytes, kilobytes, megabytes, gigabytes, terabytes, and petabytes, all shown at once from a single input value.' },
