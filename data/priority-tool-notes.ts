@@ -21,4 +21,8 @@ export const priorityToolLimits: Record<ReviewedToolSlug, string> = {
   'lorem-ipsum-generator': 'Classic lorem ipsum by words, sentences, or paragraphs (count 1–100), optional classic opening. Placeholder text only—not a content writer.',
   'image-compressor': 'Compress one JPEG, PNG, or WebP in the browser with a max-quality slider and real byte checks. If no encode is smaller, the original is kept. Not a batch folder compressor.',
   'image-cropper': 'Crop one image with fixed ratio presets (1:1, 16:9, 4:3, 3:2, portrait, passport)—drag to position within the locked ratio, then download PNG. It crops a region—it does not resize the whole frame like Image Resizer.',
+  'code-diff': 'Line-by-line text/code diff of two pasted blocks (LCS). Shows added/removed/context lines and copies plain text with +/- prefixes. Not a structured JSON tree diff—format JSON first if you need comparable layouts.',
+  'unix-timestamp-converter': 'Two-way convert between Unix epoch seconds and a local datetime-local field, with a Local preview string. No separate UTC datetime panel and no milliseconds mode—use whole seconds.',
+  'cron-parser': 'Parses standard 5-field cron (minute–weekday), shows a plain-English description and the next five local run times. Not a visual cron builder—use Cron Expression Generator to construct schedules.',
+  'password-strength-checker': 'Local composition and pattern heuristics plus a random-model bit upper bound. Does not predict crack time or check breach databases—pair with Password Generator for creating new secrets.',
 };

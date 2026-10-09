@@ -952,9 +952,10 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: "What should I know before using it?", a: "TypeScript formatting and minification preserve type annotations and declarations. Downloads keep the .ts extension. Python only reindents existing blocks, and Minify isn't available for Python. HTML formatting uses conservative block boundaries." },
   ],
   'code-diff': [
-    { q: 'What algorithm does it use to compare two code blocks?', a: 'A longest common subsequence (LCS) algorithm, the same class of algorithm behind tools like diff and git diff, which finds the actual minimal set of added and removed lines rather than just flagging any line that moved as changed.' },
-    { q: 'How are additions and removals shown?', a: 'Added lines, removed lines, and unchanged context lines are each shown with a distinct marker, so you can see exactly what changed between the two versions line by line.' },
-    { q: 'Can I copy the diff output?', a: 'Yes, the result copies as plain text with +, -, and space prefixes on each line, a format you can paste elsewhere or include in notes.' },
+    { q: 'What algorithm does it use to compare two code blocks?', a: 'A longest common subsequence (LCS) line diff—the same class of algorithm behind tools like diff and git diff. It compares plain text lines, not a parsed JSON/AST tree.' },
+    { q: 'How are additions and removals shown?', a: 'Added lines, removed lines, and unchanged context lines each get a distinct marker so you can see what changed line by line.' },
+    { q: 'Can I copy the diff output?', a: 'Yes. The result copies as plain text with +, -, and space prefixes on each line—handy for notes or pasting into a review.' },
+    { q: 'Is this a structured JSON diff?', a: 'No. Reordered keys or different whitespace still show as line changes. Beautify both sides with JSON Formatter first if you want cleaner line alignment.' },
   ],
   'code-to-diagram-generator': [
     { q: "What does this tool do?", a: "Generate Mermaid source from ordered lines or simple class and sequence declarations." },

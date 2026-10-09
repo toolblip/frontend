@@ -21,6 +21,11 @@ export const reviewedToolSlugs = [
   "lorem-ipsum-generator",
   "image-compressor",
   "image-cropper",
+  // Wave 2 leftovers + next volume cohort (DataForSEO 2026-10-09).
+  "code-diff",
+  "unix-timestamp-converter",
+  "cron-parser",
+  "password-strength-checker",
 ] as const;
 export type ReviewedToolSlug = typeof reviewedToolSlugs[number];
 export const reviewedRelatedTools: Record<ReviewedToolSlug, readonly string[]> = {
@@ -121,6 +126,26 @@ export const reviewedRelatedTools: Record<ReviewedToolSlug, readonly string[]> =
     "image-resizer",
     "image-compressor",
     "batch-image-resizer"
+  ],
+  "code-diff": [
+    "json-formatter",
+    "regex-tester",
+    "case-converter"
+  ],
+  "unix-timestamp-converter": [
+    "time-zone-converter",
+    "unit-converter",
+    "cron-parser"
+  ],
+  "cron-parser": [
+    "cron-generator",
+    "unix-timestamp-converter",
+    "regex-tester"
+  ],
+  "password-strength-checker": [
+    "password-generator",
+    "hash-identifier",
+    "uuid-generator"
   ]
 };
 export const publishedTutorialTools = {

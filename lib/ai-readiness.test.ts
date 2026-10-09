@@ -192,6 +192,8 @@ describe('tool meta descriptions', () => {
       { slug: 'character-counter', titlePart: 'Character Counter' },
       { slug: 'unix-timestamp-converter', titlePart: 'Unix Timestamp' },
       { slug: 'code-diff', titlePart: 'Code Diff' },
+      { slug: 'cron-parser', titlePart: 'Cron Expression Parser' },
+      { slug: 'password-strength-checker', titlePart: 'Password Strength Checker' },
     ];
     for (const { slug, titlePart } of cases) {
       const metadata = buildToolMetadata(getToolBySlug(slug)!);

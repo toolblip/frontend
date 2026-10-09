@@ -620,6 +620,86 @@ export const reviewedToolContent: Record<string, ToolContent> = {
       "PNG export of the crop",
       "Runs locally in the browser"
     ]
+  },
+  "code-diff": {
+    "description": "Free line-by-line diff checker for two code or text snippets—see additions, removals, and context, then copy the result as plain text.",
+    "examples": [
+      {
+        "title": "Catch a one-line bug",
+        "code": "Original: const answer = 41;\nModified: const answer = 42;\n→ one removed line, one added line",
+        "note": "Comparison is line-oriented LCS, not a structured JSON/AST tree. Reordered object keys still look like line changes."
+      },
+      {
+        "title": "Compare two API payloads cleanly",
+        "code": "Beautify both JSON strings with JSON Formatter first, then paste into Original and Modified",
+        "note": "Whitespace-only churn shrinks when both sides share the same indentation."
+      }
+    ],
+    "features": [
+      "Line-by-line LCS diff",
+      "Copy with +/- prefixes",
+      "Runs locally in the browser"
+    ]
+  },
+  "unix-timestamp-converter": {
+    "description": "Free Unix timestamp converter between epoch seconds and a local datetime field—two-way sync with a Local preview in your browser.",
+    "examples": [
+      {
+        "title": "Epoch to local datetime",
+        "code": "Unix: 1704067200 → local datetime-local + Local preview string",
+        "note": "Uses whole seconds. There is no separate UTC datetime panel on this page."
+      },
+      {
+        "title": "Now shortcut",
+        "code": "Click Now → fills current epoch seconds and updates the local datetime",
+        "note": "Example loads 1704067200 (2024-01-01 00:00:00 UTC as local wall time in the picker)."
+      }
+    ],
+    "features": [
+      "Epoch ↔ local datetime",
+      "Now button",
+      "Copy either side"
+    ]
+  },
+  "cron-parser": {
+    "description": "Free cron expression parser for standard 5-field schedules—plain-English meaning plus the next five local run times in your browser.",
+    "examples": [
+      {
+        "title": "Weekday mornings",
+        "code": "0 9 * * 1-5 → weekdays at 09:00 · next five local runs listed",
+        "note": "When both day-of-month and day-of-week are constrained, classic cron ORs them—the description makes that explicit."
+      },
+      {
+        "title": "Build instead of parse?",
+        "code": "Use Cron Expression Generator for point-and-click schedules, then paste back here to verify next runs",
+        "note": "Five fields only (minute through weekday). No seconds field and no sub-minute cadence."
+      }
+    ],
+    "features": [
+      "Plain-English explanation",
+      "Next five local runs",
+      "Standard 5-field cron"
+    ]
+  },
+  "password-strength-checker": {
+    "description": "Free password strength checker with local composition heuristics and a random-model bit upper bound—nothing leaves your browser.",
+    "examples": [
+      {
+        "title": "Review a passphrase",
+        "code": "Example: correct horse battery staple → score + composition notes + random-model bits",
+        "note": "Random-model bits assume independent random characters. They are not measured entropy of your real password."
+      },
+      {
+        "title": "Need a new password?",
+        "code": "Use Password Generator, then paste the candidate here to review composition heuristics",
+        "note": "This page does not predict crack time or query breach databases."
+      }
+    ],
+    "features": [
+      "Composition heuristics",
+      "Random-model bit estimate",
+      "Local-only checks"
+    ]
   }
 };
 
