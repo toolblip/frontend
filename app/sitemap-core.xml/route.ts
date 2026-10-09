@@ -26,6 +26,9 @@ export async function GET(): Promise<Response> {
     { url: `${baseUrl}/products`, changeFrequency: 'monthly', priority: 0.5 },
     { url: `${baseUrl}/seo`, changeFrequency: 'monthly', priority: 0.5 },
     { url: `${baseUrl}/api-docs`, changeFrequency: 'monthly', priority: 0.5 },
+    { url: `${baseUrl}/donate`, changeFrequency: 'monthly', priority: 0.3 },
+    { url: `${baseUrl}/privacy`, changeFrequency: 'yearly', priority: 0.3 },
+    { url: `${baseUrl}/terms`, changeFrequency: 'yearly', priority: 0.3 },
   ];
 
   return sitemapXmlResponse(entries);
