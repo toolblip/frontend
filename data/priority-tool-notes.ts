@@ -20,5 +20,5 @@ export const priorityToolLimits: Record<ReviewedToolSlug, string> = {
   'unit-converter': 'Convert length, weight, and temperature between common metric/imperial pairs with live results. One category at a time—not a full engineering unit library.',
   'lorem-ipsum-generator': 'Classic lorem ipsum by words, sentences, or paragraphs (count 1–100), optional classic opening. Placeholder text only—not a content writer.',
   'image-compressor': 'Compress one JPEG, PNG, or WebP in the browser with a max-quality slider and real byte checks. If no encode is smaller, the original is kept. Not a batch folder compressor.',
-  'image-cropper': 'Crop one image to freeform or presets (1:1, 16:9, 4:3, 3:2, portrait, passport) and download PNG. It crops a region—it does not resize the whole frame like Image Resizer.',
+  'image-cropper': 'Crop one image with fixed ratio presets (1:1, 16:9, 4:3, 3:2, portrait, passport)—drag to position within the locked ratio, then download PNG. It crops a region—it does not resize the whole frame like Image Resizer.',
 };

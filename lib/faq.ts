@@ -1602,8 +1602,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Will the optimized image always be smaller?', a: 'No. Resizing or changing format can make a file larger. The preview shows the exact output bytes and says when there is no reduction.' },
   ],
   'image-cropper': [
-    { q: 'What preset ratios are available?', a: 'Square 1:1, 16:9, 4:3, 3:2, Portrait 2:3, and Passport 35mm, so you can crop directly to common social, video, or ID photo dimensions.' },
-    { q: 'How do I select the exact area to crop?', a: 'Drag directly on the image to draw a crop rectangle, shown as a semi-transparent overlay you can adjust before cropping.' },
+    { q: 'What preset ratios are available?', a: 'Square 1:1, 16:9, 4:3, 3:2, Portrait 2:3, and Passport 35mm. Every crop stays locked to the selected ratio—there is no freeform unlocked mode.' },
+    { q: 'How do I select the exact area to crop?', a: 'Pick a ratio preset, then drag on the image to position and size the crop while keeping that aspect ratio. A semi-transparent overlay shows the selection before you crop.' },
     { q: 'What happens after I crop?', a: 'The selected region is drawn onto a new canvas at its original resolution and offered as a separate PNG download, leaving your original image untouched.' },
     { q: 'Does my image leave the browser?', a: 'No. Cropping runs in a canvas locally. For scaling the whole image instead of cutting a region, use Image Resizer.' },
   ],
@@ -2204,9 +2204,9 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Does my input leave the browser?', a: 'No. Conversions run locally. For percent math instead of units, use Percentage Calculator.' },
   ],
   'unix-timestamp-converter': [
-    { q: 'What are the two conversion directions it supports?', a: 'A Timestamp to Date mode that turns a Unix timestamp into a readable date, and a Date to Timestamp mode that turns a date and time you pick back into a Unix timestamp, switchable with mode tabs.' },
-    { q: 'Does it account for my local timezone?', a: 'Yes, converting a timestamp to a date shows both a UTC string and a separate local-timezone string side by side, so you can compare the two.' },
-    { q: 'Is there a shortcut for the current time?', a: 'Yes, a "Use current time" button fills in the present moment instantly instead of typing or picking it manually.' },
+    { q: 'What are the two conversion directions it supports?', a: 'Type epoch seconds on the left to fill a local datetime-local field on the right, or pick a local date/time to get epoch seconds back. Both sides stay in sync as you edit.' },
+    { q: 'Does it account for my local timezone?', a: 'Yes. The datetime field and the Local preview use your browser’s local timezone. There is no separate UTC datetime panel on this page—Unix seconds are still absolute epoch values.' },
+    { q: 'Is there a shortcut for the current time?', a: 'Yes. The Now button fills the current epoch seconds and updates the local datetime fields.' },
   ],
   'uptime-calculator': [
     { q: 'How precise is the downtime figure?', a: 'The highlighted period shows allowed downtime to 4 decimal places in minutes, while the grid cells switch to a rounded minutes or hours display depending on which is more readable for that period.' },

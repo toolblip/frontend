@@ -602,7 +602,7 @@ export const reviewedToolContent: Record<string, ToolContent> = {
     ]
   },
   "image-cropper": {
-    "description": "Free image cropper for freeform regions or presets (square, 16:9, 4:3, 3:2, portrait, passport)—download the crop as PNG in your browser.",
+    "description": "Free image cropper with fixed ratio presets (square, 16:9, 4:3, 3:2, portrait, passport)—drag to position within the locked ratio, then download PNG in your browser.",
     "examples": [
       {
         "title": "Square social crop",
@@ -616,7 +616,7 @@ export const reviewedToolContent: Record<string, ToolContent> = {
       }
     ],
     "features": [
-      "Freeform and ratio presets",
+      "Fixed ratio presets",
       "PNG export of the crop",
       "Runs locally in the browser"
     ]
