@@ -36,6 +36,8 @@ const SEO_TITLE_OVERRIDES: Record<string, string> = {
   'image-cropper': 'Image Cropper — Free Crop Image Online',
   'unix-timestamp-converter': 'Unix Timestamp Converter — Free Epoch Time Tool',
   'code-diff': 'Code Diff — Free Diff Checker for Code',
+  'cron-parser': 'Cron Expression Parser — Free Next Run Times',
+  'password-strength-checker': 'Password Strength Checker — Free Local Heuristics',
 };
 
 const META_DESCRIPTION_MAX = 160;

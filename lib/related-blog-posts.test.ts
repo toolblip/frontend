@@ -27,6 +27,10 @@ const priorityTutorials: Record<string, string[]> = {
   'lorem-ipsum-generator': [],
   'image-compressor': ['how-to-optimize-images-without-uploading', 'image-conversion-optimization-guide'],
   'image-cropper': ['2026-08-04-resize-image-for-social-media-dimensions', 'how-to-optimize-images-without-uploading'],
+  'code-diff': [],
+  'unix-timestamp-converter': ['unix-timestamp-converter'],
+  'cron-parser': ['cron-expressions-explained', 'how-to-use-cron-expression-generator'],
+  'password-strength-checker': [],
 };
 
 function renderToolPosts(slug: string) {
