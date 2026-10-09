@@ -7,14 +7,14 @@ import { getToolPath } from '@/lib/tool-path';
 import { IconArrowUR } from '@/components/v2/icons';
 
 const FEATURED_SLUGS = [
-  'json-formatter',
+  'qr-code-generator',
+  'percentage-calculator',
+  'character-counter',
+  'color-picker',
   'word-counter',
   'password-generator',
   'image-resizer',
-  'case-converter',
-  'regex-tester',
-  'base64-encoder-decoder',
-  'uuid-generator',
+  'json-formatter',
 ];
 
 export default function FeaturedStrip() {

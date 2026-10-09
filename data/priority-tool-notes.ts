@@ -8,9 +8,9 @@ export const priorityToolLimits: Record<ReviewedToolSlug, string> = {
   'base64-encoder-decoder': 'Encode/decode UTF-8 text as standard Base64 in the browser. No file upload, no Base64URL switch—use Base64 Image Converter for images and JWT Decoder for full tokens.',
   'password-generator': 'Builds a strong random password in the browser (length 8–64, chosen character sets). Shareable links keep settings only, never the password. Pair with Password Strength Checker to review a typed candidate.',
   'uuid-generator': 'Generates UUID v4 values with hyphen/case toggles and keeps the last five in page memory. No version picker and no bulk count—use Password Generator for secrets.',
-  'markdown-to-html': 'Converts Markdown to HTML in the page. Copy the HTML. There is no HTML file download, syntax highlighting, or task-list checkbox in the preview.',
+  'markdown-to-html': 'Converts Markdown to sanitized HTML with a live preview (100,000-character input). Copy the HTML—there is no file download, syntax highlighting, or task-list checkbox in the preview.',
   'case-converter': 'Shows eight case forms at once (UPPER, lower, Title, Sentence, camelCase, snake_case, kebab-case, CONSTANT). Copy one result; it does not apply editorial title-case style guides.',
   'word-counter': 'Counts words, characters (with and without spaces), sentences, paragraphs, and lines, plus reading/speaking time. For a focused character-only breakdown, use Character Counter.',
-  'reading-time-calculator': 'Estimates reading time from the text and the words-per-minute slider. It does not know how fast a specific reader actually reads.',
+  'reading-time-calculator': 'Estimates reading time from word count and a 100–500 wpm slider (default 200). It does not measure a specific reader’s speed—pair with Word Counter for full draft stats.',
   'image-resizer': 'Resizes one image to whole-pixel width/height (max 8,192 px per side, 40 megapixels) in the browser. Lock aspect ratio to avoid distortion. It does not crop to a social preset or resize a batch—use Image Cropper or Batch Image Resizer.',
 };
