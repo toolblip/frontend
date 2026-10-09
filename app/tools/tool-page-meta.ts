@@ -15,7 +15,7 @@ const SEO_TITLE_OVERRIDES: Record<string, string> = {
   'word-counter': 'Word Counter — Free Words, Characters & Reading Time',
   'password-generator': 'Password Generator — Free Strong Random Passwords',
   'image-resizer': 'Image Resizer — Free Exact Pixel Resize',
-  // Next volume tier from the same DataForSEO pack (prefer head terms).
+  // Wave 1 head terms (DataForSEO 2026-10-08).
   'json-formatter': 'JSON Formatter — Free Beautify & Minify',
   'case-converter': 'Case Converter — Free camelCase, snake_case & More',
   'regex-tester': 'Regex Tester — Free JavaScript Pattern Tester',
@@ -23,6 +23,17 @@ const SEO_TITLE_OVERRIDES: Record<string, string> = {
   'uuid-generator': 'UUID Generator — Free Random UUID v4',
   'jwt-decoder': 'JWT Decoder — Free Inspect Header & Payload',
   'url-encode': 'URL Encode & Decode — Free Percent Encoding',
+  'reading-time-calculator': 'Reading Time Calculator — Free Words-Per-Minute Estimate',
+  'markdown-to-html': 'Markdown to HTML — Free Converter With Preview',
+  // Wave 2 head terms (DataForSEO 2026-10-09).
+  'qr-code-generator': 'QR Code Generator — Free Custom QR Codes',
+  'percentage-calculator': 'Percentage Calculator — Free Percent Math',
+  'color-picker': 'Color Picker — Free HEX, RGB & HSL',
+  'character-counter': 'Character Counter — Free Count Characters Online',
+  'unit-converter': 'Unit Converter — Free Length, Weight & More',
+  'image-compressor': 'Image Compressor — Free Compress Images Online',
+  'lorem-ipsum-generator': 'Lorem Ipsum Generator — Free Placeholder Text',
+  'image-cropper': 'Image Cropper — Free Crop Image Online',
 };
 
 const META_DESCRIPTION_MAX = 160;

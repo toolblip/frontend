@@ -519,11 +519,10 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Is the MKV Compressor free?', a: 'Yes. It is a free online MKV compressor with no signup required.' },
   ],
   'character-counter': [
-    { q: 'What is the Character Counter?', a: 'The Character Counter is a free online tool that counts characters and words and tracks your progress against four built-in limits: Tweet/X (280), LinkedIn (3,000), Meta Description (160), and Google Title (60). Perfect for writing content that has to fit.' },
-    { q: 'Does the Character Counter count spaces?', a: 'Yes. It displays totals both with and without spaces, so you can match whatever limit a platform enforces.' },
-    { q: 'What Twitter/X character limit does the Character Counter use?', a: 'The Character Counter uses 280 characters, the default Twitter/X limit for free accounts. Premium accounts allow longer posts, but the bar still warns you whenever you cross 280 because that is the limit non-Premium followers see.' },
-    { q: 'Is meta description length really capped at 160?', a: 'Google truncates meta descriptions around 155–160 characters on desktop and around 120 on mobile. The Character Counter uses 160 as a safe upper bound for SEO.' },
-    { q: 'Does the Character Counter work offline?', a: 'Yes. Once this page has loaded, the Character Counter runs entirely in your browser  -  no server calls, no tracking, and no signup.' },
+    { q: 'What is the Character Counter?', a: 'It counts characters in your browser: total length, without spaces, without newlines, letters only, and digits only. It does not show platform-specific limit bars.' },
+    { q: 'Does the Character Counter count spaces?', a: 'Yes. Totals are shown with and without spaces (and without newlines) so you can compare against whatever limit you are targeting yourself.' },
+    { q: 'Does it enforce Twitter, LinkedIn, or meta-description caps?', a: 'No. Those platform rules are not built into this page. Use the live totals and compare them to the limit you care about.' },
+    { q: 'Does my text leave the browser?', a: 'No. Counting runs locally after the page loads—no upload and no signup. For words, sentences, and reading time together, use Word Counter.' },
   ],
   'base64-encoder-decoder': [
     { q: "Does this support files or images?", a: "This page encodes UTF-8 text and decodes Base64 back to UTF-8 text. It has no file upload or image preview—use Base64 Image Converter for those." },
@@ -631,6 +630,7 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: "Which Markdown features are supported?", a: "Headings, lists, links, fenced code and GitHub-style tables. Check the preview for the output you intend to publish." },
     { q: "Is raw HTML passed through unchanged?", a: "No. The output is sanitized to remove scripts and unsafe markup. Review the result for your destination before publishing." },
     { q: "Can the preview make network requests?", a: "Conversion runs locally, but the preview can load HTTPS images referenced in the input. It is not an offline-only renderer." },
+    { q: "Does my Markdown leave the browser?", a: "No. Conversion runs locally. Input is limited to 100,000 characters; there is no HTML file download from this page." },
   ],
   'yaml-to-json': [
     { q: 'What\'s the difference between YAML and JSON?', a: 'They describe the same shape of data  -  objects, arrays, strings, numbers, booleans, null. YAML is friendlier to read and supports comments; JSON is stricter and more universal as an interchange format. Most config files in modern tooling are YAML; most APIs speak JSON.' },
@@ -1912,6 +1912,7 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: "How is the displayed time rounded?", a: "The total estimate rounds to the nearest second, then divides into minutes and seconds. For example, 199 words at 200 wpm displays 1m 0s." },
     { q: "Does it detect difficult text?", a: "No. It divides whitespace-separated word count by your chosen speed. Images, diagrams and text complexity are not included." },
     { q: "What separates paragraphs?", a: "Two or more consecutive line breaks separate paragraphs. A single line break stays within the same paragraph." },
+    { q: "Does my text leave the browser?", a: "No. Estimates run locally. For words, sentences, and paragraphs together, use Word Counter." },
   ],
   'reading-time-estimator': [
     { q: 'What reading speed does it assume before I touch the slider?', a: 'It starts at 200 words per minute, before you drag the slider anywhere from 100 to 500 to match your own pace.' },

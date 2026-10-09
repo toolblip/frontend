@@ -264,18 +264,23 @@ export const reviewedToolContent: Record<string, ToolContent> = {
     ]
   },
   "markdown-to-html": {
-    "description": "Convert Markdown to sanitized HTML and inspect it in a preview. Try headings, lists, links, fenced code or GitHub-style tables, then copy the HTML for your publishing workflow.",
+    "description": "Free Markdown to HTML converter with a sanitized live preview. Try headings, lists, links, fenced code, or GitHub-style tables, then copy the HTML for publishing—all in your browser.",
     "examples": [
       {
         "title": "Convert a heading and emphasis",
         "code": "# Hello\n\nA **bold** statement.\n\nHTML:\n<h1>Hello</h1>\n<p>A <strong>bold</strong> statement.</p>",
-        "note": "Raw HTML is sanitized, so scripts and unsafe markup are removed. Input is limited to 100,000 characters. The preview can load HTTPS images referenced by your Markdown; it is not an offline-only renderer."
+        "note": "Raw HTML is sanitized, so scripts and unsafe markup are removed. Input limit: 100,000 characters."
+      },
+      {
+        "title": "Check length after convert",
+        "code": "Copy the HTML, then open Character Counter or Word Counter if a CMS field has a length limit on the rendered text.",
+        "note": "The preview can load HTTPS images from your Markdown; it is not an offline-only renderer. There is no HTML file download."
       }
     ],
     "features": [
-      "Rendered preview",
-      "Sanitized HTML output",
-      "GitHub-style Markdown"
+      "Live sanitized preview",
+      "GitHub-style Markdown",
+      "Copy HTML output"
     ]
   },
   "case-converter": {
@@ -319,12 +324,17 @@ export const reviewedToolContent: Record<string, ToolContent> = {
     ]
   },
   "reading-time-calculator": {
-    "description": "Estimate reading time from the word count and a speed you choose. Adjust the slider from 100 to 500 words per minute to model a slower or faster reader. The default is 200 words per minute.",
+    "description": "Free reading time calculator from word count and a words-per-minute speed you choose (100–500; default 200). Model a slower or faster reader before you publish.",
     "examples": [
       {
         "title": "Estimate a draft at two speeds",
-        "code": "A 600-word draft takes 3 minutes at 200 wpm, or 4 minutes at 150 wpm.",
-        "note": "Words are separated by whitespace. This estimate does not detect text complexity or include time spent studying images and diagrams. Choose a speed that fits your audience and check the result against a real reading session."
+        "code": "A 600-word draft → 3 minutes at 200 wpm, or 4 minutes at 150 wpm.",
+        "note": "Words are separated by whitespace. This estimate does not score complexity or time spent on images."
+      },
+      {
+        "title": "Pair with Word Counter",
+        "code": "Paste the same draft into Word Counter for sentences and paragraphs, then tune WPM here for audience-specific reading time.",
+        "note": "The slider does not know how fast a specific person reads—pick a speed that matches your audience and verify with a real read."
       }
     ],
     "features": [
