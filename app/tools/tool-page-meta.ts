@@ -34,6 +34,8 @@ const SEO_TITLE_OVERRIDES: Record<string, string> = {
   'image-compressor': 'Image Compressor — Free Compress Images Online',
   'lorem-ipsum-generator': 'Lorem Ipsum Generator — Free Placeholder Text',
   'image-cropper': 'Image Cropper — Free Crop Image Online',
+  'unix-timestamp-converter': 'Unix Timestamp Converter — Free Epoch Time Tool',
+  'code-diff': 'Code Diff — Free Diff Checker for Code',
 };
 
 const META_DESCRIPTION_MAX = 160;

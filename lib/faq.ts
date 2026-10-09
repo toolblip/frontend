@@ -524,6 +524,11 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Does it enforce Twitter, LinkedIn, or meta-description caps?', a: 'No. Those platform rules are not built into this page. Use the live totals and compare them to the limit you care about.' },
     { q: 'Does my text leave the browser?', a: 'No. Counting runs locally after the page loads—no upload and no signup. For words, sentences, and reading time together, use Word Counter.' },
   ],
+  'percentage-calculator': [
+    { q: 'Which percentage problems can it solve?', a: 'Five modes: find a percentage of a number, percentage change between two values, discount price, tip with optional split, and markup from cost.' },
+    { q: 'Does it show the formula?', a: 'Yes. The active mode shows the arithmetic next to the result so you can check the steps.' },
+    { q: 'Does my data leave the browser?', a: 'No. Calculations run locally. For converting units instead of percents, use Unit Converter.' },
+  ],
   'base64-encoder-decoder': [
     { q: "Does this support files or images?", a: "This page encodes UTF-8 text and decodes Base64 back to UTF-8 text. It has no file upload or image preview—use Base64 Image Converter for those." },
     { q: "Is Base64 encryption?", a: "No. Anyone can reverse the encoding. It does not protect a secret." },
@@ -575,16 +580,16 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Is it OK to use Lorem Ipsum in a real product?', a: 'Only during design and prototyping. Ship with real copy  -  Lorem Ipsum left in production is the sort of thing that ends up on social media.' },
   ],
   'qr-code-generator': [
-    { q: 'What can I encode with the QR Code Generator?', a: 'Anything that fits in a string  -  URLs are the most common, but plain text, WiFi credentials in the standard `WIFI:` format, vCard contact details, SMS templates, and email links all work. Type or paste the value, click Generate, and download the result.' },
+    { q: 'What can I encode with the QR Code Generator?', a: 'Four modes: URL, plain text, WiFi (`WIFI:` payload), and vCard contact details. Pick a type, fill the fields, generate, then download PNG or SVG.' },
     { q: 'Can I download the QR code as SVG?', a: 'Yes. The QR Code Generator exports both PNG (for quick sharing) and SVG (for print and scalable designs). SVG files stay crisp at any size, which is the right choice for posters and packaging.' },
     { q: 'Does the QR Code Generator track what I encode?', a: 'No. Everything is generated client-side, so the URLs, passwords, or contact details you encode never leave your browser. This is especially important for WiFi QR codes, which contain your network password.' },
     { q: 'How large should my QR code be for a poster?', a: "A good rule of thumb is that the QR code's size should be 1/10th the scanning distance  -  so a poster scanned from 2 meters needs a code at least 20 cm square. Pick the XL size and the SVG export to keep edges sharp at print resolution." },
     { q: 'What size should I pick?', a: 'S (128 px) is fine for a thumbnail or inline doc. M (256 px) is the safe default for the web. L and XL (512 / 1024 px) are for print, posters, or anything that will be scaled up further. The QR Code Generator keeps the contents identical across sizes.' },
   ],
   'color-picker': [
-    { q: 'What formats does the Color Picker output?', a: 'HEX (6-digit), HEX 3 (the shorthand form when applicable), RGB, and HSL. Each value is copy-ready for CSS, design tools, or code.' },
-    { q: 'How do I pick a color?', a: 'Click the color swatch on the left to open your browser\'s native color picker, drag through the spectrum, or type a HEX value directly. The other formats update live.' },
-    { q: 'Does the Color Picker check accessibility?', a: 'Yes. The Color Picker shows the WCAG contrast result for the picked color against white, with an AAA / AA / Fail badge so you can quickly tell whether the color is safe to use as text or a UI element on a white background.' },
+    { q: 'What formats does the Color Picker output?', a: 'HEX (6-digit), RGB, and HSL. Each value is copy-ready for CSS or design tools. There is no CMYK output on this page.' },
+    { q: 'How do I pick a color?', a: 'Click the color swatch to open your browser\'s native color picker, or type a 6-digit HEX value. The other formats update live.' },
+    { q: 'Does the Color Picker check accessibility?', a: 'It shows a WCAG AA / AAA / Fail badge for the picked color against white only. For arbitrary foreground and background pairs, use Contrast Checker.' },
     { q: "What's the difference between HSL and RGB?", a: 'RGB mixes red, green, and blue channels  -  how screens physically produce color. HSL thinks in terms of hue (which color), saturation (how vivid), and lightness (how bright), which matches how designers talk about color. Both describe the same values; HSL is just easier to reason about.' },
     { q: 'Does the Color Picker work offline?', a: 'Yes. Once the page has loaded, the Color Picker runs entirely in your browser. Bookmark it and reach for it even without an internet connection.' },
   ],
@@ -1600,6 +1605,7 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'What preset ratios are available?', a: 'Square 1:1, 16:9, 4:3, 3:2, Portrait 2:3, and Passport 35mm, so you can crop directly to common social, video, or ID photo dimensions.' },
     { q: 'How do I select the exact area to crop?', a: 'Drag directly on the image to draw a crop rectangle, shown as a semi-transparent overlay you can adjust before cropping.' },
     { q: 'What happens after I crop?', a: 'The selected region is drawn onto a new canvas at its original resolution and offered as a separate PNG download, leaving your original image untouched.' },
+    { q: 'Does my image leave the browser?', a: 'No. Cropping runs in a canvas locally. For scaling the whole image instead of cutting a region, use Image Resizer.' },
   ],
   'image-flip-tool': [
     { q: 'What flip directions are available?', a: 'Horizontal, Vertical, or Both, each applied with a canvas transform so the flip renders instantly without any quality loss.' },
@@ -2195,6 +2201,7 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Which categories of units can I convert?', a: 'Three tabs cover length (meters, feet, kilometers, miles, and more), weight, and temperature (Celsius, Fahrenheit, Kelvin), each with its own set of conversion pairs to pick from.' },
     { q: 'Does the result update as I type?', a: 'Yes, typing a number into the input field recalculates the converted value instantly, with no separate convert button to click.' },
     { q: 'Can I switch which units I am converting between?', a: 'Yes, each category shows a row of conversion pair tabs, like Meters to Feet or Celsius to Fahrenheit, and clicking a different pair swaps the active conversion.' },
+    { q: 'Does my input leave the browser?', a: 'No. Conversions run locally. For percent math instead of units, use Percentage Calculator.' },
   ],
   'unix-timestamp-converter': [
     { q: 'What are the two conversion directions it supports?', a: 'A Timestamp to Date mode that turns a Unix timestamp into a readable date, and a Date to Timestamp mode that turns a date and time you pick back into a Unix timestamp, switchable with mode tabs.' },

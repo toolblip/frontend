@@ -186,6 +186,12 @@ describe('tool meta descriptions', () => {
       { slug: 'uuid-generator', titlePart: 'UUID Generator' },
       { slug: 'jwt-decoder', titlePart: 'JWT Decoder' },
       { slug: 'url-encode', titlePart: 'URL Encode' },
+      { slug: 'qr-code-generator', titlePart: 'QR Code Generator' },
+      { slug: 'percentage-calculator', titlePart: 'Percentage Calculator' },
+      { slug: 'color-picker', titlePart: 'Color Picker' },
+      { slug: 'character-counter', titlePart: 'Character Counter' },
+      { slug: 'unix-timestamp-converter', titlePart: 'Unix Timestamp' },
+      { slug: 'code-diff', titlePart: 'Code Diff' },
     ];
     for (const { slug, titlePart } of cases) {
       const metadata = buildToolMetadata(getToolBySlug(slug)!);

@@ -459,5 +459,167 @@ export const reviewedToolContent: Record<string, ToolContent> = {
       "Escaped pipes and line breaks",
       "Copy and Markdown file download"
     ]
+  },
+
+  "qr-code-generator": {
+    "description": "Free QR code generator for URLs, text, WiFi, and vCards in your browser. Choose size, download PNG or SVG—nothing is uploaded.",
+    "examples": [
+      {
+        "title": "Link QR for a page",
+        "code": "Type: URL\nText: https://toolblip.com\nSize: 256 → Download PNG or SVG",
+        "note": "URL and text modes encode the string you enter. Prefer HTTPS links when the scan should open a site."
+      },
+      {
+        "title": "Guest WiFi without typing the password",
+        "code": "Type: WiFi · SSID · Security WPA · Password → Generate → guests scan to join",
+        "note": "The WiFi payload includes the password you type. Generation stays in the browser; clear the page when you are done."
+      }
+    ],
+    "features": [
+      "URL, text, WiFi, and vCard modes",
+      "PNG and SVG download",
+      "Sizes from 128 to 1024 px"
+    ]
+  },
+  "percentage-calculator": {
+    "description": "Free percentage calculator with separate modes for part-to-whole percent, percentage change, discounts, tips, and markup—each with the arithmetic shown.",
+    "examples": [
+      {
+        "title": "What is 15% of 80?",
+        "code": "Mode: Percentage · 15% of 80 → 12 (0.15 × 80)",
+        "note": "Switch modes with the tabs. Only the active mode’s inputs are used."
+      },
+      {
+        "title": "Tip split three ways",
+        "code": "Mode: Tip · bill + 18% tip · 3 people → tip total and per-person share",
+        "note": "Tip presets are shortcuts; you can type a custom tip percent. Markup and discount are separate modes."
+      }
+    ],
+    "features": [
+      "Five calculation modes",
+      "Formula shown with the result",
+      "Runs locally in the browser"
+    ]
+  },
+  "color-picker": {
+    "description": "Free color picker for HEX, RGB, and HSL with a live swatch and a WCAG contrast check against white—copy any format for CSS or design tools.",
+    "examples": [
+      {
+        "title": "Match a brand blue",
+        "code": "HEX: #0EA5E9\nRGB: rgb(14, 165, 233)\nHSL: hsl(199, 89%, 48%)",
+        "note": "Type a 6-digit HEX or use the native color control. There is no CMYK output on this page."
+      },
+      {
+        "title": "Quick contrast vs white",
+        "code": "Picked color on #ffffff → AA / AAA / Fail badge for normal text",
+        "note": "Contrast is measured against white only. For arbitrary foreground/background pairs, use Contrast Checker."
+      }
+    ],
+    "features": [
+      "HEX, RGB, and HSL values",
+      "Copy each format",
+      "WCAG badge vs white"
+    ]
+  },
+  "character-counter": {
+    "description": "Free character counter for total length, counts without spaces or newlines, plus letters and digits—live as you type in your browser.",
+    "examples": [
+      {
+        "title": "Count a short line",
+        "code": "Input: The quick brown fox jumps over 2 lazy dogs.\nTotal / no spaces / letters / digits update live",
+        "note": "JavaScript string length counts some emoji as more than one character."
+      },
+      {
+        "title": "Draft vs a limit you choose",
+        "code": "Paste your draft, read Total Characters, compare to your own cap (tweet, title, CMS field)",
+        "note": "This page does not draw Twitter, LinkedIn, or meta-description bars. Use Word Counter when you also need words and reading time."
+      }
+    ],
+    "features": [
+      "Live character breakdowns",
+      "Spaces and newlines separated",
+      "No upload required"
+    ]
+  },
+  "unit-converter": {
+    "description": "Free unit converter for length, weight, and temperature—pick a pair and get a live metric ↔ imperial result in your browser.",
+    "examples": [
+      {
+        "title": "Oven temperature",
+        "code": "Category: Temperature · 180 °C → °F (updates as you type)",
+        "note": "Each tab has its own conversion pairs. This is not a full engineering unit catalog."
+      },
+      {
+        "title": "Road distance",
+        "code": "Category: Length · 10 km → miles",
+        "note": "Switch pairs with the on-page tabs; results recalculate without a separate Convert button."
+      }
+    ],
+    "features": [
+      "Length, weight, temperature",
+      "Live conversion",
+      "Common metric and imperial pairs"
+    ]
+  },
+  "lorem-ipsum-generator": {
+    "description": "Free lorem ipsum generator for classic placeholder text—set words, sentences, or paragraphs (1–100) and copy for mockups.",
+    "examples": [
+      {
+        "title": "Five-word label filler",
+        "code": "Mode: Words · Count: 5 · classic opening on → Lorem ipsum dolor sit amet",
+        "note": "Toggle the classic opening off if you want randomized Latin without the familiar start."
+      },
+      {
+        "title": "Three paragraphs for a layout",
+        "code": "Mode: Paragraphs · Count: 3 · Regenerate → Copy",
+        "note": "Placeholder only—it does not write real marketing copy. Check length with Character Counter if a field has a cap."
+      }
+    ],
+    "features": [
+      "Words, sentences, or paragraphs",
+      "Count from 1 to 100",
+      "Optional classic opening"
+    ]
+  },
+  "image-compressor": {
+    "description": "Free image compressor for JPEG, PNG, and WebP in your browser—set a maximum quality, compare real bytes, and keep the original when compression would grow the file.",
+    "examples": [
+      {
+        "title": "Shrink a JPEG photo",
+        "code": "Format: JPEG · max quality 80 → preview bytes; quality may step down only if needed to get smaller",
+        "note": "Quality is not a guaranteed percent savings. PNG is lossless here and does not use quality retries."
+      },
+      {
+        "title": "When compression cannot help",
+        "code": "If every encode is larger, the tool keeps the original file and says there was no size reduction",
+        "note": "One image at a time. For exact pixel dimensions use Image Resizer; for cutting a region use Image Cropper."
+      }
+    ],
+    "features": [
+      "JPEG, PNG, WebP output",
+      "Real byte comparison",
+      "Original kept when not smaller"
+    ]
+  },
+  "image-cropper": {
+    "description": "Free image cropper for freeform regions or presets (square, 16:9, 4:3, 3:2, portrait, passport)—download the crop as PNG in your browser.",
+    "examples": [
+      {
+        "title": "Square social crop",
+        "code": "Preset: 1:1 · drag the region · Crop → PNG download",
+        "note": "The original file stays untouched; you download a new PNG of the selected region."
+      },
+      {
+        "title": "Need resize instead of crop?",
+        "code": "Use Image Resizer to scale the whole image, or Image Compressor when you mainly want fewer bytes",
+        "note": "Presets help match common ratios; they are not a guarantee of a platform’s latest upload rules."
+      }
+    ],
+    "features": [
+      "Freeform and ratio presets",
+      "PNG export of the crop",
+      "Runs locally in the browser"
+    ]
   }
 };
+

@@ -19,6 +19,14 @@ const priorityTutorials: Record<string, string[]> = {
   'word-counter': ['text-utilities-cheatsheet-developers', 'social-media-character-limits'],
   'reading-time-calculator': [],
   'image-resizer': ['2026-08-04-resize-image-for-social-media-dimensions', 'how-to-optimize-images-without-uploading', 'image-conversion-optimization-guide'],
+  'qr-code-generator': [],
+  'percentage-calculator': [],
+  'color-picker': [],
+  'character-counter': ['social-media-character-limits', 'text-utilities-cheatsheet-developers'],
+  'unit-converter': [],
+  'lorem-ipsum-generator': [],
+  'image-compressor': ['how-to-optimize-images-without-uploading', 'image-conversion-optimization-guide'],
+  'image-cropper': ['2026-08-04-resize-image-for-social-media-dimensions', 'how-to-optimize-images-without-uploading'],
 };
 
 function renderToolPosts(slug: string) {
@@ -81,7 +89,7 @@ describe('reviewed tool blog links', () => {
   });
 
   it('omits category-only matches and still renders one strong title match', () => {
-    const tool = getToolBySlug('color-picker')!;
+    const tool = getToolBySlug('color-mixer')!;
     const categoryOnly: BlogPost = {
       slug: 'palette-roundup',
       title: 'Palette ideas for interface work',
@@ -94,8 +102,8 @@ describe('reviewed tool blog links', () => {
       emoji: '🎨',
     };
     const strong: BlogPost = {
-      slug: 'how-a-color-picker-works',
-      title: 'How a color picker reads a pixel',
+      slug: 'how-a-color-mixer-works',
+      title: 'How a color mixer blends two hues',
       description: '',
       date: '2026-08-02T00:00:00.000Z',
       category: 'SEO',
@@ -113,13 +121,13 @@ describe('reviewed tool blog links', () => {
     expect(selectRelatedBlogPosts([categoryOnly], props)).toEqual([]);
     expect(selectRelatedBlogPosts([categoryOnly, strong], props).map(post => post.slug)).toEqual([strong.slug]);
     const html = renderToStaticMarkup(createElement(RelatedBlogPosts, { ...props, posts: [strong] }));
-    expect(html).toContain('href="/blog/how-a-color-picker-works"');
+    expect(html).toContain('href="/blog/how-a-color-mixer-works"');
     expect(html).toContain('Related Blog Posts');
     expect(renderToStaticMarkup(createElement(RelatedBlogPosts, { ...props, posts: [categoryOnly] }))).toBe('');
   });
 
   it('caps uncurated posts at three and prefers the stronger overlap', () => {
-    const tool = getToolBySlug('color-picker')!;
+    const tool = getToolBySlug('color-mixer')!;
     const make = (slug: string, title: string, date: string): BlogPost => ({
       slug,
       title,
@@ -133,9 +141,9 @@ describe('reviewed tool blog links', () => {
     });
     const selected = selectRelatedBlogPosts([
       make('weak-older', 'A note about color', '2026-01-01T00:00:00.000Z'),
-      make('strong-older', 'Color picker calibration notes', '2026-02-01T00:00:00.000Z'),
+      make('strong-older', 'Color mixer calibration notes', '2026-02-01T00:00:00.000Z'),
       make('weak-newer', 'Another color swatch', '2026-06-01T00:00:00.000Z'),
-      make('strong-newer', 'Color picker shortcuts', '2026-05-01T00:00:00.000Z'),
+      make('strong-newer', 'Color mixer shortcuts', '2026-05-01T00:00:00.000Z'),
     ], {
       toolSlug: tool.slug,
       toolName: tool.name,
