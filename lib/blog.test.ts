@@ -60,7 +60,7 @@ describe('blog markdown headings', () => {
   });
 
   it('renders every real post with no h1', () => {
-    for (const post of getBlogPosts().slice(0, 130)) {
+    for (const post of getBlogPosts()) {
       expect(getBlogPost(post.slug)?.content ?? '').not.toMatch(/<h1[\s>]/);
     }
   });
