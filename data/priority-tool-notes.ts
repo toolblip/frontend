@@ -13,4 +13,12 @@ export const priorityToolLimits: Record<ReviewedToolSlug, string> = {
   'word-counter': 'Counts words, characters (with and without spaces), sentences, paragraphs, and lines, plus reading/speaking time. For a focused character-only breakdown, use Character Counter.',
   'reading-time-calculator': 'Estimates reading time from word count and a 100–500 wpm slider (default 200). It does not measure a specific reader’s speed—pair with Word Counter for full draft stats.',
   'image-resizer': 'Resizes one image to whole-pixel width/height (max 8,192 px per side, 40 megapixels) in the browser. Lock aspect ratio to avoid distortion. It does not crop to a social preset or resize a batch—use Image Cropper or Batch Image Resizer.',
+  'qr-code-generator': 'Creates QR codes in the browser for URL, text, WiFi, or vCard, then download PNG or SVG (sizes 128–1024 px). Nothing is uploaded—WiFi payloads include the password you type.',
+  'percentage-calculator': 'Five modes: part-to-whole percent, percentage change, discount, tip (with split), and markup. Shows the arithmetic for the active mode only—not a full spreadsheet.',
+  'color-picker': 'Pick a color and copy HEX, RGB, and HSL, plus a WCAG contrast check against white. No CMYK, no eyedropper from other windows, and contrast is vs white only—use Contrast Checker for custom pairs.',
+  'character-counter': 'Live totals for characters, without spaces, without newlines, letters, and digits. No platform limit bars (Twitter/LinkedIn/meta)—compare the totals to the limit you care about, or use Word Counter for words and reading time.',
+  'unit-converter': 'Convert length, weight, and temperature between common metric/imperial pairs with live results. One category at a time—not a full engineering unit library.',
+  'lorem-ipsum-generator': 'Classic lorem ipsum by words, sentences, or paragraphs (count 1–100), optional classic opening. Placeholder text only—not a content writer.',
+  'image-compressor': 'Compress one JPEG, PNG, or WebP in the browser with a max-quality slider and real byte checks. If no encode is smaller, the original is kept. Not a batch folder compressor.',
+  'image-cropper': 'Crop one image with fixed ratio presets (1:1, 16:9, 4:3, 3:2, portrait, passport)—drag to position within the locked ratio, then download PNG. It crops a region—it does not resize the whole frame like Image Resizer.',
 };

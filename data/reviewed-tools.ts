@@ -11,7 +11,16 @@ export const reviewedToolSlugs = [
   "case-converter",
   "word-counter",
   "reading-time-calculator",
-  "image-resizer"
+  "image-resizer",
+  // Wave 2 high-volume cohort (DataForSEO 2026-10-09).
+  "qr-code-generator",
+  "percentage-calculator",
+  "color-picker",
+  "character-counter",
+  "unit-converter",
+  "lorem-ipsum-generator",
+  "image-compressor",
+  "image-cropper",
 ] as const;
 export type ReviewedToolSlug = typeof reviewedToolSlugs[number];
 export const reviewedRelatedTools: Record<ReviewedToolSlug, readonly string[]> = {
@@ -72,6 +81,46 @@ export const reviewedRelatedTools: Record<ReviewedToolSlug, readonly string[]> =
     "batch-image-resizer",
     "image-cropper",
     "image-compressor"
+  ],
+  "qr-code-generator": [
+    "image-compressor",
+    "image-cropper",
+    "image-resizer"
+  ],
+  "percentage-calculator": [
+    "percentage-difference",
+    "percentage-change-calc",
+    "unit-converter"
+  ],
+  "color-picker": [
+    "contrast-checker",
+    "color-palette-generator",
+    "color-harmony-generator"
+  ],
+  "character-counter": [
+    "word-counter",
+    "case-converter",
+    "lorem-ipsum-generator"
+  ],
+  "unit-converter": [
+    "percentage-calculator",
+    "byte-converter",
+    "unix-timestamp-converter"
+  ],
+  "lorem-ipsum-generator": [
+    "character-counter",
+    "word-counter",
+    "case-converter"
+  ],
+  "image-compressor": [
+    "image-resizer",
+    "image-cropper",
+    "image-format-converter"
+  ],
+  "image-cropper": [
+    "image-resizer",
+    "image-compressor",
+    "batch-image-resizer"
   ]
 };
 export const publishedTutorialTools = {

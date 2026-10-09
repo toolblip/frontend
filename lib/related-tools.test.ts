@@ -24,7 +24,7 @@ describe('related tool selection', () => {
   });
 
   it('renders nothing when the tool has no tags to share', () => {
-    const tool = getToolBySlug('color-picker')!;
+    const tool = getToolBySlug('punctuation-fixer')!;
     expect(tool.tags ?? []).toEqual([]);
     expect(selectRelatedTools(tools, { slug: tool.slug, category: tool.category })).toEqual([]);
     expect(renderToStaticMarkup(createElement(RelatedTools, { slug: tool.slug, category: tool.category }))).toBe('');
