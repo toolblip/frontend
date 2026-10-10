@@ -35,4 +35,9 @@ export const priorityToolLimits: Record<ReviewedToolSlug, string> = {
   'time-zone-converter': "Converts a dated local time to chosen IANA zones using the browser's time zone rules. No live time service; times that repeat or do not exist during a DST change show an error.",
   'countdown-timer': 'Browser countdown with hours (0–99), minutes, and seconds, plus Start/Pause and Reset. Plays no sound and sends no notification when it reaches zero.',
   'svg-to-png': 'Converts self-contained static SVG (up to 10 MB and 16 megapixels) to PNG in the browser, keeping transparency. Scripts, stylesheets, embedded images, and external references are rejected.',
+  'image-background-remover': 'Three modes: AI (a local IMG.LY model, about 40 MB downloaded on first AI use), Auto Detect and Color Key (pixel-color matching, not AI). Accepts PNG, JPG, WebP, GIF and HEIC; file size is capped by plan (5 MB on free). Output is PNG only.',
+  'grammar-checker': 'English (en-US) text up to 20,000 characters per check. Text is sent through Toolblip to the public LanguageTool API, so a busy or unreachable service shows a connection error. Matches are suggestions, not guaranteed fixes; the tool does not rewrite for meaning or check facts.',
+  'currency-converter': 'Converts with 20 fixed sample rates stored in the page, using USD as the base. No live or historical rates, no fees or spreads, and no bank or market data.',
+  'meme-maker': 'Top and bottom captions on one uploaded image, drawn in your browser and exported as PNG. No multi-panel layouts or template library. Text uses Impact when your device has it, otherwise a fallback font.',
+  'text-to-speech': "Uses the browser's Web Speech API. Available voices, their quality, and offline support depend on your browser and operating system, and the voice list can be empty. Speed and pitch run from 0.5x to 2x. Plays audio only; no MP3 or WAV download.",
 };

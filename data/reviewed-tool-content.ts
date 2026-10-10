@@ -881,5 +881,115 @@ export const reviewedToolContent: Record<string, ToolContent> = {
       "Self-contained SVG check"
     ]
   },
+  "image-background-remover": {
+    "description": "Free background remover with three modes: AI segmentation with a local model, Auto Detect for the corner color, and Color Key for a color you pick. Your image is processed in your browser, and the result downloads as a PNG with transparency.",
+    "examples": [
+      {
+        "title": "Solid-color backdrop",
+        "code": "Product photo on white → Auto Detect → Tolerance 32 → Download PNG",
+        "note": "Auto Detect samples the four corners and removes pixels close to that color. It works best when the backdrop is one fairly even color; shadows and gradients may need a higher tolerance or can leave edges behind."
+      },
+      {
+        "title": "Green screen with Color Key",
+        "code": "Color Key #00ff00 → Tolerance raised from 32 to 60 → Download PNG",
+        "note": "Color Key removes only the color you pick. Hair edges and reflected green can stay semi-transparent or leave a fringe, so check the preview at full size before you download."
+      },
+      {
+        "title": "First AI run",
+        "code": "AI mode → Downloading AI model… → result appears after the model loads",
+        "note": "The AI model is about 40 MB and loads from Toolblip the first time you use AI mode. Later visits can reuse the browser cache. Cancel discards the pending result but may not stop the computation."
+      }
+    ],
+    "features": [
+      "AI, Auto Detect and Color Key modes",
+      "PNG download with transparency",
+      "Processed on your device",
+      "AI model download on first use"
+    ]
+  },
+  "grammar-checker": {
+    "description": "Free English grammar and spell checker. Your text is checked by the LanguageTool service through Toolblip, and each issue lists its message, its position, and up to three replacements you can click into place.",
+    "examples": [
+      {
+        "title": "Verb form and contraction",
+        "code": "She dont like the new update. → 'dont' flagged, suggestion: don't",
+        "note": "Each match shows the rule message and its position in the text. Suggestions come from the LanguageTool service, so the exact wording can differ. Read each fix before you apply it."
+      },
+      {
+        "title": "Long text limit",
+        "code": "Paste 20,001 characters → Text is too long (max 20,000 characters)",
+        "note": "Checks are limited to 20,000 characters and English (en-US). If the grammar service is busy or unreachable, the tool shows a connection error; wait a moment and try again."
+      }
+    ],
+    "features": [
+      "Spelling and grammar matches",
+      "Up to three replacements per issue",
+      "Click-to-apply fixes",
+      "English (en-US) checking"
+    ]
+  },
+  "currency-converter": {
+    "description": "Free currency converter for 20 currencies using a fixed set of sample exchange rates stored in the page. It converts an amount between two currencies and shows the rate in both directions. The rates are not live, so use a bank or market source for real money.",
+    "examples": [
+      {
+        "title": "Sterling to yen at sample rates",
+        "code": "250 GBP → JPY = 47,310.13 JPY (250 ÷ 0.79 × 149.5)",
+        "note": "Each conversion divides by the source rate to reach USD, then multiplies by the target rate. The sample rates are fixed in the page, so this shows the arithmetic, not today's market price."
+      },
+      {
+        "title": "Reading a cross rate",
+        "code": "500 CAD → AUD = 562.50 AUD (500 ÷ 1.36 × 1.53)",
+        "note": "The rates list shows each currency relative to your selected source currency. No fees, bank spreads, or time-of-day movement are applied, and a note below the list says the rates are static examples."
+      }
+    ],
+    "features": [
+      "20 currencies",
+      "Sample rates, not live",
+      "Popular pairs",
+      "Both directions shown"
+    ]
+  },
+  "meme-maker": {
+    "description": "Free meme generator for adding top and bottom captions to an image you upload. Set font size, text color, and outline color while the PNG preview updates, then download the finished meme. Everything is drawn in your browser.",
+    "examples": [
+      {
+        "title": "Top and bottom captions",
+        "code": "Top: WHEN THE BUILD PASSES · Bottom: SHIP IT → Font size 48 → Download Meme",
+        "note": "Font size scales with the image width, so the same setting gives similar text proportions on a large photo and a small one. Bottom text stacks upward from the bottom edge as you add lines."
+      },
+      {
+        "title": "Light text on a dark photo",
+        "code": "Text color #ffffff · Stroke #000000 → Font size 64 → PNG preview",
+        "note": "The outline keeps white text readable on busy backgrounds. Text uses Impact when your device has it; otherwise the browser falls back to a similar condensed font, so the look varies by device."
+      }
+    ],
+    "features": [
+      "Top and bottom captions",
+      "Font size, text and outline colors",
+      "Live PNG preview",
+      "Runs in the browser"
+    ]
+  },
+  "text-to-speech": {
+    "description": "Free text to speech tool that reads typed text aloud with a voice from your browser, with speed and pitch sliders from 0.5x to 2x. The voices come from your browser and operating system, so the list depends on your device.",
+    "examples": [
+      {
+        "title": "Slower narration",
+        "code": "Paste a paragraph → English voice → Speed 0.8x → Speak",
+        "note": "Speed and pitch apply the next time you press Speak. Stop cancels playback at once. The tool plays audio only and does not save an MP3 or WAV file."
+      },
+      {
+        "title": "Empty voice list",
+        "code": "No voices reported → No voices are currently available",
+        "note": "Some browsers and systems expose no voices, so playback is unavailable until a voice is installed or you try another browser. Browser errors appear as Speech failed."
+      }
+    ],
+    "features": [
+      "Browser voices",
+      "Speed 0.5x to 2x",
+      "Pitch 0.5x to 2x",
+      "Stop at any time"
+    ]
+  },
 };
 

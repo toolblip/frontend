@@ -38,6 +38,12 @@ export const reviewedToolSlugs = [
   "time-zone-converter",
   "countdown-timer",
   "svg-to-png",
+  // Wave 5 head terms (DataForSEO 2026-10-10).
+  "image-background-remover",
+  "grammar-checker",
+  "currency-converter",
+  "meme-maker",
+  "text-to-speech",
 ] as const;
 export type ReviewedToolSlug = typeof reviewedToolSlugs[number];
 export const reviewedRelatedTools: Record<ReviewedToolSlug, readonly string[]> = {
@@ -208,6 +214,31 @@ export const reviewedRelatedTools: Record<ReviewedToolSlug, readonly string[]> =
     "image-resizer",
     "image-compressor",
     "svg-to-jpg"
+  ],
+  "image-background-remover": [
+    "image-resizer",
+    "image-compressor",
+    "image-cropper"
+  ],
+  "grammar-checker": [
+    "readability-score",
+    "passive-voice-detector",
+    "word-counter"
+  ],
+  "currency-converter": [
+    "unit-converter",
+    "percentage-calculator",
+    "tip-calculator"
+  ],
+  "meme-maker": [
+    "image-resizer",
+    "image-compressor",
+    "image-format-converter"
+  ],
+  "text-to-speech": [
+    "word-counter",
+    "reading-time-calculator",
+    "paragraph-counter"
   ]
 };
 export const publishedTutorialTools = {
