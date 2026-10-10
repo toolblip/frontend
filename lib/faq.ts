@@ -2180,7 +2180,7 @@ const OVERRIDES: Record<string, FAQ[]> = {
   'tip-calculator': [
     { q: 'What does the Tip Calculator compute?', a: 'Enter a bill amount, a tip percent, and how many people share the bill. It shows tip amount, total, and an equal per-person share.' },
     { q: 'What tip percentages are available?', a: 'Presets for 10%, 15%, 18%, 20%, and 25%, plus a custom field for any tip from 0% to 100%.' },
-    { q: 'How is the per-person amount calculated?', a: 'Tip is bill × tip%/100. Total is bill + tip. Per person is total divided by the people count (1–1000). There is no tax line or uneven split.' },
+    { q: 'How is the per-person amount calculated?', a: 'Tip is bill × tip%/100. Total is bill + tip. Per person is total divided by the people count (a whole number, 1 or more). There is no tax line or uneven split.' },
     { q: 'Is this the same as Percentage Calculator?', a: 'No. Percentage Calculator has separate percent-math modes. This page is only tip + equal split. Use Percentage Calculator for discounts, markup, or percent change.' },
   ],
   'json-toml-converter': [

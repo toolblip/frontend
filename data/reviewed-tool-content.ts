@@ -705,9 +705,9 @@ export const reviewedToolContent: Record<string, ToolContent> = {
     "description": "Free random number generator for integers in a min–max range—optional unique batches up to 1,000 values in your browser.",
     "examples": [
       {
-        "title": "Five unique dice rolls",
-        "code": "Min 1 · Max 10 · Count 5 · Unique on → Generate",
-        "note": "Integers only. Unique fails if count is larger than the inclusive range."
+        "title": "Two dice rolls",
+        "code": "Min 1 · Max 6 · Count 2 · Unique off → Generate",
+        "note": "Integers only. With Unique off the same value can repeat in one batch, like real dice. Unique fails if count is larger than the inclusive range."
       },
       {
         "title": "Lottery-style draw",
@@ -725,9 +725,9 @@ export const reviewedToolContent: Record<string, ToolContent> = {
     "description": "Free age calculator for years, months, and days between a birth date and an as-of date—plus next birthday countdown.",
     "examples": [
       {
-        "title": "Leap-day birth",
-        "code": "Birth 2000-02-29 · As of 2024-03-01 → years/months/days + next birthday",
-        "note": "Dates are calendar (UTC date-only). Month ends and leap-day birthdays use the last day of the month."
+        "title": "Day before a birthday",
+        "code": "Birth 1990-06-15 · As of 2024-06-14 → 33 years, 11 months, 30 days · 1 day to next birthday",
+        "note": "A plain year subtraction would say 34. Dates are calendar dates (UTC date-only); month ends and leap-day birthdays use the last day of the month."
       },
       {
         "title": "Age as of a past date",
@@ -745,8 +745,8 @@ export const reviewedToolContent: Record<string, ToolContent> = {
     "description": "Free tip calculator for bill amount, tip percent, and equal split—presets plus custom tip in your browser.",
     "examples": [
       {
-        "title": "Dinner for five",
-        "code": "Bill $180 · Tip 20% · People 5 → tip, total, and per-person share",
+        "title": "Dinner for three",
+        "code": "Bill $86.40 · Tip 18% · People 3 → tip $15.55 · total $101.95 · $33.98 each",
         "note": "Presets are 10, 15, 18, 20, and 25%. Custom tip accepts 0–100%."
       },
       {
@@ -765,8 +765,8 @@ export const reviewedToolContent: Record<string, ToolContent> = {
     "description": "Free Morse code translator for Latin letters, digits, and common punctuation—encode and decode with slash word breaks in your browser.",
     "examples": [
       {
-        "title": "Distress signal",
-        "code": "Text: SOS → ... --- ...",
+        "title": "Hello world",
+        "code": "HELLO WORLD → .... . .-.. .-.. --- / .-- --- .-. .-.. -..",
         "note": "Letters separated by spaces; words by / when encoding multi-word phrases."
       },
       {
@@ -782,11 +782,11 @@ export const reviewedToolContent: Record<string, ToolContent> = {
     ]
   },
   "roman-numeral-converter": {
-    "description": "Free Roman numeral converter for 1–3999—live number ↔ Roman conversion with validation in your browser.",
+    "description": "Free Roman numeral converter for 1–3999—live number ↔ Roman conversion with range checks in your browser.",
     "examples": [
       {
-        "title": "Current year",
-        "code": "Number → Roman (Example loads the current year)",
+        "title": "Number to Roman",
+        "code": "1994 → MCMXCIV",
         "note": "Classical range only: values outside 1–3999 are rejected."
       },
       {
@@ -798,7 +798,7 @@ export const reviewedToolContent: Record<string, ToolContent> = {
     "features": [
       "1–3999 classical range",
       "Live both directions",
-      "Validation messages"
+      "Range and format error messages"
     ]
   }
 };
