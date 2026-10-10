@@ -726,9 +726,10 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Do I need to give it a live URL?', a: 'No. Paste raw HTML directly into the tool and it parses it with the browser\'s built-in DOMParser, so you can check a page before it\'s even deployed.' },
   ],
   'age-calculator': [
-    { q: 'What breakdown does the Age Calculator show?', a: 'Enter a birth date and it shows your exact age in years, months, and days, plus totals in days, weeks, and hours since you were born.' },
-    { q: 'Does it tell me when my next birthday is?', a: 'Yes. It calculates the date of your next birthday and counts down the days remaining until it arrives.' },
-    { q: 'How does it handle the day-of-month math near leap years?', a: 'When the current day of the month falls before your birth day, the calculator borrows days from the previous calendar month using that month\'s actual length, which keeps the day/month/year breakdown accurate across February and leap years.' },
+    { q: 'What breakdown does the Age Calculator show?', a: 'Enter a birth date and an as-of date. It shows years, months, and days of calendar age, plus totals in days, weeks, and hours, and the next birthday countdown from the as-of date.' },
+    { q: 'Does it tell me when my next birthday is?', a: 'Yes. It shows the next birthday date and how many days remain until then, relative to the as-of date.' },
+    { q: 'How does it handle leap-day birthdays?', a: 'Dates are treated as calendar dates (UTC date-only). Month ends and leap-day birthdays use the last day of the month when needed.' },
+    { q: 'Is this a legal-age calculator?', a: 'No. It reports calendar age for the dates you enter. It does not apply jurisdiction-specific age-of-majority rules.' },
   ],
   'humanizer-ai': [
     { q: 'What does the AI Humanizer actually do to my text?', a: 'It swaps common, stiff-sounding words for more natural alternatives from a built-in synonym dictionary, aiming to make robotic-sounding phrasing read a bit more like normal writing.' },
@@ -1762,6 +1763,12 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Can I scan a range of ports instead of listing them one by one?', a: 'Yes, the ports field accepts ranges like "1-1000" and comma-separated mixes such as "80, 443, 8080-8090", which are parsed, deduplicated, and sorted into one port list before scanning starts.' },
     { q: 'Does it tell me what service typically runs on an open port?', a: 'For about twenty well-known ports, like 22 for SSH, 443 for HTTPS, 3306 for MySQL, and 6379 for Redis, the results table shows the matching service name next to the port number.' },
   ],
+  'morse-code-translator': [
+    { q: 'What characters can I encode?', a: 'Latin letters A–Z, digits 0–9, and a fixed punctuation set (period, comma, question mark, apostrophe, exclamation, slash, parentheses, ampersand, colon, semicolon, equals, plus, hyphen, underscore, quote, dollar, at). Spaces become word breaks.' },
+    { q: 'How should Morse be formatted for decode?', a: 'Separate letters with spaces and words with /. Use ASCII dots (.) and dashes (-) only. Unknown Morse groups show an error.' },
+    { q: 'What happens to unsupported characters?', a: 'On encode, characters outside the supported set are skipped. Accented letters and most Unicode symbols are not mapped.' },
+    { q: 'Does either pane update live?', a: 'Yes. Typing in the Text pane fills the Morse pane, and typing Morse fills Text. There is no separate swap button, and the Copy buttons copy each pane.' },
+  ],
   'mp4-to-wav': [
     { q: "What does this tool do?", a: "Decode supported MP4 audio to 16-bit PCM WAV. Files without decodable audio are rejected." },
     { q: "What should I know before using it?", a: "Limits are 20 MB, 120 decoded seconds and 24 million decoded samples across all channels. If the browser can't decode the container directly, a fallback handles supported AAC-LC tracks in MP4 files. It preserves supported timing trims and rejects layouts it can't reproduce safely. Other codecs depend on browser support. WAV output doesn't restore detail lost in earlier compression." },
@@ -1881,9 +1888,10 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'How many addresses can I generate at once?', a: 'Up to 100 per click, listed together with a Copy All button.' },
   ],
   'random-number-generator': [
-    { q: 'What happens if I ask for more unique numbers than fit in my range?', a: 'With "Unique numbers only" checked, requesting more values than the min-max range can hold shows the message "Cannot generate more unique numbers than range allows" instead of returning duplicates.' },
-    { q: 'How many numbers can I generate in one batch?', a: 'Up to 1000 numbers per click, displayed as a single comma-separated line with a Copy button.' },
-    { q: 'Can the same number repeat in the results?', a: 'Only if "Unique numbers only" is left unchecked, otherwise every number in that batch is guaranteed distinct.' },
+    { q: 'Does it generate decimals?', a: 'No. It generates whole integers between min and max (inclusive), using safe integer bounds.' },
+    { q: 'What happens if I ask for more unique numbers than fit in my range?', a: 'With Unique on, a count larger than the inclusive min–max range returns an error instead of duplicates.' },
+    { q: 'How many numbers can I generate in one batch?', a: 'Up to 1,000 per Generate click, shown as a comma-separated list with Copy.' },
+    { q: 'Is the randomness cryptographic?', a: 'No. It uses Math.random. For passwords or tokens, use Password Generator or UUID Generator instead.' },
   ],
   'random-password-generator': [
     { q: 'How is password randomness generated?', a: "It uses the browser's crypto.getRandomValues (Web Crypto API) rather than Math.random, filling a Uint32Array and mapping each value into your selected character pool." },
@@ -1947,9 +1955,10 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Does the alpha value carry over into the copied output?', a: 'Yes, the RGBA copy button includes your alpha setting, and the live preview swatch renders the actual translucent color using that same alpha value.' },
   ],
   'roman-numeral-converter': [
-    { q: "What's the valid number range?", a: 'From 1 through 3999, the largest value classical Roman numerals can represent, anything outside that range returns "Invalid (1-3999)" instead of a numeral.' },
-    { q: 'Do I need to press a button to convert?', a: 'No, both directions update live: typing a number instantly shows its Roman numeral, and typing a Roman numeral instantly shows its number, no calculate button required.' },
-    { q: 'Does it accept lowercase Roman numerals?', a: 'Whatever you type in the Roman numeral field is automatically uppercased as you type, so "mmxxiv" converts the same as "MMXXIV".' },
+    { q: "What's the valid number range?", a: 'From 1 through 3999—the classical Roman range. Values outside that range show an error instead of a numeral.' },
+    { q: 'Do I need to press a button to convert?', a: 'No. Both directions update live: a number fills Roman, and a Roman numeral fills the number.' },
+    { q: 'Does it accept lowercase Roman numerals?', a: 'Yes. Input is uppercased automatically, so mmxxiv converts the same as MMXXIV.' },
+    { q: 'Which letters are allowed?', a: 'Only I, V, X, L, C, D, and M. Other characters are rejected.' },
   ],
   'rot13-express': [
     { q: 'Why is there both an Encode and Decode mode if ROT13 is symmetric?', a: "Mathematically running ROT13 twice returns the original text either way, but the two mode buttons are kept separate so decode mode explicitly reverses whatever you last encoded, matching how people expect an encoder/decoder pair to work." },
@@ -2169,9 +2178,10 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Is there a shortcut to convert the current moment?', a: 'Yes, a "Now" button fills the input with the current Unix timestamp in seconds and converts it immediately.' },
   ],
   'tip-calculator': [
-    { q: 'How do I reach the tip-splitting calculator specifically?', a: 'The tool opens on a "Basic %" tab by default, click the "Tip" tab next to it to switch to the bill amount, tip percentage, and people-splitting fields.' },
-    { q: 'What tip percentages are available?', a: 'Six preset buttons, 5%, 10%, 15%, 18%, 20%, and 25%, plus a custom number field if you need a specific percentage outside those presets.' },
-    { q: 'How is the per-person amount calculated?', a: 'It adds your tip amount to the bill for a total, then divides that total by the number of people set with the plus and minus buttons next to "Split Between".' },
+    { q: 'What does the Tip Calculator compute?', a: 'Enter a bill amount, a tip percent, and how many people share the bill. It shows tip amount, total, and an equal per-person share.' },
+    { q: 'What tip percentages are available?', a: 'Presets for 10%, 15%, 18%, 20%, and 25%, plus a custom field for any tip from 0% to 100%.' },
+    { q: 'How is the per-person amount calculated?', a: 'Tip is bill × tip%/100. Total is bill + tip. Per person is total divided by the people count (1–1000). There is no tax line or uneven split.' },
+    { q: 'Is this the same as Percentage Calculator?', a: 'No. Percentage Calculator has separate percent-math modes. This page is only tip + equal split. Use Percentage Calculator for discounts, markup, or percent change.' },
   ],
   'json-toml-converter': [
     { q: 'Does it convert both ways?', a: 'Yes. Paste or type JSON on the left and TOML updates on the right; paste or type TOML on the right and JSON updates on the left. Incomplete text shows an error without wiping the other pane.' },

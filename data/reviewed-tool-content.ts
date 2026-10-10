@@ -700,6 +700,106 @@ export const reviewedToolContent: Record<string, ToolContent> = {
       "Random-model bit estimate",
       "Local-only checks"
     ]
+  },
+  "random-number-generator": {
+    "description": "Free random number generator for integers in a min–max range—optional unique batches up to 1,000 values in your browser.",
+    "examples": [
+      {
+        "title": "Five unique dice rolls",
+        "code": "Min 1 · Max 10 · Count 5 · Unique on → Generate",
+        "note": "Integers only. Unique fails if count is larger than the inclusive range."
+      },
+      {
+        "title": "Lottery-style draw",
+        "code": "Min 1 · Max 50 · Count 6 · Unique on → copy comma-separated result",
+        "note": "Uses Math.random, not cryptographic randomness. Prefer Password Generator for secrets."
+      }
+    ],
+    "features": [
+      "Integer min/max range",
+      "Unique batch option",
+      "Copy results"
+    ]
+  },
+  "age-calculator": {
+    "description": "Free age calculator for years, months, and days between a birth date and an as-of date—plus next birthday countdown.",
+    "examples": [
+      {
+        "title": "Leap-day birth",
+        "code": "Birth 2000-02-29 · As of 2024-03-01 → years/months/days + next birthday",
+        "note": "Dates are calendar (UTC date-only). Month ends and leap-day birthdays use the last day of the month."
+      },
+      {
+        "title": "Age as of a past date",
+        "code": "Set As of to any calendar day to see age on that date, not only today",
+        "note": "Not a legal-age or timezone wall-clock calculator."
+      }
+    ],
+    "features": [
+      "Years, months, days",
+      "Next birthday countdown",
+      "As-of date control"
+    ]
+  },
+  "tip-calculator": {
+    "description": "Free tip calculator for bill amount, tip percent, and equal split—presets plus custom tip in your browser.",
+    "examples": [
+      {
+        "title": "Dinner for five",
+        "code": "Bill $180 · Tip 20% · People 5 → tip, total, and per-person share",
+        "note": "Presets are 10, 15, 18, 20, and 25%. Custom tip accepts 0–100%."
+      },
+      {
+        "title": "Solo tip only",
+        "code": "Bill $42.50 · Tip 18% · People 1 → tip amount and total",
+        "note": "Equal split only—no tax line or uneven shares."
+      }
+    ],
+    "features": [
+      "Tip presets and custom %",
+      "Equal bill split",
+      "Copy tip summary"
+    ]
+  },
+  "morse-code-translator": {
+    "description": "Free Morse code translator for Latin letters, digits, and common punctuation—encode and decode with slash word breaks in your browser.",
+    "examples": [
+      {
+        "title": "Distress signal",
+        "code": "Text: SOS → ... --- ...",
+        "note": "Letters separated by spaces; words by / when encoding multi-word phrases."
+      },
+      {
+        "title": "Decode a group",
+        "code": "Morse: .... . .-.. .-.. --- → HELLO",
+        "note": "Unsupported Latin characters are skipped on encode. Decode rejects unknown Morse groups."
+      }
+    ],
+    "features": [
+      "Text ↔ Morse",
+      "Letters, digits, punctuation",
+      "Live two-pane sync"
+    ]
+  },
+  "roman-numeral-converter": {
+    "description": "Free Roman numeral converter for 1–3999—live number ↔ Roman conversion with validation in your browser.",
+    "examples": [
+      {
+        "title": "Current year",
+        "code": "Number → Roman (Example loads the current year)",
+        "note": "Classical range only: values outside 1–3999 are rejected."
+      },
+      {
+        "title": "Decode a numeral",
+        "code": "Roman: MMXXIV → 2024",
+        "note": "Input is uppercased automatically. Only I, V, X, L, C, D, M are accepted."
+      }
+    ],
+    "features": [
+      "1–3999 classical range",
+      "Live both directions",
+      "Validation messages"
+    ]
   }
 };
 
