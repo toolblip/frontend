@@ -100,6 +100,9 @@ test('priority discovery SSR, HTTP metadata, sitemap counts and unknown blog', a
 });
 
 for(const width of [1440,375]) test(`priority tool layout at ${width}px`,async ({page}) => {
+  // One test walks every reviewed slug on a cold `next dev` server; 22 slugs
+  // need more than the default 30s budget on CI runners.
+  test.setTimeout(120_000);
   await page.setViewportSize({width,height:1000});
   for(const slug of reviewedToolSlugs) {
     const tool=await openTool(page,slug);
