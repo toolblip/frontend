@@ -52,6 +52,12 @@ const SEO_TITLE_OVERRIDES: Record<string, string> = {
   'tip-calculator': 'Tip Calculator — Free Bill Split & Tip Percent',
   'morse-code-translator': 'Morse Code Translator — Free Encode & Decode',
   'roman-numeral-converter': 'Roman Numeral Converter — Free Number ↔ Roman',
+  // Wave 4 head terms (DataForSEO 2026-10-10).
+  'bmi-calculator': 'BMI Calculator — Free Metric & Imperial BMI',
+  'fraction-calculator': 'Fraction Calculator — Free Add, Subtract, Multiply & Divide',
+  'time-zone-converter': 'Time Zone Converter — Free Local Time Across Zones',
+  'countdown-timer': 'Countdown Timer — Free Hours, Minutes & Seconds',
+  'svg-to-png': 'SVG to PNG Converter — Free, Keeps Transparency',
 };
 
 function documentTitle(tool: Tool): string {

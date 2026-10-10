@@ -36,6 +36,11 @@ const priorityTutorials: Record<string, string[]> = {
   'tip-calculator': [],
   'morse-code-translator': [],
   'roman-numeral-converter': [],
+  'bmi-calculator': [],
+  'fraction-calculator': [],
+  'time-zone-converter': [],
+  'countdown-timer': [],
+  'svg-to-png': [],
 };
 
 function renderToolPosts(slug: string) {

@@ -18,12 +18,12 @@ export const reviewedToolContent: Record<string, ToolContent> = {
     ]
   },
   "time-zone-converter": {
-    "description": "Convert a dated local time to several IANA time zones. Compare a meeting time in New York with London and Tokyo, including date changes and daylight-saving offsets for that date.",
+    "description": "Convert a dated local time to several IANA time zones at once. Each target shows the same moment in its own zone, including date changes and daylight-saving offsets for the date you choose.",
     "examples": [
       {
-        "title": "A summer meeting",
-        "code": "2024-07-01 12:00 in America/New_York\nEurope/London: 2024-07-01 17:00\nAsia/Tokyo: 2024-07-02 01:00",
-        "note": "Choose a date and time, a source zone and target zones. Times that occur twice or do not exist during a DST transition produce an error; choose another time. Rules come from your browser, not a live time service."
+        "title": "Across midnight",
+        "code": "2024-03-10 21:30 America/Los_Angeles\nEurope/Berlin: 2024-03-11 05:30\nAsia/Kolkata: 2024-03-11 10:00",
+        "note": "On that date Los Angeles is on daylight time (UTC-7), so Berlin and Kolkata show the next day. Times that occur twice or do not exist during a DST change produce an error; choose another time. Rules come from your browser, not a live time service."
       }
     ],
     "features": [
@@ -800,6 +800,86 @@ export const reviewedToolContent: Record<string, ToolContent> = {
       "Live both directions",
       "Range and format error messages"
     ]
-  }
+  },
+  "bmi-calculator": {
+    "description": "Free BMI calculator for height and weight in metric (cm and kg) or imperial (in and lb). Shows the BMI to one decimal place and its standard weight category.",
+    "examples": [
+      {
+        "title": "Imperial inputs",
+        "code": "Height 69 in · Weight 154 lb → BMI 22.7 (Normal)",
+        "note": "Imperial uses 703 × lb ÷ in². BMI does not separate muscle from fat, so a muscular person can land in a higher category than their body fat would suggest."
+      },
+      {
+        "title": "Overweight band",
+        "code": "Height 180 cm · Weight 90 kg → BMI 27.8 (Overweight)",
+        "note": "Bands: under 18.5 Underweight, 18.5 to under 25 Normal, 25 to under 30 Overweight, 30 and above Obese. Height must be above 0 and at most 1000 cm; weight at most 10,000 kg."
+      }
+    ],
+    "features": [
+      "Metric and imperial inputs",
+      "One-decimal BMI result",
+      "Standard weight category"
+    ]
+  },
+  "fraction-calculator": {
+    "description": "Free fraction calculator that adds, subtracts, multiplies, and divides two fractions. Shows the simplified fraction, decimal value, mixed number, and step-by-step working.",
+    "examples": [
+      {
+        "title": "Multiply and simplify",
+        "code": "2/3 × 3/4 → 6/12 → 1/2 (decimal 0.5)",
+        "note": "Multiplication multiplies the numerators and the denominators, then reduces the result to lowest terms. Enter whole numbers only; a mixed number such as 1 1/2 must be written as 3/2 first."
+      },
+      {
+        "title": "Divide by a zero numerator",
+        "code": "1/2 ÷ 0/5 → You cannot divide by zero.",
+        "note": "Dividing by a fraction whose numerator is 0 is rejected. A zero denominator in either fraction shows Denominators cannot be zero."
+      }
+    ],
+    "features": [
+      "Add, subtract, multiply, divide",
+      "Step-by-step working",
+      "Simplified, decimal, and mixed-number results"
+    ]
+  },
+  "countdown-timer": {
+    "description": "Free countdown timer with hours, minutes, and seconds inputs, Start and Pause, and Reset. It runs in your browser and does not play a sound or send a notification when time is up.",
+    "examples": [
+      {
+        "title": "A 25-minute work block",
+        "code": "Hours 0 · Minutes 25 · Seconds 0 → Start → 00:25:00 counting down",
+        "note": "Hours accept 0 to 99; minutes and seconds accept 0 to 59. Pause keeps the remaining time, and Reset clears it so the duration fields can be edited again."
+      },
+      {
+        "title": "Pause and resume",
+        "code": "Start at 00:01:00 → Pause at 00:00:42 → Start again continues from 00:00:42",
+        "note": "When the display reaches 00:00:00 it stops. No sound or notification plays, so check the screen or set your own reminder."
+      }
+    ],
+    "features": [
+      "Hours, minutes, seconds",
+      "Start, Pause, Reset",
+      "Runs in the browser"
+    ]
+  },
+  "svg-to-png": {
+    "description": "Free SVG to PNG converter for self-contained SVG files. Keeps transparent areas, reports the output size against the input, and runs in your browser.",
+    "examples": [
+      {
+        "title": "Transparent background",
+        "code": "An SVG with width=\"240\" height=\"120\", one filled circle, and no background rectangle → PNG 240 × 120 with transparent corners",
+        "note": "PNG output keeps transparency. The PNG uses the SVG's natural width and height. Inputs over 10 MB or 16 megapixels are rejected."
+      },
+      {
+        "title": "Reading the result line",
+        "code": "480 × 240 · input 2140 bytes · larger output",
+        "note": "The result shows the PNG dimensions, the input size in bytes, and whether the output is larger, smaller, or the same size. A simple vector drawing can produce a larger PNG than its SVG source."
+      }
+    ],
+    "features": [
+      "Transparency kept in PNG",
+      "Measured output size",
+      "Self-contained SVG check"
+    ]
+  },
 };
 

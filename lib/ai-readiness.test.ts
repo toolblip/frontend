@@ -199,6 +199,11 @@ describe('tool meta descriptions', () => {
       { slug: 'tip-calculator', titlePart: 'Tip Calculator' },
       { slug: 'morse-code-translator', titlePart: 'Morse Code Translator' },
       { slug: 'roman-numeral-converter', titlePart: 'Roman Numeral Converter' },
+      { slug: 'bmi-calculator', titlePart: 'BMI Calculator' },
+      { slug: 'fraction-calculator', titlePart: 'Fraction Calculator' },
+      { slug: 'time-zone-converter', titlePart: 'Time Zone Converter' },
+      { slug: 'countdown-timer', titlePart: 'Countdown Timer' },
+      { slug: 'svg-to-png', titlePart: 'SVG to PNG Converter' },
     ];
     for (const { slug, titlePart } of cases) {
       const metadata = buildToolMetadata(getToolBySlug(slug)!);
