@@ -1,6 +1,14 @@
 import type { Metadata } from 'next';
 import type { Tool } from '@/data/tools';
 import { isToolIndexable } from '@/lib/indexable-tools';
+import { getToolContent } from '@/data/tool-content';
+import {
+  META_DESCRIPTION_MAX,
+  META_DESCRIPTION_MIN,
+  clampMetaDescription,
+  normalizeWhitespace,
+  splitSentences,
+} from '@/lib/meta-description';
 import { getToolAbsoluteUrl } from '@/lib/tool-path';
 
 const CUSTOM_OG_IMAGES: Record<string, string> = {
@@ -46,27 +54,55 @@ const SEO_TITLE_OVERRIDES: Record<string, string> = {
   'roman-numeral-converter': 'Roman Numeral Converter — Free Number ↔ Roman',
 };
 
-const META_DESCRIPTION_MAX = 160;
-
 function documentTitle(tool: Tool): string {
   const base = SEO_TITLE_OVERRIDES[tool.slug] ?? tool.name;
   return `${base} | Toolblip`;
 }
 
-function metaDescription(description: string): string {
-  const text = description.replace(/\s+/g, ' ').trim();
-  if (text.length <= META_DESCRIPTION_MAX) return text;
-  const firstSentence = text.split(/(?<=[.!?])\s/)[0]?.trim() ?? text;
-  if (firstSentence.length >= 25 && firstSentence.length <= META_DESCRIPTION_MAX) return firstSentence;
-  const boundary = text.lastIndexOf(' ', META_DESCRIPTION_MAX);
-  return (boundary >= 25 ? text.slice(0, boundary) : text.slice(0, META_DESCRIPTION_MAX)).trim();
+// Factual, template-level padding for short descriptions. Only claims that hold
+// for every tool (free, hosted on Toolblip) are used.
+const DESCRIPTION_FALLBACK_SUFFIXES: ReadonlyArray<(tool: Tool) => string> = [
+  () => 'Free on Toolblip.',
+  (tool) => `Free online ${tool.name} on Toolblip.`,
+  (tool) => `Also in the free ${tool.category} section of Toolblip.`,
+];
+
+/**
+ * Meta description for a tool page, kept within 110-155 characters. Short
+ * catalog descriptions are extended with sentences from the tool's own content
+ * description, then a neutral factual suffix. Long ones are clamped.
+ */
+export function buildToolDescription(tool: Tool): string {
+  const base = normalizeWhitespace(tool.description);
+  if (base.length >= META_DESCRIPTION_MIN) return clampMetaDescription(base);
+
+  let text = base;
+  const baseKey = base.toLowerCase();
+  const extras = splitSentences(getToolContent(tool.slug)?.description ?? '').filter(
+    (sentence) => !baseKey.includes(sentence.toLowerCase()) && !sentence.toLowerCase().includes(baseKey),
+  );
+  for (const sentence of extras) {
+    if (text.length >= META_DESCRIPTION_MIN) break;
+    const next = `${text} ${sentence}`.trim();
+    if (next.length > META_DESCRIPTION_MAX) continue;
+    text = next;
+  }
+  // Greedy: append the first suffix that still fits under the max.
+  while (text.length < META_DESCRIPTION_MIN) {
+    const fit = DESCRIPTION_FALLBACK_SUFFIXES
+      .map((suffix) => `${text} ${suffix(tool)}`)
+      .find((next) => next.length <= META_DESCRIPTION_MAX);
+    if (!fit) break;
+    text = fit;
+  }
+  return text;
 }
 
 export function buildToolMetadata(tool: Tool): Metadata {
   const url = getToolAbsoluteUrl(tool);
   const ogImage = `https://toolblip.com${CUSTOM_OG_IMAGES[tool.slug] ?? '/og-preview.png'}`;
   const indexable = isToolIndexable(tool.slug);
-  const description = metaDescription(tool.description);
+  const description = buildToolDescription(tool);
   const title = documentTitle(tool);
 
   return {
@@ -84,6 +120,7 @@ export function buildToolMetadata(tool: Tool): Metadata {
       description,
       url,
       siteName: 'Toolblip',
+      type: 'website',
       images: [{ url: ogImage, width: 1200, height: 630, alt: tool.name }],
     },
     twitter: {

@@ -1,21 +1,46 @@
 import { redirect } from 'next/navigation';
 import type { Metadata } from 'next';
+import { categories } from '@/data/tools';
 import { IMAGE_CATEGORY_PATH } from '@/lib/tool-path';
 import ToolsClient from './ToolsClient';
 
-export const metadata: Metadata = {
-  title: 'Tools',
-  description: 'Browse all free browser-based developer tools on Toolblip. JSON formatter, Base64 encoder, UUID generator, color picker, and more.',
-  alternates: { canonical: 'https://toolblip.com/tools' },
-  openGraph: {
-    title: 'Tools | Toolblip',
-    description: 'Browse all free browser-based developer tools on Toolblip. JSON formatter, Base64 encoder, UUID generator, color picker, and more.',
-    url: 'https://toolblip.com/tools',
-    siteName: 'Toolblip',
-    images: [{ url: 'https://toolblip.com/og-preview.png', width: 1200, height: 630, alt: 'Toolblip Tools' }],
-  },
-  twitter: { card: 'summary', title: 'Tools | Toolblip', description: 'Browse all free browser-based developer tools on Toolblip.' },
-};
+const BASE_DESCRIPTION =
+  'Browse all free browser-based developer tools on Toolblip. JSON formatter, Base64 encoder, UUID generator, color picker, and more.';
+const BASE_TITLE = 'Free Online Developer Tools | Toolblip';
+
+function matchCategory(category?: string): string | undefined {
+  if (!category) return undefined;
+  return categories.find((c) => c !== 'All' && c.toLowerCase() === category.toLowerCase());
+}
+
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<{ category?: string }>;
+}): Promise<Metadata> {
+  const { category } = await searchParams;
+  const matched = matchCategory(category);
+  // Some category labels already end in "Tools" (e.g. "PDF Tools"); avoid "PDF Tools Tools".
+  const label = matched?.replace(/\s+Tools$/i, '');
+  const title = label ? `${label} Tools — Free Online | Toolblip` : BASE_TITLE;
+  const description = label
+    ? `Browse free ${label} tools on Toolblip. Part of a catalog of 100+ free browser-based developer tools.`
+    : BASE_DESCRIPTION;
+  return {
+    title,
+    description,
+    alternates: { canonical: 'https://toolblip.com/tools' },
+    openGraph: {
+      title,
+      description,
+      url: 'https://toolblip.com/tools',
+      siteName: 'Toolblip',
+      type: 'website',
+      images: [{ url: 'https://toolblip.com/og-preview.png', width: 1200, height: 630, alt: 'Toolblip Tools' }],
+    },
+    twitter: { card: 'summary', title, description },
+  };
+}
 
 export default async function ToolsPage({
   searchParams,

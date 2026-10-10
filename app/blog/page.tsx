@@ -5,7 +5,7 @@ import { getBlogPosts, type BlogPost } from '@/lib/blog';
 import { BLOG_LLMS_PATH } from '@/lib/blog-markdown';
 
 export const metadata: Metadata = {
-  title: 'Blog',
+  title: 'Developer Guides & Tutorials | Toolblip Blog',
   description: 'Guides, tutorials, and updates from the Toolblip team. Learn about developer tools, MCP, and how to get the most out of Toolblip.',
   alternates: {
     canonical: 'https://toolblip.com/blog',
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: 'Blog | Toolblip',
+    title: 'Developer Guides & Tutorials | Toolblip Blog',
     description: 'Guides, tutorials, and updates from the Toolblip team. Learn about developer tools, MCP, and how to get the most out of Toolblip.',
     url: 'https://toolblip.com/blog',
     siteName: 'Toolblip',
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary',
-    title: 'Blog | Toolblip',
+    title: 'Developer Guides & Tutorials | Toolblip Blog',
     description: 'Guides, tutorials, and updates from the Toolblip team. Learn about developer tools, MCP, and how to get the most out of Toolblip.',
   },
 };

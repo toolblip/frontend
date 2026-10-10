@@ -5,6 +5,8 @@ import { notFound, redirect } from 'next/navigation';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { getBlogPost, getBlogPosts } from '@/lib/blog';
+import { selectRelatedPosts } from '@/lib/blog-related';
+import { clampMetaDescription } from '@/lib/meta-description';
 import { BLOG_LLMS_PATH } from '@/lib/blog-markdown';
 import BlogShareButton from '@/components/share/BlogShareButton';
 
@@ -23,10 +25,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!post) return {};
 
   const canonicalUrl = `https://toolblip.com/blog/${post.slug}`;
+  const branded = `${post.title} | Toolblip`;
+  const title = branded.length <= 60 ? branded : post.title;
+  const description = clampMetaDescription(post.description);
 
   return {
-    title: `${post.title} - Toolblip Blog`,
-    description: post.description,
+    title,
+    description,
     alternates: {
       canonical: canonicalUrl,
       types: {
@@ -34,8 +39,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       },
     },
     openGraph: {
-      title: `${post.title} | Toolblip`,
-      description: post.description,
+      title,
+      description,
       url: canonicalUrl,
       siteName: 'Toolblip',
       type: 'article',
@@ -44,8 +49,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     },
     twitter: {
       card: 'summary',
-      title: `${post.title} | Toolblip`,
-      description: post.description,
+      title,
+      description,
     },
   };
 }
@@ -86,6 +91,8 @@ export default async function BlogPostPage({ params }: PageProps) {
           },
         ].filter((item) => item.href !== `/blog/${slug}`)
       : [];
+
+  const relatedPosts = selectRelatedPosts(getBlogPosts(), currentPost);
 
   return (
     <main className="min-h-screen" style={{ background: 'var(--bg)' }}>
@@ -236,6 +243,45 @@ export default async function BlogPostPage({ params }: PageProps) {
               ))}
             </div>
           </div>
+        )}
+
+        {relatedPosts.length > 0 && (
+          <section className="mt-10 pt-8 border-t border-[var(--line)]" aria-labelledby="related-posts-title">
+            <h2
+              id="related-posts-title"
+              className="mb-4"
+              style={{
+                fontFamily: 'var(--f-display)',
+                fontSize: '22px',
+                fontWeight: 700,
+                letterSpacing: '-0.02em',
+                color: 'var(--fg-0)',
+              }}
+            >
+              Related posts
+            </h2>
+            <ul className="grid gap-4 md:grid-cols-3">
+              {relatedPosts.map((related) => (
+                <li key={related.slug}>
+                  <Link
+                    href={`/blog/${related.slug}`}
+                    className="block h-full group border border-[var(--line)] rounded-2xl p-4 transition-all duration-200 hover:border-[var(--line-2)] hover:shadow-sm"
+                    style={{ background: 'var(--surface)' }}
+                  >
+                    <span
+                      className="font-semibold text-[var(--fg-0)] group-hover:text-[var(--red)] transition-colors"
+                      style={{ fontFamily: 'var(--f-display)', fontSize: '17px', letterSpacing: '-0.01em' }}
+                    >
+                      {related.title}
+                    </span>
+                    <span className="mt-2 block text-sm" style={{ color: 'var(--fg-2)', fontFamily: 'var(--f-mono)' }}>
+                      {related.category}
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
         )}
 
         <p className="mt-10 text-sm" style={{ color: 'var(--fg-2)' }}>

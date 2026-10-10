@@ -24,7 +24,7 @@ vi.mock('@/content/blog-manifest', async (importOriginal) => {
   };
 });
 
-import { getBlogPost, getBlogPosts } from './blog';
+import { getBlogPost, getBlogPosts, renderBlogMarkdown } from './blog';
 
 describe('blog featured images', () => {
   it.each(imageCases)('%s resolves consistently for cards and article pages', (slug, _input, expected) => {
@@ -48,4 +48,26 @@ describe('WCAG contrast checklist', () => {
     expect(content).not.toContain('3.01:1');
     expect(content).not.toContain('fails AA for normal body text');
   });
+});
+
+describe('blog markdown headings', () => {
+  it('drops the leading h1 and demotes any other h1 to h2', () => {
+    const html = renderBlogMarkdown('# Title\n\nIntro\n\n# Another\n\n### Deep');
+    expect(html).not.toContain('<h1');
+    expect(html).not.toContain('Title</h2>');
+    expect(html).toContain('<h2>Another</h2>');
+    expect(html).toContain('<h3>Deep</h3>');
+  });
+
+  it('strips a leading h1 that ends at the end of the string', () => {
+    expect(renderBlogMarkdown('# Only Title')).toBe('');
+    expect(renderBlogMarkdown('# Title')).not.toContain('<h1');
+    expect(renderBlogMarkdown('# Title\r\n\r\nBody')).toContain('<p>Body</p>');
+  });
+
+  it('renders every real post with no h1', () => {
+    for (const post of getBlogPosts()) {
+      expect(getBlogPost(post.slug)?.content ?? '').not.toMatch(/<h1[\s>]/);
+    }
+  }, 60_000);
 });
