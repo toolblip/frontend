@@ -11,6 +11,13 @@ describe('tool meta descriptions', () => {
     expect(bad).toEqual([]);
   });
 
+  it('never claims no signup in generated descriptions', () => {
+    const offenders = tools
+      .filter((tool) => /no signup/i.test(String(buildToolMetadata(tool).description)))
+      .map((tool) => tool.slug);
+    expect(offenders).toEqual([]);
+  });
+
   it('declares og:type website on tool pages', () => {
     const og = buildToolMetadata(tools[0]).openGraph as { type?: string } | undefined;
     expect(og?.type).toBe('website');

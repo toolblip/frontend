@@ -53,9 +53,12 @@ function documentTitle(tool: Tool): string {
   return `${base} | Toolblip`;
 }
 
-const DESCRIPTION_FALLBACK_SUFFIXES = [
-  'Free to use on Toolblip.',
-  'Free to use online on Toolblip, no signup needed.',
+// Factual, template-level padding for short descriptions. Only claims that hold
+// for every tool (free, hosted on Toolblip) are used.
+const DESCRIPTION_FALLBACK_SUFFIXES: ReadonlyArray<(tool: Tool) => string> = [
+  () => 'Free on Toolblip.',
+  (tool) => `Free online ${tool.name} on Toolblip.`,
+  (tool) => `Also in the free ${tool.category} section of Toolblip.`,
 ];
 
 /**
@@ -78,12 +81,13 @@ export function buildToolDescription(tool: Tool): string {
     if (next.length > META_DESCRIPTION_MAX) continue;
     text = next;
   }
-  if (text.length < META_DESCRIPTION_MIN) {
-    const suffixes = [...DESCRIPTION_FALLBACK_SUFFIXES, `Use the free ${tool.name} online on Toolblip, no signup needed.`];
-    const fit = suffixes
-      .map((suffix) => `${text} ${suffix}`.trim())
-      .find((next) => next.length >= META_DESCRIPTION_MIN && next.length <= META_DESCRIPTION_MAX);
-    if (fit) text = fit;
+  // Greedy: append the first suffix that still fits under the max.
+  while (text.length < META_DESCRIPTION_MIN) {
+    const fit = DESCRIPTION_FALLBACK_SUFFIXES
+      .map((suffix) => `${text} ${suffix(tool)}`)
+      .find((next) => next.length <= META_DESCRIPTION_MAX);
+    if (!fit) break;
+    text = fit;
   }
   return text;
 }
