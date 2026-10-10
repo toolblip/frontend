@@ -28,7 +28,7 @@ const blogMarked = new Marked({
 });
 
 export function renderBlogMarkdown(markdown: string): string {
-  const body = markdown.replace(/^\s*# [^\n]*\n+/, '');
+  const body = markdown.replace(/^\s*# [^\n]*(?:\r?\n+|$)/, '');
   return blogMarked.parse(body, { async: false });
 }
 

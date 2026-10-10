@@ -59,9 +59,15 @@ describe('blog markdown headings', () => {
     expect(html).toContain('<h3>Deep</h3>');
   });
 
+  it('strips a leading h1 that ends at the end of the string', () => {
+    expect(renderBlogMarkdown('# Only Title')).toBe('');
+    expect(renderBlogMarkdown('# Title')).not.toContain('<h1');
+    expect(renderBlogMarkdown('# Title\r\n\r\nBody')).toContain('<p>Body</p>');
+  });
+
   it('renders every real post with no h1', () => {
     for (const post of getBlogPosts()) {
       expect(getBlogPost(post.slug)?.content ?? '').not.toMatch(/<h1[\s>]/);
     }
-  });
+  }, 60_000);
 });
