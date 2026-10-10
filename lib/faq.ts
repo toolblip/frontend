@@ -411,6 +411,15 @@ const OVERRIDES: Record<string, FAQ[]> = {
   ],
   'meme-maker': [
     { q: "What does this tool support?", a: "Upload an image or load the example, then add top and bottom captions. Adjust font size, text color and outline color while the PNG preview updates. Download the current result; there is no library of popular meme templates." },
+    { q: "Is my image uploaded anywhere?", a: "No. The image is drawn onto a canvas in your browser, and the PNG is created there too. Toolblip does not receive the file." },
+    { q: "Which font does the meme text use?", a: "Impact, bold, with an outline, when your device has it. Otherwise the browser falls back to Haettenschweiler, Arial Narrow Bold, or a generic sans-serif, so the look varies by device." },
+    { q: "Can I use popular meme templates?", a: "No. There is no template library and no multi-panel layout. Upload your own image or load the example." },
+  ],
+  'currency-converter': [
+    { q: "Are these live exchange rates?", a: "No. The page stores a fixed set of sample rates for 20 currencies with USD as the base. They are not updated, so they can differ a lot from current market rates." },
+    { q: "How is the result calculated?", a: "The amount is divided by the source currency's sample rate to get USD, then multiplied by the target currency's sample rate. The result is shown to two decimal places." },
+    { q: "Can I use it for payments, invoices, or accounting?", a: "No. It applies no bank spreads, fees, or card charges, and it has no historical rates. Use your bank, card issuer, or a current market source for real money." },
+    { q: "Which currencies are included?", a: "USD, EUR, GBP, JPY, CAD, AUD, CHF, CNY, INR, MXN, BRL, KRW, SGD, HKD, NOK, SEK, DKK, NZD, ZAR, and RUB." },
   ],
   'markdown-to-pdf': [
     { q: "What does this tool support?", a: "Preview sanitized Markdown and its HTML. Direct PDF download produces paginated ASCII text with headings and code blocks; Unicode, images and tables require Print / Save PDF. Browser printing retains richer styling and depends on browser print settings. There is no custom-theme selector." },
@@ -1460,9 +1469,12 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: "What should I know before using it?", a: "Results update as you change the value and units. Invalid numbers are rejected, as are temperatures below absolute zero. Calculations use floating-point arithmetic, so displayed results can be rounded." },
   ],
   'grammar-checker': [
-    { q: 'Where do the grammar and spelling checks come from?', a: 'A live call to the LanguageTool grammar API, not a small built-in rule list, so it can catch a much wider range of errors than simple pattern matching.' },
+    { q: 'Where do the grammar and spelling checks come from?', a: 'Your text is sent through Toolblip to the public LanguageTool API, which returns the matches. The checks are not run by a built-in rule list in your browser, so the results depend on that external service.' },
+    { q: 'Is my text stored?', a: 'Toolblip forwards the text for checking and does not save it. LanguageTool\'s own terms apply to its public API, so avoid pasting sensitive content you would not send to a third-party service.' },
     { q: 'Can I apply the suggested fixes directly?', a: 'Yes, each issue lists up to three replacement options as buttons, and clicking one swaps it into your text at that exact spot.' },
-    { q: 'What happens if the grammar service is unreachable?', a: 'It shows a clear connection error instead of a silent failure or a fake result, so you know to try again.' },
+    { q: 'What happens if the grammar service is unreachable?', a: 'It shows a connection error instead of a silent failure or a fake result. The public service can also be busy or rate-limited, so wait a moment and try again.' },
+    { q: 'What are the limits?', a: 'English (en-US) only, up to 20,000 characters per check.' },
+    { q: 'Does it rewrite my text?', a: 'No. It lists matches for you to accept or ignore. Some are style suggestions, and it does not judge meaning or check facts.' },
   ],
   'hash-identifier': [
     { q: 'How does it guess the hash type?', a: 'Mainly by digest length, such as 32 characters for MD5 or 64 for SHA-256, combined with format patterns like the $2a$ prefix for bcrypt or {sha1} for Apache-style hashes.' },
@@ -1591,8 +1603,10 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'How does Auto Detect know what the background is?', a: 'It samples the pixel colors at all four corners of the image, averages them into one background color, then flood-fills outward from those corners removing any pixel within your tolerance of that color.' },
     { q: 'When should I use Color Key instead?', a: 'Color Key removes a specific color you choose with the color picker, such as green screen footage, rather than guessing the background from the corners.' },
     { q: 'What does the Tolerance slider control?', a: 'It sets how close a pixel\'s color has to be to the detected or chosen background color to get made transparent, so raising it removes more color variation like shadows or gradients.' },
-    { q: "How is AI mode different from color matching?", a: "AI mode downloads an IMG.LY model and runs segmentation locally. Auto Detect and Color Key use pixel-color matching instead. Downloads or runtime setup can fail. Cancel discards the result but may not stop computation." },
-    { q: "What is downloaded?", a: "A PNG with the current background-removal result." },
+    { q: "How is AI mode different from color matching?", a: "AI mode uses a local IMG.LY segmentation model that Toolblip serves itself, and it runs in your browser. Auto Detect and Color Key use pixel-color matching instead and are not AI. Model downloads or runtime setup can fail. Cancel discards the result but may not stop computation." },
+    { q: "How big is the AI model download?", a: "About 40 MB, fetched from Toolblip the first time you use AI mode. Later visits can reuse the browser cache." },
+    { q: "Is my image uploaded?", a: "No. Processing happens in your browser. The only downloads are the AI model and the example image when you press Example." },
+    { q: "What file types and sizes are accepted?", a: "PNG, JPG, WebP, GIF, and HEIC. Upload size is capped by plan, 5 MB on the free tier, and a file over the cap is blocked with a notice. The result downloads as a PNG." },
   ],
   'image-compressor': [
     { q: 'Which output formats can I compress to?', a: 'JPEG, PNG, or WebP, chosen with a button group. JPEG and WebP use a maximum quality setting; PNG stays lossless.' },
@@ -2167,9 +2181,11 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Can I keep the original capitalization or surrounding spaces?', a: 'Yes, two checkboxes let you turn off automatic lowercasing and automatic trimming independently, so you can generate a slug that preserves your original casing or edge whitespace if you want.' },
   ],
   'text-to-speech': [
-    { q: 'Where do the voice options come from?', a: "It reads whatever voices your browser and operating system have installed via the Web Speech API, and defaults to the first English voice it finds if one is available." },
+    { q: 'Where do the voice options come from?', a: "It reads whatever voices your browser and operating system provide via the Web Speech API, and defaults to the first English voice if one is available. The list varies by device and can be empty." },
     { q: 'What can I adjust besides which voice is used?', a: 'Two sliders control speed (0.5x to 2x) and pitch (0.5x to 2x), both apply the next time you press Speak.' },
     { q: 'Can I stop playback partway through?', a: 'Yes, the Speak button turns into a Stop button while audio is playing, clicking it cancels the speech immediately.' },
+    { q: 'Does it work offline?', a: 'It depends on the voices. Voices installed on your device can work without a connection, but some browsers provide voices over the network, and those need internet access.' },
+    { q: 'Can I save the audio as a file?', a: 'No. The tool plays speech in the page and does not create an MP3 or WAV download.' },
   ],
   'text-uniqueness-checker': [
     { q: 'How does it detect repeated phrases?', a: 'It scans your text for runs of 5 to 10 consecutive words that appear more than once and are longer than 20 characters, listing each repeated phrase with how many times it occurs.' },

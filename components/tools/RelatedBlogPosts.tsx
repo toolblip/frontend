@@ -47,6 +47,11 @@ const reviewedTutorials: Record<EditorialToolSlug, readonly string[]> = {
   'time-zone-converter': [],
   'countdown-timer': [],
   'svg-to-png': [],
+  'image-background-remover': [],
+  'grammar-checker': [],
+  'currency-converter': [],
+  'meme-maker': [],
+  'text-to-speech': [],
   'favicon-generator': ['image-conversion-optimization-guide'],
   'serp-preview': [],
 };

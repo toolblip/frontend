@@ -58,6 +58,12 @@ const SEO_TITLE_OVERRIDES: Record<string, string> = {
   'time-zone-converter': 'Time Zone Converter — Free Local Time Across Zones',
   'countdown-timer': 'Countdown Timer — Free Hours, Minutes & Seconds',
   'svg-to-png': 'SVG to PNG Converter — Free, Keeps Transparency',
+  // Wave 5 head terms (DataForSEO 2026-10-10).
+  'image-background-remover': 'Remove Background — Free AI or Color Key Tool',
+  'grammar-checker': 'Grammar Checker — Free Online Grammar & Spell Check',
+  'currency-converter': 'Currency Converter — Free Calculator, Sample Rates',
+  'meme-maker': 'Meme Generator — Free Top & Bottom Text Maker',
+  'text-to-speech': 'Text to Speech — Free Browser Voices, Speed & Pitch',
 };
 
 function documentTitle(tool: Tool): string {

@@ -41,6 +41,11 @@ const priorityTutorials: Record<string, string[]> = {
   'time-zone-converter': [],
   'countdown-timer': [],
   'svg-to-png': [],
+  'image-background-remover': [],
+  'grammar-checker': [],
+  'currency-converter': [],
+  'meme-maker': [],
+  'text-to-speech': [],
 };
 
 function renderToolPosts(slug: string) {

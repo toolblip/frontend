@@ -204,6 +204,11 @@ describe('tool meta descriptions', () => {
       { slug: 'time-zone-converter', titlePart: 'Time Zone Converter' },
       { slug: 'countdown-timer', titlePart: 'Countdown Timer' },
       { slug: 'svg-to-png', titlePart: 'SVG to PNG Converter' },
+      { slug: 'image-background-remover', titlePart: 'Remove Background' },
+      { slug: 'grammar-checker', titlePart: 'Grammar Checker' },
+      { slug: 'currency-converter', titlePart: 'Currency Converter' },
+      { slug: 'meme-maker', titlePart: 'Meme Generator' },
+      { slug: 'text-to-speech', titlePart: 'Text to Speech' },
     ];
     for (const { slug, titlePart } of cases) {
       const metadata = buildToolMetadata(getToolBySlug(slug)!);
