@@ -194,6 +194,11 @@ describe('tool meta descriptions', () => {
       { slug: 'code-diff', titlePart: 'Code Diff' },
       { slug: 'cron-parser', titlePart: 'Cron Expression Parser' },
       { slug: 'password-strength-checker', titlePart: 'Password Strength Checker' },
+      { slug: 'random-number-generator', titlePart: 'Random Number Generator' },
+      { slug: 'age-calculator', titlePart: 'Age Calculator' },
+      { slug: 'tip-calculator', titlePart: 'Tip Calculator' },
+      { slug: 'morse-code-translator', titlePart: 'Morse Code Translator' },
+      { slug: 'roman-numeral-converter', titlePart: 'Roman Numeral Converter' },
     ];
     for (const { slug, titlePart } of cases) {
       const metadata = buildToolMetadata(getToolBySlug(slug)!);

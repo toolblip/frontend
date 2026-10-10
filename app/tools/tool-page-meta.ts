@@ -38,6 +38,12 @@ const SEO_TITLE_OVERRIDES: Record<string, string> = {
   'code-diff': 'Code Diff — Free Diff Checker for Code',
   'cron-parser': 'Cron Expression Parser — Free Next Run Times',
   'password-strength-checker': 'Password Strength Checker — Free Local Heuristics',
+  // Wave 3 head terms (DataForSEO 2026-10-09).
+  'random-number-generator': 'Random Number Generator — Free Integers in a Range',
+  'age-calculator': 'Age Calculator — Free Years, Months & Days',
+  'tip-calculator': 'Tip Calculator — Free Bill Split & Tip Percent',
+  'morse-code-translator': 'Morse Code Translator — Free Encode & Decode',
+  'roman-numeral-converter': 'Roman Numeral Converter — Free Number ↔ Roman',
 };
 
 const META_DESCRIPTION_MAX = 160;

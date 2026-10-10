@@ -26,6 +26,12 @@ export const reviewedToolSlugs = [
   "unix-timestamp-converter",
   "cron-parser",
   "password-strength-checker",
+  // Wave 3 high-volume utilities (DataForSEO 2026-10-09).
+  "random-number-generator",
+  "age-calculator",
+  "tip-calculator",
+  "morse-code-translator",
+  "roman-numeral-converter",
 ] as const;
 export type ReviewedToolSlug = typeof reviewedToolSlugs[number];
 export const reviewedRelatedTools: Record<ReviewedToolSlug, readonly string[]> = {
@@ -146,6 +152,31 @@ export const reviewedRelatedTools: Record<ReviewedToolSlug, readonly string[]> =
     "password-generator",
     "hash-identifier",
     "uuid-generator"
+  ],
+  "random-number-generator": [
+    "random-string-generator",
+    "uuid-generator",
+    "password-generator"
+  ],
+  "age-calculator": [
+    "unix-timestamp-converter",
+    "unit-converter",
+    "percentage-calculator"
+  ],
+  "tip-calculator": [
+    "percentage-calculator",
+    "unit-converter",
+    "random-number-generator"
+  ],
+  "morse-code-translator": [
+    "binary-to-text",
+    "case-converter",
+    "character-counter"
+  ],
+  "roman-numeral-converter": [
+    "number-base-converter",
+    "binary-to-text",
+    "case-converter"
   ]
 };
 export const publishedTutorialTools = {

@@ -31,6 +31,11 @@ const priorityTutorials: Record<string, string[]> = {
   'unix-timestamp-converter': ['unix-timestamp-converter'],
   'cron-parser': ['cron-expressions-explained', 'how-to-use-cron-expression-generator'],
   'password-strength-checker': [],
+  'random-number-generator': [],
+  'age-calculator': [],
+  'tip-calculator': [],
+  'morse-code-translator': [],
+  'roman-numeral-converter': [],
 };
 
 function renderToolPosts(slug: string) {

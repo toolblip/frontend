@@ -25,4 +25,9 @@ export const priorityToolLimits: Record<ReviewedToolSlug, string> = {
   'unix-timestamp-converter': 'Two-way convert between Unix epoch seconds and a local datetime-local field, with a Local preview string. No separate UTC datetime panel and no milliseconds mode—use whole seconds.',
   'cron-parser': 'Parses standard 5-field cron (minute–weekday), shows a plain-English description and the next five local run times. Not a visual cron builder—use Cron Expression Generator to construct schedules.',
   'password-strength-checker': 'Local composition and pattern heuristics plus a random-model bit upper bound. Does not predict crack time or check breach databases—pair with Password Generator for creating new secrets.',
+  'random-number-generator': 'Generates integers only (safe integer min/max, count 1–1000). Optional unique batch fails if count exceeds the range. Uses Math.random—not cryptographic randomness; use Password Generator for secrets.',
+  'age-calculator': 'Calendar age between a birth date and an as-of date (UTC date-only). Shows years/months/days, totals, and next birthday. Not a legal age or timezone wall-clock calculator.',
+  'tip-calculator': 'Bill amount, tip percent (presets 10–25% or custom 0–100), and equal split across any whole number of people. Tip and total are arithmetic only—no tax or currency conversion.',
+  'morse-code-translator': 'Latin A–Z, digits, and a fixed punctuation set ↔ Morse. Unknown text characters are skipped; decode needs dots/dashes with spaces between letters and / between words.',
+  'roman-numeral-converter': 'Classical Roman numerals for 1–3999, live both directions. Letters outside IVXLCDM are rejected; not for medieval/epigraphic variants.',
 };
