@@ -20,9 +20,11 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { category } = await searchParams;
   const matched = matchCategory(category);
-  const title = matched ? `${matched} Tools — Free Online | Toolblip` : BASE_TITLE;
-  const description = matched
-    ? `Browse free ${matched} tools on Toolblip. Part of a catalog of 100+ free browser-based developer tools.`
+  // Some category labels already end in "Tools" (e.g. "PDF Tools"); avoid "PDF Tools Tools".
+  const label = matched?.replace(/\s+Tools$/i, '');
+  const title = label ? `${label} Tools — Free Online | Toolblip` : BASE_TITLE;
+  const description = label
+    ? `Browse free ${label} tools on Toolblip. Part of a catalog of 100+ free browser-based developer tools.`
     : BASE_DESCRIPTION;
   return {
     title,
