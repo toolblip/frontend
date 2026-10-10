@@ -202,7 +202,7 @@ const OVERRIDES: Record<string, FAQ[]> = {
   "time-zone-converter": [
     {
       "q": "What does this tool produce?",
-      "a": "Convert a dated local time to several IANA time zones. Compare a meeting time in New York with London and Tokyo, including date changes and daylight-saving offsets for that date."
+      "a": "Each selected target zone shows the same moment as your source date and time. If the conversion crosses midnight, the target shows the next or previous day."
     },
     {
       "q": "What are the limits and important options?",
@@ -297,8 +297,9 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: "What should I know before using it?", a: "Inputs are limited to 10 MB and 16 megapixels. Output size is measured and can be larger than the input. SVG must be self-contained and static; external resources and scripts are rejected. JPEG export flattens transparency onto the chosen background and uses lossy compression." },
   ],
   'svg-to-png': [
-    { q: "What does this tool do?", a: "Convert SVG images to PNG and compare the measured output size." },
-    { q: "What should I know before using it?", a: "Inputs are limited to 10 MB and 16 megapixels. Output size is measured and can be larger than the input. SVG must be self-contained and static; external resources and scripts are rejected." },
+    { q: "What does this tool do?", a: "Converts a self-contained SVG to PNG in your browser and reports the PNG dimensions, the input size, and whether the output is larger, smaller, or the same size." },
+    { q: "What should I know before using it?", a: "Inputs are limited to 10 MB and 16 megapixels. SVG must be static and self-contained: scripts, stylesheets, embedded images, and external references are rejected. PNG output keeps transparent areas." },
+    { q: "Why can the PNG be larger than the SVG?", a: "A PNG stores pixels at the SVG's natural size, so a simple vector drawing can produce a bigger file than its SVG source." },
   ],
   'markdown-table-from-json': [
     { q: "What does this tool do?", a: "Convert JSON objects to a Markdown table with the union of their keys and escaped cell text." },
@@ -886,9 +887,10 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'What happens if the binary has an invalid character?', a: 'You get an explicit "Invalid binary string" error if anything other than 0, 1, and whitespace is present, instead of a garbled or silently wrong text result.' },
   ],
   'bmi-calculator': [
-    { q: 'Does it support both metric and imperial units?', a: 'Yes. Switching to metric uses kilograms and centimeters with the standard kg / m squared formula, while imperial uses pounds and inches with the 703 multiplier formula, so you never have to convert units yourself.' },
-    { q: 'What do the result categories mean?', a: 'Your BMI number is matched against the standard underweight, normal, overweight, and obese thresholds, and the matching category is shown alongside the number rather than leaving you to look up the ranges separately.' },
-    { q: 'Does it account for age, sex, or muscle mass?', a: 'No, it only computes the standard weight-to-height BMI ratio. It does not adjust for age, sex, or body composition, which is a known limitation of the BMI formula itself, not something this calculator tries to correct.' },
+    { q: 'Does it support metric and imperial units?', a: 'Yes. Metric takes height in centimeters and weight in kilograms (kg / m squared). Imperial takes inches and pounds and uses the 703 multiplier, so you do not convert units first.' },
+    { q: 'What do the category labels mean?', a: 'The BMI is rounded to one decimal. Below 18.5 is Underweight, 18.5 to under 25 is Normal, 25 to under 30 is Overweight, and 30 or above is Obese.' },
+    { q: 'Does it account for age, sex, or muscle mass?', a: 'No. It computes only the weight-to-height ratio. It does not adjust for age, sex, or body composition, so it cannot tell muscle from fat.' },
+    { q: 'Is the result a diagnosis?', a: 'No. BMI is a rough screening number. It is not a diagnosis, and health decisions should involve a clinician who can look at more than one measure.' },
   ],
   'broken-image-checker': [
     { q: 'How does it find the images on a page?', a: 'It reads the page HTML, resolves img src, data-src, data-lazy-src, and srcset values against the submitted page URL, dedupes them, and checks the first 20 unique HTTP image URLs.' },
@@ -1087,6 +1089,7 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Does this tool test my server\'s actual CORS behavior?', a: 'No, it only generates the header configuration for you to add to your own server, it does not send requests to check what your server currently returns.' },
   ],
   'countdown-timer': [
+    { q: 'Does it play a sound or send an alert when time runs out?', a: 'No. The display stops at 00:00:00, but no sound or notification is played.' },
     { q: 'How precise is the countdown while running?', a: 'It ticks down once per second using a real interval timer, with hours, minutes, and seconds set independently before starting.' },
     { q: 'Can I pause and resume the countdown?', a: 'Yes, the Start button becomes Pause once running, stopping the interval without losing the remaining time, pressing it again resumes from where it left off.' },
     { q: 'What does Reset do versus Pause?', a: 'Pause just halts the ticking clock, Reset clears the remaining time entirely so the duration inputs become editable again.' },
@@ -1442,8 +1445,9 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'What do the score labels mean?', a: 'Reading Ease is labeled from Very Easy down to Very Difficult, and Grade Level is labeled from Elementary through Graduate, so you don\'t have to interpret the raw numbers yourself.' },
   ],
   'fraction-calculator': [
-    { q: 'Which operations can it perform?', a: 'Addition, subtraction, multiplication, and division on two fractions, selected with a button between the two input fractions.' },
-    { q: 'Does it simplify the result?', a: 'Yes, the result is automatically reduced to lowest terms using the greatest common divisor.' },
+    { q: 'Which operations can it perform?', a: 'Addition, subtraction, multiplication, and division on two fractions, selected with the operator buttons between the two inputs.' },
+    { q: 'What inputs does it accept?', a: 'Whole numbers for the numerator and denominator of each fraction. A mixed number such as 1 1/2 must be entered as an improper fraction (3/2). Zero denominators are rejected.' },
+    { q: 'Does it show the working?', a: 'Yes. Addition and subtraction show the common denominator, multiplication shows the products before simplifying, and division shows the reciprocal step, then the simplification.' },
     { q: 'What other formats does it show?', a: 'Alongside the simplified fraction, it shows the equivalent decimal value and, when applicable, the result as a mixed number.' },
   ],
   'fraction-to-decimal': [

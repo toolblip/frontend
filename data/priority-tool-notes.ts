@@ -30,4 +30,9 @@ export const priorityToolLimits: Record<ReviewedToolSlug, string> = {
   'tip-calculator': 'Bill amount, tip percent (presets 10–25% or custom 0–100), and equal split across any whole number of people. Tip and total are arithmetic only—no tax or currency conversion.',
   'morse-code-translator': 'Latin A–Z, digits, and a fixed punctuation set ↔ Morse. Unknown text characters are skipped; decode needs dots/dashes with spaces between letters and / between words.',
   'roman-numeral-converter': 'Classical Roman numerals for 1–3999, live both directions. Letters outside IVXLCDM are rejected; not for medieval/epigraphic variants.',
+  'bmi-calculator': 'Standard BMI (kg/m² metric, 703 × lb/in² imperial) rounded to one decimal, with Underweight, Normal, Overweight, and Obese bands. Does not adjust for age, sex, or body composition.',
+  'fraction-calculator': 'Adds, subtracts, multiplies, or divides two fractions of whole-number parts with step-by-step working. Mixed numbers must be entered as improper fractions; zero denominators are rejected.',
+  'time-zone-converter': "Converts a dated local time to chosen IANA zones using the browser's time zone rules. No live time service; times that repeat or do not exist during a DST change show an error.",
+  'countdown-timer': 'Browser countdown with hours (0–99), minutes, and seconds, plus Start/Pause and Reset. Plays no sound and sends no notification when it reaches zero.',
+  'svg-to-png': 'Converts self-contained static SVG (up to 10 MB and 16 megapixels) to PNG in the browser, keeping transparency. Scripts, stylesheets, embedded images, and external references are rejected.',
 };

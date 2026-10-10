@@ -32,6 +32,12 @@ export const reviewedToolSlugs = [
   "tip-calculator",
   "morse-code-translator",
   "roman-numeral-converter",
+  // Wave 4 head terms (DataForSEO 2026-10-10).
+  "bmi-calculator",
+  "fraction-calculator",
+  "time-zone-converter",
+  "countdown-timer",
+  "svg-to-png",
 ] as const;
 export type ReviewedToolSlug = typeof reviewedToolSlugs[number];
 export const reviewedRelatedTools: Record<ReviewedToolSlug, readonly string[]> = {
@@ -177,6 +183,31 @@ export const reviewedRelatedTools: Record<ReviewedToolSlug, readonly string[]> =
     "number-base-converter",
     "binary-to-text",
     "case-converter"
+  ],
+  "bmi-calculator": [
+    "percentage-calculator",
+    "unit-converter",
+    "age-calculator"
+  ],
+  "fraction-calculator": [
+    "fraction-to-decimal",
+    "percentage-calculator",
+    "unit-converter"
+  ],
+  "time-zone-converter": [
+    "unix-timestamp-converter",
+    "cron-parser",
+    "countdown-timer"
+  ],
+  "countdown-timer": [
+    "time-zone-converter",
+    "unix-timestamp-converter",
+    "random-number-generator"
+  ],
+  "svg-to-png": [
+    "image-resizer",
+    "image-compressor",
+    "svg-to-jpg"
   ]
 };
 export const publishedTutorialTools = {

@@ -900,7 +900,7 @@ export const tools: Tool[] = [
   { name: 'Binary to Text', slug: 'binary-to-text', description: 'Convert binary strings to ASCII text and vice versa with instant encoding preview.', emoji: '0️⃣', category: 'Conversion' },
   { name: 'Percentage Difference', slug: 'percentage-difference', description: 'Calculate percentage difference between two values with direction and absolute result options.', emoji: '📊', category: 'Math' },
   { name: 'Age Calculator', slug: 'age-calculator', description: 'Free age calculator for years, months, and days between a birth date and an as-of date—plus next birthday countdown.', emoji: '🎂', category: 'Utility' },
-  { name: 'Countdown Timer', slug: 'countdown-timer', description: 'Set a countdown timer with custom duration, alerts, and sound notifications.', emoji: '⏰', category: 'Utility' },
+  { name: 'Countdown Timer', slug: 'countdown-timer', description: 'Free countdown timer with hours, minutes, and seconds, Start/Pause and Reset controls. Runs in your browser; no sound or notification when time is up.', emoji: '⏰', category: 'Utility' },
   { name: 'Color Blindness Simulator', slug: 'color-blindness-simulator', description: 'Simulate how colors appear to people with different types of color vision deficiency.', emoji: '👁️', category: 'Color' },
   { name: 'HTML to Markdown', slug: 'html-to-markdown', description: 'Convert HTML to Markdown format with options to preserve links, images, and code blocks.', emoji: '📝', category: 'Conversion' },
   { name: 'JSON Path Tester', slug: 'json-path-tester', description: "Query JSON with a bounded JSONPath grammar and live array results.", emoji: '🔎', category: 'Developer' },
