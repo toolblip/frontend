@@ -352,6 +352,21 @@ function DirectoryBadges({ duplicate = false }: { duplicate?: boolean }) {
       <DirectoryBadgeLink duplicate={duplicate} href="https://curlship.com/" target="_blank" rel="noopener">
         <span className="tb-v2-directory-text">Featured on Curlship</span>
       </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://seektool.ai/" target="_blank" title="SeekTool.ai Tools Directory">
+        <span className="tb-v2-directory-text">SeekTool.ai Tools Directory</span>
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://lemonlaunch.dev/dev-tools/toolblip" target="_blank" rel="noopener">
+        <DirectoryBadgeImage src="/directory-badges/lemonlaunch.svg" alt="Featured on LemonLaunch" width="188" height="56" fallback="LemonLaunch" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://doforai.tools" target="_blank">
+        <DirectoryBadgeImage src="/directory-badges/doforai-tools.webp" alt="Featured on doforai.tools" width="172" height="54" fallback="doforai.tools" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://theaitoolsdir.com/product/toolblip?ref=badge" target="_blank" rel="dofollow">
+        <DirectoryBadgeImage src="/directory-badges/theaitoolsdir.svg" alt="Featured on TheAIToolsDir" width="182" height="46" fallback="TheAIToolsDir" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://hiproducty.com" target="_blank" rel="noopener noreferrer">
+        <span className="tb-v2-directory-text">Featured on Hiproducty</span>
+      </DirectoryBadgeLink>
     </div>
   );
 }
