@@ -481,6 +481,139 @@
       "file": "product-launchify.svg",
       "sha256": "79639dc3be4ae5a9187e0751364d024cdef349890292688d352925c01f7dcc6c",
       "retrieved_on": "2026-10-05"
+    },
+    {
+      "name": "Featured on ShipGrowth",
+      "source": "https://storage.shipgrowth.dev/badge-light.png",
+      "file": "shipgrowth.png",
+      "sha256": "c5ec2745c70a108f4fe559b3c6ffdc3a9b850e3bdfa45ee5be4626b95d830ca0",
+      "retrieved_on": "2026-10-12"
+    },
+    {
+      "name": "Featured on ToolsClaw",
+      "source": "https://toolsclaw.com/badge/toolsclaw.com-badge.svg",
+      "file": "toolsclaw.svg",
+      "sha256": "d45d13fb4a198ede350546bd16f1c2d59cbaec4fc5b4bf37f14aecc1686c2ff5",
+      "retrieved_on": "2026-10-12"
+    },
+    {
+      "name": "Featured on Toolcurio",
+      "source": "https://toolcurio.com/badge-light.png",
+      "file": "toolcurio.png",
+      "sha256": "9f6da1b82ead630b36d3982d3bc13ce0d63904898a8b964103c35f18eb0ae4a3",
+      "retrieved_on": "2026-10-12"
+    },
+    {
+      "name": "Featured on DodoDirectory",
+      "source": "https://dododirectory.com/badge-light.png",
+      "file": "dododirectory.png",
+      "sha256": "470950cb6ad070a7e2873a3deb037e694660f4ab1f674d3717d90b4867f4dfc7",
+      "retrieved_on": "2026-10-12"
+    },
+    {
+      "name": "Listed on SaaS Cubes",
+      "source": "https://saascubes.com/images/badges/badge-dark.png",
+      "file": "saascubes.png",
+      "sha256": "dd150ae3d69c629139a4a389eb425940789902e7cdf6bad960320b59f81b898b",
+      "retrieved_on": "2026-10-12"
+    },
+    {
+      "name": "Featured on TheDevToolsDir",
+      "source": "https://thedevtoolsdir.com/badge/toolblip.svg",
+      "file": "thedevtoolsdir.svg",
+      "sha256": "ac862fa7c5782578c7bce9631c5660fe169fb15a76f091961e76b9a869653e3e",
+      "retrieved_on": "2026-10-12"
+    },
+    {
+      "name": "Featured on EasyDoFollow",
+      "source": "https://easydofollow.dev/badge/easydofollow-badge-light.svg",
+      "file": "easydofollow.svg",
+      "sha256": "75e09783e2f1194572fe43117debb920ef905ccf2a4fe0a4eb2d0d42242f828c",
+      "retrieved_on": "2026-10-12"
+    },
+    {
+      "name": "Launched on MarketingDB",
+      "source": "https://marketingdb.live/badge.svg",
+      "file": "marketingdb.svg",
+      "sha256": "fcc1537928edcd0d8180e4fd77835a6517e55ec9fec40be6013f6519ef7235d0",
+      "retrieved_on": "2026-10-12"
+    },
+    {
+      "name": "Featured On Direct2App",
+      "source": "https://www.direct2app.com/featured-light.svg",
+      "file": "direct2app.svg",
+      "sha256": "041060b28539badd66525bed0f1936bd0add7212f342bd16d73b7114e72b00bb",
+      "retrieved_on": "2026-10-12"
+    },
+    {
+      "name": "Featured on Dofollow.Tools",
+      "source": "https://dofollow.tools/badge/badge_dark.svg",
+      "file": "dofollow-tools.svg",
+      "sha256": "f7b71a190429535f30ff51cec843d8b9cd91311ddc20ba39de571a82b26fc690",
+      "retrieved_on": "2026-10-12"
+    },
+    {
+      "name": "Discover more AI tools at aifinder.site",
+      "source": "https://aifinder.site/light-badge.png",
+      "file": "aifinder.png",
+      "sha256": "9f600b7bcde04467cd2657a69489598414541259a44c72495829633d53fc4b95",
+      "retrieved_on": "2026-10-12"
+    },
+    {
+      "name": "Launchpadly Startup Directory",
+      "source": "https://launchpadly.co/embed/badges/startup/toolblip.svg?variant=listed-on",
+      "file": "launchpadly.svg",
+      "sha256": "4b5d930a70369f5865837157bf3f0442ca630c13ff98c3d6fd08c07967ded6f7",
+      "retrieved_on": "2026-10-12"
+    },
+    {
+      "name": "Toolblip on StartupTrusted",
+      "source": "https://startuptrusted.com/api/badge?type=featured&style=light",
+      "file": "startuptrusted.svg",
+      "sha256": "5ea520eb0bb6c9b4dd403204335cddf89b95f9323bf4319e8eb47f768f0cdf05",
+      "retrieved_on": "2026-10-12"
+    },
+    {
+      "name": "Listed on tools.cafe",
+      "source": "https://tools.cafe/b/light.svg",
+      "file": "tools-cafe.svg",
+      "sha256": "adba314ea33e12a66198c8536e2203a5fd7f26964f344470803482d4ecf30c90",
+      "retrieved_on": "2026-10-12"
+    },
+    {
+      "name": "Listed on Backlinkhubs",
+      "source": "https://backlinkhubs.com/badge.svg?theme=light&label=Listed%20on%20Backlinkhubs",
+      "file": "backlinkhubs.svg",
+      "sha256": "1bc57dc851933d33beb3c89cbf054692bd1c89fcc3e09a690437910d07d49535",
+      "retrieved_on": "2026-10-12"
+    },
+    {
+      "name": "Listed on Sell With boost",
+      "source": "https://sellwithboost.com/badge/listing.svg",
+      "file": "sellwithboost.svg",
+      "sha256": "aad226af9a547b5e58c7cc253171cf6f7b486076aabc88457a2aa8ca68a4dae7",
+      "retrieved_on": "2026-10-12"
+    },
+    {
+      "name": "Featured on SaaS.fyi",
+      "source": "https://saas.fyi/assets/brand/badge.svg",
+      "file": "saas-fyi.svg",
+      "sha256": "d44edc800bbfde4855a52e4fc6e0f09193d3f1970e72a94b9ed67c175996ec87",
+      "retrieved_on": "2026-10-12"
+    },
+    {
+      "name": "Featured on SaaSaur",
+      "source": "https://saasaur.com/assets/badges/featured-on-light.svg",
+      "file": "saasaur.svg",
+      "sha256": "9916f63808083ed61b67b5a00de039c0b6beb9b9571741ec0d6f73f585e1d588",
+      "retrieved_on": "2026-10-12"
+    },
+    {
+      "name": "Featured on IndexOf.AI",
+      "source": "https://indexof.ai/badge-light.svg",
+      "file": "indexof-ai.svg",
+      "sha256": "8e658c58a6d12f91a87798483a9e4b2e221e65f2baeea5ef0acdd2d1d997efdc",
+      "retrieved_on": "2026-10-12"
     }
   ]
 }
