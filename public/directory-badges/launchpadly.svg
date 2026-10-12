@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="260" height="48" viewBox="0 0 260 48" fill="none" role="img" aria-label="Launchpadly Startup Directory — 0 upvotes">
+  <rect width="260" height="48" rx="12" fill="#0a0f0d" stroke="#178a58" stroke-opacity="0.45"/>
+  <rect x="10" y="8" width="32" height="32" rx="8" fill="#111916"/>
+  <path d="M26 18V30" stroke="#34d399" stroke-width="2.6" stroke-linecap="round"/>
+  <path d="M18 24L26 16L34 24" stroke="#34d399" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M14 36H38" stroke="#64748b" stroke-width="2.6" stroke-linecap="round"/>
+  <text x="52" y="21" fill="#94a3b8" font-family="system-ui,sans-serif" font-size="8" font-weight="600" letter-spacing="0.1em">PROUDLY LISTED</text>
+  <text x="52" y="36" fill="#f8fafc" font-family="system-ui,sans-serif" font-size="15" font-weight="700">Launchpadly</text>
+  
+  <rect x="200" y="12" width="52" height="24" rx="12" fill="#111916" stroke="#178a58" stroke-opacity="0.45"/>
+  <text x="226" y="28" text-anchor="middle" fill="#34d399" font-family="system-ui,sans-serif" font-size="11" font-weight="700">▲ 0</text>
+</svg>
