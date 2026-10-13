@@ -614,6 +614,76 @@
       "file": "indexof-ai.svg",
       "sha256": "8e658c58a6d12f91a87798483a9e4b2e221e65f2baeea5ef0acdd2d1d997efdc",
       "retrieved_on": "2026-10-12"
+    },
+    {
+      "name": "LemonLaunch",
+      "source": "https://lemonlaunch.dev/badge/lemonlaunch-badge-light.svg",
+      "file": "lemonlaunch.svg",
+      "sha256": "b5c6ad157f59493b13bada7293a31cf512f92c72200b0c9a7db83d63834301e2",
+      "retrieved_on": "2026-10-13"
+    },
+    {
+      "name": "doforai.tools",
+      "source": "https://doforai.tools/badge/feature-badge-white.webp",
+      "file": "doforai-tools.webp",
+      "sha256": "98669fe56c04c3c2316bb51af5f15dfcc8ed204b4bb2f3da3df33d674604b6a3",
+      "retrieved_on": "2026-10-13"
+    },
+    {
+      "name": "TheAIToolsDir",
+      "source": "https://theaitoolsdir.com/badge/toolblip.svg",
+      "file": "theaitoolsdir.svg",
+      "sha256": "1cc3318aab0681b3dd66ac354c339211457725320937de2a0192ca0da0757dd3",
+      "retrieved_on": "2026-10-13"
+    },
+    {
+      "name": "Share Your Startup",
+      "source": "https://shareyourstartup.com/badge/418.svg",
+      "file": "shareyourstartup.svg",
+      "sha256": "2b2db3e30ce67b4ca1b6abbc3137a7710e2c233e779fd4d3d4cca294f14bb05a",
+      "retrieved_on": "2026-10-13"
+    },
+    {
+      "name": "AILaunchSpace",
+      "source": "https://ailaunch.space/assets/badges/featured.svg",
+      "file": "ailaunch.svg",
+      "sha256": "6651ac3c4689a503270691e1c78bf575f6e7bf40eeb687800692c957f511c487",
+      "retrieved_on": "2026-10-13"
+    },
+    {
+      "name": "aitoolfame.com",
+      "source": "https://aitoolfame.com/badge-light.svg",
+      "file": "aitoolfame.svg",
+      "sha256": "3c539b86c9fbb78c8fa92da09565982a37850d2202556ddeff88c55cbce6b128",
+      "retrieved_on": "2026-10-13"
+    },
+    {
+      "name": "AI Tools for Marketers",
+      "source": "https://aitoolsmarketer.com/badges/badge-dark.svg",
+      "file": "aitoolsmarketer.svg",
+      "sha256": "88fec640c80445b13ab4661540c048fda3fe45c9410ab61883b933dcb0326fe6",
+      "retrieved_on": "2026-10-13"
+    },
+    {
+      "name": "Indie Showcase",
+      "source": "https://indieshowcase.io/badge/featured-light.svg",
+      "file": "indieshowcase.svg",
+      "sha256": "53ee085cdc16303ca8bf90a34bc3220fd4fc7b47e5d4426e3ba38cbb65c2b988",
+      "retrieved_on": "2026-10-13"
+    },
+    {
+      "name": "SaaSBison",
+      "source": "https://saasbison.com/badge.png",
+      "file": "saasbison.png",
+      "sha256": "827f57be8e6d5e3149b8e0fa8429228accab30f84d408d7bcb77bb98ee58efb2",
+      "retrieved_on": "2026-10-13"
+    },
+    {
+      "name": "SaasDB",
+      "source": "https://saasdb.net/badge/featured-light.svg",
+      "file": "saasdb.svg",
+      "sha256": "e76bca01f10fe3cd3e8a91a8f634afba89ac314f32908250d57d6af53480ced4",
+      "retrieved_on": "2026-10-13"
     }
   ]
 }
