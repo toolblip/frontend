@@ -364,8 +364,8 @@ function DirectoryBadges({ duplicate = false }: { duplicate?: boolean }) {
       <DirectoryBadgeLink duplicate={duplicate} href="https://theaitoolsdir.com/product/toolblip?ref=badge" target="_blank" rel="dofollow">
         <DirectoryBadgeImage src="/directory-badges/theaitoolsdir.svg" alt="Featured on TheAIToolsDir" width="182" height="46" fallback="TheAIToolsDir" />
       </DirectoryBadgeLink>
-      <DirectoryBadgeLink duplicate={duplicate} href="https://hiproducty.com" target="_blank" rel="noopener noreferrer">
-        <span className="tb-v2-directory-text">Featured on Hiproducty</span>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://www.hiproducty.com?ref=badge" target="_blank" rel="noopener noreferrer">
+        <DirectoryBadgeImage src="/directory-badges/hiproducty.svg" alt="Featured on Hiproducty" width="180" height="48" fallback="Hiproducty" />
       </DirectoryBadgeLink>
       <DirectoryBadgeLink duplicate={duplicate} href="https://elf08.com/" target="_blank" rel="noopener">
         <span className="tb-v2-directory-text">The Elf Directory</span>
@@ -433,7 +433,7 @@ function DirectoryBadges({ duplicate = false }: { duplicate?: boolean }) {
       <DirectoryBadgeLink duplicate={duplicate} href="https://smolsaas.com/" target="_blank" rel="noopener">
         <span className="tb-v2-directory-text">Featured on SmolSaaS</span>
       </DirectoryBadgeLink>
-      <DirectoryBadgeLink duplicate={duplicate} href="https://vantaige.io/?utm_source=badge&utm_medium=embed" target="_blank" rel="noopener noreferrer">
+      <DirectoryBadgeLink duplicate={duplicate} href="https://vantaige.io/?utm_source=badge&utm_medium=embed" target="_blank" rel="noopener">
         <span className="tb-v2-directory-text">Featured on Vantaige.io</span>
       </DirectoryBadgeLink>
       <DirectoryBadgeLink duplicate={duplicate} href="https://yourhack.ai/" target="_blank" rel="noopener">

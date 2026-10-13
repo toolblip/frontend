@@ -550,7 +550,7 @@
     "rel": "dofollow"
   },
   {
-    "href": "https://hiproducty.com",
+    "href": "https://www.hiproducty.com?ref=badge",
     "target": "_blank",
     "rel": "noopener noreferrer"
   },
@@ -667,7 +667,7 @@
   {
     "href": "https://vantaige.io/?utm_source=badge&utm_medium=embed",
     "target": "_blank",
-    "rel": "noopener noreferrer"
+    "rel": "noopener"
   },
   {
     "href": "https://yourhack.ai/",

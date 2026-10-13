@@ -684,6 +684,13 @@
       "file": "saasdb.svg",
       "sha256": "e76bca01f10fe3cd3e8a91a8f634afba89ac314f32908250d57d6af53480ced4",
       "retrieved_on": "2026-10-13"
+    },
+    {
+      "name": "Hiproducty",
+      "source": "https://www.hiproducty.com/badge/hiproducty-recommend-light.svg",
+      "file": "hiproducty.svg",
+      "sha256": "b16014a7397dde9212fef52a0cd4c37318ddde4878fb83a66d54fac91b058a69",
+      "retrieved_on": "2026-10-13"
     }
   ]
 }
