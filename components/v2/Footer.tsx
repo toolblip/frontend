@@ -421,7 +421,7 @@ function DirectoryBadges({ duplicate = false }: { duplicate?: boolean }) {
         <span className="tb-v2-directory-text">Featured on Indie.deals</span>
       </DirectoryBadgeLink>
       <DirectoryBadgeLink duplicate={duplicate} href="https://indieshowcase.io">
-        <DirectoryBadgeImage src="https://indieshowcase.io/badge/featured-light.svg" alt="Featured" fallback="Indie Showcase" />
+        <DirectoryBadgeImage src="https://indieshowcase.io/badge/featured-light.svg" alt="Featured on Indie Showcase" fallback="Indie Showcase" />
       </DirectoryBadgeLink>
       <DirectoryBadgeLink duplicate={duplicate} href="https://launchnest.io/" target="_blank" rel="noopener">
         <span className="tb-v2-directory-text">Featured on LaunchNest</span>
