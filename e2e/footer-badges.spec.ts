@@ -1,6 +1,5 @@
 import { test, expect } from '@playwright/test';
 import listings from './fixtures/footer-listings.json';
-import badgeSources from '../public/directory-badges/sources.json';
 
 const group = '.tb-v2-directory-group:not([aria-hidden])';
 const codeHypeHref = 'https://codehype.ai/product/toolblip?utm_source=codehype_badge';
@@ -17,13 +16,9 @@ for (const mobile of [false, true]) {
       hasTouch: mobile,
     });
     const page = await context.newPage();
-    const externalImages: string[] = [];
     await page.route('**/*', async route => {
       const request = route.request();
-      if (new URL(request.url()).origin !== new URL(baseURL!).origin) {
-        if (badgeSources.assets.some(asset => asset.source === request.url())) externalImages.push(request.url());
-        return route.abort();
-      }
+      if (new URL(request.url()).origin !== new URL(baseURL!).origin) return route.abort();
       return route.continue();
     });
     await page.goto('/');
@@ -41,29 +36,23 @@ for (const mobile of [false, true]) {
     const before = await track.evaluate(el => getComputedStyle(el).transform);
     await expect.poll(() => track.evaluate(el => getComputedStyle(el).transform)).not.toBe(before);
     await expect(page.locator(`${group} a`)).toHaveCount(listings.length);
-    await expect(page.locator(`${group} img`)).toHaveCount(91);
+    await expect(page.locator(`${group} img`)).toHaveCount(101);
     const codeHypeLink = page.locator(`${group} a[href="${codeHypeHref}"]`);
     await expect(codeHypeLink).toHaveCount(1);
     const codeHypeImage = codeHypeLink.locator('img');
-    await expect(codeHypeImage).toHaveAttribute('src', '/directory-badges/codehype.svg');
+    await expect(codeHypeImage).toHaveAttribute('src', 'https://codehype.ai/badges/toolblip.svg?variant=find-us&v=20');
     await expect(codeHypeImage).toHaveAttribute('alt', 'Featured on CodeHype');
     await expect(codeHypeImage).toHaveAttribute('width', '180');
     await expect(codeHypeImage).toHaveAttribute('height', '65');
     await expect(codeHypeImage).toHaveAttribute('decoding', 'async');
     await expect(codeHypeImage).toHaveAttribute('loading', 'eager');
-    await expect(codeHypeImage.evaluate(async image => {
-      await (image as HTMLImageElement).decode();
-      return true;
-    })).resolves.toBe(true);
     const saasGrowLink = page.locator(`${group} a[href="${saasGrowHref}"]`);
     await expect(saasGrowLink).toHaveCount(1);
-    await expect(saasGrowLink.locator('img')).toHaveAttribute('src', '/directory-badges/saasgrow.svg');
+    await expect(saasGrowLink.locator('img')).toHaveAttribute('src', 'https://saasgrow.app/api/badge?type=featured&style=light');
     await expect(saasGrowLink.locator('img')).toHaveAttribute('alt', 'Featured on SaaSGrow');
-    await expect(saasGrowLink.locator('img')).toHaveAttribute('width', '240');
-    await expect(saasGrowLink.locator('img')).toHaveAttribute('height', '54');
     const huzzlerLink = page.locator(`${group} a[href="${huzzlerHref}"]`);
     await expect(huzzlerLink).toHaveCount(1);
-    await expect(huzzlerLink.locator('img')).toHaveAttribute('src', '/directory-badges/huzzler.png');
+    await expect(huzzlerLink.locator('img')).toHaveAttribute('src', 'https://huzzler.so/assets/images/embeddable-badges/featured.png');
     await expect(huzzlerLink.locator('img')).toHaveAttribute('alt', 'Huzzler Embed Badge');
     await expect(huzzlerLink.locator('img')).toHaveAttribute('width', '159');
     await expect(huzzlerLink.locator('img')).toHaveAttribute('height', '55');
@@ -90,7 +79,7 @@ for (const mobile of [false, true]) {
     await expect(wallOfToolsLink).toHaveCount(1);
     await expect(wallOfToolsLink).toHaveAttribute('rel', 'noopener');
     const wallOfToolsImage = wallOfToolsLink.locator('img');
-    await expect(wallOfToolsImage).toHaveAttribute('src', '/directory-badges/wall-of-tools.svg');
+    await expect(wallOfToolsImage).toHaveAttribute('src', 'https://wallof.tools/badge/toolwall-badge-light.svg');
     await expect(wallOfToolsImage).toHaveAttribute('alt', 'Featured on Wall of Tools');
     await expect(wallOfToolsImage).toHaveAttribute('width', '188');
     await expect(wallOfToolsImage).toHaveAttribute('height', '56');
@@ -98,7 +87,7 @@ for (const mobile of [false, true]) {
     const stackLedgeHref = 'https://www.stackledge.com/tools/toolblip?ref=badge&t=bdg_491aae0e9b8f91a371248d14df3586e3';
     const stackLedgeLink = page.locator(`${group} a[href="${stackLedgeHref}"]`);
     await expect(stackLedgeLink).toHaveCount(1);
-    await expect(stackLedgeLink.locator('img')).toHaveAttribute('src', '/directory-badges/stackledge.svg');
+    await expect(stackLedgeLink.locator('img')).toHaveAttribute('src', 'https://www.stackledge.com/badge?token=bdg_491aae0e9b8f91a371248d14df3586e3');
     await expect(stackLedgeLink.locator('img')).toHaveAttribute('alt', 'Featured on StackLedge');
     const easyLaunchLink = page.locator(`${group} a[href="https://easylaunch.dev/dev-tools/toolblip"]`);
     await expect(easyLaunchLink).toHaveCount(1);
@@ -117,14 +106,14 @@ for (const mobile of [false, true]) {
     const productLaunchifyLink = page.locator(`${group} a[href="https://www.productlaunchify.com"]`);
     await expect(productLaunchifyLink).toHaveCount(1);
     await expect(productLaunchifyLink).toHaveAttribute('aria-label', 'Featured on Product Launchify');
-    await expect(productLaunchifyLink.locator('img')).toHaveAttribute('src', '/directory-badges/product-launchify.svg');
+    await expect(productLaunchifyLink.locator('img')).toHaveAttribute('src', 'https://www.productlaunchify.com/images/badges/powered-by-light.svg');
     const launchAndLoopHref = 'https://www.launchandloop.com/product/toolblip';
     const launchAndLoopLink = page.locator(`${group} a[href="${launchAndLoopHref}"]`);
     await expect(launchAndLoopLink).toHaveCount(1);
     await expect(launchAndLoopLink).toHaveAttribute('rel', 'dofollow');
     const launchAndLoopImage = launchAndLoopLink.locator('img');
-    await expect(launchAndLoopImage).toHaveAttribute('src', '/directory-badges/launch-and-loop.svg');
-    await expect(launchAndLoopImage).toHaveAttribute('alt', 'Toolblip on Launch and Loop');
+    await expect(launchAndLoopImage).toHaveAttribute('src', 'https://www.launchandloop.com/api/badge/toolblip?theme=dark');
+    await expect(launchAndLoopImage).toHaveAttribute('alt', 'Toolblip on Launch & Loop');
     await expect(launchAndLoopImage).toHaveAttribute('width', '170');
     await expect(launchAndLoopImage).toHaveAttribute('height', '46');
     await expect(aiToolTrekLink).not.toHaveAttribute('target');
@@ -138,7 +127,7 @@ for (const mobile of [false, true]) {
       'https://sumodir.com',
       'https://dang.ai',
       'https://web-review.com',
-      'https://navfolders.com/',
+      'https://navfolders.com',
     ]) {
       await expect(page.locator(`${group} a[href="${href}"]`)).toHaveCount(1);
     }
@@ -159,7 +148,10 @@ for (const mobile of [false, true]) {
       }
       const image = link.locator('img');
       if (await image.count()) {
-        await expect(image).toBeVisible();
+        // Hotlinked badges are blocked above: they must fall back to text, local ones must render.
+        if ((await image.getAttribute('src'))!.startsWith('/')) await expect(image).toBeVisible();
+        else await expect(image).toBeHidden();
+        await expect(link).not.toHaveText('');
         const href = await link.getAttribute('href');
         const expectedLoading = [codeHypeHref, saasGrowHref, huzzlerHref, 'https://startupfa.me/s/toolblip?utm_source=toolblip.com'].includes(href ?? '') ? 'eager' : 'lazy';
         await expect(image).toHaveAttribute('loading', expectedLoading);
@@ -168,11 +160,10 @@ for (const mobile of [false, true]) {
       }
       await page.keyboard.press('Tab');
     }
-    await expect.poll(() => page.locator(`${group} img`).evaluateAll(images => images.every(image => {
+    await expect.poll(() => page.locator(`${group} img[src^="/"]`).evaluateAll(images => images.every(image => {
       const img = image as HTMLImageElement;
       return img.complete && img.naturalWidth > 0;
     }))).toBe(true);
-    expect(externalImages).toEqual([]);
     await strip.focus();
     await strip.evaluate(el => { el.scrollLeft = 0; });
     await strip.screenshot({ path: testInfo.outputPath('footer.png') });
@@ -180,7 +171,10 @@ for (const mobile of [false, true]) {
   });
 }
 
-test('missing and corrupt local badges show accessible text without broken icons', async ({ page }) => {
+test('missing and corrupt local badges and unreachable hotlinks show accessible text without broken icons', async ({ page, baseURL }) => {
+  await page.route('**/*', route => new URL(route.request().url()).origin !== new URL(baseURL!).origin && route.request().resourceType() === 'image'
+    ? route.abort()
+    : route.fallback());
   await page.route('**/directory-badges/*', route => route.request().url().endsWith('.png')
     ? route.fulfill({ status: 200, contentType: 'image/png', body: 'not an image' })
     : route.fulfill({ status: 404, contentType: 'text/html', body: 'Not found' }));
@@ -202,7 +196,7 @@ test('missing and corrupt local badges show accessible text without broken icons
   await expect(links.nth(19)).toHaveAccessibleName('Listed on TopAITools4U');
   await expect(page.locator(`${group} a[href="https://turbo0.com/item/toolblip"]`)).toHaveAccessibleName('Featured on Turbo0');
   await expect(page.locator(`${group} a[href="https://dang.ai"]`)).toHaveAccessibleName('Featured on Dang.ai');
-  await expect(page.locator(`${group} a[href="https://navfolders.com/"]`)).toHaveAccessibleName('Featured on NavFolders');
+  await expect(page.locator(`${group} a[href="https://navfolders.com"]`)).toHaveAccessibleName('Featured on NavFolders');
   await expect(page.locator(`${group} a[href="${codeHypeHref}"]`)).toHaveAccessibleName('Featured on CodeHype');
 });
 
