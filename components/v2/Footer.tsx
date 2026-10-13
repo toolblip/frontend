@@ -367,6 +367,78 @@ function DirectoryBadges({ duplicate = false }: { duplicate?: boolean }) {
       <DirectoryBadgeLink duplicate={duplicate} href="https://hiproducty.com" target="_blank" rel="noopener noreferrer">
         <span className="tb-v2-directory-text">Featured on Hiproducty</span>
       </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://elf08.com/" target="_blank" rel="noopener">
+        <span className="tb-v2-directory-text">The Elf Directory</span>
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://shareyourstartup.com/s/toolblip" target="_blank" rel="noopener">
+        <DirectoryBadgeImage src="/directory-badges/shareyourstartup.svg" alt="Featured on Share Your Startup" width="250" height="54" fallback="Share Your Startup" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://activdirectory.net/" target="_blank" rel="noopener">
+        <span className="tb-v2-directory-text">Featured on Activ Directory</span>
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://aibesttop.com/" target="_blank" rel="noopener">
+        <span className="tb-v2-directory-text">Featured on AI Best Top</span>
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://aiblog.tools" target="_blank" rel="noopener">
+        <span className="tb-v2-directory-text">Find us on AIBlog.Tools</span>
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://ailaunch.space/" target="_blank" rel="noopener noreferrer">
+        <DirectoryBadgeImage src="/directory-badges/ailaunch.svg" alt="Featured on AILaunchSpace" width="225" height="61" fallback="AILaunchSpace" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://aitoolfame.com/item/harun-r-rayhan" target="_blank" rel="noopener noreferrer">
+        <DirectoryBadgeImage src="/directory-badges/aitoolfame.svg" alt="Featured on aitoolfame.com" height="54" fallback="aitoolfame.com" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://www.aitoolfinder.com/" target="_blank" rel="noopener">
+        <span className="tb-v2-directory-text">Featured on AI Tool Finder</span>
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://aitoolsmarketer.com/" target="_blank" rel="noopener noreferrer">
+        <DirectoryBadgeImage src="/directory-badges/aitoolsmarketer.svg" alt="Listed on AI Tools for Marketers" width="153" height="44" fallback="AI Tools for Marketers" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://aiwith.me/" target="_blank" rel="noopener">
+        <span className="tb-v2-directory-text">Featured on AI With Me</span>
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://dailypings.com/" target="_blank" rel="noopener">
+        <span className="tb-v2-directory-text">Featured on DailyPings</span>
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://homedirectory.biz/" target="_blank" rel="noopener">
+        <span className="tb-v2-directory-text">Featured on Home Directory</span>
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://indie.deals/" target="_blank" rel="noopener">
+        <span className="tb-v2-directory-text">Featured on Indie.deals</span>
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://indieshowcase.io" target="_blank" rel="noopener">
+        <DirectoryBadgeImage src="/directory-badges/indieshowcase.svg" alt="Featured on Indie Showcase" width="200" height="54" fallback="Indie Showcase" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://launchnest.io/" target="_blank" rel="noopener">
+        <span className="tb-v2-directory-text">Featured on LaunchNest</span>
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://listmysaas.xyz/" target="_blank" rel="noopener">
+        <span className="tb-v2-directory-text">Featured on List My SaaS</span>
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://listpitch.com/" target="_blank" rel="noopener">
+        <span className="tb-v2-directory-text">Featured on ListPitch</span>
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://namedirectory.com.ar/" target="_blank" rel="noopener">
+        <span className="tb-v2-directory-text">Featured on Name Directory</span>
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://newname.ai/" target="_blank" rel="noopener">
+        <span className="tb-v2-directory-text">Featured on NewName</span>
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://saasbison.com" target="_blank" rel="dofollow">
+        <DirectoryBadgeImage src="/directory-badges/saasbison.png" alt="Featured on SaaSBison" width="200" height="54" fallback="SaaSBison" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://saasdb.net" target="_blank" rel="dofollow">
+        <DirectoryBadgeImage src="/directory-badges/saasdb.svg" alt="Featured on SaasDB" width="200" height="60" fallback="SaasDB" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://smolsaas.com/" target="_blank" rel="noopener">
+        <span className="tb-v2-directory-text">Featured on SmolSaaS</span>
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://vantaige.io/?utm_source=badge&utm_medium=embed" target="_blank" rel="noopener noreferrer">
+        <span className="tb-v2-directory-text">Featured on Vantaige.io</span>
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://yourhack.ai/" target="_blank" rel="noopener">
+        <span className="tb-v2-directory-text">Featured on yourhack.ai</span>
+      </DirectoryBadgeLink>
     </div>
   );
 }
