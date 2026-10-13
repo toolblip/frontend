@@ -439,6 +439,9 @@ function DirectoryBadges({ duplicate = false }: { duplicate?: boolean }) {
       <DirectoryBadgeLink duplicate={duplicate} href="https://yourhack.ai/" target="_blank" rel="noopener">
         <span className="tb-v2-directory-text">Featured on yourhack.ai</span>
       </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://listmaro.com/" target="_blank" rel="noopener">
+        <span className="tb-v2-directory-text">Featured on Listmaro</span>
+      </DirectoryBadgeLink>
     </div>
   );
 }
