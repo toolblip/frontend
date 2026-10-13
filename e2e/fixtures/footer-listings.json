@@ -44,7 +44,7 @@
     "target": "_blank"
   },
   {
-    "href": "https://www.outdr.lol/card/startuptrusted.com",
+    "href": "https://www.outdr.lol/card/toolblip.com",
     "target": "_blank",
     "rel": "noopener"
   },
@@ -66,12 +66,12 @@
     "title": "View this project on Aura++"
   },
   {
-    "href": "https://www.superlaun.ch/products/3508",
+    "href": "https://www.superlaun.ch/products/3620",
     "target": "_blank",
     "rel": "noopener"
   },
   {
-    "href": "https://tools.launchllama.co?utm_source=badge&utm_medium=referral",
+    "href": "https://tools.launchllama.co/products/toolblip?utm_source=badge&utm_medium=referral",
     "target": "_blank",
     "rel": "noopener noreferrer"
   },
@@ -81,13 +81,14 @@
     "rel": "noopener"
   },
   {
-    "href": "https://launchboosts.com/project/toolblip",
-    "target": "_blank"
+    "href": "https://launchboosts.com/project/toolblip?utm_source=badge&utm_medium=embed",
+    "target": "_blank",
+    "rel": "noopener"
   },
   {
     "href": "https://www.launchvault.dev",
     "target": "_blank",
-    "title": "Featured on LaunchVault"
+    "title": "Feature On Launch Vault"
   },
   {
     "href": "https://www.verifiedtools.info/tools/toolblip",
@@ -114,8 +115,7 @@
   },
   {
     "href": "https://startupfa.me/s/toolblip?utm_source=toolblip.com",
-    "target": "_blank",
-    "rel": "noopener noreferrer"
+    "target": "_blank"
   },
   {
     "href": "https://webspot.app",
@@ -144,13 +144,13 @@
     "title": "Pro Launch Featured Badge"
   },
   {
-    "href": "https://nicklaunches.com/products/toolblip/?utm_source=toolblip.com&utm_medium=badge&utm_campaign=featured",
+    "href": "https://nicklaunches.com/products/toolblip/",
     "target": "_blank",
     "rel": "noopener"
   },
   {
-    "target": "_blank",
-    "href": "https://aixcollection.com/ai/toolblip"
+    "href": "https://aixcollection.com/ai/toolblip",
+    "target": "_blank"
   },
   {
     "href": "https://www.nxgntools.com/tools/toolblip?utm_source=toolblip",
@@ -183,8 +183,8 @@
     "href": "https://sideprojects.net/projects/toolblip"
   },
   {
-    "target": "_blank",
     "href": "https://www.llmrelevance.com",
+    "target": "_blank",
     "aria-label": "LLM Relevance - AI & SEO Tools for Small Business"
   },
   {
@@ -228,9 +228,8 @@
     "rel": "dofollow"
   },
   {
-    "href": "https://navfolders.com/",
-    "target": "_blank",
-    "rel": "noopener noreferrer"
+    "href": "https://navfolders.com",
+    "target": "_blank"
   },
   {
     "href": "https://codehype.ai/product/toolblip?utm_source=codehype_badge",
@@ -261,7 +260,8 @@
   },
   {
     "href": "https://gets.tools",
-    "target": "_blank"
+    "target": "_blank",
+    "rel": "noopener noreferrer"
   },
   {
     "href": "https://launchit.fast",
@@ -296,7 +296,7 @@
   {
     "href": "https://www.stork.ai/",
     "rel": "nofollow",
-    "title": "Stork Verified — stork.ai AI tools directory"
+    "title": "Stork Verified - stork.ai AI tools directory"
   },
   {
     "href": "https://thesaasdir.com/product/toolblip?ref=badge",
@@ -318,7 +318,9 @@
     "rel": "noopener"
   },
   {
-    "href": "https://useneedle.net/directory/toolblip"
+    "href": "https://useneedle.net/directory/toolblip",
+    "target": "_blank",
+    "rel": "noopener noreferrer"
   },
   {
     "href": "https://toolhunter.ai/ai-tool/toolblip?ref=badge",
@@ -546,7 +548,6 @@
   },
   {
     "href": "https://theaitoolsdir.com/product/toolblip?ref=badge",
-    "target": "_blank",
     "rel": "dofollow"
   },
   {
@@ -591,8 +592,7 @@
   },
   {
     "href": "https://www.aitoolfinder.com/",
-    "target": "_blank",
-    "rel": "noopener"
+    "target": "_blank"
   },
   {
     "href": "https://aitoolsmarketer.com/",
@@ -620,9 +620,7 @@
     "rel": "noopener"
   },
   {
-    "href": "https://indieshowcase.io",
-    "target": "_blank",
-    "rel": "noopener"
+    "href": "https://indieshowcase.io"
   },
   {
     "href": "https://launchnest.io/",
@@ -645,7 +643,7 @@
     "rel": "noopener"
   },
   {
-    "href": "https://newname.ai/",
+    "href": "https://newname.ai/badge?ref=toolblip",
     "target": "_blank",
     "rel": "noopener"
   },
@@ -656,7 +654,6 @@
   },
   {
     "href": "https://saasdb.net",
-    "target": "_blank",
     "rel": "dofollow"
   },
   {
