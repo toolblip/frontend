@@ -8,6 +8,9 @@ import * as indexing from '@/lib/indexable-tools';
 // Independent snapshot evaluated from committed 5556e22 tools and FAQ eligibility.
 const baselineTools = baseline.tools;
 const baselineEligible = new Set(baselineTools.filter(t => t.indexable).map(t => t.slug));
+// Priority cohort and brief keyword rows always kept by the 2026-10-14 prune (docs/seo-index-prune-2026-10-14.md).
+const PRIORITY_KEEP = ['jwt-decoder', 'json-formatter', 'regex-tester', 'url-encode', 'base64-encoder-decoder', 'password-generator', 'uuid-generator', 'markdown-to-html', 'case-converter', 'word-counter', 'reading-time-calculator', 'image-resizer',
+  'bmi-calculator', 'fraction-calculator', 'time-zone-converter', 'countdown-timer', 'svg-to-png', 'random-number-generator', 'age-calculator', 'tip-calculator', 'morse-code-translator', 'roman-numeral-converter', 'qr-code-generator', 'percentage-calculator', 'binary-to-text', 'discount-calculator', 'random-color-generator', 'xml-formatter', 'json-validator', 'temperature-unit-converter', 'favicon-generator', 'image-aspect-ratio-calculator', 'color-format-converter', 'sql-prettifier', 'contrast-checker', 'http-status-checker'];
 
 afterEach(() => { vi.doUnmock('@/lib/faq'); vi.doUnmock('@/data/tools'); vi.resetModules(); });
 
@@ -52,10 +55,18 @@ describe('policy decisions and audit statuses', () => {
     expect(new Set(publicReview.rows.map(r => r.slug)).size).toBe(95);
     for (const row of publicReview.rows) {
       const decision = TOOL_INDEXING_DECISIONS[row.slug];
-      expect(decision?.status, row.slug).toBe(row.decision);
-      expect(indexing.isToolIndexable(row.slug), row.slug).toBe(row.decision === 'reviewed');
-      if (decision?.status === 'reviewed') {
-        expect(decision.reviewedAt).toBe('2026-09-28');
+      // The 2026-10-14 prune may hold a 2026-09-28 public-review row; a held row is no longer indexable.
+      const pruned = decision?.status === 'hold' && decision.reason.startsWith('Prune 2026-10-14:');
+      if (pruned) {
+        expect(indexing.isToolIndexable(row.slug), row.slug).toBe(false);
+      } else if (decision?.status === 'reviewed' && decision.reviewedAt === '2026-10-14') {
+        // Prune keep set re-reviewed a row the 2026-09-28 review left as hold (seed keyword rule).
+        expect(indexing.isToolIndexable(row.slug), row.slug).toBe(true);
+      } else {
+        expect(decision?.status, row.slug).toBe(row.decision);
+        expect(indexing.isToolIndexable(row.slug), row.slug).toBe(row.decision === 'reviewed');
+      }
+      if (decision?.status === 'reviewed' && decision.reviewedAt === '2026-09-28') {
         expect(decision.evidence).toBe('docs/gsc-public-review-2026-09-28.md#public-review-decision');
       }
       for (const key of publicReview.caseOrder) {
@@ -63,11 +74,12 @@ describe('policy decisions and audit statuses', () => {
         expect(result.scopedFinal ?? result.full, `${row.slug} ${key}`).toBe('passed');
       }
     }
-    expect(Object.keys(TOOL_INDEXING_DECISIONS)).toHaveLength(103);
+    expect(Object.keys(TOOL_INDEXING_DECISIONS)).toHaveLength(tools.length);
     expect(tools).toHaveLength(440);
-    expect(tools.filter(t => indexing.isToolIndexable(t.slug))).toHaveLength(437);
-    expect(tools.filter(t => !indexing.isToolIndexable(t.slug))).toHaveLength(3);
-    expect(indexing.getToolIndexingStatus('lorem-ipsum-generator')).toBe('legacy-eligible-needs-review');
+    expect(tools.filter(t => indexing.isToolIndexable(t.slug))).toHaveLength(178);
+    expect(tools.filter(t => !indexing.isToolIndexable(t.slug))).toHaveLength(262);
+    expect(indexing.getToolIndexingStatus('aac-to-wav')).toBe('hold');
+    for (const slug of PRIORITY_KEEP) expect(indexing.isToolIndexable(slug), slug).toBe(true);
     expect(indexing.getToolIndexingStatus('json-to-markdown-table')).toBe('reviewed');
     expect(indexing.getToolIndexingStatus('unknown-future-tool')).toBe('not-in-catalog');
     expect(indexing.getToolIndexingStatus('text-case-converter')).toBe('alias');

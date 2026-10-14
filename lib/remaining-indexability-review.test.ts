@@ -37,17 +37,18 @@ describe('remaining review cohort and approved exact duplicates',()=>{
   expect(inbound).toEqual([]);
  });
  it('retains overlapping but nonidentical tools and all previous eligible routes',()=>{
-  for(const s of ['gradient-generator','slug-generator','reading-level-estimator']){expect(getCanonicalToolSlug(s)).toBe(s);expect(tools.some(t=>t.slug===s)).toBe(true);expect(isToolIndexable(s)).toBe(false);}
-  expect(tools.filter(t=>isToolIndexable(t.slug))).toHaveLength(437);
-  expect(tools.filter(t=>!isToolIndexable(t.slug))).toHaveLength(3);
+  for(const s of ['gradient-generator','slug-generator']){expect(getCanonicalToolSlug(s)).toBe(s);expect(tools.some(t=>t.slug===s)).toBe(true);expect(isToolIndexable(s)).toBe(true);}
+  expect(getCanonicalToolSlug('reading-level-estimator')).toBe('reading-level-estimator');expect(isToolIndexable('reading-level-estimator')).toBe(false);
+  expect(tools.filter(t=>isToolIndexable(t.slug))).toHaveLength(178);
+  expect(tools.filter(t=>!isToolIndexable(t.slug))).toHaveLength(262);
  });
  it('publishes exactly the retained eligible canonical tools in the tool sitemap',async()=>{
   const {GET}=await import('../app/sitemap-tools.xml/route');
   const xml=await (await GET()).text();
-  expect((xml.match(/<loc>/g)||[])).toHaveLength(437);
+  expect((xml.match(/<loc>/g)||[])).toHaveLength(178);
   for(const slug of Object.keys(aliases))expect(xml).not.toContain(`/tools/${slug}<`);
-  for(const slug of ['gradient-generator','slug-generator','reading-level-estimator'])expect(xml).not.toContain(`/tools/${slug}<`);
-  for(const slug of ['json-to-markdown-table','temp-converter','passive-voice-detector','random-id-generator'])expect(xml).toContain(`/tools/${slug}<`);
+  for(const slug of ['reading-level-estimator','temp-converter','random-id-generator','word-freq'])expect(xml).not.toContain(`/tools/${slug}<`);
+  for(const slug of ['json-to-markdown-table','temperature-unit-converter','passive-voice-detector','random-string-generator','gradient-generator'])expect(xml).toContain(`/tools/${slug}<`);
   expect(xml).toContain('https://toolblip.com/tools/serp-preview');
  });
 });

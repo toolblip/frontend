@@ -5,10 +5,10 @@ import { getToolPath } from '@/lib/tool-path';
 
 // Omit lastmod until reliable per-tool modification dates are available.
 
-// Tier-A gate: only tools with hand-written FAQ overrides are listed
-// (isToolIndexable). Others stay live with noindex,follow until they have
-// differentiated copy - see docs/gsc-recovery-plan.md. This sitemap is
-// split from core/blog so GSC can track tool-corpus recovery separately.
+// Only tools in the explicit keep set are listed (isToolIndexable, see
+// data/tool-indexing-policy.ts and docs/seo-index-prune-2026-10-14.md). Held
+// tools stay live with noindex,follow. FAQ presence never changes this list.
+// This sitemap is split from core/blog so GSC can track tool-corpus recovery separately.
 // Slugs that exist as a real entry in data/tools.ts but are also a source
 // key in app/tools/[slug]/page.tsx's REDIRECTS map, so every request to
 // them permanently redirects away before the page ever renders - dead,

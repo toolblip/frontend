@@ -143,6 +143,8 @@ describe('assistant tool lookup', () => {
     expect(matches[0]?.url).toBe('https://toolblip.com/tools/json-formatter');
     expect(findPublicTool('qr-code-generator')?.url).toBe('https://toolblip.com/tools/images/qr-code-generator');
     expect(findPublicTool('not-a-real-tool')).toBeNull();
+    // Held tools stay live, so assistant lookup must still resolve them.
+    expect(findPublicTool('aac-to-wav')?.url).toBe('https://toolblip.com/tools/aac-to-wav');
 
     const listed = handleMcpMessage({ jsonrpc: '2.0', id: 1, method: 'tools/list' });
     expect(listed).toMatchObject({
