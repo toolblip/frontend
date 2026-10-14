@@ -189,6 +189,34 @@ function templateFaqs(t: Tool): FAQ[] {
 }
 
 const OVERRIDES: Record<string, FAQ[]> = {
+  'random-color-generator': [
+    { q: "Are the colors truly random?", a: "They come from Math.random in your browser. That is fine for picking a color, but it is not cryptographic randomness, so do not use it for secrets. Use Password Generator for passwords." },
+    { q: "Can it make a palette?", a: "No. It shows one color per press, with no lock, history or harmony option. Press Generate new color again for another color." },
+    { q: "Can it generate pure white?", a: "No. The range runs from #000000 to #FFFFFE, so #FFFFFF is never produced." },
+  ],
+  'http-status-checker': [
+    { q: "Why can I not see the status for some sites?", a: "The browser only reads responses that the server allows. A cross-origin server without CORS headers blocks the request, and the tool shows Request failed with a CORS hint." },
+    { q: "Does it follow redirects?", a: "Yes, the browser follows them. The tool shows the final URL and whether a redirect happened, but not each hop." },
+    { q: "Can I send a request body or custom headers?", a: "No. The methods are GET, HEAD, OPTIONS and POST, with no request body or custom headers, and the response body is not shown." },
+    { q: "Does the check run from Toolblip servers?", a: "No. The request goes straight from your browser to the target, so the result reflects your network and location." },
+  ],
+  'color-format-converter': [
+    { q: "Does it convert RGB to HEX and HEX to RGB?", a: "Yes, both directions are on one page. Type a color in any supported format and the other formats update, including HEX, RGB, HSL, HSV and CMYK." },
+    { q: "Which input formats are accepted?", a: "HEX with 3, 6 or 8 digits, with or without #, plus rgb() and rgba(), hsl() and hsla(), hsv() and cmyk(), using comma-separated numbers. Named colors such as red are not parsed." },
+    { q: "Are out-of-range RGB values clamped?", a: "Yes. RGB numbers outside 0 to 255 are clamped silently to that range." },
+    { q: "Is the CMYK value exact?", a: "No. CMYK is a simple formula conversion from RGB, so print profiles and real ink colors can look different." },
+  ],
+  'image-aspect-ratio-calculator': [
+    { q: "How is the ratio simplified?", a: "Width and height are divided by their greatest common divisor, so 1280 by 720 becomes 16:9. The decimal is width divided by height, shown to four places." },
+    { q: "Is my image uploaded?", a: "No. Read from image uses the file pixel size in your browser, and the tool makes no network request for it." },
+    { q: "Why does 1366 by 768 show 16:9?", a: "1366 by 768 simplifies to 683:384, which is within 2% of 16:9, so it is labeled 16:9 Widescreen." },
+    { q: "Can I type a custom ratio like 2.35:1?", a: "No. You enter a width and height in pixels, and the ratio is worked out from them." },
+  ],
+  'json-validator': [
+    { q: "Does it reformat my JSON?", a: "No. The input is checked and left as typed. Use JSON Formatter to pretty-print valid JSON." },
+    { q: "Does it validate against a JSON schema?", a: "No. It runs the browser JSON parser for syntax only, so it reports structure errors but not whether the data matches a schema." },
+    { q: "Why is a trailing comma reported as invalid?", a: "JSON does not allow a comma after the last item in an object or array, so the parser rejects it. Remove the comma and the result changes to Valid JSON." },
+  ],
   "json-to-typescript": [
     {
       "q": "What does this tool produce?",
@@ -384,7 +412,10 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: "What does this tool support?", a: "Generate RSA, ECDSA or Ed25519 key pairs using browser cryptography. The public key is an OpenSSH line; the private key is unencrypted PKCS8 PEM. Some SSH clients need a converted private-key format, particularly for Ed25519. Browser algorithm support varies." },
   ],
   'sql-prettifier': [
-    { q: "What does this tool support?", a: "Make SQL easier to read with 2- or 4-space indentation and optional uppercase keywords. Lexical formatting preserves quoted text and comments and checks quote and parenthesis balance. It does not validate SQL grammar or database-specific semantics. The current output is plain text." },
+    { q: "Does it check that my SQL is valid?", a: "No. Formatting is lexical: it breaks lines at clause keywords and checks quote and parenthesis balance. It does not parse the grammar, so a wrong keyword order is not reported." },
+    { q: "What does Uppercase keywords change?", a: "It uppercases recognized SQL keywords such as select, from and where. Table names, identifiers and unknown words keep their case." },
+    { q: "Which dialects are supported?", a: "Standard SQL is the default. PostgreSQL mode reads E-string escapes and MySQL mode reads backslash escapes inside quoted strings. The dialect only changes how quotes are read." },
+    { q: "Does it change spacing around commas and operators?", a: "No. It keeps the spacing from your input, so a comma without a space stays that way and no space is added around =." },
   ],
   'seo-title-analyzer': [
     { q: "What does this tool support?", a: "Review title text and Unicode character counts from pasted text, HTML or a URL that permits cross-origin requests. HTML inspection reports missing title markup. Counts are descriptive, not ranking scores or a guarantee that a title will fit every search result. Page scripts are not executed." },
@@ -540,9 +571,11 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Does my data leave the browser?', a: 'No. Calculations run locally. For converting units instead of percents, use Unit Converter.' },
   ],
   'base64-encoder-decoder': [
+    { q: "How do I decode Base64 back to text?", a: "Set the mode to Decode, then paste the Base64 string. The decoded UTF-8 text appears as you type. The page opens in Encode mode by default, so check the mode first." },
+    { q: "Does decoding need the = padding?", a: "No. If the string has no = signs and its length needs them, the tool adds the padding before decoding. Spaces and line breaks are ignored." },
+    { q: "Why does a Base64URL string fail?", a: "Decode accepts the standard + and / alphabet only. Base64URL uses - and _ instead, so those strings return Invalid Base64 string - cannot decode." },
     { q: "Does this support files or images?", a: "This page encodes UTF-8 text and decodes Base64 back to UTF-8 text. It has no file upload or image preview - use Base64 Image Converter for those." },
     { q: "Is Base64 encryption?", a: "No. Anyone can reverse the encoding. It does not protect a secret." },
-    { q: "Why does Base64 end in equals signs?", a: "Equals signs pad the final group when the input byte length is not a multiple of three. This decoder expects the standard +/ alphabet, not Base64URL." },
     { q: "Does my text leave the browser?", a: "No. Encode and decode run locally. For a full three-part JWT, use JWT Decoder instead of decoding segments by hand." },
   ],
   'url-encode': [
@@ -891,9 +924,9 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'What counts as valid input?', a: 'Only the digits 0 and 1, with optional whitespace between groups. Anything else triggers an "Invalid binary" message instead of attempting a conversion.' },
   ],
   'binary-to-text': [
-    { q: 'What format should the binary input be in?', a: 'Each character is expected as an 8-bit group of 0s and 1s, space separated, for example "01001000 01100101" for "He". Extra whitespace or line breaks between groups are stripped automatically before decoding.' },
-    { q: 'Can I convert text into binary too, not just decode it?', a: 'Yes. The Text to Binary side of the swap converts each character to its 8-bit ASCII binary value, zero padded and space separated, and the swap button flips between the two directions instantly.' },
-    { q: 'What happens if the binary has an invalid character?', a: 'You get an explicit "Invalid binary string" error if anything other than 0, 1, and whitespace is present, instead of a garbled or silently wrong text result.' },
+    { q: "What format should the binary input be in?", a: "Each character is one group of eight 0s and 1s. Spaces and line breaks between groups are ignored. Any other character shows the error Binary must contain only 0s and 1s. Leftover bits that do not fill a group are dropped without an error." },
+    { q: "Does it handle UTF-8 or emoji?", a: "No. Each group is read as a character code from 0 to 255 (Latin-1). ASCII and Western accented letters round-trip, but UTF-8 multi-byte sequences and emoji do not." },
+    { q: "Can I convert text into binary too?", a: "Yes. The text box and the binary box stay in sync, so typing in either one updates the other. Each character becomes its 8-bit code." },
   ],
   'bmi-calculator': [
     { q: 'Does it support metric and imperial units?', a: 'Yes. Metric takes height in centimeters and weight in kilograms (kg / m squared). Imperial takes inches and pounds and uses the 703 multiplier, so you do not convert units first.' },
@@ -1287,10 +1320,11 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: "What PDF limits apply?", a: "Up to 25 MiB per input PDF, 100 pages and 2,000 points per page side. Plan-specific upload limits may be lower." },
   ],
   'discount-calculator': [
-    { q: 'Can it apply two discounts in sequence?', a: 'Yes. The optional Additional Discount is applied to the already-reduced price, so 30% followed by 10% produces a 37% combined discount rather than 40%.' },
-    { q: 'Can it factor in sales tax as well as the discounts?', a: 'Yes, an optional Sales Tax field applies tax after all discounts, so the Final Price reflects both adjustments.' },
-    { q: 'What exactly counts as "Total Savings"?', a: 'The total amount removed from the original price by both discounts. Tax is shown separately since it is an addition rather than a saving.' },
-    { q: 'Does it accept discounts entered as a decimal like 0.25 instead of 25?', a: 'No, the Discount Percentage field expects a whole percent value like 25, not a decimal fraction.' },
+    { q: "Can it apply two discounts in sequence?", a: "Yes. The optional Additional Discount is applied to the already-reduced price, so 30% followed by 10% produces a 37% combined discount rather than 40%." },
+    { q: "Can it factor in sales tax as well as the discounts?", a: "Yes, an optional Sales Tax field applies tax after all discounts, so the Final Price reflects both adjustments." },
+    { q: "What exactly counts as \"Total Savings\"?", a: "The total amount removed from the original price by both discounts. Tax is shown separately since it is an addition rather than a saving." },
+    { q: "What happens if I type 0.25 instead of 25?", a: "The field takes a percent, so 0.25 is treated as 0.25%, not 25%. Enter 25 for a 25% discount." },
+    { q: "Does it support currencies other than dollars?", a: "No. The amounts show a $ sign and there is no currency selector." },
   ],
   'dns-lookup': [
     { q: 'Where do the DNS results come from?', a: 'Live queries to Google\'s public DNS-over-HTTPS resolver (dns.google), not cached or simulated data.' },
@@ -2133,6 +2167,7 @@ const OVERRIDES: Record<string, FAQ[]> = {
   'temperature-unit-converter': [
     { q: "What does this tool do?", a: "Convert Celsius, Fahrenheit and Kelvin with live results, presets and absolute-zero validation." },
     { q: "What should I know before using it?", a: "Results update as you change the value and units. Invalid numbers are rejected, as are temperatures below absolute zero. Calculations use floating-point arithmetic, so displayed results can be rounded." },
+    { q: "Why does 0 K convert but -1 K does not?", a: "The absolute-zero check applies to the source value. 0 K is valid and equals -273.15 °C, while any Kelvin value below 0 is rejected." },
   ],
   'text-case-converter': [
     { q: 'How many case formats does it convert to at once?', a: 'Eight: UPPER, lower, Title Case, Sentence case, camelCase, snake_case, kebab-case, and CONSTANT_CASE, all calculated simultaneously from the same input, each with its own Copy button.' },

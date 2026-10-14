@@ -168,6 +168,13 @@ describe('assistant tool lookup', () => {
 });
 
 describe('tool meta descriptions', () => {
+  it('never repeats a fallback sentence in a tool meta description', () => {
+    for (const tool of tools) {
+      const sentences = String(buildToolMetadata(tool).description).split(/(?<=[.!?])\s+/);
+      expect(new Set(sentences).size).toBe(sentences.length);
+    }
+  });
+
   it('keeps the JSON formatter description inside Bing’s 160 character limit', () => {
     const metadata = buildToolMetadata(getToolBySlug('json-formatter')!);
     const description = String(metadata.description);
@@ -182,10 +189,10 @@ describe('tool meta descriptions', () => {
     const cases: Array<{ slug: string; titlePart: string }> = [
       { slug: 'case-converter', titlePart: 'Case Converter' },
       { slug: 'regex-tester', titlePart: 'Regex Tester' },
-      { slug: 'base64-encoder-decoder', titlePart: 'Base64 Encode' },
+      { slug: 'base64-encoder-decoder', titlePart: 'Base64 Decode' },
       { slug: 'uuid-generator', titlePart: 'UUID Generator' },
       { slug: 'jwt-decoder', titlePart: 'JWT Decoder' },
-      { slug: 'url-encode', titlePart: 'URL Encode' },
+      { slug: 'url-encode', titlePart: 'URL Decode' },
       { slug: 'qr-code-generator', titlePart: 'QR Code Generator' },
       { slug: 'percentage-calculator', titlePart: 'Percentage Calculator' },
       { slug: 'color-picker', titlePart: 'Color Picker' },
@@ -209,6 +216,18 @@ describe('tool meta descriptions', () => {
       { slug: 'currency-converter', titlePart: 'Currency Converter' },
       { slug: 'meme-maker', titlePart: 'Meme Generator' },
       { slug: 'text-to-speech', titlePart: 'Text to Speech' },
+      { slug: 'binary-to-text', titlePart: 'Binary to Text' },
+      { slug: 'discount-calculator', titlePart: 'Discount Calculator' },
+      { slug: 'random-color-generator', titlePart: 'Random Color Generator' },
+      { slug: 'xml-formatter', titlePart: 'XML Formatter' },
+      { slug: 'json-validator', titlePart: 'JSON Validator' },
+      { slug: 'temperature-unit-converter', titlePart: 'Temperature Converter' },
+      { slug: 'favicon-generator', titlePart: 'Favicon Generator' },
+      { slug: 'image-aspect-ratio-calculator', titlePart: 'Aspect Ratio Calculator' },
+      { slug: 'color-format-converter', titlePart: 'RGB to Hex' },
+      { slug: 'sql-prettifier', titlePart: 'SQL Formatter' },
+      { slug: 'contrast-checker', titlePart: 'Contrast Checker' },
+      { slug: 'http-status-checker', titlePart: 'HTTP Status Code Checker' },
     ];
     for (const { slug, titlePart } of cases) {
       const metadata = buildToolMetadata(getToolBySlug(slug)!);

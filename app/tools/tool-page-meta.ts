@@ -27,10 +27,10 @@ const SEO_TITLE_OVERRIDES: Record<string, string> = {
   'json-formatter': 'JSON Formatter - Free Beautify & Minify',
   'case-converter': 'Case Converter - Free camelCase, snake_case & More',
   'regex-tester': 'Regex Tester - Free JavaScript Pattern Tester',
-  'base64-encoder-decoder': 'Base64 Encode & Decode - Free In-Browser Tool',
+  'base64-encoder-decoder': 'Base64 Decode & Encode - Free UTF-8 Tool',
   'uuid-generator': 'UUID Generator - Free Random UUID v4',
   'jwt-decoder': 'JWT Decoder - Free Inspect Header & Payload',
-  'url-encode': 'URL Encode & Decode - Free Percent Encoding',
+  'url-encode': 'URL Decode - Free Percent Decoding & Encoding',
   'reading-time-calculator': 'Reading Time Calculator - Free Words-Per-Minute Estimate',
   'markdown-to-html': 'Markdown to HTML - Free Converter With Preview',
   // Wave 2 head terms (DataForSEO 2026-10-09).
@@ -64,6 +64,19 @@ const SEO_TITLE_OVERRIDES: Record<string, string> = {
   'currency-converter': 'Currency Converter - Free Calculator, Sample Rates',
   'meme-maker': 'Meme Generator - Free Top & Bottom Text Maker',
   'text-to-speech': 'Text to Speech - Free Browser Voices, Speed & Pitch',
+  // Wave 6 head terms (DataForSEO 2026-10-10, decode/format/converter intent).
+  'binary-to-text': 'Binary to Text - Free Decoder & Encoder',
+  'discount-calculator': 'Discount Calculator - Free Sale Price & Savings',
+  'random-color-generator': 'Random Color Generator - Free HEX, RGB & HSL',
+  'xml-formatter': 'XML Formatter - Free Format & Minify',
+  'json-validator': 'JSON Validator - Free Syntax Check, Runs Locally',
+  'temperature-unit-converter': 'Temperature Converter - Free C, F & Kelvin',
+  'favicon-generator': 'Favicon Generator - Free PNG, ICO & SVG',
+  'image-aspect-ratio-calculator': 'Aspect Ratio Calculator - Free From Image Size',
+  'color-format-converter': 'RGB to Hex - Free Converter & Hex to RGB',
+  'sql-prettifier': 'SQL Formatter - Free Indent & Uppercase Keywords',
+  'contrast-checker': 'Contrast Checker - Free WCAG AA & AAA Test',
+  'http-status-checker': 'HTTP Status Code Checker - Free From Your Browser',
 };
 
 function documentTitle(tool: Tool): string {
@@ -102,7 +115,9 @@ export function buildToolDescription(tool: Tool): string {
   // Greedy: append the first suffix that still fits under the max.
   while (text.length < META_DESCRIPTION_MIN) {
     const fit = DESCRIPTION_FALLBACK_SUFFIXES
-      .map((suffix) => `${text} ${suffix(tool)}`)
+      .map((suffix) => suffix(tool))
+      .filter((sentence) => !text.includes(sentence)) // never repeat a suffix
+      .map((sentence) => `${text} ${sentence}`)
       .find((next) => next.length <= META_DESCRIPTION_MAX);
     if (!fit) break;
     text = fit;
