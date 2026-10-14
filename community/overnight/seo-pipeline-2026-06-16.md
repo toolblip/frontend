@@ -1,4 +1,4 @@
-# Toolblip SEO pipeline archive — 2026-06-16
+# Toolblip SEO pipeline archive - 2026-06-16
 
 Run time: 2026-06-16 23:00 Dhaka
 Mode: conservative, Google-safe pacing

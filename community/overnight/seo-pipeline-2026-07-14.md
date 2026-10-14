@@ -1,4 +1,4 @@
-# Toolblip SEO Pipeline Report — 2026-07-14
+# Toolblip SEO Pipeline Report - 2026-07-14
 
 **Run Type:** Manual (cron-requested rerun via Hermes)
 **Pipeline:** `/Users/ray/Work/toolblip/scripts/seo-pipeline.sh`
@@ -10,9 +10,9 @@
 - **Articles Submitted to GSC:** 0
 
 ## Topics Attempted (3 picked from queue, all failed)
-1. `generate Open Graph meta tags for social sharing` — failed at generation
-2. `generate a sitemap.xml for better search indexing` — failed at generation
-3. `generate a .gitignore file for any project type` — failed at generation
+1. `generate Open Graph meta tags for social sharing` - failed at generation
+2. `generate a sitemap.xml for better search indexing` - failed at generation
+3. `generate a .gitignore file for any project type` - failed at generation
 
 ## Root Blocker
 **Claude Code is NOT authenticated on this machine.**
@@ -30,7 +30,7 @@
 - Stale content check ran (none found >180 days old)
 
 ## What Failed
-- Content generation via `run-claude.py`/`./claude.sh -p` — Claude not authenticated
+- Content generation via `run-claude.py`/`./claude.sh -p` - Claude not authenticated
 - Topics were returned to pending queue (no orphaned items)
 - No articles were humanized, committed, or submitted
 

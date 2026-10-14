@@ -1,4 +1,4 @@
-# SEO Pipeline Run — 2026-07-31
+# SEO Pipeline Run - 2026-07-31
 
 ## Summary
 
@@ -50,4 +50,4 @@
 
 ## Next Run
 
-Tonight 11PM Dhaka (17:00 UTC) — process at most 1 strong pending topic
+Tonight 11PM Dhaka (17:00 UTC) - process at most 1 strong pending topic

@@ -1,4 +1,4 @@
-# SEO Pipeline Run — 2026-07-23
+# SEO Pipeline Run - 2026-07-23
 
 **Run time:** 2026-07-23 17:10 UTC (23:10 Dhaka)
 **Pipeline:** Manual fallback (Claude Code auth unavailable in cron)
@@ -21,7 +21,7 @@
 - **URL:** https://toolblip.com/blog/2026-07-23-convert-roman-numerals-to-numbers-and-back
 - **Keyword:** convert Roman numerals to numbers and back
 - **Word count:** ~920
-- **GSC submitted:** yes (URL unknown to Google — new page)
+- **GSC submitted:** yes (URL unknown to Google - new page)
 - **Commit:** 65e0ca6b
 - **Method:** Manual content generation (Claude Code daemon not authenticated)
 
@@ -32,7 +32,7 @@
 
 ## Notes
 
-- Article written directly by Hermes agent as manual fallback — no Claude Code generation involved.
+- Article written directly by Hermes agent as manual fallback - no Claude Code generation involved.
 - Humanizer patterns applied: no em dashes, no emojis, no bold inline headers, no AI vocabulary, varied sentence structure.
 - Queue updated: topic moved from in_progress to done.
 - GSC submission successful via service account.

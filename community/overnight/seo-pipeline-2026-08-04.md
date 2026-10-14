@@ -1,4 +1,4 @@
-# SEO Pipeline Run — 2026-08-04
+# SEO Pipeline Run - 2026-08-04
 
 **Pipeline:** Toolblip nightly SEO
 **Run time:** 10:10–10:26 UTC (16:10–16:26 Dhaka)
@@ -14,9 +14,9 @@
 
 ## Articles Committed: 3/3
 
-- b05a0a88 — complementary-and-triadic-color-scheme-generator
-- 5209cc81 — mix-two-colors-for-palette-shades
-- 0db465d5 — closest-named-color-for-hex
+- b05a0a88 - complementary-and-triadic-color-scheme-generator
+- 5209cc81 - mix-two-colors-for-palette-shades
+- 0db465d5 - closest-named-color-for-hex
 
 ## Articles Submitted to GSC: 3/3
 

@@ -39,7 +39,7 @@ Next Run: 2026-06-18 23:00 Dhaka
 - Live URL verified: https://toolblip.com/blog/2026-06-17-bcrypt-hash-generator-online-for-password-hashing → 200
 - Live HTML clean: no artifacts, no [object Object], title correct
 - Sitemap verified: contains new URL
-- GSC submitted: status "submitted" (URL unknown to Google — expected for new content)
+- GSC submitted: status "submitted" (URL unknown to Google - expected for new content)
 
 ## SEO decisions
 

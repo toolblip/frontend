@@ -1,4 +1,4 @@
-# SEO Pipeline — 2026-06-19
+# SEO Pipeline - 2026-06-19
 
 **Date:** 2026-06-19
 **Run Type:** Manual fallback (Claude Code auth unavailable)
@@ -16,7 +16,7 @@
 ### Blocker: Claude Code non-interactive auth expired (still)
 - `claude auth status` reports `loggedIn: false, authMethod: none`
 - Non-interactive probe returns `Not logged in · Please run /login`
-- Same blocker as nights 2026-06-15 through 2026-06-18 — recurring issue
+- Same blocker as nights 2026-06-15 through 2026-06-18 - recurring issue
 - Recurring since the OAuth token expired ~June 9, 2026
 
 ### Queue State (production `main`)
@@ -30,7 +30,7 @@
 - New article: 200, found in sitemap, no AI meta artifacts
 - Live HTML: no `[object Object]`, no em dash issues
 - GSC permission: `siteOwner` on `sc-domain:toolblip.com`
-- GSC diagnosis: "URL is unknown to Google" — expected for freshly published URL
+- GSC diagnosis: "URL is unknown to Google" - expected for freshly published URL
 
 ### Action Taken
 - Manual fallback article written and humanized

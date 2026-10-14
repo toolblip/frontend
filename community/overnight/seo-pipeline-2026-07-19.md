@@ -1,10 +1,10 @@
-# Toolblip SEO Pipeline — 2026-07-19
+# Toolblip SEO Pipeline - 2026-07-19
 
 ## Run Summary
 
 - **Pipeline:** Toolblip SEO nightly (conservative, 1-topic mode)
 - **Run time:** 2026-07-19 23:07 UTC (2026-07-20 05:07 Dhaka)
-- **Scheduled:** Cron job `07dd6cf18397` (toolblip-seo-nightly) — manual trigger
+- **Scheduled:** Cron job `07dd6cf18397` (toolblip-seo-nightly) - manual trigger
 - **Exit code:** 0 (script completed normally)
 
 ## Articles Generated: 0
@@ -38,7 +38,7 @@ None attempted (no content generated).
 
 ## Sitemap
 
-`https://toolblip.com/sitemap.xml` — healthy, 200 OK.
+`https://toolblip.com/sitemap.xml` - healthy, 200 OK.
 
 ## Archive
 

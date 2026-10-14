@@ -1,4 +1,4 @@
-# Toolblip SEO Pipeline Report — 2026-07-05
+# Toolblip SEO Pipeline Report - 2026-07-05
 
 **Run:** 2026-07-05T17:00:00Z (11PM Dhaka)
 **Pipeline:** seo-pipeline.sh (from isolated `main` worktree at `~/Work/toolblip-clean`)
@@ -12,11 +12,11 @@
 | Articles Committed | 0 |
 | Articles Submitted to GSC | 0 |
 | Sitemap Status | No new URLs to submit |
-| Site Status | Previous state — no changes |
+| Site Status | Previous state - no changes |
 
 ## Queue State
 
-- `pending[]`: **empty** — all original seed topics exhausted
+- `pending[]`: **empty** - all original seed topics exhausted
 - `in_progress[]`: empty
 - `done[]`: 29 entries
 
@@ -25,7 +25,7 @@
 | Check | Status |
 |-------|--------|
 | Claude Code `auth status` | `loggedIn: false` |
-| Claude Code non-interactive probe | `401 — Not logged in. Please run /login` |
+| Claude Code non-interactive probe | `401 - Not logged in. Please run /login` |
 | `gh auth status` | ✅ Logged in as `HarunRRayhan` |
 | Working branch | `main` (via isolated worktree) |
 | Pipeline exit code | 0 |
@@ -34,13 +34,13 @@
 
 - No new blog post data to report
 - Permission level: `siteOwner` on `sc-domain:toolblip.com`
-- No impressions/clicks data for recent posts — still too early for title rewrites
+- No impressions/clicks data for recent posts - still too early for title rewrites
 
 ## Site Health
 
 - Canonical repo: `feat/free-trial-two-cta` branch (not `main`)
-- Pipeline ran via `main` worktree at `~/Work/toolblip-clean` — passed branch check
-- No stale content (>180 day threshold) — earliest post is ~55 days old
+- Pipeline ran via `main` worktree at `~/Work/toolblip-clean` - passed branch check
+- No stale content (>180 day threshold) - earliest post is ~55 days old
 
 ## Decisions / Blockers
 

@@ -1,6 +1,6 @@
-# Toolblip SEO Pipeline Archive — 2026-07-15
+# Toolblip SEO Pipeline Archive - 2026-07-15
 
-**Pipeline Status:** Run completed — content generation blocked by Claude auth
+**Pipeline Status:** Run completed - content generation blocked by Claude auth
 
 ## Run Metadata
 
@@ -9,9 +9,9 @@
 | Pipeline script | `scripts/seo-pipeline.sh` |
 | Branch | `main` (clean) |
 | Mode | Conservative (1 topic) |
-| UTC Window | 17:07 UTC (23:07 Dhaka) — within overnight window ✅ |
+| UTC Window | 17:07 UTC (23:07 Dhaka) - within overnight window ✅ |
 | Pipeline exit code | 0 |
-| Claude Code auth | ❌ Not logged in (persistent — day 4: July 12, 13, 14, 15) |
+| Claude Code auth | ❌ Not logged in (persistent - day 4: July 12, 13, 14, 15) |
 | GitHub auth | ✅ Logged in as `HarunRRayhan` |
 | GSC API | ✅ Working (sitemap refresh succeeded) |
 
@@ -21,11 +21,11 @@
 2. **Branch check** passed (`main`)
 3. **Window check** passed (17:07 UTC, inside 17:00–23:59 UTC window)
 4. **Topic picked:** "generate a .gitignore file for any project type"
-5. **Keyword research** completed (fell back to topic name — Claude auth unavailable)
-6. **Content generation failed** — `run-claude.py` -> `./claude.sh -p` returned "Not logged in · Please run /login"
+5. **Keyword research** completed (fell back to topic name - Claude auth unavailable)
+6. **Content generation failed** - `run-claude.py` -> `./claude.sh -p` returned "Not logged in · Please run /login"
 7. **Topic returned to pending** queue gracefully (no orphaned items)
-8. **Sitemap refreshed** via GSC API (`GET https://toolblip.com/sitemap.xml` — status: `ok`)
-9. **Stale content check** — none found (>180 days)
+8. **Sitemap refreshed** via GSC API (`GET https://toolblip.com/sitemap.xml` - status: `ok`)
+9. **Stale content check** - none found (>180 days)
 10. **Pipeline exited 0** cleanly, lock file released
 
 ## Results
@@ -41,7 +41,7 @@
 
 ## Blocker
 
-**Claude Code auth (persistent — day 4)**
+**Claude Code auth (persistent - day 4)**
 
 - `claude auth status` → `loggedIn: false, authMethod: none`
 - `./claude.sh -p "say ok"` → "Not logged in · Please run /login"

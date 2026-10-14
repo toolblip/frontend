@@ -1,7 +1,7 @@
-# Toolblip SEO Pipeline Report — 2026-06-29
+# Toolblip SEO Pipeline Report - 2026-06-29
 
 **Run:** 2026-06-29T17:00:00Z (11PM Dhaka)
-**Pipeline:** seo-pipeline.sh (archive-only — queue empty, no topics pending)
+**Pipeline:** seo-pipeline.sh (archive-only - queue empty, no topics pending)
 **Author:** Hermes Agent (scheduled cron)
 
 ## Summary
@@ -16,14 +16,14 @@
 
 ## Queue State
 
-- `pending[]`: **empty** — all 20 seed topics exhausted. Same state as previous 3 nights.
+- `pending[]`: **empty** - all 20 seed topics exhausted. Same state as previous 3 nights.
 - `in_progress[]`: empty
 - `done[]`: 29 entries (20 original seeds + tool-page skips + manual fallback posts)
 
 ## GSC Data (28-day lookback)
 
 - Only 5 impressions to the entire site in 28 days across all URLs except homepage
-- No blog post has > 20 impressions — insufficient data for title/meta rewrites
+- No blog post has > 20 impressions - insufficient data for title/meta rewrites
 - No underperforming pages to fix (no zero-click patterns yet)
 - Permission level: `siteOwner` on `sc-domain:toolblip.com`
 
@@ -32,7 +32,7 @@
 - Homepage: **200 OK**
 - Sitemap: **200 OK** (GSC reports 0 errors, 0 warnings)
 - Recent blog posts all return **200 OK**
-- No stale content (>180 day threshold) — earliest post is ~54 days old
+- No stale content (>180 day threshold) - earliest post is ~54 days old
 
 ## Decisions / Blockers
 

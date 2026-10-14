@@ -1,10 +1,10 @@
-# Toolblip SEO Pipeline — 2026-06-20
+# Toolblip SEO Pipeline - 2026-06-20
 
 **Run Time:** 2026-06-20 17:00 UTC (23:00 Dhaka)
 
 ## Status
 
-- Claude Code auth: `loggedIn: true` (project-isolated HOME), but `claude -p` returns `401 Invalid authentication credentials` — known token expiry, same root cause as previous nights (expired June 9). Non-interactive generation is unavailable.
+- Claude Code auth: `loggedIn: true` (project-isolated HOME), but `claude -p` returns `401 Invalid authentication credentials` - known token expiry, same root cause as previous nights (expired June 9). Non-interactive generation is unavailable.
 - GitHub auth: ✅ Healthy (`gh auth status` OK, `git push --dry-run` passes from clean main worktree)
 - GSC auth: ✅ Healthy (`siteOwner` on `sc-domain:toolblip.com`)
 

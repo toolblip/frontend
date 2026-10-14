@@ -1,10 +1,10 @@
-# SEO Pipeline Archive — 2026-07-29
+# SEO Pipeline Archive - 2026-07-29
 
 ## Run Summary
 
-**Run Time:** 10:02:35 — 10:07:32 Dhaka (UTC+6)
+**Run Time:** 10:02:35 - 10:07:32 Dhaka (UTC+6)
 **Mode:** Conservative (1 topic per run, but pipeline picked 3 due to queue state)
-**Status:** Partial — 1 article generated, 2 topics skipped due to timeout
+**Status:** Partial - 1 article generated, 2 topics skipped due to timeout
 
 ## Topics Processed
 
@@ -17,12 +17,12 @@
 - **GSC Submission:** Pending (pipeline timed out during STEP 5)
 
 ### Topic 2: Test JSONPath queries against API response data with JSON Path Tester
-- **Status:** ⏭️ Skipped — already completed in previous run (2026-07-28)
+- **Status:** ⏭️ Skipped - already completed in previous run (2026-07-28)
 - **URL:** https://toolblip.com/blog/2026-07-28-test-jsonpath-expressions-online
 - **Note:** This topic was processed in an earlier run today
 
 ### Topic 3: Turn JSON arrays into Markdown tables for technical docs
-- **Status:** ⏭️ Skipped — duplicate of Topic 1
+- **Status:** ⏭️ Skipped - duplicate of Topic 1
 - **Note:** Pipeline picked the same topic twice due to queue state
 
 ## Queue State
@@ -33,7 +33,7 @@
 
 ## GSC Submission Status
 
-- **Topic 1:** Pending — pipeline timed out during GSC submission step
+- **Topic 1:** Pending - pipeline timed out during GSC submission step
 - **Previous runs:** 2 articles submitted successfully (2026-07-28)
 
 ## Errors & Blockers
@@ -41,7 +41,7 @@
 1. **Pipeline timeout:** Script timed out after 300 seconds while processing 3 topics. Only Topic 1 completed fully.
 2. **Duplicate topic selection:** Pipeline selected the same topic twice in one run (topics 1 and 3 were identical).
 3. **GSC submission incomplete:** Topic 1 GSC submission not completed due to timeout.
-4. **Live site 500 error:** Blog posts from 2026-07-28 and 2026-07-29 return HTTP 500 on toolblip.com. Pre-existing issue — posts from 2026-07-27 and earlier return 200. Likely caused by the "generate all 167 placeholder tool components" commit (4e11b353). This is a deployment/build issue, not an SEO pipeline issue.
+4. **Live site 500 error:** Blog posts from 2026-07-28 and 2026-07-29 return HTTP 500 on toolblip.com. Pre-existing issue - posts from 2026-07-27 and earlier return 200. Likely caused by the "generate all 167 placeholder tool components" commit (4e11b353). This is a deployment/build issue, not an SEO pipeline issue.
 
 ## Self-Improvement Notes
 

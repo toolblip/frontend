@@ -1,11 +1,11 @@
-# Toolblip SEO Pipeline — 2026-07-12
+# Toolblip SEO Pipeline - 2026-07-12
 
 ## Run Summary
 
 - **Date:** 2026-07-12 (Sunday)
 - **UTC Window:** 17:00–17:15 UTC (23:00–23:15 Dhaka)
-- **Claude Auth:** FAILED — `claude auth status` returns `loggedIn: false`, `./claude.sh -p "say ok"` returns "Not logged in"
-- **Canonical Branch:** `feat/free-trial-two-cta` (feature branch — not `main`)
+- **Claude Auth:** FAILED - `claude auth status` returns `loggedIn: false`, `./claude.sh -p "say ok"` returns "Not logged in"
+- **Canonical Branch:** `feat/free-trial-two-cta` (feature branch - not `main`)
 - **Clean Main Worktree:** `/Users/ray/Work/toolblip-clean` (on `main`)
 
 ## Pipeline Result
@@ -60,7 +60,7 @@ Since Claude auth is down and the pipeline cannot generate content, the conserva
 | convert YAML to JSON online for config files | /tools/yaml-to-json |
 | convert Markdown to plain text for clean output | /tools/html-to-plain-text |
 
-**8 topics remaining pending** (no clear tool overlap — good candidates for future content generation):
+**8 topics remaining pending** (no clear tool overlap - good candidates for future content generation):
 
 - generate Open Graph meta tags for social sharing
 - generate a sitemap.xml for better search indexing
@@ -74,18 +74,18 @@ Since Claude auth is down and the pipeline cannot generate content, the conserva
 ## Site Health
 
 - **Homepage:** 200 OK
-- **Blog index:** 308 (redirect) — normal
+- **Blog index:** 308 (redirect) - normal
 - **Sitemap:** 200 OK (1564 tool pages, 103 blog posts)
 - **GSC:** Not checked (Claude auth is the blocker, GSC has separate auth)
 
 ## ?? Decisions Needed
 
-1. **Claude Code auth recovery** — Claude Code needs to be logged in interactively (`/login` in a UI session). The daemon at `toolblip-haruns-m4-air` shows "Not logged in". Once auth is restored, the remaining 8 pending topics are ready for generation.
+1. **Claude Code auth recovery** - Claude Code needs to be logged in interactively (`/login` in a UI session). The daemon at `toolblip-haruns-m4-air` shows "Not logged in". Once auth is restored, the remaining 8 pending topics are ready for generation.
 
-2. **Queue replenishment** — After this sweep, only 8 topics remain. Previous queue of 40 topics has been substantially resolved (33 skipped as tool overlap, many previously published). Consider seeding new developer-tool blog topics that map to specific developer problems not directly covered by existing tool pages.
+2. **Queue replenishment** - After this sweep, only 8 topics remain. Previous queue of 40 topics has been substantially resolved (33 skipped as tool overlap, many previously published). Consider seeding new developer-tool blog topics that map to specific developer problems not directly covered by existing tool pages.
 
-3. **Queue exhaustion state** — The remaining 8 pending topics are good candidates for Claude-generated content once auth is restored. They represent genuine content gaps where no dedicated tool page exists.
+3. **Queue exhaustion state** - The remaining 8 pending topics are good candidates for Claude-generated content once auth is restored. They represent genuine content gaps where no dedicated tool page exists.
 
 ## Next Run
 
-2026-07-13 17:00 UTC (23:00 Dhaka) — will attempt pipeline again. If Claude auth is still unavailable, will run diagnostics-only mode with sitemap/GSC health check.
+2026-07-13 17:00 UTC (23:00 Dhaka) - will attempt pipeline again. If Claude auth is still unavailable, will run diagnostics-only mode with sitemap/GSC health check.

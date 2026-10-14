@@ -1,4 +1,4 @@
-# SEO Pipeline Archive — 2026-07-24
+# SEO Pipeline Archive - 2026-07-24
 
 ## Run Summary
 - **Pipeline:** Toolblip SEO nightly (conservative mode)
@@ -31,7 +31,7 @@
 
 ## Live URL Status
 - **Blog listing page (/blog):** 200 OK
-- **New post (/blog/2026-07-24-...):** 500 — likely Cloudflare Pages deployment propagation delay
+- **New post (/blog/2026-07-24-...):** 500 - likely Cloudflare Pages deployment propagation delay
 - **Previous post (/blog/2026-07-23-...):** 200 OK (cached from earlier deployment)
 - **Note:** Local build succeeds, blog manifest includes new post. Cloudflare Pages deployment may need time to propagate or may need manual trigger.
 
@@ -41,5 +41,5 @@
 - **Done:** 1 (this run)
 
 ## Blockers
-- None — pipeline completed successfully
+- None - pipeline completed successfully
 - Live URL 500 is a deployment propagation issue, not a pipeline failure

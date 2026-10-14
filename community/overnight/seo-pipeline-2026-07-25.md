@@ -1,4 +1,4 @@
-# SEO Pipeline Archive — 2026-07-25
+# SEO Pipeline Archive - 2026-07-25
 
 ## Run Summary
 - **Pipeline:** Toolblip SEO nightly (conservative mode)
@@ -11,7 +11,7 @@
 
 ## Reason
 - **Queue empty:** 0 pending topics, 0 in_progress, 76 done
-- No new content generated — queue exhausted
+- No new content generated - queue exhausted
 
 ## Stale Content Check
 - No articles older than 180 days found (all posts from 2026-04 onward)
@@ -28,7 +28,7 @@
 - **Done:** 76
 
 ## Blockers
-- None — healthy no-publish night
+- None - healthy no-publish night
 - Topic queue needs replenishment for future runs
 
 ## Next Run

@@ -1,4 +1,4 @@
-# SEO Pipeline Run — 2026-07-22
+# SEO Pipeline Run - 2026-07-22
 
 **Run time:** 2026-07-22 10:02 UTC (16:02 Dhaka)
 **Pipeline:** seo-pipeline.sh
@@ -40,7 +40,7 @@
 
 ## Deployment Status
 
-All 3 new URLs return HTTP 500. This is a **pre-existing issue** — not caused by tonight's run:
+All 3 new URLs return HTTP 500. This is a **pre-existing issue** - not caused by tonight's run:
 - Posts published before July 12 (e.g. July 8, June 19) return HTTP 200
 - Posts published July 12 onwards all return HTTP 500
 - The Cloudflare Pages deployment appears broken since ~July 10
