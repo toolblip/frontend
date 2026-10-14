@@ -130,12 +130,12 @@ const FIX_BATCH_35: Record<string, FixBatchEntry> = {
     examples: [
       {
         title: "Fill a dashboard's daily quote slot",
-        code: `Output: "The only way to do great work is to love what you do." — Steve Jobs`,
+        code: `Output: "The only way to do great work is to love what you do." - Steve Jobs`,
         note: 'Rotates automatically without needing manual updates to the content slot.',
       },
       {
         title: 'Add an attributed quote to a presentation',
-        code: `Output: "Simplicity is the ultimate sophistication." — Leonardo da Vinci`,
+        code: `Output: "Simplicity is the ultimate sophistication." - Leonardo da Vinci`,
         note: 'Comes with proper author attribution rather than an unsourced line.',
       },
     ],

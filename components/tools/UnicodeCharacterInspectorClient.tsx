@@ -78,7 +78,7 @@ export default function UnicodeCharacterInspectorClient() {
       </div>
       <div className="tb-v2-tool-output-body">
         {results.length === 0 ? (
-          <div className="tb-v2-empty">Type characters above — details update as you type</div>
+          <div className="tb-v2-empty">Type characters above - details update as you type</div>
         ) : (
           results.map((r, i) => (
             <div
