@@ -38,7 +38,7 @@ const runtimeCaching: RuntimeCaching[] = [
     handler: new NetworkOnly(),
   },
   // Sponsor favicons (google s2 / gstatic / unavatar) and other third-party
-  // images must not go through Serwist's cross-origin NetworkFirst — redirects
+  // images must not go through Serwist's cross-origin NetworkFirst - redirects
   // and opaque responses intermittently fail and SponsorAvatar falls back to
   // the letter tile.
   {

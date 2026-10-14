@@ -532,7 +532,7 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'What is the Character Counter?', a: 'It counts characters in your browser: total length, without spaces, without newlines, letters only, and digits only. It does not show platform-specific limit bars.' },
     { q: 'Does the Character Counter count spaces?', a: 'Yes. Totals are shown with and without spaces (and without newlines) so you can compare against whatever limit you are targeting yourself.' },
     { q: 'Does it enforce Twitter, LinkedIn, or meta-description caps?', a: 'No. Those platform rules are not built into this page. Use the live totals and compare them to the limit you care about.' },
-    { q: 'Does my text leave the browser?', a: 'No. Counting runs locally after the page loads—no upload and no signup. For words, sentences, and reading time together, use Word Counter.' },
+    { q: 'Does my text leave the browser?', a: 'No. Counting runs locally after the page loads - no upload and no signup. For words, sentences, and reading time together, use Word Counter.' },
   ],
   'percentage-calculator': [
     { q: 'Which percentage problems can it solve?', a: 'Five modes: find a percentage of a number, percentage change between two values, discount price, tip with optional split, and markup from cost.' },
@@ -540,7 +540,7 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Does my data leave the browser?', a: 'No. Calculations run locally. For converting units instead of percents, use Unit Converter.' },
   ],
   'base64-encoder-decoder': [
-    { q: "Does this support files or images?", a: "This page encodes UTF-8 text and decodes Base64 back to UTF-8 text. It has no file upload or image preview—use Base64 Image Converter for those." },
+    { q: "Does this support files or images?", a: "This page encodes UTF-8 text and decodes Base64 back to UTF-8 text. It has no file upload or image preview - use Base64 Image Converter for those." },
     { q: "Is Base64 encryption?", a: "No. Anyone can reverse the encoding. It does not protect a secret." },
     { q: "Why does Base64 end in equals signs?", a: "Equals signs pad the final group when the input byte length is not a multiple of three. This decoder expects the standard +/ alphabet, not Base64URL." },
     { q: "Does my text leave the browser?", a: "No. Encode and decode run locally. For a full three-part JWT, use JWT Decoder instead of decoding segments by hand." },
@@ -964,9 +964,9 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: "What should I know before using it?", a: "TypeScript formatting and minification preserve type annotations and declarations. Downloads keep the .ts extension. Python only reindents existing blocks, and Minify isn't available for Python. HTML formatting uses conservative block boundaries." },
   ],
   'code-diff': [
-    { q: 'What algorithm does it use to compare two code blocks?', a: 'A longest common subsequence (LCS) line diff—the same class of algorithm behind tools like diff and git diff. It compares plain text lines, not a parsed JSON/AST tree.' },
+    { q: 'What algorithm does it use to compare two code blocks?', a: 'A longest common subsequence (LCS) line diff - the same class of algorithm behind tools like diff and git diff. It compares plain text lines, not a parsed JSON/AST tree.' },
     { q: 'How are additions and removals shown?', a: 'Added lines, removed lines, and unchanged context lines each get a distinct marker so you can see what changed line by line.' },
-    { q: 'Can I copy the diff output?', a: 'Yes. The result copies as plain text with +, -, and space prefixes on each line—handy for notes or pasting into a review.' },
+    { q: 'Can I copy the diff output?', a: 'Yes. The result copies as plain text with +, -, and space prefixes on each line - handy for notes or pasting into a review.' },
     { q: 'Is this a structured JSON diff?', a: 'No. Reordered keys or different whitespace still show as line changes. Beautify both sides with JSON Formatter first if you want cleaner line alignment.' },
   ],
   'code-to-diagram-generator': [
@@ -1622,7 +1622,7 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Will the optimized image always be smaller?', a: 'No. Resizing or changing format can make a file larger. The preview shows the exact output bytes and says when there is no reduction.' },
   ],
   'image-cropper': [
-    { q: 'What preset ratios are available?', a: 'Square 1:1, 16:9, 4:3, 3:2, Portrait 2:3, and Passport 35mm. Every crop stays locked to the selected ratio—there is no freeform unlocked mode.' },
+    { q: 'What preset ratios are available?', a: 'Square 1:1, 16:9, 4:3, 3:2, Portrait 2:3, and Passport 35mm. Every crop stays locked to the selected ratio - there is no freeform unlocked mode.' },
     { q: 'How do I select the exact area to crop?', a: 'Pick a ratio preset, then drag on the image to position and size the crop while keeping that aspect ratio. A semi-transparent overlay shows the selection before you crop.' },
     { q: 'What happens after I crop?', a: 'The selected region is drawn onto a new canvas at its original resolution and offered as a separate PNG download, leaving your original image untouched.' },
     { q: 'Does my image leave the browser?', a: 'No. Cropping runs in a canvas locally. For scaling the whole image instead of cutting a region, use Image Resizer.' },
@@ -1973,7 +1973,7 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Does the alpha value carry over into the copied output?', a: 'Yes, the RGBA copy button includes your alpha setting, and the live preview swatch renders the actual translucent color using that same alpha value.' },
   ],
   'roman-numeral-converter': [
-    { q: "What's the valid number range?", a: 'From 1 through 3999—the classical Roman range. Values outside that range show an error instead of a numeral.' },
+    { q: "What's the valid number range?", a: 'From 1 through 3999 - the classical Roman range. Values outside that range show an error instead of a numeral.' },
     { q: 'Do I need to press a button to convert?', a: 'No. Both directions update live: a number fills Roman, and a Roman numeral fills the number.' },
     { q: 'Does it accept lowercase Roman numerals?', a: 'Yes. Input is uppercased automatically, so mmxxiv converts the same as MMXXIV.' },
     { q: 'Which letters are allowed?', a: 'Only I, V, X, L, C, D, and M. Other characters are rejected.' },
@@ -2236,7 +2236,7 @@ const OVERRIDES: Record<string, FAQ[]> = {
   ],
   'unix-timestamp-converter': [
     { q: 'What are the two conversion directions it supports?', a: 'Type epoch seconds on the left to fill a local datetime-local field on the right, or pick a local date/time to get epoch seconds back. Both sides stay in sync as you edit.' },
-    { q: 'Does it account for my local timezone?', a: 'Yes. The datetime field and the Local preview use your browser’s local timezone. There is no separate UTC datetime panel on this page—Unix seconds are still absolute epoch values.' },
+    { q: 'Does it account for my local timezone?', a: 'Yes. The datetime field and the Local preview use your browser’s local timezone. There is no separate UTC datetime panel on this page - Unix seconds are still absolute epoch values.' },
     { q: 'Is there a shortcut for the current time?', a: 'Yes. The Now button fills the current epoch seconds and updates the local datetime fields.' },
   ],
   'uptime-calculator': [

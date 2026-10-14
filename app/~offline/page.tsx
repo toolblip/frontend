@@ -15,7 +15,7 @@ export default function OfflinePage() {
         <h1 className="tb-v2-page-title">You&apos;re offline</h1>
         <p className="tb-v2-page-sub">
           This page isn&apos;t in your offline cache yet. Reconnect, or open a tool you&apos;ve
-          already visited — those stay available without a network.
+          already visited - those stay available without a network.
         </p>
         <div className="tb-v2-hero-cta" style={{ marginTop: 28 }}>
           <Link href="/" className="tb-v2-btn tb-v2-btn-primary tb-v2-btn-lg">

@@ -102,7 +102,7 @@ export default function TextToSlugClient() {
         {slug ? (
           <code style={{ fontFamily: 'var(--f-mono)', fontSize: 16, wordBreak: 'break-all' }}>{slug}</code>
         ) : (
-          <div className="tb-v2-empty">Type or paste text above — the slug updates as you type</div>
+          <div className="tb-v2-empty">Type or paste text above - the slug updates as you type</div>
         )}
       </div>
     </div>

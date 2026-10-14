@@ -133,11 +133,19 @@ export default function FavoriteListMenu({ toolName, toolSlug, favorited, onEnga
   }
 
   return (
+    // Phones (and installed PWAs) get a centered modal; the anchored menu
+    // opens below the fold when the bar sits near the bottom of the screen.
+    <div
+      className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 px-4 sm:absolute sm:inset-auto sm:right-0 sm:top-12 sm:z-30 sm:block sm:bg-transparent sm:px-0"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
     <div
       role="dialog"
       aria-label={`Lists for ${toolName}`}
       data-testid="favorite-list-menu"
-      className="absolute right-0 top-12 z-30 w-72 rounded-xl border border-gray-200 bg-white p-3 text-left shadow-xl dark:border-gray-700 dark:bg-gray-950"
+      className="w-72 max-w-full rounded-xl border border-gray-200 bg-white p-3 text-left shadow-xl dark:border-gray-700 dark:bg-gray-950"
     >
       <div className="mb-2 flex items-center justify-between gap-3">
         <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Lists</p>
@@ -190,6 +198,7 @@ export default function FavoriteListMenu({ toolName, toolSlug, favorited, onEnga
           {error}
         </p>
       )}
+    </div>
     </div>
   );
 }

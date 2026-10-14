@@ -33,7 +33,7 @@ function ArchiveRow({ row }: { row: SponsorSlot }) {
     <>
       <span className="tb-v2-sponsor-row-rank">#{row.rank}</span>
       {row.placeholder ? (
-        <span className="tb-v2-sponsor-row-avatar" aria-hidden="true">—</span>
+        <span className="tb-v2-sponsor-row-avatar" aria-hidden="true"> - </span>
       ) : (
         <SponsorAvatar domain={row.domain} name={row.name} />
       )}

@@ -45,7 +45,7 @@ const CACHE_TTL_MS = 60_000;
 /**
  * Prefixes an absolute app path with NEXT_PUBLIC_BASE_PATH when set. Only
  * the local Tailscale-preview tooling sets this (path-mounting a worktree's
- * dev server at /{slug}/toolblip) — Next.js rewrites next/link/next/router
+ * dev server at /{slug}/toolblip) - Next.js rewrites next/link/next/router
  * automatically under a basePath, but not plain fetch() calls
  * to a hardcoded string, so those need the prefix applied explicitly.
  * A no-op everywhere else (local dev, CI, Railway), where the var is unset.
@@ -57,7 +57,7 @@ export function apiPath(path: string): string {
 
 /**
  * Session-scoped cache so repeat navigations across the ~1,400 tool pages
- * don't refetch on every click — the strip renders instantly from cache and
+ * don't refetch on every click - the strip renders instantly from cache and
  * revalidates in the background. Not a correctness mechanism (server is the
  * source of truth), just avoids a fetch-per-page-view.
  */
@@ -77,7 +77,7 @@ export function writeSponsorsTopCache(data: SponsorsTopResponse): void {
   try {
     sessionStorage.setItem(CACHE_KEY, JSON.stringify({ data, fetchedAt: Date.now() }));
   } catch {
-    // Private-mode / storage-full — fine to skip caching.
+    // Private-mode / storage-full - fine to skip caching.
   }
 }
 
@@ -111,13 +111,13 @@ export function formatBid(cents: number): string {
   return `$${Math.round(cents / 100).toLocaleString("en-US")}`;
 }
 
-/** "@handle" for an x.com identity, the raw domain otherwise — always the
+/** "@handle" for an x.com identity, the raw domain otherwise - always the
  * one real, verifiable identifier, never a free-text display name. */
 export function displayIdentity(domain: string): string {
   return domain.startsWith("x.com/") ? "@" + domain.slice("x.com/".length) : domain;
 }
 
-/** Raw elapsed minutes since a bid, or null if there's no timestamp — used
+/** Raw elapsed minutes since a bid, or null if there's no timestamp - used
  * to decide whether a row still counts as "recently bid" for highlighting. */
 export function minutesSince(iso: string | null, now: number = Date.now()): number | null {
   if (!iso) return null;

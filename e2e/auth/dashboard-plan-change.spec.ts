@@ -33,7 +33,7 @@ test.describe('Dashboard plan selection and plan change', () => {
   });
 
   test('a paid user sees active plan and inline plan switcher', async ({ page }) => {
-    // Mock subscription data — use exact match not glob, so switch isn't caught
+    // Mock subscription data - use exact match not glob, so switch isn't caught
     await page.route(/\/api\/subscription$/, async (route) => {
       await route.fulfill({
         status: 200,
@@ -75,7 +75,7 @@ test.describe('Dashboard plan selection and plan change', () => {
     await expect(upgradeBtn).toBeVisible();
     await upgradeBtn.click();
 
-    // Modal shows plan cards — non-current plan has upgrade/downgrade button
+    // Modal shows plan cards - non-current plan has upgrade/downgrade button
     const actionBtn = page.getByRole('button', { name: /Upgrade|Downgrade/ });
     await expect(actionBtn.first()).toBeVisible({ timeout: 5000 });
 

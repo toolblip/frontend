@@ -57,7 +57,7 @@ export default function JsonFormatterClient() {
     if (nextIndent === 2 || nextIndent === 4) setIndent(nextIndent);
   });
 
-  // Paid-gated saved defaults — only the formatting settings are stored, never input.
+  // Paid-gated saved defaults - only the formatting settings are stored, never input.
   const toolContext = useToolContext<JsonFormatterContext>('json-formatter');
   const appliedSavedRef = useRef(false);
 

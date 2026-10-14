@@ -8,7 +8,7 @@ interface Quote {
   author: string;
 }
 
-// Public-domain quotes only — every author below died more than 70 years ago.
+// Public-domain quotes only - every author below died more than 70 years ago.
 const QUOTES: Quote[] = [
   { text: 'The secret of getting ahead is getting started.', author: 'Mark Twain' },
   { text: 'Kindness is the language which the deaf can hear and the blind can see.', author: 'Mark Twain' },
@@ -112,7 +112,7 @@ export default function QuoteOfTheDayClient() {
   };
 
   const copyQuote = () => {
-    navigator.clipboard.writeText(`"${quote.text}" — ${quote.author}`).then(() => setCopied(true), () => setCopied(false));
+    navigator.clipboard.writeText(`"${quote.text}" - ${quote.author}`).then(() => setCopied(true), () => setCopied(false));
     setTimeout(() => setCopied(false), 1500);
   };
 
@@ -129,7 +129,7 @@ export default function QuoteOfTheDayClient() {
         <p style={{ fontSize: 22, lineHeight: 1.5, fontFamily: 'var(--f-display)', fontWeight: 600, color: 'var(--fg-0)' }}>
           &ldquo;{quote.text}&rdquo;
         </p>
-        <p style={{ marginTop: 14, fontSize: 14, color: 'var(--fg-2)', fontWeight: 500 }}>— {quote.author}</p>
+        <p style={{ marginTop: 14, fontSize: 14, color: 'var(--fg-2)', fontWeight: 500 }}>- {quote.author}</p>
       </div>
 
       <div className="tb-v2-toolbar">

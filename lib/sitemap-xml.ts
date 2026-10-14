@@ -18,7 +18,7 @@ function escapeXml(value: string): string {
  * Renders one <urlset> sitemap as a Response, shared by sitemap-core.xml,
  * sitemap-tools.xml, and sitemap-blog.xml. Split into three (rather than
  * one combined app/sitemap.ts) so Search Console reports indexed/discovered
- * counts per sitemap — the clearest signal for whether the tool corpus or
+ * counts per sitemap - the clearest signal for whether the tool corpus or
  * the blog is recovering after the GSC index-recovery cleanup.
  */
 export function sitemapXmlResponse(entries: SitemapUrlEntry[]): Response {

@@ -130,7 +130,7 @@ export default function HomePage() {
               <h2>Every category, one click away.</h2>
             </div>
             <div className="tb-v2-band-head-side">
-              {`${categoryCount} categories across ${toolCount} tools — jump straight into the full index for any one of them.`}
+              {`${categoryCount} categories across ${toolCount} tools - jump straight into the full index for any one of them.`}
             </div>
           </div>
           <div className="tb-v2-dir-grid">

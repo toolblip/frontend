@@ -125,7 +125,7 @@ export default function HashCollisionFinderClient() {
       </div>
 
       <p className="text-xs text-gray-500 dark:text-gray-400" style={{ marginBottom: 14 }}>
-        MD5 is not offered — the browser&apos;s Web Crypto API (<code>crypto.subtle.digest</code>) does
+        MD5 is not offered - the browser&apos;s Web Crypto API (<code>crypto.subtle.digest</code>) does
         not support it. Only algorithms it genuinely supports (SHA-1, SHA-256) are used here.
       </p>
 
@@ -162,7 +162,7 @@ export default function HashCollisionFinderClient() {
 
       {capped && !result && (
         <div className="tb-v2-banner tb-v2-banner-warn" style={{ marginBottom: 14 }}>
-          No collision found after {SAFETY_LIMIT.toLocaleString()} attempts — try a shorter prefix
+          No collision found after {SAFETY_LIMIT.toLocaleString()} attempts - try a shorter prefix
           length.
         </div>
       )}

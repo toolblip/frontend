@@ -24,7 +24,7 @@ test.describe('Account onboarding BDD regression', () => {
     await expect(onboarding.getByRole('heading', { name: 'Simple, transparent pricing' })).toBeVisible();
     await expect(onboarding.getByText(/Compare the plans and pick the one that fits how you use Toolblip\./i)).toBeVisible();
 
-    // Select the Free plan — paid plans now trigger Stripe checkout and redirect away
+    // Select the Free plan - paid plans now trigger Stripe checkout and redirect away
     await onboarding.getByRole('button', { name: 'Keep free plan' }).click();
     await expect(onboarding).toHaveCount(0);
 
@@ -96,7 +96,7 @@ test.describe('Account onboarding BDD regression', () => {
     await onboarding.getByRole('button', { name: 'Next' }).click();
     await expect(onboarding.getByText(/Step 2 of 2/i)).toBeVisible();
     await expect(onboarding.getByRole('heading', { name: 'Simple, transparent pricing' })).toBeVisible();
-    // Select the Free plan — paid plans redirect to Stripe
+    // Select the Free plan - paid plans redirect to Stripe
     await onboarding.getByRole('button', { name: 'Keep free plan' }).click();
     await expect(onboarding).toHaveCount(0);
 

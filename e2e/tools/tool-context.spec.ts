@@ -31,7 +31,7 @@ test.describe('Paid saved tool context', () => {
     await page.getByRole('tab', { name: 'Minify' }).click();
     await page.getByTestId('save-tool-context').click();
 
-    // Only the settings are stored — never the input.
+    // Only the settings are stored - never the input.
     const stored = await page.evaluate(() => {
       const entry = Object.entries(localStorage).find(
         ([key]) => key.startsWith('toolblip_tool_context_') && key.endsWith('_json-formatter'),

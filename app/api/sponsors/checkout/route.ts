@@ -3,7 +3,7 @@ import { parseLaravelJsonResponse } from "@/lib/adminApi";
 
 const LARAVEL_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.toolblip.com";
 
-// No auth required to bid — a sponsor doesn't need a Toolblip account.
+// No auth required to bid - a sponsor doesn't need a Toolblip account.
 // Stripe collects the email at Checkout; the webhook links or auto-creates
 // the account server-side (see api repo: SponsorWebhookController).
 export async function POST(request: Request) {

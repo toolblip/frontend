@@ -222,7 +222,7 @@ body.tb-v2 a {
 .tb-v2-nav-links a.on { color: var(--fg-0); background: var(--surface-2); }
 
 /* .tb-v2-nav-links a has a type selector, so it out-specifies the plain
-   .tb-v2-btn-primary class alone — without this, the Sponsors nav pill gets
+   .tb-v2-btn-primary class alone - without this, the Sponsors nav pill gets
    btn-primary's red background but the dark nav-link foreground color. */
 .tb-v2-nav-links a.tb-v2-btn-primary,
 .tb-v2-nav-links a.tb-v2-btn-primary:hover {
@@ -2076,7 +2076,7 @@ button.tb-v2-mm-more-row-btn {
   color: var(--fg-2); letter-spacing: 0.06em;
   text-transform: uppercase;
 }
-/* Low-emphasis tool header actions (Examples, Clear) — text links, not buttons */
+/* Low-emphasis tool header actions (Examples, Clear) - text links, not buttons */
 .tb-v2-tool-text-action {
   display: inline;
   padding: 0;
@@ -4552,7 +4552,7 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
 }
 
 /* ==========================================================================
-   TOOLBLIP v2 - Sponsors strip (site-wide, under the nav — see Shell.tsx)
+   TOOLBLIP v2 - Sponsors strip (site-wide, under the nav - see Shell.tsx)
    ========================================================================== */
 
 .tb-v2-sponsor-strip {
@@ -4665,7 +4665,7 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
   gap: 1px;
 }
 
-/* Visible paid-placement disclosure — an FTC-style label, not a design
+/* Visible paid-placement disclosure - an FTC-style label, not a design
    element, so it stays small and muted rather than a badge/pill. */
 .tb-v2-sponsor-disclosure {
   font-size: 10px;
@@ -4744,7 +4744,7 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
 }
 
 /* Stacks the Bid Now button above a single strip-wide "Sponsored" disclosure
-   — one label for the whole strip instead of repeating it per-card. */
+   - one label for the whole strip instead of repeating it per-card. */
 .tb-v2-sponsor-bidyours-wrap {
   display: flex;
   flex-direction: column;
@@ -4754,7 +4754,7 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
 }
 
 /* Wraps to two short lines ("Bid" / "Now") to read smaller/more compact
-   than a single wide line — needs height:auto and align-self:center to
+   than a single wide line - needs height:auto and align-self:center to
    override .tb-v2-btn's fixed pill height, which would otherwise clip the
    second line and leave the button pinned to the top of its grid cell. */
 .tb-v2-sponsor-bidyours {
@@ -4784,7 +4784,7 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
    TOOLBLIP v2 - /sponsors page
    ========================================================================== */
 
-/* Narrower than the site-wide .tb-v2-container (1200px) — a bid leaderboard
+/* Narrower than the site-wide .tb-v2-container (1200px) - a bid leaderboard
    reads better at a max-w-4xl-ish width than the full site max-width. */
 .tb-v2-sponsor-page {
   max-width: 56rem;
@@ -4846,7 +4846,7 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
   height: 96px;
 }
 
-/* Just a positioning context now — the row's actual layout lives on the
+/* Just a positioning context now - the row's actual layout lives on the
    .tb-v2-sponsor-row-link anchor inside it, so the claim badge (its other
    child) can be an absolutely-positioned sibling instead of nesting a
    <button> inside the <a>, which the whole row now is. */
@@ -4872,7 +4872,7 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
   background: var(--surface);
 }
 
-/* Rank 4+: a plain flat list, no card — the whole point per the reference is
+/* Rank 4+: a plain flat list, no card - the whole point per the reference is
    that these all look identical. A small margin (not just the border) gives
    the claim badge a clear band to straddle without touching either row's
    text; the border-bottom still draws the visible divider inside that gap. */
@@ -4887,7 +4887,7 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
 }
 .tb-v2-sponsor-flat-list .tb-v2-sponsor-row-flat:last-child { margin-bottom: 0; border-bottom: none; }
 
-/* Sits centered on the row's top border, like a tab straddling the edge —
+/* Sits centered on the row's top border, like a tab straddling the edge -
    not inline with the balance. Shows only on hover, for every rank, same
    placement for card rows and flat rows alike. */
 .tb-v2-sponsor-row-claim-badge {
@@ -4933,7 +4933,7 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
   color: #fff;
 }
 
-/* No forced background — the real favicon/avatar image shows as-is, just
+/* No forced background - the real favicon/avatar image shows as-is, just
    clipped to a small rounded square. Same size on every row regardless of
    rank/card-vs-flat. */
 .tb-v2-sponsor-row-avatar {
@@ -5054,7 +5054,7 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
   gap: 12px;
   flex-wrap: wrap;
   font-family: var(--f-display);
-  font-size: 36px; /* this is the page's title now — the visible <h1> is hidden, 30% up from 28px */
+  font-size: 36px; /* this is the page's title now - the visible <h1> is hidden, 30% up from 28px */
   font-weight: 800;
   color: var(--fg-0);
   text-align: center;

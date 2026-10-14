@@ -40,7 +40,7 @@ const PRESETS: Preset[] = [
   { id: 'currency-usd', label: 'Currency (USD)', keywords: ['currency', 'usd', 'money', 'price'], pattern: '^\\$\\d{1,3}(,\\d{3})*(\\.\\d{2})?$', flags: '', explanation: 'Matches a US dollar amount with optional thousands separators and cents.', example: '$1,234.56' },
   { id: 'integer', label: 'Integer', keywords: ['integer', 'number', 'int'], pattern: '^-?\\d+$', flags: '', explanation: 'Matches a positive or negative whole number.', example: '-42' },
   { id: 'decimal', label: 'Decimal number', keywords: ['decimal', 'float', 'number'], pattern: '^-?\\d+\\.\\d+$', flags: '', explanation: 'Matches a positive or negative decimal number with at least one digit on each side of the dot.', example: '3.14' },
-  { id: 'whitespace-trim', label: 'Leading/trailing whitespace', keywords: ['whitespace', 'trim', 'space'], pattern: '^\\s+|\\s+$', flags: 'g', explanation: 'Matches whitespace at the very start or end of a string — useful for trimming.', example: '   padded text   ' },
+  { id: 'whitespace-trim', label: 'Leading/trailing whitespace', keywords: ['whitespace', 'trim', 'space'], pattern: '^\\s+|\\s+$', flags: 'g', explanation: 'Matches whitespace at the very start or end of a string - useful for trimming.', example: '   padded text   ' },
   { id: 'non-empty', label: 'Non-empty string', keywords: ['non-empty', 'required', 'not blank'], pattern: '^(?=[\\s\\S]*\\S)[\\s\\S]+$', flags: '', explanation: 'Matches a string that has at least one non-whitespace character.', example: 'hello' },
 ];
 

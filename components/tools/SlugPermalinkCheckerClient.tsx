@@ -37,19 +37,19 @@ function analyzeSlug(raw: string) {
   }
 
   if (/[A-Z]/.test(slug)) {
-    issues.push({ level: 'warn', message: 'Contains uppercase letters — slugs should be all lowercase.' });
+    issues.push({ level: 'warn', message: 'Contains uppercase letters - slugs should be all lowercase.' });
     score -= 15;
   }
   if (/\s/.test(slug)) {
-    issues.push({ level: 'err', message: 'Contains spaces — use hyphens to separate words instead.' });
+    issues.push({ level: 'err', message: 'Contains spaces - use hyphens to separate words instead.' });
     score -= 25;
   }
   if (/_/.test(slug)) {
-    issues.push({ level: 'warn', message: 'Contains underscores — hyphens are preferred over underscores for word separation.' });
+    issues.push({ level: 'warn', message: 'Contains underscores - hyphens are preferred over underscores for word separation.' });
     score -= 10;
   }
   if (/[^a-z0-9-]/i.test(slug.replace(/\s/g, ''))) {
-    issues.push({ level: 'err', message: 'Contains special characters — stick to letters, numbers, and hyphens.' });
+    issues.push({ level: 'err', message: 'Contains special characters - stick to letters, numbers, and hyphens.' });
     score -= 20;
   }
   if (/--+/.test(slug)) {
@@ -65,34 +65,34 @@ function analyzeSlug(raw: string) {
   const wordCount = words.length;
 
   if (wordCount < 2) {
-    issues.push({ level: 'warn', message: 'Only one word — slugs with 3–5 descriptive words tend to perform better for SEO.' });
+    issues.push({ level: 'warn', message: 'Only one word - slugs with 3–5 descriptive words tend to perform better for SEO.' });
     score -= 10;
   } else if (wordCount > 8) {
-    issues.push({ level: 'warn', message: `${wordCount} words is quite long — aim for roughly 3–5 words.` });
+    issues.push({ level: 'warn', message: `${wordCount} words is quite long - aim for roughly 3–5 words.` });
     score -= 10;
   }
 
   if (slug.length > 60) {
-    issues.push({ level: 'warn', message: `${slug.length} characters is long — Google typically truncates URLs beyond ~60 characters in the SERP.` });
+    issues.push({ level: 'warn', message: `${slug.length} characters is long - Google typically truncates URLs beyond ~60 characters in the SERP.` });
     score -= 10;
   } else if (slug.length < 3) {
-    issues.push({ level: 'warn', message: 'Very short slug — may not be descriptive enough.' });
+    issues.push({ level: 'warn', message: 'Very short slug - may not be descriptive enough.' });
     score -= 10;
   }
 
   const stopwordCount = words.filter(w => STOPWORDS.has(w)).length;
   if (wordCount > 0 && stopwordCount / wordCount > 0.5) {
-    issues.push({ level: 'warn', message: 'Mostly made up of stopwords (the, a, of, and...) — consider trimming them for a more keyword-focused slug.' });
+    issues.push({ level: 'warn', message: 'Mostly made up of stopwords (the, a, of, and...) - consider trimming them for a more keyword-focused slug.' });
     score -= 15;
   }
 
   if (/^\d+$/.test(slug.replace(/-/g, ''))) {
-    issues.push({ level: 'warn', message: 'Slug is entirely numeric — not descriptive for search engines or users.' });
+    issues.push({ level: 'warn', message: 'Slug is entirely numeric - not descriptive for search engines or users.' });
     score -= 10;
   }
 
   if (issues.length === 0) {
-    issues.push({ level: 'ok', message: 'No structural issues found — well-formatted, descriptive slug.' });
+    issues.push({ level: 'ok', message: 'No structural issues found - well-formatted, descriptive slug.' });
   }
 
   score = Math.max(0, Math.min(100, score));
@@ -117,7 +117,7 @@ export default function SlugPermalinkCheckerClient() {
       <div className="tb-v2-banner tb-v2-banner-info" style={{ margin: '20px 20px 0' }}>
         This checks the <strong>format and SEO-friendliness</strong> of a slug (lowercase, hyphenation,
         length, stopword usage). It cannot verify whether the slug is actually available/unique on a
-        live site — that requires checking your CMS or server directly.
+        live site - that requires checking your CMS or server directly.
       </div>
 
       <div className="tb-v2-tool-input-head">

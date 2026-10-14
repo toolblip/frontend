@@ -11,10 +11,10 @@ function round(n: number): number {
 }
 
 function qualityNote(ppi: number): { label: string; detail: string } {
-  if (ppi >= 300) return { label: 'Excellent — print quality', detail: '300+ PPI is the standard for sharp, professional prints.' };
-  if (ppi >= 150) return { label: 'Good — acceptable for most prints', detail: '150–299 PPI looks fine at normal viewing distance.' };
-  if (ppi >= 100) return { label: 'Fair — visible softness possible', detail: '100–149 PPI may look slightly soft up close.' };
-  return { label: 'Low quality — not recommended for print', detail: 'Below 100 PPI usually looks pixelated when printed.' };
+  if (ppi >= 300) return { label: 'Excellent - print quality', detail: '300+ PPI is the standard for sharp, professional prints.' };
+  if (ppi >= 150) return { label: 'Good - acceptable for most prints', detail: '150–299 PPI looks fine at normal viewing distance.' };
+  if (ppi >= 100) return { label: 'Fair - visible softness possible', detail: '100–149 PPI may look slightly soft up close.' };
+  return { label: 'Low quality - not recommended for print', detail: 'Below 100 PPI usually looks pixelated when printed.' };
 }
 
 export default function PixelDensityCalculatorClient() {

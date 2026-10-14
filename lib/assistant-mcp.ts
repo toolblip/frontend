@@ -61,7 +61,7 @@ function callTool(name: string, args: Record<string, unknown>) {
     const matches = searchPublicTools(query);
     const text = matches.length === 0
       ? `No public Toolblip tool matched "${query}".`
-      : matches.map((tool) => `${tool.name} (${tool.category}): ${tool.url} — ${tool.description}`).join('\n');
+      : matches.map((tool) => `${tool.name} (${tool.category}): ${tool.url} - ${tool.description}`).join('\n');
     return textResult(text);
   }
   if (name === 'get_tool') {

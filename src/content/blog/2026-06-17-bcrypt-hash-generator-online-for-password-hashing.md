@@ -59,7 +59,7 @@ Cost factor 4 completes in a few milliseconds. It offers almost no protection ag
 ### Forgetting to handle async properly
 
 ```javascript
-// wrong — returns a Promise, not a string
+// wrong - returns a Promise, not a string
 const hash = bcrypt.hash(password, 10);
 ```
 

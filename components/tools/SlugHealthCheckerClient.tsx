@@ -110,7 +110,7 @@ export default function SlugHealthCheckerClient() {
       <div className="tb-v2-banner tb-v2-banner-info" style={{ margin: '20px 20px 0' }}>
         Paste a list of slugs or URLs (one per line, e.g. from a sitemap). This checks for exact and
         near-duplicate paths within the pasted list and flags structural SEO issues per slug. It cannot
-        detect duplicate <em>content</em> across pages — only duplicate/similar <em>paths</em> in what you paste.
+        detect duplicate <em>content</em> across pages - only duplicate/similar <em>paths</em> in what you paste.
       </div>
 
       <div className="tb-v2-tool-input-head">

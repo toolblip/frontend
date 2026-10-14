@@ -10,11 +10,11 @@ const nextConfig = {
   // covers the toolblip-preview tooling's path-mounted worktree URLs. Without
   // this, Next's dev server refuses the cross-origin HMR websocket handshake
   // (a 502 through nginx) and Turbopack's dev client never completes its
-  // bootstrap — the whole app silently never hydrates, not just one component.
+  // bootstrap - the whole app silently never hydrates, not just one component.
   allowedDevOrigins: ['127.0.0.1', 'mx.ewe-ulmer.ts.net', '*.ts.net'],
   // Set only by the local Tailscale-preview tooling (toolblip-workspace's
   // scripts/tailscale-dev), which path-mounts a worktree's dev server at
-  // /{slug}/toolblip. No-op — and unset — for every other run (local dev,
+  // /{slug}/toolblip. No-op - and unset - for every other run (local dev,
   // CI, Railway). Next.js only rewrites next/link, next/router, next/image,
   // and its own generated asset URLs under a basePath; plain fetch() calls
   // to hardcoded absolute paths are not rewritten automatically, which is
@@ -225,7 +225,7 @@ const nextConfig = {
       // the canonical slug changed, so this is a pure 301/308, not a removal.
       { source: '/tools/photo-resize-tool', destination: '/tools/images/photo-resize', permanent: true },
       { source: '/tools/lorem-ipsum-api', destination: '/tools/lorem-ipsum-generator', permanent: true },
-      // Catalog duplicates of LoremIpsumGeneratorClient — one canonical tool.
+      // Catalog duplicates of LoremIpsumGeneratorClient - one canonical tool.
       { source: '/tools/lorem-ipsum', destination: '/tools/lorem-ipsum-generator', permanent: true },
       { source: '/tools/lorem-ipsum-paragraphs', destination: '/tools/lorem-ipsum-generator', permanent: true },
       { source: '/tools/paragraph-lorem-ipsum', destination: '/tools/lorem-ipsum-generator', permanent: true },
@@ -358,7 +358,7 @@ const nextConfig = {
       },
       {
         // Service worker + its map must revalidate every time. Long CDN
-        // caches (s-maxage) leave browsers on a broken SW after deploys —
+        // caches (s-maxage) leave browsers on a broken SW after deploys -
         // e.g. sponsor favicon NetworkOnly rules never reached clients.
         source: '/serwist/:path*',
         headers: [

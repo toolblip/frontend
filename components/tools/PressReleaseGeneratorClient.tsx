@@ -48,7 +48,7 @@ export default function PressReleaseGeneratorClient() {
     lines.push('');
     lines.push(headline.trim() || '[Headline]');
     lines.push('');
-    lines.push(`${dateline.trim() || '[City, State]'} — ${formatDate(date)} — ${lead}`);
+    lines.push(`${dateline.trim() || '[City, State]'} - ${formatDate(date)} - ${lead}`);
     for (const p of rest) {
       lines.push('');
       lines.push(p);

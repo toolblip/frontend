@@ -16,7 +16,7 @@ function loadCacheFromStorage() {
       if (value) qrCache.set(key.slice(STORAGE_PREFIX.length), value);
     }
   } catch {
-    // localStorage unavailable (private browsing, disabled, etc.) — fall back to in-memory only
+    // localStorage unavailable (private browsing, disabled, etc.) - fall back to in-memory only
   }
 }
 
@@ -27,7 +27,7 @@ function saveToStorage(url: string, dataUrl: string) {
   try {
     localStorage.setItem(STORAGE_PREFIX + url, dataUrl);
   } catch {
-    // storage full or unavailable — still cached in memory for this session
+    // storage full or unavailable - still cached in memory for this session
   }
 }
 

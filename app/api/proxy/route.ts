@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    // Basic validation — ensure it's a valid absolute URL
+    // Basic validation - ensure it's a valid absolute URL
     let targetUrl: URL;
     try {
       targetUrl = new URL(url);

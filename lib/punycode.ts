@@ -167,7 +167,7 @@ function locateDomain(line: string): DomainSpan {
     if (match) {
       try {
         // Validate the line actually parses as a URL. We never read fields back
-        // off this object — new URL() auto-applies IDNA ToASCII to the hostname
+        // off this object - new URL() auto-applies IDNA ToASCII to the hostname
         // on parse, and the .hostname setter/`.toString()` do so again on write,
         // which would silently defeat the toUnicode direction and percent-encode
         // the path. We only use it here to confirm URL-shape, then do the actual
@@ -182,7 +182,7 @@ function locateDomain(line: string): DomainSpan {
         const port = colonIndex >= 0 ? hostport.slice(colonIndex) : '';
         return { prefix: scheme + userinfo, domain: host, suffix: port + rest };
       } catch {
-        // Not actually a valid URL despite the "://" — fall through, treat the
+        // Not actually a valid URL despite the "://" - fall through, treat the
         // whole line as a bare domain.
       }
     }
@@ -214,7 +214,7 @@ export function analyse(domain: string): string[] {
       warnings.push(`Domain "${domain}" exceeds 253 bytes when encoded.`);
     }
   } catch {
-    // Doesn't encode cleanly — the length check doesn't apply here.
+    // Doesn't encode cleanly - the length check doesn't apply here.
   }
 
   for (const label of labels) {
@@ -229,7 +229,7 @@ export function analyse(domain: string): string[] {
         warnings.push(`Label "${label}" exceeds 63 bytes when encoded.`);
       }
     } catch {
-      // Doesn't encode cleanly — the length check doesn't apply here.
+      // Doesn't encode cleanly - the length check doesn't apply here.
     }
 
     const hasLatin = /\p{Script=Latin}/u.test(label);
@@ -239,7 +239,7 @@ export function analyse(domain: string): string[] {
       const mixed = [hasCyrillic ? 'Cyrillic' : null, hasGreek ? 'Greek' : null]
         .filter(Boolean)
         .join(' and ');
-      warnings.push(`Label "${label}" mixes Latin with ${mixed} script — possible homograph attack.`);
+      warnings.push(`Label "${label}" mixes Latin with ${mixed} script - possible homograph attack.`);
     }
   }
 
@@ -259,11 +259,11 @@ export function analyse(domain: string): string[] {
     const asciiForm = toASCII(domain.replace(DEFAULT_IGNORABLE, ''));
     if (url.hostname !== asciiForm) {
       warnings.push(
-        `Domain "${domain}" disagrees with the browser's own IDNA encoding ("${url.hostname}") — this tool's simplified Punycode conversion may not match what actually resolves.`
+        `Domain "${domain}" disagrees with the browser's own IDNA encoding ("${url.hostname}") - this tool's simplified Punycode conversion may not match what actually resolves.`
       );
     }
   } catch {
-    // domain doesn't parse as a hostname at all — not every analyse() input is one, skip silently.
+    // domain doesn't parse as a hostname at all - not every analyse() input is one, skip silently.
   }
 
   return warnings;

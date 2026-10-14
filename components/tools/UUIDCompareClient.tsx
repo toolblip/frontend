@@ -187,7 +187,7 @@ export default function UUIDCompareClient() {
               </span>
               <span className="tb-v2-status tb-v2-status-info">Lexicographic: {summary?.lexLabel}</span>
               <span className="tb-v2-status tb-v2-status-info">
-                Chronological: {summary?.chrono ?? 'not extractable — needs UUIDv1 or UUIDv7 on both sides'}
+                Chronological: {summary?.chrono ?? 'not extractable - needs UUIDv1 or UUIDv7 on both sides'}
               </span>
             </div>
           </div>

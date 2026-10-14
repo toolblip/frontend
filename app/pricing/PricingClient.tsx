@@ -165,13 +165,13 @@ export default function PricingClient() {
       const loggedIn = await isAuthenticated();
 
       if (!loggedIn) {
-        // Not authenticated — redirect to login, return to pricing after
+        // Not authenticated - redirect to login, return to pricing after
         const pricingReturn = `/dashboard?plan=${plan.tier}&billing=${billing}`;
         router.push(`/login?next=${encodeURIComponent(pricingReturn)}`);
         return;
       }
 
-      // Authenticated — create Stripe Checkout session directly
+      // Authenticated - create Stripe Checkout session directly
       const priceId = billing === 'yearly' ? plan.stripe_yearly_id : plan.stripe_monthly_id;
       if (!priceId) throw new Error('No Stripe price ID configured for this plan');
 
@@ -218,7 +218,7 @@ export default function PricingClient() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to start free trial');
 
-      // Trial started — soft-nav to dashboard
+      // Trial started - soft-nav to dashboard
       router.push('/dashboard?trial=started');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong');
@@ -307,7 +307,7 @@ export default function PricingClient() {
                         className="text-center text-xs text-[color:var(--fg-3)] underline-offset-2 hover:text-[color:var(--fg-1)] hover:underline"
                         style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '2px 0' }}
                       >
-                        {loading === sourcePlan.tier ? 'Redirecting...' : `Skip trial \u2014 ${SUBSCRIBE_NOW_LABEL}`}
+                        {loading === sourcePlan.tier ? 'Redirecting...' : `Skip trial - ${SUBSCRIBE_NOW_LABEL}`}
                       </button>
                     </div>
                   }

@@ -144,7 +144,7 @@ export default function RequestIndexingPage() {
         </div>
 
         <p style={{ marginTop: '16px', fontSize: '12px', color: 'var(--fg-3)', textAlign: 'center' }}>
-          Only toolblip.com URLs can be checked. This calls the Search Console API directly — results reflect Google&apos;s
+          Only toolblip.com URLs can be checked. This calls the Search Console API directly - results reflect Google&apos;s
           current index, not an instant re-crawl.
         </p>
       </div>

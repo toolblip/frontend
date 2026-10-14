@@ -408,7 +408,7 @@ export default function TeamPage() {
                     className="h-3 w-3 accent-gray-900 dark:accent-white"
                   />
                   <span className="font-medium">{r.label}</span>
-                  <span className="text-gray-400">— {r.description}</span>
+                  <span className="text-gray-400">- {r.description}</span>
                 </label>
               ))}
             </div>

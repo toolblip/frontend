@@ -72,7 +72,7 @@ export default function GraphqlPlaygroundClient() {
       try {
         parsed = JSON.parse(text);
       } catch {
-        // Server didn't return JSON — show the raw text plus the HTTP status
+        // Server didn't return JSON - show the raw text plus the HTTP status
         // instead of pretending we got a valid GraphQL response.
         setError(
           `Server responded with HTTP ${res.status} ${res.statusText}, but the body wasn't valid JSON:\n\n${text.slice(0, 2000)}`

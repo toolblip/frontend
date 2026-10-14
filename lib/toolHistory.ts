@@ -50,7 +50,7 @@ export function recordRecentTool(tool: { slug: string; name: string; icon?: stri
   try {
     window.localStorage.setItem(RECENT_TOOLS_STORAGE_KEY, JSON.stringify(next));
   } catch {
-    // Ignore quota / serialization errors — history is best-effort.
+    // Ignore quota / serialization errors - history is best-effort.
   }
 
   return next;

@@ -71,7 +71,7 @@ test.describe('Dashboard recent tool history', () => {
     await expect(page.locator('#favorite-tools')).toBeVisible();
     await expect(page.getByRole('button', { name: /^Favorites/ })).toHaveClass(/border-red-600/);
 
-    // Click Recents tab — recents visible, favorites hidden
+    // Click Recents tab - recents visible, favorites hidden
     await page.getByRole('button', { name: /^Recents/ }).click();
     await expect(page.locator('#recent-tools')).toBeVisible();
     await expect(page.locator('#favorite-tools')).not.toBeVisible();

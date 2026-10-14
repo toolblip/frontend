@@ -33,7 +33,7 @@ function parseJson(label: string, text: string): { value: Record<string, unknown
     }
     return { value: parsed as Record<string, unknown>, error: '' };
   } catch (e) {
-    return { value: null, error: `${label} — ${(e as Error).message}` };
+    return { value: null, error: `${label} - ${(e as Error).message}` };
   }
 }
 
@@ -75,7 +75,7 @@ export default function TokenBuilderClient() {
     if (!(Object.hasOwn(HMAC_ALGS, alg))) {
       setBuild({
         status: 'error',
-        message: `"${alg}" isn't supported for client-side signing — only HS256, HS384, and HS512 (shared-secret HMAC) can be generated in the browser. This tool does not implement asymmetric signing.`,
+        message: `"${alg}" isn't supported for client-side signing - only HS256, HS384, and HS512 (shared-secret HMAC) can be generated in the browser. This tool does not implement asymmetric signing.`,
       });
       return;
     }

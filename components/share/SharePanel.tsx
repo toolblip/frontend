@@ -160,7 +160,7 @@ export default function SharePanel({ open, onClose, url, title }: SharePanelProp
       try {
         await navigator.share({ title: title || 'Toolblip', text: shareText, url: shortUrl });
       } catch {
-        // user cancelled or share failed — nothing to do
+        // user cancelled or share failed - nothing to do
       }
       return;
     }

@@ -11,7 +11,7 @@ export const dynamic = 'force-static';
 
 export const metadata: Metadata = {
   title: 'Image Tools | Toolblip',
-  description: `Resize, crop, convert, and clean up images in your browser. ${imageTools.length} free Image tools — no upload to a server.`,
+  description: `Resize, crop, convert, and clean up images in your browser. ${imageTools.length} free Image tools - no upload to a server.`,
   alternates: { canonical: `https://toolblip.com${IMAGE_CATEGORY_PATH}` },
   openGraph: {
     title: 'Image Tools | Toolblip',

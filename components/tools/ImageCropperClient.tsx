@@ -81,7 +81,7 @@ export default function ImageCropperClient() {
   }, []);
 
   // Draw after the canvas mounts. Calling drawCanvas from FileReader/Image onload
-  // races React's commit — the <canvas> only exists once `image` is set.
+  // races React's commit - the <canvas> only exists once `image` is set.
   useEffect(() => {
     if (!image || !imgRef.current) return;
     drawCanvas(imgRef.current, cropRect);
@@ -333,7 +333,7 @@ export default function ImageCropperClient() {
       ) : (
         <div className="space-y-3">
           <p className="text-xs text-gray-500">
-            {preset.label} crop is ready — drag on the image to choose a different area
+            {preset.label} crop is ready - drag on the image to choose a different area
           </p>
           <div className="flex justify-end">
             <button

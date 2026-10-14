@@ -297,8 +297,8 @@ export default function HashDiffCheckerClient() {
             {diff.match
               ? 'The two hashes are identical.'
               : diff.sameLength
-              ? `The hashes differ — same length (${hashA.length} chars), first difference at position ${diff.firstDiffIndex + 1}.`
-              : `The hashes differ — different lengths (${hashA.length} vs ${hashB.length} chars).`}
+              ? `The hashes differ - same length (${hashA.length} chars), first difference at position ${diff.firstDiffIndex + 1}.`
+              : `The hashes differ - different lengths (${hashA.length} vs ${hashB.length} chars).`}
           </span>
         </div>
       )}

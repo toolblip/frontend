@@ -1,7 +1,7 @@
 // Lightweight, user-controlled saved context for paid users (Stage 4 Feature 3).
 //
 // Stores ONLY a small per-tool settings/defaults object keyed by user + tool
-// slug. It never captures tool input/output, files, or secrets — callers pass
+// slug. It never captures tool input/output, files, or secrets - callers pass
 // just the settings they want to remember. Persistence is local (survives
 // reload); the paid gate lives in useToolContext.
 

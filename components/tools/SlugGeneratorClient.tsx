@@ -58,7 +58,7 @@ export default function SlugGeneratorClient() {
         {slug ? (
           <code style={{ fontFamily: 'var(--f-mono)', fontSize: 16 }}>/{slug}</code>
         ) : (
-          <div className="tb-v2-empty">Type or paste a title above — the slug updates as you type</div>
+          <div className="tb-v2-empty">Type or paste a title above - the slug updates as you type</div>
         )}
       </div>
     </div>

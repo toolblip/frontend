@@ -150,7 +150,7 @@ export default function KeywordGeneratorClient() {
       </div>
 
       <p style={{ padding: '0 20px 16px', fontSize: 12.5, color: 'var(--fg-3)' }}>
-        Free keyword ideas based on common search patterns — no real search volume or competition data included.
+        Free keyword ideas based on common search patterns - no real search volume or competition data included.
       </p>
     </div>
   );

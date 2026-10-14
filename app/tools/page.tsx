@@ -22,7 +22,7 @@ export async function generateMetadata({
   const matched = matchCategory(category);
   // Some category labels already end in "Tools" (e.g. "PDF Tools"); avoid "PDF Tools Tools".
   const label = matched?.replace(/\s+Tools$/i, '');
-  const title = label ? `${label} Tools — Free Online | Toolblip` : BASE_TITLE;
+  const title = label ? `${label} Tools - Free Online | Toolblip` : BASE_TITLE;
   const description = label
     ? `Browse free ${label} tools on Toolblip. Part of a catalog of 100+ free browser-based developer tools.`
     : BASE_DESCRIPTION;

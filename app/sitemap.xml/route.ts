@@ -1,5 +1,5 @@
 /**
- * Legacy sitemap URL — many external references and old scripts still point
+ * Legacy sitemap URL - many external references and old scripts still point
  * at /sitemap.xml. Return a sitemap index that lists the three live child
  * sitemaps instead of 404ing.
  */

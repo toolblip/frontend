@@ -75,7 +75,7 @@ function analyze(text: string) {
   if (h1Count === 0) {
     checks.push({ status: 'warn', label: 'H1 heading', detail: 'No top-level (H1) heading found.' });
   } else if (h1Count > 1) {
-    checks.push({ status: 'warn', label: 'H1 heading', detail: `Found ${h1Count} H1 headings — a document should generally have only one.` });
+    checks.push({ status: 'warn', label: 'H1 heading', detail: `Found ${h1Count} H1 headings - a document should generally have only one.` });
   } else {
     checks.push({ status: 'pass', label: 'H1 heading', detail: 'Exactly one H1 heading found.' });
   }
@@ -108,7 +108,7 @@ function analyze(text: string) {
   if (usesLists) {
     checks.push({ status: 'pass', label: 'List usage', detail: 'Bulleted or numbered lists were detected.' });
   } else {
-    checks.push({ status: 'warn', label: 'List usage', detail: 'No bulleted or numbered lists detected — consider breaking up content where relevant.' });
+    checks.push({ status: 'warn', label: 'List usage', detail: 'No bulleted or numbered lists detected - consider breaking up content where relevant.' });
   }
 
   return { headings, paragraphs, longParagraphs, usesLists, checks };

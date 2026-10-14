@@ -152,7 +152,7 @@ export function InvoicesSection() {
                           PDF
                         </a>
                       ) : (
-                        <span className="text-xs text-gray-400">—</span>
+                        <span className="text-xs text-gray-400"> - </span>
                       )}
                     </td>
                   </tr>

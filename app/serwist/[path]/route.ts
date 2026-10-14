@@ -22,7 +22,7 @@ const serwistRoute = createSerwistRoute({
 // createSerwistRoute defaults to force-static + year-long s-maxage, which
 // leaves Cloudflare/Next serving a stale SW after deploys (sponsor favicon
 // NetworkOnly rules never reached clients). next.config headers alone do not
-// override that — set no-store on the response and force a dynamic render.
+// override that - set no-store on the response and force a dynamic render.
 // dynamicParams must be a compile-time boolean literal (not re-exported).
 export const dynamic = 'force-dynamic';
 export const dynamicParams = false;
