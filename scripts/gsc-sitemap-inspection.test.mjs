@@ -1,13 +1,15 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { mkdtemp, readFile, rm } from 'node:fs/promises';
+import { readFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { parseSitemap, groupResults, collect, main, selectOnly } from './gsc-sitemap-inspection.mjs';
 
 const urls = ['https://toolblip.com/tools/alpha', 'https://toolblip.com/tools/beta', 'https://toolblip.com/tools/gamma'];
 const blogUrls = ['https://toolblip.com/blog/first-post', 'https://toolblip.com/blog/another-2026-post'];
-const coreUrls = ['https://toolblip.com', 'https://toolblip.com/directory', 'https://toolblip.com/tools', 'https://toolblip.com/tools/images', 'https://toolblip.com/all-tools', 'https://toolblip.com/blog', 'https://toolblip.com/pricing', 'https://toolblip.com/sponsors', 'https://toolblip.com/sponsors/archive', 'https://toolblip.com/about', 'https://toolblip.com/products', 'https://toolblip.com/seo', 'https://toolblip.com/api-docs'];
+// Read the live core sitemap route so CORE_URLS cannot drift from what app/sitemap-core.xml emits.
+const coreUrls = [...readFileSync(new URL('../app/sitemap-core.xml/route.ts', import.meta.url), 'utf8').matchAll(/\{ url: (baseUrl|`\$\{baseUrl\}([^`]*)`)/g)].map(match => `https://toolblip.com${match[2] ?? ''}`);
 const xml = entries => `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${entries.map(url => `<url><loc>${url}</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>`).join('')}</urlset>`;
 const response = (body, status = 200) => new Response(typeof body === 'string' ? body : JSON.stringify(body), { status });
 const stored = (verdict, coverageState) => ({ inspectionResult: { indexStatusResult: { verdict, coverageState, indexingState: 'INDEXING_ALLOWED', googleCanonical: urls[0] } } });
