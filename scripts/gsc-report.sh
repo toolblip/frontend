@@ -1,5 +1,5 @@
 #!/bin/bash
-# gsc-report.sh — Wrapper for daily GSC performance report
+# gsc-report.sh - Wrapper for daily GSC performance report
 set -euo pipefail
 export USER="${USER:-$(id -un 2>/dev/null || echo ray)}"
 export HOME=/Users/ray

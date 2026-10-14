@@ -1,4 +1,4 @@
-# Public review of retained tool routes — 2026-09-28
+# Public review of retained tool routes - 2026-09-28
 
 ## Public review decision
 

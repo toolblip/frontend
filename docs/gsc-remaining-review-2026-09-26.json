@@ -2257,7 +2257,7 @@
       "source": "components/tools/HexToNamedColorClient.tsx",
       "sourceSha256AtReview": "b79d9e75f450de38bf9d99ebcedd5edec8096d61d0ab12d77da515b893f57320",
       "currentContentFinding": {
-        "priorDescription": "Convert both ways between HEX codes and CSS named colors. Pick a hex to find the nearest name, or pick a name to get its hex — live side-by-side in your browser.",
+        "priorDescription": "Convert both ways between HEX codes and CSS named colors. Pick a hex to find the nearest name, or pick a name to get its hex - live side-by-side in your browser.",
         "priorContentPresent": true,
         "review": "No specific implementation blocker established in this source-only pass; this is not a functional acceptance. Compare candidate canonical functionality before choosing a redirect."
       },

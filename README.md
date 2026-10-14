@@ -9,15 +9,15 @@
 
 🔗 **[toolblip.com](https://toolblip.com)**
 
-Toolblip is a fast, open-source collection of browser-based utilities for developers — built to be simple, private, and always free. Everything runs in your browser; we don't track you and we don't sell your data.
+Toolblip is a fast, open-source collection of browser-based utilities for developers - built to be simple, private, and always free. Everything runs in your browser; we don't track you and we don't sell your data.
 
 ## Popular Categories
 
-- 🧩 **JSON Tools** — formatters, validators, converters, diff checkers
-- ✍️ **Text Utilities** — case converters, counters, diffing, encoders
-- 🖼️ **Image Optimizers** — compression, resizing, format conversion
-- 💻 **Code Helpers** — minifiers, beautifiers, regex testers, linters
-- 🔢 **Math Calculators** — unit converters, number base tools, statistics
+- 🧩 **JSON Tools** - formatters, validators, converters, diff checkers
+- ✍️ **Text Utilities** - case converters, counters, diffing, encoders
+- 🖼️ **Image Optimizers** - compression, resizing, format conversion
+- 💻 **Code Helpers** - minifiers, beautifiers, regex testers, linters
+- 🔢 **Math Calculators** - unit converters, number base tools, statistics
 
 ## Quick Start
 
@@ -45,7 +45,7 @@ npm run lint    # Lint the codebase
 
 ## Contributing
 
-Toolblip is open-source and contributions are welcome — whether it's a new tool, a bug fix, or a docs improvement. Feel free to open an issue or submit a pull request.
+Toolblip is open-source and contributions are welcome - whether it's a new tool, a bug fix, or a docs improvement. Feel free to open an issue or submit a pull request.
 
 ## License
 

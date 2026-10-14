@@ -36,7 +36,7 @@ playwright-report/
 test-results/
 .playwright/
 
-# Local agent/runtime state — never commit
+# Local agent/runtime state - never commit
 .claude-home/
 .openclaw/
 .hermes/

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-gsc-submit-urls.py — Submit URLs to Google Search Console & IndexNow (Bing).
+gsc-submit-urls.py - Submit URLs to Google Search Console & IndexNow (Bing).
 Notifies search engines about new/updated pages for faster indexing.
 
 Usage:

@@ -11,7 +11,7 @@ import matter from 'gray-matter';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
 
-// content/blog is authoritative — scan it first so edits there win over any
+// content/blog is authoritative - scan it first so edits there win over any
 // stale duplicate under src/content/blog (see docs/gsc-recovery-plan.md).
 const BLOG_DIRS = [
   path.join(ROOT, 'content/blog'),

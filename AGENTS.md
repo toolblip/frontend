@@ -6,8 +6,8 @@ This folder is home. Treat it that way.
 
 All code changes in this project must go through a dedicated coding agent:
 
-1. **Claude Code** — primary. All editing, building, testing.
-2. **Codex CLI** — backup if Claude Code is rate-limited, blocked, or unavailable.
+1. **Claude Code** - primary. All editing, building, testing.
+2. **Codex CLI** - backup if Claude Code is rate-limited, blocked, or unavailable.
 
 Do NOT use Hermes `write_file`/`patch`/`terminal` for source code editing. Route all coding through Claude Code. The only exceptions are trivial one-line config files, package.json scripts, and deployment files (railway.json, nixpacks.toml).
 
@@ -15,8 +15,8 @@ Do NOT use Hermes `write_file`/`patch`/`terminal` for source code editing. Route
 
 When reviewing pull requests or doing code review:
 
-1. **Codex CLI** — primary reviewer
-2. **Claude Code** — backup/second review pass if Codex is blocked or unavailable
+1. **Codex CLI** - primary reviewer
+2. **Claude Code** - backup/second review pass if Codex is blocked or unavailable
 
 ## First Run
 

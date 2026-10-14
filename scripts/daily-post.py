@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-daily-post.py — Toolblip daily blog post generator (Mon-Sat).
+daily-post.py - Toolblip daily blog post generator (Mon-Sat).
 Picks 1 topic → researches → generates → humanizes → commits → submits to GSC.
 """
 import json, os, re, subprocess, sys, urllib.parse
@@ -58,7 +58,7 @@ def complete_topic(topic):
 def gsc_keywords(topic):
     """Get GSC keyword suggestions for a topic."""
     out, rc = run(["python3", "scripts/seo-content-generator.py", "keywords", topic], timeout=30, cwd=ROOT)
-    # Filter out stderr-like lines (FutureWarning, RESEACHING, etc.) — keep only JSON array
+    # Filter out stderr-like lines (FutureWarning, RESEACHING, etc.) - keep only JSON array
     lines = [l.strip() for l in out.split("\n") if l.strip().startswith("[") or l.strip().startswith("\"") or l.strip().startswith("  \"") or l.strip() == "]"]
     clean = "\n".join(lines)
     if not clean.startswith("["):
@@ -342,9 +342,9 @@ def main():
     # Day check
     dow = datetime.now().isoweekday()  # 1=Mon, 7=Sun
     if dow == 7:
-        log("Sunday — skipping (no posts on Sundays).")
+        log("Sunday - skipping (no posts on Sundays).")
         return 0
-    log(f"Day {dow} — posting day ✓")
+    log(f"Day {dow} - posting day ✓")
 
     # Pick topic
     topic = pick_topic()

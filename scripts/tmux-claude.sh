@@ -1,5 +1,5 @@
 #!/bin/bash
-# tmux-claude.sh — Send a prompt to the tmux Claude Code daemon and capture output.
+# tmux-claude.sh - Send a prompt to the tmux Claude Code daemon and capture output.
 # Usage: ./tmux-claude.sh < prompt.txt
 # Reads prompt from stdin, sends it to the tmux daemon, waits for completion.
 
@@ -51,7 +51,7 @@ while [ $ELAPSED -lt $MAX_WAIT ]; do
         if [ "$LINE_COUNT" -eq "$LAST_LINE_COUNT" ]; then
             STABLE_COUNT=$((STABLE_COUNT + 1))
             if [ $STABLE_COUNT -ge 2 ]; then
-                # Two consecutive stable checks with prompt visible — done
+                # Two consecutive stable checks with prompt visible - done
                 break
             fi
         else

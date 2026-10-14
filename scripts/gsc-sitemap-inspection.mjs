@@ -192,7 +192,7 @@ export async function collect({ sitemap = 'tools', only, env = process.env, now 
 }
 
 export function markdown(report) {
-  const cell = value => String(value ?? '—').replace(/[\r\n|]/g, ' ').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const cell = value => String(value ?? ' - ').replace(/[\r\n|]/g, ' ').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   const lines = ['# GSC sitemap URL Inspection', '', `Status: **${report.status}** | Generated: ${report.generatedAt}`,
     `Sitemap: ${report.sitemap.url} (${report.sitemap.count} validated ${report.sitemap.cohort === 'tools' || !report.sitemap.cohort ? 'tool' : report.sitemap.cohort} URLs${report.sitemap.only ? `; one listed URL: ${report.sitemap.only}` : ''})`, report.inspectionMeaning,
     'Search Console data can lag a recrawl. A stored verdict is not a guarantee of future indexing.', '',

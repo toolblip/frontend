@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-gsc-report.py — Toolblip Google Search Console daily performance report.
+gsc-report.py - Toolblip Google Search Console daily performance report.
 Queries GSC for last 7 days of data and outputs a summary.
 """
 import json, os, sys
@@ -120,7 +120,7 @@ def main():
             prev_week_clicks = sum(r.get("clicks", 0) for r in trend_rows[:7])
             change = ((last_week_clicks - prev_week_clicks) / prev_week_clicks * 100) if prev_week_clicks else 0
             direction = "📈 up" if change > 0 else "📉 down" if change < 0 else "➡️ flat"
-            print(f"**28-day trend:** Last week {fmt(last_week_clicks)} clicks vs prev week {fmt(prev_week_clicks)} — {direction} {abs(change):.0f}%\n")
+            print(f"**28-day trend:** Last week {fmt(last_week_clicks)} clicks vs prev week {fmt(prev_week_clicks)} - {direction} {abs(change):.0f}%\n")
     except Exception as e:
         print(f"⚠️ Trend query error: {e}\n")
 
