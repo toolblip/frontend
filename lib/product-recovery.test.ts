@@ -25,7 +25,7 @@ function component(name: string, modules: Record<string, unknown> = {}, globals:
   const exports: { default?: (props: Record<string, unknown>) => ReactElement } = {};
   runInNewContext(ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX } }).outputText, {
     exports, ...globals, setTimeout: () => 0, AbortController,
-    require: (id: string) => id === 'react' ? hooks : id === 'react/jsx-runtime' ? jsxRuntime : modules[id] ?? { default: () => null },
+    require: (id: string) => id === 'react' ? hooks : id === 'react/jsx-runtime' ? jsxRuntime : modules[id] ?? (id.endsWith('/useToolHash') ? { useToolHash: () => undefined } : { default: () => null }),
   });
   return () => { cursor = 0; let tree = exports.default!(props); if (effects.length) { effects.splice(0).forEach(fn => fn()); cursor = 0; tree = exports.default!(props); } return tree; };
 }
@@ -37,7 +37,7 @@ function button(tree: any, label: string) { return nodes(tree).find(n => n.type 
 
 describe('selected UI boundary repairs', () => {
   it('rounds total reading seconds before splitting minutes and leaves empty input unestimated', () => {
-    const render = component('ReadingTimeCalculatorClient');
+    const render = component('ReadingTimeCalculatorClient', { '@/components/tools/reading-stats-example': { READING_STATS_EXAMPLE: '' } });
     expect(text(render())).toContain('Enter text to calculate reading time');
     for (const [words, expected] of [[199, '1m 0s'], [399, '2m 0s']] as const) {
       field(render(), 'textarea').props.onChange({ target: { value: Array(words).fill('word').join(' ') } });

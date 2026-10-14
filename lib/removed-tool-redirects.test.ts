@@ -8,8 +8,9 @@ type Redirect = { source: string; destination: string; permanent: boolean };
 const configSource = readFileSync(new URL('../next.config.mjs', import.meta.url), 'utf8')
   .replace(/^import .*;\n/gm, '')
   .replace('export default withSerwist(nextConfig);', 'globalThis.redirects = nextConfig.redirects;');
-const context = { process: { env: {} }, browserPolicyHeaders: [], baseCsp: '', basePermissions: '' } as {
+const context = { process: { env: {} }, htmlLimitedBots: [], browserPolicyHeaders: [], baseCsp: '', basePermissions: '' } as {
   process: { env: Record<string, string> };
+  htmlLimitedBots: unknown[];
   browserPolicyHeaders: string[];
   baseCsp: string;
   basePermissions: string;

@@ -169,7 +169,26 @@ export function FavoriteListManager() {
   }
 
   async function copyLink(path: string) {
-    await navigator.clipboard.writeText(`${window.location.origin}${path}`);
+    const url = `${window.location.origin}${path}`;
+    try {
+      await navigator.clipboard.writeText(url);
+    } catch {
+      // Clipboard API is unavailable or denied (some PWA/webview contexts): fall back to a textarea copy.
+      const textarea = document.createElement("textarea");
+      textarea.value = url;
+      textarea.setAttribute("readonly", "");
+      textarea.style.position = "fixed";
+      textarea.style.left = "-9999px";
+      document.body.appendChild(textarea);
+      textarea.select();
+      let copied = false;
+      try { copied = document.execCommand("copy"); } catch { /* reported below */ }
+      document.body.removeChild(textarea);
+      if (!copied) {
+        setNotice(`Could not copy. Link: ${url}`);
+        return;
+      }
+    }
     setNotice("Link copied.");
   }
 
