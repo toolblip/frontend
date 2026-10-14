@@ -11,7 +11,7 @@ function avatarColor(seed: string): string {
   return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
 }
 
-/** Google's s2 endpoint only returns crisp icons for a few sizes — odd values
+/** Google's s2 endpoint only returns crisp icons for a few sizes - odd values
  * like 141 come back as 16×16 and look muddy when scaled to the leaderboard. */
 function snapFaviconSz(sz: number): number {
   if (sz <= 64) return 64;
@@ -20,7 +20,7 @@ function snapFaviconSz(sz: number): number {
 }
 
 /** Prefer the verified SkaleAgents logo over Google's stale cached favicon.
- * Otherwise use the same-origin proxy — see app/api/favicon/route.ts. Avoids Serwist breaking
+ * Otherwise use the same-origin proxy - see app/api/favicon/route.ts. Avoids Serwist breaking
  * Google/unavatar cross-origin image redirects for returning PWA clients. */
 export function sponsorFaviconSrc(domain: string, size = 128): string {
   if (domain.toLowerCase().replace(/^www\./, '') === 'skaleagents.com') {

@@ -36,7 +36,7 @@ test.describe('Dashboard cancellation flow', () => {
     await expect(page.getByText('Pro plan active')).toBeVisible();
     await expect(page.getByText(/Renews on/)).toBeVisible();
 
-    // Cancellation is triggered via a modal — the text appears after clicking Cancel plan
+    // Cancellation is triggered via a modal - the text appears after clicking Cancel plan
     const cancel = page.getByTestId('cancel-plan');
     await expect(cancel).toBeVisible();
     await expect(cancel).toBeEnabled();
@@ -46,7 +46,7 @@ test.describe('Dashboard cancellation flow', () => {
 
     // Modal shows the keep-access-until-period-end message
     await expect(
-      page.getByText(/Cancellation isn't immediate — you keep access until the end of your billing period/),
+      page.getByText(/Cancellation isn't immediate - you keep access until the end of your billing period/),
     ).toBeVisible();
     await expect(page.getByRole('button', { name: 'Manage Billing' })).toBeVisible();
   });
@@ -64,7 +64,7 @@ test.describe('Dashboard cancellation flow', () => {
     await expect(scheduled).toContainText('Cancellation scheduled');
     await expect(scheduled).toContainText('access until December 31, 2026');
 
-    // Still a paid plan until period end — not downgraded to Free, no renewal copy.
+    // Still a paid plan until period end - not downgraded to Free, no renewal copy.
     await expect(page.getByText('Pro plan active')).toBeVisible();
     await expect(page.getByText(/Renews on/)).toHaveCount(0);
     await expect(page.getByText('View plans')).toHaveCount(0);

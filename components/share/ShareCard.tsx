@@ -27,7 +27,7 @@ type ShareCardProps = {
   title?: string;
   /**
    * When true (default), expanding the card wraps it in its own centered,
-   * full-screen backdrop overlay — for callers (like the anchored share
+   * full-screen backdrop overlay - for callers (like the anchored share
    * popover on tool pages) that don't already render a modal backdrop.
    * SharePanel already renders its own backdrop, so it passes `false` to
    * avoid stacking two overlays.

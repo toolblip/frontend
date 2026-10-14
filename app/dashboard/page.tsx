@@ -135,7 +135,7 @@ export default function AccountPage() {
           setApiTeamName(data.team.name);
         }
       } catch {
-        // best-effort — fall back to onboarding/local name
+        // best-effort - fall back to onboarding/local name
       }
     }
     loadTeamName();

@@ -51,7 +51,7 @@ export default function FrontendHealthClient() {
 
         const latency = Math.round(performance.now() - start);
 
-        // When using no-cors, response is opaque — status is always 0.
+        // When using no-cors, response is opaque - status is always 0.
         // Treat any non-error response as "up".
         return {
           ...service,
@@ -163,7 +163,7 @@ export default function FrontendHealthClient() {
                   <div className="flex justify-between">
                     <span>Response time</span>
                     <span className="font-mono font-medium text-slate-800 dark:text-slate-200">
-                      {service.latency !== null ? `${service.latency}ms` : '—'}
+                      {service.latency !== null ? `${service.latency}ms` : ' - '}
                     </span>
                   </div>
                   <div className="mt-2 pt-2 border-t border-slate-100 dark:border-slate-700/60">

@@ -39,7 +39,7 @@ box-shadow: offset-x offset-y blur-radius spread-radius color;
 **Color** should almost always use rgba() or hsla() with an alpha channel. Solid black with opacity looks more natural than a fully opaque color because real shadows are translucent.
 
 ```css
-/* Hard outline — rarely what you want */
+/* Hard outline - rarely what you want */
 box-shadow: 0 2px 0 0 rgba(0, 0, 0, 0.2);
 
 /* Soft, natural card shadow */
@@ -132,7 +132,7 @@ Material Design uses this technique for its elevation system. Each elevation lev
 
 **Forgetting the commas in multi-shadow stacks.** Missing a comma between shadow layers silently invalidates the entire stack. The browser applies none of them.
 
-**Setting blur-radius to 0 when you meant no blur.** Zero blur gives a hard outline. If you want no visible shadow, either remove the declaration entirely or set all offsets to 0 with a transparent color. A zero-blur black shadow at 50% opacity is a common gotcha — it looks like a misaligned border.
+**Setting blur-radius to 0 when you meant no blur.** Zero blur gives a hard outline. If you want no visible shadow, either remove the declaration entirely or set all offsets to 0 with a transparent color. A zero-blur black shadow at 50% opacity is a common gotcha - it looks like a misaligned border.
 
 ## Why a Visual Box-Shadow Generator Helps
 

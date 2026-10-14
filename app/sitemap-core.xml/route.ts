@@ -15,7 +15,7 @@ export async function GET(): Promise<Response> {
     { url: `${baseUrl}/tools/images`, changeFrequency: 'weekly', priority: 0.8 },
     // Distinct from /directory (a static, category-grouped full index vs.
     // /directory's filterable browse view) with its own self-referencing
-    // canonical — not a duplicate. It was linked from the homepage and
+    // canonical - not a duplicate. It was linked from the homepage and
     // every tool page but never listed in any sitemap.
     { url: `${baseUrl}/all-tools`, changeFrequency: 'weekly', priority: 0.7 },
     { url: `${baseUrl}/blog`, changeFrequency: 'weekly', priority: 0.7 },

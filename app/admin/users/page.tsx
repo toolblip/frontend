@@ -77,7 +77,7 @@ function UsersList() {
                   <td className="px-4 py-3 text-gray-600 dark:text-gray-300">{user.email}</td>
                   <td className="px-4 py-3 text-gray-600 dark:text-gray-300">{verificationLabel(user.email_verified_at)}</td>
                   <td className="px-4 py-3 text-gray-600 dark:text-gray-300">{planLabel(user.tier)}</td>
-                  <td className="px-4 py-3 text-gray-600 dark:text-gray-300">{user.subscription_status ?? "—"}</td>
+                  <td className="px-4 py-3 text-gray-600 dark:text-gray-300">{user.subscription_status ?? " - "}</td>
                   <td className="px-4 py-3 text-gray-600 dark:text-gray-300">{formatAdminDate(user.plan_ends_at)}</td>
                   <td className="px-4 py-3 text-gray-600 dark:text-gray-300">{formatAdminDate(user.created_at)}</td>
                   <td className="px-4 py-3">

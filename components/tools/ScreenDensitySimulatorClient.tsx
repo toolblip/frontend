@@ -79,7 +79,7 @@ export default function ScreenDensitySimulatorClient() {
       </div>
 
       <div className="tb-v2-banner tb-v2-banner-warn" style={{ margin: '16px 20px' }}>
-        DPR changes the physical pixel calculation only; it does not emulate browser density. Some sites block embedding — if the preview is blank, that site doesn&apos;t allow iframes.
+        DPR changes the physical pixel calculation only; it does not emulate browser density. Some sites block embedding - if the preview is blank, that site doesn&apos;t allow iframes.
       </div>
 
       <div className="tb-v2-tool-output-head">

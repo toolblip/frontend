@@ -33,7 +33,7 @@ export default function ToolContentSection({ toolName, content }: Props) {
         // flex + order (not DOM order) puts the toggle after the expanded
         // content when open, so "See less" lands at the bottom instead of
         // sitting above the text it collapses. The content itself is still
-        // ordinary server-rendered markup inside <details> either way — it's
+        // ordinary server-rendered markup inside <details> either way - it's
         // in the initial HTML regardless of open/closed state, so this is
         // purely a visual rearrangement and doesn't hide anything from
         // crawlers (unlike a JS-mounted-only-when-open approach would).

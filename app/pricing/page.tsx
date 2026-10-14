@@ -3,7 +3,7 @@ import PricingClient from './PricingClient';
 
 export const dynamic = 'force-dynamic';
 
-const PRICING_TITLE = 'Pricing & Plans — Free, Starter, Pro & Max | Toolblip';
+const PRICING_TITLE = 'Pricing & Plans - Free, Starter, Pro & Max | Toolblip';
 const PRICING_DESCRIPTION =
   'Start a 14-day free trial or keep the free plan, no credit card required. Starter $4.99/mo, Pro $19.99/mo and Max $49.99/mo remove ads and the sponsor strip.';
 

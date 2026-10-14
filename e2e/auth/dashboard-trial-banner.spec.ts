@@ -106,7 +106,7 @@ test.describe('Dashboard trial reminder banner', () => {
 
   test('handles same-day (ends today) copy', async ({ page }) => {
     await clearTrialBannerStorage(page);
-    // Trial ends later today (3 hours from now) — "ends today" copy should fire
+    // Trial ends later today (3 hours from now) - "ends today" copy should fire
     // because the calendar end-date matches today, regardless of hours remaining.
     const endsToday = new Date(Date.now() + 3 * 60 * 60 * 1000);
     await mockSubscription(page, {
@@ -151,7 +151,7 @@ test.describe('Dashboard trial reminder banner', () => {
     );
     expect(storedKeys.length).toBeGreaterThan(0);
 
-    // Reload the dashboard — banner should stay dismissed while still trialing.
+    // Reload the dashboard - banner should stay dismissed while still trialing.
     await page.reload();
     await dismissDashboardOnboarding(page);
     await expect(page.getByTestId('trial-banner')).toHaveCount(0);
@@ -160,7 +160,7 @@ test.describe('Dashboard trial reminder banner', () => {
   test('auto-hides once the subscription leaves trialing status', async ({ page }) => {
     await clearTrialBannerStorage(page);
 
-    // First load: trialing — banner shows.
+    // First load: trialing - banner shows.
     await mockSubscription(page, trialSubscription(7));
     await loginByForm(page, VALID_USER);
     await dismissDashboardOnboarding(page);

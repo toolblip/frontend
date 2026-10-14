@@ -178,7 +178,16 @@ function SharePopover({
   onClose: () => void;
 }) {
   return (
-    <div role="dialog" aria-label={`Share ${toolName}`} className="absolute left-0 top-14 z-20">
+    // Phones (and installed PWAs) get a centered modal: the anchored popover
+    // opens below the fold when the bar sits near the bottom of the screen.
+    <div
+      role="dialog"
+      aria-label={`Share ${toolName}`}
+      className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 px-4 sm:absolute sm:inset-auto sm:left-0 sm:top-14 sm:z-20 sm:block sm:bg-transparent sm:px-0"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
       <ShareCard
         channels={channels}
         qrDataUrl={qrDataUrl}
@@ -480,7 +489,7 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
         await navigator.share({ title: toolName, text: `Check out ${toolName} on Toolblip`, url: shortUrl });
         void recordShare("native");
       } catch {
-        // user cancelled or share failed — nothing to do
+        // user cancelled or share failed - nothing to do
       }
       return;
     }

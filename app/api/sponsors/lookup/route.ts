@@ -4,7 +4,7 @@ import { parseLaravelJsonResponse } from "@/lib/adminApi";
 const LARAVEL_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.toolblip.com";
 
 // Public, unauthenticated read, keyed on whatever the bidder is currently
-// typing — no cookies to forward, never cached (the result must reflect the
+// typing - no cookies to forward, never cached (the result must reflect the
 // live current-period balance at the moment of the keystroke).
 export async function GET(req: Request) {
   try {

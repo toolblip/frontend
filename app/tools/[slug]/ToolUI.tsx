@@ -2389,7 +2389,7 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'json-csv-express': return <JsonCsvExpressClient />;
     case 'json-patch-generator': return <JsonLdGeneratorClient />;
     // 'json-path-evaluator' renders JsonPathTesterClient, not
-    // JsonPathEvaluatorExpressClient below — the "express" component just
+    // JsonPathEvaluatorExpressClient below - the "express" component just
     // pretty-prints JSON, it doesn't evaluate a JSONPath expression at all,
     // which is what the tool's own description promises.
     case 'json-path-evaluator-express': return <JsonPathEvaluatorExpressClient />; // legacy alias, redirected via next.config.mjs

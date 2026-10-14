@@ -97,7 +97,7 @@ In practice many teams store base colors as HSL custom properties, then let the 
 
 Here is the workflow with a hex to rgb hsl converter online, start to finish.
 
-Copy the hex value from your design file and paste it into the converter. You get RGB, RGBA, and HSL back at once — click any result to copy a ready-to-use CSS value.
+Copy the hex value from your design file and paste it into the converter. You get RGB, RGBA, and HSL back at once - click any result to copy a ready-to-use CSS value.
 
 That replaces three separate lookups with a single paste. A good hex color picker to rgb online also lets you tweak the swatch and watch every format update live, which is handy when a stakeholder asks for the color "a little warmer."
 

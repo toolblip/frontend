@@ -128,7 +128,7 @@ export default function GrammarScoreCheckerClient() {
       if (count > 3) {
         foundIssues.push({
           type: 'Filler word overuse',
-          message: `"${word}" appears ${count} times — consider trimming filler words`,
+          message: `"${word}" appears ${count} times - consider trimming filler words`,
           snippet: word,
           index: firstIndex,
           sentenceIndex: -1,
@@ -174,7 +174,7 @@ export default function GrammarScoreCheckerClient() {
       if (sentenceWords.length > 35) {
         foundIssues.push({
           type: 'Long sentence',
-          message: `Sentence has ${sentenceWords.length} words — consider splitting this sentence`,
+          message: `Sentence has ${sentenceWords.length} words - consider splitting this sentence`,
           snippet: trimmed.slice(0, 40) + '…',
           index: trimmedStart,
           sentenceIndex: sIndex,
@@ -222,7 +222,7 @@ export default function GrammarScoreCheckerClient() {
 
   const copy = () => {
     const text = issues
-      .map((i) => `[${i.type}] ${i.message} — "${i.snippet}"`)
+      .map((i) => `[${i.type}] ${i.message} - "${i.snippet}"`)
       .join('\n');
     navigator.clipboard.writeText(text).catch(() => {});
     setCopied(true);

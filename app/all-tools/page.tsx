@@ -10,7 +10,7 @@ export const dynamic = 'force-static';
 
 export const metadata: Metadata = {
   title: 'All Tools | Toolblip',
-  description: `Browse all ${tools.length}+ free browser-based tools on Toolblip, organized by category — text, developer, encoding, images, conversions, math, CSS, SEO, and more.`,
+  description: `Browse all ${tools.length}+ free browser-based tools on Toolblip, organized by category - text, developer, encoding, images, conversions, math, CSS, SEO, and more.`,
   alternates: { canonical: 'https://toolblip.com/all-tools' },
   openGraph: {
     title: 'All Tools | Toolblip',

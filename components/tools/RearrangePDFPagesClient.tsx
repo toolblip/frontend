@@ -166,7 +166,7 @@ export default function RearrangePDFPagesClient() {
       ['Cover page', 'Project details', 'Next steps'].forEach((title, index) => {
         const page = doc.addPage([612, 792]);
         page.drawText(title, { x: 60, y: 700, size: 26, font, color: rgb(0.1, 0.2, 0.4) });
-        page.drawText(`Sample page ${index + 1} — drag pages to change this order.`, { x: 60, y: 660, size: 13, font, color: rgb(0.35, 0.35, 0.35) });
+        page.drawText(`Sample page ${index + 1} - drag pages to change this order.`, { x: 60, y: 660, size: 13, font, color: rgb(0.35, 0.35, 0.35) });
       });
       if (requestId === loadVersionRef.current) await handleFile(new File([await doc.save() as BlobPart], 'rearrange-sample.pdf', { type: 'application/pdf' }), requestId);
     } catch {

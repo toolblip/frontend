@@ -124,7 +124,7 @@ export const reviewedToolContent: Record<string, ToolContent> = {
   },
 
   "jwt-decoder": {
-    "description": "Free JWT decoder that shows header, payload, and signature text for a three-part token in your browser. Numeric date claims appear in UTC with an expiry status from your device clock—without verifying the signature.",
+    "description": "Free JWT decoder that shows header, payload, and signature text for a three-part token in your browser. Numeric date claims appear in UTC with an expiry status from your device clock - without verifying the signature.",
     "examples": [
       {
         "title": "Inspect a sample token",
@@ -164,12 +164,12 @@ export const reviewedToolContent: Record<string, ToolContent> = {
     ]
   },
   "regex-tester": {
-    "description": "Free JavaScript regex tester: paste a pattern (no surrounding slashes), toggle flags, and inspect highlighted matches with numbered or named capture groups—all in your browser.",
+    "description": "Free JavaScript regex tester: paste a pattern (no surrounding slashes), toggle flags, and inspect highlighted matches with numbered or named capture groups - all in your browser.",
     "examples": [
       {
         "title": "Find order numbers",
         "code": "Pattern: \\d+\nFlags: g\nText: Order 12 costs 34\nMatches: 12 at index 6; 34 at index 15",
-        "note": "JavaScript RegExp only—not Python or PCRE. Limits: 2,000 pattern chars, 50,000 test chars, 1,000 matches, 500 ms worker timeout. The detailed list shows the first 100 matches."
+        "note": "JavaScript RegExp only - not Python or PCRE. Limits: 2,000 pattern chars, 50,000 test chars, 1,000 matches, 500 ms worker timeout. The detailed list shows the first 100 matches."
       },
       {
         "title": "Named groups for a slug",
@@ -184,7 +184,7 @@ export const reviewedToolContent: Record<string, ToolContent> = {
     ]
   },
   "url-encode": {
-    "description": "Free URL encode and decode for a single component value with encodeURIComponent. Spaces become %20. Paste a value—not a full URL—when you need to keep structure intact.",
+    "description": "Free URL encode and decode for a single component value with encodeURIComponent. Spaces become %20. Paste a value - not a full URL - when you need to keep structure intact.",
     "examples": [
       {
         "title": "Encode a search value",
@@ -204,7 +204,7 @@ export const reviewedToolContent: Record<string, ToolContent> = {
     ]
   },
   "base64-encoder-decoder": {
-    "description": "Free Base64 encode and decode for UTF-8 text in your browser. Use Swap to round-trip a result. Text only—images and files belong on Base64 Image Converter.",
+    "description": "Free Base64 encode and decode for UTF-8 text in your browser. Use Swap to round-trip a result. Text only - images and files belong on Base64 Image Converter.",
     "examples": [
       {
         "title": "Round-trip a greeting",
@@ -244,12 +244,12 @@ export const reviewedToolContent: Record<string, ToolContent> = {
     ]
   },
   "uuid-generator": {
-    "description": "Free UUID generator for random UUID v4 values in your browser. Toggle hyphens and letter case, then copy one ID or the last five from page history—ideal for fixtures and record keys.",
+    "description": "Free UUID generator for random UUID v4 values in your browser. Toggle hyphens and letter case, then copy one ID or the last five from page history - ideal for fixtures and record keys.",
     "examples": [
       {
         "title": "Choose an identifier format",
         "code": "Shape: xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx. Turn off Hyphens for 32 hex characters; toggle UPPERCASE if your fixture style needs it.",
-        "note": "Version 4 only. UUIDs are identifiers, not passwords—use Password Generator for secrets. History clears on reload."
+        "note": "Version 4 only. UUIDs are identifiers, not passwords - use Password Generator for secrets. History clears on reload."
       },
       {
         "title": "Build a small fixture set",
@@ -264,7 +264,7 @@ export const reviewedToolContent: Record<string, ToolContent> = {
     ]
   },
   "markdown-to-html": {
-    "description": "Free Markdown to HTML converter with a sanitized live preview. Try headings, lists, links, fenced code, or GitHub-style tables, then copy the HTML for publishing—all in your browser.",
+    "description": "Free Markdown to HTML converter with a sanitized live preview. Try headings, lists, links, fenced code, or GitHub-style tables, then copy the HTML for publishing - all in your browser.",
     "examples": [
       {
         "title": "Convert a heading and emphasis",
@@ -284,7 +284,7 @@ export const reviewedToolContent: Record<string, ToolContent> = {
     ]
   },
   "case-converter": {
-    "description": "Free case converter that shows eight outputs at once—UPPER, lower, Title, Sentence, camelCase, snake_case, kebab-case, and CONSTANT_CASE—so you can copy the form that fits a label or identifier.",
+    "description": "Free case converter that shows eight outputs at once - UPPER, lower, Title, Sentence, camelCase, snake_case, kebab-case, and CONSTANT_CASE - so you can copy the form that fits a label or identifier.",
     "examples": [
       {
         "title": "Convert a variable name",
@@ -334,7 +334,7 @@ export const reviewedToolContent: Record<string, ToolContent> = {
       {
         "title": "Pair with Word Counter",
         "code": "Paste the same draft into Word Counter for sentences and paragraphs, then tune WPM here for audience-specific reading time.",
-        "note": "The slider does not know how fast a specific person reads—pick a speed that matches your audience and verify with a real read."
+        "note": "The slider does not know how fast a specific person reads - pick a speed that matches your audience and verify with a real read."
       }
     ],
     "features": [
@@ -462,7 +462,7 @@ export const reviewedToolContent: Record<string, ToolContent> = {
   },
 
   "qr-code-generator": {
-    "description": "Free QR code generator for URLs, text, WiFi, and vCards in your browser. Choose size, download PNG or SVG—nothing is uploaded.",
+    "description": "Free QR code generator for URLs, text, WiFi, and vCards in your browser. Choose size, download PNG or SVG - nothing is uploaded.",
     "examples": [
       {
         "title": "Link QR for a page",
@@ -482,7 +482,7 @@ export const reviewedToolContent: Record<string, ToolContent> = {
     ]
   },
   "percentage-calculator": {
-    "description": "Free percentage calculator with separate modes for part-to-whole percent, percentage change, discounts, tips, and markup—each with the arithmetic shown.",
+    "description": "Free percentage calculator with separate modes for part-to-whole percent, percentage change, discounts, tips, and markup - each with the arithmetic shown.",
     "examples": [
       {
         "title": "What is 15% of 80?",
@@ -502,7 +502,7 @@ export const reviewedToolContent: Record<string, ToolContent> = {
     ]
   },
   "color-picker": {
-    "description": "Free color picker for HEX, RGB, and HSL with a live swatch and a WCAG contrast check against white—copy any format for CSS or design tools.",
+    "description": "Free color picker for HEX, RGB, and HSL with a live swatch and a WCAG contrast check against white - copy any format for CSS or design tools.",
     "examples": [
       {
         "title": "Match a brand blue",
@@ -522,7 +522,7 @@ export const reviewedToolContent: Record<string, ToolContent> = {
     ]
   },
   "character-counter": {
-    "description": "Free character counter for total length, counts without spaces or newlines, plus letters and digits—live as you type in your browser.",
+    "description": "Free character counter for total length, counts without spaces or newlines, plus letters and digits - live as you type in your browser.",
     "examples": [
       {
         "title": "Count a short line",
@@ -542,7 +542,7 @@ export const reviewedToolContent: Record<string, ToolContent> = {
     ]
   },
   "unit-converter": {
-    "description": "Free unit converter for length, weight, and temperature—pick a pair and get a live metric ↔ imperial result in your browser.",
+    "description": "Free unit converter for length, weight, and temperature - pick a pair and get a live metric ↔ imperial result in your browser.",
     "examples": [
       {
         "title": "Oven temperature",
@@ -562,7 +562,7 @@ export const reviewedToolContent: Record<string, ToolContent> = {
     ]
   },
   "lorem-ipsum-generator": {
-    "description": "Free lorem ipsum generator for classic placeholder text—set words, sentences, or paragraphs (1–100) and copy for mockups.",
+    "description": "Free lorem ipsum generator for classic placeholder text - set words, sentences, or paragraphs (1–100) and copy for mockups.",
     "examples": [
       {
         "title": "Five-word label filler",
@@ -572,7 +572,7 @@ export const reviewedToolContent: Record<string, ToolContent> = {
       {
         "title": "Three paragraphs for a layout",
         "code": "Mode: Paragraphs · Count: 3 · Regenerate → Copy",
-        "note": "Placeholder only—it does not write real marketing copy. Check length with Character Counter if a field has a cap."
+        "note": "Placeholder only - it does not write real marketing copy. Check length with Character Counter if a field has a cap."
       }
     ],
     "features": [
@@ -582,7 +582,7 @@ export const reviewedToolContent: Record<string, ToolContent> = {
     ]
   },
   "image-compressor": {
-    "description": "Free image compressor for JPEG, PNG, and WebP in your browser—set a maximum quality, compare real bytes, and keep the original when compression would grow the file.",
+    "description": "Free image compressor for JPEG, PNG, and WebP in your browser - set a maximum quality, compare real bytes, and keep the original when compression would grow the file.",
     "examples": [
       {
         "title": "Shrink a JPEG photo",
@@ -602,7 +602,7 @@ export const reviewedToolContent: Record<string, ToolContent> = {
     ]
   },
   "image-cropper": {
-    "description": "Free image cropper with fixed ratio presets (square, 16:9, 4:3, 3:2, portrait, passport)—drag to position within the locked ratio, then download PNG in your browser.",
+    "description": "Free image cropper with fixed ratio presets (square, 16:9, 4:3, 3:2, portrait, passport) - drag to position within the locked ratio, then download PNG in your browser.",
     "examples": [
       {
         "title": "Square social crop",
@@ -622,7 +622,7 @@ export const reviewedToolContent: Record<string, ToolContent> = {
     ]
   },
   "code-diff": {
-    "description": "Free line-by-line diff checker for two code or text snippets—see additions, removals, and context, then copy the result as plain text.",
+    "description": "Free line-by-line diff checker for two code or text snippets - see additions, removals, and context, then copy the result as plain text.",
     "examples": [
       {
         "title": "Catch a one-line bug",
@@ -642,7 +642,7 @@ export const reviewedToolContent: Record<string, ToolContent> = {
     ]
   },
   "unix-timestamp-converter": {
-    "description": "Free Unix timestamp converter between epoch seconds and a local datetime field—two-way sync with a Local preview in your browser.",
+    "description": "Free Unix timestamp converter between epoch seconds and a local datetime field - two-way sync with a Local preview in your browser.",
     "examples": [
       {
         "title": "Epoch to local datetime",
@@ -662,12 +662,12 @@ export const reviewedToolContent: Record<string, ToolContent> = {
     ]
   },
   "cron-parser": {
-    "description": "Free cron expression parser for standard 5-field schedules—plain-English meaning plus the next five local run times in your browser.",
+    "description": "Free cron expression parser for standard 5-field schedules - plain-English meaning plus the next five local run times in your browser.",
     "examples": [
       {
         "title": "Weekday mornings",
         "code": "0 9 * * 1-5 → weekdays at 09:00 · next five local runs listed",
-        "note": "When both day-of-month and day-of-week are constrained, classic cron ORs them—the description makes that explicit."
+        "note": "When both day-of-month and day-of-week are constrained, classic cron ORs them - the description makes that explicit."
       },
       {
         "title": "Build instead of parse?",
@@ -682,7 +682,7 @@ export const reviewedToolContent: Record<string, ToolContent> = {
     ]
   },
   "password-strength-checker": {
-    "description": "Free password strength checker with local composition heuristics and a random-model bit upper bound—nothing leaves your browser.",
+    "description": "Free password strength checker with local composition heuristics and a random-model bit upper bound - nothing leaves your browser.",
     "examples": [
       {
         "title": "Review a passphrase",
@@ -702,7 +702,7 @@ export const reviewedToolContent: Record<string, ToolContent> = {
     ]
   },
   "random-number-generator": {
-    "description": "Free random number generator for integers in a min–max range—optional unique batches up to 1,000 values in your browser.",
+    "description": "Free random number generator for integers in a min–max range - optional unique batches up to 1,000 values in your browser.",
     "examples": [
       {
         "title": "Two dice rolls",
@@ -722,7 +722,7 @@ export const reviewedToolContent: Record<string, ToolContent> = {
     ]
   },
   "age-calculator": {
-    "description": "Free age calculator for years, months, and days between a birth date and an as-of date—plus next birthday countdown.",
+    "description": "Free age calculator for years, months, and days between a birth date and an as-of date - plus next birthday countdown.",
     "examples": [
       {
         "title": "Day before a birthday",
@@ -742,7 +742,7 @@ export const reviewedToolContent: Record<string, ToolContent> = {
     ]
   },
   "tip-calculator": {
-    "description": "Free tip calculator for bill amount, tip percent, and equal split—presets plus custom tip in your browser.",
+    "description": "Free tip calculator for bill amount, tip percent, and equal split - presets plus custom tip in your browser.",
     "examples": [
       {
         "title": "Dinner for three",
@@ -752,7 +752,7 @@ export const reviewedToolContent: Record<string, ToolContent> = {
       {
         "title": "Solo tip only",
         "code": "Bill $42.50 · Tip 18% · People 1 → tip amount and total",
-        "note": "Equal split only—no tax line or uneven shares."
+        "note": "Equal split only - no tax line or uneven shares."
       }
     ],
     "features": [
@@ -762,7 +762,7 @@ export const reviewedToolContent: Record<string, ToolContent> = {
     ]
   },
   "morse-code-translator": {
-    "description": "Free Morse code translator for Latin letters, digits, and common punctuation—encode and decode with slash word breaks in your browser.",
+    "description": "Free Morse code translator for Latin letters, digits, and common punctuation - encode and decode with slash word breaks in your browser.",
     "examples": [
       {
         "title": "Hello world",
@@ -782,7 +782,7 @@ export const reviewedToolContent: Record<string, ToolContent> = {
     ]
   },
   "roman-numeral-converter": {
-    "description": "Free Roman numeral converter for 1–3999—live number ↔ Roman conversion with range checks in your browser.",
+    "description": "Free Roman numeral converter for 1–3999 - live number ↔ Roman conversion with range checks in your browser.",
     "examples": [
       {
         "title": "Number to Roman",

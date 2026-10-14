@@ -53,7 +53,7 @@ function CancelConfirmDialog({
       <div className="mx-4 w-full max-w-md rounded-2xl border border-gray-200 bg-white p-6 shadow-xl dark:border-gray-700 dark:bg-gray-900">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Cancel plan?</h3>
         <p className="mt-3 text-sm leading-relaxed text-gray-600 dark:text-gray-300">
-          Cancellation isn&apos;t immediate &mdash; you keep access until the end of your billing period.
+          Cancellation isn&apos;t immediate - you keep access until the end of your billing period.
           After that, your plan will be downgraded to Free and you&apos;ll lose Pro features.
         </p>
         <div className="mt-6 flex items-center justify-end gap-3">
@@ -367,7 +367,7 @@ export function BillingSection({
               planEndDate && <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">Renews on {planEndDate}</p>
             )}
 
-            {/* Action buttons — upgrade/cancel left, manage billing right */}
+            {/* Action buttons - upgrade/cancel left, manage billing right */}
             {portalError && <p className="mt-4 text-sm text-red-600 dark:text-red-400">{portalError}</p>}
             <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
               <div className="flex flex-wrap items-center gap-3">

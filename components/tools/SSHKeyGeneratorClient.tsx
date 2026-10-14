@@ -75,7 +75,7 @@ export default function SSHKeyGeneratorClient() {
       setState({
         status: 'error',
         message: isEd25519
-          ? "Ed25519 isn't supported in this browser yet — try RSA or ECDSA instead."
+          ? "Ed25519 isn't supported in this browser yet - try RSA or ECDSA instead."
           : `Key generation failed: ${(e as Error).message}`,
       });
     }

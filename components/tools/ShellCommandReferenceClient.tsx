@@ -66,7 +66,7 @@ const COMMANDS: ShellCommand[] = [
   { command: 'dig', syntax: 'dig domain', description: 'Query DNS name servers.', example: 'dig toolblip.com', category: 'Network' },
   { command: 'nslookup', syntax: 'nslookup domain', description: 'Query DNS records for a domain.', example: 'nslookup toolblip.com', category: 'Network' },
   { command: 'netstat', syntax: 'netstat [options]', description: 'Display network connections and listening ports.', example: 'netstat -tulpn', category: 'Network' },
-  { command: 'nc', syntax: 'nc host port', description: 'Netcat — read and write across network connections.', example: 'nc -zv host 443', category: 'Network' },
+  { command: 'nc', syntax: 'nc host port', description: 'Netcat - read and write across network connections.', example: 'nc -zv host 443', category: 'Network' },
 
   { command: 'git init', syntax: 'git init', description: 'Create a new Git repository.', example: 'git init', category: 'Git' },
   { command: 'git clone', syntax: 'git clone url', description: 'Clone a repository into a new directory.', example: 'git clone git@github.com:org/repo.git', category: 'Git' },

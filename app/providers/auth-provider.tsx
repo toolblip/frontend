@@ -45,7 +45,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setToken(null);
           return null;
         }
-        // Definitive unauth only — keep existing session on 5xx/network flakes
+        // Definitive unauth only - keep existing session on 5xx/network flakes
         if (res.status === 401 || res.status === 403) {
           setUser(null);
           setToken(null);

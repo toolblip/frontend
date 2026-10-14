@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react';
 import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
-// Curated marketing "power words" — terms studies on headline copywriting
+// Curated marketing "power words" - terms studies on headline copywriting
 // consistently flag as boosting click-through (urgency, exclusivity, ease).
 const POWER_WORDS = [
   'free', 'proven', 'secret', 'secrets', 'ultimate', 'instantly', 'guaranteed',
@@ -14,7 +14,7 @@ const POWER_WORDS = [
   'today', 'quick', 'fast', 'simple', 'results',
 ];
 
-// Curated "emotional words" — terms that signal strong sentiment/curiosity,
+// Curated "emotional words" - terms that signal strong sentiment/curiosity,
 // a well-known driver of shares and clicks in headline copywriting guides.
 const EMOTIONAL_WORDS = [
   'amazing', 'shocking', 'heartbreaking', 'incredible', 'terrifying',
@@ -97,7 +97,7 @@ function analyze(text: string) {
 
   // --- Overall score (0-100): a transparent weighted blend of the signals
   // above. Weights are a simple, defensible split of "what copywriting
-  // guides commonly cite" — not a claim of AI/ML scoring:
+  // guides commonly cite" - not a claim of AI/ML scoring:
   //   30% ideal length (6-12 words is the commonly-cited headline sweet spot)
   //   25% power/emotional word usage (capped once a couple are present)
   //   15% contains a number (numbered/listicle headlines read as concrete)

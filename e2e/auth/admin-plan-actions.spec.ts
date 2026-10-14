@@ -39,7 +39,7 @@ test.describe('Admin plan actions', () => {
     await page.goto('/admin/users/1'); // BDD User, currently Free
 
     await expect(page.getByTestId('record-plan')).toHaveText('Free');
-    await expect(page.getByTestId('record-status')).toHaveText('—');
+    await expect(page.getByTestId('record-status')).toHaveText(' - ');
     await expect(page.getByTestId('cancel-plan-action')).toBeDisabled();
     await expect(page.getByTestId('cancel-plan-action')).toContainText('No active subscription');
   });

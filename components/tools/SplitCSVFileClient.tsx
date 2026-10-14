@@ -116,7 +116,7 @@ export default function SplitCSVFileClient() {
       {header !== null && (
         <div style={{ padding: '0 20px 20px' }}>
           <div className="tb-v2-banner" style={{ display: 'block', marginBottom: 16 }}>
-            Loaded <strong>{fileName}</strong> — {dataRows.length.toLocaleString()} data rows (plus header). Files will download individually, one after another.
+            Loaded <strong>{fileName}</strong> - {dataRows.length.toLocaleString()} data rows (plus header). Files will download individually, one after another.
           </div>
 
           <div className="tb-v2-grid-2">

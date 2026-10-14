@@ -68,7 +68,7 @@ export default function ColorPaletteExtractorClient() {
 
       for (let i = 0; i < imageData.length; i += 4) {
         if (imageData[i + 3] < 128) continue;
-        // Floor buckets stay ≤248 — Math.round(255/8)*8 === 256 breaks hex (3 digits).
+        // Floor buckets stay ≤248 - Math.round(255/8)*8 === 256 breaks hex (3 digits).
         const r = Math.floor(imageData[i] / 8) * 8;
         const g = Math.floor(imageData[i + 1] / 8) * 8;
         const b = Math.floor(imageData[i + 2] / 8) * 8;

@@ -92,7 +92,7 @@ export function tokenize(pattern: string): Token[] {
       continue;
     }
     if (c === ')') { tokens.push({ text: ')', desc: 'End of the group' }); i++; continue; }
-    if (c === '|') { tokens.push({ text: '|', desc: 'OR — matches the pattern on either side' }); i++; continue; }
+    if (c === '|') { tokens.push({ text: '|', desc: 'OR - matches the pattern on either side' }); i++; continue; }
 
     if (c === '*') { tokens.push({ text: '*', desc: 'Zero or more of the preceding token' }); i++; continue; }
     if (c === '+') { tokens.push({ text: '+', desc: 'One or more of the preceding token' }); i++; continue; }

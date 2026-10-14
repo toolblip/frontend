@@ -25,12 +25,12 @@ import {
 
 // Rank 1-3 get a card treatment that fades by rank (100% / 65% / 42%);
 // rank 4+ all render identically as a plain flat list (see the outbid.lol
-// reference) — color-mix blends the red accent toward the neutral border/
+// reference) - color-mix blends the red accent toward the neutral border/
 // tint color by that share, rather than duplicating three near-identical
 // color pairs by hand.
 const CARD_TINT: Record<number, number> = { 1: 1, 2: 0.65, 3: 0.42 };
 
-// Size hierarchy layered on top of the color hierarchy — rank 1 reads
+// Size hierarchy layered on top of the color hierarchy - rank 1 reads
 // biggest, tapering down to the rank 4+ baseline (100%, i.e. unscaled).
 // Card padding, avatar, and every card-row font-size below scale by this
 // same ratio so the whole row grows/shrinks as one proportional unit
@@ -59,7 +59,7 @@ function cardRowStyle(rank: number): React.CSSProperties | undefined {
   };
 }
 
-// The rank number pill is never faded, even on rank 3 — only the card's own
+// The rank number pill is never faded, even on rank 3 - only the card's own
 // border/background follow the tint curve (see cardRowStyle above). Its
 // size still follows CARD_SCALE, same as the rest of the card.
 function cardRankBadgeStyle(rank: number): React.CSSProperties | undefined {
@@ -75,7 +75,7 @@ function cardRankBadgeStyle(rank: number): React.CSSProperties | undefined {
 }
 
 // A flat row (rank 4+) bid within the last 10 minutes gets a light,
-// borderless tint so recent activity stands out from the plain list —
+// borderless tint so recent activity stands out from the plain list -
 // independent of rank, unlike the top-3 card treatment. 10 minutes is a
 // best-guess decay window inferred from the outbid.lol reference (a 5-min-old
 // bid was still highlighted, an 11-13-min-old one wasn't); tune later if
@@ -171,7 +171,7 @@ function SponsorRow({
 }
 
 /** Prepends https:// to a bare domain (e.g. "crontinel.com") so it survives
- * PHP's FILTER_VALIDATE_URL, which rejects anything without a scheme — a
+ * PHP's FILTER_VALIDATE_URL, which rejects anything without a scheme - a
  * user typing without http(s):// is the common case, not an edge case.
  * Leaves an @handle or an already-schemed URL untouched. */
 function normalizeUrlInput(input: string): string {
@@ -226,7 +226,7 @@ export default function SponsorsClient() {
   const urlInputRef = useRef<HTMLInputElement>(null);
   const [rulesOpen, setRulesOpen] = useState(false);
 
-  // Shared by the initial mount fetch and the manual Refresh button — always
+  // Shared by the initial mount fetch and the manual Refresh button - always
   // swallows errors the same way: keep any previous board on refresh failure;
   // first-load failure falls through to the empty-board state (never a stuck
   // skeleton or a scary error for a low-stakes background refresh).
@@ -271,19 +271,19 @@ export default function SponsorsClient() {
     loadLeaderboard().finally(() => setRefreshing(false));
   };
 
-  // Hard floor of $1 regardless of what the API reports — a $0 bid must
+  // Hard floor of $1 regardless of what the API reports - a $0 bid must
   // never be reachable even if min_bid_cents is ever misconfigured.
   const minBidDollars = Math.max(1, board ? Math.round(board.min_bid_cents / 100) : 1);
   const rows = useMemo(() => board?.data ?? [], [board]);
 
-  // Price to take #1 right now — same framing as the reference: a bid below
+  // Price to take #1 right now - same framing as the reference: a bid below
   // this still lands you on the board at whatever rank it can reach.
   const topPriceDollars = useMemo(() => {
     const topBalanceCents = rows[0]?.balance_cents ?? 0;
     return Math.max(Math.round(topBalanceCents / 100) + 1, minBidDollars);
   }, [rows, minBidDollars]);
 
-  // Live-computed from the current amount, not a click-set snapshot — the
+  // Live-computed from the current amount, not a click-set snapshot - the
   // hero rank number recalculates as the user types/steps, showing exactly
   // where this bid would rank right now on the current leaderboard.
   const computedRank = useMemo(() => {
@@ -297,7 +297,7 @@ export default function SponsorsClient() {
 
   // Live "you already have a listing" lookup, debounced so it doesn't fire
   // on every keystroke. Only prefills the amount if the user hasn't already
-  // manually adjusted it (steppers/claim click) — never fights a deliberate
+  // manually adjusted it (steppers/claim click) - never fights a deliberate
   // edit, just offers a starting point.
   useEffect(() => {
     const trimmed = url.trim();
@@ -313,7 +313,7 @@ export default function SponsorsClient() {
           if (cancelled) return;
           // A $0 balance (e.g. a past winner whose credit was fully consumed
           // at period close) isn't a real "existing listing" from the user's
-          // point of view — they're not on the board, so don't claim they
+          // point of view - they're not on the board, so don't claim they
           // are or prefill toward it.
           if (data?.exists && Number.isFinite(data.balance_cents) && data.balance_cents > 0) {
             setExistingMatch({ balanceCents: data.balance_cents });
@@ -374,7 +374,7 @@ export default function SponsorsClient() {
       return;
     }
     // A re-bid on an existing listing has a higher floor than the site-wide
-    // minimum — the backend rejects anything that doesn't exceed the
+    // minimum - the backend rejects anything that doesn't exceed the
     // domain's current balance by at least $1 (SponsorController::checkout).
     const effectiveMinDollars = existingMatch
       ? Math.max(minBidDollars, Math.round(existingMatch.balanceCents / 100) + 1)
@@ -468,7 +468,7 @@ export default function SponsorsClient() {
             {formError && <p style={{ color: 'var(--red)', fontSize: 13 }}>{formError}</p>}
             {existingMatch && (
               <p style={{ color: 'var(--red)', fontSize: 13 }}>
-                You already have a listing at {formatBid(existingMatch.balanceCents)} — bidding
+                You already have a listing at {formatBid(existingMatch.balanceCents)} - bidding
                 higher will only charge the difference.
               </p>
             )}
@@ -580,7 +580,7 @@ export default function SponsorsClient() {
             </h2>
             <p style={{ margin: 0, lineHeight: 1.6 }}>
               Credit rolls over automatically every month, except for whoever is in the
-              top 3 at the instant the month closes — their balance is spent to hold
+              top 3 at the instant the month closes - their balance is spent to hold
               that spot and doesn't carry over.
             </p>
           </div>

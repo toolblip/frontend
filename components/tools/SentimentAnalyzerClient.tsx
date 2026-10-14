@@ -158,7 +158,7 @@ export default function SentimentAnalyzerClient() {
       <div className="tb-v2-tool-output-head">
         <span className="tb-v2-tool-label">Result</span>
         <span style={{ fontSize: 13, fontWeight: 700, color: labelColor, textTransform: 'capitalize' }}>
-          {input.trim() ? result.label : '—'}
+          {input.trim() ? result.label : ' - '}
         </span>
       </div>
       <div className="tb-v2-tool-output-body">
@@ -225,7 +225,7 @@ export default function SentimentAnalyzerClient() {
 
       <div className="tb-v2-section">
         <p style={{ fontSize: 12, color: 'var(--fg-2)', lineHeight: 1.5 }}>
-          <strong>How this works:</strong> This tool uses a lexicon-based approach — it scans your text for ~250 common
+          <strong>How this works:</strong> This tool uses a lexicon-based approach - it scans your text for ~250 common
           positive and negative words with preset weights, applies basic negation handling (e.g. &quot;not good&quot; flips the
           score), and sums the result. It is not an AI model and won&apos;t catch sarcasm, context, or uncommon phrasing.
         </p>

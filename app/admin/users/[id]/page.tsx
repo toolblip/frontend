@@ -80,7 +80,7 @@ function UserRecord() {
             <Field label="Email" value={user.email} testId="record-email" />
             <Field label="Email verification" value={verificationLabel(user.email_verified_at)} testId="record-verification" />
             <Field label="Plan" value={planLabel(user.tier)} testId="record-plan" />
-            <Field label="Subscription status" value={user.subscription_status ?? "—"} testId="record-status" />
+            <Field label="Subscription status" value={user.subscription_status ?? " - "} testId="record-status" />
             <Field label="Plan ends" value={formatAdminDate(user.plan_ends_at)} testId="record-plan-ends" />
             <Field label="Created" value={formatAdminDate(user.created_at)} testId="record-created" />
           </div>

@@ -29,7 +29,7 @@ test.describe('Dashboard favorite share flow', () => {
 
     await shareButton.click();
 
-    // Link-based copy — it does not navigate away from the dashboard.
+    // Link-based copy - it does not navigate away from the dashboard.
     await expect(shareButton).toHaveText('Copied');
     await expect(page).toHaveURL(/\/dashboard/);
 

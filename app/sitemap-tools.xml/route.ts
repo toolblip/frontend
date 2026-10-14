@@ -7,18 +7,18 @@ import { getToolPath } from '@/lib/tool-path';
 
 // Tier-A gate: only tools with hand-written FAQ overrides are listed
 // (isToolIndexable). Others stay live with noindex,follow until they have
-// differentiated copy — see docs/gsc-recovery-plan.md. This sitemap is
+// differentiated copy - see docs/gsc-recovery-plan.md. This sitemap is
 // split from core/blog so GSC can track tool-corpus recovery separately.
 // Slugs that exist as a real entry in data/tools.ts but are also a source
 // key in app/tools/[slug]/page.tsx's REDIRECTS map, so every request to
-// them permanently redirects away before the page ever renders — dead,
+// them permanently redirects away before the page ever renders - dead,
 // unreachable data that would otherwise falsely reappear in this sitemap.
-// ('lorem-ipsum' used to be here, but that REDIRECTS entry was stale — it
+// ('lorem-ipsum' used to be here, but that REDIRECTS entry was stale - it
 // predated a pass renaming a different tool, 'lorem-ipsum-api', onto the
 // 'lorem-ipsum' slug, and has since been removed from REDIRECTS so the
 // renamed tool is reachable under its own canonical URL. 'serp-simulator'
 // used to be here too, shadowing a real, different, live tool
-// (SerpPreviewClient vs GoogleSerpSimulatorClient) — the shadowing
+// (SerpPreviewClient vs GoogleSerpSimulatorClient) - the shadowing
 // REDIRECTS entry has now been removed instead, so the real tool is
 // reachable and belongs in this sitemap again.)
 const SHADOWED_BY_REDIRECT = new Set<string>([]);

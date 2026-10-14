@@ -153,7 +153,7 @@ export default function SplitExcelFileClient() {
           )}
 
           <div className="tb-v2-banner" style={{ marginBottom: 16 }}>
-            Sheet <strong>{selectedSheet}</strong> — {dataRows.length.toLocaleString()} data rows (plus header). Files will download individually, one after another.
+            Sheet <strong>{selectedSheet}</strong> - {dataRows.length.toLocaleString()} data rows (plus header). Files will download individually, one after another.
           </div>
 
           <div className="tb-v2-grid-2">

@@ -123,7 +123,7 @@ export default function UnitConverterClient() {
                 ? isNaN(result)
                   ? result.toFixed(4)
                   : result.toFixed(6).replace(/\.?0+$/, '')
-                : '—'}
+                : ' - '}
             </div>
           </div>
         </div>

@@ -19,7 +19,7 @@ type ToolContextState<T extends Record<string, unknown>> = {
 /**
  * Paid-gated, explicitly user-controlled saved context for a single tool.
  * Reads the saved settings on mount and exposes save/clear actions. Only the
- * settings the caller passes to `save` are stored — never tool input/output.
+ * settings the caller passes to `save` are stored - never tool input/output.
  */
 export function useToolContext<T extends Record<string, unknown>>(slug: string): ToolContextState<T> {
   const { user } = useAuth();

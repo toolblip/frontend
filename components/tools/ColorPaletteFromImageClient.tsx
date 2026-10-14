@@ -67,7 +67,7 @@ export default function ColorPaletteFromImageClient() {
       const m: Record<string, number> = {};
       for (let i = 0; i < d.length; i += 4) {
         if (d[i + 3] < 128) continue;
-        // Floor buckets stay ≤240 — Math.round(255/16)*16 === 256 breaks hex (3 digits).
+        // Floor buckets stay ≤240 - Math.round(255/16)*16 === 256 breaks hex (3 digits).
         const r = Math.floor(d[i] / 16) * 16,
           g = Math.floor(d[i + 1] / 16) * 16,
           b = Math.floor(d[i + 2] / 16) * 16;

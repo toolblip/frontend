@@ -142,7 +142,7 @@ export default function AdminPlanActions({
           <dl className="mt-2 grid gap-x-6 gap-y-1 text-emerald-900 dark:text-emerald-200 sm:grid-cols-2">
             <div><dt className="inline text-emerald-700 dark:text-emerald-300">Action:</dt> {result.action}</div>
             <div><dt className="inline text-emerald-700 dark:text-emerald-300">Plan:</dt> {planLabel(result.previous_plan ?? null)} → {planLabel(result.new_plan ?? null)}</div>
-            <div><dt className="inline text-emerald-700 dark:text-emerald-300">Status:</dt> {result.previous_status ?? "—"} → {result.new_status ?? "—"}</div>
+            <div><dt className="inline text-emerald-700 dark:text-emerald-300">Status:</dt> {result.previous_status ?? " - "} → {result.new_status ?? " - "}</div>
             <div><dt className="inline text-emerald-700 dark:text-emerald-300">Effective:</dt> {result.action === "cancel" ? formatAdminDate(result.effective_date ?? null) : "Immediately"}</div>
             {result.reference_id && <div><dt className="inline text-emerald-700 dark:text-emerald-300">Reference:</dt> {result.reference_id}</div>}
             {result.reason && <div><dt className="inline text-emerald-700 dark:text-emerald-300">Reason:</dt> {result.reason}</div>}

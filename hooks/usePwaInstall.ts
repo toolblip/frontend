@@ -22,7 +22,7 @@ function readIosStandalone(): boolean {
 
 /**
  * Chrome/Edge fire `beforeinstallprompt` when the app is installable.
- * iOS browsers have no prompt API — we surface Share → Add to Home Screen tips instead.
+ * iOS browsers have no prompt API - we surface Share → Add to Home Screen tips instead.
  * The corner hint hides only while this window is the installed app.
  * Cancelling the native dialog keeps the install entry available.
  */

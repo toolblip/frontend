@@ -71,7 +71,7 @@ function DirectoryBadges({ duplicate = false }: { duplicate?: boolean }) {
         <DirectoryBadgeImage src="https://tools.launchllama.co/featured-badge.png?v=2" alt="Featured on Launch Llama Tools" width="200" height="52" fallback="Launch Llama Tools" />
       </DirectoryBadgeLink>
       <DirectoryBadgeLink duplicate={duplicate} href="https://smollaunch.com" target="_blank" rel="noopener">
-        <DirectoryBadgeImage src="/directory-badges/smol-launch.svg" alt="Toolblip — Featured on Smol Launch" width="250" height="60" fallback="Smol Launch" />
+        <DirectoryBadgeImage src="/directory-badges/smol-launch.svg" alt="Toolblip - Featured on Smol Launch" width="250" height="60" fallback="Smol Launch" />
       </DirectoryBadgeLink>
       <DirectoryBadgeLink duplicate={duplicate} href="https://launchboosts.com/project/toolblip?utm_source=badge&utm_medium=embed" target="_blank" rel="noopener">
         <DirectoryBadgeImage src="https://launchboosts.com/api/badge/toolblip" alt="Toolblip - Featured on LaunchBoosts" width="250" height="54" fallback="LaunchBoosts" />
@@ -80,7 +80,7 @@ function DirectoryBadges({ duplicate = false }: { duplicate?: boolean }) {
         <DirectoryBadgeImage src="https://www.launchvault.dev/images/badges/launch-valut-badge.svg" alt="Feature On Launch Vault" style={{ width: 195, height: 'auto' }} fallback="LaunchVault" />
       </DirectoryBadgeLink>
       <DirectoryBadgeLink duplicate={duplicate} href="https://www.verifiedtools.info/tools/toolblip" target="_blank" rel="noopener noreferrer">
-        <DirectoryBadgeImage src="/directory-badges/verified-tools.svg" alt="Toolblip on Verified Tools — AI & SaaS tools directory" width="200" height="54" fallback="Verified Tools" />
+        <DirectoryBadgeImage src="/directory-badges/verified-tools.svg" alt="Toolblip on Verified Tools - AI & SaaS tools directory" width="200" height="54" fallback="Verified Tools" />
       </DirectoryBadgeLink>
       <DirectoryBadgeLink duplicate={duplicate} data-topaitools4u-badge="verified-listing" href="https://www.topaitools4u.site" target="_blank" rel="noopener" aria-label="Listed on TopAITools4U" style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '10px 14px', border: '1px solid #d9d9d9', borderRadius: 12, background: '#ffffff', color: '#111111', fontFamily: 'Inter,Arial,sans-serif', textDecoration: 'none' }}>
         <DirectoryBadgeImage src="https://www.topaitools4u.site/logo.svg" alt="TopAITools4U" width="32" height="32" style={{ display: 'block', width: 32, height: 32, borderRadius: 9 }} fallback="" />

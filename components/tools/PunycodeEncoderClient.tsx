@@ -99,7 +99,7 @@ export default function PunycodeEncoderClient() {
       if(id!==pasteTask.current)return;
       applyLeft(text);
     } catch {
-      // clipboard read denied/unsupported — do nothing
+      // clipboard read denied/unsupported - do nothing
     }
   }, [applyLeft]);
 
@@ -110,7 +110,7 @@ export default function PunycodeEncoderClient() {
       if(id!==pasteTask.current)return;
       applyRight(text);
     } catch {
-      // clipboard read denied/unsupported — do nothing
+      // clipboard read denied/unsupported - do nothing
     }
   }, [applyRight]);
 

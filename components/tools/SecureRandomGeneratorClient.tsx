@@ -131,7 +131,7 @@ export default function SecureRandomGeneratorClient() {
         <div className="tb-v2-tool-output-body" style={{ marginTop: 16 }}>
           <div className="flex justify-between items-center mb-2">
             <span className="tb-v2-tool-label">
-              Output ({results.length}) — generated with crypto.getRandomValues, not Math.random
+              Output ({results.length}) - generated with crypto.getRandomValues, not Math.random
             </span>
             <button onClick={copy} className="tb-v2-copy-btn">
               {copied ? 'Copied!' : 'Copy'}

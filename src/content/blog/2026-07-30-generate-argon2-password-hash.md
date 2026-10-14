@@ -112,13 +112,13 @@ If you are choosing today, pick Argon2id. If you already run bcrypt at a sensibl
 
 ## Generating Argon2 Hashes to Test Parameters
 
-Testing parameter combinations by writing a script each time is slower than adjusting values in a form and reading the result, but it's also the only way to get a hash you can actually trust: Argon2 has no native browser API, so any "generate it client-side in your browser" tool is either shipping a large WASM build of the real algorithm or, more often, faking the output. Reach for your language's real Argon2 library instead — Node's `argon2` package, PHP's built-in `password_hash()` with `PASSWORD_ARGON2ID`, or Python's `argon2-cffi` — and run it locally or in a scratch script:
+Testing parameter combinations by writing a script each time is slower than adjusting values in a form and reading the result, but it's also the only way to get a hash you can actually trust: Argon2 has no native browser API, so any "generate it client-side in your browser" tool is either shipping a large WASM build of the real algorithm or, more often, faking the output. Reach for your language's real Argon2 library instead - Node's `argon2` package, PHP's built-in `password_hash()` with `PASSWORD_ARGON2ID`, or Python's `argon2-cffi` - and run it locally or in a scratch script:
 
 ```
 node -e "require('argon2').hash('correct horse battery staple', { type: require('argon2').argon2id, memoryCost: 65536, timeCost: 3, parallelism: 4 }).then(console.log)"
 ```
 
-That property matters here more than for most tools. A password sent to a hashing endpoint travels the network in plaintext and probably lands in a request log, which defeats the point of hashing it carefully — another reason to reach for a real local library rather than a web form.
+That property matters here more than for most tools. A password sent to a hashing endpoint travels the network in plaintext and probably lands in a request log, which defeats the point of hashing it carefully - another reason to reach for a real local library rather than a web form.
 
 If you inherit a hash and cannot tell what produced it, the [Hash Identifier](https://toolblip.com/tools/hash-identifier) reads the prefix and format to name the likely algorithm. Useful when auditing a legacy database before planning a migration.
 

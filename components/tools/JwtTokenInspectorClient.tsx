@@ -235,7 +235,7 @@ export default function JwtTokenInspectorClient() {
             <p className="tb-v2-hash-stats" style={{ marginTop: 8 }}>
               Algorithm: <strong>{alg}</strong>
               {signatureBytes !== null && <> · Signature length: <strong>{signatureBytes} bytes</strong></>}
-              {' '}· Decode-only view — signature is not cryptographically verified here.
+              {' '}· Decode-only view - signature is not cryptographically verified here.
             </p>
           </div>
         </>

@@ -102,7 +102,7 @@ export default function AngleUnitConverterClient() {
               className="tb-v2-input mb-2 text-center text-2xl font-bold"
               style={{ minHeight: 44, color: 'var(--red)' }}
             >
-              {result === null ? '—' : formatResult(result)}
+              {result === null ? ' - ' : formatResult(result)}
             </div>
             <select
               value={toUnit}

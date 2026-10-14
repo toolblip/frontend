@@ -120,7 +120,7 @@ export default function ColorBlindnessSimulatorClient() {
     return true;
   }
 
-  // Draw after filter canvases mount (imageSrc truthy) — avoids canvas-mount race.
+  // Draw after filter canvases mount (imageSrc truthy) - avoids canvas-mount race.
   useEffect(() => {
     if (!imageSrc || !pendingImg) return;
     const img = pendingImg;
@@ -233,7 +233,7 @@ export default function ColorBlindnessSimulatorClient() {
       <div className="tb-v2-section" style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: 20 }}>
         <p style={{ fontSize: 13, color: 'var(--tb-text-secondary)', margin: 0 }}>
           Upload an image to see how it appears to people with different types of color vision
-          deficiency. Everything runs in your browser — the image is never uploaded to a server.
+          deficiency. Everything runs in your browser - the image is never uploaded to a server.
         </p>
 
         <label

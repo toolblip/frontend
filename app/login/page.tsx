@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   alternates: {
     canonical: 'https://toolblip.com/login',
   },
-  // Account-funnel page with no unique content for a searcher to land on —
+  // Account-funnel page with no unique content for a searcher to land on -
   // keep it out of the index but let link equity flow through.
   robots: {
     index: false,

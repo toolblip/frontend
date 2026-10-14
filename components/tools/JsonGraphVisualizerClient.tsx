@@ -94,13 +94,13 @@ export default function JsonGraphVisualizerClient() {
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="rounded-xl border border-gray-200 bg-white p-4 text-center dark:border-gray-800 dark:bg-gray-900">
           <p className="text-2xl font-bold text-gray-900 dark:text-white">
-            {'error' in summary ? '—' : summary.nodes}
+            {'error' in summary ? ' - ' : summary.nodes}
           </p>
           <p className="text-xs text-gray-500 dark:text-gray-400">Nodes</p>
         </div>
         <div className="rounded-xl border border-gray-200 bg-white p-4 text-center dark:border-gray-800 dark:bg-gray-900">
           <p className="text-2xl font-bold text-gray-900 dark:text-white">
-            {'error' in summary ? '—' : summary.edges}
+            {'error' in summary ? ' - ' : summary.edges}
           </p>
           <p className="text-xs text-gray-500 dark:text-gray-400">Edges</p>
         </div>

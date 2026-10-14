@@ -1629,7 +1629,7 @@ Output: chart-page4.png`,
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "hex-named-color-converter": {
-    description: `A hex code like #DC143C communicates nothing on its own in a design review, while the name crimson does — and the reverse is just as common when someone says “use tomato” and you need the exact hex for a stylesheet. This tool converts both ways between HEX and CSS named colors in live side-by-side panes: pick or type a hex to find the nearest name, or pick a name to get its hex instantly. Useful for writing readable CSS with named colors, turning a verbal color name into a paste-ready hex, or checking what an unfamiliar hex is closest to in the CSS named-color set.`,
+    description: `A hex code like #DC143C communicates nothing on its own in a design review, while the name crimson does - and the reverse is just as common when someone says “use tomato” and you need the exact hex for a stylesheet. This tool converts both ways between HEX and CSS named colors in live side-by-side panes: pick or type a hex to find the nearest name, or pick a name to get its hex instantly. Useful for writing readable CSS with named colors, turning a verbal color name into a paste-ready hex, or checking what an unfamiliar hex is closest to in the CSS named-color set.`,
     examples: [
 
     ],
@@ -2322,7 +2322,7 @@ Output: {"name":"John","age":30}`
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "json-yaml-converter": {
-    description: `Convert between JSON and YAML with live side-by-side panes. Paste JSON on the left and YAML updates on the right, or paste YAML on the right and JSON updates on the left. Pretty-printed output for Kubernetes manifests, Compose files, and CI configs — nothing leaves your browser.`,
+    description: `Convert between JSON and YAML with live side-by-side panes. Paste JSON on the left and YAML updates on the right, or paste YAML on the right and JSON updates on the left. Pretty-printed output for Kubernetes manifests, Compose files, and CI configs - nothing leaves your browser.`,
     examples: [
 
     ],

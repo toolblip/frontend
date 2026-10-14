@@ -116,7 +116,7 @@ export default function ColorOpacityGeneratorClient() {
           </div>
           <div>
             <label className="tb-v2-tool-label" style={{ marginBottom: 8, display: 'block' }}>
-              Opacity — {opacity}%
+              Opacity - {opacity}%
             </label>
             <input
               type="range"
