@@ -183,46 +183,6 @@ export const reviewedToolContent: Record<string, ToolContent> = {
       "No upload, runs locally"
     ]
   },
-  "url-encode": {
-    "description": "Free URL encode and decode for a single component value with encodeURIComponent. Spaces become %20. Paste a value - not a full URL - when you need to keep structure intact.",
-    "examples": [
-      {
-        "title": "Encode a search value",
-        "code": "Input: café & tea\nOutput: caf%C3%A9%20%26%20tea",
-        "note": "A plus sign is not decoded to a space. Malformed percent escapes and invalid UTF-8 produce an error. Input limit: 100,000 characters."
-      },
-      {
-        "title": "Decode a query fragment",
-        "code": "Input: hello%20world%21\nDecode: hello world!",
-        "note": "Switch to Decode mode for one result at a time. For Base64 payloads use Base64 Encode/Decode; for JWT parts use JWT Decoder."
-      }
-    ],
-    "features": [
-      "Encode and decode modes",
-      "UTF-8 percent encoding",
-      "Copy output"
-    ]
-  },
-  "base64-encoder-decoder": {
-    "description": "Free Base64 encode and decode for UTF-8 text in your browser. Use Swap to round-trip a result. Text only - images and files belong on Base64 Image Converter.",
-    "examples": [
-      {
-        "title": "Round-trip a greeting",
-        "code": "Encode: Hello, World!\nResult: SGVsbG8sIFdvcmxkIQ==\nDecode that result → Hello, World!",
-        "note": "Base64 is reversible encoding, not encryption. Expects the standard +/ alphabet and valid UTF-8, not Base64URL or arbitrary binary."
-      },
-      {
-        "title": "Prefer JWT Decoder for tokens",
-        "code": "For a compact three-part JWT, open JWT Decoder. Use this page when you only need UTF-8 text ↔ standard Base64.",
-        "note": "Text limit 100,000 characters; encoded input has a separate size cap. This decoder expects +/ padding, not Base64URL."
-      }
-    ],
-    "features": [
-      "UTF-8 text encode/decode",
-      "Swap for round trips",
-      "Runs locally in the browser"
-    ]
-  },
   "password-generator": {
     "description": "Free strong random password generator that runs in your browser with cryptographic randomness. Choose length 8–64 and which character groups to include; each selected group appears in the result.",
     "examples": [
@@ -991,5 +951,303 @@ export const reviewedToolContent: Record<string, ToolContent> = {
       "Stop at any time"
     ]
   },
+  "base64-encoder-decoder": {
+    "description": "Base64 decode turns standard Base64 text back into UTF-8 text. Set the mode to Decode, paste the Base64 string, and the decoded text appears as you type. Encode works the other way, and Swap moves a result back into the input. Padding is optional on decode, and spaces or line breaks are ignored. Base64URL (with - or _) and binary files are not supported; use Base64 Image Converter for images.",
+    "examples": [
+      {
+        "title": "Decode a Base64 string",
+        "code": "VG9vbGJsaXA= → Toolblip",
+        "note": "The page opens in Encode mode, so switch to Decode before you paste."
+      },
+      {
+        "title": "Unpadded input",
+        "code": "VG9vbGJsaXA → Toolblip",
+        "note": "Missing = padding is added automatically when the length needs it."
+      },
+      {
+        "title": "Base64URL is rejected",
+        "code": "VG9vbGJsaXA_ → Invalid Base64 string - cannot decode.",
+        "note": "Only the standard + and / alphabet decodes. For a three-part JWT, use JWT Decoder."
+      }
+    ],
+    "features": [
+      "Base64 to UTF-8 text",
+      "Encode and decode modes",
+      "Swap moves output back to input",
+      "Runs locally in the browser"
+    ]
+  },
+  "binary-to-text": {
+    "description": "Binary to text converts groups of eight 0s and 1s into characters, and text to binary writes each character as its 8-bit code. Paste binary or text and the other side updates as you type. Each group is read as a code from 0 to 255 (Latin-1), so ASCII and Western accented letters work. Emoji and UTF-8 multi-byte text do not round-trip.",
+    "examples": [
+      {
+        "title": "Binary to text",
+        "code": "01001000 01101001 → Hi",
+        "note": "01001000 is 72 (H) and 01101001 is 105 (i). Spaces and line breaks between groups are ignored."
+      },
+      {
+        "title": "Text to binary",
+        "code": "Yes → 01011001 01100101 01110011",
+        "note": "Each character becomes its 8-bit code. Emoji produce 16-bit groups that do not decode back to the emoji."
+      }
+    ],
+    "features": [
+      "Binary to text",
+      "Text to binary",
+      "Live two-way sync",
+      "Copy output"
+    ]
+  },
+  "discount-calculator": {
+    "description": "Discount calculator that works out a sale price after a percentage off, with an optional second discount and sales tax, in US dollars. Enter the original price and the first discount to see the final price and total savings. The second discount applies to the already reduced price, and tax is added last.",
+    "examples": [
+      {
+        "title": "Sale price with tax",
+        "code": "Price $80 · First discount 25% · Tax 8% → After discounts $60.00 · Tax $4.80 · Final $64.80",
+        "note": "Tax is added after the discounts. Total savings is $20.00 (25.00%) and does not include tax."
+      },
+      {
+        "title": "Two stacked discounts",
+        "code": "Price $50 · First 20% · Additional 15% → After first discount $40.00 · Final $34.00 · Savings $16.00 (32.00%)",
+        "note": "The second 15% comes off the reduced $40.00, which is $6.00, not 35% of $50. Savings are measured against the original price."
+      }
+    ],
+    "features": [
+      "Sale price after one or two discounts",
+      "Optional sales tax line",
+      "Total savings and final price",
+      "Copy breakdown"
+    ]
+  },
+  "random-color-generator": {
+    "description": "Random color generator that picks one color each time you press Generate new color, and shows it as HEX, RGB and HSL. Each value has its own copy button. The color comes from Math.random in your browser, so it is not suitable for secrets.",
+    "examples": [
+      {
+        "title": "Generate and copy",
+        "code": "HEX #3A7BD5 · RGB 58, 123, 213 · HSL 215°, 65%, 53%",
+        "note": "Example output format only; your color will differ. Copy RGB gives rgb(58, 123, 213) with the rgb() wrapper."
+      },
+      {
+        "title": "One color at a time",
+        "code": "Press Generate new color three times → three separate colors",
+        "note": "There is no palette, lock or history, so copy each value you want to keep. For a fixed color, use Color Picker."
+      }
+    ],
+    "features": [
+      "Random HEX, RGB and HSL",
+      "Copy each format",
+      "One color per press",
+      "Runs in your browser"
+    ]
+  },
+  "xml-formatter": {
+    "description": "XML formatter that re-indents well-formed XML with 2 or 4 spaces, and Minify strips the whitespace between elements. Paste your XML, choose Format or Minify, and copy the result. It checks well-formedness only, with no DTD or XSD validation.",
+    "examples": [
+      {
+        "title": "Format with 2 spaces",
+        "code": "<root><item id=\"1\">Hello &amp; welcome</item><item>Two</item></root>\n→\n<root>\n  <item id=\"1\">Hello &amp; welcome</item>\n  <item>Two</item>\n</root>",
+        "note": "Entities such as &amp; stay escaped. Comments and CDATA sections are kept."
+      },
+      {
+        "title": "Broken markup",
+        "code": "<root><item></root> → parser error",
+        "note": "The message comes from the browser XML parser, so its wording varies. Documents with DTD declarations are rejected."
+      }
+    ],
+    "features": [
+      "Format with 2 or 4 spaces",
+      "Minify",
+      "Well-formedness check",
+      "Copy output"
+    ]
+  },
+  "json-validator": {
+    "description": "JSON validator that checks your text as you type and reports Valid JSON, or the parser error when it is invalid. It checks syntax only: there is no schema validation, and trailing commas and comments are rejected. The text you paste is never reformatted.",
+    "examples": [
+      {
+        "title": "Trailing comma",
+        "code": "{\"a\": 1,} → Invalid JSON, with the parser message",
+        "note": "JSON does not allow a comma before the closing brace. The message wording comes from the browser JSON parser, so it varies by browser."
+      },
+      {
+        "title": "Valid document",
+        "code": "{\"status\": \"ok\", \"count\": 3} → Valid JSON",
+        "note": "A valid result leaves the text as typed. To pretty-print it, use JSON Formatter."
+      }
+    ],
+    "features": [
+      "Live syntax check",
+      "Parser error message",
+      "Input left as typed",
+      "Runs in your browser"
+    ]
+  },
+  "temperature-unit-converter": {
+    "description": "Temperature converter for Celsius, Fahrenheit and Kelvin. Enter a value and pick the From and To units to see the result live, with the value listed in all three units below it. Values below absolute zero are rejected.",
+    "examples": [
+      {
+        "title": "Fahrenheit to Celsius",
+        "code": "98.6 °F → 37 °C",
+        "note": "Results are rounded to 12 significant digits with trailing zeros dropped, and the output is a bare number with no unit suffix."
+      },
+      {
+        "title": "Below absolute zero",
+        "code": "-300 °C → Temperature cannot be below absolute zero.",
+        "note": "The check uses the source value, so 0 K is valid and converts to -273.15 °C."
+      }
+    ],
+    "features": [
+      "Celsius, Fahrenheit, Kelvin",
+      "Live results",
+      "All three units listed",
+      "Swap units"
+    ]
+  },
+  "url-encode": {
+    "description": "URL decode turns percent-encoded text such as %20 and %26 back into readable characters. Choose Decode, paste the encoded value, and the result appears live; Encode does the reverse for a single value. Paste one component value, not a whole URL, because every reserved character is encoded. Plus signs are not turned into spaces.",
+    "examples": [
+      {
+        "title": "Decode a query string value",
+        "code": "name%3DAda%26age%3D36 → name=Ada&age=36",
+        "note": "Only percent escapes are decoded. A plus sign stays a plus, so write a space as %20."
+      },
+      {
+        "title": "Malformed escape",
+        "code": "100% → Invalid URI component or malformed UTF-8 percent sequence.",
+        "note": "A lone % is not a valid escape. Encode the value first, so the % becomes %25."
+      }
+    ],
+    "features": [
+      "Decode and encode modes",
+      "Percent decoding of single values",
+      "Copy output",
+      "Error on malformed escapes"
+    ]
+  },
+  "favicon-generator": {
+    "description": "Favicon generator that makes a PNG, ICO or SVG favicon from an emoji, short text or an uploaded logo. Pick one size from 16 to 512 px and download it; the image is drawn in your browser. It makes one size at a time, with no HTML snippet or multi-size ICO.",
+    "examples": [
+      {
+        "title": "Text favicon",
+        "code": "Text TB · 512 px · Download PNG → favicon-512.png (512 × 512)",
+        "note": "ICO export is capped at 256 px, so the ICO download is 256 × 256 even when 512 is selected. Text is limited to four characters."
+      },
+      {
+        "title": "Logo upload",
+        "code": "PNG, JPEG, WebP or SVG logo → Padding 10% → Download SVG",
+        "note": "SVG output for a logo embeds the rendered PNG, so it is not vector artwork. Padding from 0 to 36% leaves space around the logo."
+      }
+    ],
+    "features": [
+      "Emoji, text or logo input",
+      "PNG, ICO and SVG downloads",
+      "Sizes 16 to 512 px",
+      "Runs in your browser"
+    ]
+  },
+  "image-aspect-ratio-calculator": {
+    "description": "Aspect ratio calculator that reduces a width and height to a ratio such as 16:9, with its decimal value. Type the pixel size or read it from a local image, and the nearest common preset is named when it matches within 2%.",
+    "examples": [
+      {
+        "title": "HD frame",
+        "code": "1280 × 720 → 16:9 (1.7778)",
+        "note": "Width and height are divided by their greatest common divisor, 80 here. A preset label appears when the ratio is within 2% of it."
+      },
+      {
+        "title": "Portrait crop",
+        "code": "1080 × 1350 → 4:5 (0.8)",
+        "note": "Click a preset to set the height from the current width. 4:3 on a 1920 px width gives 1440 px."
+      }
+    ],
+    "features": [
+      "Simplified width:height ratio",
+      "Common preset buttons",
+      "Read dimensions from a local image",
+      "Decimal and pixel size"
+    ]
+  },
+  "color-format-converter": {
+    "description": "RGB to hex converter that turns an RGB value into a HEX code, and HEX back into RGB, on the same page. It also shows HSL, HSV and CMYK, and accepts HEX, RGB, HSL, HSV or CMYK input. Commas are needed inside rgb(), and named colors such as red are not parsed.",
+    "examples": [
+      {
+        "title": "RGB to HEX",
+        "code": "rgb(255, 136, 0) → #FF8800 · hsl(32, 100%, 50%)",
+        "note": "Values are comma separated, as in rgb(255,136,0). CSS space syntax such as rgb(255 136 0) is not parsed."
+      },
+      {
+        "title": "HEX to RGB",
+        "code": "#2E8B57 → rgb(46, 139, 87)",
+        "note": "HEX takes 3, 6 or 8 digits, with or without #. HEX8 output adds FF for full opacity, shown as #2E8B57FF."
+      }
+    ],
+    "features": [
+      "HEX, RGB, HSL, HSV and CMYK",
+      "Two-way conversion on one page",
+      "Alpha output",
+      "Copy each format"
+    ]
+  },
+  "sql-prettifier": {
+    "description": "SQL formatter that starts each major clause on its own line and indents inside parentheses, with optional uppercase keywords. It is lexical formatting: quoted text and comments are kept intact, unbalanced quotes or parentheses are reported, and SQL syntax is not checked.",
+    "examples": [
+      {
+        "title": "Clause layout",
+        "code": "select id,name from users where id=1 → SELECT id,name\nFROM users\nWHERE id=1",
+        "note": "Spacing comes from your input, so a comma without a space stays that way. Turn off Uppercase keywords to keep the original case."
+      },
+      {
+        "title": "Unbalanced input",
+        "code": "select (id from users → Unbalanced SQL parentheses.",
+        "note": "Quote and comment errors are reported too, such as Unterminated SQL quote. A misspelled keyword is not flagged, because syntax is not checked."
+      }
+    ],
+    "features": [
+      "Clause-based line breaks",
+      "Uppercase keywords option",
+      "2 or 4 space indent",
+      "Quote and parenthesis checks"
+    ]
+  },
+  "contrast-checker": {
+    "description": "Contrast checker that measures the WCAG contrast ratio between a text color and a background color, and shows the level it reaches: AAA, AA, AA Large or Fail. Type a 6-digit HEX value for each color to see the ratio with a sample text preview. Invalid HEX hides the result without a message, and the tool does not suggest a fixed color.",
+    "examples": [
+      {
+        "title": "Gray text on white",
+        "code": "#767676 on #ffffff → 4.54:1, AA",
+        "note": "4.54:1 clears the 4.5:1 AA threshold for normal text, but not the 7:1 AAA level."
+      },
+      {
+        "title": "Light gray text",
+        "code": "#999999 on #ffffff → 2.85:1, Fail",
+        "note": "Below 3:1 the result is Fail. Pick a darker text color and check again; the tool does not pick one for you."
+      }
+    ],
+    "features": [
+      "WCAG 2.x contrast ratio",
+      "AAA, AA, AA Large or Fail",
+      "Sample text preview",
+      "6-digit HEX input"
+    ]
+  },
+  "http-status-checker": {
+    "description": "HTTP status code checker that sends a request from your browser and shows the status line, such as HTTP 200 OK, with the final URL and the headers the browser exposes. Enter an absolute http or https URL to check its live response. The response must be readable by the browser, so a cross-origin server needs to allow CORS, and redirect hops are not listed.",
+    "examples": [
+      {
+        "title": "URL with credentials",
+        "code": "https://user:pass@example.com → Enter an absolute HTTP(S) URL without embedded credentials.",
+        "note": "URLs with a username or password are refused. Only http and https addresses are accepted."
+      },
+      {
+        "title": "Blocked by CORS",
+        "code": "Cross-origin URL without CORS headers → Request failed: … The server may not allow browser CORS requests.",
+        "note": "A status is shown only for responses the browser may read. Requests time out after 10 seconds."
+      }
+    ],
+    "features": [
+      "Status line from the browser",
+      "Final URL and redirect yes or no",
+      "Readable response headers",
+      "Last 10 checks kept in the session"
+    ]
+  },
 };
-
