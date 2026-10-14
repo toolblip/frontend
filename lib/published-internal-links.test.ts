@@ -50,7 +50,7 @@ describe('published article links', () => {
     ];
     const errors = files.flatMap((file) => {
       const source = fs.readFileSync(path.join(root, file), 'utf8');
-      return [...source.matchAll(/\/blog\/([a-z0-9-]+)/g)]
+      return [...source.matchAll(/\/blog\/([a-z0-9-]+)(?![a-z0-9.-])/g)]
         .filter((match) => !blogSlugs.has(match[1]))
         .map((match) => `${file} /blog/${match[1]}`);
     });
