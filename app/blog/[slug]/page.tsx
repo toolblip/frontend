@@ -9,6 +9,8 @@ import { selectRelatedPosts } from '@/lib/blog-related';
 import { clampMetaDescription } from '@/lib/meta-description';
 import { BLOG_LLMS_PATH } from '@/lib/blog-markdown';
 import BlogShareButton from '@/components/share/BlogShareButton';
+import { buildBlogBreadcrumbJsonLd } from '@/lib/breadcrumb-jsonld';
+import { jsonLdScript } from '@/lib/tool-jsonld';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -97,6 +99,10 @@ export default async function BlogPostPage({ params }: PageProps) {
   return (
     <main className="min-h-screen" style={{ background: 'var(--bg)' }}>
       <link rel="describedby" href={BLOG_LLMS_PATH} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLdScript(buildBlogBreadcrumbJsonLd(currentPost)) }}
+      />
       <div className="max-w-3xl mx-auto px-4 pt-8">
         <nav
           className="flex items-center gap-2 text-sm mb-8"
