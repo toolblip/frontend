@@ -8,8 +8,9 @@ import * as indexing from '@/lib/indexable-tools';
 // Independent snapshot evaluated from committed 5556e22 tools and FAQ eligibility.
 const baselineTools = baseline.tools;
 const baselineEligible = new Set(baselineTools.filter(t => t.indexable).map(t => t.slug));
-// Priority cohort kept by the 2026-10-14 prune (docs/seo-index-prune-2026-10-14.md).
-const PRIORITY_KEEP = ['jwt-decoder', 'json-formatter', 'regex-tester', 'url-encode', 'base64-encoder-decoder', 'password-generator', 'uuid-generator', 'markdown-to-html', 'case-converter', 'word-counter', 'reading-time-calculator', 'image-resizer'];
+// Priority cohort and brief keyword rows always kept by the 2026-10-14 prune (docs/seo-index-prune-2026-10-14.md).
+const PRIORITY_KEEP = ['jwt-decoder', 'json-formatter', 'regex-tester', 'url-encode', 'base64-encoder-decoder', 'password-generator', 'uuid-generator', 'markdown-to-html', 'case-converter', 'word-counter', 'reading-time-calculator', 'image-resizer',
+  'bmi-calculator', 'fraction-calculator', 'time-zone-converter', 'countdown-timer', 'svg-to-png', 'random-number-generator', 'age-calculator', 'tip-calculator', 'morse-code-translator', 'roman-numeral-converter', 'qr-code-generator', 'percentage-calculator', 'binary-to-text', 'discount-calculator', 'random-color-generator', 'xml-formatter', 'json-validator', 'temperature-unit-converter', 'favicon-generator', 'image-aspect-ratio-calculator', 'color-format-converter', 'sql-prettifier', 'contrast-checker', 'http-status-checker'];
 
 afterEach(() => { vi.doUnmock('@/lib/faq'); vi.doUnmock('@/data/tools'); vi.resetModules(); });
 

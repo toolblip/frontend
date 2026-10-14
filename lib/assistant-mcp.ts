@@ -1,4 +1,5 @@
-import { publicTools } from '@/lib/llms-txt';
+// Lookup serves every live canonical tool; the SEO index gate (sitemap, llms.txt) does not narrow it.
+import { tools } from '@/data/tools';
 import { getToolAbsoluteUrl } from '@/lib/tool-path';
 
 const PROTOCOL_VERSION = '2025-03-26';
@@ -27,7 +28,7 @@ function toolCard(tool: { name: string; slug: string; description: string; categ
 export function searchPublicTools(query: string, limit = 8) {
   const terms = query.toLowerCase().split(/\s+/).filter(Boolean);
   if (terms.length === 0) return [];
-  return publicTools()
+  return tools
     .map((tool) => {
       const name = tool.name.toLowerCase();
       const slug = tool.slug.toLowerCase();
@@ -47,7 +48,7 @@ export function searchPublicTools(query: string, limit = 8) {
 }
 
 export function findPublicTool(slug: string) {
-  const tool = publicTools().find((entry) => entry.slug === slug);
+  const tool = tools.find((entry) => entry.slug === slug);
   return tool ? toolCard(tool) : null;
 }
 

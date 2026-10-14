@@ -33,10 +33,14 @@ FAQ content never grants or removes eligibility on its own.
 ## Flags for review
 
 - **KEEP is above the 100-150 estimate (178).** Most of the excess is seed keyword rows the content gate would otherwise hold. The brief said to keep them.
+- **Demoted from prior reviewed decisions (18):** `grammar-checker-pro`, `grammar-checker-v2`, `grammar-score-checker`, `image-scale-calculator`, `json-editor`, `jwt-token-inspector`, `metric-imperial-converter`, `paragraph-generator`, `random-choice-wheel`, `random-id-generator`, `regex-pattern-generator`, `slug-permalink-checker`, `square-crop`, `temp-converter`, `text-complexity-analyzer`, `text-deduplicator`, `uuid-compare`, `word-freq`. These passed the 2026-09-26 or 2026-09-28 public review. The criteria above move them to HOLD (family duplicate or content gate). The historical evidence is unchanged.
+- **Duplicate pair kept by rule:** `sql-formatter` and `sql-prettifier` do the same job with near-identical copy. Both are KEEP because a keyword row names each. Merge one in a follow-up.
+- **MCP lookup:** `lib/assistant-mcp.ts` (`search_tools`, `get_tool`) read `publicTools()`, so this change would have hidden held tools from assistants. It now reads the full live catalog. Held tools stay searchable and resolve by slug.
 - **`gradient-generator` and `slug-generator`** had prior holds for consolidation with `css-gradient-generator` and `url-slug-generator`. The seed keyword rule overrides those holds here. Revert if the consolidation decision should win.
 - **`currency-converter`** is a seed row, so it is KEEP. Its page says it uses fixed demonstration rates, not live ones. The copy is honest, but the page may not meet the working-tool bar.
 - **`temp-converter`** is held as a duplicate of `temperature-unit-converter`, a keyword row. The keyword `temperature converter` maps to the kept slug.
-- **Not checked:** no browser QA on the held pages, and no read of the HOLD copy for the user.
+- **Evidence strength:** the 2026-10-14 `reviewed` decisions rest on a code and content audit (component, FAQ, examples, description uniqueness). They are not fresh browser QA on the public routes, which `data/tool-indexing-policy.ts` asks for. Treat them as a provisional keep set until that QA runs.
+- **Not checked:** no browser QA on any route, and no read of the HOLD copy for the user.
 
 ## HOLD reasons
 
