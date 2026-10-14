@@ -1,4 +1,4 @@
-# Toolblip SEO Pipeline Report — 2026-07-10
+# Toolblip SEO Pipeline Report - 2026-07-10
 
 **Run:** 2026-07-10T17:00:00Z (11PM Dhaka)
 **Pipeline:** seo-pipeline.sh (from isolated `main` worktree at `/tmp/toolblip-cron-seo`)
@@ -12,19 +12,19 @@
 | Articles Committed | 0 |
 | Articles Submitted to GSC | 0 |
 | Sitemap Status | Refreshed successfully (1,674 URLs, 0 errors) |
-| Site Status | Healthy — toolblip.com returns 200, deployed blog posts return 200 |
+| Site Status | Healthy - toolblip.com returns 200, deployed blog posts return 200 |
 
 ## Queue State
 
-- `pending[]`: **42 topics** available (queue was refilled since last run — last archive noted exhaustion)
-- `in_progress[]`: 7 topics were orphaned in the worktree queue during failed pipeline attempts — worktree was cleaned up; canonical feature branch queue unaffected
+- `pending[]`: **42 topics** available (queue was refilled since last run - last archive noted exhaustion)
+- `in_progress[]`: 7 topics were orphaned in the worktree queue during failed pipeline attempts - worktree was cleaned up; canonical feature branch queue unaffected
 - `done[]`: 29+ entries
 
 ## Pre-flight Checks
 
 | Check | Status |
 |-------|--------|
-| Claude Code `auth status` | `loggedIn: false` — **Not logged in** |
+| Claude Code `auth status` | `loggedIn: false` - **Not logged in** |
 | Claude Code non-interactive probe | `Not logged in · Please run /login` |
 | `gh auth status` | ✅ Logged in as `HarunRRayhan` |
 | Working branch (canonical) | `feat/free-trial-two-cta` |
@@ -34,10 +34,10 @@
 ## GSC Data
 
 - Permission level: `siteOwner` on `sc-domain:toolblip.com`
-- Sitemap: `https://toolblip.com/sitemap.xml` — last submitted 2026-07-08T17:18Z, 0 errors, 0 warnings, 1,674 submitted URLs
+- Sitemap: `https://toolblip.com/sitemap.xml` - last submitted 2026-07-08T17:18Z, 0 errors, 0 warnings, 1,674 submitted URLs
 - Homepage: "Submitted and indexed" (last crawl 2026-07-01)
 - 7-day performance: 1 impression (on keyword difficulty tool), 0 clicks
-- Site is very new — minimal search footprint expected
+- Site is very new - minimal search footprint expected
 
 ## Blockers
 
@@ -49,10 +49,10 @@
 
 ## Site Health
 
-- `https://toolblip.com/` — HTTP 200 ✅
-- `https://toolblip.com/sitemap.xml` — HTTP 200 ✅
-- Deployed blog posts (pre-July 8) — HTTP 200 ✅
-- Newer post `2026-07-08-convert-json-to-csv-for-spreadsheet-analysis` — HTTP 500 ⚠️ (only staged on feature branch, not deployed to main)
+- `https://toolblip.com/` - HTTP 200 ✅
+- `https://toolblip.com/sitemap.xml` - HTTP 200 ✅
+- Deployed blog posts (pre-July 8) - HTTP 200 ✅
+- Newer post `2026-07-08-convert-json-to-csv-for-spreadsheet-analysis` - HTTP 500 ⚠️ (only staged on feature branch, not deployed to main)
 
 ## Next Run
 

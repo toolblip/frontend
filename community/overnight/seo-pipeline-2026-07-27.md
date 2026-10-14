@@ -1,4 +1,4 @@
-# SEO Pipeline Archive — 2026-07-27
+# SEO Pipeline Archive - 2026-07-27
 
 ## Run Summary
 - **Pipeline:** Toolblip SEO nightly (conservative mode)
@@ -18,16 +18,16 @@
 - **GSC Submission:** Success (sitemap.submit)
 
 ## Pipeline Steps Completed
-1. ✅ Keyword research — selected "convert json to typescript interface"
-2. ✅ Content generation — Claude Code generated article via run-claude.py
-3. ✅ Humanization — passed through humanizer skill
-4. ✅ Commit & push — committed to main, pushed to origin
-5. ✅ GSC submission — submitted via sitemap.submit()
-6. ✅ GSC check & fix — no errors found
-7. ✅ Internal linking — links added to existing posts
-8. ✅ Self-improvement — strategy file updated
-9. ✅ Sitemap refresh — sitemap refreshed
-10. ✅ Stale content check — no stale content found
+1. ✅ Keyword research - selected "convert json to typescript interface"
+2. ✅ Content generation - Claude Code generated article via run-claude.py
+3. ✅ Humanization - passed through humanizer skill
+4. ✅ Commit & push - committed to main, pushed to origin
+5. ✅ GSC submission - submitted via sitemap.submit()
+6. ✅ GSC check & fix - no errors found
+7. ✅ Internal linking - links added to existing posts
+8. ✅ Self-improvement - strategy file updated
+9. ✅ Sitemap refresh - sitemap refreshed
+10. ✅ Stale content check - no stale content found
 
 ## Post-Pipeline Fix
 - Fixed truncated tag "Convert-JSON-API-responses-to-" → "json-to-typescript"
@@ -39,7 +39,7 @@
 - **Existing blog posts:** 500 ❌ (pre-existing issue)
 
 ## Issue: Blog Pages 500 Error
-All blog posts return HTTP 500, including existing posts from April 2026. This is NOT caused by the new article — it's a pre-existing build/deployment issue with Cloudflare Pages. The main site works fine.
+All blog posts return HTTP 500, including existing posts from April 2026. This is NOT caused by the new article - it's a pre-existing build/deployment issue with Cloudflare Pages. The main site works fine.
 
 **Root cause:** Likely a Cloudflare Pages build failure or deployment configuration issue. The blog manifest generates correctly (114 posts), so the issue is in the Next.js build or Cloudflare Pages configuration.
 

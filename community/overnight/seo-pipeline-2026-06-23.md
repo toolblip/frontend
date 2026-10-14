@@ -1,7 +1,7 @@
-# Toolblip SEO Pipeline Report — 2026-06-23
+# Toolblip SEO Pipeline Report - 2026-06-23
 
 **Run:** 2026-06-23T17:00:00Z (11PM Dhaka)
-**Pipeline:** seo-pipeline.sh (archive-only — queue empty, Claude auth unavailable)
+**Pipeline:** seo-pipeline.sh (archive-only - queue empty, Claude auth unavailable)
 **Author:** Hermes Agent (scheduled cron)
 
 ## Summary
@@ -16,7 +16,7 @@
 
 ## Queue State
 
-- `pending[]`: **empty** — fully exhausted (all topics in `done[]`)
+- `pending[]`: **empty** - fully exhausted (all topics in `done[]`)
 - `in_progress[]`: empty
 - `done[]`: last post 2026-06-19 (CSS box shadow generator)
 
@@ -26,12 +26,12 @@ Current workspace: `feat/free-trial-two-cta` (not `main`). Pipeline would exit a
 
 ## Diagnostics
 
-**Claude Code auth:** `loggedIn: false` — `claude -p` returns "Not logged in." Same state as June 21. Automated content generation unavailable.
+**Claude Code auth:** `loggedIn: false` - `claude -p` returns "Not logged in." Same state as June 21. Automated content generation unavailable.
 
 **GSC diagnostics (sc-domain:toolblip.com):**
 - Permission: `siteOwner` ✅
-- Sitemap: `sitemap.xml` — submitted 2026-06-19, 0 errors, 0 warnings
-- 7-day search analytics: negligible (2 queries, 0 clicks, 1-2 impressions each) — expected for a new domain
+- Sitemap: `sitemap.xml` - submitted 2026-06-19, 0 errors, 0 warnings
+- 7-day search analytics: negligible (2 queries, 0 clicks, 1-2 impressions each) - expected for a new domain
 - No coverage errors
 
 **Stale content check:** Cutoff 2025-12-25. All posts from April 2026 or later. No stale content.
@@ -40,7 +40,7 @@ Current workspace: `feat/free-trial-two-cta` (not `main`). Pipeline would exit a
 
 ## Decision
 
-No new content needed. Queue is fully exhausted. Nightly check completed — no publish, no fixes, no changes.
+No new content needed. Queue is fully exhausted. Nightly check completed - no publish, no fixes, no changes.
 
 ## Next Run
 

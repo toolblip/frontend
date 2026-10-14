@@ -1,4 +1,4 @@
-# SEO Pipeline Archive — 2026-07-28
+# SEO Pipeline Archive - 2026-07-28
 
 ## Run Summary
 - **Run time:** 10:03–10:12 UTC (16:03–16:12 Dhaka)
@@ -24,7 +24,7 @@
    - GSC: submitted
 
 ## Topic Not Completed
-- **Turn JSON arrays into Markdown tables for technical docs** — stuck in keyword research when pipeline timed out (600s). Moved back to pending queue.
+- **Turn JSON arrays into Markdown tables for technical docs** - stuck in keyword research when pipeline timed out (600s). Moved back to pending queue.
 
 ## Queue State
 - Pending: 27
@@ -33,7 +33,7 @@
 
 ## Issues
 - **Slug fix required:** Pipeline generated slugs with date prefix (`2026-07-28-compare-two-json-files-online`). Fixed to clean slugs (`compare-two-json-files-online`). Commit: 8040955f.
-- **500 errors on new URLs:** Both new blog posts return 500. This is NOT specific to new articles — some older posts (e.g., `debug-regex-capture-groups-multiple-matches`, `cron-expression-generator-online`) also return 500. Pre-existing Cloudflare Pages deployment issue.
+- **500 errors on new URLs:** Both new blog posts return 500. This is NOT specific to new articles - some older posts (e.g., `debug-regex-capture-groups-multiple-matches`, `cron-expression-generator-online`) also return 500. Pre-existing Cloudflare Pages deployment issue.
 - **Sitemap not updated:** New URLs not yet in sitemap.xml. Will appear after next Cloudflare Pages redeploy.
 
 ## Auth Status

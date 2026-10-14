@@ -1,4 +1,4 @@
-# SEO Pipeline — 2026-06-18
+# SEO Pipeline - 2026-06-18
 
 **Date:** 2026-06-18
 **Run Type:** Archive-only (no content generated)
@@ -10,7 +10,7 @@
 - Non-interactive probe (`claude -p`) returns `401 Invalid authentication credentials`
 - Root cause: OAuth token in `.claude-home/.claude/.credentials.json` expired at `1780966893551` (~June 9, 2026)
 - The running tmux daemon session (`toolblip-haruns-m4-air`) is authenticated via system HOME (macOS Keychain) and continues to work for interactive use, but the pipeline's `run-claude.py` uses `claude -p` non-interactive mode which requires a valid token file
-- Same blocker as nights 2026-06-15, 2026-06-16, 2026-06-17 — recurring issue
+- Same blocker as nights 2026-06-15, 2026-06-16, 2026-06-17 - recurring issue
 
 ### Queue State (production `main`)
 - **Pending:** 6 topics
@@ -36,7 +36,7 @@ Only 1 of 6 pending topics ("CSS box shadow generator") does not overlap an exis
 - Blog index: 200
 - Recent articles all return 200
 - GSC permission: `siteOwner` on `sc-domain:toolblip.com`
-- GSC 7-day data: very early stage (2 impressions total) — expected for new domain
+- GSC 7-day data: very early stage (2 impressions total) - expected for new domain
 - Sitemap submitted: 1,666 URLs in GSC
 
 ### Action Taken

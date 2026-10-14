@@ -1,4 +1,4 @@
-# SEO Pipeline Archive — 2026-08-05
+# SEO Pipeline Archive - 2026-08-05
 
 **Run Time:** 04:05 UTC (10:05 Dhaka)
 **Mode:** Conservative (FORCE_SEO_PIPELINE=1, outside overnight window)
@@ -12,7 +12,7 @@
   - Topic: "Resize images to exact social media and Open Graph dimensions"
   - Status: Committed and pushed to main
 - **Articles Submitted to GSC:** 0 (enqueued, pending deployment fix)
-- **GSC Errors:** None (could not submit — deployment returning 500)
+- **GSC Errors:** None (could not submit - deployment returning 500)
 - **Queue Status:** 1 topic moved to done, 16 remaining pending
 
 ## Deployment Issue
@@ -40,6 +40,6 @@
 
 ## Next Run
 
-- Next cron: 17:00 UTC (23:00 Dhaka) — normal overnight window
+- Next cron: 17:00 UTC (23:00 Dhaka) - normal overnight window
 - **Action needed:** Investigate Railway deployment failure for Aug 4 posts
 - 16 topics remaining in queue

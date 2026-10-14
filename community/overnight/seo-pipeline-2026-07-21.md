@@ -1,4 +1,4 @@
-# Toolblip SEO Pipeline — 2026-07-21
+# Toolblip SEO Pipeline - 2026-07-21
 
 ## Run Summary
 
@@ -15,7 +15,7 @@
 - **File:** `src/content/blog/2026-07-21-generate-a-sitemap-xml-for-better-search-indexing.md`
 - **Topic from queue:** "generate a sitemap.xml for better search indexing"
 - **Target keyword:** "generate a sitemap.xml for better search indexing" (topic name used as fallback keyword)
-- **Content:** 182 lines, ~900 words — guide covering sitemap format, validation, robots.txt interaction, GSC submission, build-time generation at scale
+- **Content:** 182 lines, ~900 words - guide covering sitemap format, validation, robots.txt interaction, GSC submission, build-time generation at scale
 - **Links to tools:** XML Sitemap Generator, robots.txt checker, sitemap XML validator, XML formatter
 
 ## Steps Completed
@@ -29,7 +29,7 @@
 | 5. GSC submission | ✅ | submitted via GSC API |
 | 6. GSC check & fix | ✅ | no issues detected |
 | 7. Internal linking | ✅ | links added |
-| 8. Self-improvement | ✅ | strategy updated (0 clicks/impressions — expected for fresh post) |
+| 8. Self-improvement | ✅ | strategy updated (0 clicks/impressions - expected for fresh post) |
 | 9. Sitemap refresh | ✅ | sitemap refreshed |
 | 10. Stale content | ✅ | none found (>180 days) |
 
@@ -57,7 +57,7 @@
 ## Environment
 
 - **Branch:** main (clean worktree)
-- **Time window:** 04:13 UTC — within overnight window (< 06:00 UTC)
+- **Time window:** 04:13 UTC - within overnight window (< 06:00 UTC)
 - **Lock:** cleared on exit
 
 ## Archive
@@ -66,5 +66,5 @@ This file: `community/overnight/seo-pipeline-2026-07-21.md`
 
 ## Pre-existing Issues Found
 
-- **Blog posts returning 500:** ALL `/blog/[slug]` pages return `Internal Server Error` (500). This affects yesterday's post and all prior posts — it's a pre-existing Next.js deployment/rendering issue, not caused by this run. Homepage (200) and blog index (200) work fine. Sitemap (200) is healthy.
+- **Blog posts returning 500:** ALL `/blog/[slug]` pages return `Internal Server Error` (500). This affects yesterday's post and all prior posts - it's a pre-existing Next.js deployment/rendering issue, not caused by this run. Homepage (200) and blog index (200) work fine. Sitemap (200) is healthy.
 - **Next Run:** 2026-07-22 11:00 PM Dhaka (scheduled cron `07dd6cf18397`)

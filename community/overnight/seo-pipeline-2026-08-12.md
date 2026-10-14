@@ -1,4 +1,4 @@
-# Toolblip SEO Pipeline Archive — 2026-08-12
+# Toolblip SEO Pipeline Archive - 2026-08-12
 
 **Run:** nightly conservative cron (manual trigger, 10:05 Dhaka / 04:05 UTC)
 **Articles Generated: 0**
@@ -17,7 +17,7 @@
 1. **Claude Code auth revoked.** `claude auth status` under global HOME reports `loggedIn: false`. The project-isolated home (`~/Work/toolblip/.claude-home`, the single source of truth per Toolblip AGENTS.md) reports `loggedIn: true` but the decisive one-shot probe fails:
    - `HOME=/Users/ray/Work/toolblip/.claude-home claude --print -p "hello" --model sonnet --max-turns 1` → `Failed to authenticate. API Error: 401 OAuth access token has been revoked.`
    - `claude --print -p "say ok"` (global HOME) → `Failed to authenticate: OAuth session expired and could not be refreshed`
-   - tmux pane `toolblip-cc` shows "Remote Control disconnected — OAuth token unavailable — run /login".
+   - tmux pane `toolblip-cc` shows "Remote Control disconnected - OAuth token unavailable - run /login".
    - **Fix needed (human):** run `/login` interactively (or restore a valid OAuth token) in the normal session. Browser automation cannot do Google/Claude OAuth.
 
 2. **`claude.sh` no longer supports `-p`.** The working copy of `/Users/ray/Work/toolblip/claude.sh` was replaced (uncommitted user change) with an attach-only launcher that just does `exec tmux attach-session`. It contains no `-p`/stdin handling, so `./claude.sh -p "..."` → `open terminal failed: not a terminal` in cron. The pipeline's `run-claude.py`, `claude_is_logged_in()`, humanize, and meta-rewrite paths all rely on `./claude.sh -p`. The committed HEAD version is the daemon wrapper; the working copy differs. **Decision needed:** restore the daemon `-p` wrapper or update the pipeline to a cron-safe invocation.
@@ -26,7 +26,7 @@
 
 Audited all 16 pending topics against the live sitemap (797 tool slugs, all matched tool URLs verified HTTP 200).
 
-**Skipped to `done[]` as `skipped_existing_tool_page` (7) — single-intent topics already covered by a live tool page:**
+**Skipped to `done[]` as `skipped_existing_tool_page` (7) - single-intent topics already covered by a live tool page:**
 - Compress images for faster page loads → https://toolblip.com/tools/image-compressor
 - Crop images to any aspect ratio → https://toolblip.com/tools/crop
 - Convert images to Base64 data URLs → https://toolblip.com/tools/image-to-base64
@@ -35,7 +35,7 @@ Audited all 16 pending topics against the live sitemap (797 tool slugs, all matc
 - Catch grammar and spelling errors → https://toolblip.com/tools/grammar-checker
 - Turn plain text into handwritten notes → https://toolblip.com/tools/text-to-handwriting
 
-**Kept `pending[]` (9) — multi-step developer workflows with distinct intent not answered by a single tool page:**
+**Kept `pending[]` (9) - multi-step developer workflows with distinct intent not answered by a single tool page:**
 - From CSV to production database (CSV→JSON→schema→TS types)
 - Debug a broken API integration (JWT decode + header inspect + JSON diff)
 - Set up a secure signup form (password gen + strength + Argon2 hash)
@@ -61,4 +61,4 @@ Audited all 16 pending topics against the live sitemap (797 tool slugs, all matc
 
 1. Restore Claude Code auth (`/login` interactively) so the nightly pipeline can generate again.
 2. Decide the fate of `claude.sh`: restore the daemon `-p` wrapper (committed HEAD) or update pipeline helpers to a cron-safe claude invocation.
-3. Confirm the 9 remaining workflow topics are wanted as blog articles once auth is back (recommended: yes — they are the high-intent developer workflow category; 1 per night).
+3. Confirm the 9 remaining workflow topics are wanted as blog articles once auth is back (recommended: yes - they are the high-intent developer workflow category; 1 per night).

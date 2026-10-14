@@ -1,4 +1,4 @@
-# Toolblip SEO Pipeline Report — 2026-07-07
+# Toolblip SEO Pipeline Report - 2026-07-07
 
 **Run:** 2026-07-07T23:16:00Z (approx)
 **Pipeline:** seo-pipeline.sh (from isolated `main` worktree at `~/Work/toolblip-clean`)
@@ -17,7 +17,7 @@
 
 ## Queue State (main worktree)
 
-- `pending[]`: **empty** — all original 31 seed topics exhausted (previous runs already published everything)
+- `pending[]`: **empty** - all original 31 seed topics exhausted (previous runs already published everything)
 - `in_progress[]`: empty
 - `done[]`: 31 entries
 
@@ -29,19 +29,19 @@
 | `gh auth status` | ✅ Logged in as `HarunRRayhan` |
 | Claude Code `auth status` | `loggedIn: false` in cron shell |
 | Claude Code non-interactive probe | `Not logged in · Please run /login` |
-| Pipeline exit code | 0 — clean exit, "No topics in queue" |
+| Pipeline exit code | 0 - clean exit, "No topics in queue" |
 
 ## GSC Snapshot
 
-- Sitemap: `https://toolblip.com/sitemap.xml` — active, no pending flags
+- Sitemap: `https://toolblip.com/sitemap.xml` - active, no pending flags
 - Permission: `siteOwner` on `sc-domain:toolblip.com`
-- Last 7d search data: 1 impression ("free seo keyword difficulty tool", pos 48) — minimal, as expected for a new site
+- Last 7d search data: 1 impression ("free seo keyword difficulty tool", pos 48) - minimal, as expected for a new site
 - No pending GSC submissions (all previous posts already submitted)
 
 ## Site Health
 
 - Toolblip canonical repo is on `feat/free-trial-two-cta` branch (not `main`)
-- Pipeline ran via isolated worktree `~/Work/toolblip-clean` — passed branch check
+- Pipeline ran via isolated worktree `~/Work/toolblip-clean` - passed branch check
 - No stale content found (>180 day cutoff: 2026-01-08, earliest post is 2026-04-15)
 
 ## Blockers / Decisions Needed

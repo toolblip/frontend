@@ -1,8 +1,8 @@
-# Toolblip SEO Pipeline — 2026-07-08
+# Toolblip SEO Pipeline - 2026-07-08
 
 **Date:** 2026-07-08
 **Run Time:** 17:00 UTC (11:00 PM Dhaka)
-**Status:** Partial success — manual fallback
+**Status:** Partial success - manual fallback
 
 ## Summary
 

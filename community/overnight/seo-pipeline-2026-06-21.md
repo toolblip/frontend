@@ -1,7 +1,7 @@
-# Toolblip SEO Pipeline Report — 2026-06-21
+# Toolblip SEO Pipeline Report - 2026-06-21
 
 **Run:** 2026-06-21T17:00:00Z (11PM Dhaka)
-**Pipeline:** seo-pipeline.sh (archive-only — Claude Code auth unavailable)
+**Pipeline:** seo-pipeline.sh (archive-only - Claude Code auth unavailable)
 **Author:** Hermes Agent (scheduled cron)
 
 ## Summary
@@ -16,20 +16,20 @@
 
 ## Queue State (production main)
 
-- `pending[]`: empty — queue exhausted
+- `pending[]`: empty - queue exhausted
 - `in_progress[]`: empty
 - `done[]`: last post 2026-06-19 (CSS box shadow generator)
 
 ## Diagnostics
 
-**Claude Code auth:** `loggedIn: false` — CLI not authenticated. Non-interactive probe (`claude -p`) returned "Not logged in". Manual fallback attempted but no strong topic available for a standalone article without supporting tool page.
+**Claude Code auth:** `loggedIn: false` - CLI not authenticated. Non-interactive probe (`claude -p`) returned "Not logged in". Manual fallback attempted but no strong topic available for a standalone article without supporting tool page.
 
 **Batch audit of leftover topics on feature-branch queue:** All 7 pending topics from the canonical checkout (`fix/dashboard-plan-404` branch) have already been processed on `main` in prior runs (either published as blog posts or skipped with `skipped_existing_tool_page` status). The production queue is fully exhausted.
 
 **GSC diagnostics (sc-domain:toolblip.com):**
 - Permission: `siteOwner`
-- Sitemap: `sitemap.xml` — last submitted 2026-06-19, 0 errors
-- 7-day search analytics: negligible data (3 queries, 0 clicks, ~1 impression each) — expected for a new/low-traffic domain
+- Sitemap: `sitemap.xml` - last submitted 2026-06-19, 0 errors
+- 7-day search analytics: negligible data (3 queries, 0 clicks, ~1 impression each) - expected for a new/low-traffic domain
 
 **Live site checks:**
 - Site root: 200 ✅
