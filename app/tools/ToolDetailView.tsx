@@ -12,8 +12,7 @@ import { getToolContent } from '@/data/tool-content';
 import { priorityToolLimits } from '@/data/priority-tool-notes';
 import type { ReviewedToolSlug } from '@/data/reviewed-tools';
 import { getCategoryPath } from '@/lib/tool-path';
-import { buildToolJsonLd, jsonLdScript } from '@/lib/tool-jsonld';
-import { buildToolBreadcrumbJsonLd } from '@/lib/breadcrumb-jsonld';
+import { buildToolBreadcrumbJsonLd, buildToolJsonLd, jsonLdScript } from '@/lib/tool-jsonld';
 
 export default function ToolDetailView({ tool }: { tool: Tool }) {
   const faqs = getFaqs(tool);

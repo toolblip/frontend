@@ -9,8 +9,7 @@ import { selectRelatedPosts } from '@/lib/blog-related';
 import { clampMetaDescription } from '@/lib/meta-description';
 import { BLOG_LLMS_PATH } from '@/lib/blog-markdown';
 import BlogShareButton from '@/components/share/BlogShareButton';
-import { buildBlogBreadcrumbJsonLd } from '@/lib/breadcrumb-jsonld';
-import { jsonLdScript } from '@/lib/tool-jsonld';
+import { buildBlogBreadcrumbJsonLd, jsonLdScript } from '@/lib/tool-jsonld';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
