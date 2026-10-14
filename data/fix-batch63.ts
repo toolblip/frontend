@@ -161,8 +161,8 @@ const FIX_BATCH_63: Record<string, FixBatchEntry> = {
     description: `Typing an em dash, a proper curly quote, or a trademark symbol reliably in a design tool or a CMS field usually means knowing its exact code point first, since a keyboard shortcut that works in one piece of software often does nothing in another, and guessing at the right character by eye doesn't confirm it's actually correct. This tool inspects any Unicode character and shows its code point, UTF-8 bytes, and HTML entity, giving the precise identifier needed to insert a specific typographic character correctly wherever it's actually needed. Useful for looking up an em dash or a curly quote's exact code point before inserting it into a design tool that doesn't accept a direct keyboard shortcut, finding the HTML entity for a trademark or a copyright symbol, or confirming a special character pasted from another source is actually correct and not a visually similar lookalike.`,
     examples: [
       {
-        title: "Look up an em dash's code point",
-        code: `Input: —\nOutput: U+2014 EM DASH, UTF-8: E2 80 94, HTML entity: &mdash;`,
+        title: "Look up a copyright sign's code point",
+        code: `Input: ©\nOutput: U+00A9 COPYRIGHT SIGN, UTF-8: C2 A9, HTML entity: &copy;`,
         note: 'Gives the exact identifier needed to insert the character reliably elsewhere.',
       },
       {

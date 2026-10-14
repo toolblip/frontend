@@ -10,7 +10,7 @@ Pre-filled submission text for every directory. Copy-paste into each site's form
 - **URL:** https://toolblip.com
 - **Tagline:** 1,500+ free developer tools that run in your browser
 - **Category:** Developer Tools / Web Development / SaaS
-- **Description:** Toolblip is a free collection of 1,500+ browser-based developer tools — JSON formatter, regex tester, Base64 encoder, UUID generator, and more. No signup, no uploads, everything runs locally in your browser. Built for developers who want fast, private utilities without installing anything.
+- **Description:** Toolblip is a free collection of 1,500+ browser-based developer tools - JSON formatter, regex tester, Base64 encoder, UUID generator, and more. No signup, no uploads, everything runs locally in your browser. Built for developers who want fast, private utilities without installing anything.
 - **Pricing:** Free (Pro plan available)
 - **Founded:** 2026
 
@@ -30,7 +30,7 @@ Pre-filled submission text for every directory. Copy-paste into each site's form
 ### 2. Gumroad (DR 92)
 - **URL:** https://gumroad.com/
 - **Product:** "1,500+ Free Developer Tools" (free download)
-- **Description:** A curated guide to every free tool on Toolblip — JSON formatters, regex testers, hash generators, and more. All browser-based, no signup needed.
+- **Description:** A curated guide to every free tool on Toolblip - JSON formatters, regex testers, hash generators, and more. All browser-based, no signup needed.
 - **Price:** Free ($0)
 - **Link:** https://toolblip.com
 
@@ -38,7 +38,7 @@ Pre-filled submission text for every directory. Copy-paste into each site's form
 - **Account needed:** Yes (free)
 - **Board:** "Developer Tools" or "Free Online Tools"
 - **Pins to create:**
-  - Tool screenshots with text overlay: "Free JSON Formatter — No Signup"
+  - Tool screenshots with text overlay: "Free JSON Formatter - No Signup"
   - "1,500+ Free Developer Tools" infographic
   - Individual tool pins: regex tester, UUID generator, etc.
 - **Link each pin to:** https://toolblip.com/tools/[tool-slug]
@@ -47,7 +47,7 @@ Pre-filled submission text for every directory. Copy-paste into each site's form
 - **Account needed:** Yes (free)
 - **Album:** "Toolblip Developer Tools"
 - **Images:** Tool screenshots, GIFs of tools in action
-- **Description per image:** "Free [tool name] — format, validate, and minify [format] instantly in your browser. No signup. https://toolblip.com/tools/[slug]"
+- **Description per image:** "Free [tool name] - format, validate, and minify [format] instantly in your browser. No signup. https://toolblip.com/tools/[slug]"
 
 ---
 
@@ -57,14 +57,14 @@ Pre-filled submission text for every directory. Copy-paste into each site's form
 - **URL:** https://www.indiehackers.com/
 - **Post type:** Building in Public
 - **Title:** I built 1,500+ free developer tools that run entirely in the browser
-- **Content:** Share the story of building Toolblip — why browser-based tools, the privacy angle, the tech stack (Next.js), growth so far.
+- **Content:** Share the story of building Toolblip - why browser-based tools, the privacy angle, the tech stack (Next.js), growth so far.
 - **Link:** https://toolblip.com
 
 ### 6. SaaSHub (DR 79)
 - **URL:** https://saashub.com/submit
 - **Name:** Toolblip
 - **URL:** https://toolblip.com
-- **Description:** Free online developer tools — JSON formatter, regex tester, Base64 encoder, UUID generator, and 1,500+ more. No signup, runs in browser.
+- **Description:** Free online developer tools - JSON formatter, regex tester, Base64 encoder, UUID generator, and 1,500+ more. No signup, runs in browser.
 - **Category:** Developer Tools
 - **Alternatives to:** JSONLint, RegExr, Base64Decode.org
 
@@ -82,7 +82,7 @@ Pre-filled submission text for every directory. Copy-paste into each site's form
 - **Name:** Toolblip
 - **URL:** https://toolblip.com
 - **Tagline:** 1,500+ free developer tools in your browser
-- **Description:** Toolblip gives developers instant access to 1,500+ free browser-based tools — JSON formatting, regex testing, Base64 encoding, UUID generation, and more. No signup, no data leaves your browser.
+- **Description:** Toolblip gives developers instant access to 1,500+ free browser-based tools - JSON formatting, regex testing, Base64 encoding, UUID generation, and more. No signup, no data leaves your browser.
 - **Category:** Developer Tools
 
 ### 9. Uneed (DR 75)
@@ -96,13 +96,13 @@ Pre-filled submission text for every directory. Copy-paste into each site's form
 - **URL:** https://alternativeme.com/submit
 - **Name:** Toolblip
 - **URL:** https://toolblip.com
-- **Description:** Free online developer tools — JSON, regex, Base64, UUID, and 1,500+ more.
+- **Description:** Free online developer tools - JSON, regex, Base64, UUID, and 1,500+ more.
 
 ### 11. Privacy Tools (DR 73)
 - **URL:** https://www.privacytools.io/submit
 - **Name:** Toolblip
 - **URL:** https://toolblip.com
-- **Description:** Privacy-first developer tools. All processing happens in your browser — no data is sent to any server. 1,500+ free tools.
+- **Description:** Privacy-first developer tools. All processing happens in your browser - no data is sent to any server. 1,500+ free tools.
 - **Why privacy:** Zero data collection, no accounts, no tracking, open-source components.
 
 ### 12. TinyLaunch (DR 72)
@@ -110,7 +110,7 @@ Pre-filled submission text for every directory. Copy-paste into each site's form
 - **Name:** Toolblip
 - **URL:** https://toolblip.com
 - **Tagline:** 1,500+ free developer tools
-- **Description:** Browser-based developer utilities — format JSON, test regex, generate UUIDs, and more.
+- **Description:** Browser-based developer utilities - format JSON, test regex, generate UUIDs, and more.
 
 ### 13. SideProjectors (DR 70)
 - **URL:** https://www.sideprojectors.com/
@@ -136,7 +136,7 @@ Pre-filled submission text for every directory. Copy-paste into each site's form
 
 ### 16. TrustMRR (DR 68)
 - **URL:** https://trustmrr.com/
-- **Note:** Needs MRR data — skip if no revenue yet
+- **Note:** Needs MRR data - skip if no revenue yet
 
 ### 17. Indie Page (DR 66)
 - **URL:** https://indie.page/
@@ -147,19 +147,19 @@ Pre-filled submission text for every directory. Copy-paste into each site's form
 
 ## Submission Checklist
 
-- [ ] SourceForge — create project listing
-- [ ] Gumroad — create free product page
-- [ ] Pinterest — create account + pins
-- [ ] Imgur — upload tool screenshots
-- [ ] Indie Hackers — write building-in-public post
-- [ ] SaaSHub — submit listing
-- [ ] AlternativeTo — add as alternative
-- [ ] BetaList — submit for listing
-- [ ] Uneed — submit tool
-- [ ] Alternative Me — submit tool
-- [ ] Privacy Tools — submit as privacy-friendly
-- [ ] TinyLaunch — submit startup
-- [ ] SideProjectors — list project
-- [ ] Tiny Startup — submit
-- [ ] PeerPush — submit
-- [ ] Indie Page — create profile
+- [ ] SourceForge - create project listing
+- [ ] Gumroad - create free product page
+- [ ] Pinterest - create account + pins
+- [ ] Imgur - upload tool screenshots
+- [ ] Indie Hackers - write building-in-public post
+- [ ] SaaSHub - submit listing
+- [ ] AlternativeTo - add as alternative
+- [ ] BetaList - submit for listing
+- [ ] Uneed - submit tool
+- [ ] Alternative Me - submit tool
+- [ ] Privacy Tools - submit as privacy-friendly
+- [ ] TinyLaunch - submit startup
+- [ ] SideProjectors - list project
+- [ ] Tiny Startup - submit
+- [ ] PeerPush - submit
+- [ ] Indie Page - create profile

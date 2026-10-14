@@ -1,5 +1,5 @@
 #!/bin/bash
-# daily-post.sh — Toolblip daily blog post generator (wrapper)
+# daily-post.sh - Toolblip daily blog post generator (wrapper)
 # Delegates to daily-post.py for robustness
 # Uses launchctl asuser to access the macOS keychain (Claude auth) from cron
 set -euo pipefail

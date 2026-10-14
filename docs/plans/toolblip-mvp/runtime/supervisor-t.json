@@ -22,8 +22,8 @@
     "docs/plans/toolblip-mvp/questions.md": "missing",
     "docs/plans/toolblip-mvp/implementation-tracker.md": "missing",
     "current_stage_file": "missing",
-    "note": "Only runtime/supervisor-t.json exists under docs/plans/toolblip-mvp/. Planning docs are absent — next-task priority cannot be sourced from them."
+    "note": "Only runtime/supervisor-t.json exists under docs/plans/toolblip-mvp/. Planning docs are absent - next-task priority cannot be sourced from them."
   },
-  "worker_liveness": "Gateway healthy, tb board dispatcher active. 57 archived, 0 active. No worker process needed — idle.",
-  "last_action": "Graceful restart cycle 2026-06-28T14:00:00Z: re-read live tb board — 0 active, 57 archived. No current task, restart_pending=false, no viable next task. Planning docs still absent. System healthy, idle."
+  "worker_liveness": "Gateway healthy, tb board dispatcher active. 57 archived, 0 active. No worker process needed - idle.",
+  "last_action": "Graceful restart cycle 2026-06-28T14:00:00Z: re-read live tb board - 0 active, 57 archived. No current task, restart_pending=false, no viable next task. Planning docs still absent. System healthy, idle."
 }

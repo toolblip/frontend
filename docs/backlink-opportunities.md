@@ -1,4 +1,4 @@
-# Backlink opportunities for Toolblip — sorted by Domain Rating
+# Backlink opportunities for Toolblip - sorted by Domain Rating
 
 Priority list for a developer-tool site with **1,564 free online tools**. Free submission / listing where possible.
 
@@ -39,36 +39,36 @@ Priority list for a developer-tool site with **1,564 free online tools**. Free s
 
 ## Quick win tier (free, <15 min each)
 
-- [ ] **GitHub** — profile README + open-source a tool component
-- [ ] **GitHub Pages** — toolblip.github.io landing or repo README
-- [ ] **Medium** — cross-pub existing blog posts (canonical link back)
-- [ ] **Substack** — start dev-tips newsletter repurposing blog content
-- [ ] **Pinterest** — pin tool screenshots with link
-- [ ] **Imgur** — upload tool GIFs/screenshots with description
-- [ ] **Flickr** — tool screenshot album
-- [ ] **Pixabay** — upload free dev-themed images
-- [ ] **SourceForge** — developer utilities project profile
-- [ ] **Gumroad** — free PDF lead magnet ("100 Dev Tools")
-- [ ] **Hacker News** — submit interesting blog post / Show HN
-- [ ] **SaaSHub** — list in Developer Tools
-- [ ] **AlternativeTo** — add as alternative to paid tools
-- [ ] **BetaList** — submit as beta product
-- [ ] **Uneed, Indie Page, TinyLaunch, Tiny Startup** — profile forms
-- [ ] **Alternative Me** — directory listing
-- [ ] **Privacy Tools** — submit as privacy-respecting tool
-- [ ] **PeerPush** — cross-promotion profile
-- [ ] **SideProjectors** — side project showcase
-- [ ] **TrustMRR** — SaaS directory listing
+- [ ] **GitHub** - profile README + open-source a tool component
+- [ ] **GitHub Pages** - toolblip.github.io landing or repo README
+- [ ] **Medium** - cross-pub existing blog posts (canonical link back)
+- [ ] **Substack** - start dev-tips newsletter repurposing blog content
+- [ ] **Pinterest** - pin tool screenshots with link
+- [ ] **Imgur** - upload tool GIFs/screenshots with description
+- [ ] **Flickr** - tool screenshot album
+- [ ] **Pixabay** - upload free dev-themed images
+- [ ] **SourceForge** - developer utilities project profile
+- [ ] **Gumroad** - free PDF lead magnet ("100 Dev Tools")
+- [ ] **Hacker News** - submit interesting blog post / Show HN
+- [ ] **SaaSHub** - list in Developer Tools
+- [ ] **AlternativeTo** - add as alternative to paid tools
+- [ ] **BetaList** - submit as beta product
+- [ ] **Uneed, Indie Page, TinyLaunch, Tiny Startup** - profile forms
+- [ ] **Alternative Me** - directory listing
+- [ ] **Privacy Tools** - submit as privacy-respecting tool
+- [ ] **PeerPush** - cross-promotion profile
+- [ ] **SideProjectors** - side project showcase
+- [ ] **TrustMRR** - SaaS directory listing
 
 ## Medium effort (needs content/launch prep)
 
-- [ ] **Chrome Web Store** — wrap top tool as extension ($5 fee)
-- [ ] **Product Hunt** — schedule a launch
-- [ ] **TrustRadius** — gather reviews
-- [ ] **Indie Hackers** — write building-in-public story
-- [ ] **YourStory** — pitch founder narrative
-- [ ] **Pinterest** — ongoing pinning strategy
+- [ ] **Chrome Web Store** - wrap top tool as extension ($5 fee)
+- [ ] **Product Hunt** - schedule a launch
+- [ ] **TrustRadius** - gather reviews
+- [ ] **Indie Hackers** - write building-in-public story
+- [ ] **YourStory** - pitch founder narrative
+- [ ] **Pinterest** - ongoing pinning strategy
 
 ## High effort
 
-- [ ] **Forbes** — PR/editorial pitch with news hook
+- [ ] **Forbes** - PR/editorial pitch with news hook

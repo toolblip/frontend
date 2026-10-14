@@ -3,15 +3,15 @@
     { "name": "GitHub", "dr": 97, "status": "done", "notes": "README added to toolblip/frontend repo" },
     { "name": "GitHub Pages", "dr": 97, "status": "done", "notes": "toolblip.github.io exists with backlink and canonical to toolblip.com" },
     { "name": "Medium", "dr": 94, "status": "blocked", "notes": "Cloudflare Turnstile blocks headless browser. Needs a Medium API integration token (set in blog-writer .env) or manual cross-post from full browser." },
-    { "name": "Substack", "dr": 94, "status": "blocked", "notes": "Needs email account signup — skip" },
+    { "name": "Substack", "dr": 94, "status": "blocked", "notes": "Needs email account signup - skip" },
     { "name": "Pixabay", "dr": 92, "status": "blocked", "notes": "Needs email account signup with verification. No upload API available. Tool screenshots don't fit stock photography model. Requires manual human signup and content upload." },
     { "name": "SourceForge", "dr": 92, "status": "pending", "notes": "Create project listing" },
     { "name": "Gumroad", "dr": 92, "status": "pending", "notes": "Create free product page with link" },
     { "name": "Pinterest", "dr": 97, "status": "pending", "notes": "Create pins of tool images, link back" },
     { "name": "Imgur", "dr": 91, "status": "pending", "notes": "Upload tool screenshots with description links" },
     { "name": "Flickr", "dr": 94, "status": "pending", "notes": "Upload tool screenshots with links" },
-    { "name": "Hacker News", "dr": 91, "status": "pending", "notes": "Show HN post — must be genuine and useful" },
-    { "name": "Product Hunt", "dr": 91, "status": "pending", "notes": "Launch — needs preparation and community" },
+    { "name": "Hacker News", "dr": 91, "status": "pending", "notes": "Show HN post - must be genuine and useful" },
+    { "name": "Product Hunt", "dr": 91, "status": "pending", "notes": "Launch - needs preparation and community" },
     { "name": "Indie Hackers", "dr": 81, "status": "pending", "notes": "Share building story with link" },
     { "name": "SaaSHub", "dr": 79, "status": "pending", "notes": "List toolblip as alternative" },
     { "name": "AlternativeTo", "dr": 79, "status": "pending", "notes": "List toolblip as alternative" },
@@ -28,7 +28,7 @@
     { "name": "Chrome Web Store", "dr": 99, "status": "blocked", "notes": "Requires $5 dev account fee" },
     { "name": "TrustRadius", "dr": 84, "status": "blocked", "notes": "Needs reviews first" },
     { "name": "YourStory", "dr": 85, "status": "blocked", "notes": "Needs founder story pitch" },
-    { "name": "Forbes", "dr": 94, "status": "blocked", "notes": "Editorial pitch — long shot" }
+    { "name": "Forbes", "dr": 94, "status": "blocked", "notes": "Editorial pitch - long shot" }
   ],
   "last_updated": "2026-07-21",
   "current_index": 5

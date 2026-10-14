@@ -1,4 +1,4 @@
-# Historical route regressions — 2026-09-26
+# Historical route regressions - 2026-09-26
 
 Local verification only. No historical approval flags were changed. No server/build was started, no delegation or commits occurred, and unrelated working-tree changes were preserved.
 
@@ -94,7 +94,7 @@ Verification also passed `node --check scripts/qa/cases/historical-regressions.m
 Remaining earlier-run blocker: Chrome browser-server shutdown remains a harness failure. The nonexistent JSON download is not a product blocker; the case now follows the approved output/Copy workflow. Production deployment and production revalidation are not performed. Historical approvals remain untouched.
 
 
-## Targeted JSON correction and verification — 2026-09-26
+## Targeted JSON correction and verification - 2026-09-26
 
 This follow-up changed only `scripts/qa/cases/historical-regressions.mjs` and this report (`scripts/qa/reports/historical-regressions.md`). No component, harness, inventory, approval, server, build, commit, or delegation changes were made. Only `json-to-markdown-table` was run against the existing `http://localhost:3190` server. The earlier eight passing routes were not rerun.
 
@@ -110,8 +110,8 @@ Both final metadata files match the current case SHA-256: `40817532a3a8f01b93669
 
 | Final targeted run | Tool overall / functional | Runtime | Layouts 1280/390/320 | Process exit / teardown |
 | --- | --- | --- | --- | --- |
-| Chrome `chrome-20260926-06` | passed / passed | passed | all passed | **1** — fatal browser-server close timeout after 5000ms |
-| WebKit `webkit-20260926-03` | passed / passed | passed | all passed | **0** — no fatal shutdown error |
+| Chrome `chrome-20260926-06` | passed / passed | passed | all passed | **1** - fatal browser-server close timeout after 5000ms |
+| WebKit `webkit-20260926-03` | passed / passed | passed | all passed | **0** - no fatal shutdown error |
 
 Both completed the exact table assertions, malformed/empty input and Clear checks, disabled/enabled Copy checks, Copied feedback, and a native clipboard write with the independently specified table. Both have one completed result, no missing fixtures, and no incomplete slugs. At 320px both measured scroll/client **286/286**, with populated output. Chrome's teardown timeout occurred after the functional assertions and saved passing tool result; it remains a blocking harness/process failure and is not a functional conversion or Copy failure.
 

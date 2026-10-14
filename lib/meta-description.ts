@@ -34,5 +34,5 @@ export function clampMetaDescription(
 
   const boundary = text.lastIndexOf(' ', max);
   const cut = boundary >= 25 ? text.slice(0, boundary) : text.slice(0, max);
-  return cut.replace(/[\s,;:\-–—(]+$/, '').trim();
+  return cut.replace(/[\s,;:\-\u2013\u2014(]+$/, '').trim();
 }

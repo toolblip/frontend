@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-gsc-full-audit.py — Pull Search Analytics, sitemap status, and opportunity
+gsc-full-audit.py - Pull Search Analytics, sitemap status, and opportunity
 signals (striking-distance / low-CTR queries) from Google Search Console.
 
-Does not include the Page Indexing / URL Inspection coverage breakdown —
+Does not include the Page Indexing / URL Inspection coverage breakdown -
 use the GSC UI (or URL Inspection separately) for those.
 
 Requires GSC_SERVICE_ACCOUNT in one of:
@@ -101,7 +101,7 @@ def main():
         "credentials_from": env_path,
     }
 
-    print(f"# GSC Full Audit — toolblip.com\n")
+    print(f"# GSC Full Audit - toolblip.com\n")
     print(f"Generated: {end}\n")
 
     # ─── Performance summary ───────────────────────────────────────────────
@@ -158,7 +158,7 @@ def main():
         for r in low_ctr[:30]
     ]
     if low_ctr:
-        print("### Low CTR (<2%, 100+ impressions) — title/description fixes")
+        print("### Low CTR (<2%, 100+ impressions) - title/description fixes")
         for r in low_ctr[:10]:
             print(f"  {r['keys'][0][:50]:<50} {int(r['impressions'])} imp")
         print()
