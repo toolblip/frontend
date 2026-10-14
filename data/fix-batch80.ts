@@ -39,7 +39,7 @@ const FIX_BATCH_80: Record<string, FixBatchEntry> = {
       },
       {
         title: 'Handle smart quotes and an em dash',
-        code: `Input: "It's Great — Really"\nOutput: its-great-really`,
+        code: `Input: "It's Great - Really"\nOutput: its-great-really`,
         note: 'Strips special punctuation without leaving broken characters in the slug.',
       },
     ],
