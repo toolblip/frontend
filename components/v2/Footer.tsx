@@ -510,6 +510,9 @@ function DirectoryBadges({ duplicate = false }: { duplicate?: boolean }) {
       <DirectoryBadgeLink duplicate={duplicate} href="https://www.ontoplist.com/web-development-companies/" target="_blank">
         <DirectoryBadgeImage src="https://www.ontoplist.com/images/ontoplist31.png?id=6ad0490fb5435" alt="Top Web Development Companies in the US - OnToplist.com" fallback="OnToplist" />
       </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://goodsaas.xyz/saas/toolblip" target="_blank" rel="noopener">
+        <DirectoryBadgeImage src="https://goodsaas.xyz/badge/toolblip.svg?theme=dark" alt="Toolblip on goodSaaS" fallback="goodSaaS" />
+      </DirectoryBadgeLink>
     </div>
   );
 }
