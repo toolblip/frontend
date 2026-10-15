@@ -998,7 +998,7 @@ button.tb-v2-mm-more-row-btn {
 .tb-v2-directory-track {
   display: flex;
   width: max-content;
-  animation: tb-directory-scroll 940s linear infinite;
+  animation: tb-directory-scroll 1340s linear infinite;
 }
 .tb-v2-directory-group {
   display: flex;

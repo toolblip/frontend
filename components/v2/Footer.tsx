@@ -456,6 +456,63 @@ function DirectoryBadges({ duplicate = false }: { duplicate?: boolean }) {
       <DirectoryBadgeLink duplicate={duplicate} href="https://listmaro.com/" target="_blank" rel="noopener">
         <span className="tb-v2-directory-text">Featured on Listmaro</span>
       </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://saaslineup.com/product/toolblip?ref=badge" rel="dofollow">
+        <DirectoryBadgeImage src="https://saaslineup.com/badge/toolblip.svg" alt="Featured on SaaSLineup" width="182" height="46" fallback="SaaSLineup" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://domainrating.lol">
+        <DirectoryBadgeImage src="https://domainrating.lol/badge.svg" alt="Listed on domainrating.lol" width="160" height="40" fallback="domainrating.lol" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://indiestore.co/product/toolblip" target="_blank" rel="noopener">
+        <DirectoryBadgeImage src="https://indiestore.co/api/badge/toolblip?theme=light" alt="Featured on IndieStore" width="220" height="54" fallback="IndieStore" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://www.webprojectlist.com/" target="_blank" rel="noopener">
+        <DirectoryBadgeImage src="https://www.webprojectlist.com/static/backlink/webprojectlist_name_logo.6a3366e98900.webp" alt="WebProjectList Badge" width="200" height="40" fallback="WebProjectList" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://bunny.directory/product/toolblip">
+        <DirectoryBadgeImage src="https://bunny.directory/product/toolblip/badge.svg?theme=light" alt="Toolblip badge" width="200" height="50" fallback="bunny.directory" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://braginpublic.com/?utm_source=badge&utm_medium=referral" target="_blank" rel="noopener">
+        <DirectoryBadgeImage src="https://braginpublic.com/badge?theme=light" alt="Featured on Brag in Public" width="208" height="54" fallback="Brag in Public" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://smartees.tech/t/toolblip" target="_blank" rel="noopener">
+        <DirectoryBadgeImage src="https://smartees.tech/badge/smartees-listed-dark.svg" alt="Featured on Smartees" width="184" height="44" fallback="Smartees" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://www.norohunt.com" target="_blank" rel="noopener">
+        <DirectoryBadgeImage src="https://www.norohunt.com/images/norohunt-light.svg" alt="Featured on NoroHunt" width="185" height="48" fallback="NoroHunt" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://launchfinds.com/" target="_blank" rel="noopener">
+        <span className="tb-v2-directory-text">Featured on LaunchFinds</span>
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://startupfinds.com/" target="_blank" rel="noopener">
+        <span className="tb-v2-directory-text">Featured on StartupFinds</span>
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://startupscrolls.com/" target="_blank" rel="noopener">
+        <span className="tb-v2-directory-text">Featured on StartupScrolls</span>
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://apptooling.com/" target="_blank" rel="noopener">
+        <span className="tb-v2-directory-text">Featured on AppTooling</span>
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://themicrosaasdir.com/product/toolblip?ref=badge" rel="dofollow">
+        <DirectoryBadgeImage src="https://themicrosaasdir.com/badge/toolblip.svg" alt="Featured on TheMicroSaaSDir" width="160" height="44" fallback="TheMicroSaaSDir" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://saasearch.io/product/toolblip?utm_source=badge&utm_medium=referral&utm_campaign=featured_badge&ref=saasearch" target="_blank" rel="noopener">
+        <DirectoryBadgeImage src="https://saasearch.io/api/badge/toolblip?theme=light" alt="Featured on SaaSearch" style={{ height: 48, width: 'auto' }} fallback="SaaSearch" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://launchstag.com" target="_blank" rel="noopener">
+        <DirectoryBadgeImage src="https://launchstag.com/badge-light.svg" alt="Featured on Launchstag" width="198" height="62" fallback="Launchstag" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://bricklaun.ch/dev-tools/toolblip" target="_blank" rel="noopener">
+        <DirectoryBadgeImage src="https://bricklaun.ch/badge/brick-launch-badge-a-light.svg" alt="Featured on Brick Launch" width="140" height="54" fallback="Brick Launch" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://softwareontheweb.com" rel="dofollow">
+        <picture>
+          <source srcSet="https://softwareontheweb.com/images/badge.svg?v=1778596517" type="image/svg+xml" />
+          <img src="https://softwareontheweb.com/images/badge.png?v=1778596517" alt="Featured on Software on the Web" width="200" />
+        </picture>
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://www.ontoplist.com/web-development-companies/" target="_blank">
+        <DirectoryBadgeImage src="https://www.ontoplist.com/images/ontoplist31.png?id=6ad0490fb5435" alt="Top Web Development Companies in the US - OnToplist.com" fallback="OnToplist" />
+      </DirectoryBadgeLink>
     </div>
   );
 }
