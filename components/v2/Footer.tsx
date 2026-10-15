@@ -505,10 +505,7 @@ function DirectoryBadges({ duplicate = false }: { duplicate?: boolean }) {
         <DirectoryBadgeImage src="https://bricklaun.ch/badge/brick-launch-badge-a-light.svg" alt="Featured on Brick Launch" width="140" height="54" fallback="Brick Launch" />
       </DirectoryBadgeLink>
       <DirectoryBadgeLink duplicate={duplicate} href="https://softwareontheweb.com" rel="dofollow">
-        <picture>
-          <source srcSet="https://softwareontheweb.com/images/badge.svg?v=1778596517" type="image/svg+xml" />
-          <img src="https://softwareontheweb.com/images/badge.png?v=1778596517" alt="Featured on Software on the Web" width="200" />
-        </picture>
+        <DirectoryBadgeImage src="https://softwareontheweb.com/images/badge.svg?v=1778596517" alt="Featured on Software on the Web" width="200" fallback="Software on the Web" />
       </DirectoryBadgeLink>
       <DirectoryBadgeLink duplicate={duplicate} href="https://www.ontoplist.com/web-development-companies/" target="_blank">
         <DirectoryBadgeImage src="https://www.ontoplist.com/images/ontoplist31.png?id=6ad0490fb5435" alt="Top Web Development Companies in the US - OnToplist.com" fallback="OnToplist" />
