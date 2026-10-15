@@ -378,8 +378,8 @@ function DirectoryBadges({ duplicate = false }: { duplicate?: boolean }) {
       <DirectoryBadgeLink duplicate={duplicate} href="https://theaitoolsdir.com/product/toolblip?ref=badge" rel="dofollow">
         <DirectoryBadgeImage src="https://theaitoolsdir.com/badge/toolblip.svg" alt="Featured on TheAIToolsDir" width="182" height="46" fallback="TheAIToolsDir" />
       </DirectoryBadgeLink>
-      <DirectoryBadgeLink duplicate={duplicate} href="https://www.hiproducty.com?ref=badge" target="_blank" rel="noopener noreferrer">
-        <DirectoryBadgeImage src="https://www.hiproducty.com/badge/hiproducty-recommend-light.svg" alt="Featured on Hiproducty" width="180" height="48" fallback="Hiproducty" />
+      <DirectoryBadgeLink duplicate={duplicate} href="https://hiproducty.com" target="_blank">
+        <span className="tb-v2-directory-text">HiProducty</span>
       </DirectoryBadgeLink>
       <DirectoryBadgeLink duplicate={duplicate} href="https://elf08.com/" target="_blank" rel="noopener">
         <span className="tb-v2-directory-text">The Elf Directory</span>
@@ -509,6 +509,15 @@ function DirectoryBadges({ duplicate = false }: { duplicate?: boolean }) {
       </DirectoryBadgeLink>
       <DirectoryBadgeLink duplicate={duplicate} href="https://www.ontoplist.com/web-development-companies/" target="_blank">
         <DirectoryBadgeImage src="https://www.ontoplist.com/images/ontoplist31.png?id=6ad0490fb5435" alt="Top Web Development Companies in the US - OnToplist.com" fallback="OnToplist" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://goodsaas.xyz/saas/toolblip" target="_blank" rel="noopener">
+        <DirectoryBadgeImage src="https://goodsaas.xyz/badge/toolblip.svg?theme=dark" alt="Toolblip on goodSaaS" fallback="goodSaaS" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://toolroots.com" target="_blank" rel="noopener">
+        <DirectoryBadgeImage src="https://toolroots.com/badge.svg" alt="Featured on ToolRoots" width="181" height="32" fallback="ToolRoots" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://indieascent.com/p/toolblip" target="_blank" rel="noopener">
+        <DirectoryBadgeImage src="https://indieascent.com/badge/standard-light.svg" alt="Featured on IndieAscent" width="200" height="54" fallback="IndieAscent" />
       </DirectoryBadgeLink>
     </div>
   );

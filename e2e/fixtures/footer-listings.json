@@ -551,9 +551,8 @@
     "rel": "dofollow"
   },
   {
-    "href": "https://www.hiproducty.com?ref=badge",
-    "target": "_blank",
-    "rel": "noopener noreferrer"
+    "href": "https://hiproducty.com",
+    "target": "_blank"
   },
   {
     "href": "https://elf08.com/",
@@ -757,5 +756,20 @@
   {
     "href": "https://www.ontoplist.com/web-development-companies/",
     "target": "_blank"
+  },
+  {
+    "href": "https://goodsaas.xyz/saas/toolblip",
+    "target": "_blank",
+    "rel": "noopener"
+  },
+  {
+    "href": "https://toolroots.com",
+    "target": "_blank",
+    "rel": "noopener"
+  },
+  {
+    "href": "https://indieascent.com/p/toolblip",
+    "target": "_blank",
+    "rel": "noopener"
   }
 ]
