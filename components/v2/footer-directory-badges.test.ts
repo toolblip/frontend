@@ -8,6 +8,10 @@ const hosts = [
   'braginpublic.com', 'smartees.tech', 'norohunt.com', 'launchfinds.com', 'startupfinds.com',
   'startupscrolls.com', 'apptooling.com', 'themicrosaasdir.com', 'saasearch.io', 'launchstag.com',
   'bricklaun.ch', 'softwareontheweb.com', 'ontoplist.com', 'goodsaas.xyz', 'toolroots.com', 'indieascent.com',
+  'launchboard.dev', 'amaze.directory', 'findgreatsites.com', 'listyourproject.com', 'golanz.com', 'devlanz.com',
+  'shiplaun.ch', 'smolfind.com', 'smoltop.com', 'smolmaker.com', 'verifiedlaunches.com', 'trustedlaunches.com',
+  'launchfeeds.com', 'findscove.com', 'thistools.app', 'zerorevenue.club', 'megalaun.ch', 'aitoolslist.tools',
+  'thedevtoolslist.com', 'softwarecomoservicio.com',
 ];
 
 describe('footer directory badges', () => {
