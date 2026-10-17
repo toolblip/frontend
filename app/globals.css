@@ -3983,7 +3983,8 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
 .tb-v2-auth-more-toggle:hover { color: var(--red-hover); text-decoration: underline; }
 .tb-v2-auth-more-toggle:focus-visible { outline: 3px solid rgba(217, 48, 48, .28); outline-offset: 2px; }
 .tb-v2-auth-notice { font-size: 13px; color: var(--fg-2); text-align: center; margin-bottom: 12px; }
-.tb-v2-auth-legal { font-size: 12.5px; line-height: 1.55; color: var(--fg-2); text-align: center; margin-bottom: 20px; }
+.tb-v2-auth-legal { font-size: 12.5px; line-height: 1.55; color: var(--fg-2); text-align: center; margin: 4px 0 0; }
+.tb-v2-auth-hint { font-size: 12.5px; line-height: 1.5; color: var(--fg-2); margin-top: 6px; }
 .tb-v2-auth-legal a { color: var(--red); font-weight: 600; text-decoration: none; }
 .tb-v2-auth-legal a:hover { color: var(--red-hover); text-decoration: underline; }
 .tb-v2-auth-submit { height: 44px; background: var(--red); color: #fff; border: none; border-radius: var(--radius-sm); font-size: 14px; font-weight: 600; cursor: pointer; transition: background .15s; margin-top: 4px; width: 100%; }
