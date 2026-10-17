@@ -79,8 +79,14 @@ const runtimeCaching: RuntimeCaching[] = [
   // is bound by its connect-src CSP, which blocked Turnstile, gtag, sponsor
   // favicons and badge images.
   const { matcher } = entry;
-  if (typeof matcher !== 'function') return entry;
-  return { ...entry, matcher: (options) => options.sameOrigin && matcher(options) };
+  if (typeof matcher === 'function') {
+    return { ...entry, matcher: (options) => options.sameOrigin && matcher(options) };
+  }
+  // defaultCache ends with a /.*/ catch-all, which also matches cross-origin URLs.
+  if (matcher instanceof RegExp) {
+    return { ...entry, matcher: ({ url, sameOrigin }) => sameOrigin && matcher.test(url.href) };
+  }
+  return entry;
 });
 
 const serwist = new Serwist({
