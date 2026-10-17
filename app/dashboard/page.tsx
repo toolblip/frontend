@@ -1,6 +1,6 @@
-import { isSafeNext } from "@/lib/safe-next";
 "use client";
 export const dynamic = "force-dynamic";
+import { isSafeNext } from "@/lib/safe-next";
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
