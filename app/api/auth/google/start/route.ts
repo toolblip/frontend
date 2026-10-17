@@ -1,10 +1,11 @@
+import { isSafeNext } from "@/lib/safe-next";
 import { NextRequest, NextResponse } from "next/server";
 
 const LARAVEL_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.toolblip.com";
 const OAUTH_COOKIE_MAX_AGE = 60 * 10;
 
 function safeNext(value: string | null): string {
-  if (value && value.startsWith("/") && !value.startsWith("//") && !value.includes("\\")) {
+  if (isSafeNext(value)) {
     return value;
   }
   return "/dashboard";

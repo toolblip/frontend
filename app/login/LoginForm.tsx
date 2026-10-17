@@ -1,5 +1,6 @@
 "use client";
 
+import { isSafeNext } from "@/lib/safe-next";
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useAuth } from "@/app/providers/auth-provider";
@@ -27,7 +28,7 @@ export default function LoginForm() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const nextParam = params.get("next");
-    if (nextParam && nextParam.startsWith("/") && !nextParam.startsWith("//") && !nextParam.includes("\\")) {
+    if (isSafeNext(nextParam)) {
       setNext(nextParam);
     }
     if (params.get("oauth_error")) {

@@ -1,5 +1,6 @@
 "use client";
 
+import { isSafeNext } from "@/lib/safe-next";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import PasswordStrength from "@/components/ui/PasswordStrength";
@@ -35,7 +36,7 @@ export default function SignupForm() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const nextParam = params.get("next");
-    if (nextParam && nextParam.startsWith("/") && !nextParam.startsWith("//") && !nextParam.includes("\\")) {
+    if (isSafeNext(nextParam)) {
       setNext(nextParam);
     }
     setFavoriteOnReturn(params.get("favorite") === "1" || params.get("favorite") === "true");

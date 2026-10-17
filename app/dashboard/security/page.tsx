@@ -1,3 +1,4 @@
+import { isSafeNext } from "@/lib/safe-next";
 "use client";
 export const dynamic = "force-dynamic";
 
@@ -69,7 +70,7 @@ export default function SecurityPage() {
     const currentPath = window.location.pathname;
     const currentNext = params.get("next");
     const nextPath =
-      (currentPath === "/login" || currentPath === "/signup") && currentNext && currentNext.startsWith("/") && !currentNext.startsWith("//") && !currentNext.includes("\\")
+      (currentPath === "/login" || currentPath === "/signup") && isSafeNext(currentNext)
         ? currentNext
         : `${currentPath}${window.location.search}`;
     router.replace(`/login?next=${encodeURIComponent(nextPath)}`);

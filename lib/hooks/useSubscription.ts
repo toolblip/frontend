@@ -1,5 +1,6 @@
 "use client";
 
+import { isSafeNext } from "@/lib/safe-next";
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/providers/auth-provider";
@@ -136,9 +137,7 @@ export function useSubscription() {
     const currentNext = params.get("next");
     const nextPath =
       (currentPath === "/login" || currentPath === "/signup") &&
-      currentNext &&
-      currentNext.startsWith("/") &&
-      !currentNext.startsWith("//") && !currentNext.includes("\\")
+      isSafeNext(currentNext)
         ? currentNext
         : `${currentPath}${window.location.search}`;
     router.replace(`/login?next=${encodeURIComponent(nextPath)}`);
