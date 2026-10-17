@@ -1,8 +1,8 @@
 import { expect, test } from '@playwright/test';
-import { openEmailForm } from '../fixtures/users';
+import { loginViaApi, MOCK_URL, openMagicLink, requestMagicLink } from '../fixtures/users';
 
 test.beforeEach(async ({ request }) => {
-  await request.post('http://127.0.0.1:3199/__reset');
+  await request.post(`${MOCK_URL}/__reset`);
 });
 
 test('tool pages render templated share left, inert views, and favorite hard right with external counts', async ({ page, context }) => {
@@ -87,32 +87,11 @@ test('tool pages render templated share left, inert views, and favorite hard rig
   await expect(loginDialog).toBeVisible();
   await expect(page.getByRole('dialog', { name: /Share JSON Formatter/i })).toHaveCount(0);
   await expect(loginDialog.getByTestId('google-auth-button')).toBeVisible();
-  await expect(loginDialog.getByLabel(/Remember me/i)).toBeVisible();
+  await expect(loginDialog.getByRole('button', { name: 'Sign in with passkey' })).toBeVisible();
+  await expect(loginDialog.getByRole('link', { name: /Continue with email/i })).toHaveAttribute('href', /\/login\?next=%2Ftools%2Fjson-formatter(%3F|\?)favorite(=|%3D)1/);
+  await expect(loginDialog.getByLabel('Password')).toHaveCount(0);
   await expect(loginDialog.getByRole('link', { name: /Create account/i })).toHaveAttribute('href', /\/signup\?next=%2Ftools%2Fjson-formatter(&|%26)favorite=1/);
   await expect(loginDialog.getByRole('link', { name: /Full login/i })).toHaveCount(0);
-
-  let loginRequestBody: { email?: string; password?: string; remember_me?: boolean } | undefined;
-  await page.route('**/api/auth/login', async (route) => {
-    loginRequestBody = route.request().postDataJSON() as typeof loginRequestBody;
-    await route.continue();
-  });
-
-  await page.getByLabel('Email').fill('bdd@toolblip.test');
-  await page.getByLabel('Password', { exact: true }).fill('Password123!');
-  await page.getByLabel(/Remember me/i).check();
-  await page.getByRole('button', { name: /^Sign in$/i }).click();
-
-  await expect.poll(() => loginRequestBody?.remember_me).toBe(true);
-
-  await expect(favoriteButton).toContainText('Favorited');
-  await expect(page.getByRole('dialog', { name: /Sign in to favorite JSON Formatter/i })).toHaveCount(0);
-  await expect(favoriteButton).toContainText(/^Favorited$/i);
-  await expect(favoriteButton).toHaveClass(/bg-red-600/);
-  await expect(favoriteCount).toHaveText('1');
-
-  await page.goto('/dashboard');
-  await expect(page.locator('#favorite-tools')).toBeVisible();
-  await expect(page.getByRole('link', { name: /JSON Formatter/i })).toBeVisible();
 
 });
 
@@ -132,12 +111,8 @@ test('guest users can register from the favorite prompt and auto-favorite on ret
   await loginDialog.getByRole('link', { name: /Create account/i }).click();
   await expect(page).toHaveURL(/\/signup\?next=%2Ftools%2Fjson-formatter&favorite=1/);
 
-  await openEmailForm(page);
-  await page.getByLabel('Name', { exact: true }).fill('Favorite Tester');
-  await page.getByLabel('Email').fill('favorite-tester@example.com');
-  await page.getByLabel('Password', { exact: true }).fill('Password123!');
-  await page.getByLabel('Confirm password').fill('Password123!');
-  await page.getByRole('button', { name: /^Create account$/i }).click();
+  await requestMagicLink(page, 'favorite-tester@example.com');
+  await openMagicLink(page, 'favorite-tester@example.com');
 
   await expect(page).toHaveURL(/\/tools\/json-formatter(\?favorite=1)?/);
   await expect(page.getByTestId('tool-favorite-button')).toContainText(/Favorited/i);
@@ -145,11 +120,8 @@ test('guest users can register from the favorite prompt and auto-favorite on ret
 });
 
 test('favorited tools ask for confirmation before unfavoriting', async ({ page }) => {
-  const loginRes = await page.request.post('/api/auth/login', {
-    data: { email: 'bdd@toolblip.test', password: 'Password123!' },
-  });
-  expect(loginRes.ok()).toBeTruthy();
-
+  await loginViaApi(page, { name: 'BDD User', email: 'bdd@toolblip.test' });
+  
   await page.goto('/tools/json-formatter');
 
   const favoriteButton = page.getByTestId('tool-favorite-button');
@@ -175,11 +147,8 @@ test('favorited tools ask for confirmation before unfavoriting', async ({ page }
 });
 
 test('logged-in users can favorite after auth restore without seeing the login form', async ({ page }) => {
-  const loginRes = await page.request.post('/api/auth/login', {
-    data: { email: 'bdd@toolblip.test', password: 'Password123!' },
-  });
-  expect(loginRes.ok()).toBeTruthy();
-
+  await loginViaApi(page, { name: 'BDD User', email: 'bdd@toolblip.test' });
+  
   let releaseAuthRestore: (() => void) | undefined;
   const authRestoreStarted = new Promise<void>((resolve) => {
     void page.route('**/api/auth/me', async (route) => {

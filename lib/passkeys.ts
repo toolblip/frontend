@@ -4,10 +4,11 @@ import {
   type PublicKeyCredentialCreationOptionsJSON,
   type PublicKeyCredentialRequestOptionsJSON,
 } from "@simplewebauthn/browser";
+import { stepUpFetch } from "@/lib/step-up";
 
 export type PasskeyUser = { id: number; name: string; email: string; [key: string]: unknown };
 export type PasskeySession = { user: PasskeyUser; token: string };
-export type PasskeyItem = { id: number; name: string; created_at: string; last_used_at: string | null };
+export type PasskeyItem = { id: number; name: string; created_at: string; last_used_at: string | null; transports?: string[] };
 
 /** The user dismissed or timed out the browser passkey prompt. Not an error to surface loudly. */
 export class PasskeyCancelledError extends Error {}
@@ -24,14 +25,14 @@ function isCancelled(err: unknown): boolean {
 }
 
 async function call<T>(url: string, init: { method?: string; body?: unknown } = {}): Promise<T> {
-  const res = await fetch(url, {
+  const res = await stepUpFetch(url, {
     method: init.method ?? "POST",
     headers: JSON_HEADERS,
     credentials: "include",
     body: init.body === undefined ? undefined : JSON.stringify(init.body),
   });
   const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(data.message ?? "Something went wrong. Please try again.");
+  if (!res.ok) throw Object.assign(new Error(data.message ?? "Something went wrong. Please try again."), { code: data.code });
   return data as T;
 }
 
@@ -44,22 +45,19 @@ async function ceremony<T>(run: () => Promise<T>): Promise<T> {
   }
 }
 
+/** Passkey sign in for a challenge from /api/auth/email/start (allowCredentials = that user's passkeys). */
+export async function signInWithChallenge(challenge_id: string, options: PublicKeyCredentialRequestOptionsJSON): Promise<PasskeySession> {
+  const credential = await ceremony(() => startAuthentication({ optionsJSON: options }));
+  return call<PasskeySession>("/api/auth/passkeys/login", { body: { challenge_id, credential } });
+}
+
+/** Discoverable passkey sign in (no email typed). */
 export async function signInWithPasskey(): Promise<PasskeySession> {
   const { challenge_id, options } = await call<{ challenge_id: string; options: PublicKeyCredentialRequestOptionsJSON }>(
     "/api/auth/passkeys/login/options",
     { body: {} }
   );
-  const credential = await ceremony(() => startAuthentication({ optionsJSON: options }));
-  return call<PasskeySession>("/api/auth/passkeys/login", { body: { challenge_id, credential } });
-}
-
-export async function signUpWithPasskey(details: { name: string; email: string; turnstile_token: string }): Promise<PasskeySession> {
-  const { challenge_id, options } = await call<{ challenge_id: string; options: PublicKeyCredentialCreationOptionsJSON }>(
-    "/api/auth/passkeys/register/options",
-    { body: { ...details, accepted_terms: true } }
-  );
-  const credential = await ceremony(() => startRegistration({ optionsJSON: options }));
-  return call<PasskeySession>("/api/auth/passkeys/register", { body: { challenge_id, credential } });
+  return signInWithChallenge(challenge_id, options);
 }
 
 export async function addPasskey(name: string): Promise<void> {
@@ -70,6 +68,11 @@ export async function addPasskey(name: string): Promise<void> {
   await call("/api/auth/passkeys", { body: { challenge_id, credential, ...(name.trim() ? { name: name.trim() } : {}) } });
 }
 
+export async function renamePasskey(id: number, name: string): Promise<PasskeyItem> {
+  const data = await call<{ passkey: PasskeyItem }>(`/api/auth/passkeys/${id}`, { method: "PATCH", body: { name: name.trim() } });
+  return data.passkey;
+}
+
 export async function listPasskeys(): Promise<PasskeyItem[]> {
   const data = await call<{ passkeys: PasskeyItem[] }>("/api/auth/passkeys", { method: "GET" });
   return data.passkeys;
@@ -77,4 +80,27 @@ export async function listPasskeys(): Promise<PasskeyItem[]> {
 
 export async function deletePasskey(id: number): Promise<void> {
   await call(`/api/auth/passkeys/${id}`, { method: "DELETE" });
+}
+
+/** Step-up with one passkey (id) or any of the user's passkeys (null). */
+export async function stepUpWithPasskey(passkeyId: number | null): Promise<void> {
+  const { challenge_id, options } = await call<{ challenge_id: string; options: PublicKeyCredentialRequestOptionsJSON }>(
+    "/api/auth/step-up/options",
+    { body: passkeyId === null ? {} : { passkey_id: passkeyId } }
+  );
+  const credential = await ceremony(() => startAuthentication({ optionsJSON: options }));
+  await call("/api/auth/step-up", { body: { challenge_id, credential } });
+}
+
+export async function sendStepUpEmailCode(): Promise<void> {
+  try {
+    await call("/api/auth/step-up/email-code", { body: {} });
+  } catch (err) {
+    if ((err as { code?: string }).code === "RATE_LIMITED") throw new Error("Please wait a minute before asking for another code.");
+    throw err;
+  }
+}
+
+export async function verifyStepUpEmailCode(code: string): Promise<void> {
+  await call("/api/auth/step-up/email-code/verify", { body: { code } });
 }

@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { dismissDashboardOnboarding, loginByForm, openEmailForm, resetMockBackend, VALID_USER } from '../fixtures/users';
+import { loginByForm, resetMockBackend, VALID_USER } from '../fixtures/users';
 
 test.describe('Account settings BDD regression', () => {
   test.beforeEach(async ({ request }) => {
@@ -23,33 +23,12 @@ test.describe('Account settings BDD regression', () => {
     await expect(page.getByText('Email verification needed')).toBeVisible();
   });
 
-  test('Given an unverified user, When they resend verification, Then a confirmation appears', async ({ page }) => {
-    await page.goto('/signup');
-    await openEmailForm(page);
-    await page.getByLabel('Name', { exact: true }).fill('Unverified User');
-    await page.getByLabel('Email').fill('unverified@toolblip.test');
-    await page.getByLabel('Password', { exact: true }).fill('Password123!');
-    await page.getByLabel('Confirm password').fill('Password123!');
-    await page.getByRole('button', { name: 'Create account' }).click();
-
-    await expect(page).toHaveURL(/\/dashboard$/);
-    await page.goto('/dashboard/profile');
-    await expect(page.getByText('Email verification needed')).toBeVisible();
-    await page.getByRole('button', { name: 'Resend verification email' }).click();
-
-    await expect(page.getByText('Verification email sent.')).toBeVisible();
-  });
-
-  test('Given a logged-in user, When they change password, Then they are signed out and sent to login', async ({ page }) => {
+  test('Given a logged-in user, When they open security, Then passwords are gone and passkeys are offered', async ({ page }) => {
     await loginByForm(page, VALID_USER);
     await expect(page).toHaveURL(/\/dashboard$/);
 
     await page.goto('/dashboard/security');
-    await page.getByLabel('Current password').fill('Password123!');
-    await page.getByLabel('New password', { exact: true }).fill('NewPassword123!');
-    await page.getByLabel('Confirm new password').fill('NewPassword123!');
-    await page.getByRole('button', { name: 'Change password' }).click();
-
-    await expect(page).toHaveURL(/\/login\?next=%2Fdashboard%2Fsecurity$/);
+    await expect(page.getByRole('heading', { name: 'Passkeys' })).toBeVisible();
+    await expect(page.getByLabel('Current password')).toHaveCount(0);
   });
 });

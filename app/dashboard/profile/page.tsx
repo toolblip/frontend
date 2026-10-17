@@ -1,6 +1,7 @@
 "use client";
 export const dynamic = "force-dynamic";
 
+import { stepUpFetch } from "@/lib/step-up";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRequireAuth } from "@/lib/hooks/useRequireAuth";
@@ -34,7 +35,7 @@ export default function ProfilePage() {
     setProfileSaving(true);
 
     try {
-      const res = await fetch("/api/auth/profile", {
+      const res = await stepUpFetch("/api/auth/profile", {
         method: "PATCH",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         credentials: "include",

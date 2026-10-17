@@ -1,7 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 
-const MOCK_PORT = 3199;
-const APP_PORT = 3200;
+const MOCK_PORT = Number(process.env.E2E_MOCK_PORT ?? 3199);
+const APP_PORT = Number(process.env.E2E_APP_PORT ?? 3200);
 const MOCK_URL = `http://127.0.0.1:${MOCK_PORT}`;
 const APP_URL = `http://127.0.0.1:${APP_PORT}`;
 

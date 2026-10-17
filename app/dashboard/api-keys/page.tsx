@@ -1,6 +1,7 @@
 "use client";
 export const dynamic = "force-dynamic";
 
+import { stepUpFetch } from "@/lib/step-up";
 import { useState, useEffect } from "react";
 import { useRequireAuth } from "@/lib/hooks/useRequireAuth";
 
@@ -64,7 +65,7 @@ export default function ApiKeysPage() {
     setNewKeyData(null);
     setError("");
     try {
-      const res = await fetch("/api/keys", {
+      const res = await stepUpFetch("/api/keys", {
         method: "POST",
         credentials: "include",
         headers: { Accept: "application/json" },
@@ -85,7 +86,7 @@ export default function ApiKeysPage() {
     setRevokingId(keyId);
     setError("");
     try {
-      const res = await fetch(`/api/keys/${keyId}`, {
+      const res = await stepUpFetch(`/api/keys/${keyId}`, {
         method: "DELETE",
         credentials: "include",
       });

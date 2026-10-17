@@ -1,8 +1,16 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { forwardToLaravel } from "@/lib/auth-proxy";
 
-export async function DELETE(_req: Request, { params }: { params: Promise<{ id: string }> }) {
+async function forward(req: NextRequest, params: Promise<{ id: string }>, method: "PATCH" | "DELETE") {
   const { id } = await params;
   if (!/^\d+$/.test(id)) return NextResponse.json({ message: "Not found." }, { status: 404 });
-  return forwardToLaravel(`/api/auth/passkeys/${id}`, null, { method: "DELETE", auth: true });
+  return forwardToLaravel(`/api/auth/passkeys/${id}`, method === "PATCH" ? req : null, { method, auth: true });
+}
+
+export function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  return forward(req, params, "PATCH");
+}
+
+export function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  return forward(req, params, "DELETE");
 }

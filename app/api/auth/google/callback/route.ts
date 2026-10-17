@@ -63,7 +63,12 @@ export async function GET(req: NextRequest) {
       return redirectToLogin(req, "callback_failed");
     }
 
-    const response = NextResponse.redirect(new URL(next, safeOrigin(req)));
+    // Google accounts without a passkey get the optional setup screen; passkey_setup is "suggested" for them.
+    const target =
+      data.passkey_setup === "suggested"
+        ? `/setup-passkey?mode=suggested&next=${encodeURIComponent(next)}`
+        : next;
+    const response = NextResponse.redirect(new URL(target, safeOrigin(req)));
     response.cookies.set("auth_token", data.token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",

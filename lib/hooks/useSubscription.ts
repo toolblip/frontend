@@ -1,5 +1,6 @@
 "use client";
 
+import { stepUpFetch } from "@/lib/step-up";
 import { isSafeNext } from "@/lib/safe-next";
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
@@ -220,7 +221,7 @@ export function useSubscription() {
     }
     setCancellingSubscription(true);
     try {
-      const res = await fetch("/api/subscription/cancel", {
+      const res = await stepUpFetch("/api/subscription/cancel", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -250,7 +251,7 @@ export function useSubscription() {
       }
       setSwitchingPlan(true);
       try {
-        const res = await fetch("/api/subscription/switch", {
+        const res = await stepUpFetch("/api/subscription/switch", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

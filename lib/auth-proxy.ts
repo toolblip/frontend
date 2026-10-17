@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 const LARAVEL_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.toolblip.com";
 
 type ForwardOptions = {
-  method?: "GET" | "POST" | "DELETE";
+  method?: "GET" | "POST" | "PATCH" | "DELETE";
   /** Send the auth_token cookie as a Bearer token; 401 when it is missing. */
   auth?: boolean;
   /** When Laravel returns a token on success, store it in the auth_token cookie. */
@@ -32,7 +32,7 @@ export async function forwardToLaravel(
         Accept: "application/json",
         ...(auth && token ? { Authorization: `Bearer ${token}` } : {}),
       },
-      body: method === "POST" && req ? await req.text() : undefined,
+      body: (method === "POST" || method === "PATCH") && req ? await req.text() : undefined,
     });
 
     if (laravelRes.status === 204) {

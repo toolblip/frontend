@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { expectAuthenticatedUser, expectLoggedInCookie, resetMockBackend } from '../fixtures/users';
+import { expectAuthenticatedUser, expectLoggedInCookie, resetMockBackend, skipPasskeySetupIfPrompted } from '../fixtures/users';
 
 test.describe('Google OAuth BDD regression', () => {
   test.beforeEach(async ({ request }) => {
@@ -10,6 +10,8 @@ test.describe('Google OAuth BDD regression', () => {
     await page.goto('/login');
 
     await page.getByRole('link', { name: 'Continue with Google' }).click();
+    await page.waitForURL(/\/(setup-passkey|dashboard)/);
+    await skipPasskeySetupIfPrompted(page);
 
     await expect(page).toHaveURL(/\/dashboard$/);
     await expectAuthenticatedUser(page, { name: 'Google OAuth User', email: 'google-oauth@toolblip.test' });
@@ -20,6 +22,8 @@ test.describe('Google OAuth BDD regression', () => {
     await page.goto('/login?next=/dashboard/profile');
 
     await page.getByRole('link', { name: 'Continue with Google' }).click();
+    await page.waitForURL(/\/(setup-passkey|dashboard)/);
+    await skipPasskeySetupIfPrompted(page);
 
     await expect(page).toHaveURL(/\/dashboard\/profile$/);
     await expectAuthenticatedUser(page, { name: 'Google OAuth User', email: 'google-oauth@toolblip.test' });
@@ -36,6 +40,8 @@ test.describe('Google OAuth BDD regression', () => {
     await page.goto('/signup');
 
     await page.getByRole('link', { name: 'Continue with Google' }).click();
+    await page.waitForURL(/\/(setup-passkey|dashboard)/);
+    await skipPasskeySetupIfPrompted(page);
 
     await expect(page).toHaveURL(/\/dashboard$/);
     const legalSetup = page.getByRole('dialog', { name: 'Complete your dashboard setup' });

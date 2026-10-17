@@ -1,10 +1,29 @@
 import { expect, test } from '@playwright/test';
-import { resetMockBackend, VALID_USER } from '../fixtures/users';
+import { MOCK_URL, resetMockBackend, VALID_USER } from '../fixtures/users';
+
+// Passkey sign in needs a WebAuthn assertion. Stub only the browser call; the mock backend checks the credential id.
+const STUB_PASSKEY_ASSERTION = () => {
+  const buffer = () => new Uint8Array([1]).buffer;
+  (navigator.credentials as CredentialsContainer).get = async () => ({
+    id: 'mock-cred',
+    rawId: buffer(),
+    type: 'public-key',
+    authenticatorAttachment: 'platform',
+    response: { authenticatorData: buffer(), clientDataJSON: buffer(), signature: buffer(), userHandle: null },
+    getClientExtensionResults: () => ({}),
+  }) as unknown as Credential;
+};
+
+async function signInFromFavoriteDialog(page: import('@playwright/test').Page, request: import('@playwright/test').APIRequestContext) {
+  await request.post(`${MOCK_URL}/__seed-passkey`, { data: { email: VALID_USER.email, credential_id: 'mock-cred' } });
+  await page.addInitScript(STUB_PASSKEY_ASSERTION);
+}
 
 // Exercise both response orders without sleeps or backend response fabrication.
 for (const refreshOrder of ['before', 'after'] as const) {
   test(`inline login keeps the saved favorite when the session refresh arrives ${refreshOrder} the save`, async ({ page, request }) => {
     await resetMockBackend(request);
+    await signInFromFavoriteDialog(page, request);
     await page.goto('/tools/json-formatter');
     const favorite = page.getByTestId('tool-favorite-button');
     await expect(favorite).toBeEnabled();
@@ -34,9 +53,7 @@ for (const refreshOrder of ['before', 'after'] as const) {
 
     await favorite.click();
     const dialog = page.getByRole('dialog', { name: /Sign in to favorite JSON Formatter/i });
-    await dialog.getByLabel('Email').fill(VALID_USER.email);
-    await dialog.getByLabel('Password', { exact: true }).fill(VALID_USER.password);
-    await dialog.getByRole('button', { name: /^Sign in$/i }).click();
+    await dialog.getByRole('button', { name: 'Sign in with passkey' }).click();
     await expect(dialog).toBeHidden();
     await expect(favorite).toHaveText('Favorited');
     await expect(favorite).toBeEnabled();
@@ -69,6 +86,7 @@ for (const refreshOrder of ['before', 'after'] as const) {
 for (const lateWrite of ['view', 'share'] as const) {
   test(`a late ${lateWrite} response does not clear a favorite saved after login`, async ({ page, request, context }) => {
     await resetMockBackend(request);
+    await signInFromFavoriteDialog(page, request);
     let releaseLateWrite!: () => void;
     const lateWriteReleased = new Promise<void>(resolve => { releaseLateWrite = resolve; });
     let lateWriteSeen!: () => void;
@@ -98,9 +116,7 @@ for (const lateWrite of ['view', 'share'] as const) {
 
     await favorite.click();
     const dialog = page.getByRole('dialog', { name: /Sign in to favorite JSON Formatter/i });
-    await dialog.getByLabel('Email').fill(VALID_USER.email);
-    await dialog.getByLabel('Password', { exact: true }).fill(VALID_USER.password);
-    await dialog.getByRole('button', { name: /^Sign in$/i }).click();
+    await dialog.getByRole('button', { name: 'Sign in with passkey' }).click();
     await expect(dialog).toBeHidden();
     await expect(favorite).toHaveText('Favorited');
 

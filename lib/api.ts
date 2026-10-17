@@ -43,21 +43,7 @@ export async function getTool(slug: string) {
   return apiRequest<{ tool: Tool }>(`/api/tools/${slug}`);
 }
 
-// Auth
-export async function login(email: string, password: string) {
-  return apiRequest<{ user: User; token: string }>('/api/auth/login', {
-    method: 'POST',
-    body: { email, password },
-  });
-}
-
-export async function register(name: string, email: string, password: string, passwordConfirmation: string) {
-  return apiRequest<{ user: User; token: string }>('/api/auth/register', {
-    method: 'POST',
-    body: { name, email, password, password_confirmation: passwordConfirmation },
-  });
-}
-
+// Auth (password login and register are removed; magic link + passkeys only)
 export async function getMe() {
   return apiRequest<{ user: User }>('/api/auth/user');
 }
