@@ -181,6 +181,7 @@ function getMenuContent(key: string): MenuContent | null {
             { icon: 'util', label: 'Our products', desc: 'Other work from the same team', href: '/products' },
             { icon: 'shield', label: 'Privacy', desc: 'We do the boring thing: nothing', href: '/privacy' },
             { icon: 'command', label: 'Terms', desc: 'The short, plain-English version', href: '/terms' },
+            { icon: 'util', label: 'Contact', desc: 'Reach the team', href: '/contact' },
           ],
         },
       ],

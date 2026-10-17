@@ -43,7 +43,6 @@ export function buildSiteJsonLd() {
         '@type': 'Organization',
         name: 'Toolblip',
         url: `${SITE_ORIGIN}/`,
-        email: 'info@toolblip.com',
       },
     ],
   };

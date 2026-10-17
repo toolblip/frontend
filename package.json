@@ -26,6 +26,7 @@
     "@imgly/background-removal": "^1.7.0",
     "@modelcontextprotocol/sdk": "^1.29.0",
     "@serwist/turbopack": "^9.5.12",
+    "@simplewebauthn/browser": "^13.3.0",
     "@swc/helpers": "0.5.23",
     "@tailwindcss/postcss": "^4.2.2",
     "@types/js-yaml": "^4.0.9",

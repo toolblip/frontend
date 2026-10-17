@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { dismissDashboardOnboarding, loginByForm, resetMockBackend, VALID_USER } from '../fixtures/users';
+import { dismissDashboardOnboarding, loginByForm, openEmailForm, resetMockBackend, VALID_USER } from '../fixtures/users';
 
 test.describe('Account settings BDD regression', () => {
   test.beforeEach(async ({ request }) => {
@@ -25,11 +25,11 @@ test.describe('Account settings BDD regression', () => {
 
   test('Given an unverified user, When they resend verification, Then a confirmation appears', async ({ page }) => {
     await page.goto('/signup');
+    await openEmailForm(page);
     await page.getByLabel('Name', { exact: true }).fill('Unverified User');
     await page.getByLabel('Email').fill('unverified@toolblip.test');
     await page.getByLabel('Password', { exact: true }).fill('Password123!');
     await page.getByLabel('Confirm password').fill('Password123!');
-    await page.getByLabel(/I agree to the Terms and Conditions and Privacy Policy/i).check();
     await page.getByRole('button', { name: 'Create account' }).click();
 
     await expect(page).toHaveURL(/\/dashboard$/);

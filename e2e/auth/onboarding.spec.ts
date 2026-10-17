@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { loginByForm, makeUser, resetMockBackend, signupByForm, VALID_USER } from '../fixtures/users';
+import { loginByForm, makeUser, openEmailForm, resetMockBackend, signupByForm, VALID_USER } from '../fixtures/users';
 
 test.describe('Account onboarding BDD regression', () => {
   test.beforeEach(async ({ request }) => {
@@ -80,11 +80,12 @@ test.describe('Account onboarding BDD regression', () => {
     await signUpLink.click();
     await expect(page).toHaveURL(/\/signup\?next=.*dashboard.*plan%3Dultra.*billing%3Dmonthly/);
 
+    await openEmailForm(page);
+
     await page.getByLabel('Name', { exact: true }).fill(user.name);
     await page.getByLabel('Email').fill(user.email);
     await page.getByLabel('Password', { exact: true }).fill(user.password);
     await page.getByLabel('Confirm password').fill(user.password);
-    await page.getByLabel(/I agree to the Terms and Conditions and Privacy Policy/i).click();
     await page.getByRole('button', { name: 'Create account' }).click();
 
     await expect(page).toHaveURL(/\/dashboard\?plan=ultra&billing=monthly$/);

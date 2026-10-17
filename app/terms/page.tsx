@@ -102,7 +102,7 @@ export default function TermsPage() {
 
           <div className="tb-v2-article-section">
             <h2>Contact</h2>
-            <p>Questions about these terms? Email <a href="mailto:harun@toolblip.com">harun@toolblip.com</a>.</p>
+            <p>Questions about these terms? <a href="/contact">Contact us</a>.</p>
           </div>
         </article>
       </div>

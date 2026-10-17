@@ -44,6 +44,7 @@ describe('sitemap routes', () => {
       'https://toolblip.com/donate',
       'https://toolblip.com/privacy',
       'https://toolblip.com/terms',
+      'https://toolblip.com/contact',
     ]);
     expect(xml).not.toContain('<lastmod>');
   });
