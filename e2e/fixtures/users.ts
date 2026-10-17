@@ -53,12 +53,22 @@ export async function requestMagicLink(page: Page, email: string) {
   await expect(page.getByRole('heading', { name: 'Check your email' })).toBeVisible();
 }
 
+/** The magic link page consumes only on Continue (scanners must not burn the link). Clicks before hydration are dropped, so retry. */
+export async function continueMagicLink(page: Page) {
+  const button = page.getByRole('button', { name: 'Continue', exact: true });
+  await expect(async () => {
+    await button.click();
+    await expect(button).toBeHidden({ timeout: 1000 });
+  }).toPass();
+}
+
 /** Opens the newest magic link the mock mailbox "delivered" to the address, then waits for the app to route on. */
 export async function openMagicLink(page: Page, email: string) {
   const mailRes = await page.request.get(`${MOCK_URL}/__mail?email=${encodeURIComponent(email)}`);
   expect(mailRes.ok()).toBeTruthy();
   const mail = await mailRes.json();
   await page.goto(mail.url);
+  await continueMagicLink(page);
   await page.waitForURL((url) => !url.pathname.startsWith('/auth/magic'));
   await skipPasskeySetupIfPrompted(page);
 }

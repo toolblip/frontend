@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { MOCK_URL, expectAuthenticatedUser, expectLoggedInCookie, makeUser, openEmailForm, requestMagicLink, resetMockBackend, signupByForm, TAKEN_EMAIL } from '../fixtures/users';
+import { MOCK_URL, continueMagicLink, expectAuthenticatedUser, expectLoggedInCookie, makeUser, openEmailForm, requestMagicLink, resetMockBackend, signupByForm, TAKEN_EMAIL } from '../fixtures/users';
 
 test.describe('Signup BDD regression', () => {
   test.beforeEach(async ({ request }) => {
@@ -53,6 +53,7 @@ test.describe('Signup BDD regression', () => {
     await requestMagicLink(page, user.email);
     const mail = await (await page.request.get(`${MOCK_URL}/__mail?email=${encodeURIComponent(user.email)}`)).json();
     await page.goto(mail.url);
+    await continueMagicLink(page);
 
     await expect(page).toHaveURL(/\/setup-passkey\?mode=required/);
     await expect(page.getByRole('heading', { name: 'Set up a passkey' })).toBeVisible();

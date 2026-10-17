@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { MOCK_URL, expectAuthenticatedUser, expectLoggedInCookie, loginByForm, openEmailForm, requestMagicLink, resetMockBackend, VALID_USER } from '../fixtures/users';
+import { MOCK_URL, expectAuthenticatedUser, expectLoggedInCookie, loginByForm, openEmailForm, requestMagicLink, resetMockBackend, VALID_USER, continueMagicLink } from '../fixtures/users';
 
 test.describe('Login BDD regression', () => {
   test.beforeEach(async ({ request }) => {
@@ -36,6 +36,7 @@ test.describe('Login BDD regression', () => {
 
     const mail = await (await page.request.get(`${MOCK_URL}/__mail?email=${encodeURIComponent(VALID_USER.email)}`)).json();
     await page.goto(mail.url);
+    await continueMagicLink(page);
 
     await expect(page.locator('p[role="alert"]')).toContainText('This sign-in link is invalid or has expired.');
     const cookies = await page.context().cookies();
