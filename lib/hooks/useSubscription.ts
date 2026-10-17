@@ -138,7 +138,7 @@ export function useSubscription() {
       (currentPath === "/login" || currentPath === "/signup") &&
       currentNext &&
       currentNext.startsWith("/") &&
-      !currentNext.startsWith("//")
+      !currentNext.startsWith("//") && !currentNext.includes("\\")
         ? currentNext
         : `${currentPath}${window.location.search}`;
     router.replace(`/login?next=${encodeURIComponent(nextPath)}`);

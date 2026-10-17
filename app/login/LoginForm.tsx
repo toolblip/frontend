@@ -27,7 +27,7 @@ export default function LoginForm() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const nextParam = params.get("next");
-    if (nextParam && nextParam.startsWith("/") && !nextParam.startsWith("//")) {
+    if (nextParam && nextParam.startsWith("/") && !nextParam.startsWith("//") && !nextParam.includes("\\")) {
       setNext(nextParam);
     }
     if (params.get("oauth_error")) {

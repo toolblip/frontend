@@ -208,7 +208,7 @@ export default function AccountPage() {
     const currentPath = window.location.pathname;
     const currentNext = params.get("next");
     const nextPath =
-      (currentPath === "/login" || currentPath === "/signup") && currentNext && currentNext.startsWith("/") && !currentNext.startsWith("//")
+      (currentPath === "/login" || currentPath === "/signup") && currentNext && currentNext.startsWith("/") && !currentNext.startsWith("//") && !currentNext.includes("\\")
         ? currentNext
         : `${currentPath}${window.location.search}`;
     router.replace(`/login?next=${encodeURIComponent(nextPath)}`);

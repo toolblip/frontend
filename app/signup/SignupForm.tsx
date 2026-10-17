@@ -35,7 +35,7 @@ export default function SignupForm() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const nextParam = params.get("next");
-    if (nextParam && nextParam.startsWith("/") && !nextParam.startsWith("//")) {
+    if (nextParam && nextParam.startsWith("/") && !nextParam.startsWith("//") && !nextParam.includes("\\")) {
       setNext(nextParam);
     }
     setFavoriteOnReturn(params.get("favorite") === "1" || params.get("favorite") === "true");
