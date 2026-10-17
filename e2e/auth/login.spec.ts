@@ -1,12 +1,12 @@
 import { test, expect } from '@playwright/test';
-import { expectAuthenticatedUser, expectLoggedInCookie, loginByForm, openEmailForm, resetMockBackend, VALID_USER } from '../fixtures/users';
+import { MOCK_URL, expectAuthenticatedUser, expectLoggedInCookie, loginByForm, openEmailForm, requestMagicLink, resetMockBackend, VALID_USER, continueMagicLink } from '../fixtures/users';
 
 test.describe('Login BDD regression', () => {
   test.beforeEach(async ({ request }) => {
     await resetMockBackend(request);
   });
 
-  test('Given valid credentials, When the user submits the login form, Then they are redirected to account dashboard and get an auth cookie', async ({ page }) => {
+  test('Given an email address, When the user opens the sign-in link from their inbox, Then they land on the dashboard with an auth cookie', async ({ page }) => {
     await loginByForm(page, VALID_USER);
 
     await expect(page).toHaveURL(/\/dashboard$/);
@@ -14,38 +14,47 @@ test.describe('Login BDD regression', () => {
     await expectLoggedInCookie(page);
   });
 
-  test('Given valid credentials with a next URL, When the user logs in, Then they land on the requested path', async ({ page }) => {
-    await page.goto('/login?next=/dashboard/profile');
-    await openEmailForm(page);
-    await page.getByLabel('Email').fill(VALID_USER.email);
-    await page.getByLabel('Password').fill(VALID_USER.password);
-    await page.getByRole('button', { name: 'Sign in', exact: true }).click();
+  test('Given a next URL, When the user signs in by email link, Then they land on the requested path', async ({ page }) => {
+    await loginByForm(page, VALID_USER, '/dashboard/profile');
 
     await expect(page).toHaveURL(/\/dashboard\/profile$/);
     await expectAuthenticatedUser(page, VALID_USER);
     await expectLoggedInCookie(page);
   });
 
-  test('Given invalid credentials, When the user submits the login form, Then an error is shown and the user stays on login', async ({ page }) => {
+  test('Given the login page, Then there is no password field or password reset link', async ({ page }) => {
     await page.goto('/login');
     await openEmailForm(page);
-    await page.getByLabel('Email').fill(VALID_USER.email);
-    await page.getByLabel('Password').fill('WrongPassword123!');
-    await page.getByRole('button', { name: 'Sign in', exact: true }).click();
 
-    await expect(page).toHaveURL(/\/login$/);
-    await expect(page.locator('p[role="alert"]')).toContainText('Invalid email or password');
+    await expect(page.getByLabel('Password')).toHaveCount(0);
+    await expect(page.getByRole('link', { name: 'Forgot password?' })).toHaveCount(0);
+  });
+
+  test('Given a sign-in link was already used, When it is opened again, Then an error is shown and no auth cookie is set', async ({ page }) => {
+    await loginByForm(page, VALID_USER);
+    await page.context().clearCookies();
+
+    const mail = await (await page.request.get(`${MOCK_URL}/__mail?email=${encodeURIComponent(VALID_USER.email)}`)).json();
+    await page.goto(mail.url);
+    await continueMagicLink(page);
+
+    await expect(page.locator('p[role="alert"]')).toContainText('This sign-in link is invalid or has expired.');
     const cookies = await page.context().cookies();
     expect(cookies.find((cookie) => cookie.name === 'auth_token')).toBeUndefined();
   });
 
-  test('Given empty required fields, When the user clicks submit, Then the API validation error is shown and no auth cookie is set', async ({ page }) => {
+  test('Given an unknown email, When the user asks for a sign-in link, Then the same check-email state is shown', async ({ page }) => {
     await page.goto('/login');
-    await openEmailForm(page);
-    await page.getByRole('button', { name: 'Sign in', exact: true }).click();
+    await requestMagicLink(page, 'nobody-here@toolblip.test');
 
-    await expect(page.locator('p[role="alert"]')).toContainText('Email and password are required');
+    await expect(page.getByText('nobody-here@toolblip.test')).toBeVisible();
     const cookies = await page.context().cookies();
     expect(cookies.find((cookie) => cookie.name === 'auth_token')).toBeUndefined();
+  });
+
+  test('Given the old password reset URL, When it is requested, Then it redirects to login', async ({ request }) => {
+    const res = await request.get('/forgot-password', { maxRedirects: 0 });
+    expect(res.status()).toBe(308);
+    expect(res.headers()['location']).toMatch(/\/login$/);
   });
 });

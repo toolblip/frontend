@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { openEmailForm, resetMockBackend } from '../fixtures/users';
+import { resetMockBackend, signupByForm } from '../fixtures/users';
 
 test.describe('Email verification BDD regression', () => {
   test.beforeEach(async ({ request }) => {
@@ -7,13 +7,7 @@ test.describe('Email verification BDD regression', () => {
   });
 
   test('Given a valid verification link, When the verification page loads, Then the email is verified', async ({ page }) => {
-    await page.goto('/signup');
-    await openEmailForm(page);
-    await page.getByLabel('Name', { exact: true }).fill('Verification User');
-    await page.getByLabel('Email').fill('verify-me@toolblip.test');
-    await page.getByLabel('Password', { exact: true }).fill('Password123!');
-    await page.getByLabel('Confirm password').fill('Password123!');
-    await page.getByRole('button', { name: 'Create account' }).click();
+    await signupByForm(page, { name: 'verify-me', email: 'verify-me@toolblip.test' });
 
     await page.goto('/verify-email?email=verify-me@toolblip.test&token=mock-verification-token');
 

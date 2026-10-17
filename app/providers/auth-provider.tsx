@@ -21,6 +21,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const userRef = useRef<User | null>(null);
   const inflightRef = useRef<Promise<User | null> | null>(null);
+  // Bumped by login(): a /me response that started before a sign-in must not clear it.
+  const loginVersionRef = useRef(0);
 
   useEffect(() => {
     userRef.current = user;
@@ -30,10 +32,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (inflightRef.current) return inflightRef.current;
 
     const run = (async (): Promise<User | null> => {
+      const version = loginVersionRef.current;
       try {
         const res = await fetch("/api/auth/me", {
           credentials: "include",
         });
+        if (version !== loginVersionRef.current) return userRef.current;
         if (res.ok) {
           const data = await res.json();
           if (data.user) {
@@ -76,6 +80,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [refreshUser]);
 
   const login = (user: User, token: string) => {
+    loginVersionRef.current += 1;
     setUser(user);
     setToken(token);
   };

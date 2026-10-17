@@ -1,6 +1,7 @@
 "use client";
 export const dynamic = "force-dynamic";
 
+import { stepUpFetch } from "@/lib/step-up";
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRequireAuth } from "@/lib/hooks/useRequireAuth";
@@ -119,7 +120,7 @@ export default function TeamPage() {
     setInviteError("");
     setInviteSuccess("");
     try {
-      const res = await fetch("/api/team/members", {
+      const res = await stepUpFetch("/api/team/members", {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
@@ -148,7 +149,7 @@ export default function TeamPage() {
   async function removeMember(memberId: number) {
     setRemovingId(memberId);
     try {
-      const res = await fetch(`/api/team/members/${memberId}`, {
+      const res = await stepUpFetch(`/api/team/members/${memberId}`, {
         method: "DELETE",
         credentials: "include",
       });

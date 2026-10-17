@@ -39,6 +39,9 @@ const nextConfig = {
   },
   async redirects() {
     return [
+      // Password reset is gone (passwords are disabled); magic link replaces it.
+      { source: '/forgot-password', destination: '/login', permanent: true },
+      { source: '/reset-password/:token*', destination: '/login', permanent: true },
       // Shared lists used /@username/slug before the public path moved under /user.
       {
         source: "/@:username([a-zA-Z0-9][a-zA-Z0-9-]{1,28}[a-zA-Z0-9])/:slug([a-zA-Z0-9][a-zA-Z0-9-]{0,78}[a-zA-Z0-9])",

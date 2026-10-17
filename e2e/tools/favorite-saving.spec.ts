@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { dismissDashboardOnboarding, resetMockBackend, VALID_USER } from '../fixtures/users';
+import { VALID_USER, dismissDashboardOnboarding, loginViaApi, resetMockBackend } from '../fixtures/users';
 
 test.describe('Favorite item saving', () => {
   test.beforeEach(async ({ request }) => {
@@ -7,11 +7,8 @@ test.describe('Favorite item saving', () => {
   });
 
   test('a signed-in favorite is saved server-side and persists across a reload', async ({ page }) => {
-    const loginRes = await page.request.post('/api/auth/login', {
-      data: { email: VALID_USER.email, password: VALID_USER.password },
-    });
-    expect(loginRes.ok()).toBeTruthy();
-
+    await loginViaApi(page, VALID_USER);
+    
     await page.goto('/tools/json-formatter');
     const favoriteButton = page.getByTestId('tool-favorite-button');
     await expect(favoriteButton).toBeEnabled();
@@ -27,11 +24,8 @@ test.describe('Favorite item saving', () => {
   });
 
   test('saved favorites stay on the private default list beside custom lists', async ({ page }) => {
-    const loginRes = await page.request.post('/api/auth/login', {
-      data: { email: VALID_USER.email, password: VALID_USER.password },
-    });
-    expect(loginRes.ok()).toBeTruthy();
-
+    await loginViaApi(page, VALID_USER);
+    
     // Save two favorites (shares the page auth cookie).
     expect((await page.request.post('/api/tools/json-formatter/favorite')).ok()).toBeTruthy();
     expect((await page.request.post('/api/tools/uuid-generator/favorite')).ok()).toBeTruthy();

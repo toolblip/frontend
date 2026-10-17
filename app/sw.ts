@@ -20,9 +20,9 @@ const authAndAccountPaths = [
   '/login',
   '/signup',
   '/pricing',
-  '/forgot-password',
-  '/reset-password',
   '/verify-email',
+  '/auth',
+  '/setup-passkey',
 ];
 
 function isAuthOrAccountPath(pathname: string): boolean {

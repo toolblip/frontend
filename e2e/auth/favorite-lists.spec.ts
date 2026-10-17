@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { dismissDashboardOnboarding, resetMockBackend, VALID_USER } from '../fixtures/users';
+import { VALID_USER, dismissDashboardOnboarding, loginViaApi, resetMockBackend } from '../fixtures/users';
 
 test.describe('Favorite lists', () => {
   test.beforeEach(async ({ request }) => {
@@ -8,11 +8,8 @@ test.describe('Favorite lists', () => {
 
   test('a tool can be added to a new list and the list can be shared', async ({ page }) => {
     test.setTimeout(90_000);
-    const loginRes = await page.request.post('/api/auth/login', {
-      data: { email: VALID_USER.email, password: VALID_USER.password },
-    });
-    expect(loginRes.ok()).toBeTruthy();
-
+    await loginViaApi(page, VALID_USER);
+    
     await page.goto('/tools/json-formatter');
     await page.getByTestId('tool-favorite-lists').click();
     await expect(page.getByTestId('favorite-list-menu')).toBeVisible();

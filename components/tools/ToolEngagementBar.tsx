@@ -4,7 +4,8 @@ import Link from "next/link";
 import { useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import GoogleAuthButton from "@/components/auth/GoogleAuthButton";
-import Turnstile, { TURNSTILE_ENABLED, type TurnstileHandle } from "@/components/auth/Turnstile";
+import PasskeyAuthButton from "@/components/auth/PasskeyAuthButton";
+import { PasskeyCancelledError, passkeysSupported, signInWithPasskey } from "@/lib/passkeys";
 import { useAuth } from "@/app/providers/auth-provider";
 import { recordRecentTool } from "@/lib/toolHistory";
 import { getToolPathBySlug } from "@/lib/tool-path";
@@ -213,13 +214,8 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
   const [shareOpen, setShareOpen] = useState(false);
   const [listsOpen, setListsOpen] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [turnstileToken, setTurnstileToken] = useState("");
-  const turnstileRef = useRef<TurnstileHandle>(null);
-  const [rememberMe, setRememberMe] = useState(false);
   const [loginError, setLoginError] = useState("");
-  const [loginLoading, setLoginLoading] = useState(false);
+  const [passkeyBusy, setPasskeyBusy] = useState(false);
   const [favoriteLoading, setFavoriteLoading] = useState(false);
   const [copied, setCopied] = useState(false);
   const [pageUrl, setPageUrl] = useState(`https://toolblip.com${getToolPathBySlug(toolSlug)}`);
@@ -521,35 +517,19 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
     await favoriteTool();
   }
 
-  async function handleLoginSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  async function handlePasskeyLogin() {
     setLoginError("");
-    setLoginLoading(true);
-
+    setPasskeyBusy(true);
     try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({ email, password, remember_me: rememberMe, turnstile_token: turnstileToken }),
-        credentials: "include",
-      });
-      const data = await res.json();
-
-      if (!res.ok || !data.token) {
-        setLoginError(data.message ?? "Invalid email or password.");
-        turnstileRef.current?.reset();
-        return;
-      }
-
-      login(data.user, data.token);
+      const { user: signedInUser, token } = await signInWithPasskey();
+      login(signedInUser, token);
       setLoginOpen(false);
-      setEmail("");
-      setPassword("");
-    } catch {
-      setLoginError("Something went wrong. Please try again.");
-      turnstileRef.current?.reset();
+    } catch (err) {
+      if (!(err instanceof PasskeyCancelledError)) {
+        setLoginError(err instanceof Error ? err.message : "Passkey sign in failed. Please try again.");
+      }
     } finally {
-      setLoginLoading(false);
+      setPasskeyBusy(false);
     }
   }
 
@@ -739,30 +719,13 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
                 <span>or</span>
               </div>
 
-              <form onSubmit={handleLoginSubmit} className="space-y-3" noValidate>
-                {loginError && <p role="alert" className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700 dark:bg-red-950 dark:text-red-200">{loginError}</p>}
-                <div>
-                  <label htmlFor="favorite-login-email" className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-200">Email</label>
-                  <input id="favorite-login-email" type="email" autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} className="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 text-gray-900 outline-none focus:border-red-400 dark:border-gray-800 dark:bg-gray-900 dark:text-white" required />
-                </div>
-                <div>
-                  <label htmlFor="favorite-login-password" className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-200">Password</label>
-                  <input id="favorite-login-password" type="password" autoComplete="current-password" value={password} onChange={(event) => setPassword(event.target.value)} className="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 text-gray-900 outline-none focus:border-red-400 dark:border-gray-800 dark:bg-gray-900 dark:text-white" required />
-                </div>
-                <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
-                  <input
-                    type="checkbox"
-                    checked={rememberMe}
-                    onChange={(event) => setRememberMe(event.target.checked)}
-                    className="h-4 w-4 rounded border-gray-300 text-red-600 focus:ring-red-500 dark:border-gray-700"
-                  />
-                  <span>Remember me</span>
-                </label>
-                <Turnstile ref={turnstileRef} onToken={setTurnstileToken} />
-                <button type="submit" disabled={loginLoading || (TURNSTILE_ENABLED && !turnstileToken)} className="w-full rounded-xl bg-red-600 px-4 py-2 font-semibold text-white transition hover:bg-red-700 disabled:opacity-60">
-                  {loginLoading ? "Signing in..." : "Sign in"}
-                </button>
-              </form>
+              {loginError && <p role="alert" className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700 dark:bg-red-950 dark:text-red-200">{loginError}</p>}
+              {passkeysSupported() && (
+                <PasskeyAuthButton label="Sign in with passkey" onClick={handlePasskeyLogin} disabled={passkeyBusy} />
+              )}
+              <Link href={loginHref} className="block text-center text-sm font-semibold text-red-600 hover:text-red-700 dark:text-red-400">
+                Continue with email
+              </Link>
             </div>
 
             <div className="mt-4 flex items-center justify-end gap-3 text-sm text-gray-500 dark:text-gray-400">

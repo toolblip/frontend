@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { dismissDashboardOnboarding, resetMockBackend, VALID_USER } from '../fixtures/users';
+import { VALID_USER, dismissDashboardOnboarding, loginViaApi, resetMockBackend } from '../fixtures/users';
 
 test.describe('Dashboard favorite share flow', () => {
   test.beforeEach(async ({ context, request }) => {
@@ -8,11 +8,8 @@ test.describe('Dashboard favorite share flow', () => {
   });
 
   test('copies the public canonical tool URL for a saved favorite, and that URL opens the tool', async ({ page }) => {
-    const loginRes = await page.request.post('/api/auth/login', {
-      data: { email: VALID_USER.email, password: VALID_USER.password },
-    });
-    expect(loginRes.ok()).toBeTruthy();
-    expect((await page.request.post('/api/tools/json-formatter/favorite')).ok()).toBeTruthy();
+    await loginViaApi(page, VALID_USER);
+        expect((await page.request.post('/api/tools/json-formatter/favorite')).ok()).toBeTruthy();
 
     await page.goto('/dashboard');
     await dismissDashboardOnboarding(page);

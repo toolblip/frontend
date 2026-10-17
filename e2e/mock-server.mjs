@@ -11,6 +11,13 @@ const tokens = new Map();
 const toolStats = new Map();
 const userFavorites = new Map();
 const favoriteLists = new Map();
+const magicLinks = new Map(); // token -> { email, next, used }
+const mailbox = new Map(); // email -> { token, code, sentAt }
+const challenges = new Map(); // challenge_id -> { email | null, used }
+const passkeys = new Map(); // email -> [{ id, name, created_at, last_used_at, transports }]
+const steppedUpUntil = new Map(); // bearer token -> ms epoch
+let nextPasskeyId = 1;
+let nextChallenge = 1;
 let nextId = 1;
 let nextToken = 1;
 let nextListId = 1;
@@ -79,6 +86,44 @@ function publicUser(user) {
   };
 }
 
+function randomToken(length) {
+  const alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let out = '';
+  for (let i = 0; i < length; i += 1) out += alphabet[Math.floor(Math.random() * alphabet.length)];
+  return out;
+}
+
+function passkeyList(email) {
+  return passkeys.get(email) ?? [];
+}
+
+function passkeySetup(user) {
+  if (passkeyList(user.email).length > 0) return null;
+  return user.google_id ? 'suggested' : 'required';
+}
+
+function isSteppedUp(req) {
+  const until = steppedUpUntil.get(bearer(req)) ?? 0;
+  return until > Date.now();
+}
+
+function markSteppedUp(req) {
+  const until = Date.now() + 10 * 60 * 1000;
+  steppedUpUntil.set(bearer(req), until);
+  return until;
+}
+
+function stepUpRequired(res) {
+  return json(res, 403, { message: "Please confirm it's you.", code: 'step_up_required' });
+}
+
+function sendMagicLink(email, next) {
+  const token = randomToken(64);
+  magicLinks.set(token, { email, next, used: false });
+  mailbox.set(email, { ...(mailbox.get(email) ?? {}), token, sentAt: Date.now() });
+  return token;
+}
+
 function issueToken(email) {
   const token = `mock-token-${nextToken++}`;
   tokens.set(token, email);
@@ -110,6 +155,13 @@ function reset() {
   toolStats.clear();
   userFavorites.clear();
   favoriteLists.clear();
+  magicLinks.clear();
+  mailbox.clear();
+  challenges.clear();
+  passkeys.clear();
+  steppedUpUntil.clear();
+  nextPasskeyId = 1;
+  nextChallenge = 1;
   nextListId = 1;
   toolStats.set('json-formatter', { slug: 'json-formatter', views: 0, shares: 0, favorites: 0 });
   nextId = 1;
@@ -194,56 +246,6 @@ const server = http.createServer(async (req, res) => {
     return json(res, 200, { ok: true });
   }
 
-  if (req.method === 'POST' && url.pathname === '/api/auth/register') {
-    const body = await readJson(req);
-    const email = String(body.email ?? '').toLowerCase();
-    if (!body.name || !email || !body.password || !body.password_confirmation) {
-      return json(res, 422, { message: 'All fields are required.' });
-    }
-    if (body.accepted_terms !== true) {
-      return json(res, 422, { message: 'Please accept the Terms and Conditions and Privacy Policy.', errors: { accepted_terms: ['The terms must be accepted.'] } });
-    }
-    if (users.has(email)) {
-      return json(res, 422, {
-        message: 'The email has already been taken.',
-        errors: { email: ['The email has already been taken.'] },
-      });
-    }
-    const chosen = String(body.username ?? '').trim().toLowerCase();
-    if (chosen && !/^[a-z0-9][a-z0-9-]{1,28}[a-z0-9]$/.test(chosen)) {
-      return json(res, 422, { message: 'Choose a username with 3–30 letters, numbers, and hyphens.', code: 'username_invalid' });
-    }
-    const user = {
-      id: nextId++,
-      name: String(body.name),
-      email,
-      password: String(body.password),
-      username: chosen || null,
-      role: 'user',
-      email_verified_at: null,
-      terms_accepted_at: new Date().toISOString(),
-    };
-    ensureUsername(user);
-    users.set(email, user);
-    const token = issueToken(email);
-    return json(res, 201, { user: publicUser(user), token });
-  }
-
-  if (req.method === 'POST' && url.pathname === '/api/auth/login') {
-    const body = await readJson(req);
-    const email = String(body.email ?? '').toLowerCase();
-    const user = users.get(email);
-    if (!user || user.password !== body.password) {
-      return json(res, 401, {
-        message: 'Invalid email or password.',
-        error: { code: 'INVALID_CREDENTIALS', message: 'Invalid email or password.' },
-      });
-    }
-    ensureUsername(user);
-    const token = issueToken(email);
-    return json(res, 200, { user: publicUser(user), token });
-  }
-
   if (req.method === 'GET' && url.pathname === '/api/auth/google/redirect') {
     const state = url.searchParams.get('state') ?? '';
     const redirectUri = url.searchParams.get('redirect_uri') ?? 'http://127.0.0.1:3200/api/auth/google/callback';
@@ -267,7 +269,7 @@ const server = http.createServer(async (req, res) => {
     ensureUsername(user);
     users.set(user.email, user);
     const token = issueToken(user.email);
-    return json(res, 200, { user: publicUser(user), token, is_new_user: true, requires_terms_acceptance: true });
+    return json(res, 200, { user: publicUser(user), token, is_new_user: true, requires_terms_acceptance: true, passkey_setup: 'suggested' });
   }
 
   if (req.method === 'POST' && url.pathname === '/api/auth/accept-terms') {
@@ -308,6 +310,7 @@ const server = http.createServer(async (req, res) => {
     const body = await readJson(req);
     const nextEmail = String(body.email ?? '').toLowerCase();
     if (!body.name || !nextEmail) return json(res, 422, { message: 'Name and email are required.' });
+    if (nextEmail !== email && !isSteppedUp(req)) return stepUpRequired(res);
     if (nextEmail !== email && users.has(nextEmail)) {
       return json(res, 422, { message: 'The email has already been taken.', errors: { email: ['The email has already been taken.'] } });
     }
@@ -330,19 +333,218 @@ const server = http.createServer(async (req, res) => {
     return json(res, 200, { message: 'Profile updated successfully.', user: publicUser(user) });
   }
 
-  if (req.method === 'POST' && url.pathname === '/api/auth/change-password') {
-    const email = tokens.get(bearer(req));
-    const user = email ? users.get(email) : null;
-    if (!user) return json(res, 401, { message: 'Unauthenticated.' });
+
+  // ---- Magic link / email-first sign in ----
+  if (req.method === 'POST' && url.pathname === '/api/auth/email/start') {
     const body = await readJson(req);
-    if (body.current_password !== user.password) {
-      return json(res, 422, { message: 'The current password is incorrect.', errors: { current_password: ['The current password is incorrect.'] } });
+    const email = String(body.email ?? '').trim().toLowerCase();
+    if (!email) return json(res, 422, { message: 'Email is required.', errors: { email: ['Email is required.'] } });
+    const user = users.get(email);
+    const list = user ? passkeyList(email) : [];
+    if (user && list.length > 0) {
+      const challengeId = `challenge-${nextChallenge++}`;
+      challenges.set(challengeId, { email, next: body.next ?? null, used: false });
+      return json(res, 200, {
+        method: 'passkey',
+        challenge_id: challengeId,
+        options: {
+          challenge: 'bW9jay1jaGFsbGVuZ2U',
+          timeout: 60000,
+          rpId: '127.0.0.1',
+          userVerification: 'preferred',
+          allowCredentials: list.map((item) => ({ type: 'public-key', id: item.credential_id, transports: item.transports })),
+        },
+      });
     }
-    user.password = String(body.password ?? '');
-    for (const [token, tokenEmail] of tokens.entries()) {
-      if (tokenEmail === email) tokens.delete(token);
+    sendMagicLink(email, body.next ?? null);
+    return json(res, 200, { method: 'email_sent' });
+  }
+
+  if (req.method === 'POST' && url.pathname === '/api/auth/email/send') {
+    const body = await readJson(req);
+    const challenge = challenges.get(String(body.challenge_id ?? ''));
+    if (!challenge || challenge.used || !challenge.email) {
+      return json(res, 422, { message: 'This sign-in request has expired. Start again.', code: 'challenge_invalid' });
     }
-    return json(res, 200, { message: 'Password changed successfully.' });
+    challenge.used = true;
+    sendMagicLink(challenge.email, challenge.next);
+    return json(res, 200, { method: 'email_sent' });
+  }
+
+  if (req.method === 'POST' && url.pathname === '/api/auth/magic-link/consume') {
+    const body = await readJson(req);
+    const entry = magicLinks.get(String(body.token ?? ''));
+    if (!entry || entry.used) {
+      return json(res, 422, { message: 'This sign-in link is invalid or has expired.', code: 'magic_link_invalid' });
+    }
+    entry.used = true;
+    let user = users.get(entry.email);
+    if (!user) {
+      user = {
+        id: nextId++,
+        name: entry.email.split('@')[0],
+        email: entry.email,
+        password: '',
+        role: 'user',
+        email_verified_at: new Date().toISOString(),
+        terms_accepted_at: new Date().toISOString(),
+      };
+      ensureUsername(user);
+      users.set(entry.email, user);
+    }
+    user.email_verified_at = user.email_verified_at ?? new Date().toISOString();
+    ensureUsername(user);
+    const token = issueToken(user.email);
+    steppedUpUntil.set(token, Date.now() + 10 * 60 * 1000);
+    return json(res, 200, { user: publicUser(user), token, passkey_setup: passkeySetup(user), next: entry.next ?? null });
+  }
+
+  // Test helper: the latest magic link token / step-up code "delivered" to an address.
+  if (req.method === 'GET' && url.pathname === '/__mail') {
+    const email = String(url.searchParams.get('email') ?? '').toLowerCase();
+    const mail = mailbox.get(email);
+    if (!mail) return json(res, 404, { message: 'No mail.' });
+    return json(res, 200, { ...mail, url: `/auth/magic?token=${mail.token}` });
+  }
+
+  // ---- Passkeys ----
+  // Test helper: give an account a passkey without going through WebAuthn registration.
+  if (req.method === 'POST' && url.pathname === '/__seed-passkey') {
+    const body = await readJson(req);
+    const email = String(body.email ?? '').toLowerCase();
+    if (!users.has(email)) return json(res, 404, { message: 'No such user.' });
+    const list = passkeyList(email);
+    passkeys.set(email, [...list, { id: nextPasskeyId++, name: String(body.name ?? 'Test passkey'), created_at: new Date().toISOString(), last_used_at: null, transports: ['internal'], credential_id: String(body.credential_id ?? 'mock-cred') }]);
+    return json(res, 200, { ok: true });
+  }
+
+  if (req.method === 'POST' && url.pathname === '/api/auth/passkeys/login/options') {
+    const challengeId = `challenge-${nextChallenge++}`;
+    challenges.set(challengeId, { email: null, used: false });
+    return json(res, 200, { challenge_id: challengeId, options: { challenge: 'bW9jay1jaGFsbGVuZ2U', timeout: 60000, rpId: '127.0.0.1', userVerification: 'preferred' } });
+  }
+
+  if (req.method === 'POST' && url.pathname === '/api/auth/passkeys/login') {
+    const body = await readJson(req);
+    const challenge = challenges.get(String(body.challenge_id ?? ''));
+    if (!challenge || challenge.used) return json(res, 401, { message: 'Passkey sign in failed. Please try again.' });
+    const credentialId = body.credential?.id;
+    const owner = challenge.email
+      ? users.get(challenge.email)
+      : [...users.values()].find((candidate) => passkeyList(candidate.email).some((item) => item.credential_id === credentialId));
+    if (!owner || !passkeyList(owner.email).some((item) => item.credential_id === credentialId)) {
+      return json(res, 401, { message: 'Passkey sign in failed. Please try again.' });
+    }
+    challenge.used = true;
+    const item = passkeyList(owner.email).find((entry) => entry.credential_id === credentialId);
+    item.last_used_at = new Date().toISOString();
+    ensureUsername(owner);
+    const token = issueToken(owner.email);
+    steppedUpUntil.set(token, Date.now() + 10 * 60 * 1000);
+    return json(res, 200, { user: publicUser(owner), token });
+  }
+
+  if (req.method === 'GET' && url.pathname === '/api/auth/passkeys') {
+    const email = tokens.get(bearer(req));
+    if (!email) return json(res, 401, { message: 'Unauthenticated.' });
+    return json(res, 200, { passkeys: passkeyList(email).map(({ credential_id, ...rest }) => rest) });
+  }
+
+  if (req.method === 'POST' && url.pathname === '/api/auth/passkeys/options') {
+    const email = tokens.get(bearer(req));
+    if (!email) return json(res, 401, { message: 'Unauthenticated.' });
+    if (!isSteppedUp(req)) return stepUpRequired(res);
+    const challengeId = `challenge-${nextChallenge++}`;
+    challenges.set(challengeId, { email, used: false, registration: true });
+    return json(res, 200, {
+      challenge_id: challengeId,
+      options: {
+        challenge: 'bW9jay1jaGFsbGVuZ2U',
+        rp: { name: 'Toolblip', id: '127.0.0.1' },
+        user: { id: 'bW9jYS11c2Vy', name: email, displayName: email },
+        pubKeyCredParams: [{ type: 'public-key', alg: -7 }],
+        timeout: 60000,
+        attestation: 'none',
+        authenticatorSelection: { residentKey: 'preferred', userVerification: 'preferred' },
+      },
+    });
+  }
+
+  if (req.method === 'POST' && url.pathname === '/api/auth/passkeys') {
+    const email = tokens.get(bearer(req));
+    if (!email) return json(res, 401, { message: 'Unauthenticated.' });
+    const body = await readJson(req);
+    const list = passkeyList(email);
+    if (!isSteppedUp(req)) return stepUpRequired(res);
+    const challenge = challenges.get(String(body.challenge_id ?? ''));
+    if (!challenge || challenge.used) return json(res, 422, { message: 'This passkey request has expired. Try again.' });
+    challenge.used = true;
+    const name = String(body.name ?? '').trim().slice(0, 60) || `Passkey ${list.length + 1}`;
+    const passkey = { id: nextPasskeyId++, name, created_at: new Date().toISOString(), last_used_at: null, transports: ['internal'], credential_id: String(body.credential?.id ?? `cred-${nextPasskeyId}`) };
+    passkeys.set(email, [...list, passkey]);
+    const { credential_id, ...publicPasskey } = passkey;
+    return json(res, 201, { passkey: publicPasskey });
+  }
+
+  const passkeyItemMatch = url.pathname.match(/^\/api\/auth\/passkeys\/(\d+)$/);
+  if ((req.method === 'PATCH' || req.method === 'DELETE') && passkeyItemMatch) {
+    const email = tokens.get(bearer(req));
+    if (!email) return json(res, 401, { message: 'Unauthenticated.' });
+    const id = Number(passkeyItemMatch[1]);
+    const list = passkeyList(email);
+    const item = list.find((entry) => entry.id === id);
+    if (!item) return json(res, 404, { message: 'Passkey not found.' });
+    if (req.method === 'PATCH') {
+      const body = await readJson(req);
+      const name = String(body.name ?? '').trim();
+      if (!name || name.length > 60) return json(res, 422, { message: 'Name must be 1-60 characters.' });
+      item.name = name;
+      const { credential_id, ...publicPasskey } = item;
+      return json(res, 200, { passkey: publicPasskey });
+    }
+    if (!isSteppedUp(req)) return stepUpRequired(res);
+    passkeys.set(email, list.filter((entry) => entry.id !== id));
+    res.writeHead(204);
+    return res.end();
+  }
+
+  // ---- Step-up ----
+  if (req.method === 'POST' && url.pathname === '/api/auth/step-up/options') {
+    const email = tokens.get(bearer(req));
+    if (!email) return json(res, 401, { message: 'Unauthenticated.' });
+    const list = passkeyList(email);
+    if (list.length === 0) return json(res, 422, { message: 'You have no passkeys to confirm with.' });
+    const challengeId = `challenge-${nextChallenge++}`;
+    challenges.set(challengeId, { email, used: false, stepUp: true });
+    return json(res, 200, { challenge_id: challengeId, options: { challenge: 'bW9jay1jaGFsbGVuZ2U', timeout: 60000, rpId: '127.0.0.1', allowCredentials: list.map((item) => ({ type: 'public-key', id: item.credential_id })) } });
+  }
+
+  if (req.method === 'POST' && url.pathname === '/api/auth/step-up') {
+    const email = tokens.get(bearer(req));
+    if (!email) return json(res, 401, { message: 'Unauthenticated.' });
+    const body = await readJson(req);
+    const challenge = challenges.get(String(body.challenge_id ?? ''));
+    if (!challenge || challenge.used || !challenge.stepUp) return json(res, 422, { message: 'This check has expired. Try again.' });
+    challenge.used = true;
+    return json(res, 200, { stepped_up_until: new Date(markSteppedUp(req)).toISOString() });
+  }
+
+  if (req.method === 'POST' && url.pathname === '/api/auth/step-up/email-code') {
+    const email = tokens.get(bearer(req));
+    if (!email) return json(res, 401, { message: 'Unauthenticated.' });
+    const mail = mailbox.get(email) ?? {};
+    mailbox.set(email, { ...mail, code: '123456', sentAt: Date.now() });
+    return json(res, 200, { sent: true });
+  }
+
+  if (req.method === 'POST' && url.pathname === '/api/auth/step-up/email-code/verify') {
+    const email = tokens.get(bearer(req));
+    if (!email) return json(res, 401, { message: 'Unauthenticated.' });
+    const body = await readJson(req);
+    if (mailbox.get(email)?.code !== String(body.code ?? '')) {
+      return json(res, 422, { message: 'That code is not right. Please try again.', code: 'step_up_code_invalid' });
+    }
+    return json(res, 200, { stepped_up_until: new Date(markSteppedUp(req)).toISOString() });
   }
 
   if (req.method === 'GET' && url.pathname === '/api/auth/me') {
@@ -381,6 +583,7 @@ const server = http.createServer(async (req, res) => {
     if (!email) return json(res, 401, { message: 'Unauthenticated.' });
     const user = email ? users.get(email) : null;
     if (!user) return json(res, 404, { message: 'User not found.' });
+    if (!isSteppedUp(req)) return stepUpRequired(res);
     const targetTier = String(body.plan_tier ?? '');
     const billing = String(body.billing ?? '');
     if (!['starter', 'ultra', 'max'].includes(targetTier) || !['monthly', 'yearly'].includes(billing)) {
@@ -424,11 +627,6 @@ const server = http.createServer(async (req, res) => {
     if (!email) return json(res, 401, { message: 'Unauthenticated.' });
     return json(res, 200, { url: 'https://checkout.stripe.com/mock', session_id: 'cs_mock' });
   }
-
-  if (req.method === 'POST' && url.pathname === '/api/auth/forgot-password') {
-    return json(res, 200, { message: 'If that email exists, a reset link has been sent.' });
-  }
-
 
   const engagementMatch = url.pathname.match(/^\/api\/tools\/([^/]+)\/engagement$/);
   if (req.method === 'GET' && engagementMatch) {

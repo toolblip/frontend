@@ -1,13 +1,10 @@
 import { test, expect, type Page } from '@playwright/test';
-import { resetMockBackend, VALID_USER } from '../fixtures/users';
+import { VALID_USER, loginViaApi, resetMockBackend } from '../fixtures/users';
 
 const PAID = { is_pro: true, tier: 'ultra', subscription_status: 'active', plan_ends_at: null };
 
-async function loginViaApi(page: Page) {
-  const res = await page.request.post('/api/auth/login', {
-    data: { email: VALID_USER.email, password: VALID_USER.password },
-  });
-  expect(res.ok()).toBeTruthy();
+async function signIn(page: Page) {
+  await loginViaApi(page, VALID_USER);
 }
 
 test.describe('Paid saved tool context', () => {
@@ -19,7 +16,7 @@ test.describe('Paid saved tool context', () => {
     await page.route('**/api/subscription', async (route) => {
       await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(PAID) });
     });
-    await loginViaApi(page);
+    await signIn(page);
 
     await page.goto('/tools/json-formatter');
 
@@ -60,7 +57,7 @@ test.describe('Paid saved tool context', () => {
 
   test('a free logged-in user does not see the saved-context control', async ({ page }) => {
     // Real mock subscription returns is_pro: false.
-    await loginViaApi(page);
+    await signIn(page);
     await page.goto('/tools/json-formatter');
     await expect(page.getByLabel('JSON input')).toBeVisible();
     await expect(page.getByTestId('tool-context-controls')).toHaveCount(0);

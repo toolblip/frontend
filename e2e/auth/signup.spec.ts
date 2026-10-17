@@ -1,12 +1,12 @@
 import { test, expect } from '@playwright/test';
-import { expectAuthenticatedUser, expectLoggedInCookie, makeUser, openEmailForm, resetMockBackend, signupByForm, TAKEN_EMAIL } from '../fixtures/users';
+import { MOCK_URL, continueMagicLink, expectAuthenticatedUser, expectLoggedInCookie, makeUser, openEmailForm, requestMagicLink, resetMockBackend, signupByForm, TAKEN_EMAIL } from '../fixtures/users';
 
 test.describe('Signup BDD regression', () => {
   test.beforeEach(async ({ request }) => {
     await resetMockBackend(request);
   });
 
-  test('Given valid signup input, When the form is submitted, Then the account is created, the user is redirected to account dashboard, and an auth cookie is set', async ({ page }) => {
+  test('Given a new email, When the user signs up by email link, Then the account is created, the user is redirected to account dashboard, and an auth cookie is set', async ({ page }) => {
     const user = makeUser('signup');
 
     await signupByForm(page, user);
@@ -31,63 +31,32 @@ test.describe('Signup BDD regression', () => {
 
     const toggle = page.getByRole('button', { name: 'More options' });
     await expect(toggle).toHaveAttribute('aria-expanded', 'false');
-    await expect(page.getByLabel('Password', { exact: true })).toHaveCount(0);
+    await expect(page.getByLabel('Email')).toHaveCount(0);
 
     await openEmailForm(page);
     await expect(toggle).toHaveAttribute('aria-expanded', 'true');
-    await expect(page.getByLabel('Password', { exact: true })).toBeVisible();
+    await expect(page.getByLabel('Email')).toBeVisible();
+    await expect(page.getByLabel('Password')).toHaveCount(0);
   });
 
-  test('Given a short password, When the user submits signup, Then a client-side error is shown and no register request is made', async ({ page }) => {
-    const registerRequests: string[] = [];
-    page.on('request', (request) => {
-      if (request.method() === 'POST' && request.url().includes('/api/auth/register')) {
-        registerRequests.push(request.url());
-      }
-    });
-
+  test('Given an email that already has an account, When the user signs up with it, Then the same sign-in link is sent and no duplicate is created', async ({ page }) => {
     await page.goto('/signup');
-    await openEmailForm(page);
-    await page.getByLabel('Name', { exact: true }).fill('Short Password');
-    await page.getByLabel('Email').fill('short-password@toolblip.test');
-    await page.getByLabel('Password', { exact: true }).fill('short');
-    await page.getByLabel('Confirm password').fill('short');
-    await page.getByRole('button', { name: 'Create account' }).click();
+    await requestMagicLink(page, TAKEN_EMAIL);
 
-    await expect(page.locator('p[role="alert"]')).toContainText('Password must be at least 8 characters');
-    expect(registerRequests).toHaveLength(0);
+    await expect(page.getByText(TAKEN_EMAIL)).toBeVisible();
+    await expect(page.locator('p[role="alert"]')).toHaveCount(0);
   });
 
-  test('Given password confirmation does not match, When the user submits signup, Then a client-side error is shown and no register request is made', async ({ page }) => {
-    const registerRequests: string[] = [];
-    page.on('request', (request) => {
-      if (request.method() === 'POST' && request.url().includes('/api/auth/register')) {
-        registerRequests.push(request.url());
-      }
-    });
+  test('Given a new account without a passkey, When the user signs up, Then they are offered passkey setup and can skip it', async ({ page }) => {
+    const user = makeUser('signup-passkey');
+    await page.goto('/signup?next=%2Fdashboard');
+    await requestMagicLink(page, user.email);
+    const mail = await (await page.request.get(`${MOCK_URL}/__mail?email=${encodeURIComponent(user.email)}`)).json();
+    await page.goto(mail.url);
+    await continueMagicLink(page);
 
-    await page.goto('/signup');
-    await openEmailForm(page);
-    await page.getByLabel('Name', { exact: true }).fill('Mismatch User');
-    await page.getByLabel('Email').fill('mismatch@toolblip.test');
-    await page.getByLabel('Password', { exact: true }).fill('Password123!');
-    await page.getByLabel('Confirm password').fill('Different123!');
-    await page.getByRole('button', { name: 'Create account' }).click();
-
-    await expect(page.locator('p[role="alert"]')).toContainText('Passwords do not match');
-    expect(registerRequests).toHaveLength(0);
-  });
-
-  test('Given a duplicate email, When the API returns validation errors, Then the error is shown and the user remains on signup', async ({ page }) => {
-    await page.goto('/signup');
-    await openEmailForm(page);
-    await page.getByLabel('Name', { exact: true }).fill('Duplicate User');
-    await page.getByLabel('Email').fill(TAKEN_EMAIL);
-    await page.getByLabel('Password', { exact: true }).fill('Password123!');
-    await page.getByLabel('Confirm password').fill('Password123!');
-    await page.getByRole('button', { name: 'Create account' }).click();
-
-    await expect(page).toHaveURL(/\/signup$/);
-    await expect(page.locator('p[role="alert"]')).toContainText('email has already been taken');
+    await expect(page).toHaveURL(/\/setup-passkey\?mode=required/);
+    await expect(page.getByRole('heading', { name: 'Set up a passkey' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Not possible on this device' })).toBeVisible();
   });
 });

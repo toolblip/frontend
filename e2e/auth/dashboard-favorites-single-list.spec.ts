@@ -1,5 +1,5 @@
 import { test, expect, type Page } from '@playwright/test';
-import { dismissDashboardOnboarding, loginByForm, resetMockBackend, VALID_USER } from '../fixtures/users';
+import { VALID_USER, dismissDashboardOnboarding, loginByForm, loginViaApi, resetMockBackend } from '../fixtures/users';
 
 async function expectDefaultFavorites(page: Page) {
   await expect(page.locator('#favorite-tools')).toHaveCount(1);
@@ -24,11 +24,8 @@ test.describe('Dashboard favorites and lists', () => {
   });
 
   test('saved favorites stay in the private panel while lists are managed separately', async ({ page }) => {
-    const loginRes = await page.request.post('/api/auth/login', {
-      data: { email: VALID_USER.email, password: VALID_USER.password },
-    });
-    expect(loginRes.ok()).toBeTruthy();
-    expect((await page.request.post('/api/tools/json-formatter/favorite')).ok()).toBeTruthy();
+    await loginViaApi(page, VALID_USER);
+        expect((await page.request.post('/api/tools/json-formatter/favorite')).ok()).toBeTruthy();
     expect((await page.request.post('/api/tools/uuid-generator/favorite')).ok()).toBeTruthy();
 
     await page.goto('/dashboard');

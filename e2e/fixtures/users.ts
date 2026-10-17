@@ -3,38 +3,39 @@ import { expect, type Page, type APIRequestContext } from '@playwright/test';
 export type TestUser = {
   name: string;
   email: string;
-  password: string;
 };
 
+// Seeded accounts have no passkey, so their first magic-link sign in lands on /setup-passkey.
 export const VALID_USER: TestUser = {
   name: 'BDD User',
   email: 'bdd@toolblip.test',
-  password: 'Password123!',
 };
 
 export const ADMIN_USER: TestUser = {
   name: 'Admin User',
   email: 'admin@toolblip.test',
-  password: 'Password123!',
 };
 
 export const TAKEN_EMAIL = 'taken@toolblip.test';
 
+export const MOCK_URL = `http://127.0.0.1:${process.env.E2E_MOCK_PORT ?? 3199}`;
+
+/** Magic-link accounts are named after the email local part. */
 export function makeUser(prefix = 'tester'): TestUser {
   const id = `${Date.now()}-${Math.floor(Math.random() * 100000)}`;
+  const local = `${prefix}-${id}`;
   return {
-    name: `Regression ${id}`,
-    email: `${prefix}-${id}@toolblip.test`,
-    password: 'Password123!',
+    name: local,
+    email: `${local}@toolblip.test`,
   };
 }
 
 export async function resetMockBackend(request: APIRequestContext) {
-  const res = await request.post('http://127.0.0.1:3199/__reset');
+  const res = await request.post(`${MOCK_URL}/__reset`);
   expect(res.ok()).toBeTruthy();
 }
 
-/** Email/password forms live behind the "More options" disclosure on login and signup. */
+/** Email sign-in lives behind the "More options" disclosure on login and signup. */
 export async function openEmailForm(page: Page) {
   // A click before React hydrates is dropped, so retry until aria-expanded flips.
   const toggle = page.getByRole('button', { name: 'More options' });
@@ -44,30 +45,67 @@ export async function openEmailForm(page: Page) {
   }).toPass();
 }
 
-export async function loginByForm(page: Page, user: TestUser = VALID_USER) {
-  await page.goto('/login');
+/** Types the address and submits the magic-link form; waits for the "Check your email" state. */
+export async function requestMagicLink(page: Page, email: string) {
   await openEmailForm(page);
-  await page.getByLabel('Email').fill(user.email);
-  await page.getByLabel('Password').fill(user.password);
-  await page.getByRole('button', { name: 'Sign in', exact: true }).click();
+  await page.getByLabel('Email').fill(email);
+  await page.getByRole('button', { name: 'Continue with email' }).click();
+  await expect(page.getByRole('heading', { name: 'Check your email' })).toBeVisible();
+}
+
+/** The magic link page consumes only on Continue (scanners must not burn the link). Clicks before hydration are dropped, so retry. */
+export async function continueMagicLink(page: Page) {
+  const button = page.getByRole('button', { name: 'Continue', exact: true });
+  await expect(async () => {
+    await button.click();
+    await expect(button).toBeHidden({ timeout: 1000 });
+  }).toPass();
+}
+
+/** Opens the newest magic link the mock mailbox "delivered" to the address, then waits for the app to route on. */
+export async function openMagicLink(page: Page, email: string) {
+  const mailRes = await page.request.get(`${MOCK_URL}/__mail?email=${encodeURIComponent(email)}`);
+  expect(mailRes.ok()).toBeTruthy();
+  const mail = await mailRes.json();
+  await page.goto(mail.url);
+  await continueMagicLink(page);
+  await page.waitForURL((url) => !url.pathname.startsWith('/auth/magic'));
+  await skipPasskeySetupIfPrompted(page);
+}
+
+/** Accounts without a passkey see the setup screen after sign in; skip it for this device. */
+export async function skipPasskeySetupIfPrompted(page: Page) {
+  if (!new URL(page.url()).pathname.startsWith('/setup-passkey')) return;
+  const skip = page.getByRole('button', { name: /Not possible on this device|Maybe later/ });
+  // Clicks before hydration are dropped, so retry until the route leaves the setup screen.
+  await expect(async () => {
+    await skip.click();
+    await expect(page).not.toHaveURL(/\/setup-passkey/, { timeout: 1000 });
+  }).toPass();
+}
+
+export async function loginByForm(page: Page, user: TestUser = VALID_USER, next = '/dashboard') {
+  await page.goto(`/login?next=${encodeURIComponent(next)}`);
+  await requestMagicLink(page, user.email);
+  await openMagicLink(page, user.email);
 }
 
 export async function signupByForm(page: Page, user: TestUser, next = '/dashboard') {
   await page.goto(`/signup?next=${encodeURIComponent(next)}`);
-  await openEmailForm(page);
-  await page.getByLabel('Name', { exact: true }).fill(user.name);
-  await page.getByLabel('Email').fill(user.email);
-  await page.getByLabel('Password', { exact: true }).fill(user.password);
-  await page.getByLabel('Confirm password').fill(user.password);
-  await page.getByRole('button', { name: 'Create account' }).click();
+  await requestMagicLink(page, user.email);
+  await openMagicLink(page, user.email);
 }
 
+/** Signs in through the API (email/start, then consume the mailed token). Cookies land in the page context. */
 export async function loginViaApi(page: Page, user: TestUser = VALID_USER) {
-  const res = await page.request.post('/api/auth/login', {
-    data: { email: user.email, password: user.password },
-    headers: { Accept: 'application/json' },
-  });
-  expect(res.status()).toBe(200);
+  const headers = { Accept: 'application/json' };
+  const start = await page.request.post('/api/auth/email/start', { data: { email: user.email }, headers });
+  expect(start.status()).toBe(200);
+  expect((await start.json()).method).toBe('email_sent');
+  const mailRes = await page.request.get(`${MOCK_URL}/__mail?email=${encodeURIComponent(user.email)}`);
+  const mail = await mailRes.json();
+  const consume = await page.request.post('/api/auth/magic-link/consume', { data: { token: mail.token }, headers });
+  expect(consume.status()).toBe(200);
 }
 
 export async function dismissDashboardOnboarding(page: Page) {

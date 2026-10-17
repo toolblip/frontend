@@ -4,6 +4,7 @@ import Script from "next/script";
 import localFont from "next/font/local";
 import CookieBanner from "@/components/CookieBanner";
 import InstallAppPrompt from "@/components/v2/InstallAppPrompt";
+import StepUpDialog from "@/components/auth/StepUpDialog";
 import Analytics from "@/components/Analytics";
 import ThemeProvider from "@/components/ThemeProvider";
 import TopLoader from "@/components/TopLoader";
@@ -183,6 +184,7 @@ export default function RootLayout({
               <Analytics measurementId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
               <CookieBanner />
               <InstallAppPrompt />
+              <StepUpDialog />
             </AuthProvider>
           </PwaProvider>
         </ThemeProvider>
