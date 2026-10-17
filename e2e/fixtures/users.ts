@@ -35,9 +35,13 @@ export async function resetMockBackend(request: APIRequestContext) {
   expect(res.ok()).toBeTruthy();
 }
 
-/** The email field is the single sign-in / sign-up entry on /login and /signup. */
+/** /login and /signup offer Google or email; the email form lives on /login/email and /signup/email. */
 export async function openEmailForm(page: Page) {
-  await expect(page.getByLabel('Email')).toBeVisible();
+  const emailField = page.getByLabel('Email');
+  if (!(await emailField.isVisible())) {
+    await page.getByTestId('email-auth-button').click();
+  }
+  await expect(emailField).toBeVisible();
 }
 
 /** Types the address and submits the magic-link form; waits for the "Check your email" state. */

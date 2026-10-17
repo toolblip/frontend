@@ -39,7 +39,8 @@ test.describe('Account onboarding BDD regression', () => {
     await page.goto('/dashboard?plan=ultra&billing=monthly');
 
     await expect(page).toHaveURL(/\/login\?next=.*dashboard.*plan%3Dultra.*billing%3Dmonthly/);
-    await expect(page.getByRole('link', { name: /Continue with Google/i })).toHaveAttribute('href', /next=%2Fdashboard%3Fplan%3Dultra%26billing%3Dmonthly/);
+    const signUpLink = page.getByRole('link', { name: 'Sign up' });
+    await expect(signUpLink).toHaveAttribute('href', '/signup?next=%2Fdashboard%3Fplan%3Dultra%26billing%3Dmonthly');
   });
 
   test('Given a first-time login reaches the dashboard, Then the welcome step advances to pricing', async ({ page }) => {
@@ -74,7 +75,11 @@ test.describe('Account onboarding BDD regression', () => {
     await page.locator('[data-tier="ultra"]').getByRole('button', { name: 'Start free trial' }).click();
     await expect(page).toHaveURL(/\/login\?next=.*dashboard.*plan%3Dultra.*billing%3Dmonthly/);
 
-    // /login is also sign up: a new email gets a link and an account.
+    const signUpLink = page.getByRole('link', { name: 'Sign up' });
+    await expect(signUpLink).toHaveAttribute('href', '/signup?next=%2Fdashboard%3Fplan%3Dultra%26billing%3Dmonthly');
+    await signUpLink.click();
+    await expect(page).toHaveURL(/\/signup\?next=.*dashboard.*plan%3Dultra.*billing%3Dmonthly/);
+
     await requestMagicLink(page, user.email);
     await openMagicLink(page, user.email);
 
