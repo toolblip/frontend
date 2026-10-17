@@ -159,7 +159,7 @@ async function lookup(ctx, kind) {
   else { const results = kind === 'ping' ? result.results : result; const records = results.flatMap(r => r.records ?? []); check(records.some(r => r.data === '8.8.8.8'), '[live-public] Real dns.google A lookup contains the documented resolver address 8.8.8.8.'); }
   check(JSON.parse((await download(ctx)).toString()) !== null, 'Current network report downloads as JSON.');
   // Controlled FAILURE only; no synthetic success response.
-  const pattern = kind === 'rdap' ? '**/rdap.org/**' : kind === 'links' ? `${baseURL}/**` : '**/dns.google/resolve?*';
+  const pattern = kind === 'rdap' ? '**/rdap.org/**' : kind === 'links' ? `${baseURL}/` : '**/dns.google/resolve?*';
   await page.route(pattern, route => ctx.abortExpectedRequest(route, 'Controlled lookup network failure verifies explicit error output'));
   try {
     await tool.getByRole('button', { name: 'Lookup', exact: true }).click();

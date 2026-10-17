@@ -1159,7 +1159,7 @@
       "category": "SEO",
       "url": "https://toolblip.com/tools/robots-txt-analyzer",
       "historicallyApproved": false,
-      "canonicalAlias": null,
+      "canonicalAlias": "robots-txt-checker",
       "group": "seo-network"
     },
     {
@@ -1294,7 +1294,7 @@
       "category": "Developer",
       "url": "https://toolblip.com/tools/json-to-typescript-interface",
       "historicallyApproved": false,
-      "canonicalAlias": null,
+      "canonicalAlias": "json-to-typescript",
       "group": "developer-data"
     },
     {
@@ -1897,7 +1897,7 @@
       "category": "Developer",
       "url": "https://toolblip.com/tools/jwt-tester",
       "historicallyApproved": false,
-      "canonicalAlias": null,
+      "canonicalAlias": "jwt-token-tester",
       "group": "developer-security"
     },
     {
@@ -1915,7 +1915,7 @@
       "category": "SEO",
       "url": "https://toolblip.com/tools/serp-snippet-preview",
       "historicallyApproved": false,
-      "canonicalAlias": null,
+      "canonicalAlias": "serp-preview",
       "group": "seo-network"
     },
     {
@@ -2086,7 +2086,7 @@
       "category": "Developer",
       "url": "https://toolblip.com/tools/robots-txt-validator",
       "historicallyApproved": false,
-      "canonicalAlias": null,
+      "canonicalAlias": "robots-txt-checker",
       "group": "seo-network"
     },
     {
@@ -2203,7 +2203,7 @@
       "category": "Developer",
       "url": "https://toolblip.com/tools/json-path-evaluator",
       "historicallyApproved": false,
-      "canonicalAlias": null,
+      "canonicalAlias": "json-path-tester",
       "group": "developer-data"
     },
     {
@@ -2437,7 +2437,7 @@
       "category": "SEO",
       "url": "https://toolblip.com/tools/sitemap-extractor",
       "historicallyApproved": false,
-      "canonicalAlias": null,
+      "canonicalAlias": "sitemap-analyzer",
       "group": "seo-network"
     },
     {
@@ -2959,7 +2959,7 @@
       "category": "Image",
       "url": "https://toolblip.com/tools/images/resize",
       "historicallyApproved": false,
-      "canonicalAlias": null,
+      "canonicalAlias": "image-resizer",
       "group": "images"
     },
     {
@@ -2968,7 +2968,7 @@
       "category": "Image",
       "url": "https://toolblip.com/tools/images/rotate",
       "historicallyApproved": false,
-      "canonicalAlias": null,
+      "canonicalAlias": "image-rotate",
       "group": "images"
     },
     {
@@ -3049,7 +3049,7 @@
       "category": "PDF Tools",
       "url": "https://toolblip.com/tools/unlock-pdf",
       "historicallyApproved": false,
-      "canonicalAlias": null,
+      "canonicalAlias": "pdf-password-remover",
       "group": "pdf"
     },
     {
@@ -3193,7 +3193,7 @@
       "category": "Developer",
       "url": "https://toolblip.com/tools/json-escape-unescape",
       "historicallyApproved": false,
-      "canonicalAlias": null,
+      "canonicalAlias": "backslash-escape-unescape",
       "group": "developer-security"
     },
     {
@@ -3310,7 +3310,7 @@
       "category": "SEO",
       "url": "https://toolblip.com/tools/robots-txt-editor",
       "historicallyApproved": false,
-      "canonicalAlias": null,
+      "canonicalAlias": "robots-txt-checker",
       "group": "seo-network"
     },
     {
@@ -3400,7 +3400,7 @@
       "category": "Image",
       "url": "https://toolblip.com/tools/images/image-dimension-checker",
       "historicallyApproved": false,
-      "canonicalAlias": null,
+      "canonicalAlias": "detect",
       "group": "images"
     },
     {
@@ -3526,7 +3526,7 @@
       "category": "Network",
       "url": "https://toolblip.com/tools/random-mac-generator",
       "historicallyApproved": false,
-      "canonicalAlias": null,
+      "canonicalAlias": "mac-address-generator",
       "group": "seo-network"
     },
     {
@@ -3607,7 +3607,7 @@
       "category": "SEO",
       "url": "https://toolblip.com/tools/serp-simulator",
       "historicallyApproved": false,
-      "canonicalAlias": null,
+      "canonicalAlias": "serp-preview",
       "group": "seo-network"
     },
     {
@@ -3706,7 +3706,7 @@
       "category": "Image",
       "url": "https://toolblip.com/tools/images/image-size-resizer",
       "historicallyApproved": false,
-      "canonicalAlias": null,
+      "canonicalAlias": "image-resizer",
       "group": "images"
     },
     {
@@ -3832,7 +3832,7 @@
       "category": "Conversion",
       "url": "https://toolblip.com/tools/markdown-table-from-json",
       "historicallyApproved": false,
-      "canonicalAlias": null,
+      "canonicalAlias": "json-to-markdown-table",
       "group": "media-conversion"
     },
     {
@@ -3868,7 +3868,7 @@
       "category": "SEO",
       "url": "https://toolblip.com/tools/keyword-density-analyzer",
       "historicallyApproved": false,
-      "canonicalAlias": null,
+      "canonicalAlias": "keyword-density-checker",
       "group": "seo-network"
     },
     {
@@ -3922,7 +3922,7 @@
       "category": "Text",
       "url": "https://toolblip.com/tools/word-combinations",
       "historicallyApproved": false,
-      "canonicalAlias": null,
+      "canonicalAlias": "word-combinations-generator",
       "group": "utility-design"
     },
     {
@@ -4030,7 +4030,7 @@
       "category": "Developer",
       "url": "https://toolblip.com/tools/json-to-typescript-types",
       "historicallyApproved": false,
-      "canonicalAlias": null,
+      "canonicalAlias": "json-to-typescript",
       "group": "developer-data"
     },
     {
@@ -4039,7 +4039,7 @@
       "category": "Image",
       "url": "https://toolblip.com/tools/images/favicon-png-maker",
       "historicallyApproved": false,
-      "canonicalAlias": null,
+      "canonicalAlias": "favicon-generator",
       "group": "images"
     },
     {
@@ -4138,7 +4138,7 @@
       "category": "Image",
       "url": "https://toolblip.com/tools/images/favicon-icon-generator",
       "historicallyApproved": false,
-      "canonicalAlias": null,
+      "canonicalAlias": "favicon-generator",
       "group": "images"
     },
     {
