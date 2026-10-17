@@ -35,10 +35,10 @@ describe('per-tool browser policy', () => {
     expect(base['Permissions-Policy']).toBe('camera=(), microphone=(), geolocation=(), interest-cohort=()');
     expect(directives(base['Content-Security-Policy'])).toEqual({
       'default-src': "'self'",
-      'script-src': "'self' 'unsafe-inline' 'unsafe-eval' blob: https://static.cloudflareinsights.com https://news.google.com",
+      'script-src': "'self' 'unsafe-inline' 'unsafe-eval' blob: https://static.cloudflareinsights.com https://news.google.com https://www.googletagmanager.com",
       'style-src': "'self' 'unsafe-inline'", 'img-src': "'self' data: https: blob:",
       'font-src': "'self' data:",
-      'connect-src': "'self' blob: https://toolblip-api-production.up.railway.app https://api.toolblip.com https://*.railway.app https://publish.twitter.com https://publish.x.com https://unavatar.io https://news.google.com https://www.google.com",
+      'connect-src': "'self' blob: https://toolblip-api-production.up.railway.app https://api.toolblip.com https://*.railway.app https://publish.twitter.com https://publish.x.com https://unavatar.io https://news.google.com https://www.google.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com",
       'worker-src': "'self' blob:",
       'frame-src': 'https://news.google.com https://www.google.com https://accounts.google.com',
       'object-src': "'none'",
