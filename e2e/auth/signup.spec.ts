@@ -26,14 +26,27 @@ test.describe('Signup BDD regression', () => {
     await expect(page.getByRole('checkbox')).toHaveCount(0);
   });
 
-  test('Given the signup page, Then a single email entry is shown directly with Google as the alternative', async ({ page }) => {
+  test('Given the signup page, Then Google and email are offered, and email opens its own page with the terms line', async ({ page }) => {
     await page.goto('/signup');
 
+    await expect(page.getByTestId('google-auth-button')).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Sign up with email' })).toBeVisible();
+    await expect(page.getByLabel('Email')).toHaveCount(0);
+    await expect(page.locator('.tb-v2-auth-footer').getByRole('link', { name: 'Sign in' })).toHaveAttribute('href', /^\/login\?next=/);
+
+    await page.getByRole('link', { name: 'Sign up with email' }).click();
+    await expect(page).toHaveURL(/\/signup\/email/);
     await expect(page.getByLabel('Email')).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Continue', exact: true })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'More options' })).toHaveCount(0);
-    await expect(page.getByRole('button', { name: 'Sign in with passkey' })).toHaveCount(0);
+    await expect(page.locator('.tb-v2-auth-legal')).toContainText('By signing up, you agree');
     await expect(page.getByLabel('Password')).toHaveCount(0);
+  });
+
+  test('Given the login page, Then Google and email are offered and it links to sign up', async ({ page }) => {
+    await page.goto('/login');
+
+    await expect(page.getByTestId('google-auth-button')).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Sign in with email' })).toHaveAttribute('href', /^\/login\/email\?next=/);
+    await expect(page.locator('.tb-v2-auth-footer').getByRole('link', { name: 'Sign up' })).toHaveAttribute('href', /^\/signup\?next=/);
   });
 
   test('Given an email that already has an account, When the user signs up with it, Then the same sign-in link is sent and no duplicate is created', async ({ page }) => {

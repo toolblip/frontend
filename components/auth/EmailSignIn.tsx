@@ -1,26 +1,30 @@
 "use client";
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/providers/auth-provider";
-import GoogleAuthButton from "@/components/auth/GoogleAuthButton";
 import Turnstile, { TURNSTILE_ENABLED, type TurnstileHandle } from "@/components/auth/Turnstile";
-import { PasskeyCancelledError, signInWithChallenge, type PasskeySession } from "@/lib/passkeys";
+import { PasskeyCancelledError, passkeysSupported, signInWithChallenge, signInWithPasskey, type PasskeySession } from "@/lib/passkeys";
 import type { PublicKeyCredentialRequestOptionsJSON } from "@simplewebauthn/browser";
 
 const JSON_HEADERS = { "Content-Type": "application/json", Accept: "application/json" };
 const RESEND_AFTER_MS = 60_000;
 
 type Sent = { email: string; at: number };
+type Intent = "signin" | "signup";
 
 /**
- * One entry for sign in and sign up on /login and /signup: enter an email.
+ * Email step of /login/email and /signup/email.
  * An account with passkeys gets a passkey prompt; otherwise (or if the passkey fails) we email a magic link.
+ * Sign up needs Turnstile; sign in only emails existing accounts, so it doesn't.
  */
-export default function EmailSignIn({ next, googleHref, legal, acceptsTerms = false }: { next: string; googleHref: string; legal?: ReactNode; acceptsTerms?: boolean }) {
+export default function EmailSignIn({ intent, next, legal }: { intent: Intent; next: string; legal?: ReactNode }) {
   const { login } = useAuth();
   const router = useRouter();
+  const needsTurnstile = intent === "signup" && TURNSTILE_ENABLED;
   const [passkeyBusy, setPasskeyBusy] = useState(false);
+  const [canUsePasskey, setCanUsePasskey] = useState(false);
   const [email, setEmail] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -30,6 +34,12 @@ export default function EmailSignIn({ next, googleHref, legal, acceptsTerms = fa
   const [fallbackChallenge, setFallbackChallenge] = useState<string | null>(null);
   const [turnstileToken, setTurnstileToken] = useState("");
   const turnstileRef = useRef<TurnstileHandle>(null);
+
+  useEffect(() => {
+    setCanUsePasskey(intent === "signin" && passkeysSupported());
+    const prefill = new URLSearchParams(window.location.search).get("email");
+    if (prefill) setEmail(prefill);
+  }, [intent]);
 
   useEffect(() => {
     if (!sent) return;
@@ -43,6 +53,12 @@ export default function EmailSignIn({ next, googleHref, legal, acceptsTerms = fa
     router.push(next);
   }
 
+  function passkeyFailed(err: unknown) {
+    setPasskeyBusy(false);
+    if (err instanceof PasskeyCancelledError) setNotice("Passkey sign in was cancelled. You can try again or get a sign-in link by email.");
+    else setError(err instanceof Error ? err.message : "Passkey sign in failed. Please try again.");
+  }
+
   // The account has passkeys: prompt for one. On cancel or failure the user can fall back to an email link.
   async function runPasskeyChallenge(challenge_id: string, options: PublicKeyCredentialRequestOptionsJSON) {
     setFallbackChallenge(challenge_id);
@@ -51,9 +67,19 @@ export default function EmailSignIn({ next, googleHref, legal, acceptsTerms = fa
       const { user, token } = await signInWithChallenge(challenge_id, options);
       completeSignIn(user, token);
     } catch (err) {
-      setPasskeyBusy(false);
-      if (err instanceof PasskeyCancelledError) setNotice("Passkey sign in was cancelled. You can try again or get a sign-in link by email.");
-      else setError(err instanceof Error ? err.message : "Passkey sign in failed. Please try again.");
+      passkeyFailed(err);
+    }
+  }
+
+  async function usePasskey() {
+    setError("");
+    setNotice("");
+    setPasskeyBusy(true);
+    try {
+      const { user, token } = await signInWithPasskey();
+      completeSignIn(user, token);
+    } catch (err) {
+      passkeyFailed(err);
     }
   }
 
@@ -66,7 +92,7 @@ export default function EmailSignIn({ next, googleHref, legal, acceptsTerms = fa
         method: "POST",
         headers: JSON_HEADERS,
         credentials: "include",
-        body: JSON.stringify({ email: address, turnstile_token: turnstileToken, next, ...(acceptsTerms ? { accepted_terms: true } : {}) }),
+        body: JSON.stringify({ email: address, intent, next, ...(needsTurnstile ? { turnstile_token: turnstileToken } : {}) }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
@@ -119,6 +145,7 @@ export default function EmailSignIn({ next, googleHref, legal, acceptsTerms = fa
   }
 
   const sendingBlocked = busy || passkeyBusy;
+  const turnstileMissing = needsTurnstile && !turnstileToken;
 
   return (
     <div className="space-y-4">
@@ -134,11 +161,17 @@ export default function EmailSignIn({ next, googleHref, legal, acceptsTerms = fa
           <p>
             We sent a sign-in link to <strong>{sent.email}</strong>. It expires in 15 minutes.
           </p>
-          <Turnstile ref={turnstileRef} onToken={setTurnstileToken} />
+          {intent === "signin" && (
+            <p className="tb-v2-auth-hint">
+              No email? We only send links to existing accounts.{" "}
+              <Link href={`/signup/email?next=${encodeURIComponent(next)}&email=${encodeURIComponent(sent.email)}`}>Sign up instead</Link>
+            </p>
+          )}
+          {intent === "signup" && <Turnstile ref={turnstileRef} onToken={setTurnstileToken} />}
           <button
             type="button"
             onClick={() => startEmail(sent.email)}
-            disabled={sendingBlocked || !resendReady || (TURNSTILE_ENABLED && !turnstileToken)}
+            disabled={sendingBlocked || !resendReady || turnstileMissing}
             className="tb-v2-auth-submit"
           >
             {resendReady ? "Send a new link" : "Send a new link in a minute"}
@@ -165,15 +198,23 @@ export default function EmailSignIn({ next, googleHref, legal, acceptsTerms = fa
               placeholder="you@example.com"
             />
             <p className="tb-v2-auth-hint">
-              Have a passkey? We&apos;ll ask for it. Otherwise we&apos;ll email you a sign-in link.
+              {intent === "signin"
+                ? "Have a passkey on this account? We'll ask for it. Otherwise we'll email you a sign-in link."
+                : "We'll email you a link to finish creating your account. No password needed."}
             </p>
           </div>
 
-          <Turnstile ref={turnstileRef} onToken={setTurnstileToken} />
+          {intent === "signup" && <Turnstile ref={turnstileRef} onToken={setTurnstileToken} />}
 
-          <button type="submit" disabled={sendingBlocked || (TURNSTILE_ENABLED && !turnstileToken)} className="tb-v2-auth-submit">
+          <button type="submit" disabled={sendingBlocked || turnstileMissing} className="tb-v2-auth-submit">
             {busy ? "Sending..." : passkeyBusy ? "Waiting for passkey..." : "Continue"}
           </button>
+
+          {canUsePasskey && (
+            <button type="button" onClick={usePasskey} disabled={sendingBlocked} className="tb-v2-auth-more-toggle">
+              Sign in with a passkey instead
+            </button>
+          )}
         </form>
       )}
 
@@ -188,12 +229,6 @@ export default function EmailSignIn({ next, googleHref, legal, acceptsTerms = fa
           Email me a sign-in link instead
         </button>
       )}
-
-      <div className="tb-v2-auth-divider" aria-hidden="true">
-        <span>or</span>
-      </div>
-
-      <GoogleAuthButton href={googleHref} />
 
       {legal}
     </div>

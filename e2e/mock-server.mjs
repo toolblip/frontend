@@ -340,6 +340,8 @@ const server = http.createServer(async (req, res) => {
     const email = String(body.email ?? '').trim().toLowerCase();
     if (!email) return json(res, 422, { message: 'Email is required.', errors: { email: ['Email is required.'] } });
     const user = users.get(email);
+    // Mirrors the API: sign in never emails unknown addresses, but answers the same way.
+    if (body.intent === 'signin' && !user) return json(res, 200, { method: 'email_sent' });
     const list = user ? passkeyList(email) : [];
     if (user && list.length > 0) {
       const challengeId = `challenge-${nextChallenge++}`;
