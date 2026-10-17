@@ -40,7 +40,7 @@ export default function SignupForm() {
           />
 
           <p className="tb-v2-auth-footer">
-            Already have an account? <Link href={`/login?next=${encodeURIComponent(next)}`}>Sign in</Link>
+            Already have an account? Enter the same email above to sign in.
           </p>
         </div>
       </div>

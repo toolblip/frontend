@@ -26,16 +26,13 @@ test.describe('Signup BDD regression', () => {
     await expect(page.getByRole('checkbox')).toHaveCount(0);
   });
 
-  test('Given the signup page, Then the email form stays collapsed until More options is opened', async ({ page }) => {
+  test('Given the signup page, Then a single email entry is shown directly with Google as the alternative', async ({ page }) => {
     await page.goto('/signup');
 
-    const toggle = page.getByRole('button', { name: 'More options' });
-    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
-    await expect(page.getByLabel('Email')).toHaveCount(0);
-
-    await openEmailForm(page);
-    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
     await expect(page.getByLabel('Email')).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Continue', exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'More options' })).toHaveCount(0);
+    await expect(page.getByRole('button', { name: 'Sign in with passkey' })).toHaveCount(0);
     await expect(page.getByLabel('Password')).toHaveCount(0);
   });
 
@@ -56,7 +53,7 @@ test.describe('Signup BDD regression', () => {
     await continueMagicLink(page);
 
     await expect(page).toHaveURL(/\/setup-passkey\?mode=required/);
-    await expect(page.getByRole('heading', { name: 'Set up a passkey' })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Not possible on this device' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Set up a passkey (recommended)' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Skip for now' })).toBeVisible();
   });
 });

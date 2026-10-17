@@ -26,7 +26,7 @@ export default function LoginForm() {
     <div className="tb-v2-auth">
       <div className="tb-v2-container">
         <div className="tb-v2-auth-card">
-          <h1 className="tb-v2-auth-title">Sign in</h1>
+          <h1 className="tb-v2-auth-title">Sign in or sign up</h1>
 
           {oauthError && (
             <p role="alert" className="tb-v2-auth-error">
@@ -34,11 +34,18 @@ export default function LoginForm() {
             </p>
           )}
 
-          <EmailSignIn next={next} googleHref={googleHref} />
+          <EmailSignIn
+            next={next}
+            acceptsTerms
+            googleHref={googleHref}
+            legal={
+              <p className="tb-v2-auth-legal">
+                By continuing, you agree to our <Link href="/terms">Terms of Service</Link> and{" "}
+                <Link href="/privacy">Privacy Policy</Link>.
+              </p>
+            }
+          />
 
-          <p className="tb-v2-auth-footer">
-            Don&apos;t have an account? <Link href={`/signup?next=${encodeURIComponent(next)}`}>Sign up</Link>
-          </p>
         </div>
       </div>
     </div>

@@ -7,8 +7,8 @@ import { isSafeNext } from "@/lib/safe-next";
 import { addPasskey, PasskeyCancelledError, passkeysSupported } from "@/lib/passkeys";
 
 /**
- * Offered after sign-in when the account has no passkey. "required" (magic-link accounts) blocks
- * until a passkey exists or the user opts out for this device; "suggested" (Google) has "Maybe later".
+ * Offered after sign-in when the account has no passkey. "required" (magic-link accounts) is highly
+ * recommended and asked on every sign-in until one exists ("Skip for now"); "suggested" (Google) has "Maybe later".
  */
 export default function SetupPasskeyClient() {
   const { user, loading } = useRequireAuth();
@@ -57,10 +57,10 @@ export default function SetupPasskeyClient() {
     <div className="tb-v2-auth">
       <div className="tb-v2-container">
         <div className="tb-v2-auth-card">
-          <h1 className="tb-v2-auth-title">Set up a passkey</h1>
+          <h1 className="tb-v2-auth-title">{required ? "Set up a passkey (recommended)" : "Set up a passkey"}</h1>
           <p className="tb-v2-auth-notice">
             {required
-              ? "Passkeys are how you sign in to your Toolblip account. Use your device's fingerprint, face, or screen lock. No password or email code needed."
+              ? "Highly recommended. Next time, sign in with your device's fingerprint, face, or screen lock instead of waiting for an email. You can add more passkeys later, one per device."
               : "Add a passkey to sign in with your device's fingerprint, face, or screen lock. It is optional for accounts that sign in with Google."}
           </p>
 
@@ -107,7 +107,7 @@ export default function SetupPasskeyClient() {
 
           <p className="tb-v2-auth-footer">
             <button type="button" onClick={() => router.replace(next)} disabled={busy} className="tb-v2-auth-more-toggle">
-              {required ? "Not possible on this device" : "Maybe later"}
+              {required ? "Skip for now" : "Maybe later"}
             </button>
           </p>
         </div>

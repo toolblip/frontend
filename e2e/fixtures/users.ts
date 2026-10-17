@@ -35,22 +35,20 @@ export async function resetMockBackend(request: APIRequestContext) {
   expect(res.ok()).toBeTruthy();
 }
 
-/** Email sign-in lives behind the "More options" disclosure on login and signup. */
+/** The email field is the single sign-in / sign-up entry on /login and /signup. */
 export async function openEmailForm(page: Page) {
-  // A click before React hydrates is dropped, so retry until aria-expanded flips.
-  const toggle = page.getByRole('button', { name: 'More options' });
-  await expect(async () => {
-    await toggle.click();
-    await expect(toggle).toHaveAttribute('aria-expanded', 'true', { timeout: 1000 });
-  }).toPass();
+  await expect(page.getByLabel('Email')).toBeVisible();
 }
 
 /** Types the address and submits the magic-link form; waits for the "Check your email" state. */
 export async function requestMagicLink(page: Page, email: string) {
   await openEmailForm(page);
-  await page.getByLabel('Email').fill(email);
-  await page.getByRole('button', { name: 'Continue with email' }).click();
-  await expect(page.getByRole('heading', { name: 'Check your email' })).toBeVisible();
+  // A submit before React hydrates is a native form GET, so retry until the app handles it.
+  await expect(async () => {
+    await page.getByLabel('Email').fill(email);
+    await page.getByRole('button', { name: 'Continue', exact: true }).click();
+    await expect(page.getByRole('heading', { name: 'Check your email' })).toBeVisible({ timeout: 2000 });
+  }).toPass();
 }
 
 /** The magic link page consumes only on Continue (scanners must not burn the link). Clicks before hydration are dropped, so retry. */
@@ -76,7 +74,7 @@ export async function openMagicLink(page: Page, email: string) {
 /** Accounts without a passkey see the setup screen after sign in; skip it for this device. */
 export async function skipPasskeySetupIfPrompted(page: Page) {
   if (!new URL(page.url()).pathname.startsWith('/setup-passkey')) return;
-  const skip = page.getByRole('button', { name: /Not possible on this device|Maybe later/ });
+  const skip = page.getByRole('button', { name: /Skip for now|Maybe later/ });
   // Clicks before hydration are dropped, so retry until the route leaves the setup screen.
   await expect(async () => {
     await skip.click();

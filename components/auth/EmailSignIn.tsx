@@ -4,10 +4,8 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/providers/auth-provider";
 import GoogleAuthButton from "@/components/auth/GoogleAuthButton";
-import PasskeyAuthButton from "@/components/auth/PasskeyAuthButton";
-import AuthMoreOptions from "@/components/auth/AuthMoreOptions";
 import Turnstile, { TURNSTILE_ENABLED, type TurnstileHandle } from "@/components/auth/Turnstile";
-import { PasskeyCancelledError, passkeysSupported, signInWithChallenge, signInWithPasskey, type PasskeySession } from "@/lib/passkeys";
+import { PasskeyCancelledError, signInWithChallenge, type PasskeySession } from "@/lib/passkeys";
 import type { PublicKeyCredentialRequestOptionsJSON } from "@simplewebauthn/browser";
 
 const JSON_HEADERS = { "Content-Type": "application/json", Accept: "application/json" };
@@ -16,13 +14,12 @@ const RESEND_AFTER_MS = 60_000;
 type Sent = { email: string; at: number };
 
 /**
- * Shared sign-in entry for /login and /signup: passkey + Google up front, email magic link under "More options".
- * Email first: an account with passkeys gets a passkey prompt instead of an email.
+ * One entry for sign in and sign up on /login and /signup: enter an email.
+ * An account with passkeys gets a passkey prompt; otherwise (or if the passkey fails) we email a magic link.
  */
 export default function EmailSignIn({ next, googleHref, legal, acceptsTerms = false }: { next: string; googleHref: string; legal?: ReactNode; acceptsTerms?: boolean }) {
   const { login } = useAuth();
   const router = useRouter();
-  const [passkeyAvailable, setPasskeyAvailable] = useState(false);
   const [passkeyBusy, setPasskeyBusy] = useState(false);
   const [email, setEmail] = useState("");
   const [busy, setBusy] = useState(false);
@@ -33,10 +30,6 @@ export default function EmailSignIn({ next, googleHref, legal, acceptsTerms = fa
   const [fallbackChallenge, setFallbackChallenge] = useState<string | null>(null);
   const [turnstileToken, setTurnstileToken] = useState("");
   const turnstileRef = useRef<TurnstileHandle>(null);
-
-  useEffect(() => {
-    setPasskeyAvailable(passkeysSupported());
-  }, []);
 
   useEffect(() => {
     if (!sent) return;
@@ -50,20 +43,6 @@ export default function EmailSignIn({ next, googleHref, legal, acceptsTerms = fa
     router.push(next);
   }
 
-  async function handlePasskeyLogin() {
-    setError("");
-    setNotice("");
-    setPasskeyBusy(true);
-    try {
-      const { user, token } = await signInWithPasskey();
-      completeSignIn(user, token);
-    } catch (err) {
-      setPasskeyBusy(false);
-      if (err instanceof PasskeyCancelledError) setNotice("Passkey sign in was cancelled. You can try again or use another method.");
-      else setError(err instanceof Error ? err.message : "Passkey sign in failed. Please try again.");
-    }
-  }
-
   // The account has passkeys: prompt for one. On cancel or failure the user can fall back to an email link.
   async function runPasskeyChallenge(challenge_id: string, options: PublicKeyCredentialRequestOptionsJSON) {
     setFallbackChallenge(challenge_id);
@@ -73,7 +52,7 @@ export default function EmailSignIn({ next, googleHref, legal, acceptsTerms = fa
       completeSignIn(user, token);
     } catch (err) {
       setPasskeyBusy(false);
-      if (err instanceof PasskeyCancelledError) setNotice("Passkey sign in was cancelled.");
+      if (err instanceof PasskeyCancelledError) setNotice("Passkey sign in was cancelled. You can try again or get a sign-in link by email.");
       else setError(err instanceof Error ? err.message : "Passkey sign in failed. Please try again.");
     }
   }
@@ -149,10 +128,53 @@ export default function EmailSignIn({ next, googleHref, legal, acceptsTerms = fa
         </p>
       )}
 
-      <GoogleAuthButton href={googleHref} />
+      {sent ? (
+        <div className="tb-v2-auth-form" role="status">
+          <h2 className="tb-v2-auth-title !text-xl">Check your email</h2>
+          <p>
+            We sent a sign-in link to <strong>{sent.email}</strong>. It expires in 15 minutes.
+          </p>
+          <Turnstile ref={turnstileRef} onToken={setTurnstileToken} />
+          <button
+            type="button"
+            onClick={() => startEmail(sent.email)}
+            disabled={sendingBlocked || !resendReady || (TURNSTILE_ENABLED && !turnstileToken)}
+            className="tb-v2-auth-submit"
+          >
+            {resendReady ? "Send a new link" : "Send a new link in a minute"}
+          </button>
+          <button type="button" onClick={() => setSent(null)} className="tb-v2-auth-more-toggle">
+            Use a different email
+          </button>
+        </div>
+      ) : (
+        <form onSubmit={handleEmailSubmit} className="tb-v2-auth-form" noValidate>
+          <div className="tb-v2-auth-field">
+            <label htmlFor="email" className="tb-v2-auth-label">
+              Email
+            </label>
+            <input
+              id="email"
+              type="email"
+              name="email"
+              required
+              autoComplete="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="tb-v2-auth-input"
+              placeholder="you@example.com"
+            />
+            <p className="tb-v2-auth-hint">
+              Have a passkey? We&apos;ll ask for it. Otherwise we&apos;ll email you a sign-in link.
+            </p>
+          </div>
 
-      {passkeyAvailable && (
-        <PasskeyAuthButton label="Sign in with passkey" onClick={handlePasskeyLogin} disabled={sendingBlocked} />
+          <Turnstile ref={turnstileRef} onToken={setTurnstileToken} />
+
+          <button type="submit" disabled={sendingBlocked || (TURNSTILE_ENABLED && !turnstileToken)} className="tb-v2-auth-submit">
+            {busy ? "Sending..." : passkeyBusy ? "Waiting for passkey..." : "Continue"}
+          </button>
+        </form>
       )}
 
       {notice && (
@@ -167,59 +189,13 @@ export default function EmailSignIn({ next, googleHref, legal, acceptsTerms = fa
         </button>
       )}
 
-      {legal}
-
       <div className="tb-v2-auth-divider" aria-hidden="true">
         <span>or</span>
       </div>
 
-      <AuthMoreOptions>
-        {sent ? (
-          <div className="tb-v2-auth-form" role="status">
-            <h2 className="tb-v2-auth-title !text-xl">Check your email</h2>
-            <p>
-              We sent a sign-in link to <strong>{sent.email}</strong>. It expires in 15 minutes.
-            </p>
-            <Turnstile ref={turnstileRef} onToken={setTurnstileToken} />
-            <button
-              type="button"
-              onClick={() => startEmail(sent.email)}
-              disabled={sendingBlocked || !resendReady || (TURNSTILE_ENABLED && !turnstileToken)}
-              className="tb-v2-auth-submit"
-            >
-              {resendReady ? "Send a new link" : "Send a new link in a minute"}
-            </button>
-            <button type="button" onClick={() => setSent(null)} className="tb-v2-auth-more-toggle">
-              Use a different email
-            </button>
-          </div>
-        ) : (
-          <form onSubmit={handleEmailSubmit} className="tb-v2-auth-form" noValidate>
-            <div className="tb-v2-auth-field">
-              <label htmlFor="email" className="tb-v2-auth-label">
-                Email
-              </label>
-              <input
-                id="email"
-                type="email"
-                name="email"
-                required
-                autoComplete="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="tb-v2-auth-input"
-                placeholder="you@example.com"
-              />
-            </div>
+      <GoogleAuthButton href={googleHref} />
 
-            <Turnstile ref={turnstileRef} onToken={setTurnstileToken} />
-
-            <button type="submit" disabled={sendingBlocked || (TURNSTILE_ENABLED && !turnstileToken)} className="tb-v2-auth-submit">
-              {busy ? "Sending..." : "Continue with email"}
-            </button>
-          </form>
-        )}
-      </AuthMoreOptions>
+      {legal}
     </div>
   );
 }
