@@ -102,79 +102,6 @@ const endpoints: Endpoint[] = [
 }`,
   },
   {
-    id: 'register',
-    group: 'Authentication',
-    method: 'POST',
-    path: '/api/auth/register',
-    title: 'Register',
-    description: 'If registration is enabled, create an account after the person accepts the terms and receive a Bearer token.',
-    auth: 'No auth required',
-    status: '201 Created',
-    responseShape: '{ user, token }',
-    headers: [
-      { name: 'Content-Type', value: 'application/json', when: 'Required when sending JSON body' },
-      { name: 'Accept', value: 'application/json', when: 'Recommended for all requests' },
-    ],
-    body: [
-      { name: 'name', type: 'string', required: true, description: 'Display name for the account.' },
-      { name: 'email', type: 'string', required: true, description: 'Unique email address.' },
-      { name: 'password', type: 'string', required: true, description: 'Account password, at least 8 characters.' },
-      { name: 'password_confirmation', type: 'string', required: true, description: 'Must match password.' },
-      { name: 'accepted_terms', type: 'boolean', required: true, description: 'Send true only after the person registering has accepted the terms.' },
-    ],
-    curl: `# Run only after the person registering has accepted the terms.
-curl -X POST "${BASE_URL}/api/auth/register" \\\n  -H "Content-Type: application/json" \\\n  -H "Accept: application/json" \\\n  -d '{
-    "name": "Jane Doe",
-    "email": "jane@example.com",
-    "password": "correct-horse-battery-staple",
-    "password_confirmation": "correct-horse-battery-staple",
-    "accepted_terms": true
-  }'`,
-    response: `{
-  "user": {
-    "id": 42,
-    "name": "Jane Doe",
-    "email": "jane@example.com",
-    "is_pro": false,
-    "requires_terms_acceptance": false
-  },
-  "token": "1|exampleBearerToken"
-}`,
-  },
-  {
-    id: 'login',
-    group: 'Authentication',
-    method: 'POST',
-    path: '/api/auth/login',
-    title: 'Login',
-    description: 'Exchange an email and password for a Bearer token.',
-    auth: 'No auth required',
-    status: '200 OK',
-    responseShape: '{ user, token }',
-    headers: [
-      { name: 'Content-Type', value: 'application/json', when: 'Required when sending JSON body' },
-      { name: 'Accept', value: 'application/json', when: 'Recommended for all requests' },
-    ],
-    body: [
-      { name: 'email', type: 'string', required: true, description: 'Account email address.' },
-      { name: 'password', type: 'string', required: true, description: 'Account password.' },
-    ],
-    curl: `curl -X POST "${BASE_URL}/api/auth/login" \\\n  -H "Content-Type: application/json" \\\n  -H "Accept: application/json" \\\n  -d '{
-    "email": "jane@example.com",
-    "password": "correct-horse-battery-staple"
-  }'`,
-    response: `{
-  "user": {
-    "id": 42,
-    "name": "Jane Doe",
-    "email": "jane@example.com",
-    "is_pro": false,
-    "requires_terms_acceptance": false
-  },
-  "token": "2|exampleBearerToken"
-}`,
-  },
-  {
     id: 'logout',
     group: 'Authentication',
     method: 'POST',
@@ -234,8 +161,8 @@ const starterRequest = `curl "${BASE_URL}/api/tools?per_page=1" \\\n  -H "Accept
 
 const authenticatedRequest = `curl "${BASE_URL}/api/auth/me" \\\n  -H "Authorization: Bearer YOUR_TOKEN" \\\n  -H "Accept: application/json"`;
 
-const tokenFlow = `# 1. Register or login to receive a token
-TOKEN=$(curl -s -X POST "${BASE_URL}/api/auth/login" \\\n  -H "Content-Type: application/json" \\\n  -H "Accept: application/json" \\\n  -d '{"email":"jane@example.com","password":"your-password"}' \\\n  | jq -r .token)
+const tokenFlow = `# 1. Sign in at https://toolblip.com/login (passkey, Google, or email link) to get a Bearer token
+TOKEN=YOUR_TOKEN
 
 # 2. Use the token on protected endpoints
 curl "${BASE_URL}/api/auth/me" \\\n  -H "Authorization: Bearer $TOKEN" \\\n  -H "Accept: application/json"
