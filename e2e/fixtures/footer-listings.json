@@ -778,9 +778,10 @@
     "rel": "noopener"
   },
   {
-    "href": "https://amaze.directory",
+    "href": "https://amaze.directory/tools/toolblip",
     "target": "_blank",
-    "rel": "noopener"
+    "rel": "noopener",
+    "title": "Toolblip on amaze.directory"
   },
   {
     "href": "https://www.findgreatsites.com",

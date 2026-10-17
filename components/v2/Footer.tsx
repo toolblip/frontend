@@ -522,8 +522,8 @@ function DirectoryBadges({ duplicate = false }: { duplicate?: boolean }) {
       <DirectoryBadgeLink duplicate={duplicate} href="https://launchboard.dev" target="_blank" rel="noopener">
         <DirectoryBadgeImage src="https://launchboard.dev/featured.svg" alt="Featured on LaunchBoard" width="240" height="60" fallback="LaunchBoard" />
       </DirectoryBadgeLink>
-      <DirectoryBadgeLink duplicate={duplicate} href="https://amaze.directory" target="_blank" rel="noopener">
-        <span className="tb-v2-directory-text">Featured on Amaze Directory</span>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://amaze.directory/tools/toolblip" target="_blank" rel="noopener" title="Toolblip on amaze.directory">
+        <DirectoryBadgeImage src="https://amaze.directory/badge/dark.svg" alt="Toolblip is listed on amaze.directory" width="181" height="46" fallback="Featured on Amaze Directory" />
       </DirectoryBadgeLink>
       <DirectoryBadgeLink duplicate={duplicate} href="https://www.findgreatsites.com" target="_blank" rel="noopener">
         <span className="tb-v2-directory-text">Featured on FindGreatSites</span>
