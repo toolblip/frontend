@@ -110,7 +110,7 @@ export default function PrivacyPage() {
 
           <div className="tb-v2-article-section">
             <h2>Contact</h2>
-            <p>Questions or privacy requests? Email <a href="mailto:harun@toolblip.com">harun@toolblip.com</a>.</p>
+            <p>Questions or privacy requests? <a href="/contact">Contact us</a>.</p>
           </div>
         </article>
       </div>

@@ -29,6 +29,7 @@ export async function GET(): Promise<Response> {
     { url: `${baseUrl}/donate`, changeFrequency: 'monthly', priority: 0.3 },
     { url: `${baseUrl}/privacy`, changeFrequency: 'yearly', priority: 0.3 },
     { url: `${baseUrl}/terms`, changeFrequency: 'yearly', priority: 0.3 },
+    { url: `${baseUrl}/contact`, changeFrequency: 'yearly', priority: 0.3 },
   ];
 
   return sitemapXmlResponse(entries);

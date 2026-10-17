@@ -34,20 +34,31 @@ export async function resetMockBackend(request: APIRequestContext) {
   expect(res.ok()).toBeTruthy();
 }
 
+/** Email/password forms live behind the "More options" disclosure on login and signup. */
+export async function openEmailForm(page: Page) {
+  // A click before React hydrates is dropped, so retry until aria-expanded flips.
+  const toggle = page.getByRole('button', { name: 'More options' });
+  await expect(async () => {
+    await toggle.click();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true', { timeout: 1000 });
+  }).toPass();
+}
+
 export async function loginByForm(page: Page, user: TestUser = VALID_USER) {
   await page.goto('/login');
+  await openEmailForm(page);
   await page.getByLabel('Email').fill(user.email);
   await page.getByLabel('Password').fill(user.password);
-  await page.getByRole('button', { name: 'Sign in' }).click();
+  await page.getByRole('button', { name: 'Sign in', exact: true }).click();
 }
 
 export async function signupByForm(page: Page, user: TestUser, next = '/dashboard') {
   await page.goto(`/signup?next=${encodeURIComponent(next)}`);
+  await openEmailForm(page);
   await page.getByLabel('Name', { exact: true }).fill(user.name);
   await page.getByLabel('Email').fill(user.email);
   await page.getByLabel('Password', { exact: true }).fill(user.password);
   await page.getByLabel('Confirm password').fill(user.password);
-  await page.getByLabel(/I agree to the Terms and Conditions and Privacy Policy/i).check();
   await page.getByRole('button', { name: 'Create account' }).click();
 }
 

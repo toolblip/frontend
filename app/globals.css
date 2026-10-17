@@ -3978,6 +3978,14 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
 .tb-v2-auth-consent-checkbox { width: 16px; height: 16px; margin-top: 2px; accent-color: var(--red); flex: 0 0 auto; }
 .tb-v2-auth-consent-label a { color: var(--red); font-weight: 600; text-decoration: none; }
 .tb-v2-auth-consent-label a:hover { color: var(--red-hover); text-decoration: underline; }
+.tb-v2-auth-more { display: flex; flex-direction: column; gap: 16px; }
+.tb-v2-auth-more-toggle { align-self: center; padding: 6px 0; background: none; border: 0; font-size: 13px; font-weight: 600; color: var(--red); cursor: pointer; }
+.tb-v2-auth-more-toggle:hover { color: var(--red-hover); text-decoration: underline; }
+.tb-v2-auth-more-toggle:focus-visible { outline: 3px solid rgba(217, 48, 48, .28); outline-offset: 2px; }
+.tb-v2-auth-notice { font-size: 13px; color: var(--fg-2); text-align: center; margin-bottom: 12px; }
+.tb-v2-auth-legal { font-size: 12.5px; line-height: 1.55; color: var(--fg-2); text-align: center; margin-bottom: 20px; }
+.tb-v2-auth-legal a { color: var(--red); font-weight: 600; text-decoration: none; }
+.tb-v2-auth-legal a:hover { color: var(--red-hover); text-decoration: underline; }
 .tb-v2-auth-submit { height: 44px; background: var(--red); color: #fff; border: none; border-radius: var(--radius-sm); font-size: 14px; font-weight: 600; cursor: pointer; transition: background .15s; margin-top: 4px; width: 100%; }
 .tb-v2-auth-submit:hover { background: var(--red-hover); }
 .tb-v2-auth-submit:disabled { opacity: 0.5; cursor: not-allowed; }

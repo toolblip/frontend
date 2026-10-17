@@ -1,9 +1,11 @@
 "use client";
 export const dynamic = "force-dynamic";
+import { isSafeNext } from "@/lib/safe-next";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRequireAuth } from "@/lib/hooks/useRequireAuth";
 import { useRouter } from "next/navigation";
+import { addPasskey, deletePasskey, listPasskeys, passkeysSupported, PasskeyCancelledError, type PasskeyItem } from "@/lib/passkeys";
 
 export default function SecurityPage() {
   const { user, token, logout, loading: authLoading } = useRequireAuth();
@@ -15,13 +17,60 @@ export default function SecurityPage() {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [passkeys, setPasskeys] = useState<PasskeyItem[]>([]);
+  const [passkeyName, setPasskeyName] = useState("");
+  const [passkeyMessage, setPasskeyMessage] = useState("");
+  const [passkeyError, setPasskeyError] = useState("");
+  const [passkeyBusy, setPasskeyBusy] = useState(false);
+  const [canUsePasskeys, setCanUsePasskeys] = useState(false);
+  const userId = user?.id;
+
+  useEffect(() => {
+    setCanUsePasskeys(passkeysSupported());
+  }, []);
+
+  useEffect(() => {
+    if (!userId) return;
+    listPasskeys().then(setPasskeys).catch(() => setPasskeyError("Could not load passkeys."));
+  }, [userId]);
+
+  async function handleAddPasskey() {
+    setPasskeyMessage("");
+    setPasskeyError("");
+    setPasskeyBusy(true);
+    try {
+      await addPasskey(passkeyName);
+      setPasskeys(await listPasskeys());
+      setPasskeyName("");
+      setPasskeyMessage("Passkey added.");
+    } catch (error) {
+      if (error instanceof PasskeyCancelledError) {
+        setPasskeyMessage("Passkey setup was cancelled.");
+      } else {
+        setPasskeyError(error instanceof Error ? error.message : "Could not add passkey.");
+      }
+    } finally {
+      setPasskeyBusy(false);
+    }
+  }
+
+  async function handleDeletePasskey(id: number) {
+    setPasskeyMessage("");
+    setPasskeyError("");
+    try {
+      await deletePasskey(id);
+      setPasskeys((current) => current.filter((item) => item.id !== id));
+    } catch (error) {
+      setPasskeyError(error instanceof Error ? error.message : "Could not delete passkey.");
+    }
+  }
 
   function redirectToLoginPreservingCurrentLocation() {
     const params = new URLSearchParams(window.location.search);
     const currentPath = window.location.pathname;
     const currentNext = params.get("next");
     const nextPath =
-      (currentPath === "/login" || currentPath === "/signup") && currentNext && currentNext.startsWith("/") && !currentNext.startsWith("//")
+      (currentPath === "/login" || currentPath === "/signup") && isSafeNext(currentNext)
         ? currentNext
         : `${currentPath}${window.location.search}`;
     router.replace(`/login?next=${encodeURIComponent(nextPath)}`);
@@ -159,6 +208,69 @@ export default function SecurityPage() {
             {passwordSaving ? "Changing..." : "Change password"}
           </button>
         </form>
+      </div>
+
+      {/* Passkeys */}
+      <div className="mb-6 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-900">
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+          Passkeys
+        </h2>
+        <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+          Sign in with your device&apos;s fingerprint, face, or screen lock instead of a password.
+        </p>
+        {passkeyMessage && (
+          <p role="status" className="mt-4 text-sm text-green-600 dark:text-green-400">
+            {passkeyMessage}
+          </p>
+        )}
+        {passkeyError && (
+          <p role="alert" className="mt-4 text-sm text-red-600 dark:text-red-400">
+            {passkeyError}
+          </p>
+        )}
+        {passkeys.length > 0 && (
+          <ul className="mt-4 divide-y divide-gray-200 dark:divide-gray-700">
+            {passkeys.map((passkey) => (
+              <li key={passkey.id} className="flex items-center justify-between gap-4 py-3">
+                <div>
+                  <p className="text-sm font-medium text-gray-900 dark:text-white">{passkey.name}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                    Added {new Date(passkey.created_at).toLocaleDateString()}
+                    {passkey.last_used_at ? ` · Last used ${new Date(passkey.last_used_at).toLocaleDateString()}` : ""}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => handleDeletePasskey(passkey.id)}
+                  className="cursor-pointer rounded-full border border-gray-300 px-3 py-1.5 text-xs font-medium text-gray-700 transition-colors hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800"
+                >
+                  Delete
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+        {canUsePasskeys && (
+          <div className="mt-4 flex flex-col gap-3 sm:flex-row">
+            <input
+              type="text"
+              aria-label="Passkey name"
+              value={passkeyName}
+              onChange={(e) => setPasskeyName(e.target.value)}
+              placeholder="Name, e.g. Work laptop"
+              maxLength={60}
+              className="w-full rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 shadow-sm outline-none transition focus:border-red-500 focus:ring-2 focus:ring-red-500/20 dark:border-gray-700 dark:bg-gray-950 dark:text-white"
+            />
+            <button
+              type="button"
+              onClick={handleAddPasskey}
+              disabled={passkeyBusy}
+              className="cursor-pointer whitespace-nowrap rounded-full bg-red-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {passkeyBusy ? "Waiting for passkey..." : "Add passkey"}
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Delete account placeholder */}

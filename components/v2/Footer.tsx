@@ -711,6 +711,7 @@ export default function Footer() {
               <li><Link href="/blog">Blog</Link></li>
               <li><Link href="/pricing">Pricing</Link></li>
               <li><Link href="/donate">Donate</Link></li>
+              <li><Link href="/contact">Contact</Link></li>
             </ul>
           </div>
           <div>

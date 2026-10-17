@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import GoogleAuthButton from "@/components/auth/GoogleAuthButton";
+import Turnstile, { TURNSTILE_ENABLED, type TurnstileHandle } from "@/components/auth/Turnstile";
 import { useAuth } from "@/app/providers/auth-provider";
 import { recordRecentTool } from "@/lib/toolHistory";
 import { getToolPathBySlug } from "@/lib/tool-path";
@@ -214,6 +215,8 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
   const [loginOpen, setLoginOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState("");
+  const turnstileRef = useRef<TurnstileHandle>(null);
   const [rememberMe, setRememberMe] = useState(false);
   const [loginError, setLoginError] = useState("");
   const [loginLoading, setLoginLoading] = useState(false);
@@ -527,13 +530,14 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({ email, password, remember_me: rememberMe }),
+        body: JSON.stringify({ email, password, remember_me: rememberMe, turnstile_token: turnstileToken }),
         credentials: "include",
       });
       const data = await res.json();
 
       if (!res.ok || !data.token) {
         setLoginError(data.message ?? "Invalid email or password.");
+        turnstileRef.current?.reset();
         return;
       }
 
@@ -543,6 +547,7 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
       setPassword("");
     } catch {
       setLoginError("Something went wrong. Please try again.");
+      turnstileRef.current?.reset();
     } finally {
       setLoginLoading(false);
     }
@@ -753,7 +758,8 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
                   />
                   <span>Remember me</span>
                 </label>
-                <button type="submit" disabled={loginLoading} className="w-full rounded-xl bg-red-600 px-4 py-2 font-semibold text-white transition hover:bg-red-700 disabled:opacity-60">
+                <Turnstile ref={turnstileRef} onToken={setTurnstileToken} />
+                <button type="submit" disabled={loginLoading || (TURNSTILE_ENABLED && !turnstileToken)} className="w-full rounded-xl bg-red-600 px-4 py-2 font-semibold text-white transition hover:bg-red-700 disabled:opacity-60">
                   {loginLoading ? "Signing in..." : "Sign in"}
                 </button>
               </form>

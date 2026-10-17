@@ -95,7 +95,7 @@ export function buildLlmsTxt(): string {
     'Free, Starter ($4.99/mo), Pro ($19.99/mo), and Max ($49.99/mo). Ordinary tools work without an account.',
     '',
     '## Contact',
-    'info@toolblip.com',
+    `${SITE_ORIGIN}/contact`,
     '',
   ].join('\n');
 }

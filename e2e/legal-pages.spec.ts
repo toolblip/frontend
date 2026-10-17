@@ -9,7 +9,8 @@ test.describe('Legal pages', () => {
     await expect(page.getByRole('heading', { name: 'Account registration' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Acceptable use' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Limitation of liability' })).toBeVisible();
-    await expect(page.getByRole('link', { name: 'harun@toolblip.com' })).toHaveAttribute('href', 'mailto:harun@toolblip.com');
+    await expect(page.getByRole('link', { name: 'Contact us' })).toHaveAttribute('href', '/contact');
+    await expect(page.getByText('@toolblip.com')).toHaveCount(0);
   });
 
   test('Privacy Policy page explains collected data, usage, retention, rights, and contact details', async ({ page }) => {
@@ -21,6 +22,7 @@ test.describe('Legal pages', () => {
     await expect(page.getByRole('heading', { name: 'How we use information' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Data retention' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Your rights' })).toBeVisible();
-    await expect(page.getByRole('link', { name: 'harun@toolblip.com' })).toHaveAttribute('href', 'mailto:harun@toolblip.com');
+    await expect(page.getByRole('link', { name: 'Contact us' })).toHaveAttribute('href', '/contact');
+    await expect(page.getByText('@toolblip.com')).toHaveCount(0);
   });
 });

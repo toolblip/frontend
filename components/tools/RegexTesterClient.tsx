@@ -37,7 +37,7 @@ export default function RegexTesterClient() {
   const [pattern, setPattern] = useState('\\b\\w+@\\w+\\.\\w+\\b');
   const [flags, setFlags] = useState<Set<Flag>>(new Set(['g']));
   const [sample, setSample] = useState(
-    'Email Ada at ada@example.com or Grace at grace@toolblip.com to confirm.\nNo match: just plain text on this line.',
+    'Email Ada at ada@example.com or Grace at grace@example.com to confirm.\nNo match: just plain text on this line.',
   );
   const flagStr = useMemo(() => Array.from(flags).join(''), [flags]);
   useToolHash(

@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { expectAuthenticatedUser, expectLoggedInCookie, loginByForm, resetMockBackend, VALID_USER } from '../fixtures/users';
+import { expectAuthenticatedUser, expectLoggedInCookie, loginByForm, openEmailForm, resetMockBackend, VALID_USER } from '../fixtures/users';
 
 test.describe('Login BDD regression', () => {
   test.beforeEach(async ({ request }) => {
@@ -16,9 +16,10 @@ test.describe('Login BDD regression', () => {
 
   test('Given valid credentials with a next URL, When the user logs in, Then they land on the requested path', async ({ page }) => {
     await page.goto('/login?next=/dashboard/profile');
+    await openEmailForm(page);
     await page.getByLabel('Email').fill(VALID_USER.email);
     await page.getByLabel('Password').fill(VALID_USER.password);
-    await page.getByRole('button', { name: 'Sign in' }).click();
+    await page.getByRole('button', { name: 'Sign in', exact: true }).click();
 
     await expect(page).toHaveURL(/\/dashboard\/profile$/);
     await expectAuthenticatedUser(page, VALID_USER);
@@ -27,9 +28,10 @@ test.describe('Login BDD regression', () => {
 
   test('Given invalid credentials, When the user submits the login form, Then an error is shown and the user stays on login', async ({ page }) => {
     await page.goto('/login');
+    await openEmailForm(page);
     await page.getByLabel('Email').fill(VALID_USER.email);
     await page.getByLabel('Password').fill('WrongPassword123!');
-    await page.getByRole('button', { name: 'Sign in' }).click();
+    await page.getByRole('button', { name: 'Sign in', exact: true }).click();
 
     await expect(page).toHaveURL(/\/login$/);
     await expect(page.locator('p[role="alert"]')).toContainText('Invalid email or password');
@@ -39,7 +41,8 @@ test.describe('Login BDD regression', () => {
 
   test('Given empty required fields, When the user clicks submit, Then the API validation error is shown and no auth cookie is set', async ({ page }) => {
     await page.goto('/login');
-    await page.getByRole('button', { name: 'Sign in' }).click();
+    await openEmailForm(page);
+    await page.getByRole('button', { name: 'Sign in', exact: true }).click();
 
     await expect(page.locator('p[role="alert"]')).toContainText('Email and password are required');
     const cookies = await page.context().cookies();

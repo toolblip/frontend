@@ -1,9 +1,10 @@
+import { isSafeNext } from "@/lib/safe-next";
 import { NextRequest, NextResponse } from "next/server";
 
 const LARAVEL_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.toolblip.com";
 
 function safeNext(value: string | undefined): string {
-  if (value && value.startsWith("/") && !value.startsWith("//")) {
+  if (isSafeNext(value)) {
     return value;
   }
   return "/dashboard";

@@ -123,7 +123,7 @@ interface Segment { text: string; hit: boolean }
 
 export default function RegexExplainerClient() {
   const [pattern, setPattern] = useState('\\b\\w+@\\w+\\.\\w+\\b');
-  const [testString, setTestString] = useState('Email ada@example.com or grace@toolblip.com to confirm.');
+  const [testString, setTestString] = useState('Email ada@example.com or grace@example.com to confirm.');
 
   const tokens = useMemo(() => tokenize(pattern), [pattern]);
   const result = useSafeRegex(pattern, 'g', testString);

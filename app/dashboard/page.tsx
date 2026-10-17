@@ -1,5 +1,6 @@
 "use client";
 export const dynamic = "force-dynamic";
+import { isSafeNext } from "@/lib/safe-next";
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
@@ -208,7 +209,7 @@ export default function AccountPage() {
     const currentPath = window.location.pathname;
     const currentNext = params.get("next");
     const nextPath =
-      (currentPath === "/login" || currentPath === "/signup") && currentNext && currentNext.startsWith("/") && !currentNext.startsWith("//")
+      (currentPath === "/login" || currentPath === "/signup") && isSafeNext(currentNext)
         ? currentNext
         : `${currentPath}${window.location.search}`;
     router.replace(`/login?next=${encodeURIComponent(nextPath)}`);

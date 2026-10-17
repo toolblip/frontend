@@ -6,7 +6,7 @@ const LARAVEL_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.toolblip.com
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { name, email, password, password_confirmation, accepted_terms, username } = body;
+    const { name, email, password, password_confirmation, accepted_terms, username, turnstile_token: turnstileToken } = body;
     const chosenUsername = typeof username === "string" ? username.trim() : "";
 
     if (!name || !email || !password || !password_confirmation) {
@@ -28,6 +28,7 @@ export async function POST(req: NextRequest) {
         password,
         password_confirmation,
         accepted_terms,
+        turnstile_token: turnstileToken,
         ...(chosenUsername ? { username: chosenUsername } : {}),
       }),
     });

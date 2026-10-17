@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { openEmailForm } from '../fixtures/users';
 
 test.beforeEach(async ({ request }) => {
   await request.post('http://127.0.0.1:3199/__reset');
@@ -131,11 +132,11 @@ test('guest users can register from the favorite prompt and auto-favorite on ret
   await loginDialog.getByRole('link', { name: /Create account/i }).click();
   await expect(page).toHaveURL(/\/signup\?next=%2Ftools%2Fjson-formatter&favorite=1/);
 
+  await openEmailForm(page);
   await page.getByLabel('Name', { exact: true }).fill('Favorite Tester');
   await page.getByLabel('Email').fill('favorite-tester@example.com');
   await page.getByLabel('Password', { exact: true }).fill('Password123!');
   await page.getByLabel('Confirm password').fill('Password123!');
-  await page.getByLabel(/Terms and Conditions/i).check();
   await page.getByRole('button', { name: /^Create account$/i }).click();
 
   await expect(page).toHaveURL(/\/tools\/json-formatter(\?favorite=1)?/);
