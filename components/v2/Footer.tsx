@@ -193,7 +193,7 @@ function DirectoryBadges({ duplicate = false }: { duplicate?: boolean }) {
         <DirectoryBadgeImage src="https://firstlook.tools/badge/badge_dark.svg" alt="Featured on First Look" width="200" height="54" fallback="Featured on First Look" />
       </DirectoryBadgeLink>
       <DirectoryBadgeLink duplicate={duplicate} href="https://mydentify.com" target="_blank" rel="noopener">
-        <span className="tb-v2-directory-text">mydentify.com</span>
+        <DirectoryBadgeImage src="https://mydentify.com/badges/listed-on-mydentify.svg" alt="Listed on Mydentify" width="176" height="32" fallback="mydentify.com" />
       </DirectoryBadgeLink>
       <DirectoryBadgeLink duplicate={duplicate} data-publishyoursaas-badge="manual-submission" href="https://publishyoursaas.com" target="_blank" rel="noopener">
         <DirectoryBadgeImage src="https://publishyoursaas.com/publishyoursaas-badge.svg" alt="Listed on PublishYourSaaS" width="240" height="60" fallback="Listed on PublishYourSaaS" />
@@ -289,7 +289,7 @@ function DirectoryBadges({ duplicate = false }: { duplicate?: boolean }) {
         <DirectoryBadgeImage src="https://saascubes.com/images/badges/badge-dark.png" alt="Listed on SaaS Cubes" width="175" height="54" fallback="Listed on SaaS Cubes" />
       </DirectoryBadgeLink>
       <DirectoryBadgeLink duplicate={duplicate} href="https://www.thetoolpicker.com?ref=yourtool" target="_blank" rel="noopener">
-        <span className="tb-v2-directory-text">Featured on TheToolPicker</span>
+        <DirectoryBadgeImage src="https://www.thetoolpicker.com/badge-dark.svg" alt="Featured on TheToolPicker" width="200" height="54" fallback="Featured on TheToolPicker" />
       </DirectoryBadgeLink>
       <DirectoryBadgeLink duplicate={duplicate} href="https://thedevtoolsdir.com/product/toolblip?ref=badge" rel="dofollow">
         <DirectoryBadgeImage src="https://thedevtoolsdir.com/badge/toolblip.svg" alt="Featured on TheDevToolsDir" width="182" height="46" fallback="Featured on TheDevToolsDir" />
@@ -379,7 +379,7 @@ function DirectoryBadges({ duplicate = false }: { duplicate?: boolean }) {
         <DirectoryBadgeImage src="https://theaitoolsdir.com/badge/toolblip.svg" alt="Featured on TheAIToolsDir" width="182" height="46" fallback="TheAIToolsDir" />
       </DirectoryBadgeLink>
       <DirectoryBadgeLink duplicate={duplicate} href="https://hiproducty.com" target="_blank">
-        <span className="tb-v2-directory-text">HiProducty</span>
+        <DirectoryBadgeImage src="https://hiproducty.com/badge.svg" alt="Featured on Hiproducty" fallback="HiProducty" />
       </DirectoryBadgeLink>
       <DirectoryBadgeLink duplicate={duplicate} href="https://elf08.com/" target="_blank" rel="noopener">
         <span className="tb-v2-directory-text">The Elf Directory</span>
@@ -578,6 +578,90 @@ function DirectoryBadges({ duplicate = false }: { duplicate?: boolean }) {
       </DirectoryBadgeLink>
       <DirectoryBadgeLink duplicate={duplicate} href="https://softwarecomoservicio.com">
         <DirectoryBadgeImage src="https://softwarecomoservicio.com/badge/badge-dark.svg" alt="Featured on Software Como Servicio" width="178" height="40" fallback="Software Como Servicio" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://best.serp.co/products/toolblip.com/" target="_blank" rel="noopener noreferrer" title="Featured on SERP Best">
+        <DirectoryBadgeImage src="https://best.serp.co/badge/featured-on-serp.co-light.svg" alt="Featured on SERP Best" width="200" height="50" fallback="SERP Products" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://directory.getseoo.com" target="_blank" rel="noopener">
+        <DirectoryBadgeImage src="https://directory.getseoo.com/badges/getseoo-badge-dark.svg" alt="Featured on GetSEOO Directory" width="240" height="54" fallback="directory.getseoo.com" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://fwfw.app/item/toolblip" target="_blank">
+        <DirectoryBadgeImage src="https://fwfw.app/badge-white.svg" alt="Featured on FWFW" width="250" height="54" fallback="FWFW" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://getlaunchpod.com/product/toolblip-ead5e1">
+        <DirectoryBadgeImage src="https://getlaunchpod.com/badge/toolblip-ead5e1" alt="Toolblip on GetLaunchPod" fallback="GetLaunchPod" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://inuidea.com/hunt" target="_blank" rel="noopener noreferrer">
+        <DirectoryBadgeImage src="https://inuidea.com/wp-content/uploads/Featured-on-Inuidea-Hunt-Badge.svg" alt="Featured on Inuidea Hunt" width="150" fallback="Inuidea Hunt" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://scrappystartups.com/startup/toolblip" target="_blank" rel="noopener">
+        <DirectoryBadgeImage src="https://scrappystartups.com/badge.svg?theme=blue" alt="Find us on Scrappy Startups" height="56" fallback="scrappystartups.com" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://swipetolaunch.com/p/toolblip?ref=badge" target="_blank" rel="noopener">
+        <DirectoryBadgeImage src="https://swipetolaunch.com/api/badge/toolblip" alt="Featured on SwipeToLaunch" width="220" height="48" fallback="SwipeToLaunch" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://www.toolpilot.ai/" target="_blank" rel="noopener noreferrer" title="ToolPilot.ai">
+        <DirectoryBadgeImage src="https://www.toolpilot.ai/cdn/shop/files/f-w_690x151_crop_center.png" alt="Featured on ToolPilot.ai" width="220" height="48" fallback="ToolPilot" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://toolquix.com">
+        <DirectoryBadgeImage src="https://toolquix.com/assets/badge-featured.svg" alt="Featured on Toolquix" width="240" height="54" fallback="toolquix.com" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://wtai.cc/" target="_blank" rel="noopener">
+        <span className="tb-v2-directory-text">Featured on WTAI Navigation</span>
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://aicavo.com/tools/toolblip" target="_blank" rel="noopener noreferrer">
+        <DirectoryBadgeImage src="https://aicavo.com/api/widgets/embed-image/v1/find-us.svg?slug=toolblip&amp;theme=dark" alt="AICavo badge" width="200" height="54" fallback="aicavo.com" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://backlinkdirs.com/item/toolblip" target="_blank" rel="noopener noreferrer">
+        <DirectoryBadgeImage src="https://backlinkdirs.com/badges/badge-listed-dark.svg" alt="Listed on Backlink Dirs" fallback="backlinkdirs.com" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://bestaitool.app/" title="BestAITool AI Tools Directory">
+        <span className="tb-v2-directory-text">BestAITool AI Tools Directory</span>
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://boringcashcow.com" target="_blank">
+        <DirectoryBadgeImage src="https://boringcashcow.com/img/badge/boringcashcow-badge-light.svg" alt="Toolblip - Featured on BoringCashCow" width="200" height="54" fallback="boringcashcow.com" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://firmsrated.com" target="_blank" rel="dofollow">
+        <DirectoryBadgeImage src="https://firmsrated.com/badge.png" alt="Rated on FirmsRated" fallback="firmsrated.com" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://mydirs.com">
+        <span className="tb-v2-directory-text">MyDirs</span>
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://peerbear.io/p/toolblip" target="_blank" rel="noopener">
+        <DirectoryBadgeImage src="https://peerbear.io/badge-light.svg" alt="Sniffed by PeerBear" width="198" height="62" fallback="PeerBear" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://startupproject.org/" target="_blank" rel="noopener noreferrer">
+        <span className="tb-v2-directory-text">Startup Project</span>
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://tooltrim.com/?utm_source=toolblip&amp;utm_medium=badge&amp;utm_campaign=tool_submission" target="_blank">
+        <DirectoryBadgeImage src="https://tooltrim.com/tooltrim-badge.svg" alt="Discover ToolTrim via Toolblip" height="54" fallback="tooltrim.com" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://vibetoyou.com" target="_blank">
+        <DirectoryBadgeImage src="https://vibetoyou.com/images/badge-light.svg" alt="Listed on VibeToYou" width="186" height="56" fallback="VibeToYou" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://indiepocket.com" target="_blank" rel="noopener">
+        <span className="tb-v2-directory-text">Featured on IndiePocket</span>
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://launchgp.io" target="_blank" rel="noopener">
+        <span className="tb-v2-directory-text">Featured on LaunchGP</span>
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://launchrove.com" target="_blank" rel="noopener">
+        <span className="tb-v2-directory-text">Featured on LaunchRove</span>
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://launchwall.online" target="_blank" rel="noopener">
+        <span className="tb-v2-directory-text">Featured on launchwall.online</span>
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://makerpocket.com" target="_blank" rel="noopener">
+        <span className="tb-v2-directory-text">Featured on makerpocket.com</span>
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://superlaunchai.com" target="_blank" rel="noopener">
+        <span className="tb-v2-directory-text">Featured on SuperLaunchAI</span>
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://tooldirectory.dev" target="_blank" rel="noopener">
+        <span className="tb-v2-directory-text">Featured on tooldirectory.dev</span>
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://toolsnap.ai" target="_blank" rel="noopener">
+        <span className="tb-v2-directory-text">Featured on ToolSnap</span>
       </DirectoryBadgeLink>
     </div>
   );
