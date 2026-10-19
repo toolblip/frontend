@@ -181,41 +181,50 @@ export default function EmailSignIn({ intent, next, legal }: { intent: Intent; n
           </button>
         </div>
       ) : (
-        <form onSubmit={handleEmailSubmit} className="tb-v2-auth-form" noValidate>
-          <div className="tb-v2-auth-field">
-            <label htmlFor="email" className="tb-v2-auth-label">
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              name="email"
-              required
-              autoComplete="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="tb-v2-auth-input"
-              placeholder="you@example.com"
-            />
-            <p className="tb-v2-auth-hint">
-              {intent === "signin"
-                ? "Have a passkey on this account? We'll ask for it. Otherwise we'll email you a sign-in link."
-                : "We'll email you a link to finish creating your account. No password needed."}
-            </p>
-          </div>
-
-          {intent === "signup" && <Turnstile ref={turnstileRef} onToken={setTurnstileToken} />}
-
-          <button type="submit" disabled={sendingBlocked || turnstileMissing} className="tb-v2-auth-submit">
-            {busy ? "Sending..." : passkeyBusy ? "Waiting for passkey..." : "Continue"}
-          </button>
-
+        <>
           {canUsePasskey && (
-            <button type="button" onClick={usePasskey} disabled={sendingBlocked} className="tb-v2-auth-more-toggle">
-              Sign in with a passkey instead
-            </button>
+            <>
+              <button type="button" onClick={usePasskey} disabled={sendingBlocked} className="tb-v2-auth-oauth" data-testid="passkey-signin-button">
+                <svg aria-hidden="true" className="tb-v2-auth-oauth-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="7.5" cy="15.5" r="5.5" />
+                  <path d="m21 2-9.6 9.6M15.5 7.5l3 3L22 7l-3-3" />
+                </svg>
+                <span>{passkeyBusy ? "Waiting for passkey..." : "Sign in with a passkey"}</span>
+              </button>
+              <div className="tb-v2-auth-divider">or use your email</div>
+            </>
           )}
-        </form>
+          <form onSubmit={handleEmailSubmit} className="tb-v2-auth-form" noValidate>
+            <div className="tb-v2-auth-field">
+              <label htmlFor="email" className="tb-v2-auth-label">
+                Email
+              </label>
+              <input
+                id="email"
+                type="email"
+                name="email"
+                required
+                autoComplete="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="tb-v2-auth-input"
+                placeholder="you@example.com"
+              />
+              <p className="tb-v2-auth-hint">
+                {intent === "signin"
+                  ? "Have a passkey on this account? We'll ask for it. Otherwise we'll email you a sign-in link."
+                  : "We'll email you a link to finish creating your account. No password needed."}
+              </p>
+            </div>
+
+            {intent === "signup" && <Turnstile ref={turnstileRef} onToken={setTurnstileToken} />}
+
+            <button type="submit" disabled={sendingBlocked || turnstileMissing} className="tb-v2-auth-submit">
+              {busy ? "Sending..." : passkeyBusy ? "Waiting for passkey..." : "Continue"}
+            </button>
+
+          </form>
+        </>
       )}
 
       {notice && (

@@ -15,13 +15,14 @@ export default function EmailAuthPage({ intent }: { intent: "signin" | "signup" 
     <div className="tb-v2-auth">
       <div className="tb-v2-container">
         <div className="tb-v2-auth-card">
+          <Link href={`${signIn ? "/login" : "/signup"}${q}`} className="tb-v2-auth-back">
+            <span aria-hidden="true">←</span> {signIn ? "All sign-in options" : "All sign-up options"}
+          </Link>
           <h1 className="tb-v2-auth-title">{signIn ? "Sign in with email" : "Sign up with email"}</h1>
 
           <EmailSignIn intent={intent} next={target} legal={signIn ? undefined : <AuthLegal />} />
 
           <p className="tb-v2-auth-footer">
-            <Link href={`${signIn ? "/login" : "/signup"}${q}`}>Other options</Link>
-            <br />
             {signIn ? (
               <>
                 Don&apos;t have an account? <Link href={`/signup${q}`}>Sign up</Link>
