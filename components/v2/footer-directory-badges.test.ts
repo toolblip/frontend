@@ -12,7 +12,7 @@ const hosts = [
   'shiplaun.ch', 'smolfind.com', 'smoltop.com', 'smolmaker.com', 'verifiedlaunches.com', 'trustedlaunches.com',
   'launchfeeds.com', 'findscove.com', 'thistools.app', 'zerorevenue.club', 'megalaun.ch', 'aitoolslist.tools',
   'thedevtoolslist.com', 'softwarecomoservicio.com',
-  'best.serp.co', 'directory.getseoo.com', 'fwfw.app', 'getlaunchpod.com', 'inuidea.com', 'scrappystartups.com', 'swipetolaunch.com', 'toolpilot.ai', 'toolquix.com', 'wtai.cc', 'aicavo.com', 'backlinkdirs.com', 'bestaitool.app', 'boringcashcow.com', 'firmsrated.com', 'mydirs.com', 'peerbear.io', 'startupproject.org', 'tooltrim.com', 'vibetoyou.com', 'indiepocket.com', 'launchgp.io', 'launchrove.com', 'launchwall.online', 'makerpocket.com', 'superlaunchai.com', 'tooldirectory.dev', 'toolsnap.ai',
+  'best.serp.co', 'directory.getseoo.com', 'fwfw.app', 'getlaunchpod.com', 'inuidea.com', 'scrappystartups.com', 'swipetolaunch.com', 'toolpilot.ai', 'toolquix.com', 'wtai.cc', 'aicavo.com', 'backlinkdirs.com', 'bestaitool.app', 'boringcashcow.com', 'firmsrated.com', 'mydirs.com', 'peerbear.io', 'startupproject.org', 'tooltrim.com', 'vibetoyou.com', 'indiepocket.com', 'launchgp.io', 'launchrove.com', 'launchwall.online', 'makerpocket.com', 'superlaunchai.com', 'tooldirectory.dev', 'toolsnap.ai', 'saatlas.com', 'ufind.best',
 ];
 
 describe('footer directory badges', () => {

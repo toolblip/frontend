@@ -144,13 +144,6 @@
       "retrieved_on": "2026-10-03"
     },
     {
-      "name": "Ufind",
-      "source": "https://ufind.best",
-      "fallback": true,
-      "reason": "Official embed is inline SVG, not a remote image",
-      "retrieved_on": "2026-10-03"
-    },
-    {
       "name": "Useneedle",
       "source": "https://useneedle.net/directory/toolblip",
       "fallback": true,

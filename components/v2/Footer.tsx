@@ -216,17 +216,8 @@ function DirectoryBadges({ duplicate = false }: { duplicate?: boolean }) {
       <DirectoryBadgeLink duplicate={duplicate} href="https://toolrain.com/item/toolblip" target="_blank" rel="noopener noreferrer">
         <DirectoryBadgeImage src="https://toolrain.com/badges/badge-listed-light.svg" alt="Listed on ToolRain" style={{ height: 60, width: 'auto' }} fallback="Listed on ToolRain" />
       </DirectoryBadgeLink>
-      <DirectoryBadgeLink duplicate={duplicate} href="https://ufind.best" target="_blank" rel="noopener">
-        <svg xmlns="http://www.w3.org/2000/svg" width="140.8" height="40" viewBox="0 0 140.8 40">
-          <rect width="140.8" height="40" fill="#000000" rx="8" />
-          <g transform="translate(14, 11)">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z" />
-            </svg>
-          </g>
-          <text x="40" y="15.2" fill="#ffffff" fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" fontSize="10" fontWeight="400">Featured on</text>
-          <text x="40" y="30" fill="#ffffff" fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" fontSize="14" fontWeight="600">ufind.best</text>
-        </svg>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://ufind.best/products/toolblip" target="_blank" rel="noopener">
+        <DirectoryBadgeImage src="https://ufind.best/badges/ufind-best-badge-light.svg" alt="Toolblip - Featured on ufind.best" width="139" height="44" fallback="Featured on ufind.best" />
       </DirectoryBadgeLink>
       <DirectoryBadgeLink duplicate={duplicate} href="https://useneedle.net/directory/toolblip" target="_blank" rel="noopener noreferrer">
         <DirectoryBadgeImage src="https://useneedle.net/badges/needle-directory.svg" alt="Listed on Needle Directory" height="44" fallback="https://useneedle.net/directory/toolblip" />
@@ -662,6 +653,9 @@ function DirectoryBadges({ duplicate = false }: { duplicate?: boolean }) {
       </DirectoryBadgeLink>
       <DirectoryBadgeLink duplicate={duplicate} href="https://toolsnap.ai" target="_blank" rel="noopener">
         <span className="tb-v2-directory-text">Featured on ToolSnap</span>
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://saatlas.com/en/saas/toolblip/" title="Listed on Saatlas">
+        <DirectoryBadgeImage src="https://saatlas.com/badge/toolblip.svg?lang=en" alt="Listed on Saatlas" width="260" height="42" fallback="Listed on Saatlas" />
       </DirectoryBadgeLink>
     </div>
   );
