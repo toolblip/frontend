@@ -5,7 +5,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/providers/auth-provider";
 import { isSafeNext } from "@/lib/safe-next";
-import { addPasskey, passkeysSupported } from "@/lib/passkeys";
+import { addPasskey, passkeysSupported, type PasskeyItem } from "@/lib/passkeys";
+import PasskeyNameStep from "@/components/auth/PasskeyNameStep";
 
 /**
  * Magic link landing page. The link is NOT consumed on load (email scanners and link previews
@@ -18,6 +19,7 @@ export default function MagicLinkConsume() {
   const [token, setToken] = useState<string | null>(null);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState<"" | "signin" | "passkey">("");
+  const [created, setCreated] = useState<{ passkey: PasskeyItem; next: string } | null>(null);
   const read = useRef(false);
 
   useEffect(() => {
@@ -53,8 +55,7 @@ export default function MagicLinkConsume() {
         if (passkeysSupported()) {
           setBusy("passkey");
           try {
-            await addPasskey("");
-            router.replace(next);
+            setCreated({ passkey: await addPasskey(""), next });
             return;
           } catch {
             // Cancelled, or the browser dropped the click's activation: the setup page offers a retry or skip.
@@ -74,7 +75,9 @@ export default function MagicLinkConsume() {
     <div className="tb-v2-auth">
       <div className="tb-v2-container">
         <div className="tb-v2-auth-card">
-          {error ? (
+          {created ? (
+            <PasskeyNameStep passkey={created.passkey} onDone={() => router.replace(created.next)} />
+          ) : error ? (
             <>
               <h1 className="tb-v2-auth-title">Link not valid</h1>
               <p role="alert" className="tb-v2-auth-error">

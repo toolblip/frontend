@@ -60,12 +60,47 @@ export async function signInWithPasskey(): Promise<PasskeySession> {
   return signInWithChallenge(challenge_id, options);
 }
 
-export async function addPasskey(name: string): Promise<void> {
+/** "Chrome on Mac"-style default, so several passkeys are told apart without the user typing anything. */
+export function suggestPasskeyName(ua: string = typeof navigator === "undefined" ? "" : navigator.userAgent): string {
+  const browser = /Edg(e|A|iOS)?\//.test(ua)
+    ? "Edge"
+    : /OPR\//.test(ua)
+      ? "Opera"
+      : /Firefox\/|FxiOS\//.test(ua)
+        ? "Firefox"
+        : /Chrome\/|CriOS\//.test(ua)
+          ? "Chrome"
+          : /Safari\//.test(ua)
+            ? "Safari"
+            : "Browser";
+  const os = /iPhone/.test(ua)
+    ? "iPhone"
+    : /iPad/.test(ua)
+      ? "iPad"
+      : /Android/.test(ua)
+        ? "Android"
+        : /CrOS/.test(ua)
+          ? "Chromebook"
+          : /Mac OS X|Macintosh/.test(ua)
+            ? "Mac"
+            : /Windows/.test(ua)
+              ? "Windows"
+              : /Linux/.test(ua)
+                ? "Linux"
+                : "";
+  return os ? `${browser} on ${os}` : browser;
+}
+
+/** Creates a passkey; an empty name falls back to the device suggestion. */
+export async function addPasskey(name: string): Promise<PasskeyItem> {
   const { challenge_id, options } = await call<{ challenge_id: string; options: PublicKeyCredentialCreationOptionsJSON }>(
     "/api/auth/passkeys/options"
   );
   const credential = await ceremony(() => startRegistration({ optionsJSON: options }));
-  await call("/api/auth/passkeys", { body: { challenge_id, credential, ...(name.trim() ? { name: name.trim() } : {}) } });
+  const data = await call<{ passkey: PasskeyItem }>("/api/auth/passkeys", {
+    body: { challenge_id, credential, name: name.trim() || suggestPasskeyName() },
+  });
+  return data.passkey;
 }
 
 export async function renamePasskey(id: number, name: string): Promise<PasskeyItem> {

@@ -452,6 +452,20 @@ const server = http.createServer(async (req, res) => {
     return json(res, 200, { passkeys: passkeyList(email).map(({ credential_id, ...rest }) => rest) });
   }
 
+  const passkeyMatch = url.pathname.match(/^\/api\/auth\/passkeys\/(\d+)$/);
+  if (req.method === 'PATCH' && passkeyMatch) {
+    const email = tokens.get(bearer(req));
+    if (!email) return json(res, 401, { message: 'Unauthenticated.' });
+    const body = await readJson(req);
+    const name = String(body.name ?? '').trim();
+    if (!name || name.length > 60) return json(res, 422, { message: 'The name field is required.' });
+    const passkey = passkeyList(email).find((item) => item.id === Number(passkeyMatch[1]));
+    if (!passkey) return json(res, 404, { message: 'Not found.' });
+    passkey.name = name;
+    const { credential_id, ...publicPasskey } = passkey;
+    return json(res, 200, { passkey: publicPasskey });
+  }
+
   if (req.method === 'POST' && url.pathname === '/api/auth/passkeys/options') {
     const email = tokens.get(bearer(req));
     if (!email) return json(res, 401, { message: 'Unauthenticated.' });
