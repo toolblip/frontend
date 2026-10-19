@@ -3,7 +3,7 @@ export const dynamic = "force-dynamic";
 
 import { useEffect, useState } from "react";
 import { useRequireAuth } from "@/lib/hooks/useRequireAuth";
-import { addPasskey, deletePasskey, listPasskeys, passkeysSupported, PasskeyCancelledError, renamePasskey, type PasskeyItem } from "@/lib/passkeys";
+import { addPasskey, deletePasskey, listPasskeys, passkeysSupported, PasskeyCancelledError, renamePasskey, suggestPasskeyName, type PasskeyItem } from "@/lib/passkeys";
 
 export default function SecurityPage() {
   const { user, loading: authLoading } = useRequireAuth();
@@ -20,6 +20,7 @@ export default function SecurityPage() {
 
   useEffect(() => {
     setCanUsePasskeys(passkeysSupported());
+    setPasskeyName(suggestPasskeyName());
   }, []);
 
   useEffect(() => {
@@ -34,7 +35,7 @@ export default function SecurityPage() {
     try {
       await addPasskey(passkeyName);
       setPasskeys(await listPasskeys());
-      setPasskeyName("");
+      setPasskeyName(suggestPasskeyName());
       setPasskeyMessage("Passkey added.");
     } catch (error) {
       if (error instanceof PasskeyCancelledError) {

@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useRequireAuth } from "@/lib/hooks/useRequireAuth";
 import { isSafeNext } from "@/lib/safe-next";
-import { addPasskey, PasskeyCancelledError, passkeysSupported } from "@/lib/passkeys";
+import { addPasskey, PasskeyCancelledError, passkeysSupported, type PasskeyItem } from "@/lib/passkeys";
+import PasskeyNameStep from "@/components/auth/PasskeyNameStep";
 
 /**
  * Offered after sign-in when the account has no passkey. "required" (magic-link accounts) is highly
@@ -15,7 +16,7 @@ export default function SetupPasskeyClient() {
   const router = useRouter();
   const [mode, setMode] = useState<"required" | "suggested">("suggested");
   const [next, setNext] = useState("/dashboard");
-  const [name, setName] = useState("");
+  const [created, setCreated] = useState<PasskeyItem | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
@@ -32,8 +33,7 @@ export default function SetupPasskeyClient() {
     setNotice("");
     setBusy(true);
     try {
-      await addPasskey(name);
-      router.replace(next);
+      setCreated(await addPasskey(""));
     } catch (err) {
       if (err instanceof PasskeyCancelledError) setNotice("Passkey setup was cancelled. You can try again or continue without one.");
       else setError(err instanceof Error ? err.message : "Could not create a passkey. Please try again.");
@@ -52,6 +52,18 @@ export default function SetupPasskeyClient() {
 
   const required = mode === "required";
   const canCreate = passkeysSupported();
+
+  if (created) {
+    return (
+      <div className="tb-v2-auth">
+        <div className="tb-v2-container">
+          <div className="tb-v2-auth-card">
+            <PasskeyNameStep passkey={created} onDone={() => router.replace(next)} />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="tb-v2-auth">
@@ -83,20 +95,6 @@ export default function SetupPasskeyClient() {
                 void createPasskey();
               }}
             >
-              <div className="tb-v2-auth-field">
-                <label htmlFor="passkey-name" className="tb-v2-auth-label">
-                  Name <span className="font-normal text-gray-500">optional</span>
-                </label>
-                <input
-                  id="passkey-name"
-                  type="text"
-                  maxLength={60}
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="tb-v2-auth-input"
-                  placeholder="e.g. Work laptop"
-                />
-              </div>
               <button type="submit" disabled={busy} className="tb-v2-auth-submit">
                 {busy ? "Waiting for passkey..." : "Create passkey"}
               </button>
