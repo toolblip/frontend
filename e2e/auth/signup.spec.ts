@@ -86,4 +86,24 @@ test.describe('Signup BDD regression', () => {
     await expect(page.getByRole('heading', { name: 'Set up a passkey (recommended)' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Skip for now' })).toBeVisible();
   });
+
+  test('Given a new account without a passkey, When the user clicks Sign in on the email link, Then that one click creates the passkey and lands on the dashboard', async ({ page }) => {
+    const cdp = await page.context().newCDPSession(page);
+    await cdp.send('WebAuthn.enable');
+    await cdp.send('WebAuthn.addVirtualAuthenticator', {
+      options: { protocol: 'ctap2', transport: 'internal', hasResidentKey: true, hasUserVerification: true, isUserVerified: true, automaticPresenceSimulation: true },
+    });
+    const user = makeUser('signup-one-step');
+    const origin = 'http://localhost:3200';
+    await page.goto(`${origin}/signup?next=%2Fdashboard`);
+    await requestMagicLink(page, user.email);
+    const mail = await (await page.request.get(`${MOCK_URL}/__mail?email=${encodeURIComponent(user.email)}`)).json();
+    await page.goto(`${origin}${mail.url}`);
+    await continueMagicLink(page, { declinePasskey: false });
+
+    await expect(page).toHaveURL(/\/dashboard/);
+    const token = (await page.context().cookies()).find((c) => c.name === 'auth_token')?.value;
+    const list = await (await page.request.get(`${MOCK_URL}/api/auth/passkeys`, { headers: { Authorization: `Bearer ${token}` } })).json();
+    expect(list.passkeys).toHaveLength(1);
+  });
 });
