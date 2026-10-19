@@ -49,18 +49,21 @@ test.describe('Signup BDD regression', () => {
     await expect(page.locator('.tb-v2-auth-footer').getByRole('link', { name: 'Sign up' })).toHaveAttribute('href', /^\/signup\?next=/);
   });
 
-  test('Given the sign-in email page, Then the passkey button sits above the email field and a back link returns to every sign-in option', async ({ page }) => {
-    await page.goto('/login/email?next=%2Fdashboard');
+  test('Given the login page, Then passkey, Google and email are offered in that order; signup has no passkey', async ({ page }) => {
+    await page.goto('/login?next=%2Fdashboard');
+    const ys = await Promise.all([page.getByTestId('passkey-auth-button'), page.getByTestId('google-auth-button'), page.getByTestId('email-auth-button')].map(async l => (await l.boundingBox())!.y));
+    expect(ys).toEqual([...ys].sort((x, y) => x - y));
+    await expect(page.getByTestId('passkey-auth-button')).toHaveText('Sign in with passkey');
 
-    const passkey = page.getByTestId('passkey-signin-button');
-    await expect(passkey).toHaveText('Sign in with a passkey');
-    const passkeyBox = await passkey.boundingBox();
-    const emailBox = await page.getByLabel('Email').boundingBox();
-    expect(passkeyBox!.y).toBeLessThan(emailBox!.y);
-
+    await page.getByTestId('email-auth-button').click();
+    await expect(page.getByLabel('Email')).toBeVisible();
+    await expect(page.getByTestId('passkey-auth-button')).toHaveCount(0);
     await page.getByRole('link', { name: /All sign-in options/ }).click();
     await expect(page).toHaveURL(/\/login\?next=%2Fdashboard$/);
+
+    await page.goto('/signup');
     await expect(page.getByTestId('google-auth-button')).toBeVisible();
+    await expect(page.getByTestId('passkey-auth-button')).toHaveCount(0);
   });
 
   test('Given an email that already has an account, When the user signs up with it, Then the same sign-in link is sent and no duplicate is created', async ({ page }) => {
