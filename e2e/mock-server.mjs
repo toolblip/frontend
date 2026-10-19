@@ -462,7 +462,8 @@ const server = http.createServer(async (req, res) => {
       challenge_id: challengeId,
       options: {
         challenge: 'bW9jay1jaGFsbGVuZ2U',
-        rp: { name: 'Toolblip', id: '127.0.0.1' },
+        // No rp.id: the browser uses the page host. Chrome refuses IP addresses, so the passkey e2e runs on localhost.
+        rp: { name: 'Toolblip' },
         user: { id: 'bW9jYS11c2Vy', name: email, displayName: email },
         pubKeyCredParams: [{ type: 'public-key', alg: -7 }],
         timeout: 60000,
