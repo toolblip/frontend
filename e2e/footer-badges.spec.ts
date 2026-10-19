@@ -212,6 +212,8 @@ test('reduced motion keeps a single scrollable set of listings', async ({ page }
 
 test('text remains available before hydration or with JavaScript disabled', async ({ browser, baseURL }) => {
   const context = await browser.newContext({ baseURL, javaScriptEnabled: false });
+  // Outside badge hosts can stall the load event; this test only checks the text fallback.
+  await context.route('**/*', route => new URL(route.request().url()).origin !== new URL(baseURL!).origin ? route.abort() : route.fallback());
   const page = await context.newPage();
   await page.goto('/');
   const brand = page.locator('.tb-v2-footer-brand');
