@@ -313,7 +313,7 @@
     "rel": "noopener noreferrer"
   },
   {
-    "href": "https://ufind.best",
+    "href": "https://ufind.best/products/toolblip",
     "target": "_blank",
     "rel": "noopener"
   },
@@ -1000,5 +1000,8 @@
     "href": "https://toolsnap.ai",
     "target": "_blank",
     "rel": "noopener"
+  },
+  {
+    "href": "https://saatlas.com/en/saas/toolblip/"
   }
 ]
