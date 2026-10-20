@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
-import GoogleAuthButton from "@/components/auth/GoogleAuthButton";
+import AuthChooser from "@/components/auth/AuthChooser";
 import PasskeyAuthButton from "@/components/auth/PasskeyAuthButton";
 import { PasskeyCancelledError, passkeysSupported, signInWithPasskey } from "@/lib/passkeys";
 import { useAuth } from "@/app/providers/auth-provider";
@@ -276,8 +276,6 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
   const toolPath = getToolPathBySlug(toolSlug);
   const registerHref = `/signup?next=${encodeURIComponent(toolPath)}&favorite=1`;
   const favoriteReturnHref = `${toolPath}?favorite=1`;
-  const loginHref = `/login?next=${encodeURIComponent(favoriteReturnHref)}`;
-  const googleHref = `/api/auth/google/start?next=${encodeURIComponent(favoriteReturnHref)}`;
 
   function clearFavoriteQuery() {
     if (typeof window === "undefined") return;
@@ -713,19 +711,12 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
             </div>
 
             <div className="space-y-4">
-              <GoogleAuthButton href={googleHref} />
-
-              <div className="tb-v2-auth-divider !my-0" aria-hidden="true">
-                <span>or</span>
-              </div>
-
               {loginError && <p role="alert" className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700 dark:bg-red-950 dark:text-red-200">{loginError}</p>}
+              {/* Same order as /login: passkey, then Google, then email. */}
               {passkeysSupported() && (
-                <PasskeyAuthButton label="Sign in with passkey" onClick={handlePasskeyLogin} disabled={passkeyBusy} />
+                <PasskeyAuthButton label={passkeyBusy ? "Waiting for passkey..." : "Sign in with passkey"} onClick={handlePasskeyLogin} disabled={passkeyBusy} />
               )}
-              <Link href={loginHref} className="block text-center text-sm font-semibold text-red-600 hover:text-red-700 dark:text-red-400">
-                Continue with email
-              </Link>
+              <AuthChooser mode="signin" target={favoriteReturnHref} />
             </div>
 
             <div className="mt-4 flex items-center justify-end gap-3 text-sm text-gray-500 dark:text-gray-400">
