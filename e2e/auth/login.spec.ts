@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { MOCK_URL, expectAuthenticatedUser, expectLoggedInCookie, loginByForm, openEmailForm, requestMagicLink, resetMockBackend, VALID_USER, continueMagicLink } from '../fixtures/users';
+import { MOCK_URL, expectAuthenticatedUser, expectLoggedInCookie, loginByForm, openEmailForm, requestMagicLink, resetMockBackend, VALID_USER, makeUser } from '../fixtures/users';
 
 test.describe('Login BDD regression', () => {
   test.beforeEach(async ({ request }) => {
@@ -30,13 +30,24 @@ test.describe('Login BDD regression', () => {
     await expect(page.getByRole('link', { name: 'Forgot password?' })).toHaveCount(0);
   });
 
+  test('Given someone is already signed in, When they open another account\'s sign-in link, Then they are asked before switching', async ({ page }) => {
+    await loginByForm(page, VALID_USER);
+    const other = makeUser('switch');
+    await page.request.post('/api/auth/email/start', { data: { email: other.email }, headers: { Accept: 'application/json' } });
+    const mail = await (await page.request.get(`${MOCK_URL}/__mail?email=${encodeURIComponent(other.email)}`)).json();
+    await page.goto(mail.url);
+
+    await expect(page.getByRole('heading', { name: 'Switch account?' })).toBeVisible();
+    const me = await (await page.request.get('/api/auth/me')).json();
+    expect(me.user.email).toBe(VALID_USER.email);
+  });
+
   test('Given a sign-in link was already used, When it is opened again, Then an error is shown and no auth cookie is set', async ({ page }) => {
     await loginByForm(page, VALID_USER);
     await page.context().clearCookies();
 
     const mail = await (await page.request.get(`${MOCK_URL}/__mail?email=${encodeURIComponent(VALID_USER.email)}`)).json();
     await page.goto(mail.url);
-    await continueMagicLink(page);
 
     await expect(page.locator('p[role="alert"]')).toContainText('This sign-in link is invalid or has expired.');
     const cookies = await page.context().cookies();
