@@ -84,6 +84,16 @@ describe('AI crawler policy', () => {
     }
   });
 
+  it('throttles by the Host header, since next start sees its own address as localhost', async () => {
+    const ip = '203.0.113.45';
+    const hit = (host: string) => proxy(new NextRequest('https://localhost:3000/tools/json-formatter', {
+      headers: { host, 'user-agent': 'curl/8.0', 'x-forwarded-for': ip },
+    }));
+    for (let i = 0; i < CRAWL_LIMITS.abusive; i += 1) expect((await hit('toolblip.com')).status).not.toBe(429);
+    expect((await hit('toolblip.com')).status).toBe(429);
+    expect((await hit('localhost:3000')).status).not.toBe(429);
+  });
+
   it('keeps assistant user agents on the blocking HTML metadata list', () => {
     const htmlLimitedBots = config.htmlLimitedBots;
     expect(htmlLimitedBots).toBeInstanceOf(RegExp);
