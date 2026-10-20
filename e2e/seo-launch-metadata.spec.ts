@@ -24,7 +24,8 @@ test.describe('Launch page SEO metadata', () => {
   }
 
   test('/dashboard is noindex (account-only, no public content)', async ({ request }) => {
-    const res = await request.get('/dashboard');
+    // Signed out, the proxy redirects to /login; any auth cookie gets the dashboard page itself.
+    const res = await request.get('/dashboard', { headers: { Cookie: 'auth_token=seo-check' } });
     const html = await res.text();
 
     const robots = html.match(/<meta[^>]+name="robots"[^>]+content="([^"]*)"/i);
