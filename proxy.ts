@@ -10,28 +10,15 @@ const AUTH_ROUTES = ["/login", "/login/email", "/signup", "/signup/email", "/reg
 export function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const token = req.cookies.get("auth_token")?.value;
-  const hostname = req.nextUrl.hostname;
-  const protocol = req.nextUrl.protocol;
+  // `next start` builds req.nextUrl from its own bind address ("localhost"), so the real host only shows in the Host header.
+  // www -> apex and http -> https are done by Cloudflare in front of Railway.
+  const hostname = (req.headers.get("host") ?? req.nextUrl.host).toLowerCase().replace(/:\d+$/, "");
 
   const isLocalHost =
     hostname === "localhost" ||
     hostname === "127.0.0.1" ||
-    hostname === "::1" ||
+    hostname === "[::1]" ||
     hostname.endsWith(".localhost");
-
-  if (hostname.startsWith("www.") || (protocol === "http:" && !isLocalHost)) {
-    const url = req.nextUrl.clone();
-
-    if (hostname.startsWith("www.")) {
-      url.hostname = hostname.slice(4);
-    }
-
-    if (protocol === "http:") {
-      url.protocol = "https:";
-    }
-
-    return NextResponse.redirect(url, 301);
-  }
 
   if (!isLocalHost && pathname !== "/frontend-health") {
     const forwarded = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
