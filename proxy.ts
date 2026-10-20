@@ -1,9 +1,10 @@
 /** Live edge entry for Next.js 16+ (middleware.ts is forbidden alongside this file). */
 import { NextRequest, NextResponse } from "next/server";
 import { classifyUserAgent, crawlBudget } from "./lib/ai-crawlers";
+import { isSafeNext } from "./lib/safe-next";
 
 const PROTECTED_PREFIXES = ["/account", "/dashboard", "/submit-tool", "/lists"];
-const AUTH_ROUTES = ["/login", "/register"];
+const AUTH_ROUTES = ["/login", "/login/email", "/signup", "/signup/email", "/register"];
 
 export function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
@@ -31,7 +32,8 @@ export function proxy(req: NextRequest) {
     return NextResponse.redirect(url, 301);
   }
 
-  if (!isLocalHost && pathname !== "/frontend-health") {
+  // Link prefetches are the browser warming up pages, not page views; counting them could throttle a reader.
+  if (!isLocalHost && pathname !== "/frontend-health" && req.headers.get("next-router-prefetch") !== "1") {
     const forwarded = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
     const ip = req.headers.get("cf-connecting-ip")?.trim() || forwarded || req.headers.get("x-real-ip")?.trim();
     if (ip) {
@@ -76,7 +78,7 @@ export function proxy(req: NextRequest) {
 
   if (isAuthRoute && token) {
     const nextParam = req.nextUrl.searchParams.get("next");
-    const redirectTo = nextParam && nextParam.startsWith("/") ? nextParam : "/dashboard";
+    const redirectTo = isSafeNext(nextParam) && !AUTH_ROUTES.includes(nextParam.split("?")[0]) ? nextParam : "/dashboard";
     return NextResponse.redirect(new URL(redirectTo, req.url));
   }
 
@@ -86,6 +88,7 @@ export function proxy(req: NextRequest) {
 export const config = {
   // Catch-all matcher: intercepts ALL routes so middleware runs on /account (not just /account/*)
   matcher: [
-    "/((?!api/auth|_next/static|_next/image|favicon.svg|.*\..*).*)",
+    // "\\." so the regex sees an escaped dot: skip files like /robots.txt. A bare "\." became "." and matched nothing but "/".
+    "/((?!api/auth|_next/static|_next/image|favicon.svg|.*\\..*).*)",
   ],
 };
