@@ -3,7 +3,7 @@ import listings from './fixtures/footer-listings.json';
 
 const group = '.tb-v2-directory-group:not([aria-hidden])';
 const codeHypeHref = 'https://codehype.ai/product/toolblip?utm_source=codehype_badge';
-const saasGrowHref = 'https://saasgrow.app/saas/toolblip';
+const saasGrowHref = 'https://saasgrow.app/';
 const huzzlerHref = 'https://huzzler.so/products/UI7339a8da/toolblip?utm_source=huzzler_product_website&utm_medium=badge&utm_campaign=free_listing';
 const aiToolTrekHref = 'https://aitooltrek.com';
 
@@ -36,7 +36,7 @@ for (const mobile of [false, true]) {
     const before = await track.evaluate(el => getComputedStyle(el).transform);
     await expect.poll(() => track.evaluate(el => getComputedStyle(el).transform)).not.toBe(before);
     await expect(page.locator(`${group} a`)).toHaveCount(listings.length);
-    await expect(page.locator(`${group} img`)).toHaveCount(155);
+    await expect(page.locator(`${group} img`)).toHaveCount(162);
     const codeHypeLink = page.locator(`${group} a[href="${codeHypeHref}"]`);
     await expect(codeHypeLink).toHaveCount(1);
     const codeHypeImage = codeHypeLink.locator('img');
@@ -84,7 +84,7 @@ for (const mobile of [false, true]) {
     await expect(wallOfToolsImage).toHaveAttribute('width', '188');
     await expect(wallOfToolsImage).toHaveAttribute('height', '56');
     await expect(page.locator(`${group} a[href="https://wallof.tools"]`)).toHaveCount(0);
-    const stackLedgeHref = 'https://www.stackledge.com/tools/toolblip?ref=badge&t=bdg_491aae0e9b8f91a371248d14df3586e3';
+    const stackLedgeHref = 'https://stackledge.com/';
     const stackLedgeLink = page.locator(`${group} a[href="${stackLedgeHref}"]`);
     await expect(stackLedgeLink).toHaveCount(1);
     await expect(stackLedgeLink.locator('img')).toHaveAttribute('src', 'https://www.stackledge.com/badge?token=bdg_491aae0e9b8f91a371248d14df3586e3');
@@ -92,7 +92,7 @@ for (const mobile of [false, true]) {
     const easyLaunchLink = page.locator(`${group} a[href="https://easylaunch.dev/dev-tools/toolblip"]`);
     await expect(easyLaunchLink).toHaveCount(1);
     await expect(easyLaunchLink.locator('img')).toHaveAttribute('alt', 'Featured on EasyLaunch');
-    const launchKiwiLink = page.locator(`${group} a[href="https://launchkiwi.com/p/toolblip"]`);
+    const launchKiwiLink = page.locator(`${group} a[href="https://launchkiwi.com/"]`);
     await expect(launchKiwiLink).toHaveCount(1);
     await expect(launchKiwiLink.locator('img')).toHaveAttribute('alt', 'Featured on LaunchKiwi');
     const starthubLink = page.locator(`${group} a[href="https://starthub.zip"]`);
@@ -107,7 +107,7 @@ for (const mobile of [false, true]) {
     await expect(productLaunchifyLink).toHaveCount(1);
     await expect(productLaunchifyLink).toHaveAttribute('aria-label', 'Featured on Product Launchify');
     await expect(productLaunchifyLink.locator('img')).toHaveAttribute('src', 'https://www.productlaunchify.com/images/badges/powered-by-light.svg');
-    const launchAndLoopHref = 'https://www.launchandloop.com/product/toolblip';
+    const launchAndLoopHref = 'https://launchandloop.com/';
     const launchAndLoopLink = page.locator(`${group} a[href="${launchAndLoopHref}"]`);
     await expect(launchAndLoopLink).toHaveCount(1);
     await expect(launchAndLoopLink).toHaveAttribute('rel', 'dofollow');
