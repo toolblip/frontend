@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { renamePasskey, type PasskeyItem } from "@/lib/passkeys";
 
-/** Shown right after a passkey is created: optional nickname, pre-filled with the device suggestion. */
+/** Shown right after a passkey is created: a nickname pre-filled with the device suggestion. No skip; an empty name keeps the suggestion. */
 export default function PasskeyNameStep({ passkey, onDone }: { passkey: PasskeyItem; onDone: () => void }) {
   const [name, setName] = useState(passkey.name);
   const [busy, setBusy] = useState(false);
@@ -43,7 +43,7 @@ export default function PasskeyNameStep({ passkey, onDone }: { passkey: PasskeyI
       >
         <div className="tb-v2-auth-field">
           <label htmlFor="passkey-nickname" className="tb-v2-auth-label">
-            Passkey name <span className="font-normal text-gray-500">optional</span>
+            Passkey name
           </label>
           <input
             id="passkey-nickname"
@@ -60,11 +60,6 @@ export default function PasskeyNameStep({ passkey, onDone }: { passkey: PasskeyI
           {busy ? "Saving..." : "Save and continue"}
         </button>
       </form>
-      <p className="tb-v2-auth-footer">
-        <button type="button" onClick={onDone} disabled={busy} className="tb-v2-auth-more-toggle">
-          Skip
-        </button>
-      </p>
     </>
   );
 }

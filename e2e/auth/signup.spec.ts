@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { MOCK_URL, continueMagicLink, expectAuthenticatedUser, expectLoggedInCookie, makeUser, openEmailForm, requestMagicLink, resetMockBackend, signupByForm, TAKEN_EMAIL } from '../fixtures/users';
+import { MOCK_URL, expectAuthenticatedUser, expectLoggedInCookie, makeUser, openEmailForm, requestMagicLink, resetMockBackend, signupByForm, TAKEN_EMAIL } from '../fixtures/users';
 
 test.describe('Signup BDD regression', () => {
   test.beforeEach(async ({ request }) => {
@@ -80,14 +80,13 @@ test.describe('Signup BDD regression', () => {
     await requestMagicLink(page, user.email);
     const mail = await (await page.request.get(`${MOCK_URL}/__mail?email=${encodeURIComponent(user.email)}`)).json();
     await page.goto(mail.url);
-    await continueMagicLink(page);
 
     await expect(page).toHaveURL(/\/setup-passkey\?mode=required/);
     await expect(page.getByRole('heading', { name: 'Set up a passkey (recommended)' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Skip for now' })).toBeVisible();
   });
 
-  test('Given a new account without a passkey, When the user clicks Sign in on the email link, Then that one click creates the passkey, offers a nickname, and lands on the dashboard', async ({ page }) => {
+  test('Given a new account without a passkey, When the user opens the email link, Then they land on the passkey page, create one, name it, and land on the dashboard', async ({ page }) => {
     const cdp = await page.context().newCDPSession(page);
     await cdp.send('WebAuthn.enable');
     await cdp.send('WebAuthn.addVirtualAuthenticator', {
@@ -99,11 +98,18 @@ test.describe('Signup BDD regression', () => {
     await requestMagicLink(page, user.email);
     const mail = await (await page.request.get(`${MOCK_URL}/__mail?email=${encodeURIComponent(user.email)}`)).json();
     await page.goto(`${origin}${mail.url}`);
-    await continueMagicLink(page, { declinePasskey: false });
+    await expect(page).toHaveURL(/\/setup-passkey\?mode=required/);
+    const create = page.getByRole('button', { name: 'Create passkey' });
+    // Clicks before hydration are dropped, so retry until the name step shows.
+    await expect(async () => {
+      await create.click();
+      await expect(page.getByRole('heading', { name: 'Passkey created' })).toBeVisible({ timeout: 2000 });
+    }).toPass();
 
-    // Optional nickname, pre-filled with the device suggestion.
+    // Nickname pre-filled with the device suggestion; no skip once the passkey exists.
     await expect(page.getByRole('heading', { name: 'Passkey created' })).toBeVisible();
     await expect(page.getByLabel(/Passkey name/)).toHaveValue(/^Chrome on /);
+    await expect(page.getByRole('button', { name: 'Skip' })).toHaveCount(0);
     await page.getByLabel(/Passkey name/).fill('Work laptop');
     await page.getByRole('button', { name: 'Save and continue' }).click();
 

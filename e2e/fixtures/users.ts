@@ -56,30 +56,12 @@ export async function requestMagicLink(page: Page, email: string, name?: string)
   }).toPass();
 }
 
-/**
- * The magic link page consumes only on Sign in (scanners must not burn the link). Clicks before hydration are dropped, so retry.
- * The same click opens the passkey prompt for accounts without one; by default it is declined, like a user cancelling.
- */
-export async function continueMagicLink(page: Page, { declinePasskey = true } = {}) {
-  if (declinePasskey) {
-    await page.evaluate(() => {
-      navigator.credentials.create = () => Promise.reject(new DOMException('Cancelled', 'NotAllowedError'));
-    });
-  }
-  const button = page.locator('.tb-v2-auth-card').getByRole('button', { name: 'Sign in', exact: true });
-  await expect(async () => {
-    await button.click();
-    await expect(button).toBeHidden({ timeout: 1000 });
-  }).toPass();
-}
-
 /** Opens the newest magic link the mock mailbox "delivered" to the address, then waits for the app to route on. */
 export async function openMagicLink(page: Page, email: string) {
   const mailRes = await page.request.get(`${MOCK_URL}/__mail?email=${encodeURIComponent(email)}`);
   expect(mailRes.ok()).toBeTruthy();
   const mail = await mailRes.json();
   await page.goto(mail.url);
-  await continueMagicLink(page);
   await page.waitForURL((url) => !url.pathname.startsWith('/auth/magic'));
   await skipPasskeySetupIfPrompted(page);
 }
