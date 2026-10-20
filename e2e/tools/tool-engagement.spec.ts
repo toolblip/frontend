@@ -88,7 +88,12 @@ test('tool pages render templated share left, inert views, and favorite hard rig
   await expect(page.getByRole('dialog', { name: /Share JSON Formatter/i })).toHaveCount(0);
   await expect(loginDialog.getByTestId('google-auth-button')).toBeVisible();
   await expect(loginDialog.getByRole('button', { name: 'Sign in with passkey' })).toBeVisible();
-  await expect(loginDialog.getByRole('link', { name: /Continue with email/i })).toHaveAttribute('href', /\/login\?next=%2Ftools%2Fjson-formatter(%3F|\?)favorite(=|%3D)1/);
+  await expect(loginDialog.getByRole('link', { name: 'Sign in with email' })).toHaveAttribute('href', /\/login\/email\?next=%2Ftools%2Fjson-formatter(%3F|\?)favorite(=|%3D)1/);
+  // Same order as /login: passkey, Google, email.
+  const order = await loginDialog.locator('button, a').evaluateAll((els) => els.map((el) => el.textContent?.trim() ?? ''));
+  const at = (label: string) => order.findIndex((text) => text.includes(label));
+  expect(at('Sign in with passkey')).toBeLessThan(at('Continue with Google'));
+  expect(at('Continue with Google')).toBeLessThan(at('Sign in with email'));
   await expect(loginDialog.getByLabel('Password')).toHaveCount(0);
   await expect(loginDialog.getByRole('link', { name: /Create account/i })).toHaveAttribute('href', /\/signup\?next=%2Ftools%2Fjson-formatter(&|%26)favorite=1/);
   await expect(loginDialog.getByRole('link', { name: /Full login/i })).toHaveCount(0);
