@@ -25,6 +25,7 @@ export default function EmailSignIn({ intent, next, legal }: { intent: Intent; n
   const needsTurnstile = intent === "signup" && TURNSTILE_ENABLED;
   const [passkeyBusy, setPasskeyBusy] = useState(false);
   const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
@@ -78,7 +79,13 @@ export default function EmailSignIn({ intent, next, legal }: { intent: Intent; n
         method: "POST",
         headers: JSON_HEADERS,
         credentials: "include",
-        body: JSON.stringify({ email: address, intent, next, ...(needsTurnstile ? { turnstile_token: turnstileToken } : {}) }),
+        body: JSON.stringify({
+          email: address,
+          intent,
+          next,
+          ...(intent === "signup" && name.trim() ? { name: name.trim() } : {}),
+          ...(needsTurnstile ? { turnstile_token: turnstileToken } : {}),
+        }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
@@ -168,6 +175,24 @@ export default function EmailSignIn({ intent, next, legal }: { intent: Intent; n
         </div>
       ) : (
         <form onSubmit={handleEmailSubmit} className="tb-v2-auth-form" noValidate>
+          {intent === "signup" && (
+            <div className="tb-v2-auth-field">
+              <label htmlFor="name" className="tb-v2-auth-label">
+                Full name (optional)
+              </label>
+              <input
+                id="name"
+                type="text"
+                name="name"
+                autoComplete="name"
+                maxLength={255}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="tb-v2-auth-input"
+                placeholder="Ada Lovelace"
+              />
+            </div>
+          )}
           <div className="tb-v2-auth-field">
             <label htmlFor="email" className="tb-v2-auth-label">
               Email
