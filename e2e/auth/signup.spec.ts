@@ -66,6 +66,20 @@ test.describe('Signup BDD regression', () => {
     await expect(page.getByTestId('passkey-auth-button')).toHaveCount(0);
   });
 
+  test('Given no passkey on this device, When the user picks Sign in with passkey, Then they are pointed to email sign-in', async ({ page }) => {
+    await page.goto('/login?next=%2Ffavorites');
+    await page.evaluate(() => {
+      navigator.credentials.get = () => Promise.reject(new DOMException('No passkey', 'NotAllowedError'));
+    });
+    const notice = page.getByRole('status').filter({ hasText: 'No passkey on this device?' });
+    // Clicks before hydration are dropped, so retry until the notice shows.
+    await expect(async () => {
+      await page.getByTestId('passkey-auth-button').click();
+      await expect(notice).toBeVisible({ timeout: 1000 });
+    }).toPass();
+    await expect(notice.getByRole('link', { name: 'Sign in with email' })).toHaveAttribute('href', '/login/email?next=%2Ffavorites');
+  });
+
   test('Given an email that already has an account, When the user signs up with it, Then the same sign-in link is sent and no duplicate is created', async ({ page }) => {
     await page.goto('/signup');
     await requestMagicLink(page, TAKEN_EMAIL);
