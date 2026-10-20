@@ -22,6 +22,18 @@ test.describe('Login BDD regression', () => {
     await expectLoggedInCookie(page);
   });
 
+  test('Given a signed-in user, When they open any sign-in or sign-up page, Then they are sent to the dashboard or a safe next path', async ({ page }) => {
+    await loginByForm(page, VALID_USER);
+    for (const path of ['/login', '/login/email', '/signup', '/signup/email']) {
+      await page.goto(path);
+      await expect(page).toHaveURL(/\/dashboard$/);
+    }
+    await page.goto('/signup?next=%2Ffavorites');
+    await expect(page).toHaveURL(/\/favorites$/);
+    await page.goto('/login?next=%2F%2Fevil.example');
+    await expect(page).toHaveURL(/\/dashboard$/);
+  });
+
   test('Given the login page, Then there is no password field or password reset link', async ({ page }) => {
     await page.goto('/login');
     await openEmailForm(page);
