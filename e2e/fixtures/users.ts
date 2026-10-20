@@ -49,7 +49,7 @@ export async function requestMagicLink(page: Page, email: string, name?: string)
   await openEmailForm(page);
   // A submit before React hydrates is a native form GET, so retry until the app handles it.
   await expect(async () => {
-    if (name !== undefined) await page.getByLabel('Full name (optional)').fill(name);
+    if (name !== undefined) await page.getByLabel('Full name').fill(name);
     await page.getByLabel('Email').fill(email);
     await page.getByRole('button', { name: 'Continue', exact: true }).click();
     await expect(page.getByRole('heading', { name: 'Check your email' })).toBeVisible({ timeout: 2000 });

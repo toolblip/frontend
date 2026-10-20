@@ -178,7 +178,7 @@ export default function EmailSignIn({ intent, next, legal }: { intent: Intent; n
           {intent === "signup" && (
             <div className="tb-v2-auth-field">
               <label htmlFor="name" className="tb-v2-auth-label">
-                Full name (optional)
+                Full name
               </label>
               <input
                 id="name"
