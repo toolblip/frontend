@@ -3,7 +3,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { classifyUserAgent, crawlBudget } from "./lib/ai-crawlers";
 import { isSafeNext } from "./lib/safe-next";
 
-const PROTECTED_PREFIXES = ["/account", "/dashboard", "/submit-tool", "/lists"];
+// /submit-tool is left out: its page is public (indexed) and asks for sign in itself.
+const PROTECTED_PREFIXES = ["/account", "/dashboard", "/lists"];
 const AUTH_ROUTES = ["/login", "/login/email", "/signup", "/signup/email", "/register"];
 
 export function proxy(req: NextRequest) {
@@ -73,7 +74,9 @@ export function proxy(req: NextRequest) {
   if (isProtected && !token) {
     const url = req.nextUrl.clone();
     url.pathname = "/login";
-    url.searchParams.set("next", pathname);
+    // The query belongs to the page being protected (e.g. ?plan=ultra), so it goes inside next.
+    url.search = "";
+    url.searchParams.set("next", pathname + req.nextUrl.search);
     return NextResponse.redirect(url);
   }
 
