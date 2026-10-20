@@ -15,6 +15,7 @@ export default function LoginForm() {
   const router = useRouter();
   const [error, setError] = useState("");
   const [passkeyBusy, setPasskeyBusy] = useState(false);
+  const [noPasskey, setNoPasskey] = useState(false);
 
   useEffect(() => {
     if (new URLSearchParams(window.location.search).get("oauth_error")) {
@@ -24,13 +25,16 @@ export default function LoginForm() {
 
   async function handlePasskey() {
     setError("");
+    setNoPasskey(false);
     setPasskeyBusy(true);
     try {
       const { user, token } = await signInWithPasskey();
       login(user, token);
       router.push(target);
     } catch (err) {
-      if (!(err instanceof PasskeyCancelledError)) setError(err instanceof Error ? err.message : "Passkey sign in failed. Please try again.");
+      // The browser reports "no passkey here" and "cancelled" the same way, so point at email for both.
+      if (err instanceof PasskeyCancelledError) setNoPasskey(true);
+      else setError(err instanceof Error ? err.message : "Passkey sign in failed. Please try again.");
     } finally {
       setPasskeyBusy(false);
     }
@@ -45,6 +49,12 @@ export default function LoginForm() {
           {error && (
             <p role="alert" className="tb-v2-auth-error">
               {error}
+            </p>
+          )}
+
+          {noPasskey && (
+            <p role="status" className="tb-v2-auth-notice">
+              No passkey on this device? <Link href={`/login/email?next=${encodeURIComponent(target)}`}>Sign in with email</Link> and we&apos;ll set one up.
             </p>
           )}
 
