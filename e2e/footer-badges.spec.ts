@@ -3,7 +3,7 @@ import listings from './fixtures/footer-listings.json';
 
 const group = '.tb-v2-directory-group:not([aria-hidden])';
 const codeHypeHref = 'https://codehype.ai/product/toolblip?utm_source=codehype_badge';
-const saasGrowHref = 'https://saasgrow.app/saas/toolblip';
+const saasGrowHref = 'https://saasgrow.app/';
 const huzzlerHref = 'https://huzzler.so/products/UI7339a8da/toolblip?utm_source=huzzler_product_website&utm_medium=badge&utm_campaign=free_listing';
 const aiToolTrekHref = 'https://aitooltrek.com';
 
@@ -36,7 +36,7 @@ for (const mobile of [false, true]) {
     const before = await track.evaluate(el => getComputedStyle(el).transform);
     await expect.poll(() => track.evaluate(el => getComputedStyle(el).transform)).not.toBe(before);
     await expect(page.locator(`${group} a`)).toHaveCount(listings.length);
-    await expect(page.locator(`${group} img`)).toHaveCount(155);
+    await expect(page.locator(`${group} img`)).toHaveCount(162);
     const codeHypeLink = page.locator(`${group} a[href="${codeHypeHref}"]`);
     await expect(codeHypeLink).toHaveCount(1);
     const codeHypeImage = codeHypeLink.locator('img');
