@@ -117,9 +117,9 @@ function stepUpRequired(res) {
   return json(res, 403, { message: "Please confirm it's you.", code: 'step_up_required' });
 }
 
-function sendMagicLink(email, next, name = null) {
+function sendMagicLink(email, next, name = null, browserNonce = null) {
   const token = randomToken(64);
-  magicLinks.set(token, { email, next, name, used: false });
+  magicLinks.set(token, { email, next, name, browserNonce, used: false });
   mailbox.set(email, { ...(mailbox.get(email) ?? {}), token, sentAt: Date.now() });
   return token;
 }
@@ -359,7 +359,7 @@ const server = http.createServer(async (req, res) => {
       });
     }
     // Mirrors the API: the typed name only names a new account.
-    sendMagicLink(email, body.next ?? null, user ? null : String(body.name ?? '').trim() || null);
+    sendMagicLink(email, body.next ?? null, user ? null : String(body.name ?? '').trim() || null, body.browser_nonce ?? null);
     return json(res, 200, { method: 'email_sent' });
   }
 
@@ -370,7 +370,7 @@ const server = http.createServer(async (req, res) => {
       return json(res, 422, { message: 'This sign-in request has expired. Start again.', code: 'challenge_invalid' });
     }
     challenge.used = true;
-    sendMagicLink(challenge.email, challenge.next);
+    sendMagicLink(challenge.email, challenge.next, null, body.browser_nonce ?? null);
     return json(res, 200, { method: 'email_sent' });
   }
 
@@ -379,6 +379,10 @@ const server = http.createServer(async (req, res) => {
     const entry = magicLinks.get(String(body.token ?? ''));
     if (!entry || entry.used) {
       return json(res, 422, { message: 'This sign-in link is invalid or has expired.', code: 'magic_link_invalid' });
+    }
+    // Mirrors the API: only the browser that asked for the link may sign in without a click.
+    if (body.auto && (!entry.browserNonce || entry.browserNonce !== body.browser_nonce)) {
+      return json(res, 409, { message: 'Confirm to sign in.', code: 'confirm_required' });
     }
     entry.used = true;
     let user = users.get(entry.email);
