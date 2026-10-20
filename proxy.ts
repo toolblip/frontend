@@ -32,13 +32,14 @@ export function proxy(req: NextRequest) {
     return NextResponse.redirect(url, 301);
   }
 
-  // Link prefetches are the browser warming up pages, not page views; counting them could throttle a reader.
-  if (!isLocalHost && pathname !== "/frontend-health" && req.headers.get("next-router-prefetch") !== "1") {
+  if (!isLocalHost && pathname !== "/frontend-health") {
     const forwarded = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
     const ip = req.headers.get("cf-connecting-ip")?.trim() || forwarded || req.headers.get("x-real-ip")?.trim();
     if (ip) {
       const crawlClass = classifyUserAgent(req.headers.get("user-agent") ?? "");
-      const slot = crawlBudget.take(`${ip}|${crawlClass}`, crawlClass);
+      // Link prefetches get their own bucket so they can't use up a reader's page views. The header is client-set, so that bucket is capped too.
+      const prefetch = req.headers.get("next-router-prefetch") === "1" ? "|prefetch" : "";
+      const slot = crawlBudget.take(`${ip}|${crawlClass}${prefetch}`, crawlClass);
       if (!slot.allowed) {
         return new NextResponse("Too many requests. Identified AI and search crawlers can read public pages within a higher budget.", {
           status: 429,
