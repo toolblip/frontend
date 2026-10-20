@@ -117,9 +117,9 @@ function stepUpRequired(res) {
   return json(res, 403, { message: "Please confirm it's you.", code: 'step_up_required' });
 }
 
-function sendMagicLink(email, next) {
+function sendMagicLink(email, next, name = null) {
   const token = randomToken(64);
-  magicLinks.set(token, { email, next, used: false });
+  magicLinks.set(token, { email, next, name, used: false });
   mailbox.set(email, { ...(mailbox.get(email) ?? {}), token, sentAt: Date.now() });
   return token;
 }
@@ -358,7 +358,8 @@ const server = http.createServer(async (req, res) => {
         },
       });
     }
-    sendMagicLink(email, body.next ?? null);
+    // Mirrors the API: the typed name only names a new account.
+    sendMagicLink(email, body.next ?? null, user ? null : String(body.name ?? '').trim() || null);
     return json(res, 200, { method: 'email_sent' });
   }
 
@@ -384,7 +385,7 @@ const server = http.createServer(async (req, res) => {
     if (!user) {
       user = {
         id: nextId++,
-        name: entry.email.split('@')[0],
+        name: entry.name || entry.email.split('@')[0],
         email: entry.email,
         password: '',
         role: 'user',

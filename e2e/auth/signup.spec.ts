@@ -6,8 +6,8 @@ test.describe('Signup BDD regression', () => {
     await resetMockBackend(request);
   });
 
-  test('Given a new email, When the user signs up by email link, Then the account is created, the user is redirected to account dashboard, and an auth cookie is set', async ({ page }) => {
-    const user = makeUser('signup');
+  test('Given a new email and a name, When the user signs up by email link, Then the account is created with that name, the user is redirected to account dashboard, and an auth cookie is set', async ({ page }) => {
+    const user = { ...makeUser('signup'), name: 'Ada Lovelace' };
 
     await signupByForm(page, user);
 
