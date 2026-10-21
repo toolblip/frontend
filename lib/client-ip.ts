@@ -40,11 +40,11 @@ export function isCloudflareIp(ip: string): boolean {
 
 /**
  * Railway sets X-Real-IP to the connecting IP (or to cf-connecting-ip when that peer is Cloudflare); clients can't override it.
- * X-Forwarded-For isn't used for the peer: Railway's own CDN hops land at the end of it.
+ * X-Forwarded-For is never used: clients can forge its head and Railway's CDN hops land at its tail.
  * If X-Real-IP is still a Cloudflare edge, cf-connecting-ip is trusted; a direct hit on Railway can't pass that check.
  */
 export function clientIp(headers: Headers): string | undefined {
-  const peer = headers.get('x-real-ip')?.trim() || headers.get('x-forwarded-for')?.split(',')[0]?.trim();
+  const peer = headers.get('x-real-ip')?.trim();
   const cf = headers.get('cf-connecting-ip')?.trim();
   if (peer && cf && isCloudflareIp(peer)) return cf;
   return peer || undefined;
