@@ -23,6 +23,8 @@ import { getToolPath } from '@/lib/tool-path';
 // reachable and belongs in this sitemap again.)
 const SHADOWED_BY_REDIRECT = new Set<string>([]);
 
+export const dynamic = 'force-static';
+
 export async function GET(): Promise<Response> {
   const baseUrl = 'https://toolblip.com';
 

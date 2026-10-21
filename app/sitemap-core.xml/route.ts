@@ -5,6 +5,8 @@ import { sitemapXmlResponse, type SitemapUrlEntry } from '@/lib/sitemap-xml';
 // /login, /signup, /submit-tool, /account, and /frontend-health are
 // intentionally excluded: they carry robots: { index: false } directly
 // on the page. /tools and /tools/images are real listing pages now.
+export const dynamic = 'force-static';
+
 export async function GET(): Promise<Response> {
   const baseUrl = 'https://toolblip.com';
 

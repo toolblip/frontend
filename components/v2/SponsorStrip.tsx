@@ -43,7 +43,8 @@ export default function SponsorStrip() {
   };
 
   useEffect(() => {
-    if (suppressed) return;
+    // Fresh session cache (lib/sponsors.ts TTL) already seeded the slots.
+    if (suppressed || readSponsorsTopCache()) return;
 
     let cancelled = false;
     fetchSponsorsTop()

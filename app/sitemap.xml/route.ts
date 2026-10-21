@@ -3,6 +3,8 @@
  * at /sitemap.xml. Return a sitemap index that lists the three live child
  * sitemaps instead of 404ing.
  */
+export const dynamic = 'force-static';
+
 export async function GET(): Promise<Response> {
   const baseUrl = 'https://toolblip.com';
   // Omit lastmod until reliable child sitemap modification dates are available.

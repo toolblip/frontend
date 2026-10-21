@@ -22,14 +22,9 @@ const nextConfig = {
   // var below rather than relying on this alone.
   basePath: process.env.NEXT_PUBLIC_BASE_PATH || undefined,
   assetPrefix: process.env.NEXT_PUBLIC_BASE_PATH || undefined,
-  images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: '**',
-      },
-    ],
-  },
+  // next/image is unused; disabling the optimizer closes /_next/image as a
+  // fetch-and-resize-anything endpoint.
+  images: { unoptimized: true },
   async rewrites() {
     return {
       beforeFiles: [

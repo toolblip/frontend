@@ -209,7 +209,8 @@ function SharePopover({
 export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰" }: ToolEngagementBarProps) {
   const { user, login, loading: authLoading } = useAuth();
   const [stats, setStats] = useState<EngagementStats>(() => fallbackStats(toolSlug));
-  const viewRecordedRef = useRef(false);
+  const viewRecordedRef = useRef<string | null>(null);
+  const lastUserIdRef = useRef(user?.id);
   const favoriteRevisionRef = useRef(0);
   const [shareOpen, setShareOpen] = useState(false);
   const [listsOpen, setListsOpen] = useState(false);
@@ -416,13 +417,15 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
     }
   }
 
+  // The view POST returns the same stats payload as the engagement GET, so it
+  // is the only engagement call a guest page view makes.
   async function recordViewOnce() {
-    if (viewRecordedRef.current) return;
-    viewRecordedRef.current = true;
+    if (viewRecordedRef.current === toolSlug) return;
+    viewRecordedRef.current = toolSlug;
     const favoriteRevision = favoriteRevisionRef.current;
     try {
       const res = await fetch(`/api/tools/${toolSlug}/view`, { method: "POST", credentials: "include" });
-      if (!res.ok) return;
+      if (!res.ok) return refreshStats();
       const data = await res.json();
       commitFetchedStats(favoriteRevision, data);
     } catch {
@@ -431,14 +434,17 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
   }
 
   useEffect(() => {
-    refreshStats();
     recordViewOnce();
     // Best-effort client-side history for the dashboard "Recent tools" panel.
     recordRecentTool({ slug: toolSlug, name: toolName, icon: toolIcon });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toolSlug]);
 
+  // Only re-read viewer_favorited when the signed-in user actually changes
+  // after mount (login/logout); the initial load is covered by the view POST.
   useEffect(() => {
+    if (lastUserIdRef.current === user?.id) return;
+    lastUserIdRef.current = user?.id;
     refreshStats();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id]);

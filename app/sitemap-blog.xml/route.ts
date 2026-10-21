@@ -5,6 +5,8 @@ import { sitemapXmlResponse, type SitemapUrlEntry } from '@/lib/sitemap-xml';
 // separately from the tool corpus. The 121 blog posts measure far better
 // on content-quality checks than the tool pages do (see the GSC recovery
 // plan), so this is the sitemap to watch for the earliest sign of recovery.
+export const dynamic = 'force-static';
+
 export async function GET(): Promise<Response> {
   const baseUrl = 'https://toolblip.com';
 
