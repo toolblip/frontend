@@ -27,6 +27,8 @@ describe('AI crawler policy', () => {
     expect(classifyUserAgent('GPTBot')).toBe('ai');
     expect(classifyUserAgent('Mozilla/5.0 (compatible; Googlebot/2.1)')).toBe('search');
     expect(classifyUserAgent('Mozilla/5.0 (compatible; bingbot/2.0)')).toBe('search');
+    expect(classifyUserAgent('Mozilla/5.0 (compatible; AhrefsBot/7.0; +http://ahrefs.com/robot/)')).toBe('search');
+    expect(classifyUserAgent('Mozilla/5.0 (compatible; SemrushBot/7~bl; +http://www.semrush.com/bot.html)')).toBe('search');
     expect(classifyUserAgent('Mozilla/5.0 Chrome/120.0 Safari/537.36')).toBe('browser');
     expect(classifyUserAgent('curl/8.7.1')).toBe('abusive');
     expect(classifyUserAgent('')).toBe('abusive');
