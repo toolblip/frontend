@@ -42,15 +42,15 @@ export const PRIVATE_PATHS = [
   '/lists',
 ] as const;
 
+// SEO audit crawlers we use ourselves: search-sized budget, but kept out of robots.txt and llms.txt lists.
+const SEO_AUDIT_TOKENS = ['semrushbot', 'ahrefsbot', 'dataforseobot'];
+
 const ABUSIVE_TOKENS = [
   'bytespider',
   'petalbot',
   'mj12bot',
   'dotbot',
   'blexbot',
-  'semrushbot',
-  'ahrefsbot',
-  'dataforseobot',
   'python-requests',
   'scrapy',
   'go-http-client',
@@ -81,6 +81,7 @@ export function classifyUserAgent(userAgent: string): CrawlClass {
   if (!value) return 'abusive';
   const haystack = value.toLowerCase();
   if (ABUSIVE_TOKENS.some((token) => haystack.includes(token))) return 'abusive';
+  if (SEO_AUDIT_TOKENS.some((token) => haystack.includes(token))) return 'search';
   const named = NAMED_AGENTS.find((agent) => haystack.includes(agent.toLowerCase()));
   if (!named) {
     return /mozilla\/|chrome\/|safari\/|firefox\/|edg\//i.test(value) ? 'browser' : 'unknown';
