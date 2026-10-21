@@ -6,7 +6,7 @@ import Footer from './Footer';
 const hosts = [
   'saaslineup.com', 'domainrating.lol', 'indiestore.co', 'webprojectlist.com', 'bunny.directory',
   'braginpublic.com', 'smartees.tech', 'norohunt.com', 'launchfinds.com', 'startupfinds.com',
-  'startupscrolls.com', 'apptooling.com', 'themicrosaasdir.com', 'saasearch.io', 'launchstag.com',
+  'startupscrolls.com', 'apptooling.com', 'themicrosaasdir.com', 'launchstag.com',
   'bricklaun.ch', 'softwareontheweb.com', 'ontoplist.com', 'goodsaas.xyz', 'toolroots.com', 'indieascent.com',
   'launchboard.dev', 'amaze.directory', 'findgreatsites.com', 'listyourproject.com', 'golanz.com', 'devlanz.com',
   'shiplaun.ch', 'smolfind.com', 'smoltop.com', 'smolmaker.com', 'verifiedlaunches.com', 'trustedlaunches.com',

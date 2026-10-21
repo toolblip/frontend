@@ -36,7 +36,7 @@ for (const mobile of [false, true]) {
     const before = await track.evaluate(el => getComputedStyle(el).transform);
     await expect.poll(() => track.evaluate(el => getComputedStyle(el).transform)).not.toBe(before);
     await expect(page.locator(`${group} a`)).toHaveCount(listings.length);
-    await expect(page.locator(`${group} img`)).toHaveCount(184);
+    await expect(page.locator(`${group} img`)).toHaveCount(181);
     const codeHypeLink = page.locator(`${group} a[href="${codeHypeHref}"]`);
     await expect(codeHypeLink).toHaveCount(1);
     const codeHypeImage = codeHypeLink.locator('img');
@@ -192,8 +192,8 @@ test('missing and corrupt local badges and unreachable hotlinks show accessible 
     }
   }
   await expect(links.nth(0)).toHaveAccessibleName('SaaSCity');
-  await expect(links.nth(17)).toHaveAccessibleName('LaunchVault');
-  await expect(links.nth(19)).toHaveAccessibleName('Listed on TopAITools4U');
+  await expect(links.nth(16)).toHaveAccessibleName('LaunchVault');
+  await expect(links.nth(17)).toHaveAccessibleName('Listed on TopAITools4U');
   await expect(page.locator(`${group} a[href="https://turbo0.com/item/toolblip"]`)).toHaveAccessibleName('Featured on Turbo0');
   await expect(page.locator(`${group} a[href="https://dang.ai"]`)).toHaveAccessibleName('Featured on Dang.ai');
   await expect(page.locator(`${group} a[href="https://navfolders.com"]`)).toHaveAccessibleName('Featured on NavFolders');

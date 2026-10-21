@@ -38,12 +38,6 @@
       "reason": "Rating belongs to startuptrusted.com"
     },
     {
-      "name": "ConfettiSaaS",
-      "source": "https://confettisaas.com/badge-light.svg",
-      "file": "confettisaas.svg",
-      "sha256": "8285a9a33984c9851fd03a3d05e5c26bc10d52aa617020d63c74e0ddf6dc306f"
-    },
-    {
       "name": "Aura++",
       "source": "https://auraplusplus.com/images/badges/featured-on-light.svg",
       "file": "aura.svg",
@@ -60,12 +54,6 @@
       "source": "https://www.launchvault.dev/images/badges/launch-vault-badge.svg",
       "fallback": true,
       "reason": "404 text/html; charset=utf-8 https://www.launchvault.dev/images/badges/launch-vault-badge.svg"
-    },
-    {
-      "name": "Verified Tools",
-      "source": "https://www.verifiedtools.info/badge.svg",
-      "file": "verified-tools.svg",
-      "sha256": "849e8130b586aaf14de7ce06256b449d7098d57e5f9769aa2bf8ae77ada4f614"
     },
     {
       "name": "MakerHunt",
