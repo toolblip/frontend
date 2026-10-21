@@ -63,18 +63,18 @@ describe('AI crawler policy', () => {
     const ip = '203.0.113.44';
     for (let i = 0; i < CRAWL_LIMITS.abusive; i += 1) {
       const response = await proxy(new NextRequest('https://toolblip.com/tools/json-formatter', {
-        headers: { 'user-agent': 'curl/8.0', 'x-forwarded-for': ip },
+        headers: { 'user-agent': 'curl/8.0', 'x-real-ip': ip },
       }));
       expect(response.status).not.toBe(429);
     }
     const blocked = await proxy(new NextRequest('https://toolblip.com/tools/json-formatter', {
-      headers: { 'user-agent': 'curl/8.0', 'x-forwarded-for': ip },
+      headers: { 'user-agent': 'curl/8.0', 'x-real-ip': ip },
     }));
     expect(blocked.status).toBe(429);
     expect(blocked.headers.get('retry-after')).toBeTruthy();
 
     const assistant = await proxy(new NextRequest('https://toolblip.com/tools/json-formatter', {
-      headers: { 'user-agent': 'GPTBot', 'x-forwarded-for': ip },
+      headers: { 'user-agent': 'GPTBot', 'x-real-ip': ip },
     }));
     expect(assistant.status).not.toBe(429);
 
@@ -89,7 +89,7 @@ describe('AI crawler policy', () => {
   it('throttles by the Host header, since next start sees its own address as localhost', async () => {
     const ip = '203.0.113.45';
     const hit = (host: string) => proxy(new NextRequest('https://localhost:3000/tools/json-formatter', {
-      headers: { host, 'user-agent': 'curl/8.0', 'x-forwarded-for': ip },
+      headers: { host, 'user-agent': 'curl/8.0', 'x-real-ip': ip },
     }));
     for (let i = 0; i < CRAWL_LIMITS.abusive; i += 1) expect((await hit('toolblip.com')).status).not.toBe(429);
     expect((await hit('toolblip.com')).status).toBe(429);

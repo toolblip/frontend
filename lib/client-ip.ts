@@ -39,11 +39,12 @@ export function isCloudflareIp(ip: string): boolean {
 }
 
 /**
- * The last X-Forwarded-For entry is the peer that connected to Railway, added by Railway itself, so it can't be faked.
- * cf-connecting-ip is only trusted when that peer is Cloudflare; a direct hit on Railway could set it to anything.
+ * Railway sets X-Real-IP to the connecting IP (or to cf-connecting-ip when that peer is Cloudflare); clients can't override it.
+ * X-Forwarded-For is never used: clients can forge its head and Railway's CDN hops land at its tail.
+ * If X-Real-IP is still a Cloudflare edge, cf-connecting-ip is trusted; a direct hit on Railway can't pass that check.
  */
 export function clientIp(headers: Headers): string | undefined {
-  const peer = headers.get('x-forwarded-for')?.split(',').pop()?.trim() || headers.get('x-real-ip')?.trim();
+  const peer = headers.get('x-real-ip')?.trim();
   const cf = headers.get('cf-connecting-ip')?.trim();
   if (peer && cf && isCloudflareIp(peer)) return cf;
   return peer || undefined;
