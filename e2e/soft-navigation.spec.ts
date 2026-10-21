@@ -29,7 +29,8 @@ test.describe('soft navigation', () => {
     expect(meRequests).toBe(meAfterHome);
 
     await page.locator('a[href="/tools/json-formatter"]').first().click();
-    await expect(page).toHaveURL(/\/tools\/json-formatter/);
+    // A sharded run can reach this route before the dev server has compiled it.
+    await expect(page).toHaveURL(/\/tools\/json-formatter/, { timeout: 30_000 });
     await expect(page.locator('[data-testid="tool-detail-shell"]')).toBeVisible();
     expect(documentRequests).toBe(docsAfterHome);
     expect(meRequests).toBe(meAfterHome);
