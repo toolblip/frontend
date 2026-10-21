@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { loginByForm, makeUser, openEmailForm, openMagicLink, requestMagicLink, resetMockBackend, signupByForm, VALID_USER } from '../fixtures/users';
+import { loginByForm, makeUser, mockPlansApi, openEmailForm, openMagicLink, requestMagicLink, resetMockBackend, signupByForm, VALID_USER } from '../fixtures/users';
 
 test.describe('Account onboarding BDD regression', () => {
   test.beforeEach(async ({ request }) => {
@@ -104,6 +104,7 @@ test.describe('Account onboarding BDD regression', () => {
   });
 
   test('Given an authenticated user on pricing, Then selecting a plan creates a Stripe checkout session directly', async ({ page }) => {
+    await mockPlansApi(page);
     await loginByForm(page, VALID_USER);
     await expect(page).toHaveURL(/\/dashboard/);
 

@@ -158,3 +158,27 @@ export async function expectAuthenticatedUser(page: Page, user: Pick<TestUser, '
   expect(body.user).toMatchObject({ name: user.name, email: user.email });
   expect(body.user.id).toEqual(expect.any(Number));
 }
+
+// The app's CSP blocks the browser from reaching the mock API port, so stub /api/plans in-page.
+export async function mockPlansApi(page: Page) {
+  await page.addInitScript(() => {
+    const plan = (tier: string, monthly: number, yearly: number, sort_order: number, stripe_monthly_id: string | null, stripe_yearly_id: string | null) => ({
+      tier, name: tier, description: null, price_monthly: monthly, price_yearly: yearly, stripe_monthly_id, stripe_yearly_id,
+      storage_gb: 0, max_file_size_mb: 5, team_seats: 1, api_access: false, priority_support: false, sort_order,
+    });
+    const plans = [
+      plan('free', 0, 0, 0, null, null),
+      plan('starter', 499, 4990, 1, 'price_e2e_starter_m', 'price_e2e_starter_y'),
+      plan('ultra', 1999, 19990, 2, 'price_e2e_ultra_m', 'price_e2e_ultra_y'),
+      plan('max', 4999, 49990, 3, 'price_e2e_max_m', 'price_e2e_max_y'),
+    ];
+    const originalFetch = window.fetch.bind(window);
+    window.fetch = ((input: RequestInfo | URL, init?: RequestInit) => {
+      const url = input instanceof Request ? input.url : String(input);
+      if (url.endsWith('/api/plans')) {
+        return Promise.resolve(new Response(JSON.stringify({ plans }), { status: 200, headers: { 'Content-Type': 'application/json' } }));
+      }
+      return originalFetch(input, init);
+    }) as typeof window.fetch;
+  });
+}

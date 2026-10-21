@@ -582,19 +582,6 @@ const server = http.createServer(async (req, res) => {
     return json(res, 200, { message: 'Logged out.' });
   }
 
-  if (req.method === 'GET' && url.pathname === '/api/plans') {
-    const plan = (tier, name, description, price_monthly, price_yearly, stripe_monthly_id, stripe_yearly_id, storage_gb, max_file_size_mb, team_seats, api_access, priority_support, sort_order) =>
-      ({ tier, name, description, price_monthly, price_yearly, stripe_monthly_id, stripe_yearly_id, storage_gb, max_file_size_mb, team_seats, api_access, priority_support, sort_order });
-    // Browser fetches /api/plans cross-origin from the app port.
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    return json(res, 200, { plans: [
-      plan('free', 'Free', 'For anyone getting started', 0, 0, null, null, 0, 5, 1, false, false, 0),
-      plan('starter', 'Starter', 'For personal use', 499, 4990, 'price_1TOflqHd4AsPgGTOxspjxODX', 'price_1TOflqHd4AsPgGTOOrxqG1kM', 1, 50, 1, false, false, 1),
-      plan('ultra', 'Pro', 'For power users', 1999, 19990, 'price_1TOflrHd4AsPgGTOnt9jYhjz', 'price_1TOflsHd4AsPgGTO5ra4mhwt', 10, 500, 3, true, false, 2),
-      plan('max', 'Max', 'For teams', 4999, 49990, 'price_1TOflsHd4AsPgGTOG7jeNqLk', 'price_1TOfltHd4AsPgGTOnUHvrbT7', 50, 5000, 10, true, true, 3),
-    ] });
-  }
-
   if (req.method === 'GET' && url.pathname === '/api/subscription') {
     const email = tokens.get(bearer(req));
     if (!email) return json(res, 401, { message: 'Unauthenticated.' });
