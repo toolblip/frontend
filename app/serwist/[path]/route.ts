@@ -14,6 +14,17 @@ const additionalPrecacheEntries = [...PWA_SHELL_URLS, ...PWA_PRECACHE_TOOL_PATHS
 
 const serwistRoute = createSerwistRoute({
   additionalPrecacheEntries,
+  // Large runtime assets stay on their CacheFirst runtime rule (app/sw.ts)
+  // instead of being precached on every install.
+  globIgnores: [
+    '**/node_modules/**/*',
+    'public/models/**',
+    'public/qa/**',
+    'public/samples/**',
+    'public/data/**',
+    'public/logos/**',
+    'public/pdf-worker/**',
+  ],
   swSrc: 'app/sw.ts',
   // Alpine (Railway) can use native esbuild; wasm is the fallback if native fails.
   useNativeEsbuild: true,

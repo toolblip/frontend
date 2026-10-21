@@ -90,7 +90,9 @@ function displayOnboardingPlanName(tier: string | null | undefined) {
   );
 }
 
-export function useSubscription() {
+// `plans` is opt-in: the hook is mounted on every page via useShowAds, and only
+// the billing page needs /api/plans.
+export function useSubscription({ plans = false }: { plans?: boolean } = {}) {
   const { user, token } = useAuth();
   const router = useRouter();
 
@@ -111,6 +113,7 @@ export function useSubscription() {
 
   // Pricing plans
   useEffect(() => {
+    if (!plans) return;
     let cancelled = false;
     async function loadPricingPlans() {
       try {
@@ -130,7 +133,7 @@ export function useSubscription() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [plans]);
 
   const redirectToLoginPreservingCurrentLocation = useCallback(() => {
     const params = new URLSearchParams(window.location.search);
