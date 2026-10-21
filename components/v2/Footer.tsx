@@ -58,9 +58,6 @@ function DirectoryBadges({ duplicate = false }: { duplicate?: boolean }) {
       <DirectoryBadgeLink duplicate={duplicate} href="https://www.foundrlist.com/product/toolblip?utm_source=badge&utm_medium=embed" target="_blank" rel="noopener">
         <DirectoryBadgeImage src="https://www.foundrlist.com/api/badge/toolblip" alt="Featured on FoundrList" width="150" height="48" fallback="FoundrList" />
       </DirectoryBadgeLink>
-      <DirectoryBadgeLink duplicate={duplicate} href="https://confettisaas.com/saas/toolblip-com?ref=badge" target="_blank" rel="noopener" aria-label="View Toolblip on ConfettiSaaS">
-        <DirectoryBadgeImage src="/directory-badges/confettisaas.svg" width="250" height="54" alt="Toolblip on ConfettiSaaS" style={{ display: 'block' }} fallback="ConfettiSaaS" />
-      </DirectoryBadgeLink>
       <DirectoryBadgeLink duplicate={duplicate} href="https://auraplusplus.com/projects/toolblip" target="_blank" rel="noopener" title="View this project on Aura++">
         <DirectoryBadgeImage src="/directory-badges/aura.svg" alt="Featured on Aura++" width="265" height="58" fallback="Aura++" />
       </DirectoryBadgeLink>
@@ -78,9 +75,6 @@ function DirectoryBadges({ duplicate = false }: { duplicate?: boolean }) {
       </DirectoryBadgeLink>
       <DirectoryBadgeLink duplicate={duplicate} href="https://www.launchvault.dev" target="_blank" title="Feature On Launch Vault">
         <DirectoryBadgeImage src="https://www.launchvault.dev/images/badges/launch-valut-badge.svg" alt="Feature On Launch Vault" style={{ width: 195, height: 'auto' }} fallback="LaunchVault" />
-      </DirectoryBadgeLink>
-      <DirectoryBadgeLink duplicate={duplicate} href="https://www.verifiedtools.info/tools/toolblip" target="_blank" rel="noopener noreferrer">
-        <DirectoryBadgeImage src="/directory-badges/verified-tools.svg" alt="Toolblip on Verified Tools - AI & SaaS tools directory" width="200" height="54" fallback="Verified Tools" />
       </DirectoryBadgeLink>
       <DirectoryBadgeLink duplicate={duplicate} data-topaitools4u-badge="verified-listing" href="https://www.topaitools4u.site" target="_blank" rel="noopener" aria-label="Listed on TopAITools4U" style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '10px 14px', border: '1px solid #d9d9d9', borderRadius: 12, background: '#ffffff', color: '#111111', fontFamily: 'Inter,Arial,sans-serif', textDecoration: 'none' }}>
         <DirectoryBadgeImage src="https://www.topaitools4u.site/logo.svg" alt="TopAITools4U" width="32" height="32" style={{ display: 'block', width: 32, height: 32, borderRadius: 9 }} fallback="" />
@@ -476,9 +470,6 @@ function DirectoryBadges({ duplicate = false }: { duplicate?: boolean }) {
       </DirectoryBadgeLink>
       <DirectoryBadgeLink duplicate={duplicate} href="https://themicrosaasdir.com/product/toolblip?ref=badge" rel="dofollow">
         <DirectoryBadgeImage src="https://themicrosaasdir.com/badge/toolblip.svg" alt="Featured on TheMicroSaaSDir" width="160" height="44" fallback="TheMicroSaaSDir" />
-      </DirectoryBadgeLink>
-      <DirectoryBadgeLink duplicate={duplicate} href="https://saasearch.io/product/toolblip?utm_source=badge&utm_medium=referral&utm_campaign=featured_badge&ref=saasearch" target="_blank" rel="noopener">
-        <DirectoryBadgeImage src="https://saasearch.io/api/badge/toolblip?theme=light" alt="Featured on SaaSearch" style={{ height: 48, width: 'auto' }} fallback="SaaSearch" />
       </DirectoryBadgeLink>
       <DirectoryBadgeLink duplicate={duplicate} href="https://launchstag.com/p/tool-1792035055558" target="_blank" rel="noopener">
         <DirectoryBadgeImage src="https://launchstag.com/badge-light.svg" alt="Featured on Launchstag" width="198" height="62" fallback="Launchstag" />
