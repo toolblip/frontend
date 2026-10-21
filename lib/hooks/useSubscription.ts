@@ -13,6 +13,7 @@ import type { Subscription, Plan } from "@/components/dashboard/types";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "https://api.toolblip.com";
 
+// Display-only: price IDs must come from /api/plans (checkout errors until it loads).
 const FALLBACK_PLANS: Plan[] = [
   {
     tier: "free",
@@ -35,8 +36,8 @@ const FALLBACK_PLANS: Plan[] = [
     description: "For personal use",
     price_monthly: 499,
     price_yearly: 4990,
-    stripe_monthly_id: "price_1TOflqHd4AsPgGTOxspjxODX",
-    stripe_yearly_id: "price_1TOflqHd4AsPgGTOOrxqG1kM",
+    stripe_monthly_id: null,
+    stripe_yearly_id: null,
     storage_gb: 1,
     max_file_size_mb: 50,
     team_seats: 1,
@@ -50,8 +51,8 @@ const FALLBACK_PLANS: Plan[] = [
     description: "For power users",
     price_monthly: 1999,
     price_yearly: 19990,
-    stripe_monthly_id: "price_1TOflrHd4AsPgGTOnt9jYhjz",
-    stripe_yearly_id: "price_1TOflsHd4AsPgGTO5ra4mhwt",
+    stripe_monthly_id: null,
+    stripe_yearly_id: null,
     storage_gb: 10,
     max_file_size_mb: 500,
     team_seats: 3,
@@ -65,8 +66,8 @@ const FALLBACK_PLANS: Plan[] = [
     description: "For teams",
     price_monthly: 4999,
     price_yearly: 49990,
-    stripe_monthly_id: "price_1TOflsHd4AsPgGTOG7jeNqLk",
-    stripe_yearly_id: "price_1TOfltHd4AsPgGTOnUHvrbT7",
+    stripe_monthly_id: null,
+    stripe_yearly_id: null,
     storage_gb: 50,
     max_file_size_mb: 5000,
     team_seats: 10,

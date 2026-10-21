@@ -19,11 +19,12 @@ import {
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://api.toolblip.com';
 
+// Display-only: price IDs must come from /api/plans (checkout errors until it loads).
 const FALLBACK_PLANS: Plan[] = [
   { tier: 'free', name: 'Free', description: 'For anyone getting started', price_monthly: 0, price_yearly: 0, stripe_monthly_id: null, stripe_yearly_id: null, storage_gb: 0, max_file_size_mb: 5, team_seats: 1, api_access: false, priority_support: false, sort_order: 0 },
-  { tier: 'starter', name: 'Starter', description: 'For personal use', price_monthly: 499, price_yearly: 4990, stripe_monthly_id: 'price_1TqUeaHSZeRFIaEpVvLwETXO', stripe_yearly_id: 'price_1TqUecHSZeRFIaEpTImaNlP9', storage_gb: 1, max_file_size_mb: 50, team_seats: 1, api_access: false, priority_support: false, sort_order: 1 },
-  { tier: 'ultra', name: 'Pro', description: 'For power users', price_monthly: 1999, price_yearly: 19990, stripe_monthly_id: 'price_1TqUeoHSZeRFIaEp1xlsBAYx', stripe_yearly_id: 'price_1TqUeoHSZeRFIaEpCiZhmjpP', storage_gb: 10, max_file_size_mb: 500, team_seats: 3, api_access: true, priority_support: false, sort_order: 2 },
-  { tier: 'max', name: 'Max', description: 'For teams', price_monthly: 4999, price_yearly: 49990, stripe_monthly_id: 'price_1TqUeqHSZeRFIaEpGcJW3R1B', stripe_yearly_id: 'price_1TqUerHSZeRFIaEpmyyXqTrI', storage_gb: 50, max_file_size_mb: 5000, team_seats: 10, api_access: true, priority_support: true, sort_order: 3 },
+  { tier: 'starter', name: 'Starter', description: 'For personal use', price_monthly: 499, price_yearly: 4990, stripe_monthly_id: null, stripe_yearly_id: null, storage_gb: 1, max_file_size_mb: 50, team_seats: 1, api_access: false, priority_support: false, sort_order: 1 },
+  { tier: 'ultra', name: 'Pro', description: 'For power users', price_monthly: 1999, price_yearly: 19990, stripe_monthly_id: null, stripe_yearly_id: null, storage_gb: 10, max_file_size_mb: 500, team_seats: 3, api_access: true, priority_support: false, sort_order: 2 },
+  { tier: 'max', name: 'Max', description: 'For teams', price_monthly: 4999, price_yearly: 49990, stripe_monthly_id: null, stripe_yearly_id: null, storage_gb: 50, max_file_size_mb: 5000, team_seats: 10, api_access: true, priority_support: true, sort_order: 3 },
 ];
 
 interface Plan {
@@ -173,7 +174,7 @@ export default function PricingClient() {
 
       // Authenticated - create Stripe Checkout session directly
       const priceId = billing === 'yearly' ? plan.stripe_yearly_id : plan.stripe_monthly_id;
-      if (!priceId) throw new Error('No Stripe price ID configured for this plan');
+      if (!priceId) throw new Error("Couldn't load plans, try again.");
 
       const res = await fetch('/api/subscription/checkout', {
         method: 'POST',
@@ -206,7 +207,7 @@ export default function PricingClient() {
       }
 
       const priceId = billing === 'yearly' ? plan.stripe_yearly_id : plan.stripe_monthly_id;
-      if (!priceId) throw new Error('No Stripe price ID configured for this plan');
+      if (!priceId) throw new Error("Couldn't load plans, try again.");
 
       const res = await fetch('/api/subscription/trial', {
         method: 'POST',
