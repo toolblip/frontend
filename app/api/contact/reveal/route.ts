@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { clientIp } from "@/lib/client-ip";
 
 // Keeps the address out of HTML and client bundles. Only returned after a Turnstile check.
 export async function POST(req: NextRequest) {
@@ -11,7 +12,7 @@ export async function POST(req: NextRequest) {
       const form = new FormData();
       form.append("secret", secret);
       form.append("response", token);
-      const ip = req.headers.get("cf-connecting-ip") ?? req.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
+      const ip = clientIp(req.headers);
       if (ip) form.append("remoteip", ip);
 
       const verify = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
