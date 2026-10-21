@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { dismissDashboardOnboarding, loginByForm, resetMockBackend, VALID_USER } from '../fixtures/users';
+import { dismissDashboardOnboarding, loginByForm, mockPlansApi, resetMockBackend, VALID_USER } from '../fixtures/users';
 
 const PAID_SUBSCRIPTION = {
   is_pro: true,
@@ -90,6 +90,7 @@ test.describe('Dashboard plan selection and plan change', () => {
   });
 
   test('selecting a plan on pricing starts a free trial for authenticated users', async ({ page }) => {
+    await mockPlansApi(page);
     await loginByForm(page, VALID_USER);
     await expect(page).toHaveURL(/\/dashboard/);
 
