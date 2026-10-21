@@ -12,6 +12,7 @@ describe('clientIp', () => {
   it('ignores a spoofed cf-connecting-ip from a direct hit', () => {
     expect(clientIp(h({ 'x-forwarded-for': '203.0.113.9', 'cf-connecting-ip': '10.0.0.1' }))).toBe('203.0.113.9');
     expect(clientIp(h({ 'cf-connecting-ip': '10.0.0.1' }))).toBeUndefined();
+    expect(clientIp(h({ 'x-forwarded-for': '172.70.1.2, 203.0.113.9', 'cf-connecting-ip': '10.0.0.1' }))).toBe('203.0.113.9');
   });
 
   it('matches Cloudflare ranges', () => {
