@@ -3,7 +3,7 @@ import listings from './fixtures/footer-listings.json';
 
 const group = '.tb-v2-directory-group:not([aria-hidden])';
 const codeHypeHref = 'https://codehype.ai/product/toolblip?utm_source=codehype_badge';
-const saasGrowHref = 'https://saasgrow.app/';
+const saasGrowHref = 'https://saasgrow.app/saas/toolblip/badge';
 const huzzlerHref = 'https://huzzler.so/products/UI7339a8da/toolblip?utm_source=huzzler_product_website&utm_medium=badge&utm_campaign=free_listing';
 const aiToolTrekHref = 'https://aitooltrek.com';
 
@@ -36,7 +36,7 @@ for (const mobile of [false, true]) {
     const before = await track.evaluate(el => getComputedStyle(el).transform);
     await expect.poll(() => track.evaluate(el => getComputedStyle(el).transform)).not.toBe(before);
     await expect(page.locator(`${group} a`)).toHaveCount(listings.length);
-    await expect(page.locator(`${group} img`)).toHaveCount(162);
+    await expect(page.locator(`${group} img`)).toHaveCount(184);
     const codeHypeLink = page.locator(`${group} a[href="${codeHypeHref}"]`);
     await expect(codeHypeLink).toHaveCount(1);
     const codeHypeImage = codeHypeLink.locator('img');
@@ -99,7 +99,7 @@ for (const mobile of [false, true]) {
     await expect(starthubLink).toHaveCount(1);
     await expect(starthubLink).toHaveText('starthub.zip');
     await expect(starthubLink.locator('img')).toHaveCount(0);
-    const toolIndexLink = page.locator(`${group} a[href="https://toolindex.net/?ref=listed"]`);
+    const toolIndexLink = page.locator(`${group} a[href="https://toolindex.net/tools/toolblip"]`);
     await expect(toolIndexLink).toHaveCount(1);
     await expect(toolIndexLink).toHaveText('Listed on Tool Index');
     await expect(toolIndexLink).toHaveAttribute('rel', 'nofollow noopener');
@@ -120,7 +120,7 @@ for (const mobile of [false, true]) {
     await expect(aiToolTrekLink).not.toHaveAttribute('rel');
     await expect(aiToolTrekLink.locator('img')).toHaveCount(0);
     await expect(page.locator(`${group} a[href="https://launchtory.com/projects/toolblip"]`)).toHaveCount(1);
-    await expect(page.locator(`${group} a[href="https://bowora.com/?via=0aoviedt"]`)).toHaveCount(1);
+    await expect(page.locator(`${group} a[href="https://bowora.com/toolblip.com"]`)).toHaveCount(1);
     await expect(page.locator(`${group} a[href="https://saaspa.ge/product/cmu8mzn8n0005gm0a1obn4e2g"]`)).toHaveCount(1);
     for (const href of [
       'https://turbo0.com/item/toolblip',
