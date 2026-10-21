@@ -1,6 +1,7 @@
 /** Live edge entry for Next.js 16+ (middleware.ts is forbidden alongside this file). */
 import { NextRequest, NextResponse } from "next/server";
 import { classifyUserAgent, crawlBudget } from "./lib/ai-crawlers";
+import { clientIp } from "./lib/client-ip";
 import { isSafeNext } from "./lib/safe-next";
 
 // /submit-tool is left out: its page is public (indexed) and asks for sign in itself.
@@ -21,8 +22,7 @@ export function proxy(req: NextRequest) {
     hostname.endsWith(".localhost");
 
   if (!isLocalHost && pathname !== "/frontend-health") {
-    const forwarded = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
-    const ip = req.headers.get("cf-connecting-ip")?.trim() || forwarded || req.headers.get("x-real-ip")?.trim();
+    const ip = clientIp(req.headers);
     if (ip) {
       const crawlClass = classifyUserAgent(req.headers.get("user-agent") ?? "");
       // Link prefetches get their own bucket so they can't use up a reader's page views. The header is client-set, so that bucket is capped too.
