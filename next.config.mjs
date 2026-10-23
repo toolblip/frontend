@@ -5,6 +5,7 @@ import { htmlLimitedBots } from './lib/html-limited-bots.mjs';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'standalone',
   htmlLimitedBots,
   // '127.0.0.1' covers plain localhost dev; the Tailscale hostname/wildcard
   // covers the toolblip-preview tooling's path-mounted worktree URLs. Without
