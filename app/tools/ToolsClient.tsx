@@ -1,22 +1,37 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { Suspense, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { tools, categories } from '@/data/tools';
-import { getCategoryPath, getToolPath, IMAGE_CATEGORY } from '@/lib/tool-path';
+import { getCategoryPath, getToolPath, IMAGE_CATEGORY, IMAGE_CATEGORY_PATH } from '@/lib/tool-path';
 
 const allTools = tools;
 
-export default function ToolsClient({ initialCategory }: { initialCategory?: string }) {
+// Isolated so useSearchParams() only bails the (empty) sync node out of the
+// static prerender, keeping the full tool grid in the cached HTML.
+function SearchParamsSync({ onCategory, onSearch }: { onCategory: (c: string) => void; onSearch: (q: string) => void }) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const category = searchParams.get('category');
+  const search = searchParams.get('search');
+  useEffect(() => {
+    if (category?.toLowerCase() === 'image') {
+      router.replace(IMAGE_CATEGORY_PATH);
+      return;
+    }
+    onCategory(categories.find((c) => c !== 'All' && c.toLowerCase() === category?.toLowerCase()) ?? 'All');
+  }, [category, onCategory, router]);
+  useEffect(() => {
+    if (search !== null) onSearch(search);
+  }, [search, onSearch]);
+  return null;
+}
+
+export default function ToolsClient() {
   const router = useRouter();
   const [query, setQuery] = useState('');
-  const [activeCategory, setActiveCategory] = useState(() => {
-    if (!initialCategory) return 'All';
-    return categories.includes(initialCategory as (typeof categories)[number])
-      ? initialCategory
-      : 'All';
-  });
+  const [activeCategory, setActiveCategory] = useState('All');
 
   const selectCategory = (cat: string) => {
     if (cat === IMAGE_CATEGORY) {
@@ -38,6 +53,9 @@ export default function ToolsClient({ initialCategory }: { initialCategory?: str
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
+      <Suspense>
+        <SearchParamsSync onCategory={setActiveCategory} onSearch={setQuery} />
+      </Suspense>
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">All Tools</h1>
         <p className="text-gray-500 dark:text-gray-400">
