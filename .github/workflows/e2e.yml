@@ -16,13 +16,13 @@ jobs:
   # Specs share one stateful mock server, so each shard gets its own runner,
   # mock server and dev server instead of more workers on one machine.
   auth-e2e-shard:
-    name: auth-e2e (shard ${{ matrix.shard }}/4)
+    name: auth-e2e (shard ${{ matrix.shard }}/6)
     runs-on: ubuntu-latest
     timeout-minutes: 25
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3, 4]
+        shard: [1, 2, 3, 4, 5, 6]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -40,7 +40,7 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: Run auth E2E regression tests
-        run: npm run test:e2e -- --shard=${{ matrix.shard }}/4 --reporter=list
+        run: npm run test:e2e -- --shard=${{ matrix.shard }}/6
 
   # Single check name for branch protection / merge gating.
   auth-e2e:
