@@ -8,7 +8,8 @@ const APP_URL = `http://127.0.0.1:${APP_PORT}`;
 export default defineConfig({
   testDir: './e2e',
   testIgnore: '**/remaining-indexability.spec.ts',
-  fullyParallel: false,
+  // workers stays 1, so this only lets --shard split by test instead of by file; every stateful spec resets the mock in beforeEach.
+  fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
   workers: 1,
