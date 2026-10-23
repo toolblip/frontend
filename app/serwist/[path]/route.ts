@@ -26,6 +26,10 @@ const serwistRoute = createSerwistRoute({
     'public/pdf-worker/**',
   ],
   swSrc: 'app/sw.ts',
+  // Standalone server.js reports distDir as './.next', which serwist's
+  // './.next/' prefix check never matches - precache URLs would come out as
+  // '.next/static/...' instead of '/_next/static/...'.
+  nextConfig: { distDir: '.next' },
   // Alpine (Railway) can use native esbuild; wasm is the fallback if native fails.
   useNativeEsbuild: true,
 });
