@@ -2,7 +2,6 @@ import Link from 'next/link';
 import BrandMark from './BrandMark';
 import DirectoryBadgeImage from './DirectoryBadgeImage';
 import PreferredSourceButton from './PreferredSourceButton';
-import ApiStatus from '@/components/ApiStatus';
 import { tools } from '@/data/tools';
 
 function DirectoryBadgeLink({
@@ -841,7 +840,6 @@ export default function Footer() {
         </div>
         <div className="tb-v2-footer-meta">
           <span>© {year} Toolblip. Built to stay out of your way.</span>
-          <ApiStatus />
         </div>
       </div>
     </footer>
