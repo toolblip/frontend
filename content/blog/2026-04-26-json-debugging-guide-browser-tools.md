@@ -1,5 +1,5 @@
 ---
-title: "JSON Debugging in 2026: Browser-Based Tools Every Developer Should Know"
+title: "JSON Debugging in 2026: Browser Tools Developers Need"
 description: >-
   Stop guessing why your JSON is broken. This guide walks through the most common
   JSON errors developers hit, how to diagnose them fast using free browser tools,

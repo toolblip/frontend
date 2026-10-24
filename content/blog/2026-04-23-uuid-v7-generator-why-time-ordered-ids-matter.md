@@ -1,5 +1,5 @@
 ---
-title: "UUID v7 Generator: Why Time-Ordered IDs Are the Best Choice for Databases in 2026"
+title: "UUID v7 Generator: Why Time-Ordered IDs Win for Databases"
 description: "UUID v7 combines time-ordered inserts with privacy-safe randomness - no MAC address leakage, no index fragmentation. Generate UUID v7 online, free, in your browser."
 date: '2026-04-23'
 category: Developer Tools

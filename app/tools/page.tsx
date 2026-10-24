@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import ToolsClient from './ToolsClient';
+import { tools } from '@/data/tools';
+import { buildToolsItemListJsonLd, jsonLdScript } from '@/lib/tool-jsonld';
 
 const TITLE = 'Free Online Developer Tools | Toolblip';
 const DESCRIPTION =
@@ -25,5 +27,13 @@ export const metadata: Metadata = {
 };
 
 export default function ToolsPage() {
-  return <ToolsClient />;
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLdScript(buildToolsItemListJsonLd('Toolblip developer tools', tools)) }}
+      />
+      <ToolsClient />
+    </>
+  );
 }

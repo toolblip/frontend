@@ -1,5 +1,5 @@
 ---
-title: 'JavaScript vs Python vs PCRE Regex: The Differences That Break Your Patterns'
+title: "JavaScript vs Python vs PCRE Regex: Key Differences"
 description: >-
   Your regex works in JavaScript but fails in Python? Explains the key syntax
   and feature differences between JavaScript, Python (re), and PCRE regex flavors

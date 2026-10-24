@@ -1,6 +1,6 @@
 ---
 title: Cron 表达式速查表：5分钟掌握定时任务调度
-description: Cron 表达式是 Linux 定时任务的核心。本文提供完整的 cron 格式说明、常用示例、工具验证方法，附赠速查表供日常参考。
+description: Cron 表达式是 Linux 定时任务的核心。本文提供完整的 cron 五字段格式说明、每分钟到每月的常用示例、特殊字符用法、在线工具验证方法，并附赠一份可收藏的速查表，方便日常编写和排查定时任务。
 slug: cron-expression-cheatsheet
 date: 2026-04-15T00:00:00.000Z
 category: 开发者工具

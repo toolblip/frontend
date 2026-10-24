@@ -1,5 +1,5 @@
 ---
-title: "API Key vs JWT: How to Choose the Right Authentication for Your Project"
+title: "API Key vs JWT: Choosing the Right Authentication"
 description: "API keys and JWT tokens serve different purposes  -  and mixing them up leads to real security problems. Here is the clear breakdown developers actually need."
 publishDate: "2026-05-06"
 slug: api-key-vs-jwt-authentication

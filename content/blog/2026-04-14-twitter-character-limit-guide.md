@@ -1,7 +1,7 @@
 ---
 title: "Character Counts for Social Posts: Check the Composer"
 description: >-
-  Understand X weighted counts and check other platforms in their current composer.
+  Understand how X weights URLs, emoji, and CJK text in its character count, and why you should confirm limits for other platforms in their current composer.
 slug: social-media-character-limits
 date: 2026-04-14T00:00:00.000Z
 category: Reference

@@ -1,5 +1,5 @@
 ---
-title: 'The Developer Text Utilities Cheatsheet: Word Count, Case Conversion, and More'
+title: "Developer Text Utilities Cheatsheet: Counts and Case"
 description: 'From counting characters to sorting lines and checking readability  -  here are the text utilities every developer should have bookmarked, with quick-reference examples.'
 publishDate: '2026-05-01'
 slug: text-utilities-cheatsheet-developers

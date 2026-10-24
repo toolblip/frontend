@@ -943,7 +943,7 @@ export const blogPosts: BlogManifestEntry[] = [
   },
   {
     "slug": "api-key-vs-jwt-authentication",
-    "title": "API Key vs JWT: How to Choose the Right Authentication for Your Project",
+    "title": "API Key vs JWT: Choosing the Right Authentication",
     "description": "API keys and JWT tokens serve different purposes  -  and mixing them up leads to real security problems. Here is the clear breakdown developers actually need.",
     "date": "2026-05-06",
     "category": "Authentication",
@@ -988,7 +988,7 @@ export const blogPosts: BlogManifestEntry[] = [
   },
   {
     "slug": "2026-05-03-why-json-has-undefined",
-    "title": "Why Your JSON Has `undefined`: How to Debug Invalid JSON in Any Language",
+    "title": "Why Your JSON Has `undefined` and How to Fix It",
     "description": "JSON returning undefined or invalid JSON errors? Learn the most common causes  -  streaming output, character encoding, schema mismatches  -  and how to fix them fast.",
     "date": "2026-05-03T00:00:00.000Z",
     "category": "Developer Tools",
@@ -1001,7 +1001,7 @@ export const blogPosts: BlogManifestEntry[] = [
   },
   {
     "slug": "2026-05-02-time-ordered-ids-uuid-v7-sparkid-ulid-guide",
-    "title": "Time-Ordered IDs Explained: UUID v7 vs SparkID vs ULID for Database Design",
+    "title": "Time-Ordered IDs: UUID v7 vs SparkID vs ULID",
     "description": "Compare UUID v7, SparkID, and ULID  -  three time-ordered ID formats that fix the performance problems of random UUIDs in databases. Learn which one to use and why.",
     "date": "2026-05-02T00:00:00.000Z",
     "category": "Developer Tools",
@@ -1027,7 +1027,7 @@ export const blogPosts: BlogManifestEntry[] = [
   },
   {
     "slug": "text-utilities-cheatsheet-developers",
-    "title": "The Developer Text Utilities Cheatsheet: Word Count, Case Conversion, and More",
+    "title": "Developer Text Utilities Cheatsheet: Counts and Case",
     "description": "From counting characters to sorting lines and checking readability  -  here are the text utilities every developer should have bookmarked, with quick-reference examples.",
     "date": "2026-05-01",
     "category": "Developer Tools",
@@ -1078,7 +1078,7 @@ export const blogPosts: BlogManifestEntry[] = [
   },
   {
     "slug": "2026-04-29-wcag-color-contrast-checklist-browser",
-    "title": "WCAG Color Contrast Checklist: Test Every Color Pair in Under 30 Seconds",
+    "title": "WCAG Color Contrast Checklist: Test Color Pairs Fast",
     "description": "Use this developer checklist to catch WCAG AA and AAA contrast failures before they ship. Free browser tool, no upload required.",
     "date": "2026-04-29T00:00:00.000Z",
     "category": "Developer Tools",
@@ -1159,7 +1159,7 @@ export const blogPosts: BlogManifestEntry[] = [
   },
   {
     "slug": "2026-04-27-toolblip-vs-vscode-extensions-browser-based-developer-tools",
-    "title": "Toolblip vs. VS Code Extensions: When Browser-Based Developer Tools Win",
+    "title": "Toolblip vs VS Code Extensions: When Browser Tools Win",
     "description": "VS Code extensions are powerful but bloated. Here's when you should reach for a browser-based tool instead - and why privacy, speed, and zero setup make all the difference.",
     "date": "2026-04-27",
     "category": "Developer Tools",
@@ -1182,7 +1182,7 @@ export const blogPosts: BlogManifestEntry[] = [
   },
   {
     "slug": "2026-04-26-json-debugging-guide-browser-tools",
-    "title": "JSON Debugging in 2026: Browser-Based Tools Every Developer Should Know",
+    "title": "JSON Debugging in 2026: Browser Tools Developers Need",
     "description": "Stop guessing why your JSON is broken. This guide walks through the most common JSON errors developers hit, how to diagnose them fast using free browser tools, and when to reach for an IDE extension instead.",
     "date": "2026-04-26",
     "category": "Developer Tools",
@@ -1246,7 +1246,7 @@ export const blogPosts: BlogManifestEntry[] = [
   },
   {
     "slug": "2026-04-23-crop-images-without-uploading-privacy-guide",
-    "title": "Crop Images Without Uploading: Why Client-Side Tools Are the Privacy-First Choice",
+    "title": "Crop Images Without Uploading: Private Client-Side Cropping",
     "description": "Learn why cropping images in your browser keeps your data private, how client-side image processing works, and which tools do it right.",
     "date": "2026-04-23T00:00:00.000Z",
     "category": "Developer Tools",
@@ -1304,7 +1304,7 @@ export const blogPosts: BlogManifestEntry[] = [
   },
   {
     "slug": "2026-04-23-debug-regex-capture-groups-multiple-matches",
-    "title": "Debug Regex Capture Groups Across Multiple Matches: A Developer Checklist",
+    "title": "Debug Regex Capture Groups Across Multiple Matches",
     "description": "Learn how to debug regex capture groups across multiple matches with examples for JavaScript, Python, optional groups, named groups, and split bugs.",
     "date": "2026-04-23T00:00:00.000Z",
     "category": "Developer Tools",
@@ -1317,7 +1317,7 @@ export const blogPosts: BlogManifestEntry[] = [
   },
   {
     "slug": "2026-04-23-detect-secrets-api-keys-regex-guide",
-    "title": "How to Detect Secrets and API Keys in Text with Regex (And Why Blind Scanning Is Dangerous)",
+    "title": "Detect Secrets and API Keys in Text with Regex",
     "description": "Learn which regex patterns actually catch secrets, why naive scanning creates false positives that waste developer time, and how to build a secret detector that doesn't cry wolf.",
     "date": "2026-04-23T00:00:00.000Z",
     "category": "Developer Tools",
@@ -1338,7 +1338,7 @@ export const blogPosts: BlogManifestEntry[] = [
   },
   {
     "slug": "2026-04-23-html-input-pattern-regex-fails",
-    "title": "Why Your HTML Input Pattern Regex Fails Even When Regex101 Says It Works",
+    "title": "Why Your HTML Input Pattern Regex Fails in the Browser",
     "description": "Debug HTML input pattern regex issues: implicit anchors, escaping, browser validation, Unicode flags, and safer ways to test forms.",
     "date": "2026-04-23T00:00:00.000Z",
     "category": "Developer Tools",
@@ -1364,7 +1364,7 @@ export const blogPosts: BlogManifestEntry[] = [
   },
   {
     "slug": "2026-04-23-javascript-python-regex-differences-guide",
-    "title": "JavaScript vs Python vs PCRE Regex: The Differences That Break Your Patterns",
+    "title": "JavaScript vs Python vs PCRE Regex: Key Differences",
     "description": "Your regex works in JavaScript but fails in Python? Explains the key syntax and feature differences between JavaScript, Python (re), and PCRE regex flavors with side-by-side examples.",
     "date": "2026-04-23",
     "category": "Developer Tools",
@@ -1445,7 +1445,7 @@ export const blogPosts: BlogManifestEntry[] = [
   },
   {
     "slug": "online-json-formatter-vs-browser-extension-security",
-    "title": "Online JSON Formatter vs Browser Extension: Which Is Safer for API Payloads?",
+    "title": "Online JSON Formatter vs Extension: Which Is Safer?",
     "description": "Browser JSON extensions can be convenient, but they add supply-chain risk. Learn a safer workflow for formatting API payloads locally.",
     "date": "2026-04-23",
     "category": "Developer Tools",
@@ -1487,7 +1487,7 @@ export const blogPosts: BlogManifestEntry[] = [
   },
   {
     "slug": "2026-04-23-uuid-v7-generator-why-time-ordered-ids-matter",
-    "title": "UUID v7 Generator: Why Time-Ordered IDs Are the Best Choice for Databases in 2026",
+    "title": "UUID v7 Generator: Why Time-Ordered IDs Win for Databases",
     "description": "UUID v7 combines time-ordered inserts with privacy-safe randomness - no MAC address leakage, no index fragmentation. Generate UUID v7 online, free, in your browser.",
     "date": "2026-04-23",
     "category": "Developer Tools",
@@ -1603,7 +1603,7 @@ export const blogPosts: BlogManifestEntry[] = [
   },
   {
     "slug": "css-gradient-generator-guide",
-    "title": "CSS Gradient Generator: Create Beautiful Gradients Without Memorizing Syntax",
+    "title": "CSS Gradient Generator: Build Gradients Without Syntax",
     "description": "CSS gradients look stunning but the syntax is hard to visualize. Learn how Toolblip's CSS gradient generator helps you craft linear, radial, and conic gradients with real-time previews and copy-ready code.",
     "date": "2026-04-17",
     "category": "Design",
@@ -1891,7 +1891,7 @@ export const blogPosts: BlogManifestEntry[] = [
   },
   {
     "slug": "uuid-v4-generator-online",
-    "title": "Generate UUIDs Online: Why V4 Is the Right Choice for Most Applications",
+    "title": "Generate UUIDs Online: Why V4 Fits Most Applications",
     "description": "A UUID v4 generator creates unique identifiers with virtually zero collision risk. Learn how UUIDs work, why version 4 is the most practical choice for web and app development, and how to use Toolblip's UUID generator.",
     "date": "2026-04-17",
     "category": "Developer Tools",
@@ -1986,7 +1986,7 @@ export const blogPosts: BlogManifestEntry[] = [
   {
     "slug": "cron-expression-cheatsheet",
     "title": "Cron 表达式速查表：5分钟掌握定时任务调度",
-    "description": "Cron 表达式是 Linux 定时任务的核心。本文提供完整的 cron 格式说明、常用示例、工具验证方法，附赠速查表供日常参考。",
+    "description": "Cron 表达式是 Linux 定时任务的核心。本文提供完整的 cron 五字段格式说明、每分钟到每月的常用示例、特殊字符用法、在线工具验证方法，并附赠一份可收藏的速查表，方便日常编写和排查定时任务。",
     "date": "2026-04-15T00:00:00.000Z",
     "category": "开发者工具",
     "tags": [
@@ -2082,7 +2082,7 @@ export const blogPosts: BlogManifestEntry[] = [
   {
     "slug": "social-media-character-limits",
     "title": "Character Counts for Social Posts: Check the Composer",
-    "description": "Understand X weighted counts and check other platforms in their current composer.",
+    "description": "Understand how X weights URLs, emoji, and CJK text in its character count, and why you should confirm limits for other platforms in their current composer.",
     "date": "2026-04-14T00:00:00.000Z",
     "category": "Reference",
     "tags": [

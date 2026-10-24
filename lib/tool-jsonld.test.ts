@@ -3,7 +3,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, it, expect, vi } from 'vitest';
 import { getToolBySlug } from '@/data/tools';
 import { getBlogPost } from '@/lib/blog';
-import { buildBlogBreadcrumbJsonLd, buildToolBreadcrumbJsonLd, jsonLdScript } from '@/lib/tool-jsonld';
+import { buildBlogBreadcrumbJsonLd, buildBlogPostingJsonLd, buildToolBreadcrumbJsonLd, buildToolsItemListJsonLd, jsonLdScript } from '@/lib/tool-jsonld';
 
 vi.mock('@/app/tools/[slug]/ToolUI', () => ({ ToolUI: () => null }));
 vi.mock('@/components/tools/ToolWrapper', () => ({ default: ({ children }: { children: ReactNode }) => children }));
@@ -84,5 +84,26 @@ describe('buildBlogBreadcrumbJsonLd', () => {
     const crumbs = breadcrumbBlocks(html);
     expect(crumbs).toHaveLength(1);
     expect(listItems(crumbs[0])).toEqual(listItems(buildBlogBreadcrumbJsonLd(getBlogPost(slug)!)));
+  });
+});
+
+describe('buildBlogPostingJsonLd', () => {
+  it('emits an absolute-image BlogPosting for a post and renders it on the page', async () => {
+    const slug = 'free-online-developer-tools-browser';
+    const post = getBlogPost(slug)!;
+    const json = buildBlogPostingJsonLd(post);
+    expect(json).toMatchObject({ '@type': 'BlogPosting', headline: post.title, url: `https://toolblip.com/blog/${slug}` });
+    expect(json.image).toMatch(/^https:\/\//);
+    const html = renderToStaticMarkup(await BlogPostPage({ params: Promise.resolve({ slug }) }));
+    expect(html).toContain('"@type":"BlogPosting"');
+  });
+});
+
+describe('buildToolsItemListJsonLd', () => {
+  it('numbers tools from 1 with canonical tool URLs', () => {
+    const tool = getToolBySlug('json-formatter')!;
+    const json = buildToolsItemListJsonLd('Tools', [tool, tool]);
+    expect(json.numberOfItems).toBe(2);
+    expect(json.itemListElement[1]).toEqual({ '@type': 'ListItem', position: 2, name: tool.name, url: 'https://toolblip.com/tools/json-formatter' });
   });
 });

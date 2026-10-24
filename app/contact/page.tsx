@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import ContactClient from './ContactClient';
 
-const description = 'How to reach the Toolblip team. Reveal the contact address after a quick security check.';
+const description = 'How to reach the Toolblip team for support, bug reports, tool requests, and partnerships. Reveal the contact address after a quick security check.';
 
 export const metadata: Metadata = {
   title: 'Contact | Toolblip',
