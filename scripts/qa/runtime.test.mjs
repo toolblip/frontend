@@ -128,4 +128,14 @@ test('blocked third-party footer badge is environment noise; other cross-origin 
   classifyRuntime(ok,base); assert.equal(ok.status,'passed');
   const bad=runtime([], [{text,source:{url:'https://saasgrow.app/other.svg'}}]);
   classifyRuntime(bad,base); assert.equal(bad.status,'failed');
+  const forbidden='https://startupfa.me/badges/featured-badge.webp';
+  const http=runtime([{url:forbidden,status:403,method:'GET'}],[{text:'Failed to load resource: the server responded with a status of 403 (Forbidden)',source:{url:forbidden}}]);
+  classifyRuntime(http,base); assert.equal(http.status,'passed');
+});
+test('rate-limited RSC prefetch is non-blocking; a rate-limited document is not',()=>{
+  const url=base+'/tools?category=Developer&_rsc=abc12';
+  const ok=runtime([{url,status:429,method:'GET'}],[{text:'Failed to load resource: the server responded with a status of 429 ()',source:{url}}]);
+  classifyRuntime(ok,base); assert.equal(ok.status,'passed');
+  const bad=runtime([{url:base+'/tools',status:429,method:'GET'}]);
+  classifyRuntime(bad,base); assert.equal(bad.status,'failed');
 });

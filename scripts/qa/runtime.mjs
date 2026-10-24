@@ -1,9 +1,13 @@
+import { readFileSync } from 'node:fs';
 // Classifications annotate raw records; they never delete or rewrite browser evidence.
 const parseURL = value => { try { return new URL(value); } catch { return null; } };
 const resourceFailure = /^Failed to load resource: the server responded with a status of (\d{3})(?: \([^\n]*\))?\.?$/;
 const abortedResourceFailure = /^Failed to load resource: (?:net::ERR_FAILED|An error occurred while loading the resource\.)$/;
 const injectedFailure = record => record.requestId && record.injectedAbort?.requestId === record.requestId && record.injectedAbort.errorCode === 'failed' && typeof record.injectedAbort.reason === 'string' && record.injectedAbort.reason.trim() && Number.isInteger(record.injectedAbort.sequence) && record.injectedAbort.sequence < record.sequence && ['net::ERR_FAILED', 'Failed', 'An error occurred while loading the resource.'].includes(record.failure?.errorText);
-const footerBadge = 'https://saasgrow.app/api/badge?type=featured&style=light';
+// Third-party directory badges in the footer; their hosts often block datacenter runners and the footer shows a text fallback.
+const footerBadges = new Set([...readFileSync(new URL('../../components/v2/Footer.tsx', import.meta.url),'utf8').matchAll(/DirectoryBadgeImage src="(https:\/\/[^"]+)"/g)]
+  .map(match => parseURL(match[1].replaceAll('&amp;','&'))?.href).filter(Boolean));
+const isFooterBadge = value => footerBadges.has(parseURL(value)?.href);
 const beacon = /^https:\/\/static\.cloudflareinsights\.com\/beacon\.min\.js(?:\/[^\s'"<>]*)?(?:\?[^\s'"<>]*)?$/;
 
 export function validateExpectations(fixture = {}) {
@@ -23,9 +27,13 @@ export function classifyRuntime(runtime, base, fixture) {
   const linkedAborts = new Set();
   runtime.httpErrors.forEach(record=>{
     const url = parseURL(record.url);
+    if (isFooterBadge(record.url)) return annotate(record,'shared-environment','Third-party footer badge failed for this runner; footer shows its text fallback');
     if (url?.origin !== origin) return;
     if (url.pathname === '/api/auth/me' && record.status === 401 && record.method === 'GET') {
       annotate(record,'anonymous-auth-probe','Expected anonymous GET /api/auth/me returns 401 in a fresh unauthenticated context');
+    } else if (record.status === 429 && record.method === 'GET' && url.searchParams.has('_rsc')) {
+      // Next prefetches every visible link; the crawl budget can throttle the runner IP. A failed prefetch falls back to a normal navigation.
+      annotate(record,'rate-limited-prefetch','Crawl budget throttled a background RSC prefetch from the shared runner IP');
     } else {
       const rule = fixture?.expectedHttpErrors?.find(r=>r.pathname === url.pathname && r.status === record.status);
       if (rule) annotate(record,'expected-fixture-http',rule.reason);
@@ -40,9 +48,8 @@ export function classifyRuntime(runtime, base, fixture) {
       annotate(record,'shared-environment','Cloudflare edge-injected analytics beacon is blocked by the existing script CSP; environment observation remains unresolved');
       return;
     }
-    // The third-party footer badge host blocks datacenter runners; the footer renders a text fallback.
-    if (record.source?.url === footerBadge && text === 'Failed to load resource: net::ERR_BLOCKED_BY_RESPONSE.NotSameOrigin') {
-      annotate(record,'shared-environment','Third-party footer badge blocked for this runner; footer shows its text fallback');
+    if (isFooterBadge(record.source?.url) && /^Failed to load resource: /.test(text)) {
+      annotate(record,'shared-environment','Third-party footer badge failed for this runner; footer shows its text fallback');
       return;
     }
     if (abortedResourceFailure.test(text) && record.source?.url && Number.isInteger(record.sequence)) {
@@ -65,7 +72,7 @@ export function classifyRuntime(runtime, base, fixture) {
     const index = runtime.httpErrors.findIndex(h=>h.url === sourceURL && h.status === status && h.blocking === false);
     if (index < 0) return;
     const http = runtime.httpErrors[index];
-    if (http.classification === 'anonymous-auth-probe' || fixture?.expectedConsoleErrors?.some(r=>r.text === text && r.status === status && r.pathname === parseURL(sourceURL)?.pathname)) {
+    if (['anonymous-auth-probe','rate-limited-prefetch'].includes(http.classification) || fixture?.expectedConsoleErrors?.some(r=>r.text === text && r.status === status && r.pathname === parseURL(sourceURL)?.pathname)) {
       annotate(record,http.classification,`${http.reason}; console resource failure linked to observed HTTP response`,{httpEvidence:`httpErrors[${index}]`});
     }
   });
