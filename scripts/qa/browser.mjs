@@ -100,7 +100,14 @@ export async function auditTool({browser, entry, expectedEntry = entry, fixture,
     page.on('requestfailed',request=>{if(active) result.runtime.failedRequests.push({...stamp(),requestId:requestId(request),url:request.url(),method:request.method(),resourceType:request.resourceType(),failure:request.failure(),injectedAbort:injectedAborts.get(request)});});
     page.on('response',response=>{if(active && response.status() >= 400) result.runtime.httpErrors.push({...stamp(),url:response.url(),status:response.status(),resourceType:response.request().resourceType(),method:response.request().method()});});
     page.on('dialog',async dialog=>{if(active) result.runtime.dialogs.push({...stamp(),type:dialog.type(),message:dialog.message()}); await dialog.dismiss().catch(()=>{});});
-    const response = await page.goto(result.route.requestedURL,{waitUntil:'domcontentloaded'});
+    let response;
+    for (let attempt = 0; ; attempt++) {
+      response = await page.goto(result.route.requestedURL,{waitUntil:'domcontentloaded'});
+      // The site's crawl budget rate-limits the shared runner IP; wait it out instead of failing the tool.
+      if (response?.status() !== 429 || attempt === 3) break;
+      await page.waitForTimeout(Math.min(Number(response.headers()['retry-after']) || 30, 60) * 1000);
+      for (const kind of ['pageErrors','consoleErrors','failedRequests','httpErrors']) result.runtime[kind].length = 0;
+    }
     result.http = {status:response?.ok() ? 'passed':'failed',code:response?.status() ?? null};
     const chain = [];
     for (let request = response?.request(); request; request = request.redirectedFrom()) {

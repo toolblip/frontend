@@ -122,3 +122,10 @@ test('sequential explicit failures pair one-to-one while overlapping injections 
   const ambiguous=runtime([], [abortConsole({sequence:7})]); ambiguous.failedRequests=[injectedFailure(),second];
   classifyRuntime(ambiguous,base); assert.equal(ambiguous.status,'failed');
 });
+test('blocked third-party footer badge is environment noise; other cross-origin blocks still fail',()=>{
+  const text='Failed to load resource: net::ERR_BLOCKED_BY_RESPONSE.NotSameOrigin';
+  const ok=runtime([], [{text,source:{url:'https://saasgrow.app/api/badge?type=featured&style=light'}}]);
+  classifyRuntime(ok,base); assert.equal(ok.status,'passed');
+  const bad=runtime([], [{text,source:{url:'https://saasgrow.app/other.svg'}}]);
+  classifyRuntime(bad,base); assert.equal(bad.status,'failed');
+});

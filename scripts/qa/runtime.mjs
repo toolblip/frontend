@@ -3,6 +3,7 @@ const parseURL = value => { try { return new URL(value); } catch { return null; 
 const resourceFailure = /^Failed to load resource: the server responded with a status of (\d{3})(?: \([^\n]*\))?\.?$/;
 const abortedResourceFailure = /^Failed to load resource: (?:net::ERR_FAILED|An error occurred while loading the resource\.)$/;
 const injectedFailure = record => record.requestId && record.injectedAbort?.requestId === record.requestId && record.injectedAbort.errorCode === 'failed' && typeof record.injectedAbort.reason === 'string' && record.injectedAbort.reason.trim() && Number.isInteger(record.injectedAbort.sequence) && record.injectedAbort.sequence < record.sequence && ['net::ERR_FAILED', 'Failed', 'An error occurred while loading the resource.'].includes(record.failure?.errorText);
+const footerBadge = 'https://saasgrow.app/api/badge?type=featured&style=light';
 const beacon = /^https:\/\/static\.cloudflareinsights\.com\/beacon\.min\.js(?:\/[^\s'"<>]*)?(?:\?[^\s'"<>]*)?$/;
 
 export function validateExpectations(fixture = {}) {
@@ -37,6 +38,11 @@ export function classifyRuntime(runtime, base, fixture) {
     const scriptCSP = /^(?:Refused to load the script|Loading the script|Refused to load) ['"]?(https:\/\/[^'"\s]+)['"]?/.exec(text);
     if (scriptCSP && beacon.test(scriptCSP[1]) && /(?:Content Security Policy|content security policy)/.test(text) && /(?:script-src|script-src-elem)/.test(text)) {
       annotate(record,'shared-environment','Cloudflare edge-injected analytics beacon is blocked by the existing script CSP; environment observation remains unresolved');
+      return;
+    }
+    // The third-party footer badge host blocks datacenter runners; the footer renders a text fallback.
+    if (record.source?.url === footerBadge && text === 'Failed to load resource: net::ERR_BLOCKED_BY_RESPONSE.NotSameOrigin') {
+      annotate(record,'shared-environment','Third-party footer badge blocked for this runner; footer shows its text fallback');
       return;
     }
     if (abortedResourceFailure.test(text) && record.source?.url && Number.isInteger(record.sequence)) {
