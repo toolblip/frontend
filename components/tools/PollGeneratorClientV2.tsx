@@ -6,13 +6,6 @@ import { useMemo, useState } from 'react';
 
 type PollFormat = 'twitter' | 'instagram' | 'survey';
 
-interface Props {
-  tool?: {
-    name: string;
-    slug: string;
-    description: string;
-  };
-}
 
 const FORMAT_LABELS: Record<PollFormat, string> = {
   twitter: 'Twitter/X',
@@ -175,7 +168,7 @@ export function buildOutput(rawInput: string, format: PollFormat) {
   return lines.join('\n');
 }
 
-export default function PollGeneratorClient({ tool = { name: '', slug: '', description: '' } }: Props) {
+export default function PollGeneratorClient() {
   const [input, setInput] = useState('');
   const [format, setFormat] = useState<PollFormat>('twitter');
   const [output, setOutput] = useState('');
@@ -213,10 +206,6 @@ export default function PollGeneratorClient({ tool = { name: '', slug: '', descr
   return (<UtilityDesignLayout>
     <div className="mx-auto max-w-2xl p-6">
       <ToolExampleClearActions onExample={() => { setInput('Which fruit? | Apple | Pear | Plum'); setOutput(''); }} onClear={() => { setInput(''); setOutput(''); setCopied(false); setIsLoading(false); }}/>
-      <div className="mb-6">
-        <h1 className="mb-2 text-2xl font-bold">{tool.name}</h1>
-        <p className="text-gray-600 dark:text-gray-400">{tool.description}</p>
-      </div>
 
       <div className="space-y-5">
         <div>

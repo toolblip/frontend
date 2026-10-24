@@ -1,5 +1,5 @@
 ---
-title: 'Online JSON Formatter vs Browser Extension: Which Is Safer for API Payloads?'
+title: "Online JSON Formatter vs Extension: Which Is Safer?"
 description: 'Browser JSON extensions can be convenient, but they add supply-chain risk. Learn a safer workflow for formatting API payloads locally.'
 publishDate: '2026-04-23'
 slug: online-json-formatter-vs-browser-extension-security

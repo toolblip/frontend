@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import ProductCatalog from './ProductCatalog';
+import { products } from './products-data';
+import { buildItemListJsonLd, jsonLdScript } from '@/lib/tool-jsonld';
 import styles from './products.module.css';
 
 const title = 'Our products | Toolblip';
@@ -30,6 +32,10 @@ export default function ProductsPage() {
   return (
     <div className={styles.page}>
       <div className={styles.wrap}>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: jsonLdScript(buildItemListJsonLd('Toolblip products', products.map((p) => ({ name: p.name, url: p.url })))) }}
+        />
         <header className={styles.header}>
           <span className={styles.eyebrow}><i />The Toolblip collection</span>
           <h1>Built out of curiosity. Made to be useful.</h1>

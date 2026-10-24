@@ -1,5 +1,5 @@
 ---
-title: "Toolblip vs. VS Code Extensions: When Browser-Based Developer Tools Win"
+title: "Toolblip vs VS Code Extensions: When Browser Tools Win"
 description: "VS Code extensions are powerful but bloated. Here's when you should reach for a browser-based tool instead - and why privacy, speed, and zero setup make all the difference."
 date: "2026-04-27"
 category: Developer Tools

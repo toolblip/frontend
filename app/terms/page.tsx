@@ -2,10 +2,10 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Terms and Conditions | Toolblip',
-  description: 'Terms and Conditions for using Toolblip accounts, free tools, APIs, and paid features.',
+  description: 'Terms and Conditions for using Toolblip accounts, free browser-based developer tools, the public API, MCP server, and paid features such as sponsorships.',
   openGraph: {
     title: 'Terms and Conditions | Toolblip',
-    description: 'Terms and Conditions for using Toolblip accounts, free tools, APIs, and paid features.',
+    description: 'Terms and Conditions for using Toolblip accounts, free browser-based developer tools, the public API, MCP server, and paid features such as sponsorships.',
     url: 'https://toolblip.com/terms',
     siteName: 'Toolblip',
     type: 'website',
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary',
     title: 'Terms and Conditions | Toolblip',
-    description: 'Terms and Conditions for using Toolblip accounts, free tools, APIs, and paid features.',
+    description: 'Terms and Conditions for using Toolblip accounts, free browser-based developer tools, the public API, MCP server, and paid features such as sponsorships.',
   },
 };
 

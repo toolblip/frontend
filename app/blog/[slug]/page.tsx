@@ -9,7 +9,7 @@ import { selectRelatedPosts } from '@/lib/blog-related';
 import { clampMetaDescription } from '@/lib/meta-description';
 import { BLOG_LLMS_PATH } from '@/lib/blog-markdown';
 import BlogShareButton from '@/components/share/BlogShareButton';
-import { buildBlogBreadcrumbJsonLd, jsonLdScript } from '@/lib/tool-jsonld';
+import { buildBlogBreadcrumbJsonLd, buildBlogPostingJsonLd, jsonLdScript } from '@/lib/tool-jsonld';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -101,6 +101,10 @@ export default async function BlogPostPage({ params }: PageProps) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: jsonLdScript(buildBlogBreadcrumbJsonLd(currentPost)) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLdScript(buildBlogPostingJsonLd(currentPost)) }}
       />
       <div className="max-w-3xl mx-auto px-4 pt-8">
         <nav

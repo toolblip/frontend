@@ -1,5 +1,5 @@
 ---
-title: "How to Detect Secrets and API Keys in Text with Regex (And Why Blind Scanning Is Dangerous)"
+title: "Detect Secrets and API Keys in Text with Regex"
 description: "Learn which regex patterns actually catch secrets, why naive scanning creates false positives that waste developer time, and how to build a secret detector that doesn't cry wolf."
 date: 2026-04-23
 category: Developer Tools

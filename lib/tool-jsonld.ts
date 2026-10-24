@@ -43,6 +43,8 @@ export function buildSiteJsonLd() {
         '@type': 'Organization',
         name: 'Toolblip',
         url: `${SITE_ORIGIN}/`,
+        logo: `${SITE_ORIGIN}/icons/icon-512.png`,
+        description: 'Toolblip builds free browser-based developer tools, a public API, and an MCP server.',
       },
     ],
   };
@@ -83,4 +85,52 @@ export function buildBlogBreadcrumbJsonLd(post: { slug: string; title: string })
     { name: 'Blog', url: `${SITE_ORIGIN}/blog` },
     { name: post.title, url: `${SITE_ORIGIN}/blog/${post.slug}` },
   ]);
+}
+
+export function buildItemListJsonLd(name: string, items: { name: string; url: string }[]) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name,
+    numberOfItems: items.length,
+    itemListElement: items.map((item, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: item.name,
+      url: item.url,
+    })),
+  };
+}
+
+export function buildToolsItemListJsonLd(name: string, list: Pick<Tool, 'name' | 'slug' | 'category'>[]) {
+  return buildItemListJsonLd(name, list.map((tool) => ({ name: tool.name, url: getToolAbsoluteUrl(tool) })));
+}
+
+export function buildBlogPostingJsonLd(post: {
+  slug: string;
+  title: string;
+  description: string;
+  date: string;
+  author: string;
+  featuredImage?: string;
+}) {
+  const url = `${SITE_ORIGIN}/blog/${post.slug}`;
+  const image = post.featuredImage ?? '/og-preview.png';
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.title,
+    description: post.description,
+    url,
+    mainEntityOfPage: url,
+    datePublished: post.date,
+    image: image.startsWith('http') ? image : `${SITE_ORIGIN}${image}`,
+    author: { '@type': 'Organization', name: post.author || 'Toolblip Team', url: `${SITE_ORIGIN}/` },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Toolblip',
+      url: `${SITE_ORIGIN}/`,
+      logo: { '@type': 'ImageObject', url: `${SITE_ORIGIN}/icons/icon-512.png` },
+    },
+  };
 }

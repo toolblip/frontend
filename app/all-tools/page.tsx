@@ -5,6 +5,7 @@ import { tools } from '@/data/tools';
 import { getCategoryMeta, categoryAnchor } from '@/lib/v2/categoryMeta';
 import { getToolPath } from '@/lib/tool-path';
 import { IconArrowUR } from '@/components/v2/icons';
+import { buildToolsItemListJsonLd, jsonLdScript } from '@/lib/tool-jsonld';
 
 export const dynamic = 'force-static';
 
@@ -39,6 +40,10 @@ export default function AllToolsPage() {
 
   return (
     <main className="tb-v2-blog">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLdScript(buildToolsItemListJsonLd('All Toolblip tools', toolsByCategory.flatMap((group) => group.tools))) }}
+      />
       <div className="tb-v2-container">
         <div className="tb-v2-blog-header">
           <div className="tb-v2-kicker">All {tools.length} tools</div>

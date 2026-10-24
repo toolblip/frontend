@@ -1,6 +1,6 @@
 ---
 featuredImage: 'https://toolblip.com/api/og?title=Why%20Your%20JSON%20Has%20%60undefined%60%3A%20How%20to%20Debug%20Invalid%20JSON%20in%20Any%20Language&category=Developer%20Tools&date=2026-05-03'
-title: "Why Your JSON Has `undefined`: How to Debug Invalid JSON in Any Language"
+title: "Why Your JSON Has `undefined` and How to Fix It"
 description: "JSON returning undefined or invalid JSON errors? Learn the most common causes  -  streaming output, character encoding, schema mismatches  -  and how to fix them fast."
 date: 2026-05-03
 category: Developer Tools

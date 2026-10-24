@@ -1,5 +1,5 @@
 ---
-title: "CSS Gradient Generator: Create Beautiful Gradients Without Memorizing Syntax"
+title: "CSS Gradient Generator: Build Gradients Without Syntax"
 description: "CSS gradients look stunning but the syntax is hard to visualize. Learn how Toolblip's CSS gradient generator helps you craft linear, radial, and conic gradients with real-time previews and copy-ready code."
 publishDate: "2026-04-17"
 slug: css-gradient-generator-guide
