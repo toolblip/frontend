@@ -1,5 +1,5 @@
 'use client';
-import { useMemo, useState, useRef, useEffect } from 'react';
+import { useMemo, useState, useRef, useEffect, useSyncExternalStore } from 'react';
 import { markdownHtml, previewDocument } from '@/lib/developer-data/browser';
 import { textPdf } from '@/lib/developer-data/pdf';
 import { useToolHash } from '@/components/tools/useToolHash';
@@ -16,7 +16,9 @@ export default function MarkdownTool({ pdf = false, initial = pdf ? '' : MARKDOW
     const version = useRef(0);
     useEffect(() => () => { version.current++; }, []);
     function change(s: string) { version.current++; setInput(s); setBusy(false); setError(''); }
-    const result = useMemo(() => attempt(() => input.trim() ? markdownHtml(input) : ''), [input]);
+    // markdownHtml sanitizes with DOMParser, which only exists in the browser; render empty on the server.
+    const client = useSyncExternalStore(() => () => {}, () => true, () => false);
+    const result = useMemo(() => attempt(() => client && input.trim() ? markdownHtml(input) : ''), [client, input]);
     async function download() {
         const v = version.current;
         setBusy(true);
