@@ -3,6 +3,7 @@ const parseURL = value => { try { return new URL(value); } catch { return null; 
 const resourceFailure = /^Failed to load resource: the server responded with a status of (\d{3})(?: \([^\n]*\))?\.?$/;
 const abortedResourceFailure = /^Failed to load resource: (?:net::ERR_FAILED|An error occurred while loading the resource\.)$/;
 const injectedFailure = record => record.requestId && record.injectedAbort?.requestId === record.requestId && record.injectedAbort.errorCode === 'failed' && typeof record.injectedAbort.reason === 'string' && record.injectedAbort.reason.trim() && Number.isInteger(record.injectedAbort.sequence) && record.injectedAbort.sequence < record.sequence && ['net::ERR_FAILED', 'Failed', 'An error occurred while loading the resource.'].includes(record.failure?.errorText);
+const footerBadge = 'https://saasgrow.app/api/badge?type=featured&style=light';
 const beacon = /^https:\/\/static\.cloudflareinsights\.com\/beacon\.min\.js(?:\/[^\s'"<>]*)?(?:\?[^\s'"<>]*)?$/;
 
 export function validateExpectations(fixture = {}) {
@@ -39,10 +40,17 @@ export function classifyRuntime(runtime, base, fixture) {
       annotate(record,'shared-environment','Cloudflare edge-injected analytics beacon is blocked by the existing script CSP; environment observation remains unresolved');
       return;
     }
+    // The third-party footer badge host blocks datacenter runners; the footer renders a text fallback.
+    if (record.source?.url === footerBadge && text === 'Failed to load resource: net::ERR_BLOCKED_BY_RESPONSE.NotSameOrigin') {
+      annotate(record,'shared-environment','Third-party footer badge blocked for this runner; footer shows its text fallback');
+      return;
+    }
     if (abortedResourceFailure.test(text) && record.source?.url && Number.isInteger(record.sequence)) {
       // ConsoleMessage exposes no request identity. Pair only a unique recorded
       // injection and retain ambiguous/real same-URL failures as blocking evidence.
-      const failures = (runtime.failedRequests ?? []).map((request,index)=>({request,index})).filter(({request})=>request.url === record.source.url);
+      // A later navigation cancellation cannot explain an ERR_FAILED console event.
+      const failures = (runtime.failedRequests ?? []).map((request,index)=>({request,index})).filter(({request})=>
+        request.url === record.source.url && (injectedFailure(request) || ['net::ERR_FAILED','Failed','An error occurred while loading the resource.'].includes(request.failure?.errorText)));
       const candidates = failures.filter(({request,index})=>injectedFailure(request) && !linkedAborts.has(index) && request.injectedAbort.sequence < record.sequence);
       if (failures.every(({request})=>injectedFailure(request)) && candidates.length === 1) {
         const {request,index} = candidates[0];

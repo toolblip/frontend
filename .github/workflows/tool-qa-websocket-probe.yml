@@ -1,0 +1,22 @@
+name: Hosted WebKit WebSocket endpoint probe
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/tool-qa-websocket-probe.yml'
+      - 'scripts/qa/probes/websocket-endpoints.mjs'
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx --no-install playwright install --with-deps webkit
+      - run: node scripts/qa/probes/websocket-endpoints.mjs

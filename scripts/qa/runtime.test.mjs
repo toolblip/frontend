@@ -105,6 +105,15 @@ test('earlier same-URL console remains blocking alongside an allowed later injec
   classifyRuntime(r,base); assert.equal(r.status,'failed');
   assert.equal(r.consoleErrors[0].blocking,true); assert.equal(r.consoleErrors[1].blocking,false);
 });
+test('later same-URL navigation cancellation does not obscure an injected failure',()=>{
+  const r=runtime([], [abortConsole({sequence:11})]);
+  r.failedRequests=[injectedFailure({sequence:10,injectedAbort:{requestId:'request-1',sequence:9,errorCode:'failed',reason:'Controlled lookup failure'}}),
+    {url:base+'/lookup',requestId:'navigation',sequence:12,failure:{errorText:'net::ERR_ABORTED'}}];
+  classifyRuntime(r,base);
+  assert.equal(r.status,'passed');
+  assert.equal(r.consoleErrors[0].failedRequestEvidence,'failedRequests[0]');
+  assert.equal(r.failedRequests[1].classification,'discovery');
+});
 test('sequential explicit failures pair one-to-one while overlapping injections are ambiguous',()=>{
   const second=injectedFailure({requestId:'request-2',sequence:8,injectedAbort:{requestId:'request-2',sequence:6,errorCode:'failed',reason:'Second controlled failure'}});
   const r=runtime([], [abortConsole(),abortConsole({sequence:7})]); r.failedRequests=[injectedFailure(),second];
@@ -112,4 +121,11 @@ test('sequential explicit failures pair one-to-one while overlapping injections 
   assert.equal(r.consoleErrors[1].failedRequestEvidence,'failedRequests[1]');
   const ambiguous=runtime([], [abortConsole({sequence:7})]); ambiguous.failedRequests=[injectedFailure(),second];
   classifyRuntime(ambiguous,base); assert.equal(ambiguous.status,'failed');
+});
+test('blocked third-party footer badge is environment noise; other cross-origin blocks still fail',()=>{
+  const text='Failed to load resource: net::ERR_BLOCKED_BY_RESPONSE.NotSameOrigin';
+  const ok=runtime([], [{text,source:{url:'https://saasgrow.app/api/badge?type=featured&style=light'}}]);
+  classifyRuntime(ok,base); assert.equal(ok.status,'passed');
+  const bad=runtime([], [{text,source:{url:'https://saasgrow.app/other.svg'}}]);
+  classifyRuntime(bad,base); assert.equal(bad.status,'failed');
 });
