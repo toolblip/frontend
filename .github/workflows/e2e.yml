@@ -17,7 +17,7 @@ jobs:
   # mock server and dev server instead of more workers on one machine.
   auth-e2e-shard:
     name: auth-e2e (shard ${{ matrix.shard }}/4)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 25
     strategy:
       fail-fast: false
@@ -46,6 +46,6 @@ jobs:
   auth-e2e:
     if: always()
     needs: auth-e2e-shard
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - run: test "${{ needs.auth-e2e-shard.result }}" = success
