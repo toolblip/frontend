@@ -101,6 +101,7 @@ test.describe('Admin panel', () => {
     await acme.getByRole('button', { name: 'Refund' }).click();
     const confirm = page.getByTestId('sponsor-confirm');
     await expect(confirm).toContainText('Refund $25.00 for acme.dev');
+    await expect(confirm).toContainText("refunded to the sponsor's card through Stripe");
     const confirmRefund = page.getByRole('button', { name: 'Confirm refund' });
     await expect(confirmRefund).toBeDisabled();
     await confirm.getByLabel('Type REFUND to confirm').fill('refund');

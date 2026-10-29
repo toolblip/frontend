@@ -29,7 +29,7 @@ const ACTION_COPY: Record<SponsorAction, (s: AdminSponsor) => string> = {
   block: (s) => `Block ${s.domain}? It disappears from the strip and leaderboard right away.`,
   unblock: (s) => `Unblock ${s.domain}? It shows up on public sponsor surfaces again.`,
   refund: (s) =>
-    `Refund ${money(s.balance_cents)} for ${s.domain}? This zeroes its current-period balance in the ledger and cannot be undone. It does not send money back through Stripe; issue the card refund in Stripe separately.`,
+    `Refund ${money(s.balance_cents)} for ${s.domain}? The remaining period balance is refunded to the sponsor's card through Stripe. This cannot be undone.`,
 };
 
 function SponsorsManager() {
