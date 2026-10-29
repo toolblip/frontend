@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import AdminNav from "@/components/admin/AdminNav";
 
 export const metadata: Metadata = {
   title: "Admin | Toolblip",
@@ -7,5 +8,10 @@ export const metadata: Metadata = {
 };
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  return <>{children}</>;
+  return (
+    <>
+      <AdminNav />
+      {children}
+    </>
+  );
 }

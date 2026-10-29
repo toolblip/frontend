@@ -2,8 +2,9 @@
 
 export const dynamic = "force-dynamic";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import AdminGuard from "@/components/admin/AdminGuard";
 import {
   formatAdminDate,
@@ -12,20 +13,55 @@ import {
   type AdminUser,
 } from "@/lib/adminUsers";
 
+const PER_PAGE = 25;
+
+type PageMeta = { current_page: number; last_page: number; per_page: number; total: number };
+
 function UsersList() {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const search = searchParams.get("search") ?? "";
+  const page = Math.max(1, Number.parseInt(searchParams.get("page") ?? "1", 10) || 1);
+
+  const [query, setQuery] = useState(search);
   const [users, setUsers] = useState<AdminUser[] | null>(null);
+  const [meta, setMeta] = useState<PageMeta | null>(null);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(true);
+
+  const goTo = (nextSearch: string, nextPage: number) => {
+    const params = new URLSearchParams();
+    if (nextSearch) params.set("search", nextSearch);
+    if (nextPage > 1) params.set("page", String(nextPage));
+    const qs = params.toString();
+    router.replace(qs ? `${pathname}?${qs}` : pathname);
+  };
+
+  // Back/forward changes the URL; keep the input in step with it.
+  useEffect(() => {
+    setQuery(search);
+  }, [search]);
+
+  useEffect(() => {
+    const trimmed = query.trim();
+    if (trimmed === search) return;
+    const timer = setTimeout(() => goTo(trimmed, 1), 300);
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- goTo is recreated each render; query/search drive this.
+  }, [query, search]);
 
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
     setError(false);
-    fetch("/api/admin/users", { credentials: "include", headers: { Accept: "application/json" } })
+    const params = new URLSearchParams({ search, page: String(page), per_page: String(PER_PAGE) });
+    fetch(`/api/admin/users?${params}`, { credentials: "include", headers: { Accept: "application/json" } })
       .then((res) => (res.ok ? res.json() : Promise.reject(new Error("load failed"))))
       .then((data) => {
         if (cancelled) return;
         setUsers(Array.isArray(data.data) ? data.data : []);
+        setMeta(data.meta ?? null);
       })
       .catch(() => {
         if (!cancelled) setError(true);
@@ -36,7 +72,10 @@ function UsersList() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [search, page]);
+
+  const pagerButton =
+    "cursor-pointer rounded-full border border-gray-300 px-3 py-1.5 text-xs font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800";
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
@@ -44,6 +83,19 @@ function UsersList() {
       <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
         Look up an account and open its record.
       </p>
+
+      <input
+        type="search"
+        aria-label="Search users"
+        data-testid="admin-users-search"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") goTo(query.trim(), 1);
+        }}
+        placeholder="Search by name or email"
+        className="mt-6 w-full max-w-md rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 shadow-sm outline-none transition focus:border-red-500 focus:ring-2 focus:ring-red-500/20 dark:border-gray-700 dark:bg-gray-950 dark:text-white"
+      />
 
       <div className="mt-6 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-900">
         {loading ? (
@@ -97,6 +149,22 @@ function UsersList() {
           <p className="p-6 text-sm text-gray-500 dark:text-gray-400">No users found.</p>
         )}
       </div>
+
+      {meta && (
+        <div className="mt-4 flex items-center justify-between gap-4 text-sm text-gray-600 dark:text-gray-400">
+          <p data-testid="admin-users-page-info">
+            Page {meta.current_page} of {Math.max(1, meta.last_page)} · {meta.total} {meta.total === 1 ? "user" : "users"}
+          </p>
+          <div className="flex gap-2">
+            <button type="button" className={pagerButton} disabled={loading || meta.current_page <= 1} onClick={() => goTo(search, meta.current_page - 1)}>
+              Prev
+            </button>
+            <button type="button" className={pagerButton} disabled={loading || meta.current_page >= meta.last_page} onClick={() => goTo(search, meta.current_page + 1)}>
+              Next
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -104,7 +172,9 @@ function UsersList() {
 export default function AdminUsersPage() {
   return (
     <AdminGuard>
-      <UsersList />
+      <Suspense>
+        <UsersList />
+      </Suspense>
     </AdminGuard>
   );
 }

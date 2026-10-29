@@ -9,7 +9,9 @@ import {
   User,
   Shield,
   Key,
+  Wrench,
 } from "lucide-react";
+import { useAuth } from "@/app/providers/auth-provider";
 
 const NAV_ITEMS = [
   { id: "nav-dashboard", href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -20,8 +22,12 @@ const NAV_ITEMS = [
   { id: "nav-security", href: "/dashboard/security", label: "Security", icon: Shield },
 ];
 
+const ADMIN_ITEM = { id: "nav-admin", href: "/admin", label: "Admin", icon: Wrench };
+
 export function DashboardShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const { user } = useAuth();
+  const items = user?.role === "admin" ? [...NAV_ITEMS, ADMIN_ITEM] : NAV_ITEMS;
 
   const isActive = (href: string) => {
     if (href === "/dashboard") {
@@ -35,7 +41,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
       <div className="flex gap-8 min-h-[500px]">
         {/* Left menu bar */}
         <nav className="flex w-40 shrink-0 flex-col gap-1 self-stretch">
-          {NAV_ITEMS.map((item) => {
+          {items.map((item) => {
             const active = isActive(item.href);
             const Icon = item.icon;
             return (
