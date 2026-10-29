@@ -29,7 +29,7 @@ const ACTION_COPY: Record<SponsorAction, (s: AdminSponsor) => string> = {
   block: (s) => `Block ${s.domain}? It disappears from the strip and leaderboard right away.`,
   unblock: (s) => `Unblock ${s.domain}? It shows up on public sponsor surfaces again.`,
   refund: (s) =>
-    `Refund ${money(s.balance_cents)} for ${s.domain}? The remaining period balance is refunded to the sponsor's card through Stripe. This cannot be undone.`,
+    `Refund ${money(s.balance_cents)} for ${s.domain}? The remaining period balance is refunded to the sponsor's card through Stripe, up to this period's Stripe payments; rolled-over credit stays. This cannot be undone.`,
 };
 
 function SponsorsManager() {
@@ -76,11 +76,15 @@ function SponsorsManager() {
         body: JSON.stringify({ action: pending.action }),
       });
       const data = await res.json().catch(() => ({}));
-      // Responses carry the updated sponsor, errors too (a part-way Stripe refund still moves the balance).
-      if (data.data?.id) setSponsors((rows) => rows?.map((row) => (row.id === data.data.id ? data.data : row)) ?? rows);
+      // A 200 carries the updated sponsor, and so does a failed refund (it may have refunded part way).
+      const updated: AdminSponsor | null = data.data?.id ? data.data : null;
+      if (updated) {
+        setSponsors((rows) => rows?.map((row) => (row.id === updated.id ? updated : row)) ?? rows);
+        setPending((p) => (p && p.sponsor.id === updated.id ? { ...p, sponsor: updated } : p));
+      }
       if (!res.ok) throw new Error(data.message || `Could not ${pending.action} sponsor.`);
       setPending(null);
-      if (!data.data?.id) await load();
+      if (!updated) await load();
     } catch (error) {
       setActionError(error instanceof Error ? error.message : "Action failed.");
     } finally {
