@@ -101,6 +101,7 @@ test.describe('Admin panel', () => {
     await acme.getByRole('button', { name: 'Refund' }).click();
     const confirm = page.getByTestId('sponsor-confirm');
     await expect(confirm).toContainText('Refund $25.00 for acme.dev');
+    await expect(confirm).toContainText("refunded to the sponsor's card through Stripe");
     const confirmRefund = page.getByRole('button', { name: 'Confirm refund' });
     await expect(confirmRefund).toBeDisabled();
     await confirm.getByLabel('Type REFUND to confirm').fill('refund');
@@ -121,5 +122,27 @@ test.describe('Admin panel', () => {
     await page.getByRole('button', { name: 'Confirm block' }).click();
     await expect(page.getByTestId('sponsor-confirm').getByRole('alert')).toHaveText('The selected action is invalid.');
     await expect(page.getByTestId('admin-sponsor-status-1')).toHaveText('active');
+  });
+
+  test('a part-way Stripe refund shows the message and the balance Stripe left', async ({ page }) => {
+    await loginViaApi(page, ADMIN_USER);
+    await page.goto('/admin/sponsors');
+    const acme = page.getByTestId('admin-sponsor-row-1');
+    await expect(acme).toBeVisible();
+    const acmeAfter = { id: 1, domain: 'acme.dev', url: 'https://acme.dev', name: 'Acme', tagline: 'Rockets for devs', email: 'ops@acme.dev', status: 'active', clicks: 34, views: 1240, balance_cents: 1000, created_at: '2026-10-01T00:00:00.000Z' };
+    await page.route('**/api/admin/sponsors/1', (route) =>
+      route.fulfill({
+        status: 502,
+        contentType: 'application/json',
+        body: JSON.stringify({ message: 'Stripe refund failed part way. $15.00 was refunded and recorded; the rest was not. Please try again.', data: acmeAfter }),
+      }),
+    );
+    await acme.getByRole('button', { name: 'Refund' }).click();
+    const confirm = page.getByTestId('sponsor-confirm');
+    await confirm.getByLabel('Type REFUND to confirm').fill('REFUND');
+    await page.getByRole('button', { name: 'Confirm refund' }).click();
+    await expect(confirm.getByRole('alert')).toContainText('$15.00 was refunded');
+    await expect(page.getByTestId('admin-sponsor-balance-1')).toHaveText('$10.00');
+    await expect(confirm).toContainText('Refund $10.00 for acme.dev');
   });
 });

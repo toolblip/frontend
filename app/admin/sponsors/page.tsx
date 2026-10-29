@@ -29,7 +29,7 @@ const ACTION_COPY: Record<SponsorAction, (s: AdminSponsor) => string> = {
   block: (s) => `Block ${s.domain}? It disappears from the strip and leaderboard right away.`,
   unblock: (s) => `Unblock ${s.domain}? It shows up on public sponsor surfaces again.`,
   refund: (s) =>
-    `Refund ${money(s.balance_cents)} for ${s.domain}? This zeroes its current-period balance in the ledger and cannot be undone. It does not send money back through Stripe; issue the card refund in Stripe separately.`,
+    `Refund ${money(s.balance_cents)} for ${s.domain}? The remaining period balance is refunded to the sponsor's card through Stripe, up to this period's Stripe payments; rolled-over credit stays. This cannot be undone.`,
 };
 
 function SponsorsManager() {
@@ -76,11 +76,15 @@ function SponsorsManager() {
         body: JSON.stringify({ action: pending.action }),
       });
       const data = await res.json().catch(() => ({}));
+      // A 200 carries the updated sponsor, and so does a failed refund (it may have refunded part way).
+      const updated: AdminSponsor | null = data.data?.id ? data.data : null;
+      if (updated) {
+        setSponsors((rows) => rows?.map((row) => (row.id === updated.id ? updated : row)) ?? rows);
+        setPending((p) => (p && p.sponsor.id === updated.id ? { ...p, sponsor: updated } : p));
+      }
       if (!res.ok) throw new Error(data.message || `Could not ${pending.action} sponsor.`);
       setPending(null);
-      // The 200 carries the updated sponsor; patch the row so a failed reload can't hide a done action.
-      if (data.data?.id) setSponsors((rows) => rows?.map((row) => (row.id === data.data.id ? data.data : row)) ?? rows);
-      else await load();
+      if (!updated) await load();
     } catch (error) {
       setActionError(error instanceof Error ? error.message : "Action failed.");
     } finally {
