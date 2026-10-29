@@ -60,6 +60,10 @@ test.describe('Admin panel', () => {
     await page.reload();
     await expect(info).toHaveText('Page 2 of 2 · 34 users');
 
+    // A stale page number past the end snaps back to the last page.
+    await page.goto('/admin/users?page=9');
+    await expect(page).toHaveURL(/\/admin\/users\?page=2$/);
+
     await page.getByTestId('admin-users-search').fill('admin@');
     await expect(page).toHaveURL(/\/admin\/users\?search=admin%40$/);
     await expect(info).toHaveText('Page 1 of 1 · 1 user');
@@ -96,7 +100,7 @@ test.describe('Admin panel', () => {
 
     await acme.getByRole('button', { name: 'Refund' }).click();
     const confirm = page.getByTestId('sponsor-confirm');
-    await expect(confirm).toContainText('Refund $25.00 to acme.dev');
+    await expect(confirm).toContainText('Refund $25.00 for acme.dev');
     const confirmRefund = page.getByRole('button', { name: 'Confirm refund' });
     await expect(confirmRefund).toBeDisabled();
     await confirm.getByLabel('Type REFUND to confirm').fill('refund');

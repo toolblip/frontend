@@ -5,6 +5,7 @@ export const dynamic = "force-dynamic";
 import { useCallback, useEffect, useState } from "react";
 import AdminGuard from "@/components/admin/AdminGuard";
 import { formatAdminDate } from "@/lib/adminUsers";
+import { stepUpFetch } from "@/lib/step-up";
 
 interface AdminSponsor {
   id: number;
@@ -28,7 +29,7 @@ const ACTION_COPY: Record<SponsorAction, (s: AdminSponsor) => string> = {
   block: (s) => `Block ${s.domain}? It disappears from the strip and leaderboard right away.`,
   unblock: (s) => `Unblock ${s.domain}? It shows up on public sponsor surfaces again.`,
   refund: (s) =>
-    `Refund ${money(s.balance_cents)} to ${s.domain}? This zeroes its balance for the current period and cannot be undone.`,
+    `Refund ${money(s.balance_cents)} for ${s.domain}? This zeroes its current-period balance in the ledger and cannot be undone. It does not send money back through Stripe; issue the card refund in Stripe separately.`,
 };
 
 function SponsorsManager() {
@@ -68,7 +69,7 @@ function SponsorsManager() {
     setBusy(true);
     setActionError("");
     try {
-      const res = await fetch(`/api/admin/sponsors/${pending.sponsor.id}`, {
+      const res = await stepUpFetch(`/api/admin/sponsors/${pending.sponsor.id}`, {
         method: "POST",
         credentials: "include",
         headers: { Accept: "application/json", "Content-Type": "application/json" },
@@ -77,7 +78,9 @@ function SponsorsManager() {
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.message || `Could not ${pending.action} sponsor.`);
       setPending(null);
-      await load();
+      // The 200 carries the updated sponsor; patch the row so a failed reload can't hide a done action.
+      if (data.data?.id) setSponsors((rows) => rows?.map((row) => (row.id === data.data.id ? data.data : row)) ?? rows);
+      else await load();
     } catch (error) {
       setActionError(error instanceof Error ? error.message : "Action failed.");
     } finally {

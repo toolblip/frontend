@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/app/providers/auth-provider";
+import { isAdminRole } from "@/lib/adminUsers";
 
 export const ADMIN_SECTIONS = [
   { href: "/admin/users", label: "Users", description: "Search accounts, change plans, add support notes." },
@@ -14,7 +15,7 @@ export const ADMIN_SECTIONS = [
 export default function AdminNav() {
   const { user } = useAuth();
   const pathname = usePathname();
-  if (user?.role !== "admin") return null;
+  if (!isAdminRole(user?.role)) return null;
 
   const items = [{ href: "/admin", label: "Admin home" }, ...ADMIN_SECTIONS];
   return (

@@ -589,7 +589,7 @@ const server = http.createServer(async (req, res) => {
     if (body.confirm !== 'DELETE') return json(res, 422, { message: 'Type DELETE to confirm.' });
     const admins = [...users.values()].filter((u) => (u.role ?? 'user') === 'admin');
     if (user.role === 'admin' && admins.length === 1) {
-      return json(res, 422, { message: 'You are the last admin. Make someone else an admin first.' });
+      return json(res, 422, { message: 'You are the only admin. Promote another admin before deleting your account.' });
     }
     users.delete(email);
     for (const [token, owner] of tokens) if (owner === email) tokens.delete(token);

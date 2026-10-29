@@ -2,7 +2,7 @@
 
 export const dynamic = "force-dynamic";
 
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import AdminGuard from "@/components/admin/AdminGuard";
@@ -30,7 +30,9 @@ function UsersList() {
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  const pushedSearch = useRef(search);
   const goTo = (nextSearch: string, nextPage: number) => {
+    pushedSearch.current = nextSearch;
     const params = new URLSearchParams();
     if (nextSearch) params.set("search", nextSearch);
     if (nextPage > 1) params.set("page", String(nextPage));
@@ -38,10 +40,18 @@ function UsersList() {
     router.replace(qs ? `${pathname}?${qs}` : pathname);
   };
 
-  // Back/forward changes the URL; keep the input in step with it.
+  // Back/forward changes the URL; keep the input in step with it, but not when our own debounce landed.
   useEffect(() => {
+    if (search === pushedSearch.current) return;
+    pushedSearch.current = search;
     setQuery(search);
   }, [search]);
+
+  // A stale ?page= past the end: jump to the last real page.
+  useEffect(() => {
+    if (meta && meta.last_page >= 1 && page > meta.last_page) goTo(search, meta.last_page);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- goTo is recreated each render.
+  }, [meta, page, search]);
 
   useEffect(() => {
     const trimmed = query.trim();

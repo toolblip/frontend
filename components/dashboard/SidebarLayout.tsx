@@ -12,6 +12,7 @@ import {
   Wrench,
 } from "lucide-react";
 import { useAuth } from "@/app/providers/auth-provider";
+import { isAdminRole } from "@/lib/adminUsers";
 
 const NAV_ITEMS = [
   { id: "nav-dashboard", href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -27,7 +28,7 @@ const ADMIN_ITEM = { id: "nav-admin", href: "/admin", label: "Admin", icon: Wren
 export function DashboardShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { user } = useAuth();
-  const items = user?.role === "admin" ? [...NAV_ITEMS, ADMIN_ITEM] : NAV_ITEMS;
+  const items = isAdminRole(user?.role) ? [...NAV_ITEMS, ADMIN_ITEM] : NAV_ITEMS;
 
   const isActive = (href: string) => {
     if (href === "/dashboard") {

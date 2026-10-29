@@ -40,7 +40,7 @@ test.describe('Delete account', () => {
     await zone.getByLabel('Type DELETE to confirm').fill('DELETE');
     await zone.getByRole('button', { name: 'Delete my account' }).click();
 
-    await expect(zone.getByRole('alert')).toHaveText('You are the last admin. Make someone else an admin first.');
+    await expect(zone.getByRole('alert')).toHaveText('You are the only admin. Promote another admin before deleting your account.');
     await expect(page).toHaveURL(/\/dashboard\/security$/);
     expect((await page.request.get('/api/auth/me')).status()).toBe(200);
   });
