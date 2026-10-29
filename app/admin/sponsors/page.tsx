@@ -76,11 +76,11 @@ function SponsorsManager() {
         body: JSON.stringify({ action: pending.action }),
       });
       const data = await res.json().catch(() => ({}));
+      // Responses carry the updated sponsor, errors too (a part-way Stripe refund still moves the balance).
+      if (data.data?.id) setSponsors((rows) => rows?.map((row) => (row.id === data.data.id ? data.data : row)) ?? rows);
       if (!res.ok) throw new Error(data.message || `Could not ${pending.action} sponsor.`);
       setPending(null);
-      // The 200 carries the updated sponsor; patch the row so a failed reload can't hide a done action.
-      if (data.data?.id) setSponsors((rows) => rows?.map((row) => (row.id === data.data.id ? data.data : row)) ?? rows);
-      else await load();
+      if (!data.data?.id) await load();
     } catch (error) {
       setActionError(error instanceof Error ? error.message : "Action failed.");
     } finally {
