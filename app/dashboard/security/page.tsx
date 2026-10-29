@@ -2,7 +2,9 @@
 export const dynamic = "force-dynamic";
 
 import { useEffect, useState } from "react";
+import { useAuth } from "@/app/providers/auth-provider";
 import { useRequireAuth } from "@/lib/hooks/useRequireAuth";
+import { stepUpFetch } from "@/lib/step-up";
 import { addPasskey, deletePasskey, listPasskeys, passkeysSupported, PasskeyCancelledError, renamePasskey, suggestPasskeyName, type PasskeyItem } from "@/lib/passkeys";
 
 export default function SecurityPage() {
@@ -17,6 +19,11 @@ export default function SecurityPage() {
   const [passkeyBusy, setPasskeyBusy] = useState(false);
   const [canUsePasskeys, setCanUsePasskeys] = useState(false);
   const userId = user?.id;
+  const { logout } = useAuth();
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [deleteConfirm, setDeleteConfirm] = useState("");
+  const [deleteError, setDeleteError] = useState("");
+  const [deleteBusy, setDeleteBusy] = useState(false);
 
   useEffect(() => {
     setCanUsePasskeys(passkeysSupported());
@@ -68,6 +75,27 @@ export default function SecurityPage() {
       setPasskeys((current) => current.filter((item) => item.id !== id));
     } catch (error) {
       setPasskeyError(error instanceof Error ? error.message : "Could not delete passkey.");
+    }
+  }
+
+  async function handleDeleteAccount() {
+    setDeleteError("");
+    setDeleteBusy(true);
+    try {
+      const res = await stepUpFetch("/api/auth/account", {
+        method: "DELETE",
+        credentials: "include",
+        headers: { Accept: "application/json", "Content-Type": "application/json" },
+        body: JSON.stringify({ confirm: deleteConfirm }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.message || "Could not delete your account.");
+      await logout();
+      // Hard navigation: a soft one races useRequireAuth's redirect to /login once user is null.
+      window.location.replace("/");
+    } catch (error) {
+      setDeleteError(error instanceof Error ? error.message : "Could not delete your account.");
+      setDeleteBusy(false);
     }
   }
 
@@ -190,25 +218,69 @@ export default function SecurityPage() {
         )}
       </div>
 
-      {/* Delete account placeholder */}
-      <div className="rounded-2xl border border-red-200 bg-white p-6 shadow-sm dark:border-red-900/50 dark:bg-gray-900">
+      {/* Delete account */}
+      <div data-testid="danger-zone" className="rounded-2xl border border-red-200 bg-white p-6 shadow-sm dark:border-red-900/50 dark:bg-gray-900">
         <h2 className="text-sm font-semibold uppercase tracking-wide text-red-600 dark:text-red-400">
           Danger zone
         </h2>
         <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
           Once you delete your account, there is no going back. Please be certain.
         </p>
-        <button
-          type="button"
-          disabled
-          className="mt-4 rounded-full border border-red-300 px-4 py-2 text-sm font-medium text-red-600 opacity-50 cursor-not-allowed dark:border-red-800 dark:text-red-400"
-          title="Account deletion is not available yet"
-        >
-          Delete account
-        </button>
-        <p className="mt-2 text-xs text-gray-400 dark:text-gray-500">
-          Account deletion is coming soon.
-        </p>
+        {deleteOpen ? (
+          <form
+            className="mt-4"
+            onSubmit={(e) => {
+              e.preventDefault();
+              void handleDeleteAccount();
+            }}
+          >
+            <label htmlFor="delete-confirm" className="block text-sm text-gray-700 dark:text-gray-300">
+              Type <span className="font-mono font-semibold">DELETE</span> to confirm
+            </label>
+            <input
+              id="delete-confirm"
+              type="text"
+              autoComplete="off"
+              value={deleteConfirm}
+              onChange={(e) => setDeleteConfirm(e.target.value)}
+              className={`mt-1 max-w-xs ${inputClass}`}
+            />
+            {deleteError && (
+              <p role="alert" className="mt-3 text-sm text-red-600 dark:text-red-400">
+                {deleteError}
+              </p>
+            )}
+            <div className="mt-4 flex gap-2">
+              <button
+                type="submit"
+                disabled={deleteBusy || deleteConfirm !== "DELETE"}
+                className="cursor-pointer rounded-full bg-red-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {deleteBusy ? "Deleting..." : "Delete my account"}
+              </button>
+              <button
+                type="button"
+                disabled={deleteBusy}
+                onClick={() => {
+                  setDeleteOpen(false);
+                  setDeleteConfirm("");
+                  setDeleteError("");
+                }}
+                className={smallButtonClass}
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        ) : (
+          <button
+            type="button"
+            onClick={() => setDeleteOpen(true)}
+            className="mt-4 cursor-pointer rounded-full border border-red-300 px-4 py-2 text-sm font-medium text-red-600 transition-colors hover:bg-red-50 dark:border-red-800 dark:text-red-400 dark:hover:bg-red-950/30"
+          >
+            Delete account
+          </button>
+        )}
       </div>
     </div>
   );

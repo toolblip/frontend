@@ -4,6 +4,7 @@ import { useEffect, type ReactNode } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/providers/auth-provider";
+import { isAdminRole } from "@/lib/adminUsers";
 
 /**
  * Gates admin-only routes. While auth resolves it shows a loading state;
@@ -14,7 +15,7 @@ export default function AdminGuard({ children }: { children: ReactNode }) {
   const { user, loading } = useAuth();
   const router = useRouter();
 
-  const isAdmin = user?.role === "admin";
+  const isAdmin = isAdminRole(user?.role);
 
   useEffect(() => {
     if (loading || user) return;

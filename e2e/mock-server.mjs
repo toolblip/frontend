@@ -16,6 +16,7 @@ const mailbox = new Map(); // email -> { token, code, sentAt }
 const challenges = new Map(); // challenge_id -> { email | null, used }
 const passkeys = new Map(); // email -> [{ id, name, created_at, last_used_at, transports }]
 const steppedUpUntil = new Map(); // bearer token -> ms epoch
+const sponsors = new Map(); // id -> admin sponsor view fields
 let nextPasskeyId = 1;
 let nextChallenge = 1;
 let nextId = 1;
@@ -160,6 +161,9 @@ function reset() {
   challenges.clear();
   passkeys.clear();
   steppedUpUntil.clear();
+  sponsors.clear();
+  sponsors.set(1, { id: 1, domain: 'acme.dev', url: 'https://acme.dev', name: 'Acme', tagline: 'Rockets for devs', email: 'ops@acme.dev', status: 'active', clicks: 34, views: 1240, balance_cents: 2500, created_at: '2026-10-01T00:00:00.000Z' });
+  sponsors.set(2, { id: 2, domain: 'spam.example', url: 'https://spam.example', name: null, tagline: null, email: 'x@spam.example', status: 'blocked', clicks: 0, views: 3, balance_cents: 0, created_at: '2026-10-02T00:00:00.000Z' });
   nextPasskeyId = 1;
   nextChallenge = 1;
   nextListId = 1;
@@ -569,6 +573,29 @@ const server = http.createServer(async (req, res) => {
     return json(res, 200, { stepped_up_until: new Date(markSteppedUp(req)).toISOString() });
   }
 
+  // Test helper: drop the recent step-up for every session of an address so the next guarded call asks again.
+  if (req.method === 'POST' && url.pathname === '/__expire-step-up') {
+    const body = await readJson(req);
+    for (const [token, email] of tokens) if (email === body.email) steppedUpUntil.delete(token);
+    return json(res, 200, { ok: true });
+  }
+
+  if (req.method === 'DELETE' && url.pathname === '/api/auth/account') {
+    const email = tokens.get(bearer(req));
+    const user = email ? users.get(email) : null;
+    if (!user) return json(res, 401, { message: 'Unauthenticated.' });
+    if (!isSteppedUp(req)) return stepUpRequired(res);
+    const body = await readJson(req);
+    if (body.confirm !== 'DELETE') return json(res, 422, { message: 'Type DELETE to confirm.' });
+    const admins = [...users.values()].filter((u) => (u.role ?? 'user') === 'admin');
+    if (user.role === 'admin' && admins.length === 1) {
+      return json(res, 422, { message: 'You are the only admin. Promote another admin before deleting your account.' });
+    }
+    users.delete(email);
+    for (const [token, owner] of tokens) if (owner === email) tokens.delete(token);
+    return json(res, 200, { message: 'Account deleted.' });
+  }
+
   if (req.method === 'GET' && url.pathname === '/api/auth/me') {
     const email = tokens.get(bearer(req));
     const user = email ? users.get(email) : null;
@@ -863,7 +890,47 @@ const server = http.createServer(async (req, res) => {
   if (req.method === 'GET' && url.pathname === '/api/admin/users') {
     const gate = requireAdmin(req);
     if (gate.error) return json(res, gate.error, { message: gate.error === 401 ? 'Unauthenticated.' : 'Forbidden.' });
-    return json(res, 200, { data: Array.from(users.values()).map(adminUserView) });
+    const search = String(url.searchParams.get('search') ?? '').toLowerCase();
+    const perPage = Math.max(1, Number.parseInt(url.searchParams.get('per_page') ?? '25', 10) || 25);
+    const matches = Array.from(users.values()).filter(
+      (u) => !search || u.name.toLowerCase().includes(search) || u.email.toLowerCase().includes(search),
+    );
+    const lastPage = Math.max(1, Math.ceil(matches.length / perPage));
+    const page = Math.min(lastPage, Math.max(1, Number.parseInt(url.searchParams.get('page') ?? '1', 10) || 1));
+    return json(res, 200, {
+      data: matches.slice((page - 1) * perPage, page * perPage).map(adminUserView),
+      meta: { current_page: page, last_page: lastPage, per_page: perPage, total: matches.length },
+    });
+  }
+
+  // Test helper: add plain users so the admin list has more than one page.
+  if (req.method === 'POST' && url.pathname === '/__seed-users') {
+    const body = await readJson(req);
+    for (let i = 1; i <= Number(body.count ?? 0); i++) {
+      const email = `seeded-${i}@toolblip.test`;
+      users.set(email, { id: nextId++, name: `Seeded ${i}`, email, role: 'user', email_verified_at: null, terms_accepted_at: null });
+    }
+    return json(res, 200, { ok: true });
+  }
+
+  if (req.method === 'GET' && url.pathname === '/api/admin/sponsors') {
+    const gate = requireAdmin(req);
+    if (gate.error) return json(res, gate.error, { message: gate.error === 401 ? 'Unauthenticated.' : 'Forbidden.' });
+    return json(res, 200, { period: '2026-10', data: [...sponsors.values()].sort((a, b) => b.id - a.id) });
+  }
+
+  const adminSponsorMatch = url.pathname.match(/^\/api\/admin\/sponsors\/(\d+)$/);
+  if (req.method === 'POST' && adminSponsorMatch) {
+    const gate = requireAdmin(req);
+    if (gate.error) return json(res, gate.error, { message: gate.error === 401 ? 'Unauthenticated.' : 'Forbidden.' });
+    const sponsor = sponsors.get(Number(adminSponsorMatch[1]));
+    if (!sponsor) return json(res, 404, { message: 'Sponsor not found.' });
+    const body = await readJson(req);
+    if (body.action === 'block') sponsor.status = 'blocked';
+    else if (body.action === 'unblock') sponsor.status = 'active';
+    else if (body.action === 'refund') sponsor.balance_cents = 0;
+    else return json(res, 422, { message: 'The selected action is invalid.' });
+    return json(res, 200, { data: sponsor, audit: { admin_id: gate.user.id, action: body.action } });
   }
 
   const adminUserMatch = url.pathname.match(/^\/api\/admin\/users\/([^/]+)$/);

@@ -22,7 +22,7 @@ export async function proxyLaravel(path: string, init: RequestInit = {}) {
       headers,
       cache: "no-store",
     });
-    const data = await laravelRes.json().catch(() => ({ message: "Unable to update lists." }));
+    const data = await laravelRes.json().catch(() => ({ message: "Unexpected response from the API." }));
     return NextResponse.json(data, { status: laravelRes.status });
   } catch {
     return NextResponse.json({ message: "Unable to reach the API." }, { status: 500 });

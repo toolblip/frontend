@@ -11,6 +11,9 @@ export interface AdminUser {
   favorites_count?: number;
 }
 
+/** Mirrors the API User::isAdmin(). */
+export const isAdminRole = (role: unknown) => role === "admin" || role === "superadmin";
+
 export const PLAN_TIERS = ["free", "starter", "ultra", "max"] as const;
 export type PlanTier = (typeof PLAN_TIERS)[number];
 
