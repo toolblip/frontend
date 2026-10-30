@@ -1,5 +1,5 @@
 import { getBrowserPolicy, browserPolicyKey } from './browser-policy.mjs';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import config from '../next.config.mjs';
 import { getPathMatch } from 'next/dist/shared/lib/router/utils/path-match';
 import { tools, getCanonicalToolSlug } from '@/data/tools';
@@ -173,5 +173,36 @@ describe('document navigation policy identity', () => {
     expect(browserPolicyKey('/tools/dns-lookup/')).toBe(key);
     expect(browserPolicyKey('/preview/toolblip/tools/dns-lookup', '/preview/toolblip')).toBe(key);
     expect(browserPolicyKey('/tools/dns-lookup/unrelated')).toBe(browserPolicyKey('/'));
+  });
+});
+
+describe('local API origin in connect-src', () => {
+  const load = async (nodeEnv: string, apiUrl: string) => {
+    vi.resetModules();
+    vi.stubEnv('NODE_ENV', nodeEnv);
+    vi.stubEnv('NEXT_PUBLIC_API_URL', apiUrl);
+    try {
+      return await import('./browser-policy.mjs');
+    } finally {
+      vi.unstubAllEnvs();
+    }
+  };
+  const connect = (csp: string) => csp.split('; ').find(part => part.startsWith('connect-src '))!;
+
+  it('keeps production byte-identical and appends the local origin in dev, including tool overrides', async () => {
+    const plain = await load('production', '');
+    const prod = await load('production', 'http://localhost:8000/api');
+    expect(prod.baseCsp).toBe(plain.baseCsp);
+    expect(prod.browserPolicyHeaders).toEqual(plain.browserPolicyHeaders);
+    expect(connect(prod.baseCsp)).not.toContain('localhost');
+
+    const dev = await load('development', 'http://localhost:8000/api');
+    expect(connect(dev.baseCsp).split(' ')).toContain('http://localhost:8000');
+    expect(connect(dev.getBrowserPolicy('/tools/dns-lookup').csp).split(' ')).toContain('http://localhost:8000');
+    expect(dev.baseCsp.replace(' http://localhost:8000', '')).toBe(plain.baseCsp);
+
+    const already = await load('development', 'https://api.toolblip.com');
+    expect(already.baseCsp).toBe(plain.baseCsp);
+    expect((await load('development', 'localhost:8000')).baseCsp).toBe(plain.baseCsp);
   });
 });
