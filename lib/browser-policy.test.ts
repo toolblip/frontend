@@ -203,5 +203,6 @@ describe('local API origin in connect-src', () => {
 
     const already = await load('development', 'https://api.toolblip.com');
     expect(already.baseCsp).toBe(plain.baseCsp);
+    expect((await load('development', 'localhost:8000')).baseCsp).toBe(plain.baseCsp);
   });
 });
