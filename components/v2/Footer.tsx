@@ -770,6 +770,57 @@ function DirectoryBadges({ duplicate = false }: { duplicate?: boolean }) {
       <DirectoryBadgeLink duplicate={duplicate} href="https://huntstartup.com/" target="_blank" rel="noopener">
         <DirectoryBadgeImage src="https://huntstartup.com/badge-dark.svg" alt="Featured on Hunt Startup" height="54" fallback="Featured on Hunt Startup" />
       </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://dirpilot.com/tools?ref=badge-hangar" target="_blank" rel="noopener">
+        <DirectoryBadgeImage src="https://dirpilot.com/badges/hangar-light.svg" alt="Live on DirPilot" width="250" height="54" fallback="DirPilot" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://saasearch.io/product/toolblip?utm_source=badge&utm_medium=referral&utm_campaign=featured_badge&ref=saasearch" target="_blank" rel="noopener">
+        <DirectoryBadgeImage src="https://saasearch.io/api/badge/toolblip?theme=light" alt="Featured on SaaSearch" style={{ height: 48, width: 'auto' }} fallback="SaaSearch" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://adsly.io/?ref=badge" target="_blank" rel="noopener">
+        <DirectoryBadgeImage src="https://adsly.io/badges/adsly-badge-dark.svg" alt="Featured on Adsly" width="134" height="44" fallback="Adsly" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://confettisaas.com/" target="_blank" rel="noopener">
+        <DirectoryBadgeImage src="https://confettisaas.com/badge-light.svg" alt="Featured on ConfettiSaaS" height="54" fallback="ConfettiSaaS" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://francesaas.fr/saas/toolblip" target="_blank" rel="noopener" title="Profil du SaaS Toolblip sur FranceSaaS.fr">
+        <DirectoryBadgeImage src="https://francesaas.fr/badge-francesaas.svg" alt="Badge FranceSaaS" width="200" height="44" fallback="FranceSaaS" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://indieshowcase.io">
+        <DirectoryBadgeImage src="https://indieshowcase.io/badge/featured-light.svg" alt="Featured" fallback="Indie Showcase" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://producthot.com" target="_blank" rel="noopener noreferrer">
+        <DirectoryBadgeImage src="https://producthot.com/badages-awards.svg" alt="Featured" style={{ height: 54, width: 'auto' }} fallback="Product Hot" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://productwill.com" target="_blank" rel="noopener noreferrer">
+        <DirectoryBadgeImage src="https://productwill.com/badages-awards.svg" alt="Featured on Product Will" style={{ height: 54, width: 'auto' }} fallback="Product Will" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://sameproduct.com" target="_blank" rel="noopener noreferrer">
+        <DirectoryBadgeImage src="https://sameproduct.com/badages-awards.svg" alt="Featured" style={{ height: 54, width: 'auto' }} fallback="Same Product" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://shipdirs.com" target="_blank">
+        <span className="tb-v2-directory-text">Featured on Shipdirs</span>
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://www.shipnlaunch.com/" target="_blank" rel="noopener noreferrer">
+        <DirectoryBadgeImage src="https://www.shipnlaunch.com/badges/featured-light.svg" alt="Featured on ShipNLaunch" width="240" height="56" fallback="ShipNLaunch" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://smollaunchpad.com/" target="_blank" rel="noopener noreferrer">
+        <DirectoryBadgeImage src="https://smollaunchpad.com/smollaunchpad/images/badges/featured-on-light.svg" alt="Featured on Smol LaunchPad" style={{ height: 44, width: 'auto' }} fallback="Smol LaunchPad" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://smollist.com/" target="_blank" rel="noopener noreferrer">
+        <DirectoryBadgeImage src="https://smollist.com/smollist/images/badges/featured-on-light.svg" alt="Featured on Smol List" style={{ height: 44, width: 'auto' }} fallback="Smol List" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://smolstartup.com/" target="_blank" rel="noopener noreferrer">
+        <DirectoryBadgeImage src="https://smolstartup.com/smolstartup/images/badges/featured-on-light.svg" alt="Featured on Smol Startup" style={{ height: 44, width: 'auto' }} fallback="Smol Startup" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://startupog.com" target="_blank" rel="noopener">
+        <DirectoryBadgeImage src="https://startupog.com/startupog-badge-wide.webp" alt="Featured on StartupOG" width="250" height="54" fallback="StartupOG" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://theonestartup.com" target="_blank" rel="noopener noreferrer">
+        <DirectoryBadgeImage src="https://theonestartup.com/badages-awards.svg" alt="Featured on The One Startup" style={{ height: 54, width: 'auto' }} fallback="The One Startup" />
+      </DirectoryBadgeLink>
+      <DirectoryBadgeLink duplicate={duplicate} href="https://www.tooluck.org">
+        <span className="tb-v2-directory-text">Tooluck</span>
+      </DirectoryBadgeLink>
     </div>
   );
 }

@@ -13,6 +13,7 @@ const hosts = [
   'launchfeeds.com', 'findscove.com', 'thistools.app', 'zerorevenue.club', 'megalaun.ch', 'aitoolslist.tools',
   'thedevtoolslist.com', 'softwarecomoservicio.com',
   'best.serp.co', 'directory.getseoo.com', 'fwfw.app', 'getlaunchpod.com', 'inuidea.com', 'scrappystartups.com', 'swipetolaunch.com', 'toolpilot.ai', 'toolquix.com', 'wtai.cc', 'aicavo.com', 'backlinkdirs.com', 'bestaitool.app', 'boringcashcow.com', 'firmsrated.com', 'mydirs.com', 'peerbear.io', 'startupproject.org', 'tooltrim.com', 'vibetoyou.com', 'indiepocket.com', 'launchgp.io', 'launchrove.com', 'launchwall.online', 'makerpocket.com', 'superlaunchai.com', 'tooldirectory.dev', 'toolsnap.ai', 'saatlas.com', 'ufind.best',
+  'dirpilot.com', 'saasearch.io', 'adsly.io', 'confettisaas.com', 'francesaas.fr', 'indieshowcase.io', 'producthot.com', 'productwill.com', 'sameproduct.com', 'shipdirs.com', 'shipnlaunch.com', 'smollaunchpad.com', 'smollist.com', 'smolstartup.com', 'startupog.com', 'theonestartup.com', 'tooluck.org',
   'aitoolsaver.com', 'launchbuck.com', 'meshkore.com', 'nextbigproduct.com', 'primadirectory.it', 'rankcert.com', 'showmebest.ai', 'startuplist.ing', 'submitstartup.io', 'tooltrove.net', 'unique-listing.com',
 ];
 
