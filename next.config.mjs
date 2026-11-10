@@ -52,6 +52,10 @@ const nextConfig = {
       // Consolidate older articles that cover the same topic under one URL.
       { source: '/blog/optimize-images-without-uploading', destination: '/blog/how-to-optimize-images-without-uploading', permanent: true },
       { source: '/blog/top-5-developer-tools-should-bookmark', destination: '/blog/top-5-developer-tools-you-should-bookmark', permanent: true },
+      // Date-prefixed slugs from the original markdown filenames; Search Console still reports them as 404.
+      { source: '/blog/2026-04-15-how-to-optimize-images-without-uploading', destination: '/blog/how-to-optimize-images-without-uploading', permanent: true },
+      { source: '/blog/2026-04-15-top-5-developer-tools-you-should-bookmark', destination: '/blog/top-5-developer-tools-you-should-bookmark', permanent: true },
+      { source: '/blog/2026-04-15-why-browser-based-tools-are-the-future', destination: '/blog/why-browser-based-tools-are-the-future', permanent: true },
       { source: '/tools/markdown-table-from-json', destination: '/tools/json-to-markdown-table', permanent: true },
       // Stage-1 exact shared-engine consolidations; query parameters are preserved.
       { source: '/tools/hash-from-text', destination: '/tools/sha256-hash-generator', permanent: true },
