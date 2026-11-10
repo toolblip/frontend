@@ -830,12 +830,14 @@ function DirectoryBadges({ duplicate = false }: { duplicate?: boolean }) {
       <DirectoryBadgeLink duplicate={duplicate} href="https://saasdirectorypro.com/launch/toolblip" target="_blank" rel="nofollow">
         <DirectoryBadgeImage src="https://saasdirectorypro.com/badge/toolblip.svg?kind=listed&amp;shape=standard&amp;mode=auto&amp;size=m&amp;v=2" alt="Listed on SaaS Directory Pro" width="250" height="54" decoding="async" fallback="SaaS Directory Pro" />
       </DirectoryBadgeLink>
+      {!duplicate && <script async src="https://saasdirectorypro.com/badge/toolblip.js" />}
       <DirectoryBadgeLink duplicate={duplicate} href="https://launchbuff.com/products/toolblip-0nnb3c" target="_blank" rel="noopener noreferrer" title="Featured on LaunchBuff">
         <DirectoryBadgeImage src="https://launchbuff.com/badge-featured-dark.svg" alt="Featured on LaunchBuff" width="256" height="80" fallback="LaunchBuff" />
       </DirectoryBadgeLink>
       <DirectoryBadgeLink duplicate={duplicate} href="https://saasdirectorylist.com/launch/toolblip" target="_blank" rel="nofollow">
         <DirectoryBadgeImage src="https://saasdirectorylist.com/badge/toolblip.svg?kind=listed&amp;shape=standard&amp;mode=light&amp;size=m&amp;v=2" alt="Listed on SaaS Directory List" width="250" height="54" decoding="async" fallback="SaaS Directory List" />
       </DirectoryBadgeLink>
+      {!duplicate && <script async src="https://saasdirectorylist.com/badge/toolblip.js" />}
     </div>
   );
 }
