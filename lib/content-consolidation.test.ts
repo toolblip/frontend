@@ -8,6 +8,7 @@ import { categoricalAliases, consolidatedAliases } from '@/e2e/content-aliases';
 import { getToolContent } from '@/data/tool-content';
 import { getFaqs } from '@/lib/faq';
 import { buildToolMetadata } from '@/app/tools/tool-page-meta';
+import { blogPosts } from '@/content/blog-manifest';
 
 // Avoid loading browser tool implementations when exercising server routing.
 vi.mock('@/app/tools/ToolDetailView', () => ({ default: () => null }));
@@ -94,5 +95,16 @@ describe('confirmed same-intent aliases', () => {
     expect(content).not.toMatch(/connect apps and automate|whichever your automation runner expects|feeding that definition into/i);
     expect(content).toMatch(/not.*(?:verified|validated).*compatib/i);
     expect(buildToolMetadata(tool).robots).toEqual({ index: true, follow: true });
+  });
+});
+
+describe('date-prefixed blog URLs', () => {
+  it('permanently redirect to the live undated article', async () => {
+    const redirects = await config.redirects!();
+    for (const slug of ['how-to-optimize-images-without-uploading', 'top-5-developer-tools-you-should-bookmark', 'why-browser-based-tools-are-the-future']) {
+      expect(blogPosts.some(post => post.slug === slug)).toBe(true);
+      expect(redirects.filter((entry: { source: string }) => entry.source === `/blog/2026-04-15-${slug}`))
+        .toEqual([{ source: `/blog/2026-04-15-${slug}`, destination: `/blog/${slug}`, permanent: true }]);
+    }
   });
 });
