@@ -111,17 +111,18 @@ function PlanSwitchModal({
   switchSuccess: string | null;
   handleSwitchPlan: (planTier: string, billing: BillingCycle) => Promise<void>;
 }) {
-  if (!open) return null;
-
-  const currentTier = subscription?.tier;
-
-  // Close modal on successful switch
+  // Close modal on successful switch. Hooks run before the early return so the
+  // hook order stays the same when `open` toggles.
   React.useEffect(() => {
-    if (switchSuccess) {
+    if (open && switchSuccess) {
       const timer = setTimeout(onClose, 1800);
       return () => clearTimeout(timer);
     }
-  }, [switchSuccess, onClose]);
+  }, [open, switchSuccess, onClose]);
+
+  if (!open) return null;
+
+  const currentTier = subscription?.tier;
 
   return (
     <>

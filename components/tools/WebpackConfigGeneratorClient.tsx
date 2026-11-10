@@ -23,7 +23,6 @@ export default function WebpackConfigGeneratorClient() {
     if (config.jsx) lines.push(`  module: { rules: [{ test: /\\.jsx?$/, exclude: /node_modules/, use: 'babel-loader' }] },`);
     if (config.css) lines.push(`  module: { rules: [{ test: /\\.css$/, use: ['style-loader', 'css-loader'] }] },`);
     lines.push(`};`);
-    setConfig(prev => ({ ...prev }));
     return lines.join('\n');
   };
 
