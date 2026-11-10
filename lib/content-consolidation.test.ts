@@ -101,10 +101,17 @@ describe('confirmed same-intent aliases', () => {
 describe('date-prefixed blog URLs', () => {
   it('permanently redirect to the live undated article', async () => {
     const redirects = await config.redirects!();
-    for (const slug of ['how-to-optimize-images-without-uploading', 'top-5-developer-tools-you-should-bookmark', 'why-browser-based-tools-are-the-future']) {
+    const dated: Record<string, string> = {
+      '2026-04-15-how-to-optimize-images-without-uploading': 'how-to-optimize-images-without-uploading',
+      '2026-04-15-top-5-developer-tools-you-should-bookmark': 'top-5-developer-tools-you-should-bookmark',
+      '2026-04-15-why-browser-based-tools-are-the-future': 'why-browser-based-tools-are-the-future',
+      // The file name differs from its frontmatter slug.
+      '2026-04-16-seo-friendly-urls-guide': 'url-structure-seo-guide',
+    };
+    for (const [source, slug] of Object.entries(dated)) {
       expect(blogPosts.some(post => post.slug === slug)).toBe(true);
-      expect(redirects.filter((entry: { source: string }) => entry.source === `/blog/2026-04-15-${slug}`))
-        .toEqual([{ source: `/blog/2026-04-15-${slug}`, destination: `/blog/${slug}`, permanent: true }]);
+      expect(redirects.filter((entry: { source: string }) => entry.source === `/blog/${source}`))
+        .toEqual([{ source: `/blog/${source}`, destination: `/blog/${slug}`, permanent: true }]);
     }
   });
 });

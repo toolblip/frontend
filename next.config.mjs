@@ -56,6 +56,7 @@ const nextConfig = {
       { source: '/blog/2026-04-15-how-to-optimize-images-without-uploading', destination: '/blog/how-to-optimize-images-without-uploading', permanent: true },
       { source: '/blog/2026-04-15-top-5-developer-tools-you-should-bookmark', destination: '/blog/top-5-developer-tools-you-should-bookmark', permanent: true },
       { source: '/blog/2026-04-15-why-browser-based-tools-are-the-future', destination: '/blog/why-browser-based-tools-are-the-future', permanent: true },
+      { source: '/blog/2026-04-16-seo-friendly-urls-guide', destination: '/blog/url-structure-seo-guide', permanent: true },
       { source: '/tools/markdown-table-from-json', destination: '/tools/json-to-markdown-table', permanent: true },
       // Stage-1 exact shared-engine consolidations; query parameters are preserved.
       { source: '/tools/hash-from-text', destination: '/tools/sha256-hash-generator', permanent: true },
