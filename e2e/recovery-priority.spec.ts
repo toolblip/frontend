@@ -77,6 +77,9 @@ test('URL Unicode encodes and decodes the same text', async ({page}) => {
 });
 
 test('priority discovery SSR, HTTP metadata, sitemap counts and unknown blog', async ({request}) => {
+  // ~50 sequential cold `next dev` renders (every reviewed slug, tutorial and hub):
+  // 17s locally, past the default 30s on CI runners once reviewed slugs reached 39.
+  test.setTimeout(120_000);
   expect(Object.keys(consolidatedAliases)).toHaveLength(46);
   expect(Object.keys(categoricalAliases)).toHaveLength(9);
   for (const path of ['/', '/all-tools']) {
