@@ -10,6 +10,17 @@ function cmykToRgb(c: number, m: number, y: number, k: number): { rgb: string; h
   return { rgb: `rgb(${r}, ${g}, ${b})`, hex, r, g, b };
 }
 
+const Slider = ({ label, value, setValue, color }: { label: string; value: number; setValue: (v: number) => void; color: string }) => (
+  <div style={{ marginBottom: 12 }}>
+    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
+      <span style={{ fontSize: 12, color: 'var(--tb-text-secondary)' }}>{label}</span>
+      <span style={{ fontSize: 12, fontFamily: 'var(--f-mono)' }}>{value}%</span>
+    </div>
+    <input type="range" min={0} max={100} value={value} onChange={(e) => setValue(parseInt(e.target.value))}
+      style={{ width: '100%', accentColor: color }} />
+  </div>
+);
+
 export default function CmykToRgbConverterClient() {
   const [c, setC] = useState(0);
   const [m, setM] = useState(50);
@@ -29,17 +40,6 @@ export default function CmykToRgbConverterClient() {
     setCopied(format);
     setTimeout(() => setCopied(''), 1500);
   };
-
-  const Slider = ({ label, value, setValue, color }: { label: string; value: number; setValue: (v: number) => void; color: string }) => (
-    <div style={{ marginBottom: 12 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-        <span style={{ fontSize: 12, color: 'var(--tb-text-secondary)' }}>{label}</span>
-        <span style={{ fontSize: 12, fontFamily: 'var(--f-mono)' }}>{value}%</span>
-      </div>
-      <input type="range" min={0} max={100} value={value} onChange={(e) => setValue(parseInt(e.target.value))}
-        style={{ width: '100%', accentColor: color }} />
-    </div>
-  );
 
   return (
     <div>

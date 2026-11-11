@@ -13,7 +13,6 @@ const baselineWarnings = Object.fromEntries([
   'react-hooks/purity',
   'react-hooks/refs',
   'react-hooks/set-state-in-effect',
-  'react-hooks/static-components',
   'react/no-unescaped-entities',
 ].map(rule => [rule, 'warn']));
 
