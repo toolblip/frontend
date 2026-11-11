@@ -2,17 +2,23 @@ import type { SVGProps } from 'react';
 
 type IconProps = SVGProps<SVGSVGElement>;
 
-const base = (d: string) => (props: IconProps) => (
-  <svg viewBox="0 0 24 24" className="tb-v2-ic" {...props}>
-    <path d={d} />
-  </svg>
-);
+const base = (d: string) => {
+  const Icon = (props: IconProps) => (
+    <svg viewBox="0 0 24 24" className="tb-v2-ic" {...props}>
+      <path d={d} />
+    </svg>
+  );
+  return Icon;
+};
 
-const compound = (children: React.ReactNode) => (props: IconProps) => (
-  <svg viewBox="0 0 24 24" className="tb-v2-ic" {...props}>
-    {children}
-  </svg>
-);
+const compound = (children: React.ReactNode) => {
+  const Icon = (props: IconProps) => (
+    <svg viewBox="0 0 24 24" className="tb-v2-ic" {...props}>
+      {children}
+    </svg>
+  );
+  return Icon;
+};
 
 // A filled brand mark, not a stroke icon like the rest of this file - .tb-v2-ic
 // sets fill:none/stroke:currentColor, so this overrides both back via inline
