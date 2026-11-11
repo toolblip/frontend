@@ -27,7 +27,7 @@ export default function AudioConverter({ mp3 = false, extract = false }: { mp3?:
   });
   return <div className="tb-v2-section" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr)', gap: 12, minWidth: 0, overflowWrap: 'anywhere' }}>
     <div className="tb-v2-tool-input-head" style={{ flexWrap: 'wrap', gap: 8 }}><span className="tb-v2-tool-label">{extract ? 'Extract audio to WAV' : 'Audio conversion'}</span><ToolExampleClearActions exampleDisabled={!job.ready} onExample={example} onClear={clear} /></div>
-    <p>Maximum 20 MB and 120 decoded seconds. Browser decoders determine supported codecs; a valid container alone doesn't guarantee support. WAV export contains decoded PCM audio.</p>
+    <p>Maximum 20 MB and 120 decoded seconds. Browser decoders determine supported codecs; a valid container alone doesn&apos;t guarantee support. WAV export contains decoded PCM audio.</p>
     {mp3 && <p role="note">MP3 exports use the LAME encoder at 128 kbps, for mono or stereo audio. WAV is also available.</p>}
     <input ref={inputRef} type="file" aria-label="Media file" accept={extract ? 'video/*,audio/*' : `.${extension}`} style={{ maxWidth: '100%' }} onChange={e => { if (e.target.files?.[0]) choose(e.target.files[0]); }} />
     {file && <p>{file.name} · {file.size} bytes</p>}

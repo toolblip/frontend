@@ -198,7 +198,7 @@ export default function PhotoMetadataRemoverClient() {
             ) : (
               <div className="tb-v2-banner tb-v2-banner-info" style={{ marginBottom: 16 }}>
                 None found by the quick scan (this parser only reads common JPEG EXIF tags - the file may already be
-                clean, or use a format/encoding it doesn't decode). Re-encoding below still strips any embedded
+                clean, or use a format/encoding it doesn&apos;t decode). Re-encoding below still strips any embedded
                 metadata as a safety measure, regardless of what this scan could read.
               </div>
             )

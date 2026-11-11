@@ -479,7 +479,7 @@ export default function ImageBackgroundRemoverClient() {
           {isProcessing && !isSlowFetch && aiStage === 'compute' && (
             <div className="text-sm text-gray-500">
               <div className="flex items-center justify-between mb-1">
-                <span>Hold on, we're processing your image...</span>
+                <span>Hold on, we&apos;re processing your image...</span>
                 <span>{aiProgress ?? 0}%</span>
               </div>
               <div className="w-full h-2 bg-gray-800 rounded-full overflow-hidden">
@@ -494,7 +494,7 @@ export default function ImageBackgroundRemoverClient() {
           {isProcessing && !isSlowFetch && aiStage === 'fetch' && (
             <div className="text-sm text-gray-500">
               <div className="flex items-center justify-between mb-1">
-                <span>Hold on, we're processing your image...</span>
+                <span>Hold on, we&apos;re processing your image...</span>
                 <span>{aiProgress ?? 0}%</span>
               </div>
               <div className="w-full h-2 bg-gray-800 rounded-full overflow-hidden">

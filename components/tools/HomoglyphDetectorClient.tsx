@@ -173,7 +173,7 @@ export default function HomoglyphDetectorClient() {
                   className={`px-3 py-2 rounded-lg border ${getRiskColor(result.risk)}`}
                 >
                   <div className="flex items-center gap-2">
-                    <span className="font-mono text-lg font-bold">"{result.char}"</span>
+                    <span className="font-mono text-lg font-bold">&quot;{result.char}&quot;</span>
                     <span className={`text-xs px-2 py-0.5 rounded ${getCategoryColor(result.category)}`}>
                       {result.category}
                     </span>
@@ -273,8 +273,8 @@ export default function HomoglyphDetectorClient() {
             similarity between characters from different scripts to create deceptive domain names.
           </p>
           <p className="text-gray-600">
-            Attackers may register domains like "pаypal.com" (with Cyrillic 'а') that look identical
-            to "paypal.com" in browsers, tricking users into visiting malicious sites.
+            Attackers may register domains like &quot;pаypal.com&quot; (with Cyrillic &apos;а&apos;) that look identical
+            to &quot;paypal.com&quot; in browsers, tricking users into visiting malicious sites.
           </p>
           <p className="text-gray-600">
             <strong>Protection:</strong> Always verify URLs carefully, enable punycode display in

@@ -42,7 +42,7 @@ export default function VideoConverter({ subtitles = false }: { subtitles?: bool
       <label>Caption background<input type="color" aria-label="Caption background" value={style.background} onChange={e => updateStyle({ background: e.target.value })} /></label>
       <label>Font size at 640px width<input type="range" min={16} max={48} aria-label="Font size" value={style.size} onChange={e => updateStyle({ size: Number(e.target.value) })} /></label>
       <label>Caption style<select aria-label="Caption style" className="tb-v2-select" value={style.effect} onChange={e => updateStyle({ effect: e.target.value as CaptionStyle['effect'] })}><option value="default">Default</option><option value="outline">Outline</option><option value="shadow">Shadow</option></select></label>
-      <p>Export burns plain caption text into frames. VTT positioning and inline markup aren't preserved.</p>
+      <p>Export burns plain caption text into frames. VTT positioning and inline markup aren&apos;t preserved.</p>
     </>}
     <button className="tb-v2-btn tb-v2-btn-primary" disabled={!file || !duration || job.busy} onClick={convert}>{job.busy ? 'Recording…' : 'Convert'}</button>
     {job.busy && <button className="tb-v2-btn" onClick={job.cancel}>Cancel</button>}

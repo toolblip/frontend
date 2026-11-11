@@ -180,7 +180,7 @@ export default function PassiveVoiceDetectorClient() {
                   borderLeft: '3px solid #eab308'
                 }}>
                   <div style={{ fontSize: 12, color: '#a16207', fontWeight: 500, marginBottom: 4 }}>
-                    "{occ.verbPhrase}"
+                    &quot;{occ.verbPhrase}&quot;
                   </div>
                   <div style={{ fontSize: 13 }}>
                     {occ.sentence}

@@ -119,7 +119,7 @@ export default function UlidGeneratorClient() {
           <li>Universally Unique Lexicographically Sortable Identifier</li>
           <li>128-bit identifier compatible with UUID/GUID</li>
           <li>Sortable by creation time (like UUIDv1/v7) without exposing MAC address</li>
-          <li>Uses Crockford's Base32 encoding (26 characters, no confusing chars)</li>
+          <li>Uses Crockford&apos;s Base32 encoding (26 characters, no confusing chars)</li>
           <li>Random within the same millisecond; timestamp sorting does not imply monotonic ordering</li>
         </ul>
       </div>

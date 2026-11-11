@@ -274,7 +274,7 @@ export default function HeadlineAnalyzerClient() {
                 <strong>{result.isQuestion ? 'Yes' : 'No'}</strong>
               </li>
               <li style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--line)', paddingBottom: 6 }}>
-                <span>"How to" headline</span>
+                <span>&quot;How to&quot; headline</span>
                 <strong>{result.isHowTo ? 'Yes' : 'No'}</strong>
               </li>
               <li style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--line)', paddingBottom: 6 }}>

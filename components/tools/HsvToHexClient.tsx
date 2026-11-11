@@ -311,7 +311,7 @@ export default function HsvToHexClient() {
         <div className="tb-v2-card p-4 text-sm space-y-2">
           <p>
             <strong>HSV</strong> (Hue, Saturation, Value) is also known as HSB (Hue, Saturation, Brightness). 
-            It's commonly used in image editing software and color pickers.
+            It&apos;s commonly used in image editing software and color pickers.
           </p>
           <p>
             <strong>HSL</strong> (Hue, Saturation, Lightness) is more intuitive for human understanding, 

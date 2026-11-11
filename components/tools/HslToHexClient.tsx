@@ -312,11 +312,11 @@ export default function HslToHexClient() {
         <div className="tb-v2-card p-4 text-sm space-y-2">
           <p>
             <strong>HSL</strong> (Hue, Saturation, Lightness) is a cylindrical color model 
-            that's intuitive for humans to understand and adjust colors.
+            that&apos;s intuitive for humans to understand and adjust colors.
           </p>
           <p>
             <strong>HEX</strong> is a hexadecimal representation used in web design (#RRGGBB). 
-            It's the most common format for specifying colors in CSS.
+            It&apos;s the most common format for specifying colors in CSS.
           </p>
           <p className="text-gray-600">
             <strong>Hue:</strong> The color type (0-360° on the color wheel, where 0° is red, 

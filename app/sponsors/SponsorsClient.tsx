@@ -581,7 +581,7 @@ export default function SponsorsClient() {
             <p style={{ margin: 0, lineHeight: 1.6 }}>
               Credit rolls over automatically every month, except for whoever is in the
               top 3 at the instant the month closes - their balance is spent to hold
-              that spot and doesn't carry over.
+              that spot and doesn&apos;t carry over.
             </p>
           </div>
         </div>
