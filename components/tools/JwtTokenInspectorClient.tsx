@@ -74,13 +74,13 @@ export default function JwtTokenInspectorClient() {
   const clipboardTask=useSecurityTask();
   const [token, setToken] = useState(SAMPLE);
   const [copied, setCopied] = useState<string | null>(null);
-  const [decoded, setDecoded] = useState<{ result: Decoded | null; error: string }>({ result: null, error: '' });
+  const [decoded, setDecoded] = useState<{ result: Decoded | null; error: string; now?: number }>({ result: null, error: '' });
 
   useEffect(() => {
-    setDecoded(decodeJwt(token));
+    setDecoded({ ...decodeJwt(token), now: Math.floor(Date.now() / 1000) });
   }, [token]);
 
-  const { result, error } = decoded;
+  const { result, error, now } = decoded;
 
   const alg = useMemo(() => {
     if (!result || typeof result.header !== 'object' || !result.header) return 'unknown';
@@ -91,12 +91,12 @@ export default function JwtTokenInspectorClient() {
   const claims = useMemo(() => {
     if (!result || typeof result.payload !== 'object' || !result.payload) return null;
     const p = result.payload as Record<string, unknown>;
-    const now = Math.floor(Date.now() / 1000);
+    const nowSec = now ?? 0;
     const exp = typeof p.exp === 'number' ? p.exp : null;
     const nbf = typeof p.nbf === 'number' ? p.nbf : null;
     let status: 'valid' | 'expired' | 'not-yet' | 'unknown' = 'unknown';
-    if (exp !== null && exp <= now) status = 'expired';
-    else if (nbf !== null && nbf > now) status = 'not-yet';
+    if (exp !== null && exp <= nowSec) status = 'expired';
+    else if (nbf !== null && nbf > nowSec) status = 'not-yet';
     else if (exp !== null) status = 'valid';
     return {
       iss: typeof p.iss === 'string' ? p.iss : null,
@@ -107,7 +107,7 @@ export default function JwtTokenInspectorClient() {
       nbf,
       status,
     };
-  }, [result]);
+  }, [result, now]);
 
   const signatureBytes = useMemo(() => {
     if (!result) return null;
