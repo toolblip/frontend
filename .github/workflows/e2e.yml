@@ -37,7 +37,7 @@ jobs:
         run: npm ci
 
       - name: Install Playwright Chromium
-        run: npx playwright install --with-deps chromium
+        run: npx playwright install chromium
 
       - name: Run auth E2E regression tests
         run: npm run test:e2e -- --shard=${{ matrix.shard }}/4
