@@ -7,7 +7,6 @@ import nextTs from 'eslint-config-next/typescript';
 // its warnings are cleaned up.
 const baselineWarnings = Object.fromEntries([
   '@typescript-eslint/no-explicit-any',
-  '@typescript-eslint/no-require-imports',
   'prefer-const',
   'react-hooks/immutability',
   'react-hooks/refs',
@@ -19,5 +18,7 @@ export default defineConfig([
   ...nextVitals,
   ...nextTs,
   { rules: baselineWarnings },
+  // package.json has no "type": "module", so these scripts are CommonJS and use require().
+  { files: ['scripts/**/*.js'], rules: { '@typescript-eslint/no-require-imports': 'off' } },
   globalIgnores(['.next/**', 'out/**', 'build/**', 'next-env.d.ts', 'lib/generated/**', 'public/**', 'playwright-report/**', 'test-results/**']),
 ]);
