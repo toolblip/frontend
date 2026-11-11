@@ -106,7 +106,7 @@ export default function SignPDFClient() {
     if (sigFileRef.current) sigFileRef.current.value = '';
   };
 
-  const loadFile = useCallback(async (f: File | undefined, requestId?: number) => {
+  const loadFile = async (f: File | undefined, requestId?: number) => {
     if (!f || status === 'processing') return;
     const currentRequestId = requestId ?? ++loadVersionRef.current;
     if (currentRequestId !== loadVersionRef.current) return;
@@ -143,7 +143,7 @@ export default function SignPDFClient() {
         setMessage('Could not read this file as a valid PDF.');
       }
     }
-  }, [status, tier]);
+  };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (status === 'processing') return;
@@ -159,7 +159,7 @@ export default function SignPDFClient() {
     void loadFile(f);
   };
 
-  const loadExample = useCallback(async () => {
+  const loadExample = async () => {
     if (status === 'processing') return;
     const requestId = ++loadVersionRef.current;
     setStatus('loading');
@@ -183,7 +183,7 @@ export default function SignPDFClient() {
         setMessage('Could not create the sample PDF.');
       }
     }
-  }, [loadFile, status]);
+  };
 
   // Draw-mode canvas handlers
   const getCanvasPoint = (e: React.PointerEvent<HTMLCanvasElement>) => {
