@@ -28,6 +28,17 @@ function rgbaToHsl(r: number, g: number, b: number, a: number = 1): { hex: strin
   };
 }
 
+const Slider = ({ label, value, setValue, max = 255 }: { label: string; value: number; setValue: (v: number) => void; max?: number }) => (
+  <div style={{ marginBottom: 12 }}>
+    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
+      <span style={{ fontSize: 12, color: 'var(--tb-text-secondary)' }}>{label}</span>
+      <span style={{ fontSize: 12, fontFamily: 'var(--f-mono)' }}>{value}</span>
+    </div>
+    <input type="range" min={0} max={max} step={max === 1 ? 0.01 : 1} value={value} onChange={(e) => setValue(parseFloat(e.target.value))}
+      style={{ width: '100%', accentColor: 'var(--tb-accent)' }} />
+  </div>
+);
+
 export default function RgbaToHslConverterClient() {
   const [r, setR] = useState(100);
   const [g, setG] = useState(150);
@@ -51,17 +62,6 @@ export default function RgbaToHslConverterClient() {
     setCopied(format);
     setTimeout(() => setCopied(''), 1500);
   };
-
-  const Slider = ({ label, value, setValue, max = 255 }: { label: string; value: number; setValue: (v: number) => void; max?: number }) => (
-    <div style={{ marginBottom: 12 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-        <span style={{ fontSize: 12, color: 'var(--tb-text-secondary)' }}>{label}</span>
-        <span style={{ fontSize: 12, fontFamily: 'var(--f-mono)' }}>{value}</span>
-      </div>
-      <input type="range" min={0} max={max} step={max === 1 ? 0.01 : 1} value={value} onChange={(e) => setValue(parseFloat(e.target.value))}
-        style={{ width: '100%', accentColor: 'var(--tb-accent)' }} />
-    </div>
-  );
 
   return (
     <div>
