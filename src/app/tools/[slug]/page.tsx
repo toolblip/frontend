@@ -1,4 +1,5 @@
 import { notFound, redirect } from 'next/navigation';
+import Link from 'next/link';
 import type { Metadata } from 'next';
 import { getCanonicalToolSlug, getToolBySlug, getToolRouteSlugs } from '../../../data/tools';
 import ShareButtons from '../../../components/ShareButtons';
@@ -76,13 +77,13 @@ export default async function ToolDetailPage({ params }: ToolDetailPageProps) {
   return (
     <main className="mx-auto max-w-4xl px-4 py-10 sm:px-6 lg:px-8">
       <nav className="mb-8 text-sm text-gray-500 dark:text-gray-400" aria-label="Breadcrumb">
-        <a href="/" className="hover:text-green-600 dark:hover:text-green-400">
+        <Link href="/" className="hover:text-green-600 dark:hover:text-green-400">
           Home
-        </a>
+        </Link>
         <span className="mx-2">/</span>
-        <a href="/tools" className="hover:text-green-600 dark:hover:text-green-400">
+        <Link href="/tools" className="hover:text-green-600 dark:hover:text-green-400">
           Tools
-        </a>
+        </Link>
         <span className="mx-2">/</span>
         <span className="text-gray-900 dark:text-white">{tool.name}</span>
       </nav>
