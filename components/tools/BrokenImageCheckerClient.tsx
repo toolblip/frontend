@@ -276,7 +276,7 @@ async function readBrokenImageHtmlWithCap(response: Response) {
   return new TextDecoder().decode(bytes);
 }
 
-export default function BrokenImageCheckerClient({}: {}) {
+export default function BrokenImageCheckerClient() {
   const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<BrokenImageResult[]>([]);

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-export default function BrokenLinkCheckerV2Client({}: {}) {
+export default function BrokenLinkCheckerV2Client() {
   const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<{ href: string; text: string; status: string; ok: boolean; time: number }[]>([]);

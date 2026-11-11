@@ -7,7 +7,6 @@ import nextTs from 'eslint-config-next/typescript';
 // its warnings are cleaned up.
 const baselineWarnings = Object.fromEntries([
   '@next/next/no-html-link-for-pages',
-  '@typescript-eslint/no-empty-object-type',
   '@typescript-eslint/no-explicit-any',
   '@typescript-eslint/no-require-imports',
   'prefer-const',
