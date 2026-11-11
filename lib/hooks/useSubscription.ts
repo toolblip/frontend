@@ -99,6 +99,8 @@ export function useSubscription({ plans = false }: { plans?: boolean } = {}) {
 
   const [subscription, setSubscription] = useState<Subscription | null>(null);
   const [subscriptionError, setSubscriptionError] = useState(false);
+  // Captured once so render stays pure; trial countdown is fixed at mount.
+  const [nowMs] = useState(() => Date.now());
   const [loadingPortal, setLoadingPortal] = useState(false);
   const [portalError, setPortalError] = useState<string | null>(null);
   const [cancellingSubscription, setCancellingSubscription] = useState(false);
@@ -302,13 +304,13 @@ export function useSubscription({ plans = false }: { plans?: boolean } = {}) {
     ? Math.max(
         0,
         Math.ceil(
-          (trialEndsAt.getTime() - Date.now()) / (1000 * 60 * 60 * 24)
+          (trialEndsAt.getTime() - nowMs) / (1000 * 60 * 60 * 24)
         )
       )
     : null;
   const trialEndsToday = trialEndsAt
     ? (() => {
-        const now = new Date();
+        const now = new Date(nowMs);
         return (
           trialEndsAt.getFullYear() === now.getFullYear() &&
           trialEndsAt.getMonth() === now.getMonth() &&

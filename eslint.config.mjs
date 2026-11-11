@@ -10,7 +10,6 @@ const baselineWarnings = Object.fromEntries([
   '@typescript-eslint/no-require-imports',
   'prefer-const',
   'react-hooks/immutability',
-  'react-hooks/purity',
   'react-hooks/refs',
   'react-hooks/set-state-in-effect',
   'react-hooks/static-components',
