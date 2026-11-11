@@ -34,7 +34,7 @@ jobs:
       - run: node scripts/build-browser-workers.mjs
       - run: npx --no-install tsc --noEmit
       - run: npm run build
-      - run: npx --no-install playwright install --with-deps chromium --only-shell
+      - run: npx --no-install playwright install chromium --only-shell
       - run: npx --no-install playwright test e2e/tools/speech-permission-ui.spec.ts e2e/tools/background-remover-ui.spec.ts --project=chromium --timeout=60000
       - if: always()
         uses: actions/upload-artifact@v4
