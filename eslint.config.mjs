@@ -10,7 +10,6 @@ const baselineWarnings = Object.fromEntries([
   'react-hooks/immutability',
   'react-hooks/refs',
   'react-hooks/set-state-in-effect',
-  'react/no-unescaped-entities',
 ].map(rule => [rule, 'warn']));
 
 export default defineConfig([

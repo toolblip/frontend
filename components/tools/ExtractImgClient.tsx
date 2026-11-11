@@ -414,7 +414,7 @@ export default function ExtractImgClient() {
       <div className="tb-v2-tool-input-head" style={{ margin: '0 20px 12px' }}><span className="tb-v2-tool-label">PDF File</span><ToolExampleClearActions onExample={() => void loadExample()} onClear={clearAll} canClear={Boolean(images.length || loaded || error || fileName || loading)} exampleCount={1} exampleDisabled={loading} /></div>
       <div className="tb-v2-banner" style={{ margin: 20 }}>
         JPEG images embedded in the PDF are extracted directly. Other raster images (grayscale, RGB, CMYK, or
-        indexed-color) are reconstructed as PNG. JPEG2000, CCITT fax, and other uncommon encodings can't be decoded
+        indexed-color) are reconstructed as PNG. JPEG2000, CCITT fax, and other uncommon encodings can&apos;t be decoded
         by this tool and are skipped, not faked.
       </div>
 

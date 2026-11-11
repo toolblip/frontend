@@ -126,7 +126,7 @@ export default function HomePage() {
       <section className="text-center space-y-4">
         <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white tracking-tight">
           Quick browser tools
-          <span className="text-red-600 dark:text-red-400"> that don't touch your data</span>
+          <span className="text-red-600 dark:text-red-400"> that don&apos;t touch your data</span>
         </h1>
         <p className="text-lg text-gray-500 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed">
           {tools.length}+ focused utilities for text, encoding, development, and everyday cleanup - pick a tool, paste your data, and get clean output while everything stays in your browser.

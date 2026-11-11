@@ -121,7 +121,7 @@ export default function StickyNotesClient() {
           <div className="text-center py-20">
             <div className="text-6xl mb-4">📝</div>
             <p className="text-gray-500 dark:text-gray-400 mb-4">
-              No sticky notes yet. Click "Add Note" to create one!
+              No sticky notes yet. Click &quot;Add Note&quot; to create one!
             </p>
           </div>
         ) : (

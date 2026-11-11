@@ -246,7 +246,7 @@ export default function FakeAddressGeneratorClient() {
             </div>
           </>
         ) : (
-          <p className="text-gray-500 text-center py-4">Click "Generate Address" to create an address</p>
+          <p className="text-gray-500 text-center py-4">Click &quot;Generate Address&quot; to create an address</p>
         )}
       </div>
 

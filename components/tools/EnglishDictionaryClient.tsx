@@ -98,7 +98,7 @@ export default function EnglishDictionaryClient() {
                   {m.definitions.slice(0, 5).map((d, di) => (
                     <li key={di} style={{ marginBottom: 6, fontSize: 14 }}>
                       {d.definition}
-                      {d.example && <div style={{ fontSize: 13, color: 'var(--fg-2)', fontStyle: 'italic' }}>"{d.example}"</div>}
+                      {d.example && <div style={{ fontSize: 13, color: 'var(--fg-2)', fontStyle: 'italic' }}>&quot;{d.example}&quot;</div>}
                     </li>
                   ))}
                 </ol>

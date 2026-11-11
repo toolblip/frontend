@@ -153,7 +153,7 @@ export default function TextUniquenessCheckerClient() {
                       alignItems: 'center'
                     }}>
                       <span style={{ fontSize: 12, color: '#f59e0b' }}>×{dup.count}</span>
-                      <span style={{ fontSize: 12 }}>"{dup.phrase.slice(0, 40)}..."</span>
+                      <span style={{ fontSize: 12 }}>&quot;{dup.phrase.slice(0, 40)}...&quot;</span>
                     </div>
                   ))}
                 </div>

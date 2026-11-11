@@ -90,7 +90,7 @@ export default function FillerWordCounterClient() {
                   justifyContent: 'space-between', 
                   alignItems: 'center' 
                 }}>
-                  <span style={{ fontSize: 13 }}>"{result.word}"</span>
+                  <span style={{ fontSize: 13 }}>&quot;{result.word}&quot;</span>
                   <span style={{ fontSize: 12, color: 'var(--tb-accent)', fontWeight: 600 }}>
                     ×{result.count}
                   </span>
