@@ -40,7 +40,7 @@ export default function CodeToDiagramGeneratorClient() {
           if (/^\w+\s*(->|<-)\s*\w+:/.test(clean)) {
             const match = clean.match(/(\w+)\s*(->|<-)\s*(\w+):/);
             if (match) {
-              let [, from, direction, to] = match;if(direction==='<-')[from,to]=[to,from];
+              const [, a, direction, b] = match;const [from, to] = direction==='<-' ? [b, a] : [a, b];
               if (!participants.includes(from)) participants.push(from);
               if (!participants.includes(to)) participants.push(to);
               messages += `    ${from}->>${to}:${clean.split(':').slice(1).join(':').trim()}\n`;
