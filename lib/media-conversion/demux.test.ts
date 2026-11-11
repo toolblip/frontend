@@ -34,7 +34,7 @@ function craftedMp4({start=0,duration=3072,rate=65536,deltas=[1024,1024,1024],ed
   const trak=atom('trak',...(edits?[atom('edts',atom('elst',edit))]:[]),atom('mdia',atom('mdhd',header(deltas.reduce((a,b)=>a+b,0))),atom('hdlr',Buffer.alloc(8),Buffer.from('soun')),atom('minf',stbl)));
   return Buffer.concat([atom('ftyp'),atom('mdat',Buffer.from([1,2,3])),atom('moov',atom('mvhd',header(duration)),trak)]);
 }
-function ebml(id: number, payload: Uint8Array) { const hex=id.toString(16); const key=Buffer.from(hex.length%2?'0'+hex:hex,'hex'); let size=payload.length<127?Buffer.from([0x80|payload.length]):Buffer.from([0x40|(payload.length>>8),payload.length&255]); return Buffer.concat([key,size,payload]); }
+function ebml(id: number, payload: Uint8Array) { const hex=id.toString(16); const key=Buffer.from(hex.length%2?'0'+hex:hex,'hex'); const size=payload.length<127?Buffer.from([0x80|payload.length]):Buffer.from([0x40|(payload.length>>8),payload.length&255]); return Buffer.concat([key,size,payload]); }
 const unsigned = (n:number) => { const b=Buffer.alloc(6); b.writeUIntBE(n,0,6); return b; };
 function craftedMkv(timestamps=[0,23,46], delay=0, discard=0) {
   const track=ebml(0xae,Buffer.concat([ebml(0xd7,Buffer.from([1])),ebml(0x83,Buffer.from([2])),ebml(0x86,Buffer.from('A_AAC')),ebml(0x63a2,Buffer.from([0x12,0x08])),ebml(0x56aa,unsigned(delay))]));

@@ -71,7 +71,7 @@ export default function GifMakerClient() {
           canvas.width = width;
           canvas.height = height;
 
-          let currentFrame = 0;
+          const currentFrame = 0;
           const totalFrames = loadedImages.length;
 
           const gifFrames: { image: string; delay: number }[] = loadedImages.map((_, i) => ({

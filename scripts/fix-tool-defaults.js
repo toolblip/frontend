@@ -9,7 +9,7 @@ let skipped = 0;
 
 files.forEach(file => {
   const fp = path.join(toolsDir, file);
-  let c = fs.readFileSync(fp, 'utf8');
+  const c = fs.readFileSync(fp, 'utf8');
   
   if (!c.includes('{ tool = {} }') && !c.includes('{ tool = { name: ""')) return;
   

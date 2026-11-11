@@ -79,7 +79,7 @@ export async function POST(request: Request) {
 
     const data = loadShortLinks();
 
-    let code = customCode || generateShortCode();
+    const code = customCode || generateShortCode();
 
     // Validate custom code
     if (customCode) {

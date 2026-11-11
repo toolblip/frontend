@@ -34,12 +34,11 @@ files.forEach(file => {
   if (!defaultMatch) { skipped++; return; }
   
   const currentDefault = defaultMatch[1];
-  let neededDefault;
   const parts = [];
   if (hasName) parts.push('name: ""');
   if (hasSlug) parts.push('slug: ""');
   if (hasDesc) parts.push('description: ""');
-  neededDefault = '{ ' + parts.join(', ') + ' }';
+  const neededDefault = '{ ' + parts.join(', ') + ' }';
   
   if (currentDefault === neededDefault) { skipped++; return; }
   

@@ -207,7 +207,7 @@ async function main() {
   const compMap = loadComponentMap();
   console.log(`${tools.length} tools, ${Object.keys(compMap).length} components\n`);
 
-  let results = loadProgress();
+  const results = loadProgress();
   const done = new Set(results.map(r => r.slug));
   const remaining = tools.filter(t => !done.has(t.slug));
   console.log(`${results.length} done, ${remaining.length} to test\n`);

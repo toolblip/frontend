@@ -2,7 +2,7 @@ const fs = require('fs');
 
 // Read the file
 const filepath = 'app/tools/[slug]/ToolUI.tsx';
-let content = fs.readFileSync(filepath, 'utf8');
+const content = fs.readFileSync(filepath, 'utf8');
 
 // Get all component files (without Client suffix)
 const files = fs.readdirSync('components/tools/');

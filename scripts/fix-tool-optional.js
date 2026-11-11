@@ -9,7 +9,7 @@ let skipped = 0;
 
 files.forEach(fname => {
   const fpath = path.join(toolsDir, fname);
-  let content = fs.readFileSync(fpath, 'utf8');
+  const content = fs.readFileSync(fpath, 'utf8');
 
   // Pattern 1: interface Props { tool: { ... } } -> tool?:
   // This handles multiline interface definitions

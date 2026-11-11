@@ -7,7 +7,6 @@ import nextTs from 'eslint-config-next/typescript';
 // its warnings are cleaned up.
 const baselineWarnings = Object.fromEntries([
   '@typescript-eslint/no-explicit-any',
-  'prefer-const',
   'react-hooks/immutability',
   'react-hooks/refs',
   'react-hooks/set-state-in-effect',

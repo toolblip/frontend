@@ -8,7 +8,7 @@ export default function HtmlToMarkdownV2() {
   const [error, setError] = useState("");
 
   const htmlToMarkdown = (html: string) => {
-    let md = html
+    const md = html
       .replace(/<h1[^>]*>([^<]*)<\/h1>/gi, "# $1\n")
       .replace(/<h2[^>]*>([^<]*)<\/h2>/gi, "## $1\n")
       .replace(/<h3[^>]*>([^<]*)<\/h3>/gi, "### $1\n")

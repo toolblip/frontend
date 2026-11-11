@@ -11,7 +11,7 @@ export async function probeNativeSpeech(ctx, kind) {
       acceptance:'unverified',blocker:kind==='recognition'?'No known spoken audio supplied; recognition accuracy cannot be accepted.':'Audible output is not independently monitored.'};
     if (!supported) return {...base,outcome:'unsupported',blocker:'Native browser API absent.'};
     return new Promise(resolve=>{
-      let timer, api, settled=false;const events=[];
+      let api, settled=false;const events=[];
       const finish=outcome=>{
         if(settled)return;settled=true;clearTimeout(timer);
         const blocker = outcome.startsWith('error:') || outcome.startsWith('exception:')
@@ -20,7 +20,7 @@ export async function probeNativeSpeech(ctx, kind) {
         resolve({...base,outcome,blocker,events,voices:kind==='synthesis'?speechSynthesis.getVoices().map(v=>({name:v.name,lang:v.lang})):undefined});
         try {if(kind==='recognition')api?.abort();else speechSynthesis.cancel();}catch{}
       };
-      timer=setTimeout(()=>finish('no-terminal-event-within-4s'),4000);
+      const timer=setTimeout(()=>finish('no-terminal-event-within-4s'),4000);
       try {
         if(kind==='recognition') {
           api=new Recognition();api.lang='en-US';
