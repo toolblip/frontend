@@ -2,11 +2,10 @@
 import DeveloperSecurityFrame from './DeveloperSecurityFrame';
 import { decodeHtml } from '@/lib/developer-security/primitives';
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 export default function HtmlEncoderDecoder() {
   const [input, setInput] = useState("");
-  const [output, setOutput] = useState("");
   const [mode, setMode] = useState<"encode" | "decode">("encode");
 
   const htmlEncode = (str: string) => {
@@ -20,14 +19,10 @@ export default function HtmlEncoderDecoder() {
 
   const htmlDecode = decodeHtml;
 
-  const handleConvert = () => {
-    setOutput(mode === "encode" ? htmlEncode(input) : htmlDecode(input));
-  };
-
-  useEffect(() => { handleConvert(); }, [input, mode]);
+  const output = mode === "encode" ? htmlEncode(input) : htmlDecode(input);
 
   return (
-    <DeveloperSecurityFrame onExample={()=>{setMode('encode');setInput('<b>é & tea</b>');}} onClear={()=>{setInput('');setOutput('');}}>
+    <DeveloperSecurityFrame onExample={()=>{setMode('encode');setInput('<b>é & tea</b>');}} onClear={()=>{setInput('');}}>
     <div className="tb-v2-section">
       <h2 className="tb-v2-heading-sm">HTML Encoder / Decoder</h2>
       <p className="tb-v2-text">Encode or decode HTML entities in text.</p>
@@ -60,7 +55,7 @@ export default function HtmlEncoderDecoder() {
         />
       </div>
 
-      <button className="tb-v2-button" onClick={handleConvert}>
+      <button className="tb-v2-button">
         {mode === "encode" ? "Encode" : "Decode"}
       </button>
 

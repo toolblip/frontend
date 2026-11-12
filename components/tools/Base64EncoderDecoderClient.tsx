@@ -4,7 +4,7 @@ import DeveloperSecurityFrame, { useSecurityTask } from './DeveloperSecurityFram
 import { encodeBase64 as base64Encode, decodeBase64 as base64Decode } from '@/lib/developer-security/primitives';
 
 import { useToolHash } from '@/components/tools/useToolHash';
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import ToolContextControls from '@/components/tools/ToolContextControls';
 import { useToolContext } from '@/components/tools/useToolContext';
 
@@ -24,8 +24,6 @@ export default function Base64EncoderDecoderClient() {
   const clipboardTask=useSecurityTask();
   const [input, setInput] = useState(EXAMPLES[0].data);
   const [mode, setMode] = useState<Mode>('encode');
-  const [output, setOutput] = useState('');
-  const [error, setError] = useState('');
   const [copied, setCopied] = useState(false);
   const [showExamples, setShowExamples] = useState(false);
 
@@ -44,19 +42,14 @@ export default function Base64EncoderDecoderClient() {
     appliedSaved.current = true;
   }, [toolContext.saved]);
 
-  const process = useCallback(() => {
-    setError('');
-    setOutput('');
-    if (!input) return;
+  const { output, error } = useMemo(() => {
+    if (!input) return { output: '', error: '' };
     try {
-      setOutput(mode === 'encode' ? base64Encode(input) : base64Decode(input));
-    } catch (e) {
-      setError(mode === 'encode' ? 'Failed to encode.' : 'Invalid Base64 string - cannot decode.');
-      setOutput('');
+      return { output: mode === 'encode' ? base64Encode(input) : base64Decode(input), error: '' };
+    } catch {
+      return { output: '', error: mode === 'encode' ? 'Failed to encode.' : 'Invalid Base64 string - cannot decode.' };
     }
   }, [input, mode]);
-
-  useEffect(() => { process(); }, [process]);
 
   const copy = useCallback((text: string) => {
     const copyId=clipboardTask.bump();setClipboardError('');
@@ -66,21 +59,17 @@ export default function Base64EncoderDecoderClient() {
 
   const swap = useCallback(() => {
     setInput(output);
-    setOutput('');
-    setError('');
     setMode(mode === 'encode' ? 'decode' : 'encode');
   }, [output, mode]);
 
   const loadExample = (data: string) => {
     setMode('encode');
     setInput(data);
-    setOutput('');
-    setError('');
     setShowExamples(false);
   };
 
   return (
-    <DeveloperSecurityFrame onExample={()=>{clipboardTask.bump();setMode('encode');loadExample('é😀');}} onClear={()=>{clipboardTask.bump();setClipboardError('');setInput('');setOutput('');setError('');setCopied(false);setShowExamples(false);}}>
+    <DeveloperSecurityFrame onExample={()=>{clipboardTask.bump();setMode('encode');loadExample('é😀');}} onClear={()=>{clipboardTask.bump();setClipboardError('');setInput('');setCopied(false);setShowExamples(false);}}>
     {clipboardError&&<p role="alert" className="tb-v2-error">{clipboardError}</p>}
     <div>
       <ToolContextControls
@@ -107,7 +96,7 @@ export default function Base64EncoderDecoderClient() {
                 key={m}
                 role="tab"
                 aria-selected={mode === m}
-                onClick={() => { setMode(m); setOutput(''); setError(''); }}
+                onClick={() => { setMode(m); }}
                 className={`tb-v2-mode-tab ${mode === m ? 'on' : ''}`}
               >
                 {m === 'encode' ? 'Encode' : 'Decode'}
@@ -144,7 +133,6 @@ export default function Base64EncoderDecoderClient() {
       />
 
       <button
-        onClick={process}
         className="tb-v2-btn tb-v2-btn-primary tb-v2-btn-lg w-full"
       >
         {mode === 'encode' ? 'Encode to Base64' : 'Decode from Base64'}
