@@ -29,13 +29,13 @@ export default function UrlEncodeClient() {
   const output=conversion.value;
 
   const copy = () => {
-    const copyId=++clipboardTask.current;setClipboardError('');
-    copySecurityText(output).then(()=>{if(copyId!==clipboardTask.current)return;setCopied(true);}).catch(()=>{if(copyId===clipboardTask.current)setClipboardError('Clipboard access failed. Select and copy the output manually.');});
+    const copyId=clipboardTask.bump();setClipboardError('');
+    copySecurityText(output).then(()=>{if(copyId!==clipboardTask.get())return;setCopied(true);}).catch(()=>{if(copyId===clipboardTask.get())setClipboardError('Clipboard access failed. Select and copy the output manually.');});
     setTimeout(() => setCopied(false), 1500);
   };
 
   return (
-    <DeveloperSecurityFrame onExample={()=>{clipboardTask.current++;setMode('encode');setInput('café & tea');}} onClear={()=>{clipboardTask.current++;setClipboardError('');setInput('');setCopied(false);}}>
+    <DeveloperSecurityFrame onExample={()=>{clipboardTask.bump();setMode('encode');setInput('café & tea');}} onClear={()=>{clipboardTask.bump();setClipboardError('');setInput('');setCopied(false);}}>
     {clipboardError&&<p role="alert" className="tb-v2-error">{clipboardError}</p>}
     <div className="tb-v2-tool-card">
       <div className="tb-v2-tool-input-head">

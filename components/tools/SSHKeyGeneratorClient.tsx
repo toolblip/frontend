@@ -40,9 +40,9 @@ export default function SSHKeyGeneratorClient() {
   const [copied, setCopied] = useState<string | null>(null);
 
   const task=useSecurityTask();
-  const invalidate=()=>{task.current++;setState({status:'idle'});setCopied(null);};
+  const invalidate=()=>{task.bump();setState({status:'idle'});setCopied(null);};
   const generate = async () => {
-    const id=++task.current;
+    const id=task.bump();
     if(/[\r\n\x00]/.test(comment)){setState({status:'error',message:'Use a single-line comment without control characters.'});return;}
     setState({ status: 'generating' });
     try {
@@ -67,10 +67,10 @@ export default function SSHKeyGeneratorClient() {
           result = await generateEd25519(comment);
           break;
       }
-      if(id!==task.current)return;
+      if(id!==task.get())return;
       setState({ status: 'done', result });
     } catch (e) {
-      if(id!==task.current)return;
+      if(id!==task.get())return;
       const isEd25519 = keyType === 'ed25519';
       setState({
         status: 'error',
@@ -82,13 +82,13 @@ export default function SSHKeyGeneratorClient() {
   };
 
   const copy = (id: string, val: string) => {
-    const copyId=++clipboardTask.current;setClipboardError('');
-    copySecurityText(val).then(()=>{if(copyId!==clipboardTask.current)return;setCopied(id);}).catch(()=>{if(copyId===clipboardTask.current)setClipboardError('Clipboard access failed. Select and copy the output manually.');});
+    const copyId=clipboardTask.bump();setClipboardError('');
+    copySecurityText(val).then(()=>{if(copyId!==clipboardTask.get())return;setCopied(id);}).catch(()=>{if(copyId===clipboardTask.get())setClipboardError('Clipboard access failed. Select and copy the output manually.');});
     setTimeout(() => setCopied(null), 1500);
   };
 
   return (
-    <DeveloperSecurityFrame onExample={()=>{clipboardTask.current++;invalidate();setKeyType('ecdsa-256');setComment('example@local');}} onClear={()=>{clipboardTask.current++;setClipboardError('');invalidate();setComment('');setCopied(null);}}>
+    <DeveloperSecurityFrame onExample={()=>{clipboardTask.bump();invalidate();setKeyType('ecdsa-256');setComment('example@local');}} onClear={()=>{clipboardTask.bump();setClipboardError('');invalidate();setComment('');setCopied(null);}}>
     {clipboardError&&<p role="alert" className="tb-v2-error">{clipboardError}</p>}
     <div>
       <div className="tb-v2-grid-2">

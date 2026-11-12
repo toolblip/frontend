@@ -18,16 +18,16 @@ export default function BcryptHashGeneratorClient() {
 
   const task=useSecurityTask();
   const [error,setError]=useState('');
-  const invalidate=()=>{task.current++;setHash('');setVerifyResult(null);setGenerating(false);setError('');};
+  const invalidate=()=>{task.bump();setHash('');setVerifyResult(null);setGenerating(false);setError('');};
 
   const generate = async () => {
-    invalidate(); const id=task.current;
+    invalidate(); const id=task.get();
     if(new TextEncoder().encode(password).length>72){setError('bcrypt accepts at most 72 UTF-8 bytes. Shorten the password to avoid truncation.');return;}
     if(!password){setError('Enter a password.');return;}
     setGenerating(true);
-    try { const h=await bcrypt.hash(password,rounds); if(id===task.current)setHash(h); }
-    catch(e){if(id===task.current)setError((e as Error).message);}
-    finally{if(id===task.current)setGenerating(false);}
+    try { const h=await bcrypt.hash(password,rounds); if(id===task.get())setHash(h); }
+    catch(e){if(id===task.get())setError((e as Error).message);}
+    finally{if(id===task.get())setGenerating(false);}
   };
 
   const copy = () => {
@@ -38,10 +38,10 @@ export default function BcryptHashGeneratorClient() {
   };
 
   const verify = async () => {
-    if (!hash) return; const id=++task.current;setVerifyResult(null);
+    if (!hash) return; const id=task.bump();setVerifyResult(null);
     if(new TextEncoder().encode(verifyPassword).length>72){setError('Verification password exceeds 72 UTF-8 bytes.');return;}
-    try{const match=await bcrypt.compare(verifyPassword,hash);if(id===task.current)setVerifyResult(match?'match':'no-match');}
-    catch(e){if(id===task.current)setError((e as Error).message);}
+    try{const match=await bcrypt.compare(verifyPassword,hash);if(id===task.get())setVerifyResult(match?'match':'no-match');}
+    catch(e){if(id===task.get())setError((e as Error).message);}
   };
 
   return (
@@ -122,7 +122,7 @@ export default function BcryptHashGeneratorClient() {
           <input maxLength={100000}
             type="text"
             value={verifyPassword}
-            onChange={(e) => {task.current++;setVerifyResult(null);setError('');setVerifyPassword(e.target.value);}}
+            onChange={(e) => {task.bump();setVerifyResult(null);setError('');setVerifyPassword(e.target.value);}}
             placeholder="Enter password to verify..."
             className="tb-v2-tool-input"
             style={{ flex: 1, fontFamily: 'var(--f-mono)' }}

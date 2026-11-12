@@ -11,13 +11,14 @@ export default function ToyQR() {
   const [url, setUrl] = useState('https://toolblip.com');
 
   const matrix = useMemo(() => {
-    let h = 5381;
+    let hash = 5381;
     for (let i = 0; i < url.length; i++) {
-      h = ((h << 5) + h + url.charCodeAt(i)) | 0;
+      hash = ((hash << 5) + hash + url.charCodeAt(i)) | 0;
     }
+    const seed = { h: hash };
     const rng = () => {
-      h = (h * 1664525 + 1013904223) | 0;
-      return ((h >>> 0) % 1000) / 1000;
+      seed.h = (seed.h * 1664525 + 1013904223) | 0;
+      return ((seed.h >>> 0) % 1000) / 1000;
     };
     const m: number[][] = Array.from({ length: N }, () => Array(N).fill(0));
 

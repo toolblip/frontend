@@ -56,24 +56,24 @@ export default function HashCollisionFinderClient() {
 
   const task=useSecurityTask();
   const [error,setError]=useState('');
-  const stopSearch=()=>{task.current++;setRunning(false);};
+  const stopSearch=()=>{task.bump();setRunning(false);};
   const resetSearch=()=>{stopSearch();setAttempts(0);setResult(null);setCapped(false);setError('');};
   const startSearch=async()=>{
-    resetSearch();const id=task.current;setRunning(true);
+    resetSearch();const id=task.get();setRunning(true);
     const seen=new Map<string,{str:string;hash:string}>();
     try{
       for(let n=1;n<=SAFETY_LIMIT;n++){
-        if(id!==task.current)return;
+        if(id!==task.get())return;
         const str=randomString(RANDOM_STR_LEN),hash=await hashHex(algorithm,str);
-        if(id!==task.current)return;
+        if(id!==task.get())return;
         const prefix=hash.slice(0,prefixLen),previous=seen.get(prefix);
         if(previous && previous.str!==str){setAttempts(n);setResult({strA:previous.str,strB:str,hashA:previous.hash,hashB:hash,prefix});return;}
         seen.set(prefix,{str,hash});
         if(n%BATCH_SIZE===0){setAttempts(n);await new Promise<void>(resolve=>requestAnimationFrame(()=>resolve()));}
       }
       setCapped(true);
-    }catch(e){if(id===task.current)setError((e as Error).message);}
-    finally{if(id===task.current)setRunning(false);}
+    }catch(e){if(id===task.get())setError((e as Error).message);}
+    finally{if(id===task.get())setRunning(false);}
   };
 
   const bits = prefixLen * 4;

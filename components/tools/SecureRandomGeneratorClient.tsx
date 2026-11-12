@@ -58,12 +58,12 @@ export default function SecureRandomGeneratorClient() {
   };
 
   const copy = () => {
-    const copyId=++clipboardTask.current;setClipboardError('');
-    copySecurityText(results.join('\n')).then(()=>{if(copyId!==clipboardTask.current)return;setCopied(true);}).catch(()=>{if(copyId===clipboardTask.current)setClipboardError('Clipboard access failed. Select and copy the output manually.');});
+    const copyId=clipboardTask.bump();setClipboardError('');
+    copySecurityText(results.join('\n')).then(()=>{if(copyId!==clipboardTask.get())return;setCopied(true);}).catch(()=>{if(copyId===clipboardTask.get())setClipboardError('Clipboard access failed. Select and copy the output manually.');});
   };
 
   return (
-    <DeveloperSecurityFrame onExample={()=>{clipboardTask.current++;generate();}} onClear={()=>{clipboardTask.current++;setClipboardError('');setResults([]);setError('');setCopied(false);}}>
+    <DeveloperSecurityFrame onExample={()=>{clipboardTask.bump();generate();}} onClear={()=>{clipboardTask.bump();setClipboardError('');setResults([]);setError('');setCopied(false);}}>
     {clipboardError&&<p role="alert" className="tb-v2-error">{clipboardError}</p>}
     <div className="tb-v2-tool-card">
       <div className="tb-v2-mode-tabs">

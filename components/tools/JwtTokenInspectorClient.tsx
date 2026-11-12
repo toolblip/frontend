@@ -120,13 +120,13 @@ export default function JwtTokenInspectorClient() {
 
   const copy = (id: string, val: string) => {
     if (!val) return;
-    const copyId=++clipboardTask.current;setClipboardError('');
-    copySecurityText(val).then(()=>{if(copyId!==clipboardTask.current)return;setCopied(id);}).catch(()=>{if(copyId===clipboardTask.current)setClipboardError('Clipboard access failed. Select and copy the output manually.');});
+    const copyId=clipboardTask.bump();setClipboardError('');
+    copySecurityText(val).then(()=>{if(copyId!==clipboardTask.get())return;setCopied(id);}).catch(()=>{if(copyId===clipboardTask.get())setClipboardError('Clipboard access failed. Select and copy the output manually.');});
     setTimeout(() => setCopied(null), 1500);
   };
 
   return (
-    <DeveloperSecurityFrame onExample={()=>{clipboardTask.current++;setToken(SAMPLE);}} onClear={()=>{clipboardTask.current++;setClipboardError('');setToken(''); setDecoded({result:null,error:''}); setCopied(null);}}>
+    <DeveloperSecurityFrame onExample={()=>{clipboardTask.bump();setToken(SAMPLE);}} onClear={()=>{clipboardTask.bump();setClipboardError('');setToken(''); setDecoded({result:null,error:''}); setCopied(null);}}>
     {clipboardError&&<p role="alert" className="tb-v2-error">{clipboardError}</p>}
     <div>
       <div className="tb-v2-tool-input-head">

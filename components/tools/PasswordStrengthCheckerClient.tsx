@@ -66,13 +66,13 @@ export default function PasswordStrengthCheckerClient() {
   const strength = getStrength();
 
   const copy = () => {
-    const copyId=++clipboardTask.current;setClipboardError('');
-    copySecurityText(password).then(()=>{if(copyId!==clipboardTask.current)return;setCopied(true);}).catch(()=>{if(copyId===clipboardTask.current)setClipboardError('Clipboard access failed. Select and copy the output manually.');});
+    const copyId=clipboardTask.bump();setClipboardError('');
+    copySecurityText(password).then(()=>{if(copyId!==clipboardTask.get())return;setCopied(true);}).catch(()=>{if(copyId===clipboardTask.get())setClipboardError('Clipboard access failed. Select and copy the output manually.');});
     setTimeout(() => setCopied(false), 1500);
   };
 
   return (
-    <DeveloperSecurityFrame onExample={()=>{clipboardTask.current++;setPassword('correct horse battery staple');}} onClear={()=>{clipboardTask.current++;setClipboardError('');setPassword('');setCopied(false);setShow(false);}}>
+    <DeveloperSecurityFrame onExample={()=>{clipboardTask.bump();setPassword('correct horse battery staple');}} onClear={()=>{clipboardTask.bump();setClipboardError('');setPassword('');setCopied(false);setShow(false);}}>
     {clipboardError&&<p role="alert" className="tb-v2-error">{clipboardError}</p>}
     <div>
       <p className="tb-v2-hash-stats">Composition heuristic only. The random-model search space assumes independent random characters; it does not measure the entropy or crack time of your password.</p>

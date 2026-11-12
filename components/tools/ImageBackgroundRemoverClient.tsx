@@ -225,51 +225,6 @@ export default function ImageBackgroundRemoverClient() {
     }
   }, [imageFile]);
 
-  const removeBackground = useCallback(() => {
-    if (!image || !canvasRef.current) return;
-
-    const requestId = ++requestIdRef.current;
-    setProcessedImage(null);
-    setIsProcessing(true);
-
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) {
-      setIsProcessing(false);
-      return;
-    }
-
-    const img = new Image();
-    img.onload = () => {
-      if (requestIdRef.current !== requestId) return;
-      canvas.width = img.width;
-      canvas.height = img.height;
-      ctx.drawImage(img, 0, 0);
-
-      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      const data = imageData.data;
-
-      if (method === 'floodfill') {
-        // Flood fill from corners to detect background
-        removeBackgroundFloodFill(data, canvas.width, canvas.height);
-      } else {
-        // Chroma key removal
-        const keyColor = hexToRgb(chromaKeyColor);
-        removeChromaKey(data, canvas.width, canvas.height, keyColor);
-      }
-
-      releaseProcessedBlobUrl();
-      ctx.putImageData(imageData, 0, 0);
-      setProcessedImage(canvas.toDataURL('image/png'));
-      setIsProcessing(false);
-    };
-    img.onerror = () => {
-      if (requestIdRef.current !== requestId) return;
-      setIsProcessing(false);
-    };
-    img.src = image;
-  }, [image, method, tolerance, chromaKeyColor]);
-
   const removeBackgroundFloodFill = (data: Uint8ClampedArray, width: number, height: number) => {
     // One flag per pixel (not a Set<string> of index strings) - avoids
     // allocating/hashing a string per pixel, which otherwise dominates
@@ -359,6 +314,51 @@ export default function ImageBackgroundRemoverClient() {
       }
     }
   };
+
+  const removeBackground = useCallback(() => {
+    if (!image || !canvasRef.current) return;
+
+    const requestId = ++requestIdRef.current;
+    setProcessedImage(null);
+    setIsProcessing(true);
+
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) {
+      setIsProcessing(false);
+      return;
+    }
+
+    const img = new Image();
+    img.onload = () => {
+      if (requestIdRef.current !== requestId) return;
+      canvas.width = img.width;
+      canvas.height = img.height;
+      ctx.drawImage(img, 0, 0);
+
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const data = imageData.data;
+
+      if (method === 'floodfill') {
+        // Flood fill from corners to detect background
+        removeBackgroundFloodFill(data, canvas.width, canvas.height);
+      } else {
+        // Chroma key removal
+        const keyColor = hexToRgb(chromaKeyColor);
+        removeChromaKey(data, canvas.width, canvas.height, keyColor);
+      }
+
+      releaseProcessedBlobUrl();
+      ctx.putImageData(imageData, 0, 0);
+      setProcessedImage(canvas.toDataURL('image/png'));
+      setIsProcessing(false);
+    };
+    img.onerror = () => {
+      if (requestIdRef.current !== requestId) return;
+      setIsProcessing(false);
+    };
+    img.src = image;
+  }, [image, method, tolerance, chromaKeyColor]);
 
   const handleDownload = () => {
     if (!processedImage) return;

@@ -58,13 +58,6 @@ export default function ExifRemoverClient() {
   const loadIdRef = useRef(0);
   const cleanIdRef = useRef(0);
 
-  useEffect(() => () => {
-    loadIdRef.current += 1;
-    cleanIdRef.current += 1;
-    revokeSource();
-    revokeResult();
-  }, []);
-
   const revokeSource = () => {
     if (sourceUrlRef.current) {
       URL.revokeObjectURL(sourceUrlRef.current);
@@ -78,6 +71,13 @@ export default function ExifRemoverClient() {
       resultUrlRef.current = '';
     }
   };
+
+  useEffect(() => () => {
+    loadIdRef.current += 1;
+    cleanIdRef.current += 1;
+    revokeSource();
+    revokeResult();
+  }, []);
 
   const clearResult = () => {
     cleanIdRef.current += 1;

@@ -33,10 +33,6 @@ export default function ChartMakerClient() {
   const [showGrid, setShowGrid] = useState(true);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  useEffect(() => {
-    drawChart();
-  }, [chartType, dataPoints, title, showGrid]);
-
   const drawChart = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -238,6 +234,10 @@ export default function ChartMakerClient() {
       ctx.fillText('Total', centerX, centerY + 28);
     }
   };
+
+  useEffect(() => {
+    drawChart();
+  }, [chartType, dataPoints, title, showGrid]);
 
   const addDataPoint = () => {
     if (!newLabel.trim() || !newValue.trim() || !Number.isFinite(Number(newValue)) || Number(newValue) < 0 || Number(newValue)>1e12 || dataPoints.length >= 100) {setError('Enter a label and a finite value from 0 to 1 trillion; maximum 100 points.');return;}

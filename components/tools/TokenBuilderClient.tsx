@@ -53,7 +53,7 @@ export default function TokenBuilderClient() {
   const [copied, setCopied] = useState(false);
 
   const task=useSecurityTask();
-  const invalidate=()=>{task.current++;setBuild({status:'idle'});setCopied(false);};
+  const invalidate=()=>{task.bump();setBuild({status:'idle'});setCopied(false);};
   const header = useMemo(() => parseJson('Header', headerText), [headerText]);
   const payload = useMemo(() => parseJson('Payload', payloadText), [payloadText]);
 
@@ -66,7 +66,7 @@ export default function TokenBuilderClient() {
   const canGenerate = !!header.value && !!payload.value && !!alg && Object.hasOwn(HMAC_ALGS, alg);
 
   const generate = async () => {
-    const id=++task.current;
+    const id=task.bump();
     if (!header.value || !payload.value) return;
     if (!alg) {
       setBuild({ status: 'error', message: 'Header must include an "alg" field.' });
@@ -95,23 +95,23 @@ export default function TokenBuilderClient() {
       );
       const sigBuf = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(signingInput));
       const signature = bytesToBase64Url(new Uint8Array(sigBuf));
-      if(id!==task.current)return;
+      if(id!==task.get())return;
       setBuild({ status: 'done', token: `${signingInput}.${signature}` });
     } catch (e) {
-      if(id!==task.current)return;
+      if(id!==task.get())return;
       setBuild({ status: 'error', message: (e as Error).message });
     }
   };
 
   const copy = () => {
     if (build.status !== 'done') return;
-    const copyId=++clipboardTask.current;setClipboardError('');
-    copySecurityText(build.token).then(()=>{if(copyId!==clipboardTask.current)return;setCopied(true);}).catch(()=>{if(copyId===clipboardTask.current)setClipboardError('Clipboard access failed. Select and copy the output manually.');});
+    const copyId=clipboardTask.bump();setClipboardError('');
+    copySecurityText(build.token).then(()=>{if(copyId!==clipboardTask.get())return;setCopied(true);}).catch(()=>{if(copyId===clipboardTask.get())setClipboardError('Clipboard access failed. Select and copy the output manually.');});
     setTimeout(() => setCopied(false), 1500);
   };
 
   return (
-    <DeveloperSecurityFrame onExample={()=>{clipboardTask.current++;invalidate();setHeaderText(DEFAULT_HEADER);setPayloadText(DEFAULT_PAYLOAD);setSecret('your-256-bit-secret');}} onClear={()=>{clipboardTask.current++;setClipboardError('');invalidate();setHeaderText('');setPayloadText('');setSecret('');setCopied(false);}}>
+    <DeveloperSecurityFrame onExample={()=>{clipboardTask.bump();invalidate();setHeaderText(DEFAULT_HEADER);setPayloadText(DEFAULT_PAYLOAD);setSecret('your-256-bit-secret');}} onClear={()=>{clipboardTask.bump();setClipboardError('');invalidate();setHeaderText('');setPayloadText('');setSecret('');setCopied(false);}}>
     {clipboardError&&<p role="alert" className="tb-v2-error">{clipboardError}</p>}
     <div>
       <div className="tb-v2-grid-2">

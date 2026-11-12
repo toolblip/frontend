@@ -59,8 +59,8 @@ export default function Base64EncoderDecoderClient() {
   useEffect(() => { process(); }, [process]);
 
   const copy = useCallback((text: string) => {
-    const copyId=++clipboardTask.current;setClipboardError('');
-    copySecurityText(text).then(()=>{if(copyId!==clipboardTask.current)return;setCopied(true);}).catch(()=>{if(copyId===clipboardTask.current)setClipboardError('Clipboard access failed. Select and copy the output manually.');});
+    const copyId=clipboardTask.bump();setClipboardError('');
+    copySecurityText(text).then(()=>{if(copyId!==clipboardTask.get())return;setCopied(true);}).catch(()=>{if(copyId===clipboardTask.get())setClipboardError('Clipboard access failed. Select and copy the output manually.');});
     setTimeout(() => setCopied(false), 1500);
   }, []);
 
@@ -80,7 +80,7 @@ export default function Base64EncoderDecoderClient() {
   };
 
   return (
-    <DeveloperSecurityFrame onExample={()=>{clipboardTask.current++;setMode('encode');loadExample('é😀');}} onClear={()=>{clipboardTask.current++;setClipboardError('');setInput('');setOutput('');setError('');setCopied(false);setShowExamples(false);}}>
+    <DeveloperSecurityFrame onExample={()=>{clipboardTask.bump();setMode('encode');loadExample('é😀');}} onClear={()=>{clipboardTask.bump();setClipboardError('');setInput('');setOutput('');setError('');setCopied(false);setShowExamples(false);}}>
     {clipboardError&&<p role="alert" className="tb-v2-error">{clipboardError}</p>}
     <div>
       <ToolContextControls
