@@ -32,19 +32,19 @@ export default function UuidV1GeneratorClient() {
   useEffect(()=>{generate();},[generate]);
 
   const copyToClipboard = (uuid: string, index: number) => {
-    const copyId=++clipboardTask.current;setClipboardError('');
-    copySecurityText(uuid).then(()=>{if(copyId!==clipboardTask.current)return;setCopied(index);}).catch(()=>{if(copyId===clipboardTask.current)setClipboardError('Clipboard access failed. Select and copy the output manually.');});
+    const copyId=clipboardTask.bump();setClipboardError('');
+    copySecurityText(uuid).then(()=>{if(copyId!==clipboardTask.get())return;setCopied(index);}).catch(()=>{if(copyId===clipboardTask.get())setClipboardError('Clipboard access failed. Select and copy the output manually.');});
     setTimeout(() => setCopied(null), 1500);
   };
 
   const copyAll = () => {
-    const copyId=++clipboardTask.current;setClipboardError('');
-    copySecurityText(uuids.join('\n')).then(()=>{if(copyId!==clipboardTask.current)return;setCopied(-1);}).catch(()=>{if(copyId===clipboardTask.current)setClipboardError('Clipboard access failed. Select and copy the output manually.');});
+    const copyId=clipboardTask.bump();setClipboardError('');
+    copySecurityText(uuids.join('\n')).then(()=>{if(copyId!==clipboardTask.get())return;setCopied(-1);}).catch(()=>{if(copyId===clipboardTask.get())setClipboardError('Clipboard access failed. Select and copy the output manually.');});
     setTimeout(() => setCopied(null), 1500);
   };
 
   return (
-    <DeveloperSecurityFrame onExample={()=>{clipboardTask.current++;generate();}} onClear={()=>{clipboardTask.current++;setClipboardError('');setError('');setUuids([]);setCopied(null);}}>
+    <DeveloperSecurityFrame onExample={()=>{clipboardTask.bump();generate();}} onClear={()=>{clipboardTask.bump();setClipboardError('');setError('');setUuids([]);setCopied(null);}}>
     {clipboardError&&<p role="alert" className="tb-v2-error">{clipboardError}</p>}
     {error&&<p role="alert" className="tb-v2-error">{error}</p>}
     <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>

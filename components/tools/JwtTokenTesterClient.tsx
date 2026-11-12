@@ -146,13 +146,13 @@ export default function JwtTokenTesterClient() {
 
   const copy = (id: string, val: string) => {
     if (!val) return;
-    const copyId=++clipboardTask.current;setClipboardError('');
-    copySecurityText(val).then(()=>{if(copyId!==clipboardTask.current)return;setCopied(id);}).catch(()=>{if(copyId===clipboardTask.current)setClipboardError('Clipboard access failed. Select and copy the output manually.');});
+    const copyId=clipboardTask.bump();setClipboardError('');
+    copySecurityText(val).then(()=>{if(copyId!==clipboardTask.get())return;setCopied(id);}).catch(()=>{if(copyId===clipboardTask.get())setClipboardError('Clipboard access failed. Select and copy the output manually.');});
     setTimeout(() => setCopied(null), 1500);
   };
 
   return (
-    <DeveloperSecurityFrame onExample={()=>{clipboardTask.current++;setToken(SAMPLE);setSecret('your-256-bit-secret');}} onClear={()=>{clipboardTask.current++;setClipboardError('');setToken('');setSecret('');setDecoded({result:null,error:''});setVerify({status:'idle'});setCopied(null);}}>
+    <DeveloperSecurityFrame onExample={()=>{clipboardTask.bump();setToken(SAMPLE);setSecret('your-256-bit-secret');}} onClear={()=>{clipboardTask.bump();setClipboardError('');setToken('');setSecret('');setDecoded({result:null,error:''});setVerify({status:'idle'});setCopied(null);}}>
     {clipboardError&&<p role="alert" className="tb-v2-error">{clipboardError}</p>}
     <div>
       <div className="tb-v2-tool-input-head">

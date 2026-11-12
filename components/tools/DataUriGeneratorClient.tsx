@@ -30,15 +30,15 @@ export default function DataUriGeneratorClient() {
   const readerRef=useRef<FileReader|null>(null);
   const [error,setError]=useState('');
   const [loading,setLoading]=useState(false);
-  const clearFile=()=>{task.current++;readerRef.current?.abort();setFile(null);setFileDataUri('');setError('');setLoading(false);if(fileInputRef.current)fileInputRef.current.value='';};
+  const clearFile=()=>{task.bump();readerRef.current?.abort();setFile(null);setFileDataUri('');setError('');setLoading(false);if(fileInputRef.current)fileInputRef.current.value='';};
 
   const loadFile = (selected: File | undefined) => {
     clearFile();if(!selected)return;
     if(selected.size>2*1024*1024){setError('File exceeds the 2 MiB limit.');return;}
-    const id=task.current;setFile(selected);setLoading(true);
+    const id=task.get();setFile(selected);setLoading(true);
     const reader=new FileReader();readerRef.current=reader;
-    reader.onload=()=>{if(id===task.current){setFileDataUri(String(reader.result||''));setLoading(false);}};
-    reader.onerror=()=>{if(id===task.current){setError('Could not read this file.');setLoading(false);setFileDataUri('');}};
+    reader.onload=()=>{if(id===task.get()){setFileDataUri(String(reader.result||''));setLoading(false);}};
+    reader.onerror=()=>{if(id===task.get()){setError('Could not read this file.');setLoading(false);setFileDataUri('');}};
     reader.readAsDataURL(selected);
   };
 
@@ -58,13 +58,13 @@ export default function DataUriGeneratorClient() {
 
   const copy = () => {
     if (!output) return;
-    const copyId=++clipboardTask.current;setClipboardError('');
-    copySecurityText(output).then(()=>{if(copyId!==clipboardTask.current)return;setCopied(true);}).catch(()=>{if(copyId===clipboardTask.current)setClipboardError('Clipboard access failed. Select and copy the output manually.');});
+    const copyId=clipboardTask.bump();setClipboardError('');
+    copySecurityText(output).then(()=>{if(copyId!==clipboardTask.get())return;setCopied(true);}).catch(()=>{if(copyId===clipboardTask.get())setClipboardError('Clipboard access failed. Select and copy the output manually.');});
     setTimeout(() => setCopied(false), 1500);
   };
 
   return (
-    <DeveloperSecurityFrame onExample={()=>{clipboardTask.current++;clearFile();loadExample();}} onClear={()=>{clipboardTask.current++;setClipboardError('');clearFile();setText('');setCopied(false);}}>
+    <DeveloperSecurityFrame onExample={()=>{clipboardTask.bump();clearFile();loadExample();}} onClear={()=>{clipboardTask.bump();setClipboardError('');clearFile();setText('');setCopied(false);}}>
     {clipboardError&&<p role="alert" className="tb-v2-error">{clipboardError}</p>}
     <div className="flex flex-col gap-4">{error&&<p role="alert" className="tb-v2-error">{error}</p>}{loading&&<p role="status">Reading file…</p>}
       <div className="tb-v2-mode-tabs">

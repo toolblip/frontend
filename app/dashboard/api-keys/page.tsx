@@ -39,12 +39,6 @@ export default function ApiKeysPage() {
   const [revokingId, setRevokingId] = useState<number | null>(null);
   const [confirmRevokeId, setConfirmRevokeId] = useState<number | null>(null);
 
-  // Load keys when token is ready
-  useEffect(() => {
-    if (!token) return;
-    loadKeys();
-  }, [token]); // eslint-disable-line react-hooks/exhaustive-deps
-
   async function loadKeys() {
     setLoading(true);
     setError("");
@@ -59,6 +53,12 @@ export default function ApiKeysPage() {
       setLoading(false);
     }
   }
+
+  // Load keys when token is ready
+  useEffect(() => {
+    if (!token) return;
+    loadKeys();
+  }, [token]); // eslint-disable-line react-hooks/exhaustive-deps
 
   async function handleGenerate() {
     setGenerating(true);

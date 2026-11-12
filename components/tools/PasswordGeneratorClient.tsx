@@ -104,8 +104,8 @@ export default function PasswordGeneratorClient() {
 
   const copy = () => {
     if (!password) return;
-    const copyId=++clipboardTask.current;setClipboardError('');
-    copySecurityText(password).then(()=>{if(copyId!==clipboardTask.current)return;setCopied(true);}).catch(()=>{if(copyId===clipboardTask.current)setClipboardError('Clipboard access failed. Select and copy the output manually.');});
+    const copyId=clipboardTask.bump();setClipboardError('');
+    copySecurityText(password).then(()=>{if(copyId!==clipboardTask.get())return;setCopied(true);}).catch(()=>{if(copyId===clipboardTask.get())setClipboardError('Clipboard access failed. Select and copy the output manually.');});
     setTimeout(() => setCopied(false), 1500);
   };
 
@@ -118,7 +118,7 @@ export default function PasswordGeneratorClient() {
   };
 
   return (
-    <DeveloperSecurityFrame onExample={()=>{clipboardTask.current++;setCleared(false);setOpts({length:16,upper:true,lower:true,digits:true,symbols:true,excludeAmbiguous:false});}} onClear={()=>{clipboardTask.current++;setClipboardError('');setCleared(true);setPassword('');setCopied(false);setGenerationError('');}}>
+    <DeveloperSecurityFrame onExample={()=>{clipboardTask.bump();setCleared(false);setOpts({length:16,upper:true,lower:true,digits:true,symbols:true,excludeAmbiguous:false});}} onClear={()=>{clipboardTask.bump();setClipboardError('');setCleared(true);setPassword('');setCopied(false);setGenerationError('');}}>
     {clipboardError&&<p role="alert" className="tb-v2-error">{clipboardError}</p>}
     <div>
       <div className="tb-v2-tool-input-head">

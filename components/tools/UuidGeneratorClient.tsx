@@ -38,16 +38,16 @@ export default function UuidGeneratorClient() {
   };
 
   const copy = (val: string, idx: number) => {
-    const copyId=++clipboardTask.current;setClipboardError('');
-    copySecurityText(val).then(()=>{if(copyId!==clipboardTask.current)return;setCopied(idx);}).catch(()=>{if(copyId===clipboardTask.current)setClipboardError('Clipboard access failed. Select and copy the output manually.');});
+    const copyId=clipboardTask.bump();setClipboardError('');
+    copySecurityText(val).then(()=>{if(copyId!==clipboardTask.get())return;setCopied(idx);}).catch(()=>{if(copyId===clipboardTask.get())setClipboardError('Clipboard access failed. Select and copy the output manually.');});
     setTimeout(() => setCopied(null), 1500);
   };
 
   const copyAll = () => {
     if (!history) return;
     const all = history.map((u) => format(u, { hyphens, uppercase })).join('\n');
-    const copyId=++clipboardTask.current;setClipboardError('');
-    copySecurityText(all).then(()=>{if(copyId!==clipboardTask.current)return;setCopied(-1);}).catch(()=>{if(copyId===clipboardTask.current)setClipboardError('Clipboard access failed. Select and copy the output manually.');});
+    const copyId=clipboardTask.bump();setClipboardError('');
+    copySecurityText(all).then(()=>{if(copyId!==clipboardTask.get())return;setCopied(-1);}).catch(()=>{if(copyId===clipboardTask.get())setClipboardError('Clipboard access failed. Select and copy the output manually.');});
     setTimeout(() => setCopied(null), 1500);
   };
 
@@ -75,7 +75,7 @@ export default function UuidGeneratorClient() {
   }
 
   return (
-    <DeveloperSecurityFrame onExample={()=>{clipboardTask.current++;generate();}} onClear={()=>{clipboardTask.current++;setClipboardError('');setHistory([]);setCopied(null);setError('');}}>
+    <DeveloperSecurityFrame onExample={()=>{clipboardTask.bump();generate();}} onClear={()=>{clipboardTask.bump();setClipboardError('');setHistory([]);setCopied(null);setError('');}}>
     {clipboardError&&<p role="alert" className="tb-v2-error">{clipboardError}</p>}
     {error&&<p role="alert" className="tb-v2-error">{error}</p>}
     <div>

@@ -15,13 +15,13 @@ export default function EmailValidatorClient() {
 
   const copy = () => {
     if (!email) return;
-    const copyId=++clipboardTask.current;setClipboardError('');
-    copySecurityText(email).then(()=>{if(copyId!==clipboardTask.current)return;setCopied(true);}).catch(()=>{if(copyId===clipboardTask.current)setClipboardError('Clipboard access failed. Select and copy the output manually.');});
+    const copyId=clipboardTask.bump();setClipboardError('');
+    copySecurityText(email).then(()=>{if(copyId!==clipboardTask.get())return;setCopied(true);}).catch(()=>{if(copyId===clipboardTask.get())setClipboardError('Clipboard access failed. Select and copy the output manually.');});
     setTimeout(() => setCopied(false), 1500);
   };
 
   return (
-    <DeveloperSecurityFrame onExample={()=>{clipboardTask.current++;setEmail('a+b@example.com');}} onClear={()=>{clipboardTask.current++;setClipboardError('');setEmail('');setCopied(false);}}>
+    <DeveloperSecurityFrame onExample={()=>{clipboardTask.bump();setEmail('a+b@example.com');}} onClear={()=>{clipboardTask.bump();setClipboardError('');setEmail('');setCopied(false);}}>
     {clipboardError&&<p role="alert" className="tb-v2-error">{clipboardError}</p>}
     <div>
       <p className="tb-v2-hash-stats">Checks unquoted ASCII address syntax only. This does not check DNS, mailbox existence, or deliverability. Use Punycode for international domain names.</p>

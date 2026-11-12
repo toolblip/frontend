@@ -102,8 +102,8 @@ export default function HashDiffCheckerClient() {
 
   const copy = useCallback((field: string, value: string) => {
     if (!value) return;
-    const copyId=++clipboardTask.current;setClipboardError('');
-    copySecurityText(value).then(()=>{if(copyId!==clipboardTask.current)return;setCopiedField(field);}).catch(()=>{if(copyId===clipboardTask.current)setClipboardError('Clipboard access failed. Select and copy the output manually.');});
+    const copyId=clipboardTask.bump();setClipboardError('');
+    copySecurityText(value).then(()=>{if(copyId!==clipboardTask.get())return;setCopiedField(field);}).catch(()=>{if(copyId===clipboardTask.get())setClipboardError('Clipboard access failed. Select and copy the output manually.');});
     setTimeout(() => setCopiedField(''), 1500);
   }, []);
 
@@ -146,7 +146,7 @@ export default function HashDiffCheckerClient() {
   };
 
   return (
-    <DeveloperSecurityFrame onExample={()=>{clipboardTask.current++;loadExample();}} onClear={()=>{clipboardTask.current++;setClipboardError('');setTextA('');setTextB('');setHashInputA('');setHashInputB('');setComputedA('');setComputedB('');setCopiedField('');setError('');}}>
+    <DeveloperSecurityFrame onExample={()=>{clipboardTask.bump();loadExample();}} onClear={()=>{clipboardTask.bump();setClipboardError('');setTextA('');setTextB('');setHashInputA('');setHashInputB('');setComputedA('');setComputedB('');setCopiedField('');setError('');}}>
     {clipboardError&&<p role="alert" className="tb-v2-error">{clipboardError}</p>}
     <div className="flex flex-col gap-4">
       {(error||invalidHash)&&<p role="alert" className="tb-v2-error">{error||'Use even-length hexadecimal hashes.'}</p>}

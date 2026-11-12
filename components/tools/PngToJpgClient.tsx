@@ -54,13 +54,6 @@ export default function PngToJpgClient() {
   const loadIdRef = useRef(0);
   const convertIdRef = useRef(0);
 
-  useEffect(() => () => {
-    loadIdRef.current += 1;
-    convertIdRef.current += 1;
-    revokeSource();
-    revokeResult();
-  }, []);
-
   const revokeSource = () => {
     if (sourceUrlRef.current) {
       URL.revokeObjectURL(sourceUrlRef.current);
@@ -74,6 +67,13 @@ export default function PngToJpgClient() {
       resultUrlRef.current = '';
     }
   };
+
+  useEffect(() => () => {
+    loadIdRef.current += 1;
+    convertIdRef.current += 1;
+    revokeSource();
+    revokeResult();
+  }, []);
 
   const clearResult = () => {
     convertIdRef.current += 1;

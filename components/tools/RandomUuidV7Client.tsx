@@ -32,12 +32,12 @@ export default function RandomUuidV7Client() {
 
   const copyToClipboard = () => {
     const text = uuids.join('\n');
-    const copyId=++clipboardTask.current;setClipboardError('');
-    copySecurityText(text).then(()=>{}).catch(()=>{if(copyId===clipboardTask.current)setClipboardError('Clipboard access failed. Select and copy the output manually.');});
+    const copyId=clipboardTask.bump();setClipboardError('');
+    copySecurityText(text).then(()=>{}).catch(()=>{if(copyId===clipboardTask.get())setClipboardError('Clipboard access failed. Select and copy the output manually.');});
   };
 
   return (
-    <DeveloperSecurityFrame onExample={()=>{clipboardTask.current++;generate();}} onClear={()=>{clipboardTask.current++;setClipboardError('');setError('');setUuids([]);}}>
+    <DeveloperSecurityFrame onExample={()=>{clipboardTask.bump();generate();}} onClear={()=>{clipboardTask.bump();setClipboardError('');setError('');setUuids([]);}}>
     {clipboardError&&<p role="alert" className="tb-v2-error">{clipboardError}</p>}
     {error&&<p role="alert" className="tb-v2-error">{error}</p>}
     <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>

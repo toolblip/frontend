@@ -55,13 +55,13 @@ export default function BinaryConverterClient() {
 
   const copyResult = () => {
     if (!result) return;
-    const copyId=++clipboardTask.current;setClipboardError('');
-    copySecurityText(result).then(()=>{if(copyId!==clipboardTask.current)return;setCopied(true);}).catch(()=>{if(copyId===clipboardTask.current)setClipboardError('Clipboard access failed. Select and copy the output manually.');});
+    const copyId=clipboardTask.bump();setClipboardError('');
+    copySecurityText(result).then(()=>{if(copyId!==clipboardTask.get())return;setCopied(true);}).catch(()=>{if(copyId===clipboardTask.get())setClipboardError('Clipboard access failed. Select and copy the output manually.');});
     setTimeout(() => setCopied(false), 1500);
   };
 
   return (
-    <DeveloperSecurityFrame onExample={()=>{clipboardTask.current++;setMode('textToBinary');setInput('é');setError(null);}} onClear={()=>{clipboardTask.current++;setClipboardError('');handleClear();setCopied(false);}}>
+    <DeveloperSecurityFrame onExample={()=>{clipboardTask.bump();setMode('textToBinary');setInput('é');setError(null);}} onClear={()=>{clipboardTask.bump();setClipboardError('');handleClear();setCopied(false);}}>
     {clipboardError&&<p role="alert" className="tb-v2-error">{clipboardError}</p>}
     <div className="flex flex-col gap-4">
       <div>

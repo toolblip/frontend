@@ -10,12 +10,12 @@ export default function HashGeneratorClient({ fixedAlgorithm }: { fixedAlgorithm
   const task=useSecurityTask();
   useEffect(()=>{if(!fixedAlgorithm){const slug=window.location.pathname.split('/').pop();if(slug==='md5-hash-generator')setAlgo('MD5');if(slug==='sha1-hash-generator')setAlgo('SHA-1');}},[fixedAlgorithm]);
   useEffect(()=>{
-    const id=++task.current;setOutput('');setError('');setCopied(false);
+    const id=task.bump();setOutput('');setError('');setCopied(false);
     if(!active){setBusy(false);return;}
-    setBusy(true);digest(algo,input).then(h=>{if(id===task.current)setOutput(h);}).catch(e=>{if(id===task.current)setError(String(e.message));}).finally(()=>{if(id===task.current)setBusy(false);});
-    return ()=>{task.current++;};
+    setBusy(true);digest(algo,input).then(h=>{if(id===task.get())setOutput(h);}).catch(e=>{if(id===task.get())setError(String(e.message));}).finally(()=>{if(id===task.get())setBusy(false);});
+    return ()=>{task.bump();};
   },[input,algo,active,task]);
-  const clear=()=>{task.current++;setInput('');setOutput('');setError('');setBusy(false);setActive(false);setCopied(false);};
+  const clear=()=>{task.bump();setInput('');setOutput('');setError('');setBusy(false);setActive(false);setCopied(false);};
   const result=uppercase?output.toUpperCase():output;
   return <DeveloperSecurityFrame onExample={()=>{setInput('abc');setActive(true);}} onClear={clear}>
     <label className="tb-v2-tool-label" htmlFor="security-hash-input">Input</label>

@@ -94,9 +94,9 @@ export default function PunycodeEncoderClient() {
   const pasteTask=useSecurityTask();
   const pasteLeft = useCallback(async () => {
     try {
-      const id=++pasteTask.current;
+      const id=pasteTask.bump();
       const text = await navigator.clipboard.readText();
-      if(id!==pasteTask.current)return;
+      if(id!==pasteTask.get())return;
       applyLeft(text);
     } catch {
       // clipboard read denied/unsupported - do nothing
@@ -105,9 +105,9 @@ export default function PunycodeEncoderClient() {
 
   const pasteRight = useCallback(async () => {
     try {
-      const id=++pasteTask.current;
+      const id=pasteTask.bump();
       const text = await navigator.clipboard.readText();
-      if(id!==pasteTask.current)return;
+      if(id!==pasteTask.get())return;
       applyRight(text);
     } catch {
       // clipboard read denied/unsupported - do nothing
@@ -115,14 +115,14 @@ export default function PunycodeEncoderClient() {
   }, [applyRight]);
 
   const copyLeft = useCallback(() => {
-    const copyId=++clipboardTask.current;setClipboardError('');
-    copySecurityText(left).then(()=>{if(copyId!==clipboardTask.current)return;setCopiedLeft(true);}).catch(()=>{if(copyId===clipboardTask.current)setClipboardError('Clipboard access failed. Select and copy the output manually.');});
+    const copyId=clipboardTask.bump();setClipboardError('');
+    copySecurityText(left).then(()=>{if(copyId!==clipboardTask.get())return;setCopiedLeft(true);}).catch(()=>{if(copyId===clipboardTask.get())setClipboardError('Clipboard access failed. Select and copy the output manually.');});
     setTimeout(() => setCopiedLeft(false), 1500);
   }, [left]);
 
   const copyRight = useCallback(() => {
-    const copyId=++clipboardTask.current;setClipboardError('');
-    copySecurityText(right).then(()=>{if(copyId!==clipboardTask.current)return;setCopiedRight(true);}).catch(()=>{if(copyId===clipboardTask.current)setClipboardError('Clipboard access failed. Select and copy the output manually.');});
+    const copyId=clipboardTask.bump();setClipboardError('');
+    copySecurityText(right).then(()=>{if(copyId!==clipboardTask.get())return;setCopiedRight(true);}).catch(()=>{if(copyId===clipboardTask.get())setClipboardError('Clipboard access failed. Select and copy the output manually.');});
     setTimeout(() => setCopiedRight(false), 1500);
   }, [right]);
 
@@ -170,7 +170,7 @@ export default function PunycodeEncoderClient() {
   };
 
   return (
-    <DeveloperSecurityFrame onExample={()=>{clipboardTask.current++;loadExampleLeft('schön.de');}} onClear={()=>{clipboardTask.current++;setClipboardError('');pasteTask.current++;clearAll();setCopiedLeft(false);setCopiedRight(false);setShowEmojiPicker(false);setShowExamplesLeft(false);setShowExamplesRight(false);}}>
+    <DeveloperSecurityFrame onExample={()=>{clipboardTask.bump();loadExampleLeft('schön.de');}} onClear={()=>{clipboardTask.bump();setClipboardError('');pasteTask.bump();clearAll();setCopiedLeft(false);setCopiedRight(false);setShowEmojiPicker(false);setShowExamplesLeft(false);setShowExamplesRight(false);}}>
     {clipboardError&&<p role="alert" className="tb-v2-error">{clipboardError}</p>}
     <div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 divide-y divide-[var(--line)] md:divide-y-0 md:divide-x">
