@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import {
   detectGeometryMimeType,
   formatGeometryBytesExact,
@@ -225,7 +225,7 @@ export function useImageLayoutImages(maxImages: number, onOutputInvalidated?: ()
   const resultUrlRef = useRef('');
   const itemsRef = useRef<ImageLayoutItem[]>([]);
   const onOutputInvalidatedRef = useRef(onOutputInvalidated);
-  onOutputInvalidatedRef.current = onOutputInvalidated;
+  useLayoutEffect(() => { onOutputInvalidatedRef.current = onOutputInvalidated; });
 
   useEffect(() => {
     itemsRef.current = items;

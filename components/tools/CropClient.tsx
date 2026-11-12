@@ -15,6 +15,7 @@ interface Selection {
 export default function CropClient() {
   const [image, setImage] = useState<string | null>(null);
   const [selection, setSelection] = useState<Selection | null>(null);
+  const [natural, setNatural] = useState<{ w: number; h: number } | null>(null);
   const [isSelecting, setIsSelecting] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [croppedImage, setCroppedImage] = useState<string | null>(null);
@@ -26,8 +27,8 @@ export default function CropClient() {
   const request=useRef(0),decoded=useRef<HTMLImageElement|null>(null);
   const [error,setError]=useState('');
   useEffect(()=>()=>{request.current++;},[]);useEffect(()=>()=>{if(image)URL.revokeObjectURL(image);},[image]);
-  const clear=()=>{request.current++;decoded.current=null;setImage(null);setSelection(null);setCroppedImage(null);setError('');if(fileInputRef.current)fileInputRef.current.value='';};
-  const loadFile=async(file:File|undefined)=>{if(!file)return;clear();const id=request.current;try{const {img,mime,bytes}=await readImage(file);if(id!==request.current)return;decoded.current=img;outputMime.current=mime==='image/jpeg'?'image/jpeg':'image/png';setImage(URL.createObjectURL(new Blob([bytes],{type:mime})));setSelection({startX:0,startY:0,endX:img.naturalWidth,endY:img.naturalHeight});}catch(e){if(id===request.current)setError((e as Error).message);}};
+  const clear=()=>{request.current++;decoded.current=null;setImage(null);setSelection(null);setNatural(null);setCroppedImage(null);setError('');if(fileInputRef.current)fileInputRef.current.value='';};
+  const loadFile=async(file:File|undefined)=>{if(!file)return;clear();const id=request.current;try{const {img,mime,bytes}=await readImage(file);if(id!==request.current)return;decoded.current=img;outputMime.current=mime==='image/jpeg'?'image/jpeg':'image/png';setImage(URL.createObjectURL(new Blob([bytes],{type:mime})));setSelection({startX:0,startY:0,endX:img.naturalWidth,endY:img.naturalHeight});setNatural({w:img.naturalWidth,h:img.naturalHeight});}catch(e){if(id===request.current)setError((e as Error).message);}};
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     loadFile(e.target.files?.[0]);
@@ -108,16 +109,12 @@ export default function CropClient() {
   };
 
   const getSelectionStyle = () => {
-    if (!selection || !imageRef.current) return {};
-    const rect = imageRef.current.getBoundingClientRect();
-    const scaleX = rect.width / imageRef.current.naturalWidth;
-    const scaleY = rect.height / imageRef.current.naturalHeight;
-
+    if (!selection || !natural) return {};
     return {
-      left: `${Math.min(selection.startX, selection.endX) / imageRef.current.naturalWidth * 100}%`,
-      top: `${Math.min(selection.startY, selection.endY) / imageRef.current.naturalHeight * 100}%`,
-      width: `${Math.abs(selection.endX - selection.startX) / imageRef.current.naturalWidth * 100}%`,
-      height: `${Math.abs(selection.endY - selection.startY) / imageRef.current.naturalHeight * 100}%`,
+      left: `${Math.min(selection.startX, selection.endX) / natural.w * 100}%`,
+      top: `${Math.min(selection.startY, selection.endY) / natural.h * 100}%`,
+      width: `${Math.abs(selection.endX - selection.startX) / natural.w * 100}%`,
+      height: `${Math.abs(selection.endY - selection.startY) / natural.h * 100}%`,
     };
   };
 

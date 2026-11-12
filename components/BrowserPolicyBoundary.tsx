@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { usePathname } from 'next/navigation';
 import { browserPolicyKey } from '@/lib/browser-policy.mjs';
 
@@ -8,9 +8,9 @@ import { browserPolicyKey } from '@/lib/browser-policy.mjs';
 export default function BrowserPolicyBoundary({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const policy = browserPolicyKey(pathname, process.env.NEXT_PUBLIC_BASE_PATH);
-  const documentPolicy = useRef(policy);
+  const [documentPolicy] = useState(policy);
   const replacing = useRef(false);
-  const needsDocument = policy !== documentPolicy.current;
+  const needsDocument = policy !== documentPolicy;
 
   useEffect(() => {
     if (needsDocument && !replacing.current) {

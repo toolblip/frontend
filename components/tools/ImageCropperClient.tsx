@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useCallback, useEffect } from 'react';
+import { useState, useRef, useCallback, useEffect, useLayoutEffect } from 'react';
 import { useSubscription } from '@/hooks/useSubscription';
 import { FileSizeError, UpgradeNotice } from '@/components/FileSizeGuard';
 import { convertHeicIfNeeded } from '@/lib/heic';
@@ -42,8 +42,10 @@ export default function ImageCropperClient() {
   const { tier } = useSubscription();
   const maxSizeMB = tier === 'free' ? 5 : tier === 'starter' ? 10 : tier === 'ultra' ? 100 : tier === 'max' ? 500 : 5;
 
-  presetRef.current = preset;
-  cropRectRef.current = cropRect;
+  useLayoutEffect(() => {
+    presetRef.current = preset;
+    cropRectRef.current = cropRect;
+  });
 
   const isOversized = selectedFile != null && selectedFile.size / (1024 * 1024) > maxSizeMB;
 

@@ -8,7 +8,7 @@ export function useToolHash(
   apply: (params: URLSearchParams) => void,
 ) {
   const applyRef = useRef(apply);
-  applyRef.current = apply;
+  useLayoutEffect(() => { applyRef.current = apply; });
   const [ready, setReady] = useState(false);
   const serialized = hashFromFields(fields);
 

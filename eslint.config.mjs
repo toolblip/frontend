@@ -8,7 +8,6 @@ import nextTs from 'eslint-config-next/typescript';
 const baselineWarnings = Object.fromEntries([
   '@typescript-eslint/no-explicit-any',
   'react-hooks/immutability',
-  'react-hooks/refs',
   'react-hooks/set-state-in-effect',
 ].map(rule => [rule, 'warn']));
 

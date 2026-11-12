@@ -61,6 +61,9 @@ export default function SignPDFClient() {
   const [sigWidth, setSigWidth] = useState(180);
   const [sigHeight, setSigHeight] = useState(70);
   const [hasDrawing, setHasDrawing] = useState(false);
+  // Data URLs of the draw/type canvases for the placement preview, captured when the stroke ends or the text is drawn.
+  const [drawnUrl, setDrawnUrl] = useState<string | null>(null);
+  const [typedUrl, setTypedUrl] = useState<string | null>(null);
   const [status, setStatus] = useState<'idle' | 'loading' | 'processing' | 'done' | 'error'>('idle');
   const [message, setMessage] = useState('');
   const [isDragging, setIsDragging] = useState(false);
@@ -231,6 +234,7 @@ export default function SignPDFClient() {
 
   const onPointerUp = () => {
     drawingRef.current = false;
+    if (canvasRef.current) setDrawnUrl(canvasRef.current.toDataURL('image/png'));
   };
 
   const clearDrawCanvas = (force = false) => {
@@ -241,6 +245,7 @@ export default function SignPDFClient() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
     setHasDrawing(false);
+    setDrawnUrl(null);
     invalidateResult();
   };
 
@@ -263,6 +268,7 @@ export default function SignPDFClient() {
     ctx.font = 'italic 42px "Brush Script MT", "Segoe Script", cursive';
     ctx.textBaseline = 'middle';
     ctx.fillText(typedText || ' ', 16, canvas.height / 2, canvas.width - 32);
+    setTypedUrl(canvas.toDataURL('image/png'));
   }, [typedText, mode, file, pageCount]);
 
   useEffect(() => {
@@ -387,9 +393,9 @@ export default function SignPDFClient() {
   };
 
   const signaturePreviewUrl = mode === 'draw'
-    ? (hasDrawing ? canvasRef.current?.toDataURL('image/png') : null)
+    ? (hasDrawing ? drawnUrl : null)
     : mode === 'type'
-      ? typeCanvasRef.current?.toDataURL('image/png')
+      ? typedUrl
       : uploadedDataUrl || null;
 
   const previewScale = PDF_PREVIEW_SCALE;

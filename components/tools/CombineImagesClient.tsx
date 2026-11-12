@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { ChevronLeft, ChevronRight, Download, GripVertical, ImagePlus, RotateCw, Trash2, Upload } from 'lucide-react';
 import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 import {
@@ -82,7 +82,7 @@ export default function CombineImagesClient() {
   const canClear = items.length > 0 || errors.length > 0 || Boolean(result) || loading || exampleLoading || exporting;
   const canPreview = items.length >= MIN_COMBINE_IMAGES && !actionError && !loading;
   const outputActionsRef = useRef({ beginOutputAttempt, isCurrentAttempt, setOutput, clearResult });
-  outputActionsRef.current = { beginOutputAttempt, isCurrentAttempt, setOutput, clearResult };
+  useLayoutEffect(() => { outputActionsRef.current = { beginOutputAttempt, isCurrentAttempt, setOutput, clearResult }; });
 
   const cancelExampleLoad = () => {
     exampleGenerationRef.current += 1;
