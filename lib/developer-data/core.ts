@@ -4,8 +4,11 @@ export function bounded(text: string) {
         throw new Error('Input exceeds 100,000 characters.');
     return text;
 }
+// JSON.parse output is validated structurally at runtime by each caller, so its static type stays open.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type ParsedJson = any;
 export interface JsonBudget { maxBytes: number; maxDepth: number; maxNodes: number }
-export function parseJson(text: string, budget?: JsonBudget): any {
+export function parseJson(text: string, budget?: JsonBudget): ParsedJson {
     if (budget) {
         if (text.length > budget.maxBytes || new TextEncoder().encode(text).byteLength > budget.maxBytes)
             throw new Error(`JSON exceeds ${budget.maxBytes.toLocaleString('en-US')} bytes.`);
@@ -23,7 +26,7 @@ export function parseJson(text: string, budget?: JsonBudget): any {
     visit(value, 0);
     return value;
 }
-export function pythonValue(v: any, depth = 0): string {
+export function pythonValue(v: unknown, depth = 0): string {
     if (v === null)
         return 'None';
     if (typeof v === 'boolean')
@@ -43,7 +46,7 @@ export function toTypescript(text: string, root = 'Root', item = 'Data', single 
             throw new Error('Type names must be non-reserved TypeScript identifiers.');
     const end = semi ? ';' : '';
     function key(k: string) { return /^[A-Za-z_$][\w$]*$/.test(k) ? k : single ? "'" + JSON.stringify(k).slice(1, -1).replace(/'/g, "\\'") + "'" : JSON.stringify(k); }
-    function type(v: any, depth = 0): string {
+    function type(v: unknown, depth = 0): string {
         if (v === null)
             return 'null';
         if (Array.isArray(v))

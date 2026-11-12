@@ -15,7 +15,7 @@ async function flattenPdfWithPassword(bytes: Uint8Array, password: string, signa
   pdfjs.GlobalWorkerOptions.workerSrc = `${process.env.NEXT_PUBLIC_BASE_PATH || ''}/pdf-worker/pdf.worker.min.mjs`;
   const loadingTask = pdfjs.getDocument({
     // PDF.js transfers its input buffer to the worker, so keep the source bytes reusable for retries.
-    data: bytes.slice() as any,
+    data: bytes.slice(),
     password: password || undefined,
   });
   const cancel = () => { void loadingTask.destroy(); };

@@ -6,7 +6,7 @@ import Script from 'next/script';
 export default function Analytics({ measurementId }: { measurementId?: string }) {
   useEffect(() => {
     const grant = () => {
-      const gtag = (window as Window & { gtag?: (...args: any[]) => void }).gtag;
+      const gtag = (window as Window & { gtag?: (...args: unknown[]) => void }).gtag;
       gtag?.('consent', 'update', { analytics_storage: 'granted' });
     };
 

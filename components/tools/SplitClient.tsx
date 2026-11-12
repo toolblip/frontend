@@ -31,10 +31,10 @@ export default function SplitClient() {
         const arrayBuffer = await selected.arrayBuffer();
         const doc = await PDFDocument.load(arrayBuffer);
         setPdfDoc(doc);
-      } catch (err: any) {
+      } catch (err) {
         setResult({
           success: false,
-          message: `Error loading PDF: ${err.message}`,
+          message: `Error loading PDF: ${err instanceof Error ? err.message : String(err)}`,
         });
       }
     }
@@ -58,10 +58,10 @@ export default function SplitClient() {
         const arrayBuffer = await dropped.arrayBuffer();
         const doc = await PDFDocument.load(arrayBuffer);
         setPdfDoc(doc);
-      } catch (err: any) {
+      } catch (err) {
         setResult({
           success: false,
-          message: `Error loading PDF: ${err.message}`,
+          message: `Error loading PDF: ${err instanceof Error ? err.message : String(err)}`,
         });
       }
     }
@@ -117,7 +117,7 @@ export default function SplitClient() {
           copiedPages.forEach(page => newDoc.addPage(page));
           
           const pdfBytes = await newDoc.save();
-          const blob = new Blob([pdfBytes as any], { type: 'application/pdf' });
+          const blob = new Blob([pdfBytes as BlobPart], { type: 'application/pdf' });
           outputFiles.push({
             name: `${file.name.replace('.pdf', '')}_part${i + 1}.pdf`,
             blob,
@@ -138,7 +138,7 @@ export default function SplitClient() {
           copiedPages.forEach(page => newDoc.addPage(page));
           
           const pdfBytes = await newDoc.save();
-          const blob = new Blob([pdfBytes as any], { type: 'application/pdf' });
+          const blob = new Blob([pdfBytes as BlobPart], { type: 'application/pdf' });
           outputFiles.push({
             name: `${file.name.replace('.pdf', '')}_part${Math.floor(i / chunkSize) + 1}.pdf`,
             blob,
@@ -151,10 +151,10 @@ export default function SplitClient() {
         message: `Split into ${outputFiles.length} file(s)`,
         files: outputFiles,
       });
-    } catch (err: any) {
+    } catch (err) {
       setResult({
         success: false,
-        message: `Error: ${err.message}`,
+        message: `Error: ${err instanceof Error ? err.message : String(err)}`,
       });
     } finally {
       setProcessing(false);

@@ -7,7 +7,7 @@ type Step = {
     filter?: {
         key: string;
         op: string;
-        value: any;
+        value: string | number | boolean | null;
     };
 };
 // Deliberately bounded grammar: no JavaScript evaluation or silently ignored tokens.
@@ -49,12 +49,12 @@ export function jsonPath(text: string, path: string): unknown[] {
         else
             throw new Error('Expected a property or wildcard at ' + i);
     }
-    let current: any[] = [data];
+    let current: unknown[] = [data];
     let work = 0;
-    const own = (v: any, k: string) => v !== null && typeof v === 'object' && Object.hasOwn(v, k);
+    const own = (v: unknown, k: string): v is Record<string, unknown> => v !== null && typeof v === 'object' && Object.hasOwn(v, k);
     for (const step of steps) {
-        const next: any[] = [];
-        function apply(v: any) {
+        const next: unknown[] = [];
+        function apply(v: unknown) {
             if (++work > 50000)
                 throw new Error('JSONPath exceeds the 50,000-visit limit.');
             if (step.key !== undefined && own(v, step.key))
@@ -68,18 +68,18 @@ export function jsonPath(text: string, path: string): unknown[] {
                 next.push(...Object.values(v));
             else if (step.filter && v !== null && typeof v === 'object') {
                 const { key, op, value } = step.filter;
-                for (const x of Object.values(v) as any[])
+                for (const x of Object.values(v))
                     if (own(x, key)) {
                         const a = x[key];
                         const ordered = typeof a === typeof value && (typeof a === 'number' || typeof a === 'string');
-                        if (op === '==' ? a === value : op === '!=' ? a !== value : ordered && (op === '>' ? a > value : op === '<' ? a < value : op === '>=' ? a >= value : a <= value))
+                        if (op === '==' ? a === value : op === '!=' ? a !== value : ordered && (op === '>' ? (a as number) > (value as number) : op === '<' ? (a as number) < (value as number) : op === '>=' ? (a as number) >= (value as number) : (a as number) <= (value as number)))
                             next.push(x);
                     }
             }
             if (next.length > 10000)
                 throw new Error('Too many JSONPath matches.');
         }
-        function walk(v: any) { apply(v); if (v !== null && typeof v === 'object')
+        function walk(v: unknown) { apply(v); if (v !== null && typeof v === 'object')
             Object.values(v).forEach(walk); }
         current.forEach(step.recursive ? walk : apply);
         current = next;
