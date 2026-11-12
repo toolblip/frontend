@@ -1,15 +1,18 @@
 'use client';
 import UtilityDesignLayout from './UtilityDesignLayout';
 import { useEffect, useRef, useState } from 'react';
+type SpeechEvent={results:ArrayLike<ArrayLike<{transcript:string}>>;error?:string};
+type Recognizer={continuous:boolean;interimResults:boolean;lang:string;onresult:((e:SpeechEvent)=>void)|null;onstart:(()=>void)|null;onerror:((e:SpeechEvent)=>void)|null;onend:(()=>void)|null;start():void;stop():void;abort():void};
+const speechConstructor=()=>{const w=window as unknown as {SpeechRecognition?:new()=>Recognizer;webkitSpeechRecognition?:new()=>Recognizer};return w.SpeechRecognition||w.webkitSpeechRecognition;};
 export default function AudioToTextClient() {
   const [transcript,setTranscript]=useState(''), [copied,setCopied]=useState(false);
   const [supported,setSupported]=useState(false), [listening,setListening]=useState(false), [error,setError]=useState('');
-  const recognition=useRef<any>(null), active=useRef(false);
+  const recognition=useRef<Recognizer|null>(null), active=useRef(false);
   const permissionRequest=useRef(0);
   const copyReset=useRef<ReturnType<typeof setTimeout>|null>(null);
   const [permission,setPermission]=useState<'idle'|'requesting'|'granted'|'denied'>('idle');
   useEffect(()=>{
-    const Constructor=(window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    const Constructor=speechConstructor();
     setSupported(Boolean(Constructor));
     return ()=>{ permissionRequest.current++; active.current=false; recognition.current?.abort(); if(copyReset.current)clearTimeout(copyReset.current); };
   },[]);
@@ -30,7 +33,7 @@ export default function AudioToTextClient() {
     const request=permissionRequest.current;
     setTranscript('');setCopied(false);setError('');setPermission('requesting');
     try {
-      const Constructor=(window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      const Constructor=speechConstructor();
       if(!Constructor) throw new Error('Speech recognition is not supported in this browser.');
       if(!navigator.mediaDevices?.getUserMedia) throw new Error('Microphone access is unavailable. Use a secure browser connection and check your device settings.');
       const stream=await navigator.mediaDevices.getUserMedia({audio:true});
@@ -41,7 +44,7 @@ export default function AudioToTextClient() {
       setPermission('granted');
       const r=new Constructor(); recognition.current=r; active.current=true;
       r.continuous=true; r.interimResults=true; r.lang='en-US';
-      r.onresult=(event:any)=>{
+      r.onresult=(event:SpeechEvent)=>{
         if(!active.current || recognition.current!==r) return;
         // results is the whole session, not just the newest event.
         const parts=[];
@@ -49,7 +52,7 @@ export default function AudioToTextClient() {
         setTranscript(parts.join(' ').slice(0,100000));setCopied(false);
       };
       r.onstart=()=>{ if(active.current && recognition.current===r) setListening(true); };
-      r.onerror=(event:any)=>{ if(recognition.current===r && active.current) {
+      r.onerror=(event:SpeechEvent)=>{ if(recognition.current===r && active.current) {
         if(event.error==='not-allowed'||event.error==='service-not-allowed'){setPermission('denied');setError('Allow microphone access in your browser site settings, then try again.');}
         else setError(`Speech recognition failed: ${event.error || 'unknown error'}. Check your browser speech service and try again.`);
         active.current=false; setListening(false);

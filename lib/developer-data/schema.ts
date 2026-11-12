@@ -1,8 +1,8 @@
-import { parseJson } from './core';
+import { parseJson, type ParsedJson } from './core';
 const types = ['null', 'boolean', 'object', 'array', 'number', 'integer', 'string'];
 const supported = new Set('$schema title description default examples $comment type enum const minimum maximum exclusiveMinimum exclusiveMaximum multipleOf pattern format minLength maxLength minItems maxItems uniqueItems items minProperties maxProperties required properties additionalProperties allOf anyOf oneOf not'.split(' '));
-const object = (v: any) => v !== null && typeof v === 'object' && !Array.isArray(v);
-export function equal(a: any, b: any): boolean { if (a === b)
+const object = (v: unknown): v is Record<string, unknown> => v !== null && typeof v === 'object' && !Array.isArray(v);
+export function equal(a: unknown, b: unknown): boolean { if (a === b)
     return true; if (typeof a !== typeof b || a === null || b === null)
     return false; if (Array.isArray(a))
     return Array.isArray(b) && a.length === b.length && a.every((x, i) => equal(x, b[i])); if (object(a) && object(b)) {
@@ -27,7 +27,7 @@ export function validateSchema(json: string, schemaText: string): string[] {
     const value = parseJson(json), schema = parseJson(schemaText);
     let schemaCount = 0;
     const patterns = new Map<string, RegExp>();
-    function inspect(s: any): void {
+    function inspect(s: ParsedJson): void {
         if (++schemaCount > 500)
             throw new Error('Schema exceeds 500 subschemas.');
         if (typeof s === 'boolean')
@@ -41,7 +41,7 @@ export function validateSchema(json: string, schemaText: string): string[] {
             throw new Error('Only the draft-07 subset is supported.');
         if (s.type !== undefined) {
             const t = Array.isArray(s.type) ? s.type : [s.type];
-            if (!t.length || t.some((x: any) => !types.includes(x)))
+            if (!t.length || t.some((x: string) => !types.includes(x)))
                 throw new Error('Invalid schema type.');
         }
         if (s.pattern !== undefined) {
@@ -58,11 +58,11 @@ export function validateSchema(json: string, schemaText: string): string[] {
             if (s[k] !== undefined && (typeof s[k] !== 'number' || (k === 'multipleOf' && s[k] <= 0)))
                 throw new Error('Invalid ' + k);
         for (const k of ['minLength', 'maxLength', 'minItems', 'maxItems', 'minProperties', 'maxProperties'])
-            if (s[k] !== undefined && (!Number.isInteger(s[k]) || s[k] < 0))
+            if (s[k] !== undefined && (!Number.isInteger(s[k]) || (s[k] as number) < 0))
                 throw new Error('Invalid ' + k);
         if (s.uniqueItems !== undefined && typeof s.uniqueItems !== 'boolean')
             throw new Error('uniqueItems must be boolean.');
-        if (s.required !== undefined && (!Array.isArray(s.required) || s.required.some((x: any) => typeof x !== 'string')))
+        if (s.required !== undefined && (!Array.isArray(s.required) || s.required.some((x: unknown) => typeof x !== 'string')))
             throw new Error('required must be an array of strings.');
         if (s.properties !== undefined) {
             if (!object(s.properties))
@@ -81,7 +81,7 @@ export function validateSchema(json: string, schemaText: string): string[] {
     }
     inspect(schema);
     let work = 0;
-    function validate(v: any, s: any, p: string): string[] {
+    function validate(v: ParsedJson, s: ParsedJson, p: string): string[] {
         if (++work > 20000)
             throw new Error('Schema validation exceeds the 20,000-check limit.');
         if (s === true)
@@ -96,7 +96,7 @@ export function validateSchema(json: string, schemaText: string): string[] {
             if (!ts.some((t: string) => t === actual || (t === 'integer' && Number.isInteger(v))))
                 err('Expected ' + ts.join(' or '));
         }
-        if (s.enum && !s.enum.some((x: any) => equal(v, x)))
+        if (s.enum && !s.enum.some((x: unknown) => equal(v, x)))
             err('Value is not in enum');
         if (Object.hasOwn(s, 'const') && !equal(v, s.const))
             err('Value differs from const');
@@ -147,7 +147,7 @@ export function validateSchema(json: string, schemaText: string): string[] {
         }
         for (const k of ['allOf', 'anyOf', 'oneOf'])
             if (s[k]) {
-                const successes = s[k].filter((sub: any) => validate(v, sub, p).length === 0).length;
+                const successes = s[k].filter((sub: ParsedJson) => validate(v, sub, p).length === 0).length;
                 if (k === 'allOf' ? successes !== s[k].length : k === 'oneOf' ? successes !== 1 : successes === 0)
                     err('Failed ' + k);
             }

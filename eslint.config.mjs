@@ -6,7 +6,6 @@ import nextTs from 'eslint-config-next/typescript';
 // `next lint`). They warn instead of fail; promote one back to 'error' once
 // its warnings are cleaned up.
 const baselineWarnings = Object.fromEntries([
-  '@typescript-eslint/no-explicit-any',
   'react-hooks/set-state-in-effect',
 ].map(rule => [rule, 'warn']));
 
@@ -16,5 +15,7 @@ export default defineConfig([
   { rules: baselineWarnings },
   // package.json has no "type": "module", so these scripts are CommonJS and use require().
   { files: ['scripts/**/*.js'], rules: { '@typescript-eslint/no-require-imports': 'off' } },
+  // Tests and e2e specs hand-roll React hook doubles and poke at `window`; typing those adds noise, not safety.
+  { files: ['**/*.test.{ts,tsx}', 'e2e/**'], rules: { '@typescript-eslint/no-explicit-any': 'off' } },
   globalIgnores(['.next/**', 'out/**', 'build/**', 'next-env.d.ts', 'lib/generated/**', 'public/**', 'playwright-report/**', 'test-results/**']),
 ]);
