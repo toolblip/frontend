@@ -1,13 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { useTheme } from '@/components/ThemeProvider';
+import { useMounted } from '@/hooks/useMounted';
 
 export default function ThemeToggle() {
   const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
+  const mounted = useMounted();
 
-  useEffect(() => { setMounted(true); }, []);
 
   if (!mounted) {
     return (

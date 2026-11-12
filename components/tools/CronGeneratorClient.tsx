@@ -4,6 +4,7 @@ import DeveloperGeneralFrame from './DeveloperGeneralFrame';
 import ToolExampleClearActions from './ToolExampleClearActions';
 import { parseCron, computeNextRuns } from '@/lib/developer-general/cron';
 import { useState, useMemo, useEffect } from 'react';
+import { useMounted } from '@/hooks/useMounted';
 
 const PRESETS = [
   { label: 'Every minute', value: '* * * * *' },
@@ -62,11 +63,8 @@ export default function CronGeneratorClient() {
   const [dom, setDom] = useState('*');
   const [mon, setMon] = useState('*');
   const [dow, setDow] = useState('1-5');
-  const [mounted, setMounted] = useState(false);
+  const mounted = useMounted();
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const expr = `${min} ${hour} ${dom} ${mon} ${dow}`;
   const [nextRuns, setNextRuns] = useState<Date[]>([]);

@@ -4,6 +4,7 @@ import { SeoOwnedBoundary } from './SeoNetworkShared';
 
 import { useState, useEffect } from 'react';
 import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
+import { useMounted } from '@/hooks/useMounted';
 
 interface HeaderConfig {
   enabled: boolean;
@@ -98,11 +99,8 @@ function SecurityHeadersGeneratorForm() {
   const [customHeaders, setCustomHeaders] = useState<{ name: string; value: string }[]>([]);
   const [newHeaderName, setNewHeaderName] = useState('');
   const [newHeaderValue, setNewHeaderValue] = useState('');
-  const [isMounted, setIsMounted] = useState(false);
+  const isMounted = useMounted();
 
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
 
   const applyPreset = (presetName: string) => {
     setPreset(presetName);

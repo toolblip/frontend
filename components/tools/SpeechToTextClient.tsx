@@ -1,16 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useMounted } from '@/hooks/useMounted';
 
 export default function SpeechToTextClient() {
   const [input, setInput] = useState('');
   const [output, setOutput] = useState('');
   const [error, setError] = useState('');
-  const [isMounted, setIsMounted] = useState(false);
+  const isMounted = useMounted();
 
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
 
   const process = () => {
     setError('');
