@@ -2,11 +2,10 @@
 import DeveloperSecurityFrame from './DeveloperSecurityFrame';
 import { decodeHtml } from '@/lib/developer-security/primitives';
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 export default function HtmlAttributeEncoder() {
   const [input, setInput] = useState("");
-  const [output, setOutput] = useState("");
   const [mode, setMode] = useState<"encode" | "decode">("encode");
 
   const htmlAttributeEncode = (str: string) => {
@@ -20,14 +19,10 @@ export default function HtmlAttributeEncoder() {
 
   const htmlAttributeDecode = decodeHtml;
 
-  const handleConvert = () => {
-    setOutput(mode === "encode" ? htmlAttributeEncode(input) : htmlAttributeDecode(input));
-  };
-
-  useEffect(() => { handleConvert(); }, [input, mode]);
+  const output = mode === "encode" ? htmlAttributeEncode(input) : htmlAttributeDecode(input);
 
   return (
-    <DeveloperSecurityFrame onExample={()=>{setMode('encode');setInput('a="é & tea"');}} onClear={()=>{setInput('');setOutput('');}}>
+    <DeveloperSecurityFrame onExample={()=>{setMode('encode');setInput('a="é & tea"');}} onClear={()=>{setInput('');}}>
     <div className="tb-v2-section">
       <h2 className="tb-v2-heading-sm">HTML Attribute Encoder</h2>
       <p className="tb-v2-text">Encode text for quoted HTML attribute values. Decoding does not sanitize HTML or URLs.</p>
@@ -60,7 +55,7 @@ export default function HtmlAttributeEncoder() {
         />
       </div>
 
-      <button className="tb-v2-button" onClick={handleConvert}>
+      <button className="tb-v2-button">
         {mode === "encode" ? "Encode" : "Decode"}
       </button>
 

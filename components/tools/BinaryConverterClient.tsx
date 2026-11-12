@@ -3,54 +3,36 @@ import { copySecurityText, MAX_TEXT, MAX_BINARY_INPUT } from '@/lib/developer-se
 import DeveloperSecurityFrame, { useSecurityTask } from './DeveloperSecurityFrame';
 import { textToBinary, binaryToText } from '@/lib/developer-security/primitives';
 
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 
 export default function BinaryConverterClient() {
   const [clipboardError,setClipboardError]=useState('');
   const clipboardTask=useSecurityTask();
   const [mode, setMode] = useState<'textToBinary' | 'binaryToText'>('textToBinary');
   const [input, setInput] = useState('');
-  const [result, setResult] = useState('');
-  const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
-  const handleConvert = () => {
-    setError(null);
-    setResult('');
-
-    if (!input) return;
-
+  const { result, error } = useMemo<{ result: string; error: string | null }>(() => {
+    if (!input) return { result: '', error: null };
     try {
-      if (mode === 'textToBinary') {
-        setResult(textToBinary(input));
-      } else {
-        setResult(binaryToText(input));
-      }
+      return { result: mode === 'textToBinary' ? textToBinary(input) : binaryToText(input), error: null };
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Conversion failed');
+      return { result: '', error: err instanceof Error ? err.message : 'Conversion failed' };
     }
-  };
-
-  useEffect(() => { handleConvert(); }, [input, mode]);
+  }, [input, mode]);
 
   const handleSwap = () => {
     setMode(mode === 'textToBinary' ? 'binaryToText' : 'textToBinary');
     setInput(result);
-    setResult('');
-    setError(null);
   };
 
   const handleClear = () => {
     setInput('');
-    setResult('');
-    setError(null);
   };
 
   const loadExample = () => {
     setMode('textToBinary');
     setInput('Hello World');
-    setResult('');
-    setError(null);
   };
 
   const copyResult = () => {
@@ -61,7 +43,7 @@ export default function BinaryConverterClient() {
   };
 
   return (
-    <DeveloperSecurityFrame onExample={()=>{clipboardTask.bump();setMode('textToBinary');setInput('é');setError(null);}} onClear={()=>{clipboardTask.bump();setClipboardError('');handleClear();setCopied(false);}}>
+    <DeveloperSecurityFrame onExample={()=>{clipboardTask.bump();setMode('textToBinary');setInput('é');}} onClear={()=>{clipboardTask.bump();setClipboardError('');handleClear();setCopied(false);}}>
     {clipboardError&&<p role="alert" className="tb-v2-error">{clipboardError}</p>}
     <div className="flex flex-col gap-4">
       <div>
@@ -72,14 +54,14 @@ export default function BinaryConverterClient() {
         <div className="grid grid-cols-2 gap-2" style={{ marginTop: 8 }}>
           <button
             type="button"
-            onClick={() => { setMode('textToBinary'); setResult(''); setError(null); }}
+            onClick={() => { setMode('textToBinary'); }}
             className={`tb-v2-btn ${mode === 'textToBinary' ? 'tb-v2-btn-primary' : ''}`}
           >
             Text to Binary
           </button>
           <button
             type="button"
-            onClick={() => { setMode('binaryToText'); setResult(''); setError(null); }}
+            onClick={() => { setMode('binaryToText'); }}
             className={`tb-v2-btn ${mode === 'binaryToText' ? 'tb-v2-btn-primary' : ''}`}
           >
             Binary to Text
@@ -96,7 +78,7 @@ export default function BinaryConverterClient() {
         </div>
         <textarea aria-label="Input" maxLength={mode === 'textToBinary' ? MAX_TEXT : MAX_BINARY_INPUT}
           value={input}
-          onChange={(e) => { setInput(e.target.value); setResult(''); setError(null); }}
+          onChange={(e) => { setInput(e.target.value); }}
           placeholder={mode === 'textToBinary' ? 'Enter text to convert...' : 'Enter binary (e.g., 01001000 01100101 01101100 01101100 01101111)...'}
           className="tb-v2-tool-textarea"
           rows={4}
@@ -107,7 +89,7 @@ export default function BinaryConverterClient() {
       </div>
 
       <div className="flex gap-2">
-        <button type="button" onClick={handleConvert} disabled={!input.trim()} className="tb-v2-btn tb-v2-btn-primary" style={{ flex: 1 }}>
+        <button type="button" disabled={!input.trim()} className="tb-v2-btn tb-v2-btn-primary" style={{ flex: 1 }}>
           Convert
         </button>
         <button type="button" onClick={handleSwap} className="tb-v2-btn">
