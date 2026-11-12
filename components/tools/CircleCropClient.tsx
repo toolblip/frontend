@@ -132,6 +132,7 @@ export function drawEditor(canvas: HTMLCanvasElement, img: HTMLImageElement, sel
 
 export default function CircleCropClient() {
   const [image, setImage] = useState<string | null>(null);
+  const [maxCropSize, setMaxCropSize] = useState(0);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [bgType, setBgType] = useState<OutputBg>('transparent');
   const [outputSize, setOutputSize] = useState(512);
@@ -153,7 +154,7 @@ export default function CircleCropClient() {
   const { tier } = useSubscription();
   const maxSizeMB = tier === 'free' ? 5 : tier === 'starter' ? 10 : tier === 'ultra' ? 100 : tier === 'max' ? 500 : 5;
   const isOversized = selectedFile != null && selectedFile.size / (1024 * 1024) > maxSizeMB;
-  const cropMaxSize = imgRef.current ? Math.min(imgRef.current.width, imgRef.current.height) : 1;
+  const cropMaxSize = Math.max(1, maxCropSize);
   const cropMinSize = Math.min(32, cropMaxSize);
 
   useEffect(() => {
@@ -166,6 +167,7 @@ export default function CircleCropClient() {
 
   const applyLoadedImage = (img: HTMLImageElement, src: string) => {
     imgRef.current = img;
+    setMaxCropSize(Math.min(img.width, img.height));
     setCropSelection(centerCropSelection(img.width, img.height, Math.min(img.width, img.height)));
     setZoom(1);
     setPreviewCanvas(null);
@@ -263,6 +265,7 @@ export default function CircleCropClient() {
     setPreviewCanvas(null);
     setSampleError(false);
     imgRef.current = null;
+    setMaxCropSize(0);
     dragRef.current = null;
     if (editorCanvasRef.current) editorCanvasRef.current.width = 0;
     if (outputCanvasRef.current) outputCanvasRef.current.width = 0;

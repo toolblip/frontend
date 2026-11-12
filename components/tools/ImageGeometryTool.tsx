@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Upload } from 'lucide-react';
 import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 import {
@@ -495,7 +495,7 @@ export default function ImageGeometryTool({ kind, live = false }: { kind: Geomet
     img.src = source.url;
   };
 
-  processImageRef.current = processImage;
+  useLayoutEffect(() => { processImageRef.current = processImage; });
 
   useEffect(() => {
     if (!liveBorder || !source || loading) return;

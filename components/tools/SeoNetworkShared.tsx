@@ -18,7 +18,8 @@ export function SeoSelect({ label, value, onChange, options }: { label: string; 
 }
 export function SeoOutput({ text, filename = 'result.txt', error = '' }: { text: string; filename?: string; error?: string }) {
   const [message, setMessage] = useState('');
-  const current = useRef(text); current.current = text;
+  const current = useRef(text);
+  useEffect(() => { current.current = text; }, [text]);
   useEffect(() => setMessage(''), [text]);
   return <>{error && <p role="alert" className="tb-v2-banner tb-v2-banner-err">{error}</p>}{text && <>
     <div className="tb-v2-tool-output-head"><span className="tb-v2-tool-label">Result</span><div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}><button className="tb-v2-copy-btn" onClick={async () => { try { await navigator.clipboard.writeText(text); if (current.current === text) setMessage('Copied'); } catch { if (current.current === text) setMessage('Clipboard unavailable. Select the result to copy.'); } }}>Copy</button><button className="tb-v2-btn-sm" onClick={() => downloadText(text, filename)}>Download</button></div></div>

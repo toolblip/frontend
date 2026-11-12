@@ -10,6 +10,10 @@ vi.mock('react', async importOriginal => ({
     const index = state.cursor++;
     return state.refs[index] ??= { current: value };
   },
+  useState: (value: unknown) => {
+    const index = state.cursor++;
+    return [(state.refs[index] ??= { current: value }).current, vi.fn()];
+  },
   useEffect: (effect: () => void) => state.effects.push(effect),
 }));
 import BrowserPolicyBoundary from './BrowserPolicyBoundary';
