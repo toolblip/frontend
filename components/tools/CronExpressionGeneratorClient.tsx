@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
+import { useMounted } from '@/hooks/useMounted';
 
 const PRESETS = [
   { label: 'Every minute', value: '* * * * *' },
@@ -154,9 +155,8 @@ export default function CronExpressionGeneratorClient() {
   const [dom, setDom] = useState('*');
   const [mon, setMon] = useState('*');
   const [dow, setDow] = useState('1-5');
-  const [mounted, setMounted] = useState(false);
+  const mounted = useMounted();
 
-  useEffect(() => setMounted(true), []);
 
   const expr = `${min} ${hour} ${dom} ${mon} ${dow}`;
   const nextRuns = useMemo(() => mounted ? getNextRuns(expr, 5) : [], [expr, mounted]);

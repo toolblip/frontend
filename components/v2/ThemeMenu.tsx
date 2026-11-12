@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTheme } from '@/components/ThemeProvider';
 import { IconSun, IconMoon, IconLaptop, IconCheck } from './icons';
+import { useMounted } from '@/hooks/useMounted';
 
 type Theme = 'light' | 'dark' | 'system';
 
@@ -15,11 +16,10 @@ const OPTIONS: Array<[Theme, string, typeof IconSun]> = [
 export default function ThemeMenu() {
   const { theme, setTheme } = useTheme();
   const [open, setOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useMounted();
   const btnRef = useRef<HTMLButtonElement | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => { setMounted(true); }, []);
 
   useEffect(() => {
     if (!open) return;

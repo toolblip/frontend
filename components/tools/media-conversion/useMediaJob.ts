@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import { createResultUrl, type ResultUrl } from '@/lib/media-conversion/result-url';
+import { useMounted } from '@/hooks/useMounted';
 
 export type MediaResult = { blob: Blob; name: string; detail?: string; preview?: 'image' | 'audio' | 'video' };
 export type MediaJobResult = MediaResult & Pick<ResultUrl, 'url' | 'attachPreview'>;
@@ -8,8 +9,7 @@ export function useMediaJob() {
   const [result, setResult] = useState<MediaJobResult | null>(null);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
-  const [ready, setReady] = useState(false);
-  useEffect(() => { setReady(true); }, []);
+  const ready = useMounted();
   const generation = useRef(0);
   const resultUrl = useRef<ResultUrl | null>(null);
   const controller = useRef<AbortController | null>(null);
