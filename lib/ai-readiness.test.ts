@@ -242,6 +242,9 @@ describe('tool meta descriptions', () => {
       { slug: 'sql-prettifier', titlePart: 'SQL Formatter' },
       { slug: 'contrast-checker', titlePart: 'Contrast Checker' },
       { slug: 'http-status-checker', titlePart: 'HTTP Status Code Checker' },
+      { slug: 'punctuation-fixer', titlePart: 'Punctuation Fixer' },
+      { slug: 'json-to-markdown-table', titlePart: 'JSON to Markdown Table Converter' },
+      { slug: 'xml-sitemap-generator', titlePart: 'XML Sitemap Generator' },
     ];
     for (const { slug, titlePart } of cases) {
       const metadata = buildToolMetadata(getToolBySlug(slug)!);

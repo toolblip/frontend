@@ -829,13 +829,13 @@ const TOOL_SLUG_ALIASES: Record<string, string> = {
 
 export const tools: Tool[] = [
   { name: 'Lorem Ipsum Generator', slug: 'lorem-ipsum-generator', description: 'Free lorem ipsum generator for placeholder text - customize paragraphs, sentences, and word count, then copy instantly for design mockups.', emoji: '📜', category: 'Text' },
-  { name: 'Punctuation Fixer', slug: 'punctuation-fixer', description: 'Fix missing or incorrect punctuation marks and apply consistent spacing in text.', emoji: '✏️', category: 'Text' },
+  { name: 'Punctuation Fixer', slug: 'punctuation-fixer', description: 'Free punctuation fixer: remove stray spaces before periods, commas and question marks, collapse double spaces, and switch smart or straight quotes.', emoji: '✏️', category: 'Text' },
   { name: 'Text Statistics', slug: 'text-statistics', description: 'Analyze text for syllable count, sentence length, and average word length.', emoji: '📊', category: 'Text' },
   { name: 'JSON to Markdown Table', slug: 'json-to-markdown-table', description: "Turn a JSON object or array of objects into an escaped Markdown table with columns from every row.", emoji: '📋', category: 'Developer' },
   { name: 'CSS Class Generator', slug: 'css-class-generator', description: 'Generate utility CSS classes for spacing, typography, colors, and flexbox layouts.', emoji: '🎨', category: 'Developer' },
   { name: 'robots.txt Generator', slug: 'robots-txt-generator', description: 'Free online robots.txt generator. Create and configure robots.txt files to control search engine crawler access to your site.', emoji: '🤖', category: 'SEO' },
   { name: 'Security Headers Generator', slug: 'security-headers-generator', description: 'Generate security HTTP headers including CSP, HSTS, X-Frame-Options, and more.', emoji: '🔒', category: 'SEO' },
-  { name: 'XML Sitemap Generator', slug: 'xml-sitemap-generator', description: 'Generate XML sitemaps for SEO to help search engines index your pages faster.', emoji: '🗺️', category: 'SEO' },
+  { name: 'XML Sitemap Generator', slug: 'xml-sitemap-generator', description: 'Free XML sitemap generator: add page URLs with lastmod, changefreq and priority, then copy or download a valid sitemap.xml to submit to Google.', emoji: '🗺️', category: 'SEO' },
   { name: 'Color Palette Generator', slug: 'color-palette-generator', description: 'Generate complete color palettes from a single base color with hex and RGB codes.', emoji: '🎨', category: 'Color' },
   { name: 'Image Aspect Ratio Calculator', slug: 'image-aspect-ratio-calculator', description: "Reduce image width and height to an aspect ratio, compare common presets or read dimensions from a local image.", emoji: '📐', category: 'Image' },
   { name: 'URL Parameter Extractor', slug: 'url-parameter-extractor', description: 'Extract and decode all query parameters from a URL into a clean key-value list.', emoji: '🔗', category: 'Developer' },
