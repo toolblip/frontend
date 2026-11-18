@@ -77,6 +77,10 @@ const SEO_TITLE_OVERRIDES: Record<string, string> = {
   'sql-prettifier': 'SQL Formatter - Free Indent & Uppercase Keywords',
   'contrast-checker': 'Contrast Checker - Free WCAG AA & AAA Test',
   'http-status-checker': 'HTTP Status Code Checker - Free From Your Browser',
+  // Keyword batch 1 (Google autocomplete + Ahrefs free Keyword Generator, 2026-11-18).
+  'punctuation-fixer': 'Punctuation Fixer - Free Spacing & Quote Cleanup',
+  'json-to-markdown-table': 'JSON to Markdown Table Converter - Free Online',
+  'xml-sitemap-generator': 'XML Sitemap Generator - Free sitemap.xml Maker',
 };
 
 function documentTitle(tool: Tool): string {
