@@ -265,6 +265,19 @@ test.describe('PWA page metadata', () => {
     expect(earlyListeners).toBe(1);
   });
 
+  test('head lists iOS launch images and the one for an iPhone 15 loads', async ({ page, request }) => {
+    await page.goto('/privacy');
+    const links = page.locator('link[rel="apple-touch-startup-image"]');
+    expect(await links.count()).toBeGreaterThanOrEqual(40);
+    const iphone15 = page.locator(
+      'link[rel="apple-touch-startup-image"][media*="device-width: 393px"][media*="orientation: portrait"]',
+    );
+    await expect(iphone15).toHaveAttribute('href', '/splash/1179x2556.png');
+    const image = await request.get('/splash/1179x2556.png');
+    expect(image.ok()).toBe(true);
+    expect(image.headers()['content-type']).toContain('image/png');
+  });
+
   test('manifest is served and every icon it lists loads', async ({ request }) => {
     const response = await request.get('/manifest.webmanifest');
     expect(response.ok()).toBe(true);

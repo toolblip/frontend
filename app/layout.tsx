@@ -14,6 +14,7 @@ import Footer from "@/components/v2/Footer";
 import { AuthProvider } from "./providers/auth-provider";
 import PwaProvider from "./providers/pwa-provider";
 import { buildSiteJsonLd, jsonLdScript } from "@/lib/tool-jsonld";
+import { PWA_SPLASH_SCREENS } from "@/lib/pwa-splash-screens.mjs";
 import "./globals.css";
 import "./fonts/fallbacks.css";
 
@@ -100,6 +101,8 @@ export const metadata: Metadata = {
     // "black-translucent" draws the page under the iPhone status bar, over the nav.
     statusBarStyle: "black",
     title: "Toolblip",
+    // Without these the installed iOS app opens on a blank screen.
+    startupImage: PWA_SPLASH_SCREENS.map(({ url, media }) => ({ url, media })),
   },
   formatDetection: {
     telephone: false,
