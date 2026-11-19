@@ -143,3 +143,139 @@ test.describe('PWA install corner prompt', () => {
     await expect(page.getByRole('button', { name: 'Install app' })).toHaveCount(0);
   });
 });
+
+/** Chrome fires `beforeinstallprompt` once, often before React hydrates.
+ * Fire a fake one as early as a real browser can. */
+async function fireEarlyInstallEvent(page: Page, outcome: 'accepted' | 'dismissed' = 'dismissed') {
+  await page.addInitScript((choice) => {
+    (window as unknown as { __prompted: number }).__prompted = 0;
+    document.addEventListener('DOMContentLoaded', () => {
+      const event = new Event('beforeinstallprompt', { cancelable: true }) as Event & {
+        prompt: () => Promise<void>;
+        userChoice: Promise<{ outcome: string }>;
+      };
+      event.prompt = async () => {
+        (window as unknown as { __prompted: number }).__prompted += 1;
+      };
+      event.userChoice = Promise.resolve({ outcome: choice });
+      window.dispatchEvent(event);
+    });
+  }, outcome);
+}
+
+const promptCalls = (page: Page) =>
+  page.evaluate(() => (window as unknown as { __prompted: number }).__prompted);
+
+test.describe('PWA native install prompt', () => {
+  test('More menu offers Install app even though the install event fired before React', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await fireEarlyInstallEvent(page);
+    await page.goto('/privacy');
+
+    const more = page.getByRole('button', { name: 'More', exact: true });
+    // The server-rendered nav ignores clicks until React attaches its listener.
+    await expect(async () => {
+      if ((await more.getAttribute('aria-expanded')) !== 'true') await more.click();
+      await expect(more).toHaveAttribute('aria-expanded', 'true', { timeout: 1_000 });
+    }).toPass();
+
+    const row = page.locator('.tb-v2-mm-more-row-btn', { hasText: 'Install app' });
+    await expect(row).toBeVisible();
+    await row.click();
+    await expect.poll(() => promptCalls(page)).toBe(1);
+  });
+
+  test('corner card shows a working Install button; dismissing keeps the steps', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await fireEarlyInstallEvent(page, 'dismissed');
+    await page.goto('/privacy');
+
+    const chip = page.getByRole('button', { name: 'Install app' });
+    const card = page.getByRole('complementary', { name: 'Install Toolblip' });
+    await expect(async () => {
+      if ((await card.count()) === 0) await chip.click();
+      await expect(card).toBeVisible({ timeout: 1_000 });
+    }).toPass();
+
+    const install = card.getByRole('button', { name: 'Install', exact: true });
+    await expect(install).toBeVisible();
+    await install.click();
+    await expect.poll(() => promptCalls(page)).toBe(1);
+    // The event is spent: no dead button, but the written steps stay.
+    await expect(install).toHaveCount(0);
+    await expect(card.locator('.tb-pwa-step-num')).toHaveCount(3);
+    await expect(chip).toBeVisible();
+  });
+
+  test('accepting the native prompt removes the install entry', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await fireEarlyInstallEvent(page, 'accepted');
+    await page.goto('/privacy');
+
+    const chip = page.getByRole('button', { name: 'Install app' });
+    const card = page.getByRole('complementary', { name: 'Install Toolblip' });
+    await expect(async () => {
+      if ((await card.count()) === 0) await chip.click();
+      await expect(card).toBeVisible({ timeout: 1_000 });
+    }).toPass();
+    await card.getByRole('button', { name: 'Install', exact: true }).click();
+
+    await expect(card).toHaveCount(0);
+    await expect(chip).toHaveCount(0);
+  });
+
+  test.describe('Android phone', () => {
+    test.use({
+      viewport: { width: 412, height: 915 },
+      userAgent:
+        'Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Mobile Safari/537.36',
+    });
+
+    test('mobile menu offers Install app and opens the native prompt', async ({ page }) => {
+      await fireEarlyInstallEvent(page);
+      await page.goto('/privacy');
+
+      const menu = page.getByRole('button', { name: 'Menu', exact: true });
+      const install = page.locator('.tb-v2-nav-mobile-install');
+      const more = page.locator('.tb-v2-nav-mobile-section', { hasText: 'More' });
+      await expect(async () => {
+        if ((await menu.getAttribute('aria-expanded')) !== 'true') await menu.click();
+        if ((await more.getAttribute('aria-expanded')) !== 'true') await more.click();
+        await expect(install).toBeVisible({ timeout: 1_000 });
+      }).toPass();
+      await install.click();
+      await expect.poll(() => promptCalls(page)).toBe(1);
+    });
+  });
+});
+
+test.describe('PWA page metadata', () => {
+  test('head links the manifest, an opaque-status-bar iOS app and the early install listener', async ({ page }) => {
+    await page.goto('/privacy');
+    await expect(page.locator('link[rel="manifest"]')).toHaveAttribute('href', '/manifest.webmanifest');
+    await expect(page.locator('link[rel="apple-touch-icon"]')).toHaveAttribute('href', '/icons/apple-touch-icon.png');
+    // black-translucent draws the page under the iPhone status bar.
+    await expect(page.locator('meta[name="apple-mobile-web-app-status-bar-style"]')).toHaveAttribute('content', 'black');
+    const earlyListeners = await page.evaluate(
+      () =>
+        [...document.head.querySelectorAll('script')].filter((script) =>
+          script.textContent?.includes('beforeinstallprompt'),
+        ).length,
+    );
+    expect(earlyListeners).toBe(1);
+  });
+
+  test('manifest is served and every icon it lists loads', async ({ request }) => {
+    const response = await request.get('/manifest.webmanifest');
+    expect(response.ok()).toBe(true);
+    expect(response.headers()['content-type']).toContain('application/manifest+json');
+    const manifest = await response.json();
+    expect(manifest.display).toBe('standalone');
+    expect(manifest.icons.length).toBeGreaterThanOrEqual(3);
+    for (const icon of manifest.icons) {
+      const image = await request.get(icon.src);
+      expect(image.ok(), icon.src).toBe(true);
+      expect(image.headers()['content-type'], icon.src).toContain('image/png');
+    }
+  });
+});
