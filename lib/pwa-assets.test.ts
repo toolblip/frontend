@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import manifest from '../app/manifest';
+import { PWA_SPLASH_SCREENS } from './pwa-splash-screens.mjs';
 
 function png(src: string) {
   const file = readFileSync(resolve('public', src.replace(/^\//, '')));
@@ -57,5 +58,31 @@ describe('web app manifest', () => {
     expect(image.width).toBe(180);
     expect(image.height).toBe(180);
     expect(image.hasAlpha).toBe(false);
+  });
+});
+
+describe('iOS launch images', () => {
+  it('has a portrait and a landscape image for every device', () => {
+    expect(PWA_SPLASH_SCREENS.length).toBeGreaterThanOrEqual(40);
+    expect(PWA_SPLASH_SCREENS.filter((screen) => screen.media.includes('portrait')).length).toBe(
+      PWA_SPLASH_SCREENS.length / 2,
+    );
+  });
+
+  it('gives each image its own media query, or iOS would pick the wrong one', () => {
+    const queries = PWA_SPLASH_SCREENS.map((screen) => screen.media);
+    expect(new Set(queries).size).toBe(queries.length);
+  });
+
+  it('ships every file at exactly the pixel size its media query promises', () => {
+    for (const screen of PWA_SPLASH_SCREENS) {
+      const image = png(screen.url);
+      expect(image.isPng, screen.url).toBe(true);
+      expect(`${image.width}x${image.height}`, screen.url).toBe(`${screen.width}x${screen.height}`);
+      const [, w, h, ratio] = /device-width: (\d+)px\) and \(device-height: (\d+)px\) and \(-webkit-device-pixel-ratio: (\d)/.exec(screen.media)!;
+      const portrait = screen.media.includes('portrait');
+      expect(screen.width, screen.url).toBe(Number(portrait ? w : h) * Number(ratio));
+      expect(screen.height, screen.url).toBe(Number(portrait ? h : w) * Number(ratio));
+    }
   });
 });
