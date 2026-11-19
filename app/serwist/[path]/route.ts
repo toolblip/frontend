@@ -1,10 +1,24 @@
 import { spawnSync } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
+import { readFileSync } from 'node:fs';
 import { createSerwistRoute } from '@serwist/turbopack';
 import { NextResponse } from 'next/server';
 import { PWA_PRECACHE_TOOL_PATHS, PWA_SHELL_URLS } from '../../../lib/pwa-precache-entries.mjs';
 
+// The production image has no git, so the old git-or-random revision was a new
+// UUID per server process: every restart or replica shipped a "new" worker and
+// made installed apps download the precached pages again. BUILD_ID is the same
+// for every process of one build.
+function buildId(): string {
+  try {
+    return readFileSync('.next/BUILD_ID', 'utf-8').trim();
+  } catch {
+    return '';
+  }
+}
+
 const revision =
+  buildId() ||
   spawnSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf-8' }).stdout?.trim() ||
   randomUUID();
 
@@ -24,6 +38,15 @@ const serwistRoute = createSerwistRoute({
     'public/data/**',
     'public/logos/**',
     'public/pdf-worker/**',
+    // Not needed offline: browser extension source, marketing art, site verification files.
+    'public/extension/**',
+    'public/directory-badges/**',
+    'public/products/**',
+    'public/sponsor-logos/**',
+    'public/images/**',
+    'public/og-*.png',
+    'public/*.txt',
+    'public/_headers',
   ],
   swSrc: 'app/sw.ts',
   // Standalone server.js reports distDir as './.next', which serwist's

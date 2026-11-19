@@ -97,7 +97,8 @@ export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "https://toolblip.com"),
   appleWebApp: {
     capable: true,
-    statusBarStyle: "black-translucent",
+    // "black-translucent" draws the page under the iPhone status bar, over the nav.
+    statusBarStyle: "black",
     title: "Toolblip",
   },
   formatDetection: {
@@ -153,6 +154,13 @@ export default function RootLayout({
             content={process.env.NEXT_PUBLIC_BING_VERIFICATION_CODE}
           />
         ) : null}
+        {/* Plain script so it runs while the HTML parses: the browser fires this
+            event once, often before React is ready. hooks/usePwaInstall.ts reads it. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();window.__tbBip=e;});`,
+          }}
+        />
         <Script
           id="theme-init"
           dangerouslySetInnerHTML={{
