@@ -278,7 +278,7 @@ test.describe('PWA page metadata', () => {
     expect(image.headers()['content-type']).toContain('image/png');
   });
 
-  test('manifest is served and every icon it lists loads', async ({ request }) => {
+  test('manifest is served and every icon and screenshot it lists loads', async ({ request }) => {
     const response = await request.get('/manifest.webmanifest');
     expect(response.ok()).toBe(true);
     expect(response.headers()['content-type']).toContain('application/manifest+json');
@@ -289,6 +289,12 @@ test.describe('PWA page metadata', () => {
       const image = await request.get(icon.src);
       expect(image.ok(), icon.src).toBe(true);
       expect(image.headers()['content-type'], icon.src).toContain('image/png');
+    }
+    expect(manifest.screenshots.length).toBeGreaterThanOrEqual(2);
+    for (const shot of manifest.screenshots) {
+      const image = await request.get(shot.src);
+      expect(image.ok(), shot.src).toBe(true);
+      expect(image.headers()['content-type'], shot.src).toContain('image/png');
     }
   });
 });

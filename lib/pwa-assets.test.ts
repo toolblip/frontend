@@ -86,3 +86,40 @@ describe('iOS launch images', () => {
     }
   });
 });
+
+describe('manifest screenshots', () => {
+  const screenshots = manifest().screenshots ?? [];
+  const sized = screenshots.map((shot) => ({ ...shot, image: png(shot.src) }));
+
+  it('has a desktop and a phone screenshot, which Chrome needs for the richer install dialog', () => {
+    expect(screenshots.some((shot) => shot.form_factor === 'wide')).toBe(true);
+    expect(screenshots.some((shot) => shot.form_factor !== 'wide')).toBe(true);
+    expect(manifest().description).toBeTruthy();
+  });
+
+  it('points every screenshot at a real PNG of the declared size, with a label', () => {
+    for (const shot of sized) {
+      expect(shot.image.isPng, shot.src).toBe(true);
+      expect(`${shot.image.width}x${shot.image.height}`, shot.src).toBe(shot.sizes);
+      expect(shot.label, shot.src).toBeTruthy();
+    }
+  });
+
+  it('stays inside Chrome limits: 320 to 3840px a side, longest side at most 2.3 times the shortest', () => {
+    for (const { image, src } of sized) {
+      const [short, long] = [image.width, image.height].sort((a, b) => a - b);
+      expect(short, src).toBeGreaterThanOrEqual(320);
+      expect(long, src).toBeLessThanOrEqual(3840);
+      expect(long / short, src).toBeLessThanOrEqual(2.3);
+    }
+  });
+
+  it('uses one aspect ratio per form factor (Chrome drops the odd ones out)', () => {
+    for (const factor of ['wide', 'narrow']) {
+      const ratios = sized
+        .filter((shot) => shot.form_factor === factor)
+        .map((shot) => (shot.image.width / shot.image.height).toFixed(4));
+      expect(new Set(ratios).size, factor).toBe(1);
+    }
+  });
+});
