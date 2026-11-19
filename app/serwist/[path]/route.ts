@@ -45,6 +45,7 @@ const serwistRoute = createSerwistRoute({
     'public/sponsor-logos/**',
     'public/images/**',
     'public/splash/**',
+    'public/screenshots/**',
     'public/og-*.png',
     'public/*.txt',
     'public/_headers',

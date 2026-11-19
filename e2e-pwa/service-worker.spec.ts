@@ -43,7 +43,7 @@ test.describe('service worker script', () => {
     expect(urls.length).toBeGreaterThan(100);
 
     const junk = urls.filter((url) =>
-      /^\/(extension|directory-badges|products|sponsor-logos|images|splash|models|qa|samples|data|logos|pdf-worker)\/|^\/og-|\.txt$|^\/_headers$/.test(url),
+      /^\/(extension|directory-badges|products|sponsor-logos|images|splash|screenshots|models|qa|samples|data|logos|pdf-worker)\/|^\/og-|\.txt$|^\/_headers$/.test(url),
     );
     expect(junk).toEqual([]);
 
