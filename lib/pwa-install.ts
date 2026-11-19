@@ -262,16 +262,18 @@ function phoneInstallSteps(os: InstallOs, browser: InstallBrowser): InstallStep[
   if (os === 'ios') {
     return [
       say(
-        'This browser can’t add the icon. Open ',
-        { hot: 'Safari' },
-        ' and go to toolblip.com.',
-      ),
-      say(
-        'In Safari, tap ',
+        'Tap ',
         { hot: 'Share' },
-        '. On an iPhone it is at the bottom. On an iPad it is at the top. It is a square with an arrow pointing up.',
+        '. In Chrome it is at the right end of the address bar. In other browsers, open the menu and tap Share.',
       ),
-      say('Tap ', { hot: 'Add to Home Screen' }, ', then tap ', { hot: 'Add' }, '.'),
+      say('A panel opens. Scroll the list of actions and tap ', { hot: 'Add to Home Screen' }, '.'),
+      say(
+        'Tap ',
+        { hot: 'Add' },
+        '. If Add to Home Screen is not in the list, open toolblip.com in ',
+        { hot: 'Safari' },
+        ' and do the same there.',
+      ),
     ];
   }
   if (browser === 'samsung') {
