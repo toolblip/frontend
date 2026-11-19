@@ -99,6 +99,9 @@ async function install() {
   if (shouldHideInstallAfterPrompt(choice?.outcome)) update({ installed: true });
 }
 
+/** The store without React, for unit tests. */
+export const pwaInstallStore = { subscribe, getSnapshot, install };
+
 /**
  * Chrome/Edge fire `beforeinstallprompt` when the app is installable.
  * iOS browsers have no prompt API - we surface Share → Add to Home Screen tips instead.
