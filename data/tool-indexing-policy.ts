@@ -377,6 +377,7 @@ export const TOOL_INDEXING_DECISIONS: Readonly<Record<string, ToolIndexingDecisi
   'add-pages-to-pdf': { status: 'reviewed', reviewedAt: '2026-10-14', evidence: 'docs/seo-index-prune-2026-10-14.md#keep: content gate; PdfPageAdderClient; hand-written FAQ; 2 examples; unique description' },
   'add-subtitles': { status: 'hold', reason: 'Prune 2026-10-14: no task examples in tool content.' },
   'add-watermark-to-pdf': { status: 'reviewed', reviewedAt: '2026-10-14', evidence: 'docs/seo-index-prune-2026-10-14.md#keep: content gate; AddWatermarkToPDFClient; hand-written FAQ; 2 examples; unique description' },
+  'ai-provenance-checker': { status: 'hold', reason: 'New tool 2026-11-20: index after public browser QA and a keyword check.' },
   'age-calculator': { status: 'reviewed', reviewedAt: '2026-10-14', evidence: 'docs/seo-index-prune-2026-10-14.md#keep: priority or keyword row; AgeCalculatorClient; hand-written FAQ; 2 examples; unique description' },
   'algorithm-visualizer': { status: 'hold', reason: 'Prune 2026-10-14: no task examples in tool content.' },
   'all-in-one-unit-converter': { status: 'hold', reason: 'Prune 2026-10-14: no task examples in tool content.' },

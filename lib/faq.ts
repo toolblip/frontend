@@ -1445,6 +1445,13 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: "What does this tool do?", a: "Export a selected XLSX sheet to XML fields; the first row supplies field names." },
     { q: "What should I know before using it?", a: "Choose one sheet from an XLSX workbook. Exports use displayed cell values and cached formula results, without recalculating formulas or preserving workbook styles, charts or macros. Inputs are limited to 5 MB and 50 sheets, with per-sheet row, column and cell limits." },
   ],
+  'ai-provenance-checker': [
+    { q: 'What does it look for?', a: 'C2PA Content Credentials manifests, the IPTC DigitalSourceType value (for example trainedAlgorithmicMedia), generator names from tools such as Adobe Firefly, OpenAI, Google AI and Midjourney, editing software listed in XMP or C2PA history, and Stable Diffusion parameters saved as PNG text.' },
+    { q: 'Does "No AI label found" mean a person made the image?', a: 'No. Screenshots, re-saving, and most social platforms remove this metadata, and many generators never add it. The tool only reports labels that are still in the file.' },
+    { q: 'Can it detect SynthID or other invisible watermarks?', a: 'No. SynthID and similar watermarks are hidden in the pixels and can only be read by the vendor\'s own detector. This tool reads metadata only.' },
+    { q: 'Is the C2PA signature verified?', a: 'No. The tool shows that a manifest is present and what it declares, but it does not validate the certificate chain. Use a full C2PA validator when you need a cryptographic check.' },
+    { q: 'Is my image uploaded?', a: 'No. The file is read with the browser File API and scanned locally. Nothing is sent to a server.' },
+  ],
   'exif-remover': [
     { q: 'What image formats does it accept?', a: 'JPEG, PNG, WebP, GIF, and SVG files up to 20 MiB. JPEG exports back to JPEG at quality 95. PNG, WebP, GIF, and SVG export as PNG, with GIF cleaned as a still frame and SVG rasterized.' },
     { q: 'What metadata does it remove?', a: 'After canvas re-encoding, the final bytes are checked for JPEG APP1, APP13, and COM metadata plus PNG text and eXIf chunks. The download is blocked if EXIF, XMP, or IPTC signatures are still found.' },

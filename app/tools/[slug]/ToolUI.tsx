@@ -441,6 +441,7 @@ const ExcelToCsvClient = dynamic(() => import('@/components/tools/ExcelToCsvClie
 const ExcelToPdfClient = dynamic(() => import('@/components/tools/ExcelToPdfClient'));
 const ExcelToXmlClient = dynamic(() => import('@/components/tools/ExcelToXmlClient'));
 const ExifRemoverClient = dynamic(() => import('@/components/tools/ExifRemoverClient'));
+const AiProvenanceCheckerClient = dynamic(() => import('@/components/tools/AiProvenanceCheckerClient'));
 const ExtractAudioClient = dynamic(() => import('@/components/tools/ExtractAudioClient'));
 const ExtractImgClient = dynamic(() => import('@/components/tools/ExtractImgClient'));
 const FontToPngClient = dynamic(() => import('@/components/tools/FontToPngClient'));
@@ -1568,6 +1569,8 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <ExcelToXmlClient />;
     case 'exif-remover':
       return <ExifRemoverClient />;
+    case 'ai-provenance-checker':
+      return <AiProvenanceCheckerClient />;
     case 'extract-audio':
       return <ExtractAudioClient />;
     case 'extract-images-from-pdf':

@@ -75,9 +75,9 @@ describe('policy decisions and audit statuses', () => {
       }
     }
     expect(Object.keys(TOOL_INDEXING_DECISIONS)).toHaveLength(tools.length);
-    expect(tools).toHaveLength(440);
+    expect(tools).toHaveLength(441);
     expect(tools.filter(t => indexing.isToolIndexable(t.slug))).toHaveLength(178);
-    expect(tools.filter(t => !indexing.isToolIndexable(t.slug))).toHaveLength(262);
+    expect(tools.filter(t => !indexing.isToolIndexable(t.slug))).toHaveLength(263);
     expect(indexing.getToolIndexingStatus('aac-to-wav')).toBe('hold');
     for (const slug of PRIORITY_KEEP) expect(indexing.isToolIndexable(slug), slug).toBe(true);
     expect(indexing.getToolIndexingStatus('json-to-markdown-table')).toBe('reviewed');
