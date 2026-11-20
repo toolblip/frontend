@@ -1040,6 +1040,7 @@ export const tools: Tool[] = [
   { name: 'JWT Token Tester', slug: 'jwt-token-tester', description: "Verify supported HMAC JWT signatures with a supplied secret and inspect decoded claims.", emoji: '🎫', category: 'Developer' },
   { name: 'SEO Meta Tag Analyzer', slug: 'seo-meta-tag-analyzer', description: "Inspect HTML metadata for missing or duplicate tags without a ranking score.", emoji: '🏷️', category: 'SEO' },
   { name: 'Text to Speech', slug: 'text-to-speech', description: 'Convert text to speech using your browser with adjustable voice, speed, and pitch.', emoji: '🔊', category: 'Text' },
+  { name: 'AI Image Provenance Checker', slug: 'ai-provenance-checker', description: 'Check an image for C2PA Content Credentials, IPTC AI source labels, and AI generator metadata in your browser.', emoji: '🔎', category: 'Image' },
   { name: 'EXIF Remover', slug: 'exif-remover', description: 'Inspect common EXIF fields and re-encode images in the browser to remove EXIF, XMP, and IPTC personal metadata.', emoji: '🛡️', category: 'Image' },
   { name: 'UUID Validator', slug: 'uuid-validator', description: 'Validate UUID v1, v4, and v7 formats and check if a UUID string is properly formatted.', emoji: '🆔', category: 'Developer' },
   { name: 'CIDR Subnet Calculator', slug: 'cidr-calculator', description: 'Calculate subnet masks, network ranges, usable IPs, and wildcard masks from CIDR notation.', emoji: '🌐', category: 'Network' },

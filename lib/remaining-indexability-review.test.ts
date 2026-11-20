@@ -40,7 +40,7 @@ describe('remaining review cohort and approved exact duplicates',()=>{
   for(const s of ['gradient-generator','slug-generator']){expect(getCanonicalToolSlug(s)).toBe(s);expect(tools.some(t=>t.slug===s)).toBe(true);expect(isToolIndexable(s)).toBe(true);}
   expect(getCanonicalToolSlug('reading-level-estimator')).toBe('reading-level-estimator');expect(isToolIndexable('reading-level-estimator')).toBe(false);
   expect(tools.filter(t=>isToolIndexable(t.slug))).toHaveLength(178);
-  expect(tools.filter(t=>!isToolIndexable(t.slug))).toHaveLength(262);
+  expect(tools.filter(t=>!isToolIndexable(t.slug))).toHaveLength(263);
  });
  it('publishes exactly the retained eligible canonical tools in the tool sitemap',async()=>{
   const {GET}=await import('../app/sitemap-tools.xml/route');

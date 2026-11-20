@@ -518,6 +518,7 @@ const componentMap: Record<string, () => Promise<{ default: React.ComponentType 
   'svg-compressor': () => import('@/components/tools/SVGCompressorClient'),
   'svg-to-png': () => import('@/components/tools/SvgToPngClient'),
   'exif-remover': () => import('@/components/tools/ExifRemoverClient'),
+  'ai-provenance-checker': () => import('@/components/tools/AiProvenanceCheckerClient'),
   'json-to-tsv': () => import('@/components/tools/JsonToTsvClient'),
   'json-csv-express': () => import('@/components/tools/JsonCsvExpressClient'),
   'json-xml-express': () => import('@/components/tools/JsonXmlExpressClient'),
