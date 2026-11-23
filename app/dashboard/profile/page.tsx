@@ -12,6 +12,7 @@ export default function ProfilePage() {
   const [profileName, setProfileName] = useState("");
   const [profileUsername, setProfileUsername] = useState("");
   const [profileEmail, setProfileEmail] = useState("");
+  const [marketingOk, setMarketingOk] = useState(false);
   const [profileMessage, setProfileMessage] = useState("");
   const [profileError, setProfileError] = useState("");
   const [profileSaving, setProfileSaving] = useState(false);
@@ -25,6 +26,7 @@ export default function ProfilePage() {
     setProfileName(user.name);
     setProfileUsername(typeof user.username === "string" ? user.username : "");
     setProfileEmail(user.email);
+    setMarketingOk(user.marketing_ok === true);
   }, [user]);
 
   async function handleProfileSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -39,7 +41,7 @@ export default function ProfilePage() {
         method: "PATCH",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         credentials: "include",
-        body: JSON.stringify({ name: profileName, email: profileEmail, username: profileUsername.trim() }),
+        body: JSON.stringify({ name: profileName, email: profileEmail, username: profileUsername.trim(), marketing_ok: marketingOk }),
       });
       const data = await res.json();
 
@@ -265,6 +267,16 @@ export default function ProfilePage() {
               required
             />
           </div>
+          <label htmlFor="profile-marketing-ok" className="flex gap-3 text-sm text-gray-700 dark:text-gray-300">
+            <input
+              id="profile-marketing-ok"
+              type="checkbox"
+              checked={marketingOk}
+              onChange={(event) => setMarketingOk(event.target.checked)}
+              className="mt-1 h-4 w-4 rounded border-gray-300 text-red-600 focus:ring-red-500"
+            />
+            <span>Tell me about other Binary Labs products</span>
+          </label>
           <button
             type="submit"
             disabled={profileSaving}
