@@ -72,6 +72,7 @@ export default function PrivacyPage() {
               <li><strong>Cloudflare Web Analytics:</strong> cookieless analytics for aggregate traffic and performance insights.</li>
               <li><strong>Optional analytics:</strong> Google Analytics uses consent mode. The Google tag may load before you opt in, but analytics storage stays denied until you accept the cookie banner.</li>
               <li><strong>Sign-up source:</strong> If you accept the cookie banner, we remember how you first arrived (campaign tag, referring site, landing page) and save it on your account when you sign up. Declining stores nothing.</li>
+              <li><strong>Customer list:</strong> Binary Labs LLC keeps the account owner&apos;s name, email, company, plan and sign-up source in its internal customer list to support you.</li>
             </ul>
           </div>
 
