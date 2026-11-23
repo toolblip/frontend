@@ -1,9 +1,14 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { captureSignupSource } from '@/lib/signup-source';
 
 export default function CookieBanner() {
   const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    captureSignupSource();
+  }, []);
 
   useEffect(() => {
     const consent = localStorage.getItem('toolblip_cookie_consent');
@@ -15,6 +20,7 @@ export default function CookieBanner() {
 
   function accept() {
     localStorage.setItem('toolblip_cookie_consent', 'accepted');
+    captureSignupSource();
     setVisible(false);
     window.dispatchEvent(new CustomEvent('toolblip:analytics:enable'));
   }
