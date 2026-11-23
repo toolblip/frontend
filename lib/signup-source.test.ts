@@ -70,6 +70,23 @@ describe('captureSignupSource', () => {
   });
 });
 
+describe('first touch only', () => {
+  it('ignores a later sign-in redirect when the first visit had no source', () => {
+    storage.setItem(CONSENT, 'accepted');
+    captureSignupSource({ search: '', pathname: '/' }, '', storage);
+    captureSignupSource({ search: '', pathname: '/dashboard' }, 'https://accounts.google.com/', storage);
+    expect(stored()).toBeNull();
+  });
+
+  it('does not capture again after the source was sent', async () => {
+    storage.setItem(CONSENT, 'accepted');
+    captureSignupSource({ search: '?utm_source=hn', pathname: '/' }, '', storage);
+    await sendSignupSource(vi.fn().mockResolvedValue(new Response('{}')), storage);
+    captureSignupSource({ search: '', pathname: '/auth/magic' }, 'https://mail.google.com/', storage);
+    expect(stored()).toBeNull();
+  });
+});
+
 describe('sendSignupSource', () => {
   it('send posts once and clears', async () => {
     storage.setItem(STORAGE_KEY, JSON.stringify({ utm_source: 'reddit' }));

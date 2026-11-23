@@ -1,6 +1,9 @@
 // First-touch sign-up attribution. Stored only after the cookie banner is accepted,
 // sent once after sign-in; the API keeps it only for accounts made in the last day.
 export const STORAGE_KEY = 'tb_signup_source';
+// Set on the first consented page view and never removed: later visits, such as the
+// Google or mail-client redirect back after sign-in, are not a first touch.
+const SEEN_KEY = 'tb_signup_source_seen';
 
 const CONSENT_KEY = 'toolblip_cookie_consent';
 const INTERNAL_HOSTS = new Set(['toolblip.com', 'www.toolblip.com']);
@@ -24,7 +27,8 @@ export function captureSignupSource(
   storage: Storage = window.localStorage,
 ): void {
   try {
-    if (storage.getItem(CONSENT_KEY) !== 'accepted' || storage.getItem(STORAGE_KEY) !== null) return;
+    if (storage.getItem(CONSENT_KEY) !== 'accepted' || storage.getItem(SEEN_KEY) !== null) return;
+    storage.setItem(SEEN_KEY, '1');
 
     const params = new URLSearchParams(loc.search);
     const source: SignupSource = {};
