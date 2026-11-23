@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect, useCallback, useRef, ReactNode } from "react";
+import { sendSignupSource } from "@/lib/signup-source";
 
 type User = { id: number; name: string; email: string; username?: string | null; [key: string]: unknown };
 
@@ -66,6 +67,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     inflightRef.current = run;
     return run;
   }, []);
+
+  // Covers every sign-in path, including the Google redirect that only restores the session.
+  const userId = user?.id;
+  useEffect(() => {
+    if (userId) void sendSignupSource();
+  }, [userId]);
 
   // Restore session once on mount
   useEffect(() => {
