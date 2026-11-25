@@ -19,11 +19,11 @@ const hosts = [
 ];
 
 describe('footer directory badges', () => {
-  it('lists each directory once per marquee track', () => {
+  it('server-renders each directory once; the loop copy is cloned in the browser', () => {
     const html = renderToStaticMarkup(createElement(Footer));
     for (const host of hosts) {
       const links = html.match(new RegExp(`<a [^>]*href="https://(www\\.)?${host.replace('.', '\\.')}`, 'g')) ?? [];
-      expect(links, host).toHaveLength(2); // original + aria-hidden copy
+      expect(links, host).toHaveLength(1);
     }
   });
 });

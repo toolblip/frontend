@@ -8,7 +8,7 @@ describe('Startup Fame footer badge', () => {
     const html = renderToStaticMarkup(createElement(Footer));
 
     const listingLinks = html.match(/href="https:\/\/startupfa\.me\/s\/toolblip\?utm_source=toolblip\.com"/g) ?? [];
-    expect(listingLinks).toHaveLength(2); // footer track + aria-hidden marquee copy
+    expect(listingLinks).toHaveLength(1); // the marquee copy is cloned in the browser
     expect(html).toContain('src="https://startupfa.me/badges/featured-badge.webp"');
     expect(html).toContain('alt="Toolblip - Featured on Startup Fame"');
     expect(html).toContain('width="171"');
