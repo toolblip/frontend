@@ -245,6 +245,8 @@ describe('tool meta descriptions', () => {
       { slug: 'punctuation-fixer', titlePart: 'Punctuation Fixer' },
       { slug: 'json-to-markdown-table', titlePart: 'JSON to Markdown Table Converter' },
       { slug: 'xml-sitemap-generator', titlePart: 'XML Sitemap Generator' },
+      { slug: 'color-palette-generator', titlePart: 'Color Palette Generator' },
+      { slug: 'remove-duplicate-lines', titlePart: 'Remove Duplicate Lines Online' },
     ];
     for (const { slug, titlePart } of cases) {
       const metadata = buildToolMetadata(getToolBySlug(slug)!);

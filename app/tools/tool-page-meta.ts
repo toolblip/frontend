@@ -81,6 +81,9 @@ const SEO_TITLE_OVERRIDES: Record<string, string> = {
   'punctuation-fixer': 'Punctuation Fixer - Free Spacing & Quote Cleanup',
   'json-to-markdown-table': 'JSON to Markdown Table Converter - Free Online',
   'xml-sitemap-generator': 'XML Sitemap Generator - Free sitemap.xml Maker',
+  // Keyword batch 2 (Google autocomplete + Ahrefs free Keyword Generator, 2026-11-25).
+  'color-palette-generator': 'Color Palette Generator - Free, From One Color',
+  'remove-duplicate-lines': 'Remove Duplicate Lines Online - Free Line Deduper',
 };
 
 function documentTitle(tool: Tool): string {
