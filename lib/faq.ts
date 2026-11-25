@@ -537,6 +537,10 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: "How are words counted?", a: "Words are separated by whitespace. Sentence counts use punctuation heuristics; results can differ from a language-aware editor." },
     { q: "What do reading and speaking time mean?", a: "Reading time uses 200 words per minute and speaking time uses 130. Both round up to whole minutes. For a custom speed slider, use the Reading Time Calculator." },
     { q: "Do character counts include spaces?", a: "Both totals are shown. The no-spaces count removes all whitespace. JavaScript string length counts some emoji as more than one character. For a character-only breakdown, use Character Counter." },
+    { q: "Can I use it to check an essay's word count?", a: "Yes. Paste the text and read the Words total. Every run of characters between spaces or line breaks counts as a word, including numbers and citations like (Smith, 2020), so paste only the part your limit covers and leave out the title or reference list if they are excluded." },
+    { q: "Will the count match Google Docs or Word?", a: "For plain prose it is usually the same or within a few words. Each app has its own rules for dashes, bullets and symbols, so when a limit is strict, check the final number in the app that will grade or publish the text." },
+    { q: "How are hyphenated words and numbers counted?", a: "A hyphenated word such as well-known counts as one word, a contraction such as don't counts as one, and 3.14 counts as one. A dash with spaces around it counts as its own word, because the tool splits only on whitespace." },
+    { q: "What counts as a sentence, a paragraph and a line?", a: "Sentences are split at . ! and ?, so decimals like 3.14 and abbreviations like e.g. can add extra sentences. A paragraph is a block separated by a blank line, and lines are counted at every line break." },
   ],
   'http-method-tester': [
     { q: 'What is the HTTP Method Tester?', a: 'The HTTP Method Tester is a browser-based HTTP tester for sending GET, POST, PUT, DELETE, and other requests with custom headers and body content.' },
@@ -564,6 +568,10 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Does the Character Counter count spaces?', a: 'Yes. Totals are shown with and without spaces (and without newlines) so you can compare against whatever limit you are targeting yourself.' },
     { q: 'Does it enforce Twitter, LinkedIn, or meta-description caps?', a: 'No. Those platform rules are not built into this page. Use the live totals and compare them to the limit you care about.' },
     { q: 'Does my text leave the browser?', a: 'No. Counting runs locally after the page loads - no upload and no signup. For words, sentences, and reading time together, use Word Counter.' },
+    { q: 'Do line breaks and spaces count as characters?', a: 'Yes. Total Characters counts every space and every line break as one character each. Without Spaces removes all whitespace, and Without Newlines removes only line breaks, so you can match whichever rule your limit uses.' },
+    { q: 'Why can the count be higher than what a site shows for emoji?', a: 'The counter measures string length in the browser, where many emoji count as two or more characters and accented letters built from combining marks count extra. A platform that counts what you see can report a lower number for the same text.' },
+    { q: 'What do Letters Only and Digits Only count?', a: 'Letters Only counts the English letters A to Z in either case, and Digits Only counts 0 to 9. Accented letters and non-Latin scripts such as Chinese or Arabic are not in Letters Only, though they are included in the total.' },
+    { q: 'How do I check text against a character limit?', a: 'Paste the text and compare Total Characters to the limit you have. Counts are for plain text, so check the final number in the platform when a limit is strict, since some sites count links or emoji differently.' },
   ],
   'percentage-calculator': [
     { q: 'Which percentage problems can it solve?', a: 'Five modes: find a percentage of a number, percentage change between two values, discount price, tip with optional split, and markup from cost.' },
