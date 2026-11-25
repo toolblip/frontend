@@ -681,6 +681,11 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Can I skip empty lines?', a: 'Yes. Toggle Skip empty and the tool drops any line that is blank (or contains only whitespace) before deduping. Useful when pasting text with stray newlines.' },
     { q: 'Is there a limit on input size?', a: 'No fixed limit  -  the tool runs in your browser. Tens of thousands of lines process in well under a second; very large inputs are bounded only by your device\'s memory.' },
     { q: 'Will my data be uploaded?', a: 'No. The Remove Duplicate Lines tool is fully client-side. Whatever you paste  -  addresses, IDs, log lines  -  never leaves your browser.' },
+    { q: 'Which spelling is kept when lines differ only by case?', a: 'The first one. With Case-sensitive off, "Apple" then "apple" leaves just "Apple", and the result keeps the original capitalization of the line it kept.' },
+    { q: 'Why does a line that looks identical stay in the result?', a: 'Usually a trailing space, a tab or a Windows line ending makes the two lines differ. Turn on Trim whitespace to compare them without that padding. Note that Trim also strips the spaces from the lines in the output.' },
+    { q: 'What happens to blank lines?', a: 'Blank lines are treated like any other line, so repeated blank lines collapse into one. Turn on Skip empty to remove blank lines completely.' },
+    { q: 'Does it sort the lines or find near-duplicates?', a: 'No. It only removes exact repeats, after the options you set, and keeps the remaining lines in their original order. It does not sort or match similar lines.' },
+    { q: 'How is this different from uniq or sort -u?', a: 'The Unix uniq command removes only repeats that sit next to each other, and sort -u sorts the list first. This tool removes repeats anywhere in the list and keeps the first occurrence in place, with no sorting.' },
   ],
   'markdown-to-html': [
     { q: "Which Markdown features are supported?", a: "Headings, lists, links, fenced code and GitHub-style tables. Check the preview for the output you intend to publish." },
