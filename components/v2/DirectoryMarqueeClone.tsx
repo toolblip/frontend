@@ -8,22 +8,31 @@ export default function DirectoryMarqueeClone() {
   const marker = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
-    const track = marker.current?.parentElement;
-    const group = marker.current?.previousElementSibling;
-    if (!track || !group) return;
-    const copy = group.cloneNode(true) as HTMLElement;
-    copy.setAttribute('aria-hidden', 'true');
-    copy.querySelectorAll('script').forEach((el) => el.remove()); // badge scripts already ran for the original
-    copy.querySelectorAll('a').forEach((a) => a.setAttribute('tabindex', '-1'));
-    // Badge images reveal themselves through React state; the clone has no handlers, so mirror it.
-    copy.querySelectorAll('img').forEach((img) => {
-      const wrap = img.parentElement;
-      const reveal = () => wrap?.setAttribute('data-loaded', '');
-      if (img.complete && img.naturalWidth > 0) reveal();
-      else img.addEventListener('load', reveal, { once: true });
-    });
-    track.appendChild(copy);
-    return () => copy.remove();
+    let copy: HTMLElement | undefined;
+    const clone = () => {
+      const track = marker.current?.parentElement;
+      const group = marker.current?.previousElementSibling;
+      if (!track || !group) return;
+      copy = group.cloneNode(true) as HTMLElement;
+      copy.setAttribute('aria-hidden', 'true');
+      copy.querySelectorAll('script').forEach((el) => el.remove()); // badge scripts already ran for the original
+      copy.querySelectorAll('a').forEach((a) => a.setAttribute('tabindex', '-1'));
+      // Badge images reveal themselves through React state; the clone has no handlers, so mirror it.
+      copy.querySelectorAll('img').forEach((img) => {
+        const wrap = img.parentElement;
+        const reveal = () => wrap?.setAttribute('data-loaded', '');
+        if (img.complete && img.naturalWidth > 0) reveal();
+        else img.addEventListener('load', reveal, { once: true });
+      });
+      track.appendChild(copy);
+    };
+    // After the load event, so the copy's image requests never hold up page load.
+    if (document.readyState === 'complete') clone();
+    else window.addEventListener('load', clone, { once: true });
+    return () => {
+      window.removeEventListener('load', clone);
+      copy?.remove();
+    };
   }, []);
 
   return <span ref={marker} hidden />;
