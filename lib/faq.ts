@@ -564,9 +564,10 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Is the MKV Compressor free?', a: 'Yes. It is a free online MKV compressor with no signup required.' },
   ],
   'character-counter': [
-    { q: 'What is the Character Counter?', a: 'It counts characters in your browser: total length, without spaces, without newlines, letters only, and digits only. It does not show platform-specific limit bars.' },
+    { q: 'What is the Character Counter?', a: 'It counts characters in your browser: total length, without spaces, without newlines, letters only, and digits only. Optional presets for X (Twitter) show how many characters you have left.' },
     { q: 'Does the Character Counter count spaces?', a: 'Yes. Totals are shown with and without spaces (and without newlines) so you can compare against whatever limit you are targeting yourself.' },
-    { q: 'Does it enforce Twitter, LinkedIn, or meta-description caps?', a: 'No. Those platform rules are not built into this page. Use the live totals and compare them to the limit you care about.' },
+    { q: 'Which character limits can I check against?', a: 'Pick an X (Twitter) preset: post (280), bio (160), display name (50) or username (15). The page then shows characters used, left or over. LinkedIn, Instagram and meta-description caps are not built in, so compare Total Characters to those limits yourself.' },
+    { q: 'Is the X count the same as on X?', a: 'It can differ. This page counts plain characters. X counts every link as a fixed length and weights emoji and some scripts more, so a post with links or emoji can show a different number on X. Check the final count in the composer.' },
     { q: 'Does my text leave the browser?', a: 'No. Counting runs locally after the page loads - no upload and no signup. For words, sentences, and reading time together, use Word Counter.' },
     { q: 'Do line breaks and spaces count as characters?', a: 'Yes. Total Characters counts every space and every line break as one character each. Without Spaces removes all whitespace, and Without Newlines removes only line breaks, so you can match whichever rule your limit uses.' },
     { q: 'Why can the count be higher than what a site shows for emoji?', a: 'The counter measures string length in the browser, where many emoji count as two or more characters and accented letters built from combining marks count extra. A platform that counts what you see can report a lower number for the same text.' },
