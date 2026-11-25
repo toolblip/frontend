@@ -132,9 +132,7 @@ for (const mobile of [false, true]) {
       await expect(page.locator(`${group} a[href="${href}"]`)).toHaveCount(1);
     }
     await expect(page.locator('main .tb-v2-directory-group')).toHaveCount(0);
-    await expect(page.locator('.tb-v2-directory-group[aria-hidden="true"] a:not([tabindex="-1"])')).toHaveCount(0);
-    await expect(page.locator('.tb-v2-directory-group[aria-hidden="true"] a[href]')).toHaveCount(listings.length);
-    await expect(page.locator('.tb-v2-directory-group[aria-hidden="true"] a[href="https://fazier.com/launches/toolblip"]')).toHaveCount(1);
+    await expect(page.locator('.tb-v2-directory-group')).toHaveCount(1); // one row; the marquee ping-pongs over it
 
     // Keyboard focus disables the transform so the browser can scroll to every listing.
     await strip.focus();
@@ -204,7 +202,7 @@ test('reduced motion keeps a single scrollable set of listings', async ({ page }
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/');
   await expect(page.locator('.tb-v2-directory-track')).toHaveCSS('animation-name', 'none');
-  await expect(page.locator('.tb-v2-directory-group[aria-hidden="true"]')).toBeHidden();
+  await expect(page.locator('.tb-v2-directory-group')).toHaveCount(1);
   await expect(page.locator('.tb-v2-footer-badge')).toHaveCSS('overflow-x', 'auto');
   await page.locator(`${group} > a`).last().scrollIntoViewIfNeeded();
   await expect(page.locator(`${group} > a`).last()).toBeInViewport();
