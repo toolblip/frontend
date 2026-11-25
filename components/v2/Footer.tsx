@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import BrandMark from './BrandMark';
 import DirectoryBadgeImage from './DirectoryBadgeImage';
-import DirectoryMarqueeClone from './DirectoryMarqueeClone';
 import PreferredSourceButton from './PreferredSourceButton';
 import { tools } from '@/data/tools';
 
@@ -9,7 +8,7 @@ function DirectoryBadgeLink(props: React.ComponentPropsWithoutRef<'a'>) {
   return <a {...props} />;
 }
 
-// Only this row is server-rendered; DirectoryMarqueeClone adds the aria-hidden loop copy in the browser.
+// One row only: the marquee ping-pongs over it (see tb-v2-directory-track) instead of looping a second copy.
 function DirectoryBadges() {
   return (
     <div className="tb-v2-directory-group">
@@ -854,7 +853,6 @@ export default function Footer() {
             >
               <div className="tb-v2-directory-track">
                 <DirectoryBadges />
-                <DirectoryMarqueeClone />
               </div>
             </div>
           </div>
