@@ -19,6 +19,7 @@ export default function DirectoryMarqueeClone() {
       copy.querySelectorAll('a').forEach((a) => a.setAttribute('tabindex', '-1'));
       // Badge images reveal themselves through React state; the clone has no handlers, so mirror it.
       copy.querySelectorAll('img').forEach((img) => {
+        img.loading = 'lazy'; // the loop copy is off-screen: fetch it only when the marquee scrolls it into view
         const wrap = img.parentElement;
         const reveal = () => wrap?.setAttribute('data-loaded', '');
         if (img.complete && img.naturalWidth > 0) reveal();
