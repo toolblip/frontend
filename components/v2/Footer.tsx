@@ -854,7 +854,6 @@ export default function Footer() {
             >
               <div className="tb-v2-directory-track">
                 <DirectoryBadges />
-                <DirectoryMarqueeClone />
               </div>
             </div>
           </div>
