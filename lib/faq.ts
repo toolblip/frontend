@@ -1942,7 +1942,7 @@ const OVERRIDES: Record<string, FAQ[]> = {
   ],
   'punctuation-fixer': [
     { q: 'What does the Smart Quotes option actually change?', a: 'It converts straight quotes into curly ones by position: a quote at the start of the text or after a space, bracket or dash opens, and any other quote closes. A single quote inside a word, as in don\'t, becomes an apostrophe.' },
-    { q: 'What spacing problems does it clean up?', a: 'It removes any space sitting between a word and the punctuation mark right after it, like "word ." becoming "word.", and it collapses runs of spaces and tabs down to a single space. Line breaks and blank lines between paragraphs are kept.' },
+    { q: 'What spacing problems does it clean up?', a: 'It removes any space between a word, closing quote or closing bracket and the punctuation mark right after it, like "word ." becoming "word.", and it collapses runs of spaces and tabs down to a single space. Line breaks and blank lines between paragraphs are kept.' },
     { q: 'Can I convert curly quotes back to straight ones?', a: 'Yes, switching to the Straight Quotes option runs the reverse replacement, turning curly double and single quote characters back into plain " and \' marks.' },
   ],
   'port-scanner-full': [
