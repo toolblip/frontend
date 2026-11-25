@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
+import { toSmartQuotes, toStraightQuotes } from '@/lib/smart-quotes';
 
 const PUNCTUATION_EXAMPLE = 'This  is  messy . She waited here ! Then she left .';
 
@@ -14,12 +15,7 @@ export default function PunctuationFixerClient() {
     if (!text) { setOutput(''); return; }
     let result = text;
 
-    if (style === 'smart') {
-      result = result.replace(/\u0022/g, '\u201C').replace(/\u0022/g, '\u201D'); // straight " -> curly "
-      result = result.replace(/\u0027/g, '\u2018').replace(/\u0027/g, '\u2019'); // straight ' -> curly '
-    } else {
-      result = result.replace(/\u201C|\u201D/g, '"').replace(/\u2018|\u2019/g, "'");
-    }
+    result = style === 'smart' ? toSmartQuotes(result) : toStraightQuotes(result);
 
     // Fix common issues
     result = result.replace(/([a-z])\s+([.!?,:;])/gi, '$1$2'); // space before punctuation
