@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 import { toSmartQuotes, toStraightQuotes } from '@/lib/smart-quotes';
+import { fixSpacing } from '@/lib/punctuation-spacing';
 
 const PUNCTUATION_EXAMPLE = 'This  is  messy . She waited here ! Then she left .';
 
@@ -18,8 +19,7 @@ export default function PunctuationFixerClient() {
     result = style === 'smart' ? toSmartQuotes(result) : toStraightQuotes(result);
 
     // Fix common issues
-    result = result.replace(/([a-z])\s+([.!?,:;])/gi, '$1$2'); // space before punctuation
-    result = result.replace(/\s+/g, ' ').trim(); // multiple spaces
+    result = fixSpacing(result);
 
     setOutput(result);
   };

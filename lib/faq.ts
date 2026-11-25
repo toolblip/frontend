@@ -1941,8 +1941,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: "What should I know before using it?", a: "Inputs are limited to 10 MB and 16 megapixels. Output size is measured and can be larger than the input. WebP export uses a browser encoder with a local codec fallback." },
   ],
   'punctuation-fixer': [
-    { q: 'What does the Smart Quotes option actually change?', a: 'It converts straight double and single quote characters into their curly Unicode equivalents, so plain " and \' marks come out looking like typeset quotation marks instead of typewriter-style straight ones.' },
-    { q: 'What spacing problems does it clean up?', a: 'It removes any space sitting between a word and the punctuation mark right after it, like "word ." becoming "word.", and it collapses runs of multiple spaces anywhere in the text down to single spaces.' },
+    { q: 'What does the Smart Quotes option actually change?', a: 'It converts straight quotes into curly ones by position: a quote at the start of the text or after a space, bracket or dash opens, and any other quote closes. A single quote inside a word, as in don\'t, becomes an apostrophe.' },
+    { q: 'What spacing problems does it clean up?', a: 'It removes any space sitting between a word and the punctuation mark right after it, like "word ." becoming "word.", and it collapses runs of spaces and tabs down to a single space. Line breaks and blank lines between paragraphs are kept.' },
     { q: 'Can I convert curly quotes back to straight ones?', a: 'Yes, switching to the Straight Quotes option runs the reverse replacement, turning curly double and single quote characters back into plain " and \' marks.' },
   ],
   'port-scanner-full': [
